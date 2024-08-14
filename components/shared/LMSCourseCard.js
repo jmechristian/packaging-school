@@ -86,7 +86,7 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
     );
     coupon
       ? window.open(isCourse.link + `?${coupon}`, '_blank')
-      : window.open(isLesson.link, '_blank');
+      : window.open(isCourse.link, '_blank');
   };
 
   function applyDiscount(originalPrice, discountPercentage) {
