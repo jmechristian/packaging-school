@@ -28,6 +28,7 @@ import Loading from '../../components/shared/Loading';
 import SignInModal from '../../components/shared/SignInModal';
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
+import { allCourseBackup } from '../../data/allCourseBackup';
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -122,12 +123,12 @@ const Layout = ({ children }) => {
     `;
 
     const getCourses = async () => {
-      const courses = await API.graphql({
-        query: listLMSCourses,
-        variables: { filter: { collection: { contains: 'null' } } },
-      });
+      // const courses = await API.graphql({
+      //   query: listLMSCourses,
+      //   variables: { filter: { collection: { contains: 'null' } } },
+      // });
 
-      dispatch(setAllCourses(courses.data.listLMSCourses.items));
+      dispatch(setAllCourses(allCourseBackup));
     };
 
     const setLessons = async () => {

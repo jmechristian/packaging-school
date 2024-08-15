@@ -48,8 +48,58 @@ const faqs = [
   },
 ];
 
-const Page = ({ customer }) => {
+const Page = () => {
   // console.log(customer);
+
+  const customer = {
+    courses: {
+      items: [
+        {
+          clicks: 2,
+          courseId: '452ec0d8-7464-4bd6-bfc2-eab051a9b40b',
+          customerId: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+          id: '6d433368-3c27-4e47-8e19-bc4b7dec9447',
+        },
+        {
+          clicks: 4,
+          courseId: 'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
+          customerId: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+          id: '67279e76-7fca-4c93-b14e-636ad7696b4b',
+        },
+        {
+          clicks: 6,
+          courseId: '4e6c079e-b396-4762-8b7f-4fa4dea64969',
+          customerId: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+          id: '29530305-8b13-455a-be1c-ab458ade011f',
+        },
+        {
+          clicks: 12,
+          courseId: 'ff174f01-5f76-486c-8d7a-849d6d3ff914',
+          customerId: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+          id: '9066dada-7a99-4115-9720-f1e8266e7fae',
+        },
+      ],
+    },
+    createdAt: '2023-12-12T15:05:36.899Z',
+    displayName: 'GreenBlue',
+    email: null,
+    highlightColor: null,
+    id: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+    link: null,
+    logo: null,
+    offered: null,
+    offerings: null,
+    pdf: null,
+    primaryColor: null,
+    pscourses: {
+      items: [],
+    },
+    slide: null,
+    status: null,
+    updatedAt: '2023-12-12T15:05:36.899Z',
+    video: null,
+  };
+
   return (
     <>
       <Head>
@@ -110,16 +160,16 @@ const Page = ({ customer }) => {
   );
 };
 
-export async function getServerSideProps() {
-  const res = await API.graphql({
-    query: getCustomer,
-    variables: { id: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea' },
-  });
-  const customer = res.data.getCustomer;
+// export async function getServerSideProps() {
+//   const res = await API.graphql({
+//     query: getCustomer,
+//     variables: { id: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea' },
+//   });
+//   const customer = res.data.getCustomer;
 
-  return {
-    props: { customer },
-  };
-}
+//   return {
+//     props: { customer },
+//   };
+// }
 
 export default Page;
