@@ -24,7 +24,7 @@ import SortToggleItem from '../components/shared/SortToggleItem';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { listLMSCourses } from '../src/graphql/queries';
-import { allCourseBackup } from '../data/allCourseBackup';
+// import { allCourseBackup } from '../data/allCourseBackup';
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const Page = () => {
   const [isFilters, setIsFilters] = useState([]);
   const [openSort, setOpenSort] = useState(false);
   const [isTable, setIsTable] = useState(true);
-  const [isCourses, setIsCourses] = useState(allCourseBackup);
+  const [isCourses, setIsCourses] = useState([]);
 
   useEffect(() => {
     const filter = router.query.category;
@@ -53,7 +53,7 @@ const Page = () => {
         variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
       });
 
-      setIsCourses(allCourseBackup);
+      setIsCourses(courses.data.listLMSCourses.items);
       filter &&
         setIsFilters(
           filter === 'ALL' ? [] : (prevState) => [...prevState, filter]

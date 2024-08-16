@@ -2,6 +2,5 @@
   "AppSyncApiName": "packbrain",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "APIKeyExpirationEpoch": -1,
-  "CreateAPIKey": -1
+  "AuthModeLastUpdated": "2024-08-16T11:59:22.360Z"
 }
