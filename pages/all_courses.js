@@ -53,6 +53,8 @@ const Page = () => {
         variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
       });
 
+      console.log(courses);
+
       setIsCourses(courses.data.listLMSCourses.items);
       filter &&
         setIsFilters(

@@ -22,9 +22,7 @@ const CCCourseIntro = ({
       <div className='w-full bg-green-600 p-3 flex items-center gap-2 border-2 border-black'>
         <div className='flex flex-col gap-1'></div>
         <div className='text-white font-semibold uppercase text-sm'>
-          THIS COHORT BEGAN AUG 1 - YOU MAY STILL JOIN THE CONVERSATIONS ALREADY
-          IN PROGRESS IF YOU PURCHASE TODAY - ACCESS TO COURSE CONTENT IS FOR 12
-          FULL MONTHS.
+          THIS COHORT RUNS Oct. 10, 2024 to Nov. 7th. 2024
         </div>
       </div>
       <div className='flex flex-wrap flex-row gap-3'>

@@ -18,11 +18,11 @@
       "function": {
         "addAPSToUser": {
           "deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
-          "s3Key": "amplify-builds/addAPSToUser-4c365635554c53573037-build.zip"
+          "s3Key": "amplify-builds/addAPSToUser-4f53484a6e2b59516159-build.zip"
         },
         "addNewUser": {
           "deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
-          "s3Key": "amplify-builds/addNewUser-764b54334c69696d3575-build.zip"
+          "s3Key": "amplify-builds/addNewUser-2b6f424f693367774b79-build.zip"
         },
         "sendEmailFn": {
           "deploymentBucketName": "amplify-packbrain-staging-54032-deployment",

@@ -74,9 +74,11 @@ const CCCourseMain = ({ data }) => {
                 <div className='flex flex-col gap-3'>
                   <div className='h3-base'>Contact Hours:</div>
                   <div className='text-lg'>
-                    Ten hours over the course of five weeks (includes six live
-                    virtual meetings with Cory!) where content will be
-                    progressively disclosed as assigned per week.
+                    6 hours over the course of three weeks (includes three live
+                    virtual meetings with Cory!) (content will be available upon
+                    enrollment, but discussed based on schedule below). Please
+                    note that you will have access to this course content for
+                    12-months.
                   </div>
                 </div>
                 <div className='flex flex-col gap-3'>

@@ -24,7 +24,7 @@ const Page = () => {
 
   const getLessonsQuery = /* GraphQL */ `
     query MyQuery {
-      listLessons(limit: 250, filter: { status: { eq: "PUBLISHED" } }) {
+      listLessons(limit: 15000, filter: { status: { eq: "PUBLISHED" } }) {
         items {
           author
           backdate
@@ -73,6 +73,7 @@ const Page = () => {
         query: getLessonsQuery,
       });
       setIsLessons(lessons.data.listLessons.items);
+      console.log(lessons.data.listLessons.items);
     };
 
     const getTags = async () => {
