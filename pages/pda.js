@@ -30,7 +30,7 @@ const faqs = [
     id: 1,
     question: 'Who is my PDA contact?',
     answer:
-      'If you have any questions regarding curriculum, reach out to barb.dammann@gmail.com.',
+      'If you have any questions regarding curriculum, reach out to Barb@pdachain.com.',
   },
   {
     id: 2,
@@ -197,7 +197,7 @@ const Page = ({ customer }) => {
             'https://packschool.s3.amazonaws.com/PDA-Instructions-for-Libary.pdf'
           }
           displayName={'Packaging Distributors of America'}
-          email={'info@pdachain.com'}
+          email={'Barb@pdachain.com'}
           subhead={
             'The Packaging School offers top-tier education for packaging professionals. Our programs cover material sciences, industrial processes, design, and management. We continually update our 4,000+ learning assets. Partnering with the Packaging Distributors of America, we provide employees with comprehensive training courses to enhance their skills and knowledge.'
           }
