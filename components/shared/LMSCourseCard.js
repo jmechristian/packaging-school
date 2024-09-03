@@ -66,7 +66,7 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
     );
 
     isCourse.altLink
-      ? window.open(isCourse.altLink, '_blank')
+      ? router.push(isCourse.altLink)
       : router.push(
           `/${
             isCourse.type && isCourse.type === 'COLLECTION'
@@ -85,8 +85,8 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
       'GRID'
     );
     coupon
-      ? window.open(isCourse.link + `?${coupon}`, '_blank')
-      : window.open(isCourse.link, '_blank');
+      ? router.push(isCourse.link + `?${coupon}`)
+      : router.push(isCourse.link);
   };
 
   function applyDiscount(originalPrice, discountPercentage) {
