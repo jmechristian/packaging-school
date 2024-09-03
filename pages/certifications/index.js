@@ -198,7 +198,7 @@ const Index = () => {
               </div>
               <div className='w-full flex justify-center lg:justify-start items-center'>
                 <div
-                  className='w-full max-w-[400px] h-[520px] cursor-pointer'
+                  className='w-full max-w-[380px] md:max-w-[400px] h-[520px] cursor-pointer'
                   onClick={() => router.push('/certifications/get-to-know-apc')}
                 >
                   <APCCard />
