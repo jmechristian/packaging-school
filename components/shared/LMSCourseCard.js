@@ -117,9 +117,10 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
             <div className='w-full h-full border-[3px] rounded-lg border-black relative bg-cover bg-top bg-no-repeat overflow-hidden'>
               {/* COURSE ID */}
               <motion.div
+                onClick={cardClickHandler}
                 initial={{ scale: 1 }}
                 animate={isEntered ? { scale: 1.1 } : { scale: 1 }}
-                className='bg-center bg-cover w-full h-full absolute z-[5]'
+                className='bg-center bg-cover w-full h-full absolute z-[5] cursor-pointer'
                 style={{ backgroundImage: `url(${isCourse.seoImage})` }}
               ></motion.div>
               <div
