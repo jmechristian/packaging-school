@@ -56,9 +56,7 @@ const CCCourseMain = ({ data }) => {
                   data.subscriptionPrice ? data.subscriptionPrice : null
                 }
                 partOf={data.partOf ? data.partOf : undefined}
-                seoImage={
-                  'https://packschool.s3.amazonaws.com/Cory-Connors-Course-Card.png'
-                }
+                seoImage={data.seoImage}
               />
             </div>
           </div>

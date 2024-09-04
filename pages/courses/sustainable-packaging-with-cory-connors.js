@@ -18,7 +18,7 @@ const Page = ({ course }) => {
       <Meta
         title={course && `Packaging School | ${course.title}`}
         description={course && course.subheadline}
-        image='https://packschool.s3.amazonaws.com/Cory-Connors-Course-Card.png'
+        image='course && course.seoImage'
       />
       <div className='relative'>
         <CCCourseMain data={course} />
