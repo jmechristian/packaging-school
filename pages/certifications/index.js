@@ -100,7 +100,7 @@ const Index = () => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#apc'} passHref shallow>
+              <Link href={'#csp'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/csp-black.png'}
                   className='group-hover:invert'
@@ -213,7 +213,7 @@ const Index = () => {
                   textColor={'text-black'}
                 />
                 <div>
-                  <h2 className='h2-base'>
+                  <h2 className='h2-base' id='csp'>
                     Transform Your Packaging: Empower Your Team with Our
                     Revolutionary Sustainable Design Program.
                   </h2>
