@@ -5473,6 +5473,33 @@ export const listIndexRows = /* GraphQL */ `
     }
   }
 `;
+export const getIndexPage = /* GraphQL */ `
+  query GetIndexPage($id: ID!) {
+    getIndexPage(id: $id) {
+      id
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndexPages = /* GraphQL */ `
+  query ListIndexPages(
+    $filter: ModelIndexPageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listIndexPages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        content
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getFaq = /* GraphQL */ `
   query GetFaq($id: ID!) {
     getFaq(id: $id) {

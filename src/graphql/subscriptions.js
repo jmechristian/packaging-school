@@ -6430,6 +6430,36 @@ export const onDeleteIndexRow = /* GraphQL */ `
     }
   }
 `;
+export const onCreateIndexPage = /* GraphQL */ `
+  subscription OnCreateIndexPage {
+    onCreateIndexPage {
+      id
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndexPage = /* GraphQL */ `
+  subscription OnUpdateIndexPage {
+    onUpdateIndexPage {
+      id
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndexPage = /* GraphQL */ `
+  subscription OnDeleteIndexPage {
+    onDeleteIndexPage {
+      id
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateFaq = /* GraphQL */ `
   subscription OnCreateFaq {
     onCreateFaq {
