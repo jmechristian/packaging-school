@@ -5478,6 +5478,10 @@ export const getIndexPage = /* GraphQL */ `
     getIndexPage(id: $id) {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
@@ -5493,6 +5497,39 @@ export const listIndexPages = /* GraphQL */ `
       items {
         id
         content
+        slug
+        discount
+        status
+        type
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const indexPagesBySlug = /* GraphQL */ `
+  query IndexPagesBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelIndexPageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    indexPagesBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        content
+        slug
+        discount
+        status
+        type
         createdAt
         updatedAt
       }

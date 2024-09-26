@@ -4,6 +4,7 @@ import {
   listSalesBars,
   getLMSCourse,
   listFaqs,
+  listIndexPages,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -156,4 +157,9 @@ export const setCoursesFromIds = async (ids) => {
 export const getAllFaqs = async () => {
   const faqs = await API.graphql({ query: listFaqs });
   return faqs.data.listFaqs.items;
+};
+
+export const getAllIndexes = async () => {
+  const indexes = await API.graphql({ query: listIndexPages });
+  return indexes.data.listIndexPages.items;
 };

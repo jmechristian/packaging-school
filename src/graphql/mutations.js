@@ -6987,6 +6987,10 @@ export const createIndexPage = /* GraphQL */ `
     createIndexPage(input: $input, condition: $condition) {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
@@ -7000,6 +7004,10 @@ export const updateIndexPage = /* GraphQL */ `
     updateIndexPage(input: $input, condition: $condition) {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
@@ -7013,6 +7021,10 @@ export const deleteIndexPage = /* GraphQL */ `
     deleteIndexPage(input: $input, condition: $condition) {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }

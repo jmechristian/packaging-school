@@ -215,6 +215,12 @@ const LibraryLessonGrid = () => {
                     : paginatedItems[0].seoImage
                 })`,
               }}
+              onClick={() =>
+                window.open(
+                  `https://www.packagingschool.com/lessons/${paginatedItems[0].slug}`,
+                  '_blank'
+                )
+              }
             ></div>
             <div className='flex flex-col gap-10 p-6 lg:p-10'>
               <div className='w-full flex flex-col gap-2'>
@@ -237,7 +243,15 @@ const LibraryLessonGrid = () => {
                   )}
                 </div>
                 <div className='line-clamp-6'>{paginatedItems[0].subhead}</div>
-                <div className='flex items-center justify-between'>
+                <div
+                  className='flex items-center justify-between'
+                  onClick={() =>
+                    window.open(
+                      `https://www.packagingschool.com/lessons/${paginatedItems[0].slug}`,
+                      '_blank'
+                    )
+                  }
+                >
                   <div className='flex items-center gap-1.5 mt-2 cursor-pointer border-b-black border-b pb-1 w-fit'>
                     <div className='text-sm uppercase font-semibold'>
                       View Article

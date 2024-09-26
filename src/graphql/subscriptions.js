@@ -6435,6 +6435,10 @@ export const onCreateIndexPage = /* GraphQL */ `
     onCreateIndexPage {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
@@ -6445,6 +6449,10 @@ export const onUpdateIndexPage = /* GraphQL */ `
     onUpdateIndexPage {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
@@ -6455,6 +6463,10 @@ export const onDeleteIndexPage = /* GraphQL */ `
     onDeleteIndexPage {
       id
       content
+      slug
+      discount
+      status
+      type
       createdAt
       updatedAt
     }
