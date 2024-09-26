@@ -11,7 +11,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-
+import LibraryLessonGrid from '../components/library/LibraryLessonGrid';
+import LibraryCourseGrid from '../components/library/LibraryCourseGrid';
 import CustomerIntro from '../components/customers/CustomerIntro';
 import CustomerSearchContainer from '../components/customers/CustomerSearchContainer';
 import FullWidthDropDown from '../components/shared/FullWidthDropDown';
@@ -52,22 +53,6 @@ const faqs = [
 
 const courses = [
   {
-    id: 'd2cef5c2-31f5-4e42-ba51-bfd9a5bc660a',
-    courseId: '08fc6679-6728-43b7-977b-7d98ec04bfd5',
-    clicks: 1,
-    customerId: '84558b1f-359a-4551-8832-c6c570171163',
-    createdAt: '2024-04-15T13:26:10.528Z',
-    updatedAt: '2024-04-15T13:26:10.528Z',
-  },
-  {
-    id: '908b2c57-c0fe-4716-b926-c92af86a539d',
-    courseId: '0de2af71-d0f1-4ecc-a7d6-e0b235672ec9',
-    clicks: 1,
-    customerId: '84558b1f-359a-4551-8832-c6c570171163',
-    createdAt: '2024-04-15T13:20:14.656Z',
-    updatedAt: '2024-04-15T13:20:14.656Z',
-  },
-  {
     id: 'bce3eca3-4f42-4571-b892-06adfc26ccbb',
     courseId: '255394df-4fa0-477d-b19a-a8e04837cdb4',
     clicks: 5,
@@ -91,22 +76,7 @@ const courses = [
     createdAt: '2024-03-19T13:27:02.748Z',
     updatedAt: '2024-03-19T13:27:02.748Z',
   },
-  {
-    id: '5e5d379b-e9df-4491-9c57-e4e924a36aff',
-    courseId: '2a0796ab-7a60-455b-b6b2-f95697f1c338',
-    clicks: 5,
-    customerId: '84558b1f-359a-4551-8832-c6c570171163',
-    createdAt: '2024-03-19T13:27:23.239Z',
-    updatedAt: '2024-03-19T13:27:23.239Z',
-  },
-  {
-    id: '8079d27e-992d-4024-8810-b1ed6f8ae5e6',
-    courseId: '78349554-27bf-4a86-b2e1-211afb3fa0cf',
-    clicks: 6,
-    customerId: '84558b1f-359a-4551-8832-c6c570171163',
-    createdAt: '2024-03-19T13:22:59.044Z',
-    updatedAt: '2024-03-19T13:22:59.044Z',
-  },
+
   {
     id: '55ee9368-7f26-461d-93e7-7d8759d5fdaa',
     courseId: 'f2fad11c-4548-41ea-b39d-be5a4913a4f5',
@@ -200,6 +170,7 @@ const Page = ({ customer }) => {
           displayName={'Acme'}
           email={'Bobbo@acme.com'}
           logo={'https://packschool.s3.amazonaws.com/acme-logo.png'}
+          callout={`This library is for DEMO purposes only. If you are interested in building your own library from our hudreds of expert-led courses, please connect please out this form.`}
         />
         <div className='flex flex-col gap-5'>
           <FullWidthDropDown
@@ -215,14 +186,14 @@ const Page = ({ customer }) => {
           <FullWidthDropDown
             title={'Packaging School Course Offerings'}
             Icon={AcademicCapIcon}
-            cash={true}
+            // cash={true}
             bg='bg-base-mid'
             bgdark='bg-base-dark'
             content={
-              <CustomerSearchContainer
-                reference={'ref=lt'}
+              <LibraryCourseGrid
                 courses={courses}
-                link_text={'Purchase Course'}
+                coupon={'coupon=pscpspda2024'}
+                discount={81.2}
               />
             }
             highlight={'bg-clemson'}
@@ -233,13 +204,13 @@ const Page = ({ customer }) => {
             Icon={BookmarkSquareIcon}
             bg='bg-base-mid'
             bgdark='bg-base-dark'
-            content={<CustomerSearchLOTMContainer />}
+            content={<LibraryLessonGrid />}
             highlight={'bg-clemson'}
             bgContent={'bg-neutral-200 border'}
           />
           <div className='bg-neutral-200 rounded-xl'>
             <div className='mx-auto max-w-7xl px-6 py-12 lg:px-16 flex flex-col gap-12'>
-              <div className='flex flex-col lg:flex-row items-center bg-neutral-100/80 rounded-2xl px-6 py-9 shadow'>
+              {/* <div className='flex flex-col lg:flex-row items-center bg-neutral-100/80 rounded-2xl px-6 py-9 shadow'>
                 <div className='flex flex-col gap-4 pb-10 max-w-sm h-full justify-center'>
                   <h2 className='text-xl lg:text-2xl font-bold leading-10 tracking-tight text-gray-900'>
                     Looking to Learn More?
@@ -280,7 +251,7 @@ const Page = ({ customer }) => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className='mx-auto divide-y divide-gray-900/10 w-full'>
                 <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>
                   Frequently asked questions
@@ -332,7 +303,7 @@ const Page = ({ customer }) => {
 export async function getServerSideProps() {
   const res = await API.graphql({
     query: getCustomer,
-    variables: { id: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea' },
+    variables: { id: 'f98b155b-b06b-4f5a-822f-ddf47bca0a30' },
   });
   const customer = res.data.getCustomer;
 

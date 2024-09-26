@@ -207,6 +207,7 @@ const Page = ({ customer }) => {
           slides={
             'https://docs.google.com/presentation/d/1MX5U6ogSY6HN7636TOVq5aIqr5iF_igXDkZFc3Zrkh4/edit?usp=sharing'
           }
+          callout={`Discover your library courses BELOW at the special discounted ${customer.displayName} rate of $75. If you have any questions, please reach out to ${customer.email}`}
         />
         <div className='flex flex-col gap-5'>
           {/* <FullWidthDropDown

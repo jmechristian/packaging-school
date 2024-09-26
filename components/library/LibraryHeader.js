@@ -22,6 +22,7 @@ const LibraryHeader = ({
   video,
   pdf,
   subhead,
+  callout,
 }) => {
   const [isMediaType, setIsMediaType] = useState('SLIDES');
   return (
@@ -94,9 +95,7 @@ const LibraryHeader = ({
         <div>
           <div className='font-semibold px-5 py-5 bg-brand-yellow-light relative w-fit h-full'>
             <div className='relative z-10 pr-10 text-lg leading-snug'>
-              Discover your library courses BELOW at the special discounted{' '}
-              {displayName} rate of $75. If you have any questions, please reach
-              out to <a href={`mailto:${email}`}>{email}</a>
+              {callout}
             </div>
             <div className='absolute bottom-0 -right-10 opacity-30 z-0'>
               <MdArrowCircleDown className='w-40 h-40' color='white' />
@@ -135,11 +134,7 @@ const LibraryHeader = ({
           <></>
         )}
         <div className='font-semibold px-5 py-5 bg-brand-yellow-light relative lg:hidden xl:block'>
-          <div className='relative z-10 pr-10 leading-snug'>
-            Discover your library courses BELOW at the special discounted{' '}
-            {displayName} rate of $75. If you have any questions, please reach
-            out to <a href={`mailto:${email}`}>{email}</a>
-          </div>
+          <div className='relative z-10 pr-10 leading-snug'>{callout}</div>
           <div className='absolute inset-y-0 right-0 opacity-30 z-0'>
             <MdArrowCircleDown className='w-full h-full' color='white' />
           </div>
