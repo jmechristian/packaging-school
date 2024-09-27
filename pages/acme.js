@@ -8,19 +8,15 @@ import {
   PlusSmallIcon,
   AcademicCapIcon,
   BookmarkSquareIcon,
+  ArrowTurnRightUpIcon,
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
+import { MdCampaign, MdCelebration, Md3P } from 'react-icons/md';
 import { Disclosure } from '@headlessui/react';
-import { AnimatePresence, motion } from 'framer-motion';
 import LibraryLessonGrid from '../components/library/LibraryLessonGrid';
 import LibraryCourseGrid from '../components/library/LibraryCourseGrid';
-import CustomerIntro from '../components/customers/CustomerIntro';
-import CustomerSearchContainer from '../components/customers/CustomerSearchContainer';
 import FullWidthDropDown from '../components/shared/FullWidthDropDown';
-import CustomerFeatures from '../components/customers/CustomerFeatures';
-import CustomerIntro_2 from '../components/customers/CustomerIntro_2';
-import { dummyData } from '../data/DummyData';
-import CustomerSearchLOTMContainer from '../components/customers/CustomerSearchLOTMContainer';
-import CustomerOfferings from '../components/customers/CustomerOfferings';
+
 import LibraryHeader from '../components/library/LibraryHeader';
 import DemoOffering from '../components/library/DemoOffering';
 
@@ -165,16 +161,43 @@ const Page = ({ customer }) => {
         <title>Packaging School | Acme</title>
         <meta name='robots' content='noindex,nofollow' />
       </Head>
-      <div className='w-full max-w-7xl px-3 md:px-6 lg:px-0 flex flex-col gap-4 md:gap-32 py-5 md:py-6 lg:py-16 mx-auto'>
+      <div className='bg-brand-yellow/80 p-1.5 cursor-pointer'>
+        <div className='flex items-center justify-center lg:max-w-3xl xl:max-w-7xl mx-auto gap-3'>
+          <div>
+            <div className='bg-white w-10 h-10 flex items-center justify-center border-2 border-black'>
+              <div className='flex items-center justify-center'>
+                <MdCampaign size={26} color='black' />
+              </div>
+            </div>
+          </div>
+          <div className='leading-tight font-semibold'>
+            This library is for DEMO purposes only. If you&apos;d like to build
+            your own library, click to schedule a free 15-min library
+            consultation.
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-7xl px-3 md:px-6 lg:px-0 flex flex-col gap-16 md:gap-32 py-10 md:py-16 lg:py-24 mx-auto'>
         <LibraryHeader
+          header={'Welcome Your Members Here!'}
           displayName={'Acme'}
           email={'Bobbo@acme.com'}
-          logo={'https://packschool.s3.amazonaws.com/acme-logo.png'}
-          callout={`This library is for DEMO purposes only. If you are interested in building your own library from our hudreds of expert-led courses, please connect please out this form.`}
+          logo={'https://packschool.s3.amazonaws.com/fake-logo.png'}
+          subhead={
+            'Customize your library with your own content and build the optimal collection for your employees from our database of over 4,000 lessons. New content is added every month, keeping your team up-to-date with the latest trends and best practices to implement into your workflow.'
+          }
+          cta={
+            <div className='flex items-center gap-2 mt-2'>
+              <button className='bg-black hover:bg-base-dark cursor-pointer text-lg text-white px-3 py-2 flex items-center gap-2'>
+                <Md3P size={24} color='white' />
+                <span> Schedule a Free Consultation</span>
+              </button>
+            </div>
+          }
         />
         <div className='flex flex-col gap-5'>
           <FullWidthDropDown
-            title={'Acme Knowledge Library Topics'}
+            title={'Your Company Knowledge Library Topics'}
             Icon={AcademicCapIcon}
             bg='bg-[#ea2d2d]'
             bgdark='bg-[#ea2d2d]'
@@ -189,13 +212,7 @@ const Page = ({ customer }) => {
             // cash={true}
             bg='bg-base-mid'
             bgdark='bg-base-dark'
-            content={
-              <LibraryCourseGrid
-                courses={courses}
-                coupon={'coupon=pscpspda2024'}
-                discount={81.2}
-              />
-            }
+            content={<LibraryCourseGrid courses={courses} />}
             highlight={'bg-clemson'}
             bgContent={'bg-neutral-200 border'}
           />
