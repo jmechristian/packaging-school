@@ -161,7 +161,15 @@ const Page = ({ customer }) => {
         <title>Packaging School | Acme</title>
         <meta name='robots' content='noindex,nofollow' />
       </Head>
-      <div className='bg-brand-yellow/80 p-1.5 cursor-pointer'>
+      <div
+        className='bg-brand-yellow/80 p-1.5 cursor-pointer'
+        onClick={() =>
+          window.open(
+            'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ13gmFbYioAfeatuD9a7p7K7zmbPcBoIysUAlPb3hGoL0UqNdLogD7Mq_4e3m-YQhO6ubJxuv6E',
+            '_blank'
+          )
+        }
+      >
         <div className='flex items-center justify-center lg:max-w-3xl xl:max-w-7xl mx-auto gap-3'>
           <div>
             <div className='bg-white w-10 h-10 flex items-center justify-center border-2 border-black'>
@@ -189,7 +197,16 @@ const Page = ({ customer }) => {
           cta={
             <div className='flex items-center gap-2 mt-2'>
               <button className='bg-black hover:bg-base-dark cursor-pointer text-lg text-white px-3 py-2 flex items-center gap-2'>
-                <Md3P size={24} color='white' />
+                <Md3P
+                  size={24}
+                  color='white'
+                  onClick={() =>
+                    window.open(
+                      'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ13gmFbYioAfeatuD9a7p7K7zmbPcBoIysUAlPb3hGoL0UqNdLogD7Mq_4e3m-YQhO6ubJxuv6E',
+                      '_blank'
+                    )
+                  }
+                />
                 <span> Schedule a Free Consultation</span>
               </button>
             </div>
