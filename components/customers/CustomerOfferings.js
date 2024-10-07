@@ -54,6 +54,30 @@ const CustomerOfferings = ({ featured, reference }) => {
         external={true}
         link_text={'Select Topic'}
       />
+      <WiredCourseCard
+        id={'93ed9ccc-f7ab-49eb-b186-279e607101bb'}
+        reference={reference}
+        external={true}
+        link_text={'Select Topic'}
+      />
+      <WiredCourseCard
+        id={'6584feb9-665f-4ee8-9690-9a46e9fb7d41'}
+        reference={reference}
+        external={true}
+        link_text={'Select Topic'}
+      />
+      <WiredCourseCard
+        id={'0f5cad69-68eb-4af0-9ee6-af91ab1c8c22'}
+        reference={reference}
+        external={true}
+        link_text={'Select Topic'}
+      />
+      <WiredCourseCard
+        id={'97bd5164-0560-4116-a8a0-5f1e09c586ca'}
+        reference={reference}
+        external={true}
+        link_text={'Select Topic'}
+      />
     </motion.div>
   );
 };
