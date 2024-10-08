@@ -5,7 +5,7 @@ const ImageHero = ({ title, date, author, media }) => {
   return (
     <div className='flex flex-col gap-8 lg:gap-16 md:flex-row items-center justify-between md:px-6 xl:px-0 pt-6'>
       <div
-        className='aspect-[1/1] w-full max-w-[450px] bg-black bg-cover bg-center bg-no-repeat md:rounded-2xl'
+        className='aspect-[16/9] w-full max-w-[450px] bg-black bg-cover bg-center bg-no-repeat md:rounded-2xl'
         style={{ backgroundImage: `url(${media})` }}
       ></div>
       <div className='flex flex-col h-full w-full gap-5 px-6 lg:px-0'>
