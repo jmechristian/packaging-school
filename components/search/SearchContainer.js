@@ -156,7 +156,10 @@ export function LOTMItem({ hit }) {
   const dispatch = useDispatch();
 
   return (
-    <Link passHref href={`/lessons/${hit.slug}`}>
+    <Link
+      passHref
+      href={hit.type === 'INDEX' ? `/${hit.slug}` : `/lessons/${hit.slug}`}
+    >
       <a
         href={hit.slug}
         className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
