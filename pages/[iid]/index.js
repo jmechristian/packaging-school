@@ -16,6 +16,7 @@ import {
   CourseTable,
   BasicCallout,
   CourseCardCallout,
+  CertCallout,
 } from '@jmechristian/ps-component-library';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -121,6 +122,19 @@ const Page = ({ indexPage }) => {
     }
   };
 
+  const setCertRow = (row) => {
+    console.log(row);
+    return (
+      <CertCallout
+        headline={row.headline}
+        subheadline={row.subheadline}
+        link={row.link}
+        cert={row.template}
+        linkText={row.linkText}
+      />
+    );
+  };
+
   const setCourseRow = (row) => {
     switch (row.template) {
       case 'CARD':
@@ -158,6 +172,8 @@ const Page = ({ indexPage }) => {
         return setCourseRow(row);
       case 'CTA':
         return setCtaRow(row);
+      case 'CERT':
+        return setCertRow(row);
       default:
         return <div>Default</div>;
     }
