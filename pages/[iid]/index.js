@@ -223,9 +223,9 @@ const Page = ({ indexPage }) => {
   return (
     <>
       <Meta
-        title={index.title}
-        description={index.description}
-        image={index.hero.hero ? index.hero.hero : index.image}
+        title={index && index.title}
+        description={index && index.description}
+        image={index && index.hero.hero ? index.hero.hero : index.image}
       />
       {index ? (
         <motion.div
