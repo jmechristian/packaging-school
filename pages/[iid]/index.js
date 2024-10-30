@@ -225,7 +225,7 @@ const Page = ({ indexPage }) => {
       <Meta
         title={index && index.title}
         description={index && index.description}
-        image={index && index.hero.hero ? index.hero.hero : index.image}
+        image={index && index.hero.hero ? index.hero.hero : index.seoImage}
       />
       {index ? (
         <motion.div
