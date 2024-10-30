@@ -24,6 +24,7 @@ import Meta from '../../components/shared/Meta';
 
 const Page = ({ indexPage }) => {
   const index = indexPage && JSON.parse(indexPage.content);
+  console.log(index);
   const router = useRouter();
   const { location } = useSelector((state) => state.auth);
 
@@ -125,7 +126,6 @@ const Page = ({ indexPage }) => {
   };
 
   const setCertRow = (row) => {
-    console.log(row);
     return (
       <CertCallout
         headline={row.headline}
@@ -225,7 +225,11 @@ const Page = ({ indexPage }) => {
       <Meta
         title={index && index.title}
         description={index && index.description}
-        image={index && index.hero.hero ? index.hero.hero : index.seoImage}
+        image={
+          index && index.hero.hero
+            ? index.hero.hero
+            : 'https://packmedia54032-staging.s3.amazonaws.com/public/all-courses-seoimagewebp'
+        }
       />
       {index ? (
         <motion.div
