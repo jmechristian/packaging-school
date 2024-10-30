@@ -131,15 +131,18 @@ export function LOTMItem({ hit, components }) {
 
   return (
     <a
-      href={`/lessons/${hit.slug}`}
+      href={hit.type === 'INDEX' ? `/${hit.slug}` : `/lessons/${hit.slug}`}
       className='aa-ItemLink hover:bg-slate-100 cursor-pointer'
     >
       <div className='grid grid-cols-5 w-full'>
         <div className='px-3 py-1.5 col-span-5'>
           <div className='flex gap-3 w-full'>
-            <div>
-              <LotmIcon style='w-12 h-12 fill-slate-900' />
-            </div>
+            {hit.type === 'LOTM' && (
+              <div>
+                <LotmIcon style='w-12 h-12 fill-slate-900' />
+              </div>
+            )}
+
             <div className='flex flex-col '>
               <div className='font-greycliff font-semibold leading-snug '>
                 <components.Highlight hit={hit} attribute='title' />
