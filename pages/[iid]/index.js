@@ -20,8 +20,7 @@ import {
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import dynamic from 'next/dynamic';
-const LazyCardCallout = dynamic(() => import(<CertCallout />), { ssr: false });
+import Meta from '../../components/shared/Meta';
 
 const Page = ({ indexPage }) => {
   const index = indexPage && JSON.parse(indexPage.content);
@@ -221,51 +220,60 @@ const Page = ({ indexPage }) => {
     }
   };
 
-  return index ? (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.75 }}
-      className='flex flex-col gap-32 max-w-7xl px-5 mx-auto pt-32 pb-32'
-    >
-      <div>{setHeroContent(index.hero.type)}</div>
-      <div className='flex flex-col gap-32'>
-        {index.rows.map((row) => (
-          <div key={row.id}>{setRowContent(row)}</div>
-        ))}
-      </div>
-    </motion.div>
-  ) : (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className='flex flex-col gap-16 max-w-7xl px-5 mx-auto pt-16 pb-32 animate-pulse'
-    >
-      {/* Hero Section */}
-      <div className='h-64 bg-gray-200 rounded-lg'></div>
-
-      {/* Content Rows */}
-      <div className='flex flex-col gap-16'>
-        {/* Row 1 */}
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-          <div className='h-48 bg-gray-200 rounded-lg'></div>
-          <div className='h-48 bg-gray-200 rounded-lg'></div>
-          <div className='h-48 bg-gray-200 rounded-lg'></div>
-        </div>
-
-        {/* Row 2 */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+  return (
+    <>
+      <Meta
+        title={index.title}
+        description={index.description}
+        image={index.hero.hero ? index.hero.hero : index.image}
+      />
+      {index ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.75 }}
+          className='flex flex-col gap-32 max-w-7xl px-5 mx-auto pt-32 pb-32'
+        >
+          <div>{setHeroContent(index.hero.type)}</div>
+          <div className='flex flex-col gap-32'>
+            {index.rows.map((row) => (
+              <div key={row.id}>{setRowContent(row)}</div>
+            ))}
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className='flex flex-col gap-16 max-w-7xl px-5 mx-auto pt-16 pb-32 animate-pulse'
+        >
+          {/* Hero Section */}
           <div className='h-64 bg-gray-200 rounded-lg'></div>
-          <div className='h-64 bg-gray-200 rounded-lg'></div>
-        </div>
 
-        {/* Row 3 */}
-        <div className='h-32 bg-gray-200 rounded-lg'></div>
-      </div>
-    </motion.div>
+          {/* Content Rows */}
+          <div className='flex flex-col gap-16'>
+            {/* Row 1 */}
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+              <div className='h-48 bg-gray-200 rounded-lg'></div>
+              <div className='h-48 bg-gray-200 rounded-lg'></div>
+              <div className='h-48 bg-gray-200 rounded-lg'></div>
+            </div>
+
+            {/* Row 2 */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+              <div className='h-64 bg-gray-200 rounded-lg'></div>
+              <div className='h-64 bg-gray-200 rounded-lg'></div>
+            </div>
+
+            {/* Row 3 */}
+            <div className='h-32 bg-gray-200 rounded-lg'></div>
+          </div>
+        </motion.div>
+      )}
+    </>
   );
 };
 
