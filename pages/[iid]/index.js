@@ -18,7 +18,10 @@ import {
   CourseCardCallout,
   CertCallout,
 } from '@jmechristian/ps-component-library';
+import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+const LazyCardCallout = dynamic(() => import(<CertCallout />), { ssr: false });
 
 const Page = ({ indexPage }) => {
   const index = indexPage && JSON.parse(indexPage.content);
