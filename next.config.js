@@ -14,6 +14,7 @@ const nextConfig = {
       'psadmin.s3.amazonaws.com',
       'media.licdn.com',
       'packmedia54032-staging.s3.amazonaws.com',
+      'packschool.s3.us-east-1.amazonaws.com',
     ],
   },
   async redirects() {

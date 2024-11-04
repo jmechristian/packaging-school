@@ -5,13 +5,14 @@ import {
   getLMSCourse,
   listFaqs,
   listIndexPages,
+  listEventTemplates,
+  eventTemplatesBySlug,
 } from '../src/graphql/queries';
 import {
   createClick,
   createCourseClick,
   createIndiaClick,
   createLessonClick,
-  listLMSCourses,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -162,4 +163,96 @@ export const getAllFaqs = async () => {
 export const getAllIndexes = async () => {
   const indexes = await API.graphql({ query: listIndexPages });
   return indexes.data.listIndexPages.items;
+};
+
+export const getAllEvents = async () => {
+  const events = await API.graphql({ query: listEventTemplates });
+  return events.data.listEventTemplates.items;
+};
+
+export const getEventBySlug = async (slug) => {
+  const getEvent = /* GraphQL */ `
+    query MyQuery($slug: String!) {
+      eventTemplatesBySlug(slug: $slug) {
+        items {
+          agenda {
+            items {
+              items {
+                createdAt
+                description
+                end
+                eventAgendaItemsId
+                eventSpeakerAgendaItemsId
+                id
+                location
+                speakers {
+                  items {
+                    company
+                    email
+                    eventAgendaItemSpeakersId
+                    eventTemplateSpeakersId
+                    id
+                    image
+                    logo
+                    name
+                    title
+                  }
+                }
+                start
+                title
+                type
+              }
+            }
+          }
+          createdAt
+          description
+          endDate
+          eventTemplateAgendaId
+          hero
+          id
+          link
+          location
+          logo
+          photos {
+            items {
+              caption
+              id
+              eventTemplatePhotosId
+              photo
+            }
+          }
+          presentations {
+            items {
+              createdAt
+              hero
+              id
+              presentation
+            }
+          }
+          slug
+          speakers {
+            items {
+              company
+              email
+              eventAgendaItemSpeakersId
+              eventTemplateSpeakersId
+              id
+              image
+              logo
+              name
+              title
+            }
+          }
+          startDate
+          title
+        }
+      }
+    }
+  `;
+
+  const event = await API.graphql({
+    query: getEvent,
+    variables: { slug: slug },
+  });
+  return event.data.eventTemplatesBySlug;
 };

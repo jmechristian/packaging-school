@@ -859,3 +859,66 @@ type Faq @model @auth(rules: [{ allow: public }]) {
   type: String
   order: Int! @default(value: "0")
 }
+
+######### EVENT TEMPLATES #########
+
+type EventTemplate @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  startDate: String!
+  endDate: String!
+  description: String
+  location: String
+  hero: String
+  link: String
+  photos: [EventPhoto] @hasMany
+  presentations: [EventPresentation] @hasMany
+  agenda: EventAgenda @hasOne
+  speakers: [EventSpeaker] @hasMany
+  slug: String! @index(name: "eventBySlug")
+}
+
+type EventPhoto @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  photo: String
+  caption: String
+  uploadedBy: String
+  event: EventTemplate @belongsTo
+}
+
+type EventPresentation @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  presentation: String
+  hero: String
+  event: EventTemplate @belongsTo
+}
+
+type EventAgenda @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  items: [EventAgendaItem] @hasMany
+  event: EventTemplate @belongsTo
+}
+
+type EventAgendaItem @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  description: String
+  location: String
+  type: String
+  start: String
+  end: String
+  speakers: [EventSpeaker] @hasMany
+  agenda: EventAgenda @belongsTo
+}
+
+type EventSpeaker @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  title: String
+  company: String
+  email: String
+  image: String
+  logo: String
+  event: EventTemplate @belongsTo
+  agendaItems: [EventAgendaItem] @hasMany
+}

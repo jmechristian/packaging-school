@@ -5631,6 +5631,613 @@ export const listFaqs = /* GraphQL */ `
     }
   }
 `;
+export const getEventTemplate = /* GraphQL */ `
+  query GetEventTemplate($id: ID!) {
+    getEventTemplate(id: $id) {
+      id
+      title
+      startDate
+      endDate
+      description
+      location
+      hero
+      link
+      photos {
+        items {
+          id
+          photo
+          caption
+          uploadedBy
+          createdAt
+          updatedAt
+          eventTemplatePhotosId
+        }
+        nextToken
+      }
+      presentations {
+        items {
+          id
+          presentation
+          hero
+          createdAt
+          updatedAt
+          eventTemplatePresentationsId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      slug
+      createdAt
+      updatedAt
+      eventTemplateAgendaId
+    }
+  }
+`;
+export const listEventTemplates = /* GraphQL */ `
+  query ListEventTemplates(
+    $filter: ModelEventTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      nextToken
+    }
+  }
+`;
+export const eventTemplatesBySlug = /* GraphQL */ `
+  query EventTemplatesBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEventTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    eventTemplatesBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventPhoto = /* GraphQL */ `
+  query GetEventPhoto($id: ID!) {
+    getEventPhoto(id: $id) {
+      id
+      photo
+      caption
+      uploadedBy
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePhotosId
+    }
+  }
+`;
+export const listEventPhotos = /* GraphQL */ `
+  query ListEventPhotos(
+    $filter: ModelEventPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        photo
+        caption
+        uploadedBy
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventTemplatePhotosId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventPresentation = /* GraphQL */ `
+  query GetEventPresentation($id: ID!) {
+    getEventPresentation(id: $id) {
+      id
+      presentation
+      hero
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePresentationsId
+    }
+  }
+`;
+export const listEventPresentations = /* GraphQL */ `
+  query ListEventPresentations(
+    $filter: ModelEventPresentationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventPresentations(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        presentation
+        hero
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventTemplatePresentationsId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventAgenda = /* GraphQL */ `
+  query GetEventAgenda($id: ID!) {
+    getEventAgenda(id: $id) {
+      id
+      items {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventAgendaEventId
+    }
+  }
+`;
+export const listEventAgenda = /* GraphQL */ `
+  query ListEventAgenda(
+    $filter: ModelEventAgendaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventAgenda(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventAgendaItem = /* GraphQL */ `
+  query GetEventAgendaItem($id: ID!) {
+    getEventAgendaItem(id: $id) {
+      id
+      title
+      description
+      location
+      type
+      start
+      end
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      createdAt
+      updatedAt
+      eventAgendaItemsId
+      eventSpeakerAgendaItemsId
+    }
+  }
+`;
+export const listEventAgendaItems = /* GraphQL */ `
+  query ListEventAgendaItems(
+    $filter: ModelEventAgendaItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventAgendaItems(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        location
+        type
+        start
+        end
+        speakers {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        createdAt
+        updatedAt
+        eventAgendaItemsId
+        eventSpeakerAgendaItemsId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventSpeaker = /* GraphQL */ `
+  query GetEventSpeaker($id: ID!) {
+    getEventSpeaker(id: $id) {
+      id
+      name
+      title
+      company
+      email
+      image
+      logo
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      agendaItems {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      eventTemplateSpeakersId
+      eventAgendaItemSpeakersId
+    }
+  }
+`;
+export const listEventSpeakers = /* GraphQL */ `
+  query ListEventSpeakers(
+    $filter: ModelEventSpeakerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventSpeakers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        title
+        company
+        email
+        image
+        logo
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        agendaItems {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        eventTemplateSpeakersId
+        eventAgendaItemSpeakersId
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {

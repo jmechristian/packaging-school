@@ -6550,6 +6550,1014 @@ export const onDeleteFaq = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEventTemplate = /* GraphQL */ `
+  subscription OnCreateEventTemplate {
+    onCreateEventTemplate {
+      id
+      title
+      startDate
+      endDate
+      description
+      location
+      hero
+      link
+      photos {
+        items {
+          id
+          photo
+          caption
+          uploadedBy
+          createdAt
+          updatedAt
+          eventTemplatePhotosId
+        }
+        nextToken
+      }
+      presentations {
+        items {
+          id
+          presentation
+          hero
+          createdAt
+          updatedAt
+          eventTemplatePresentationsId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      slug
+      createdAt
+      updatedAt
+      eventTemplateAgendaId
+    }
+  }
+`;
+export const onUpdateEventTemplate = /* GraphQL */ `
+  subscription OnUpdateEventTemplate {
+    onUpdateEventTemplate {
+      id
+      title
+      startDate
+      endDate
+      description
+      location
+      hero
+      link
+      photos {
+        items {
+          id
+          photo
+          caption
+          uploadedBy
+          createdAt
+          updatedAt
+          eventTemplatePhotosId
+        }
+        nextToken
+      }
+      presentations {
+        items {
+          id
+          presentation
+          hero
+          createdAt
+          updatedAt
+          eventTemplatePresentationsId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      slug
+      createdAt
+      updatedAt
+      eventTemplateAgendaId
+    }
+  }
+`;
+export const onDeleteEventTemplate = /* GraphQL */ `
+  subscription OnDeleteEventTemplate {
+    onDeleteEventTemplate {
+      id
+      title
+      startDate
+      endDate
+      description
+      location
+      hero
+      link
+      photos {
+        items {
+          id
+          photo
+          caption
+          uploadedBy
+          createdAt
+          updatedAt
+          eventTemplatePhotosId
+        }
+        nextToken
+      }
+      presentations {
+        items {
+          id
+          presentation
+          hero
+          createdAt
+          updatedAt
+          eventTemplatePresentationsId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      slug
+      createdAt
+      updatedAt
+      eventTemplateAgendaId
+    }
+  }
+`;
+export const onCreateEventPhoto = /* GraphQL */ `
+  subscription OnCreateEventPhoto {
+    onCreateEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePhotosId
+    }
+  }
+`;
+export const onUpdateEventPhoto = /* GraphQL */ `
+  subscription OnUpdateEventPhoto {
+    onUpdateEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePhotosId
+    }
+  }
+`;
+export const onDeleteEventPhoto = /* GraphQL */ `
+  subscription OnDeleteEventPhoto {
+    onDeleteEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePhotosId
+    }
+  }
+`;
+export const onCreateEventPresentation = /* GraphQL */ `
+  subscription OnCreateEventPresentation {
+    onCreateEventPresentation {
+      id
+      presentation
+      hero
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePresentationsId
+    }
+  }
+`;
+export const onUpdateEventPresentation = /* GraphQL */ `
+  subscription OnUpdateEventPresentation {
+    onUpdateEventPresentation {
+      id
+      presentation
+      hero
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePresentationsId
+    }
+  }
+`;
+export const onDeleteEventPresentation = /* GraphQL */ `
+  subscription OnDeleteEventPresentation {
+    onDeleteEventPresentation {
+      id
+      presentation
+      hero
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventTemplatePresentationsId
+    }
+  }
+`;
+export const onCreateEventAgenda = /* GraphQL */ `
+  subscription OnCreateEventAgenda {
+    onCreateEventAgenda {
+      id
+      items {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventAgendaEventId
+    }
+  }
+`;
+export const onUpdateEventAgenda = /* GraphQL */ `
+  subscription OnUpdateEventAgenda {
+    onUpdateEventAgenda {
+      id
+      items {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventAgendaEventId
+    }
+  }
+`;
+export const onDeleteEventAgenda = /* GraphQL */ `
+  subscription OnDeleteEventAgenda {
+    onDeleteEventAgenda {
+      id
+      items {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      createdAt
+      updatedAt
+      eventAgendaEventId
+    }
+  }
+`;
+export const onCreateEventAgendaItem = /* GraphQL */ `
+  subscription OnCreateEventAgendaItem {
+    onCreateEventAgendaItem {
+      id
+      title
+      description
+      location
+      type
+      start
+      end
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      createdAt
+      updatedAt
+      eventAgendaItemsId
+      eventSpeakerAgendaItemsId
+    }
+  }
+`;
+export const onUpdateEventAgendaItem = /* GraphQL */ `
+  subscription OnUpdateEventAgendaItem {
+    onUpdateEventAgendaItem {
+      id
+      title
+      description
+      location
+      type
+      start
+      end
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      createdAt
+      updatedAt
+      eventAgendaItemsId
+      eventSpeakerAgendaItemsId
+    }
+  }
+`;
+export const onDeleteEventAgendaItem = /* GraphQL */ `
+  subscription OnDeleteEventAgendaItem {
+    onDeleteEventAgendaItem {
+      id
+      title
+      description
+      location
+      type
+      start
+      end
+      speakers {
+        items {
+          id
+          name
+          title
+          company
+          email
+          image
+          logo
+          createdAt
+          updatedAt
+          eventTemplateSpeakersId
+          eventAgendaItemSpeakersId
+        }
+        nextToken
+      }
+      agenda {
+        id
+        items {
+          nextToken
+        }
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        createdAt
+        updatedAt
+        eventAgendaEventId
+      }
+      createdAt
+      updatedAt
+      eventAgendaItemsId
+      eventSpeakerAgendaItemsId
+    }
+  }
+`;
+export const onCreateEventSpeaker = /* GraphQL */ `
+  subscription OnCreateEventSpeaker {
+    onCreateEventSpeaker {
+      id
+      name
+      title
+      company
+      email
+      image
+      logo
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      agendaItems {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      eventTemplateSpeakersId
+      eventAgendaItemSpeakersId
+    }
+  }
+`;
+export const onUpdateEventSpeaker = /* GraphQL */ `
+  subscription OnUpdateEventSpeaker {
+    onUpdateEventSpeaker {
+      id
+      name
+      title
+      company
+      email
+      image
+      logo
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      agendaItems {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      eventTemplateSpeakersId
+      eventAgendaItemSpeakersId
+    }
+  }
+`;
+export const onDeleteEventSpeaker = /* GraphQL */ `
+  subscription OnDeleteEventSpeaker {
+    onDeleteEventSpeaker {
+      id
+      name
+      title
+      company
+      email
+      image
+      logo
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      agendaItems {
+        items {
+          id
+          title
+          description
+          location
+          type
+          start
+          end
+          createdAt
+          updatedAt
+          eventAgendaItemsId
+          eventSpeakerAgendaItemsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      eventTemplateSpeakersId
+      eventAgendaItemSpeakersId
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {
