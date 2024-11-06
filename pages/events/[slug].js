@@ -13,6 +13,9 @@ import {
   BrutalButton,
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
+import APSPresentations from '../../components/shared/APSPresentations';
+import APSImageGallery from '../../components/shared/APSImageGallery';
+import { presentations } from '../../data/presentations';
 
 const EventPage = ({ event }) => {
   console.log(event);
@@ -25,6 +28,7 @@ const EventPage = ({ event }) => {
     uploadedBy: photo.uploadedBy || '',
     uploadedAt: photo.createdAt,
   }));
+
   return (
     <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20'>
       {/* HEADER */}
@@ -79,6 +83,25 @@ const EventPage = ({ event }) => {
           ]}
         />
       </div>
+      <div className='max-w-7xl mx-auto lg:px-0 grid grid-cols-4  w-fit divide-x divide-neutral-900 bg-neutral-900 py-3'>
+        <div className='flex items-center justify-center gap-2 w-60'>
+          <h2 className='text-sm uppercase font-bold text-brand-yellow'>
+            Navigate
+          </h2>
+        </div>
+        <div className='flex items-center gap-2'>
+          <MdCalendarMonth color='white' size={24} />
+          <h2 className='text-2xl font-semibold text-white'>Agenda</h2>
+        </div>
+        <div className='flex items-center gap-2'>
+          <MdPhotoLibrary color='white' size={24} />
+          <h2 className='text-2xl font-semibold text-white'>Photos</h2>
+        </div>
+        <div className='flex items-center gap-2'>
+          <MdSlideshow color='white' size={24} />
+          <h2 className='text-2xl font-semibold text-white'>Presentations</h2>
+        </div>
+      </div>
       {/* AGENDA */}
       <div id='agenda' className='flex flex-col gap-8 md:gap-10'>
         <div className='flex items-center gap-2'>
@@ -90,23 +113,17 @@ const EventPage = ({ event }) => {
       {/* PHOTOS */}
       <div id='photos'>
         <div className='flex flex-col gap-8 md:gap-10'>
-          <div className='flex items-center gap-2'>
+          {/* <div className='flex items-center gap-2'>
             <MdPhotoLibrary color='black' size={24} />
             <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
-          </div>
-          <div>
-            <ThumbnailGallery images={mappedImages} />
-          </div>
+          </div> */}
+          <APSImageGallery images={mappedImages} />
         </div>
       </div>
       {/* PRESENTATIONS */}
       <div id='presentations'>
         <div className='flex flex-col gap-8 md:gap-10'>
-          <div className='flex items-center gap-2'>
-            <MdSlideshow color='black' size={24} />
-            <h2 className='text-2xl md:text-3xl font-bold'>Presentations</h2>
-          </div>
-          <div className='grid w-full aspect-[4/3] border border-black'></div>
+          <APSPresentations presentations={presentations} />
         </div>
       </div>
       {/* CTA */}

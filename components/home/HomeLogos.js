@@ -28,8 +28,8 @@ export default function HomeLogos() {
         />
         <img
           className='col-span-2 max-h-28 w-full object-contain sm:col-start-2 lg:col-span-1'
-          src='https://packschool.s3.amazonaws.com/skg_logo.png'
-          alt='Smurfit Kappa'
+          src='https://packschool.s3.us-east-1.amazonaws.com/sm-westrock.png'
+          alt='Smurfit Westrock'
           width={400}
           height={400}
         />

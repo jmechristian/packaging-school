@@ -68,6 +68,10 @@ module.exports = {
         'gb-dark': '#051923',
         'gb-gray': '#636466',
         'gb-red': '#FB6107',
+        'ap-yellow': '#E4A800',
+        'ap-darkblue': '#005892',
+        'ap-blue': '#0873B8',
+        'ap-red': '#E43A00',
       },
       backgroundImage: {
         'dark-mobile':
