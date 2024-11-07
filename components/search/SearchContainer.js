@@ -169,7 +169,11 @@ export function LOTMItem({ hit }) {
           <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
             <div
               className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
-              style={{ backgroundImage: `url(${hit.seoImage})` }}
+              style={{
+                backgroundImage: `url(${
+                  hit.screengrab ? hit.screengrab : hit.seoImage
+                })`,
+              }}
             ></div>
             <div className='flex flex-col md:flex-row h-[90px] md:h-[120px] py-1.5 justify-between items-center w-full'>
               <div className='flex flex-col gap-2 w-full'>
