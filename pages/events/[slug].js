@@ -29,7 +29,7 @@ const EventPage = ({ event }) => {
       uploadedAt: photo.createdAt,
     }));
 
-  return (
+  return event ? (
     <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20'>
       {/* HEADER */}
       <div className='grid md:grid-cols-2 gap-8'>
@@ -128,6 +128,8 @@ const EventPage = ({ event }) => {
       </div>
       {/* CTA */}
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 };
 
