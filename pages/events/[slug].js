@@ -18,16 +18,16 @@ import APSImageGallery from '../../components/shared/APSImageGallery';
 import { presentations } from '../../data/presentations';
 
 const EventPage = ({ event }) => {
-  console.log(event);
-
-  const mappedImages = event.photos.items.map((photo) => ({
-    id: photo.id,
-    src: photo.photo,
-    caption: photo.caption || '',
-    alt: photo.caption || '',
-    uploadedBy: photo.uploadedBy || '',
-    uploadedAt: photo.createdAt,
-  }));
+  const mappedImages =
+    event &&
+    event.photos.items.map((photo) => ({
+      id: photo.id,
+      src: photo.photo,
+      caption: photo.caption || '',
+      alt: photo.caption || '',
+      uploadedBy: photo.uploadedBy || '',
+      uploadedAt: photo.createdAt,
+    }));
 
   return (
     <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20'>
@@ -117,7 +117,7 @@ const EventPage = ({ event }) => {
             <MdPhotoLibrary color='black' size={24} />
             <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
           </div> */}
-          <APSImageGallery images={mappedImages} />
+          <APSImageGallery images={mappedImages && mappedImages} />
         </div>
       </div>
       {/* PRESENTATIONS */}
