@@ -27,7 +27,7 @@ const APSImageGallery = ({
             <div className='flex gap-3 items-center h-full -mr-3 md:mr-0 bg-white/10 py-3 px-4 rounded-lg'>
               <div className='flex flex-col gap-0'>
                 <div className='text-white font-semibold'>
-                  Want to Add Your Photos?
+                  Want to Add Your APS Photos?
                 </div>
                 <div className='text-white/50 text-sm'>
                   Valid registration email required.

@@ -83,10 +83,26 @@ const APSPresentations = ({ presentations }) => {
             </div>
           </div>
         </div>
+        <div className='w-full h-full aspect-video relative'>
+          <div
+            className={`absolute inset-0 rounded-xl bg-ap-darkblue bg-opacity-80 z-10`}
+          >
+            <div className='flex font-medium leading-tight items-center justify-center w-full h-full text-white max-w-xl mx-auto text-center text-4xl'>
+              Video presentations will be coming mid-November 2024! Until then
+              enjoy the photo gallery above.
+            </div>
+          </div>
+          <div
+            className='absolute inset-0 rounded-xl z-5 bg-cover bg-center grayscale'
+            style={{
+              backgroundImage: `url('https://packmedia54032-staging.s3.amazonaws.com/public/aps24/img-5083webp')`,
+            }}
+          ></div>
+        </div>
 
         {/* START CONTENT */}
 
-        <div
+        {/* <div
           className='w-full rounded-b-xl relative bg-neutral-900 flex flex-col lg:flex-row items-center cursor-pointer'
           onClick={() =>
             clickHandler(
@@ -152,7 +168,7 @@ const APSPresentations = ({ presentations }) => {
                 />
               </div>
             ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
