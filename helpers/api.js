@@ -7,6 +7,7 @@ import {
   listIndexPages,
   listEventTemplates,
   eventTemplatesBySlug,
+  aPSRegistrantsByEmail,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -257,4 +258,12 @@ export const getEventBySlug = async (slug) => {
     variables: { slug: slug },
   });
   return event.data.eventTemplatesBySlug;
+};
+
+export const checkRegistrantEmail = async (email) => {
+  const registrant = await API.graphql({
+    query: aPSRegistrantsByEmail,
+    variables: { email: email },
+  });
+  return registrant.data.aPSRegistrantsByEmail;
 };

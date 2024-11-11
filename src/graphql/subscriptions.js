@@ -6599,6 +6599,7 @@ export const onCreateEventTemplate = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6624,6 +6625,23 @@ export const onCreateEventTemplate = /* GraphQL */ `
         nextToken
       }
       slug
+      logo
+      clicks {
+        items {
+          id
+          page
+          ipAddress
+          country
+          email
+          type
+          object
+          objectId
+          createdAt
+          updatedAt
+          eventTemplateClicksId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       eventTemplateAgendaId
@@ -6679,6 +6697,7 @@ export const onUpdateEventTemplate = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6704,6 +6723,23 @@ export const onUpdateEventTemplate = /* GraphQL */ `
         nextToken
       }
       slug
+      logo
+      clicks {
+        items {
+          id
+          page
+          ipAddress
+          country
+          email
+          type
+          object
+          objectId
+          createdAt
+          updatedAt
+          eventTemplateClicksId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       eventTemplateAgendaId
@@ -6759,6 +6795,7 @@ export const onDeleteEventTemplate = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6784,6 +6821,23 @@ export const onDeleteEventTemplate = /* GraphQL */ `
         nextToken
       }
       slug
+      logo
+      clicks {
+        items {
+          id
+          page
+          ipAddress
+          country
+          email
+          type
+          object
+          objectId
+          createdAt
+          updatedAt
+          eventTemplateClicksId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       eventTemplateAgendaId
@@ -6822,6 +6876,10 @@ export const onCreateEventPhoto = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6864,6 +6922,10 @@ export const onUpdateEventPhoto = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6906,6 +6968,10 @@ export const onDeleteEventPhoto = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6947,6 +7013,10 @@ export const onCreateEventPresentation = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6988,6 +7058,10 @@ export const onUpdateEventPresentation = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7029,6 +7103,10 @@ export const onDeleteEventPresentation = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7084,6 +7162,10 @@ export const onCreateEventAgenda = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7139,6 +7221,10 @@ export const onUpdateEventAgenda = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7194,6 +7280,10 @@ export const onDeleteEventAgenda = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7245,6 +7335,7 @@ export const onCreateEventAgendaItem = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -7301,6 +7392,7 @@ export const onUpdateEventAgendaItem = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -7357,6 +7449,7 @@ export const onDeleteEventAgendaItem = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -7407,6 +7500,10 @@ export const onCreateEventSpeaker = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7469,6 +7566,10 @@ export const onUpdateEventSpeaker = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7531,6 +7632,10 @@ export const onDeleteEventSpeaker = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -7555,6 +7660,156 @@ export const onDeleteEventSpeaker = /* GraphQL */ `
       updatedAt
       eventTemplateSpeakersId
       eventAgendaItemSpeakersId
+    }
+  }
+`;
+export const onCreateEventClick = /* GraphQL */ `
+  subscription OnCreateEventClick {
+    onCreateEventClick {
+      id
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        logo
+        clicks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      page
+      ipAddress
+      country
+      email
+      type
+      object
+      objectId
+      createdAt
+      updatedAt
+      eventTemplateClicksId
+    }
+  }
+`;
+export const onUpdateEventClick = /* GraphQL */ `
+  subscription OnUpdateEventClick {
+    onUpdateEventClick {
+      id
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        logo
+        clicks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      page
+      ipAddress
+      country
+      email
+      type
+      object
+      objectId
+      createdAt
+      updatedAt
+      eventTemplateClicksId
+    }
+  }
+`;
+export const onDeleteEventClick = /* GraphQL */ `
+  subscription OnDeleteEventClick {
+    onDeleteEventClick {
+      id
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        logo
+        clicks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      page
+      ipAddress
+      country
+      email
+      type
+      object
+      objectId
+      createdAt
+      updatedAt
+      eventTemplateClicksId
     }
   }
 `;

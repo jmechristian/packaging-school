@@ -876,6 +876,8 @@ type EventTemplate @model @auth(rules: [{ allow: public }]) {
   agenda: EventAgenda @hasOne
   speakers: [EventSpeaker] @hasMany
   slug: String! @index(name: "eventBySlug")
+  logo: String
+  clicks: [EventClick] @hasMany
 }
 
 type EventPhoto @model @auth(rules: [{ allow: public }]) {
@@ -921,4 +923,16 @@ type EventSpeaker @model @auth(rules: [{ allow: public }]) {
   logo: String
   event: EventTemplate @belongsTo
   agendaItems: [EventAgendaItem] @hasMany
+}
+
+type EventClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  event: EventTemplate @belongsTo
+  page: String
+  ipAddress: String
+  country: String
+  email: String
+  type: String
+  object: String
+  objectId: String
 }

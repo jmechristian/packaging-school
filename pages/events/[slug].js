@@ -2,16 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { getAllEvents, getEventBySlug } from '../../helpers/api';
+import {
+  getAllEvents,
+  getEventBySlug,
+  checkRegistrantEmail,
+} from '../../helpers/api';
 import {
   MdCalendarMonth,
   MdLocationOn,
   MdPhotoLibrary,
   MdSlideshow,
+  MdDoNotDisturb,
+  MdSync,
 } from 'react-icons/md';
 import {
   DropDownSelect,
-  ThumbnailGallery,
   BrutalButton,
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
@@ -20,12 +25,17 @@ import APSImageGallery from '../../components/shared/APSImageGallery';
 import { presentations } from '../../data/presentations';
 
 const EventPage = ({ event }) => {
-  console.log(event);
+  const [isUser, setIsUser] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isPassword, setIsPassword] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isImages, setIsImages] = useState([]);
+  const [isEmail, setIsEmail] = useState('');
+  const [isEmailConfirmed, setIsEmailConfirmed] = useState(false);
+  const [isRecoverMode, setIsRecoverMode] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [isEmailError, setIsEmailError] = useState(false);
 
   useEffect(() => {
     const mappedImages =
@@ -45,8 +55,177 @@ const EventPage = ({ event }) => {
     // console.log(event.photos.items);
   }, [event]);
 
+  const unlockHandler = () => {
+    setIsUnlocking(true);
+  };
+
+  const validatePasswordHandler = () => {
+    if (isPassword.toLowerCase() === 'packphotos24') {
+      setIsPassword('');
+      setIsUnlocking(false);
+      setIsLocked(false);
+    }
+  };
+
+  const downloadHandler = (image) => {
+    console.log(image);
+  };
+
+  const handleRecoverSubmit = () => {
+    console.log('Recovery email sent to:', isEmail);
+    setIsError(false);
+    setIsRecoverMode(false);
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleEmailChange = async (e) => {
+    const email = e.target.value;
+    setIsEmail(email);
+    if (validateEmail(email)) {
+      setIsCheckingEmail(true);
+      const registrant = await checkRegistrantEmail(email);
+      if (registrant.items.length > 0) {
+        setIsEmailError(false);
+        setIsEmailConfirmed(true);
+      } else {
+        setIsEmailConfirmed(false);
+        setIsEmailError(true);
+      }
+      setIsCheckingEmail(false);
+    }
+  };
+
   return event ? (
-    <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20'>
+    <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20 relative'>
+      {/*  LOGIN MODAL */}
+      {isUnlocking && (
+        <div className='fixed mx-auto inset-0 bg-black/50 z-50 flex items-center justify-center'>
+          <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+            <button
+              onClick={() => {
+                setIsUnlocking(false);
+                setIsRecoverMode(false);
+              }}
+              className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
+            >
+              ×
+            </button>
+            <div className='flex flex-col gap-2'>
+              <h2 className='text-2xl font-bold text-clemson'>
+                {isRecoverMode ? 'Recover Password' : 'Registered Attendee?'}
+              </h2>
+              <p className='mb-4'>
+                {isRecoverMode
+                  ? 'Enter your registration email to receive password recovery instructions.'
+                  : 'Please enter the email used for registration and the password sent in the post-event email to access event media.'}
+              </p>
+            </div>
+            <div className='flex flex-col gap-4'>
+              <div>
+                <label
+                  htmlFor='email'
+                  className='block text-sm font-medium mb-1'
+                >
+                  Email
+                </label>
+                <div className='relative'>
+                  <input
+                    type='email'
+                    id='email'
+                    value={isEmail}
+                    onChange={handleEmailChange}
+                    className='w-full p-2 border border-gray-300 rounded'
+                    placeholder='Enter your email'
+                  />
+                  {isEmailError && !isCheckingEmail && (
+                    <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                      <div className='w-5 h-5 flex items-center justify-center'>
+                        <MdDoNotDisturb color='black' size={24} />
+                      </div>
+                    </div>
+                  )}
+                  {isCheckingEmail && (
+                    <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                      <div className='w-5 h-5 animate-spin rounded-full flex items-center justify-center'>
+                        <MdSync color='black' size={24} />
+                      </div>
+                    </div>
+                  )}
+                  {isEmailConfirmed && (
+                    <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                      <div className='w-5 h-5 rounded-full bg-green-500 flex items-center justify-center'>
+                        <svg
+                          className='w-3 h-3 text-white'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth={2}
+                            d='M5 13l4 4L19 7'
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {!isRecoverMode && (
+                <div>
+                  <label
+                    htmlFor='password'
+                    className='block text-sm font-medium mb-1'
+                  >
+                    Password
+                  </label>
+                  <input
+                    type='password'
+                    id='password'
+                    value={isPassword}
+                    onChange={(e) => setIsPassword(e.target.value)}
+                    className='w-full p-2 border border-gray-300 rounded'
+                    placeholder='Enter password'
+                  />
+                </div>
+              )}
+              <button
+                onClick={
+                  isRecoverMode ? handleRecoverSubmit : validatePasswordHandler
+                }
+                disabled={!isEmail || (!isRecoverMode && !isPassword)}
+                className={`w-full py-2 rounded mt-4 ${
+                  !isEmailConfirmed || (!isRecoverMode && !isPassword)
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-black hover:bg-gray-800'
+                } text-white`}
+              >
+                {isRecoverMode ? 'Send Recovery Email' : 'Submit'}
+              </button>
+              <button
+                onClick={() => setIsRecoverMode(!isRecoverMode)}
+                className='underline text-sm flex w-full justify-center'
+              >
+                {isRecoverMode
+                  ? 'Back to Login'
+                  : 'I did not receive a password'}
+              </button>
+              {isError && (
+                <p className='text-red-500 flex w-full justify-center'>
+                  {isRecoverMode
+                    ? 'Error sending recovery email. Please try again.'
+                    : 'Incorrect email or password. Please try again.'}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {/* HEADER */}
       <div className='grid md:grid-cols-2 gap-8'>
         <div className='grid content-center '>
@@ -133,7 +312,14 @@ const EventPage = ({ event }) => {
             <MdPhotoLibrary color='black' size={24} />
             <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
           </div> */}
-          <APSImageGallery images={isImages && isImages} />
+          <APSImageGallery
+            images={isImages && isImages}
+            isLocked={isLocked}
+            unlockHandler={unlockHandler}
+            validatePasswordHandler={validatePasswordHandler}
+            downloadHandler={(image) => downloadHandler(image)}
+            isUnlocking={isUnlocking}
+          />
         </div>
       </div>
       {/* PRESENTATIONS */}

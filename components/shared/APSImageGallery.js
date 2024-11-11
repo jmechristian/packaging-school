@@ -8,23 +8,14 @@ import {
 import { ThumbnailGallery } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 
-const APSImageGallery = ({ images }) => {
-  const [isLocked, setIsLocked] = useState(true);
-  const [isPassword, setIsPassword] = useState('');
-  const [isUnlocking, setIsUnlocking] = useState(false);
-
-  const unlockHandler = () => {
-    setIsUnlocking(!isUnlocking);
-  };
-
-  const validatePasswordHandler = () => {
-    if (isPassword.toLowerCase() === 'packphotos24') {
-      setIsPassword('');
-      setIsUnlocking(false);
-      setIsLocked(false);
-    }
-  };
-
+const APSImageGallery = ({
+  images,
+  unlockHandler,
+  validatePasswordHandler,
+  downloadHandler,
+  isLocked,
+  isUnlocking,
+}) => {
   return (
     <div className='w-full max-w-7xl mx-auto lg:px-0 pb-12'>
       <div className='w-full h-full border-2 border-neutral-900 bg-neutral-900 flex flex-col p-0.5 gap-1 '>
@@ -40,7 +31,7 @@ const APSImageGallery = ({ images }) => {
               >
                 <div className='w-5 h-5'>
                   {isLocked ? (
-                    <PlusIcon className='w-5 h-5 stroke-white' />
+                    <LockClosedIcon className='w-5 h-5 stroke-white' />
                   ) : (
                     <PlusIcon className='w-5 h-5 stroke-white' />
                   )}
@@ -49,33 +40,17 @@ const APSImageGallery = ({ images }) => {
                   {isLocked ? 'Unlock' : 'Unlocked!'}
                 </div>
               </div>
-              {isLocked && isUnlocking && (
-                <div className='flex items-center h-full bg-ap-blue rounded-lg'>
-                  <div>
-                    <input
-                      type='text'
-                      placeholder='Enter Password'
-                      className='text-neutral-600 placeholder:text-neutral-400 bg-neutral-300 rounded-l-lg border-0'
-                      value={isPassword}
-                      onChange={(e) => setIsPassword(e.target.value)}
-                    />
-                  </div>
-                  <div
-                    className='bg-ap-blue text-white px-3 py-2 h-full cursor-pointer rounded-lg'
-                    onClick={validatePasswordHandler}
-                  >
-                    <div className='w-5 h-5 rounded-r-xl'>
-                      <ArrowRightIcon className='w-5 h-5 stroke-white' />
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
         <div className='w-full rounded-b-xl pb-6 relative bg-neutral-900 flex flex-col lg:flex-row items-center cursor-pointer'>
           <div className='w-full h-full'>
-            <ThumbnailGallery images={images} dark={true} />
+            <ThumbnailGallery
+              images={images}
+              dark={true}
+              download={!isLocked}
+              downloadHandler={(image) => downloadHandler(image)}
+            />
           </div>
         </div>
       </div>

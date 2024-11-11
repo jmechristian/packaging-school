@@ -5680,6 +5680,7 @@ export const getEventTemplate = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -5705,6 +5706,23 @@ export const getEventTemplate = /* GraphQL */ `
         nextToken
       }
       slug
+      logo
+      clicks {
+        items {
+          id
+          page
+          ipAddress
+          country
+          email
+          type
+          object
+          objectId
+          createdAt
+          updatedAt
+          eventTemplateClicksId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       eventTemplateAgendaId
@@ -5743,6 +5761,10 @@ export const listEventTemplates = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -5791,6 +5813,10 @@ export const eventTemplatesBySlug = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -5831,6 +5857,10 @@ export const getEventPhoto = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -5863,6 +5893,7 @@ export const listEventPhotos = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -5906,6 +5937,10 @@ export const getEventPresentation = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -5941,6 +5976,7 @@ export const listEventPresentations = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -5998,6 +6034,10 @@ export const getEventAgenda = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6030,6 +6070,7 @@ export const listEventAgenda = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6083,6 +6124,7 @@ export const getEventAgendaItem = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6170,6 +6212,10 @@ export const getEventSpeaker = /* GraphQL */ `
           nextToken
         }
         slug
+        logo
+        clicks {
+          nextToken
+        }
         createdAt
         updatedAt
         eventTemplateAgendaId
@@ -6222,6 +6268,7 @@ export const listEventSpeakers = /* GraphQL */ `
           hero
           link
           slug
+          logo
           createdAt
           updatedAt
           eventTemplateAgendaId
@@ -6233,6 +6280,95 @@ export const listEventSpeakers = /* GraphQL */ `
         updatedAt
         eventTemplateSpeakersId
         eventAgendaItemSpeakersId
+      }
+      nextToken
+    }
+  }
+`;
+export const getEventClick = /* GraphQL */ `
+  query GetEventClick($id: ID!) {
+    getEventClick(id: $id) {
+      id
+      event {
+        id
+        title
+        startDate
+        endDate
+        description
+        location
+        hero
+        link
+        photos {
+          nextToken
+        }
+        presentations {
+          nextToken
+        }
+        agenda {
+          id
+          createdAt
+          updatedAt
+          eventAgendaEventId
+        }
+        speakers {
+          nextToken
+        }
+        slug
+        logo
+        clicks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        eventTemplateAgendaId
+      }
+      page
+      ipAddress
+      country
+      email
+      type
+      object
+      objectId
+      createdAt
+      updatedAt
+      eventTemplateClicksId
+    }
+  }
+`;
+export const listEventClicks = /* GraphQL */ `
+  query ListEventClicks(
+    $filter: ModelEventClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventClicks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        event {
+          id
+          title
+          startDate
+          endDate
+          description
+          location
+          hero
+          link
+          slug
+          logo
+          createdAt
+          updatedAt
+          eventTemplateAgendaId
+        }
+        page
+        ipAddress
+        country
+        email
+        type
+        object
+        objectId
+        createdAt
+        updatedAt
+        eventTemplateClicksId
       }
       nextToken
     }
