@@ -24,7 +24,15 @@ const APSImageGallery = ({
             <div className='font-oswald uppercase text-white text-xl md:text-2xl tracking-wide'>
               <span className='text-ap-yellow'>Photos</span> / 2024
             </div>
-            <div className='flex gap-3 items-center h-full -mr-3 md:mr-0'>
+            <div className='flex gap-3 items-center h-full -mr-3 md:mr-0 bg-white/10 py-3 px-4 rounded-lg'>
+              <div className='flex flex-col gap-0'>
+                <div className='text-white font-semibold'>
+                  Want to Add Your Photos?
+                </div>
+                <div className='text-white/50 text-sm'>
+                  Valid registration email required.
+                </div>
+              </div>
               <div
                 className={`cursor-pointer bg-gradient-to-r gap-2 from-ap-darkblue to-ap-yellow w-fit p-4 rounded-full md:py-2 md:px-6 md:rounded-lg flex items-center`}
                 onClick={unlockHandler}
