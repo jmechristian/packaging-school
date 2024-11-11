@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getAllEvents, getEventBySlug } from '../../helpers/api';
 import {
@@ -18,16 +20,30 @@ import APSImageGallery from '../../components/shared/APSImageGallery';
 import { presentations } from '../../data/presentations';
 
 const EventPage = ({ event }) => {
-  const mappedImages =
-    event &&
-    event.photos.items.map((photo) => ({
-      id: photo.id,
-      src: photo.photo,
-      caption: photo.caption || '',
-      alt: photo.caption || '',
-      uploadedBy: photo.uploadedBy || '',
-      uploadedAt: photo.createdAt,
-    }));
+  console.log(event);
+  const [isLocked, setIsLocked] = useState(true);
+  const [isPassword, setIsPassword] = useState('');
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isImages, setIsImages] = useState([]);
+
+  useEffect(() => {
+    const mappedImages =
+      event &&
+      event.photos.items
+        .map((photo) => ({
+          id: photo.id,
+          src: photo.photo,
+          caption: photo.caption || '',
+          alt: photo.caption || '',
+          uploadedBy: photo.uploadedBy,
+          uploadedAt: photo.createdAt,
+        }))
+        .sort((a, b) => new Date(a.uploadedAt) - new Date(b.uploadedAt));
+
+    setIsImages(mappedImages);
+    // console.log(event.photos.items);
+  }, [event]);
 
   return event ? (
     <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20'>
@@ -117,7 +133,7 @@ const EventPage = ({ event }) => {
             <MdPhotoLibrary color='black' size={24} />
             <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
           </div> */}
-          <APSImageGallery images={mappedImages && mappedImages} />
+          <APSImageGallery images={isImages && isImages} />
         </div>
       </div>
       {/* PRESENTATIONS */}

@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const APSPresentations = ({ presentations }) => {
-  console.log(presentations);
   const [toHover, setToHover] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isOpen, setIsOpen] = useState(false);

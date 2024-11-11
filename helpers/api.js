@@ -219,6 +219,8 @@ export const getEventBySlug = async (slug) => {
               id
               eventTemplatePhotosId
               photo
+              uploadedBy
+              createdAt
             }
           }
           presentations {
