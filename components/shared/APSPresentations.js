@@ -87,9 +87,9 @@ const APSPresentations = ({ presentations }) => {
           <div
             className={`absolute inset-0 rounded-xl bg-ap-darkblue bg-opacity-80 z-10`}
           >
-            <div className='flex font-medium leading-tight items-center justify-center w-full h-full text-white max-w-xl mx-auto text-center text-4xl'>
-              Video presentations will be coming mid-November 2024! Until then
-              enjoy the photo gallery above.
+            <div className='flex font-medium leading-tight items-center justify-center w-full h-full text-white max-w-2xl mx-auto text-center text-4xl'>
+              Video presentations will be launching by November 21 2024! Until
+              then enjoy the photo gallery above.
             </div>
           </div>
           <div

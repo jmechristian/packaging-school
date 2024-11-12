@@ -121,6 +121,7 @@ const EventPage = ({ event }) => {
                 setIsRecoverMode(false);
                 setIsPassword('');
                 setIsEmail('');
+                setIsEmailConfirmed(false);
               }}
               className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
             >
@@ -239,7 +240,7 @@ const EventPage = ({ event }) => {
         </div>
       )}
       {/* HEADER */}
-      <div className='grid md:grid-cols-2 gap-8'>
+      {/* <div className='grid md:grid-cols-2 gap-8'>
         <div className='grid content-center '>
           <Image src={event.hero} alt={event.title} width={800} height={600} />
         </div>
@@ -273,20 +274,96 @@ const EventPage = ({ event }) => {
             />
           </div>
         </div>
+      </div> */}
+      <div className='grid grid-cols-12 gap-10'>
+        <div className='flex flex-col gap-5 col-span-9 '>
+          <div className='h2-base'>
+            AutoPack Summit 2024 – Paving the Way for the Future of Automotive
+            Packaging
+          </div>
+          <div>
+            AutoPack Summit 2024 concluded on a high note, bringing together top
+            industry leaders, experts, and innovators for a dynamic exchange of
+            ideas and strategies. Held over three days, the summit explored
+            critical topics shaping the future of automotive packaging, from
+            sustainable innovations to cutting-edge technology integration.
+          </div>
+          <div>
+            Throughout the summit, attendees actively participated in
+            Mentimeter-powered Q&A sessions, fostering real-time interaction on
+            topics like material innovations, regulatory impacts, and future
+            trends. Networking opportunities, including speed networking rounds
+            focused on Production Packaging and Expendable & Aftersales
+            Packaging, provided valuable connections and insights.
+          </div>
+          <div>
+            With an impressive lineup of speakers, case studies, and interactive
+            discussions, AutoPack Summit 2024 solidified its role as a premier
+            platform for advancing the automotive packaging industry. Attendees
+            left with actionable strategies to implement in their organizations,
+            paving the way for a more sustainable and efficient automotive
+            supply chain.
+          </div>
+          <div>
+            We look forward to welcoming everyone back next year for AutoPack
+            Summit 2025!
+          </div>
+        </div>
+        <div className='col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40'>
+          <div className='w-full h-auto aspect-video border bg-white p-8 flex items-center justify-center'>
+            <Image
+              src={
+                'https://packschool.s3.us-east-1.amazonaws.com/AutoPackSummit+RGB+COLOR+on+Transparent+Back.png'
+              }
+              alt={event.title}
+              width={1900}
+              height={498}
+              className='object-cover'
+            />
+          </div>
+          <div className='p-8'>
+            <div className='flex flex-col gap-4'>
+              <div className='flex items-center gap-3'>
+                <div>
+                  <MdCalendarMonth color='black' size={32} />
+                </div>
+                <div className='flex flex-col '>
+                  <span className='font-semibold '>October 21, 2024 -</span>
+                  <span className='font-semibold'>October 23, 2024</span>
+                </div>
+              </div>
+              <div className='flex items-center gap-2'>
+                <div>
+                  <MdLocationOn color='black' size={32} />
+                </div>
+                <span className='font-semibold '>{event.location}</span>
+              </div>
+              <div className='mt-4'>
+                <BrutalButton
+                  text='View Event Site'
+                  background='bg-clemson'
+                  link='https://www.autopacksummit.com'
+                  textColor='text-white'
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       {/* MENU */}
-      <div className='w-full flex justify-center md:hidden'>
+      {/* <div className='w-full flex justify-center md:hidden'>
         <DropDownSelect
           text='Navigate'
           backgroundColor='bg-black'
           links={[
-            { text: 'Agenda', link: '#agenda', icon: MdCalendarMonth },
             { text: 'Photos', link: '#photos', icon: MdPhotoLibrary },
             {
               text: 'Presentations',
               link: '#presentations',
               icon: MdSlideshow,
             },
+            { text: 'Agenda', link: '#agenda', icon: MdCalendarMonth },
           ]}
         />
       </div>
@@ -297,10 +374,6 @@ const EventPage = ({ event }) => {
           </h2>
         </div>
         <div className='flex items-center gap-2'>
-          <MdCalendarMonth color='white' size={24} />
-          <h2 className='text-2xl font-semibold text-white'>Agenda</h2>
-        </div>
-        <div className='flex items-center gap-2'>
           <MdPhotoLibrary color='white' size={24} />
           <h2 className='text-2xl font-semibold text-white'>Photos</h2>
         </div>
@@ -308,16 +381,12 @@ const EventPage = ({ event }) => {
           <MdSlideshow color='white' size={24} />
           <h2 className='text-2xl font-semibold text-white'>Presentations</h2>
         </div>
-      </div>
-      {/* AGENDA */}
-      <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
-        <APSAgenda
-          dayOne={dayOne}
-          dayTwo={dayTwo}
-          dayThree={dayThree}
-          enabled={true}
-        />
-      </div>
+        <div className='flex items-center gap-2'>
+          <MdCalendarMonth color='white' size={24} />
+          <h2 className='text-2xl font-semibold text-white'>Agenda</h2>
+        </div>
+      </div> */}
+
       {/* PHOTOS */}
       <div id='photos' className='scroll-mt-20'>
         <div className='flex flex-col gap-8 md:gap-10'>
@@ -336,10 +405,19 @@ const EventPage = ({ event }) => {
         </div>
       </div>
       {/* PRESENTATIONS */}
-      <div id='presentations'>
+      <div id='presentations' className='scroll-mt-20'>
         <div className='flex flex-col gap-8 md:gap-10'>
           <APSPresentations presentations={presentations} />
         </div>
+      </div>
+      {/* AGENDA */}
+      <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
+        <APSAgenda
+          dayOne={dayOne}
+          dayTwo={dayTwo}
+          dayThree={dayThree}
+          enabled={true}
+        />
       </div>
       {/* CTA */}
     </div>
