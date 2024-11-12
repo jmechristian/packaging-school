@@ -4,7 +4,7 @@ import NewAgendaItem from './NewAgendaItem';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   return (
     <div className='w-full max-w-7xl mx-auto lg:px-0 pb-12'>
       <div className='w-full h-full border-2 border-neutral-900 bg-neutral-900 flex flex-col p-0.5 gap-1 '>
