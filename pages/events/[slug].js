@@ -114,7 +114,7 @@ const EventPage = ({ event }) => {
   };
 
   return event ? (
-    <div className='max-w-7xl mx-auto flex flex-col gap-12 md:py-20 sm:py-10  relative'>
+    <div className='max-w-7xl mx-auto flex flex-col py-10 lg:py-20 relative'>
       {/*  LOGIN MODAL */}
       {isUnlocking && (
         <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
@@ -279,9 +279,9 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div> */}
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-10 relative'>
-        <div className='flex flex-col gap-5 col-span-9 '>
-          <div className='h2-base'>
+      <div className='grid p-5 md:p-0 xl:p-0 lg:p-0! grid-cols-1 lg:grid-cols-12 gap-10 pb-10 lg:pb-20'>
+        <div className='flex flex-col gap-5 lg:col-span-9 '>
+          <div className='h1-base'>
             AutoPack Summit 2024 – Paving the Way for the Future of Automotive
             Packaging
           </div>
@@ -313,7 +313,7 @@ const EventPage = ({ event }) => {
             Summit 2025!
           </div>
         </div>
-        <div className='col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40'>
+        <div className='lg:col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40'>
           <div className='w-full h-auto aspect-video border bg-white p-8 flex items-center justify-center'>
             <Image
               src={
@@ -354,41 +354,54 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div>
-      <div className='sticky z-20 top-2'>
-        <div className='w-fit mx-auto bg-black/60 backdrop-blur-sm rounded-md flex items-center justify-start p-4'>
+      <div className='sticky z-20 top-2 mt-10 lg:mt-20'>
+        <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
           <div className='flex items-center gap-3'>
-            <div className='text-lg font-semibold text-white'>
-              <div>
-                <MdDehaze size={22} color='white' />
-              </div>
-            </div>
             <div className='grid grid-cols-3 gap-4'>
               <div
-                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
                 onClick={() => {
                   router.push('#photos');
                 }}
               >
-                <MdPhotoLibrary color='black' size={24} />
-                <div className='font-semibold text-black'>Photos</div>
+                <MdPhotoLibrary
+                  color='white'
+                  size={24}
+                  className='hidden md:block lg:block'
+                />
+                <div className='font-semibold text-white text-sm lg:text-base'>
+                  Photos
+                </div>
               </div>
               <div
-                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
                 onClick={() => {
                   router.push('#presentations');
                 }}
               >
-                <MdSlideshow color='black' size={24} />
-                <div className='font-semibold text-black'>Presentations</div>
+                <MdSlideshow
+                  color='white'
+                  size={24}
+                  className='hidden md:block lg:block'
+                />
+                <div className='font-semibold text-white text-sm lg:text-base'>
+                  Presentations
+                </div>
               </div>
               <div
-                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
                 onClick={() => {
                   router.push('#agenda');
                 }}
               >
-                <MdCalendarMonth color='black' size={24} />
-                <div className='font-semibold text-black'>Agenda</div>
+                <MdCalendarMonth
+                  color='white'
+                  size={24}
+                  className='hidden md:block lg:block'
+                />
+                <div className='font-semibold text-white text-sm lg:text-base'>
+                  Agenda
+                </div>
               </div>
             </div>
           </div>
