@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import {
   getAllEvents,
@@ -14,10 +15,12 @@ import {
   MdSlideshow,
   MdDoNotDisturb,
   MdSync,
+  MdDehaze,
 } from 'react-icons/md';
 import {
   DropDownSelect,
   BrutalButton,
+  CertCallout,
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import APSPresentations from '../../components/shared/APSPresentations';
@@ -28,6 +31,7 @@ import { presentations } from '../../data/presentations';
 import { sessionData } from '../../data/sessionData';
 
 const EventPage = ({ event }) => {
+  const router = useRouter();
   const [isUser, setIsUser] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isPassword, setIsPassword] = useState('');
@@ -110,7 +114,7 @@ const EventPage = ({ event }) => {
   };
 
   return event ? (
-    <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20 relative'>
+    <div className='max-w-7xl mx-auto flex flex-col gap-12 md:py-20 sm:py-10  relative'>
       {/*  LOGIN MODAL */}
       {isUnlocking && (
         <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
@@ -275,7 +279,7 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div> */}
-      <div className='grid grid-cols-12 gap-10'>
+      <div className='grid grid-cols-12 gap-10 relative'>
         <div className='flex flex-col gap-5 col-span-9 '>
           <div className='h2-base'>
             AutoPack Summit 2024 – Paving the Way for the Future of Automotive
@@ -350,43 +354,46 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div>
-
-      {/* MENU */}
-      {/* <div className='w-full flex justify-center md:hidden'>
-        <DropDownSelect
-          text='Navigate'
-          backgroundColor='bg-black'
-          links={[
-            { text: 'Photos', link: '#photos', icon: MdPhotoLibrary },
-            {
-              text: 'Presentations',
-              link: '#presentations',
-              icon: MdSlideshow,
-            },
-            { text: 'Agenda', link: '#agenda', icon: MdCalendarMonth },
-          ]}
-        />
+      <div className='sticky z-20 top-2'>
+        <div className='w-fit mx-auto bg-black/60 backdrop-blur-sm rounded-md flex items-center justify-start p-4'>
+          <div className='flex items-center gap-3'>
+            <div className='text-lg font-semibold text-white'>
+              <div>
+                <MdDehaze size={22} color='white' />
+              </div>
+            </div>
+            <div className='grid grid-cols-3 gap-4'>
+              <div
+                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                onClick={() => {
+                  router.push('#photos');
+                }}
+              >
+                <MdPhotoLibrary color='black' size={24} />
+                <div className='font-semibold text-black'>Photos</div>
+              </div>
+              <div
+                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                onClick={() => {
+                  router.push('#presentations');
+                }}
+              >
+                <MdSlideshow color='black' size={24} />
+                <div className='font-semibold text-black'>Presentations</div>
+              </div>
+              <div
+                className='flex items-center gap-2 justify-center bg-white hover:bg-clemson transition-colors duration-300 py-2 px-3 cursor-pointer'
+                onClick={() => {
+                  router.push('#agenda');
+                }}
+              >
+                <MdCalendarMonth color='black' size={24} />
+                <div className='font-semibold text-black'>Agenda</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className='max-w-7xl mx-auto lg:px-0 grid grid-cols-4  w-fit divide-x divide-neutral-900 bg-neutral-900 py-3'>
-        <div className='flex items-center justify-center gap-2 w-60'>
-          <h2 className='text-sm uppercase font-bold text-brand-yellow'>
-            Navigate
-          </h2>
-        </div>
-        <div className='flex items-center gap-2'>
-          <MdPhotoLibrary color='white' size={24} />
-          <h2 className='text-2xl font-semibold text-white'>Photos</h2>
-        </div>
-        <div className='flex items-center gap-2'>
-          <MdSlideshow color='white' size={24} />
-          <h2 className='text-2xl font-semibold text-white'>Presentations</h2>
-        </div>
-        <div className='flex items-center gap-2'>
-          <MdCalendarMonth color='white' size={24} />
-          <h2 className='text-2xl font-semibold text-white'>Agenda</h2>
-        </div>
-      </div> */}
-
       {/* PHOTOS */}
       <div id='photos' className='scroll-mt-20'>
         <div className='flex flex-col gap-8 md:gap-10'>
@@ -404,12 +411,23 @@ const EventPage = ({ event }) => {
           />
         </div>
       </div>
+      <CertCallout
+        headline='Master Automotive Packaging – Lead with Expertise and Innovation'
+        subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
+        linkText='Enroll Now and Accelerate Your Career'
+        cert={'APC'}
+        link='certifications/get-to-know-apc'
+        cardClickHandler={() => {
+          router.push('/certifications/get-to-know-apc');
+        }}
+      />
       {/* PRESENTATIONS */}
       <div id='presentations' className='scroll-mt-20'>
         <div className='flex flex-col gap-8 md:gap-10'>
           <APSPresentations presentations={presentations} />
         </div>
       </div>
+
       {/* AGENDA */}
       <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
         <APSAgenda
