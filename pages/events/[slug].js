@@ -279,7 +279,7 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div> */}
-      <div className='grid grid-cols-12 gap-10 relative'>
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-10 relative'>
         <div className='flex flex-col gap-5 col-span-9 '>
           <div className='h2-base'>
             AutoPack Summit 2024 – Paving the Way for the Future of Automotive
