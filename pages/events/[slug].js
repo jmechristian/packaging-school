@@ -22,7 +22,10 @@ import {
 import '@jmechristian/ps-component-library/dist/style.css';
 import APSPresentations from '../../components/shared/APSPresentations';
 import APSImageGallery from '../../components/shared/APSImageGallery';
+import APSAgenda from '../../components/shared/APSAgenda';
+
 import { presentations } from '../../data/presentations';
+import { sessionData } from '../../data/sessionData';
 
 const EventPage = ({ event }) => {
   const [isUser, setIsUser] = useState(false);
@@ -36,6 +39,10 @@ const EventPage = ({ event }) => {
   const [isRecoverMode, setIsRecoverMode] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [isEmailError, setIsEmailError] = useState(false);
+
+  const dayOne = sessionData.filter((s) => s.date === '2024-10-21');
+  const dayTwo = sessionData.filter((s) => s.date === '2024-10-22');
+  const dayThree = sessionData.filter((s) => s.date === '2024-10-23');
 
   useEffect(() => {
     const mappedImages =
@@ -299,11 +306,12 @@ const EventPage = ({ event }) => {
       </div>
       {/* AGENDA */}
       <div id='agenda' className='flex flex-col gap-8 md:gap-10'>
-        <div className='flex items-center gap-2'>
-          <MdCalendarMonth color='black' size={24} />
-          <h2 className='text-2xl md:text-3xl font-bold'>Agenda</h2>
-        </div>
-        <div className='grid w-full aspect-[4/3] border border-black'></div>
+        <APSAgenda
+          dayOne={dayOne}
+          dayTwo={dayTwo}
+          dayThree={dayThree}
+          enabled={true}
+        />
       </div>
       {/* PHOTOS */}
       <div id='photos'>
