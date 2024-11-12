@@ -114,7 +114,7 @@ const EventPage = ({ event }) => {
   };
 
   return event ? (
-    <div className='max-w-7xl mx-auto flex flex-col py-10 lg:py-20 relative'>
+    <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-16 relative'>
       {/*  LOGIN MODAL */}
       {isUnlocking && (
         <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
@@ -279,7 +279,7 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div> */}
-      <div className='grid p-5 md:p-0 xl:p-0 lg:p-0! grid-cols-1 lg:grid-cols-12 gap-10 pb-10 lg:pb-20'>
+      <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
         <div className='flex flex-col gap-5 lg:col-span-9 '>
           <div className='h1-base'>
             AutoPack Summit 2024 – Paving the Way for the Future of Automotive
@@ -313,7 +313,7 @@ const EventPage = ({ event }) => {
             Summit 2025!
           </div>
         </div>
-        <div className='lg:col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40'>
+        <div className='lg:col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
           <div className='w-full h-auto aspect-video border bg-white p-8 flex items-center justify-center'>
             <Image
               src={
@@ -354,7 +354,7 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div>
-      <div className='sticky z-20 top-2 mt-10 lg:mt-20'>
+      <div className='sticky z-20 top-2 mt-10 lg:!mt-24'>
         <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
           <div className='flex items-center gap-3'>
             <div className='grid grid-cols-3 gap-4'>
@@ -424,33 +424,34 @@ const EventPage = ({ event }) => {
           />
         </div>
       </div>
-      <CertCallout
-        headline='Master Automotive Packaging – Lead with Expertise and Innovation'
-        subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
-        linkText='Enroll Now and Accelerate Your Career'
-        cert={'APC'}
-        link='certifications/get-to-know-apc'
-        cardClickHandler={() => {
-          router.push('/certifications/get-to-know-apc');
-        }}
-      />
-      {/* PRESENTATIONS */}
-      <div id='presentations' className='scroll-mt-20'>
-        <div className='flex flex-col gap-8 md:gap-10'>
-          <APSPresentations presentations={presentations} />
+      <div className='flex flex-col gap-10 lg:gap-24'>
+        <CertCallout
+          headline='Master Automotive Packaging – Lead with Expertise and Innovation'
+          subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
+          linkText='Enroll Now and Accelerate Your Career'
+          cert={'APC'}
+          link='certifications/get-to-know-apc'
+          cardClickHandler={() => {
+            router.push('/certifications/get-to-know-apc');
+          }}
+        />
+        {/* PRESENTATIONS */}
+        <div id='presentations' className='scroll-mt-20'>
+          <div className='flex flex-col gap-8 md:gap-10'>
+            <APSPresentations presentations={presentations} />
+          </div>
+        </div>
+
+        {/* AGENDA */}
+        <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
+          <APSAgenda
+            dayOne={dayOne}
+            dayTwo={dayTwo}
+            dayThree={dayThree}
+            enabled={true}
+          />
         </div>
       </div>
-
-      {/* AGENDA */}
-      <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
-        <APSAgenda
-          dayOne={dayOne}
-          dayTwo={dayTwo}
-          dayThree={dayThree}
-          enabled={true}
-        />
-      </div>
-      {/* CTA */}
     </div>
   ) : (
     <div>Loading...</div>

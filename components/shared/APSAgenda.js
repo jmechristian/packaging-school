@@ -13,7 +13,7 @@ const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
             <div className='font-oswald uppercase text-white text-xl md:text-2xl tracking-wide'>
               <span className='text-ap-yellow'>Agenda</span> / 2024
             </div>
-            <div className='flex gap-3 items-center h-full -mr-3 md:mr-0 bg-white/10 py-3 px-4 rounded-lg'>
+            <div className='flex gap-3 items-center h-full -mr-3 md:mr-0'>
               <div
                 className={`cursor-pointer bg-gradient-to-r gap-2 from-ap-darkblue to-ap-yellow w-fit p-4 rounded-full md:rounded-lg flex items-center`}
                 onClick={() => setExpanded(!expanded)}

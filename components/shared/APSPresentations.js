@@ -83,11 +83,11 @@ const APSPresentations = ({ presentations }) => {
             </div>
           </div>
         </div>
-        <div className='w-full h-full aspect-video relative'>
+        <div className='w-full h-full aspect-[16/9] relative'>
           <div
             className={`absolute inset-0 rounded-xl bg-ap-darkblue bg-opacity-80 z-10`}
           >
-            <div className='flex font-medium leading-tight items-center justify-center w-full h-full text-white max-w-2xl mx-auto text-center text-4xl'>
+            <div className='flex font-medium leading-tight items-center justify-center w-full h-full text-white max-w-2xl mx-auto text-center text-3xl px-4 lg:px-0'>
               Video presentations will be launching by November 21 2024! Until
               then enjoy the photo gallery above.
             </div>
