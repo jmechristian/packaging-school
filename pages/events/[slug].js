@@ -95,7 +95,10 @@ const EventPage = ({ event }) => {
     if (validateEmail(email)) {
       setIsCheckingEmail(true);
       const registrant = await checkRegistrantEmail(email);
-      if (registrant.items.length > 0) {
+      if (
+        registrant.items.length > 0 ||
+        email.toLowerCase().includes('@packagingschool.com')
+      ) {
         setIsEmailError(false);
         setIsEmailConfirmed(true);
       } else {
@@ -110,12 +113,14 @@ const EventPage = ({ event }) => {
     <div className='max-w-7xl mx-auto flex flex-col gap-16 lg:gap-20 py-10 md:py-20 relative'>
       {/*  LOGIN MODAL */}
       {isUnlocking && (
-        <div className='fixed mx-auto inset-0 bg-black/50 z-50 flex items-center justify-center'>
+        <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
           <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
             <button
               onClick={() => {
                 setIsUnlocking(false);
                 setIsRecoverMode(false);
+                setIsPassword('');
+                setIsEmail('');
               }}
               className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
             >
@@ -125,9 +130,9 @@ const EventPage = ({ event }) => {
               <h2 className='text-2xl font-bold text-clemson'>
                 {isRecoverMode ? 'Recover Password' : 'Registered Attendee?'}
               </h2>
-              <p className='mb-4'>
+              <p className='mb-4 font-medium'>
                 {isRecoverMode
-                  ? 'Enter your registration email to receive password recovery instructions.'
+                  ? 'Please enter the email you used to register to receive password recovery instructions.'
                   : 'Please enter the email used for registration and the password sent in the post-event email to access event media.'}
               </p>
             </div>
@@ -137,7 +142,7 @@ const EventPage = ({ event }) => {
                   htmlFor='email'
                   className='block text-sm font-medium mb-1'
                 >
-                  Email
+                  Email (Case Sensitive)
                 </label>
                 <div className='relative'>
                   <input
@@ -305,7 +310,7 @@ const EventPage = ({ event }) => {
         </div>
       </div>
       {/* AGENDA */}
-      <div id='agenda' className='flex flex-col gap-8 md:gap-10'>
+      <div id='agenda' className='flex flex-col gap-8 md:gap-10 scroll-mt-20'>
         <APSAgenda
           dayOne={dayOne}
           dayTwo={dayTwo}
@@ -314,7 +319,7 @@ const EventPage = ({ event }) => {
         />
       </div>
       {/* PHOTOS */}
-      <div id='photos'>
+      <div id='photos' className='scroll-mt-20'>
         <div className='flex flex-col gap-8 md:gap-10'>
           {/* <div className='flex items-center gap-2'>
             <MdPhotoLibrary color='black' size={24} />
