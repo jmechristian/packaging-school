@@ -304,8 +304,6 @@ export const uploadToAPS3 = async (file) => {
       resumable: true,
     });
 
-    console.log('res', res);
-
     const photoUrl = `https://packmedia54032-staging.s3.amazonaws.com/public/${res.params.Key}`;
 
     return photoUrl;
