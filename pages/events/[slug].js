@@ -601,7 +601,7 @@ const EventPage = ({ event }) => {
         </div>
       </div>
       {/* PHOTOS */}
-      <div id='photos' className='scroll-mt-20'>
+      <div id='photos' className='scroll-mt-20 mb-12'>
         <div className='flex flex-col gap-8 md:gap-10'>
           {/* <div className='flex items-center gap-2'>
             <MdPhotoLibrary color='black' size={24} />

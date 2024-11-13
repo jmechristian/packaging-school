@@ -36,7 +36,7 @@ const APSPresentations = ({ presentations }) => {
     setIsUnlocking(!isUnlocking);
   };
   return (
-    <div className='w-full max-w-7xl mx-auto lg:px-0 pb-12'>
+    <div className='w-full max-w-7xl mx-auto lg:px-0 '>
       <div className='w-full h-full border-2 border-neutral-900 bg-neutral-900 flex flex-col p-0.5 gap-1 '>
         <div className='w-full bg-neutral-800 rounded-t-lg'>
           <div className='w-full flex justify-between items-center px-5 py-4'>
