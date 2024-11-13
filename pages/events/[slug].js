@@ -506,8 +506,8 @@ const EventPage = ({ event }) => {
             Summit 2025!
           </div>
         </div>
-        <div className='lg:col-span-3 w-full h-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
-          <div className='w-full h-auto aspect-video border bg-white p-8 flex items-center justify-center'>
+        <div className='lg:col-span-3 w-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
+          <div className='w-full aspect-video md:!aspect-square border bg-white p-16 lg:!p-8 flex items-center justify-center'>
             <Image
               src={
                 'https://packschool.s3.us-east-1.amazonaws.com/AutoPackSummit+RGB+COLOR+on+Transparent+Back.png'
