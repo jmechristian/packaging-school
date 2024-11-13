@@ -2,11 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import {
   getAllEvents,
   getEventBySlug,
-  checkRegistrantEmail,
+  uploadUserEventPhoto,
+  uploadToAPS3,
+  registerEventClick,
 } from '../../helpers/api';
 import {
   MdCalendarMonth,
@@ -15,10 +18,10 @@ import {
   MdSlideshow,
   MdDoNotDisturb,
   MdSync,
-  MdDehaze,
+  MdCheckCircle,
+  MdError,
 } from 'react-icons/md';
 import {
-  DropDownSelect,
   BrutalButton,
   CertCallout,
   H2,
@@ -31,9 +34,109 @@ import APSAgenda from '../../components/shared/APSAgenda';
 import { presentations } from '../../data/presentations';
 import { sessionData } from '../../data/sessionData';
 import { apsAttendees } from '../../data/aps24';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
+
+const resizeImage = async (file) => {
+  try {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') {
+      throw new Error('This function must be run on client side');
+    }
+
+    // Dynamically import heic2any only on client side
+    if (file.type === 'image/heic' || file.type === 'image/heif') {
+      const heic2any = (await import('heic2any')).default;
+
+      // Convert HEIC to JPEG blob
+      const jpegBlob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: 0.9,
+      });
+
+      // Create new file with jpeg extension
+      const fileName = file.name.replace(/\.(heic|HEIC|heif|HEIF)$/, '.jpg');
+      file = new File([jpegBlob], fileName, { type: 'image/jpeg' });
+    }
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Calculate new dimensions while maintaining aspect ratio
+          if (width > height) {
+            if (width > 1920) {
+              height = Math.round((height * 1920) / width);
+              width = 1920;
+            }
+          } else {
+            if (height > 1920) {
+              width = Math.round((width * 1920) / height);
+              height = 1920;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Start with high quality
+          let quality = 0.9;
+          let output = canvas.toDataURL('image/jpeg', quality);
+
+          // Reduce quality until file size is under MAX_FILE_SIZE
+          while (output.length > MAX_FILE_SIZE * 1.37) {
+            // 1.37 accounts for base64 encoding
+            quality -= 0.1;
+            output = canvas.toDataURL('image/jpeg', quality);
+          }
+
+          // Convert base64 to file with sanitized filename
+          const sanitizedFilename = file.name.replace(/\s+/g, '_');
+          const resizedFile = dataURLtoFile(output, sanitizedFilename);
+          resolve({
+            file: resizedFile,
+            preview: output,
+            width,
+            height,
+            quality: Math.round(quality * 100),
+          });
+        };
+      };
+    });
+  } catch (error) {
+    console.error('Error processing image:', error);
+    throw new Error('Failed to process image: ' + error.message);
+  }
+};
+
+const dataURLtoFile = (dataurl, filename) => {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+};
 
 const EventPage = ({ event }) => {
   const router = useRouter();
+  const { location } = useSelector((state) => state.auth);
   const [isUser, setIsUser] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isPassword, setIsPassword] = useState('');
@@ -45,6 +148,13 @@ const EventPage = ({ event }) => {
   const [isRecoverMode, setIsRecoverMode] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [isEmailError, setIsEmailError] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [uploadPreview, setUploadPreview] = useState(null);
+  const [uploadCaption, setUploadCaption] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+  const [isUploadError, setIsUploadError] = useState(false);
+  const [isUploadedPhoto, setIsUploadedPhoto] = useState(null);
 
   const dayOne = sessionData.filter((s) => s.date === '2024-10-21');
   const dayTwo = sessionData.filter((s) => s.date === '2024-10-22');
@@ -80,8 +190,19 @@ const EventPage = ({ event }) => {
     }
   };
 
-  const downloadHandler = (image) => {
-    console.log(image);
+  const downloadHandler = async (image) => {
+    const res = await registerEventClick({
+      country: location.country,
+      email: isUser,
+      eventTemplateClicksId: event.id,
+      ipAddress: location.ipAddress,
+      object: image.src,
+      objectId: image.id,
+      page: 'APS24',
+      type: 'download',
+    });
+
+    router.push(image.src);
   };
 
   const handleRecoverSubmit = () => {
@@ -108,7 +229,7 @@ const EventPage = ({ event }) => {
       setIsCheckingEmail(true);
       const attendee = await checkLocalAttendee(email);
       if (attendee || email.toLowerCase().includes('@packagingschool.com')) {
-        setIsUser(attendee);
+        setIsUser(email);
         setIsEmailError(false);
         setIsEmailConfirmed(true);
       } else {
@@ -117,6 +238,74 @@ const EventPage = ({ event }) => {
       }
       setIsCheckingEmail(false);
     }
+  };
+
+  const photoAddHandler = () => {
+    setIsUploadOpen(true);
+  };
+
+  const handleFileUpload = async (file) => {
+    try {
+      // Accept both standard images and HEIC/HEIF
+      if (
+        !file.type.startsWith('image/') &&
+        !['image/heic', 'image/heif'].includes(file.type)
+      ) {
+        throw new Error('Please upload a valid image file');
+      }
+
+      const resizedImage = await resizeImage(file);
+
+      // Set preview
+      setUploadPreview(resizedImage.preview);
+
+      // Optional: Log image details
+      // console.log(
+      //   `Resized image: ${resizedImage.width}x${resizedImage.height} at ${resizedImage.quality}% quality`
+      // );
+      // console.log(
+      //   `File size: ${resizedImage.file.name} - ${Math.round(
+      //     resizedImage.file.size / 1024
+      //   )}KB`
+      // );
+
+      const photoUrl = await uploadToAPS3(resizedImage.file);
+      if (photoUrl) {
+        setIsUploadedPhoto(photoUrl);
+      }
+      // const upload = await uploadUserEventPhoto(
+      //   uploadCaption,
+      //   event.title,
+      //   event.id,
+      //   photoUrl,
+      //   isUser
+      // );
+    } catch (error) {
+      console.error('Error processing image:', error);
+      // Handle error appropriately
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUploadSubmit = async () => {
+    setIsUploading(true);
+    try {
+      const res = await uploadUserEventPhoto(
+        uploadCaption,
+        event.title,
+        event.id,
+        isUploadedPhoto,
+        isUser
+      );
+      setIsUploadSuccess(true);
+      setUploadPreview(null);
+      setUploadCaption('');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setIsUploadError(true);
+    }
+    setIsUploading(false);
   };
 
   return event ? (
@@ -153,7 +342,7 @@ const EventPage = ({ event }) => {
                   htmlFor='email'
                   className='block text-sm font-medium mb-1'
                 >
-                  Email (Case Sensitive)
+                  Email
                 </label>
                 <div className='relative'>
                   <input
@@ -250,41 +439,6 @@ const EventPage = ({ event }) => {
         </div>
       )}
       {/* HEADER */}
-      {/* <div className='grid md:grid-cols-2 gap-8'>
-        <div className='grid content-center '>
-          <Image src={event.hero} alt={event.title} width={800} height={600} />
-        </div>
-        <div className='flex flex-col gap-5 p-5 lg:p-10'>
-          <h1 className='text-4xl md:text-5xl font-bold'>{event.title}</h1>
-          <p className='text-lg md:text-xl leading-normal'>
-            {event.description}
-          </p>
-          <div className='flex flex-col gap-4'>
-            <div className='flex items-center gap-2'>
-              <div>
-                <MdCalendarMonth color='black' size={24} />
-              </div>
-              <span className='font-semibold '>{event.startDate}</span>
-              <span className=''>-</span>
-              <span className='font-semibold'>{event.endDate}</span>
-            </div>
-            <div className='flex items-center gap-2'>
-              <div>
-                <MdLocationOn color='black' size={24} />
-              </div>
-              <span className='font-semibold '>{event.location}</span>
-            </div>
-          </div>
-          <div className='flex gap-4'>
-            <BrutalButton
-              text='View Event Site'
-              background='bg-clemson'
-              link='https://www.autopacksummit.com'
-              textColor='text-white'
-            />
-          </div>
-        </div>
-      </div> */}
       <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
         <div className='flex flex-col gap-5 lg:col-span-9 '>
           <H2 textColor='text-black'>
@@ -427,6 +581,7 @@ const EventPage = ({ event }) => {
             validatePasswordHandler={validatePasswordHandler}
             downloadHandler={(image) => downloadHandler(image)}
             isUnlocking={isUnlocking}
+            photoAddHandler={photoAddHandler}
           />
         </div>
       </div>
@@ -458,6 +613,147 @@ const EventPage = ({ event }) => {
           />
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {isUploadOpen && (
+        <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
+          <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+            <AnimatePresence>
+              {isUploadSuccess && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  onAnimationComplete={() => {
+                    setTimeout(() => {
+                      setIsUploadSuccess(false);
+                    }, 2000);
+                  }}
+                  className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-green-600 text-white px-4 py-2 rounded-lg'
+                >
+                  <MdCheckCircle color='white' size={24} />
+                  <div className='font-bold'>Photo Uploaded!</div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {isUploadError && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  onAnimationComplete={() => {
+                    setTimeout(() => {
+                      setIsUploadError(false);
+                    }, 2000);
+                  }}
+                  className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-red-600 text-white px-4 py-2 rounded-lg'
+                >
+                  <MdError color='white' size={24} />
+                  <div className='font-bold'>Error Uploading Photo!</div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <button
+              onClick={() => {
+                setIsUploadOpen(false);
+                setUploadPreview(null);
+                setUploadCaption('');
+              }}
+              className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
+            >
+              ×
+            </button>
+
+            <div className='flex flex-col gap-6'>
+              <h2 className='text-2xl font-bold text-brand-indigo'>
+                Upload Photo
+              </h2>
+
+              {/* File Drop Zone */}
+              <div
+                className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400'
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files[0];
+                  if (file.type.startsWith('image/')) {
+                    handleFileUpload(file);
+                  }
+                }}
+                onDragOver={(e) => e.preventDefault()}
+              >
+                {uploadPreview ? (
+                  <img
+                    src={uploadPreview}
+                    alt='Preview'
+                    className='max-h-48 mx-auto'
+                  />
+                ) : (
+                  <div>
+                    <p>Drag and drop your image here or</p>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      onChange={(e) => handleFileUpload(e.target.files[0])}
+                      className='mt-2'
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Caption Input */}
+              <div>
+                <label className='block text-sm font-medium mb-2'>
+                  Caption ({uploadCaption.length}/140 characters)
+                </label>
+                <textarea
+                  value={uploadCaption}
+                  onChange={(e) =>
+                    setUploadCaption(e.target.value.slice(0, 140))
+                  }
+                  className='w-full p-2 border border-gray-300 rounded'
+                  rows={3}
+                  placeholder='Add a caption to your photo...'
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className='flex gap-4'>
+                <button
+                  onClick={handleUploadSubmit}
+                  disabled={!uploadPreview || isUploading}
+                  className={`flex-1 py-2 rounded ${
+                    !uploadPreview || isUploading
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-black hover:bg-gray-800 text-white'
+                  }`}
+                >
+                  {isUploading ? 'Uploading...' : 'Submit'}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsUploadOpen(false);
+                    setUploadPreview(null);
+                    setUploadCaption('');
+                  }}
+                  className='flex-1 py-2 border border-black rounded hover:bg-gray-100'
+                >
+                  Cancel
+                </button>
+              </div>
+              <div className='text-sm text-gray-500 leading-tight text-center'>
+                Thank you for sharing your photos! Just a quick note: all images
+                and captions will go through a brief approval process. By
+                uploading, you grant us the right to feature your image in our
+                marketing materials if selected. We’re excited to see what
+                you’ll share!
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   ) : (
     <div>Loading...</div>

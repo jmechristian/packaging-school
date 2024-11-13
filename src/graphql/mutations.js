@@ -7576,6 +7576,57 @@ export const deleteEventPhoto = /* GraphQL */ `
     }
   }
 `;
+export const createUserEventPhoto = /* GraphQL */ `
+  mutation CreateUserEventPhoto(
+    $input: CreateUserEventPhotoInput!
+    $condition: ModelUserEventPhotoConditionInput
+  ) {
+    createUserEventPhoto(input: $input, condition: $condition) {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUserEventPhoto = /* GraphQL */ `
+  mutation UpdateUserEventPhoto(
+    $input: UpdateUserEventPhotoInput!
+    $condition: ModelUserEventPhotoConditionInput
+  ) {
+    updateUserEventPhoto(input: $input, condition: $condition) {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserEventPhoto = /* GraphQL */ `
+  mutation DeleteUserEventPhoto(
+    $input: DeleteUserEventPhotoInput!
+    $condition: ModelUserEventPhotoConditionInput
+  ) {
+    deleteUserEventPhoto(input: $input, condition: $condition) {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createEventPresentation = /* GraphQL */ `
   mutation CreateEventPresentation(
     $input: CreateEventPresentationInput!

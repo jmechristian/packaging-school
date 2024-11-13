@@ -5906,6 +5906,41 @@ export const listEventPhotos = /* GraphQL */ `
     }
   }
 `;
+export const getUserEventPhoto = /* GraphQL */ `
+  query GetUserEventPhoto($id: ID!) {
+    getUserEventPhoto(id: $id) {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserEventPhotos = /* GraphQL */ `
+  query ListUserEventPhotos(
+    $filter: ModelUserEventPhotoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserEventPhotos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        photo
+        caption
+        uploadedBy
+        eventID
+        event
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getEventPresentation = /* GraphQL */ `
   query GetEventPresentation($id: ID!) {
     getEventPresentation(id: $id) {

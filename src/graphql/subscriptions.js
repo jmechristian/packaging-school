@@ -6982,6 +6982,48 @@ export const onDeleteEventPhoto = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUserEventPhoto = /* GraphQL */ `
+  subscription OnCreateUserEventPhoto {
+    onCreateUserEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserEventPhoto = /* GraphQL */ `
+  subscription OnUpdateUserEventPhoto {
+    onUpdateUserEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserEventPhoto = /* GraphQL */ `
+  subscription OnDeleteUserEventPhoto {
+    onDeleteUserEventPhoto {
+      id
+      photo
+      caption
+      uploadedBy
+      eventID
+      event
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateEventPresentation = /* GraphQL */ `
   subscription OnCreateEventPresentation {
     onCreateEventPresentation {

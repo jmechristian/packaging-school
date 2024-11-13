@@ -888,6 +888,15 @@ type EventPhoto @model @auth(rules: [{ allow: public }]) {
   event: EventTemplate @belongsTo
 }
 
+type UserEventPhoto @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  photo: String
+  caption: String
+  uploadedBy: String
+  eventID: String
+  event: String
+}
+
 type EventPresentation @model @auth(rules: [{ allow: public }]) {
   id: ID!
   presentation: String

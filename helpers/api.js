@@ -1,4 +1,4 @@
-import { Amplify, API } from 'aws-amplify';
+import { Amplify, API, Storage } from 'aws-amplify';
 import {
   getAuthor,
   listSalesBars,
@@ -14,6 +14,8 @@ import {
   createCourseClick,
   createIndiaClick,
   createLessonClick,
+  createUserEventPhoto,
+  createEventClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -266,4 +268,67 @@ export const checkRegistrantEmail = async (email) => {
     variables: { email: email },
   });
   return registrant.data.aPSRegistrantsByEmail;
+};
+
+export const uploadUserEventPhoto = async (
+  caption,
+  event,
+  eventID,
+  photo,
+  uploadedBy
+) => {
+  const res = await API.graphql({
+    query: createUserEventPhoto,
+    variables: {
+      input: {
+        caption: caption,
+        event: event,
+        eventID: eventID,
+        photo: photo,
+        uploadedBy: uploadedBy,
+      },
+    },
+  });
+  return res.data.createUserEventPhoto;
+};
+
+export const uploadToAPS3 = async (file) => {
+  if (!file) return;
+
+  try {
+    // Process the image before upload
+    const fileName = `user-event-photos/${file.name}`;
+
+    const res = await Storage.put(fileName, file, {
+      contentType: file.type,
+      resumable: true,
+    });
+
+    console.log('res', res);
+
+    const photoUrl = `https://packmedia54032-staging.s3.amazonaws.com/public/${res.params.Key}`;
+
+    return photoUrl;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+};
+
+export const registerEventClick = async (data) => {
+  const res = await API.graphql({
+    query: createEventClick,
+    variables: {
+      input: {
+        country: data.country,
+        email: data.email,
+        eventTemplateClicksId: data.eventTemplateClicksId,
+        ipAddress: data.ipAddress,
+        object: data.object,
+        objectId: data.objectId,
+        page: data.page,
+        type: data.type,
+      },
+    },
+  });
+  return res.data.createEventClick;
 };

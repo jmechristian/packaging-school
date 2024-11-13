@@ -15,6 +15,7 @@ const APSImageGallery = ({
   downloadHandler,
   isLocked,
   isUnlocking,
+  photoAddHandler,
 }) => {
   return (
     <div className='w-full max-w-7xl mx-auto lg:px-0 pb-12'>
@@ -34,8 +35,8 @@ const APSImageGallery = ({
                 </div>
               </div>
               <div
-                className={`cursor-pointer bg-gradient-to-r gap-2 from-ap-darkblue to-ap-yellow w-fit p-4 rounded-full md:py-2 md:px-6 md:rounded-lg flex items-center`}
-                onClick={unlockHandler}
+                className={`cursor-pointer bg-gradient-to-r gap-2 from-ap-darkblue to-ap-yellow w-fit p-4 rounded-full md:py-2 md:px-6 md:rounded-lg flex items-center border border-white`}
+                onClick={isLocked ? unlockHandler : photoAddHandler}
               >
                 <div className='w-5 h-5'>
                   {isLocked ? (
