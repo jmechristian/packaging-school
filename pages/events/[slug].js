@@ -10,6 +10,7 @@ import {
   uploadUserEventPhoto,
   uploadToAPS3,
   registerEventClick,
+  sendAPSRecoveryEmail,
 } from '../../helpers/api';
 import {
   MdCalendarMonth,
@@ -35,6 +36,7 @@ import { presentations } from '../../data/presentations';
 import { sessionData } from '../../data/sessionData';
 import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
+import Cookies from 'js-cookie';
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
 
@@ -155,6 +157,8 @@ const EventPage = ({ event }) => {
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
   const [isUploadError, setIsUploadError] = useState(false);
   const [isUploadedPhoto, setIsUploadedPhoto] = useState(null);
+  const [isPasswordSending, setIsPasswordSending] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const dayOne = sessionData.filter((s) => s.date === '2024-10-21');
   const dayTwo = sessionData.filter((s) => s.date === '2024-10-22');
@@ -178,15 +182,28 @@ const EventPage = ({ event }) => {
     // console.log(event.photos.items);
   }, [event]);
 
+  useEffect(() => {
+    const savedEmail = Cookies.get('aps_user_email');
+    if (savedEmail) {
+      setIsUser(savedEmail);
+      setIsLocked(false);
+    }
+  }, []);
+
   const unlockHandler = () => {
     setIsUnlocking(true);
   };
 
   const validatePasswordHandler = async () => {
     if (isPassword.toLowerCase() === 'autopack2024') {
+      // Set cookie to expire in 30 days
+      Cookies.set('aps_user_email', isUser, { expires: 30 });
+
       setIsPassword('');
       setIsUnlocking(false);
       setIsLocked(false);
+    } else {
+      setIsError(true);
     }
   };
 
@@ -205,10 +222,16 @@ const EventPage = ({ event }) => {
     router.push(image.src);
   };
 
-  const handleRecoverSubmit = () => {
-    console.log('Recovery email sent to:', isEmail);
-    setIsError(false);
-    setIsRecoverMode(false);
+  const handleRecoverSubmit = async () => {
+    setIsPasswordSending(true);
+    const res = await sendAPSRecoveryEmail(isEmail);
+    if (res === 200) {
+      setIsError(false);
+      setIsRecoverMode(false);
+      setIsEmailSent(true);
+    } else {
+      setIsError(true);
+    }
   };
 
   const validateEmail = (email) => {
@@ -306,6 +329,12 @@ const EventPage = ({ event }) => {
       setIsUploadError(true);
     }
     setIsUploading(false);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('aps_user_email');
+    setIsUser('');
+    setIsLocked(true);
   };
 
   return event ? (
@@ -420,7 +449,10 @@ const EventPage = ({ event }) => {
                 {isRecoverMode ? 'Send Recovery Email' : 'Submit'}
               </button>
               <button
-                onClick={() => setIsRecoverMode(!isRecoverMode)}
+                onClick={() => {
+                  setIsError(false);
+                  setIsRecoverMode(!isRecoverMode);
+                }}
                 className='underline text-sm flex w-full justify-center'
               >
                 {isRecoverMode
@@ -431,7 +463,7 @@ const EventPage = ({ event }) => {
                 <p className='text-red-500 flex w-full justify-center'>
                   {isRecoverMode
                     ? 'Error sending recovery email. Please try again.'
-                    : 'Incorrect email or password. Please try again.'}
+                    : 'Incorrect password. Please try again.'}
                 </p>
               )}
             </div>

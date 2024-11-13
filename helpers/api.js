@@ -332,3 +332,18 @@ export const registerEventClick = async (data) => {
   });
   return res.data.createEventClick;
 };
+
+export const sendAPSRecoveryEmail = async (email) => {
+  const res = fetch('/api/send-aps-recovery-email', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  });
+
+  return (await res).status;
+};
