@@ -37,7 +37,7 @@ const CookieConsent = (props) => {
         <div className='block md:hidden'>
           <div className='text-white font-medium text-xs leading-tight'>
             We use cookies to improve your experience and analyze site traffic.
-            For more information, see our{' '}
+            See our{' '}
             <a href='https://library.packagingschool.com/articles/privacy-policy'>
               Privacy Policy
             </a>
