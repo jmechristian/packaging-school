@@ -21,6 +21,7 @@ import {
   DropDownSelect,
   BrutalButton,
   CertCallout,
+  H2,
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import APSPresentations from '../../components/shared/APSPresentations';
@@ -281,10 +282,10 @@ const EventPage = ({ event }) => {
       </div> */}
       <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
         <div className='flex flex-col gap-5 lg:col-span-9 '>
-          <div className='h1-base'>
+          <H2 textColor='text-black'>
             AutoPack Summit 2024 – Paving the Way for the Future of Automotive
             Packaging
-          </div>
+          </H2>
           <div>
             AutoPack Summit 2024 concluded on a high note, bringing together top
             industry leaders, experts, and innovators for a dynamic exchange of
