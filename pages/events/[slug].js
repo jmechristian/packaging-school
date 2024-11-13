@@ -232,6 +232,7 @@ const EventPage = ({ event }) => {
     } else {
       setIsError(true);
     }
+    setIsPasswordSending(false);
   };
 
   const validateEmail = (email) => {
@@ -444,7 +445,7 @@ const EventPage = ({ event }) => {
                   !isEmailConfirmed || (!isRecoverMode && !isPassword)
                     ? 'bg-gray-300 cursor-not-allowed'
                     : 'bg-black hover:bg-gray-800'
-                } text-white`}
+                } text-white ${isPasswordSending ? 'animate-pulse' : ''}`}
               >
                 {isRecoverMode ? 'Send Recovery Email' : 'Submit'}
               </button>
