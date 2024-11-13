@@ -895,6 +895,7 @@ type UserEventPhoto @model @auth(rules: [{ allow: public }]) {
   uploadedBy: String
   eventID: String
   event: String
+  approved: Boolean @default(value: "false")
 }
 
 type EventPresentation @model @auth(rules: [{ allow: public }]) {
