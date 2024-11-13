@@ -340,470 +340,476 @@ const EventPage = ({ event }) => {
 
   return (
     <>
-      <Meta
-        title={event.title}
-        description={event.description}
-        image={event.hero}
-      />
       {event ? (
-        <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-20 relative'>
-          {/*  LOGIN MODAL */}
-          {isUnlocking && (
-            <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
-              <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
-                <button
-                  onClick={() => {
-                    setIsUnlocking(false);
-                    setIsRecoverMode(false);
-                    setIsPassword('');
-                    setIsEmail('');
-                    setIsEmailConfirmed(false);
-                  }}
-                  className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
-                >
-                  ×
-                </button>
-                <div className='flex flex-col gap-2'>
-                  <h2 className='text-2xl font-bold text-brand-indigo'>
-                    {isRecoverMode
-                      ? 'Recover Password'
-                      : 'Registered Attendee?'}
-                  </h2>
-                  <p className='mb-4 font-medium'>
-                    {isRecoverMode
-                      ? 'Please enter the email you used to register to receive password recovery instructions.'
-                      : 'Please enter the email used for registration and the password sent in the post-event email to access event media.'}
-                  </p>
-                </div>
-                <div className='flex flex-col gap-4'>
-                  <div>
-                    <label
-                      htmlFor='email'
-                      className='block text-sm font-medium mb-1'
-                    >
-                      Email
-                    </label>
-                    <div className='relative'>
-                      <input
-                        type='email'
-                        id='email'
-                        value={isEmail}
-                        onChange={handleEmailChange}
-                        className='w-full p-2 border border-gray-300 rounded'
-                        placeholder='Enter your email'
-                      />
-                      {isEmailError && !isCheckingEmail && (
-                        <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                          <div className='w-5 h-5 flex items-center justify-center'>
-                            <MdDoNotDisturb color='black' size={24} />
-                          </div>
-                        </div>
-                      )}
-                      {isCheckingEmail && (
-                        <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                          <div className='w-5 h-5 animate-spin rounded-full flex items-center justify-center'>
-                            <MdSync color='black' size={24} />
-                          </div>
-                        </div>
-                      )}
-                      {isEmailConfirmed && (
-                        <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                          <div className='w-5 h-5 rounded-full bg-green-500 flex items-center justify-center'>
-                            <svg
-                              className='w-3 h-3 text-white'
-                              fill='none'
-                              stroke='currentColor'
-                              viewBox='0 0 24 24'
-                            >
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth={2}
-                                d='M5 13l4 4L19 7'
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+        <>
+          <Meta
+            title={event.title}
+            description={event.description}
+            image={event.hero}
+          />
+          <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-20 relative'>
+            {/*  LOGIN MODAL */}
+            {isUnlocking && (
+              <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
+                <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+                  <button
+                    onClick={() => {
+                      setIsUnlocking(false);
+                      setIsRecoverMode(false);
+                      setIsPassword('');
+                      setIsEmail('');
+                      setIsEmailConfirmed(false);
+                    }}
+                    className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
+                  >
+                    ×
+                  </button>
+                  <div className='flex flex-col gap-2'>
+                    <h2 className='text-2xl font-bold text-brand-indigo'>
+                      {isRecoverMode
+                        ? 'Recover Password'
+                        : 'Registered Attendee?'}
+                    </h2>
+                    <p className='mb-4 font-medium'>
+                      {isRecoverMode
+                        ? 'Please enter the email you used to register to receive password recovery instructions.'
+                        : 'Please enter the email used for registration and the password sent in the post-event email to access event media.'}
+                    </p>
                   </div>
-                  {!isRecoverMode && (
+                  <div className='flex flex-col gap-4'>
                     <div>
                       <label
-                        htmlFor='password'
+                        htmlFor='email'
                         className='block text-sm font-medium mb-1'
                       >
-                        Password
+                        Email
                       </label>
-                      <input
-                        type='password'
-                        id='password'
-                        value={isPassword}
-                        onChange={(e) => setIsPassword(e.target.value)}
-                        className='w-full p-2 border border-gray-300 rounded'
-                        placeholder='Enter password'
-                      />
-                    </div>
-                  )}
-                  <button
-                    onClick={
-                      isRecoverMode
-                        ? handleRecoverSubmit
-                        : validatePasswordHandler
-                    }
-                    disabled={!isEmail || (!isRecoverMode && !isPassword)}
-                    className={`w-full py-2 rounded mt-4 ${
-                      !isEmailConfirmed || (!isRecoverMode && !isPassword)
-                        ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-black hover:bg-gray-800'
-                    } text-white ${isPasswordSending ? 'animate-pulse' : ''}`}
-                  >
-                    {isRecoverMode ? 'Send Recovery Email' : 'Submit'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsError(false);
-                      setIsRecoverMode(!isRecoverMode);
-                    }}
-                    className='underline text-sm flex w-full justify-center'
-                  >
-                    {isRecoverMode
-                      ? 'Back to Login'
-                      : 'I did not receive a password'}
-                  </button>
-                  {isError && (
-                    <p className='text-red-500 flex w-full justify-center'>
-                      {isRecoverMode
-                        ? 'Error sending recovery email. Please try again.'
-                        : 'Incorrect password. Please try again.'}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-          {/* HEADER */}
-          <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
-            <div className='flex flex-col gap-5 lg:col-span-9 '>
-              <H2 textColor='text-black'>
-                AutoPack Summit 2024 – Paving the Way for the Future of
-                Automotive Packaging
-              </H2>
-              <div>
-                AutoPack Summit 2024 concluded on a high note, bringing together
-                top industry leaders, experts, and innovators for a dynamic
-                exchange of ideas and strategies. Held over three days, the
-                summit explored critical topics shaping the future of automotive
-                packaging, from sustainable innovations to cutting-edge
-                technology integration.
-              </div>
-              <div>
-                Throughout the summit, attendees actively participated in
-                Mentimeter-powered Q&A sessions, fostering real-time interaction
-                on topics like material innovations, regulatory impacts, and
-                future trends. Networking opportunities, including speed
-                networking rounds focused on Production Packaging and Expendable
-                & Aftersales Packaging, provided valuable connections and
-                insights.
-              </div>
-              <div>
-                With an impressive lineup of speakers, case studies, and
-                interactive discussions, AutoPack Summit 2024 solidified its
-                role as a premier platform for advancing the automotive
-                packaging industry. Attendees left with actionable strategies to
-                implement in their organizations, paving the way for a more
-                sustainable and efficient automotive supply chain.
-              </div>
-              <div>
-                We look forward to welcoming everyone back next year for
-                AutoPack Summit 2025!
-              </div>
-            </div>
-            <div className='lg:col-span-3 w-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
-              <div className='w-full aspect-video md:!aspect-square border bg-white p-16 lg:!p-8 flex items-center justify-center'>
-                <Image
-                  src={
-                    'https://packschool.s3.us-east-1.amazonaws.com/AutoPackSummit+RGB+COLOR+on+Transparent+Back.png'
-                  }
-                  alt={event.title}
-                  width={1900}
-                  height={498}
-                  className='object-cover'
-                />
-              </div>
-              <div className='p-8'>
-                <div className='flex flex-col gap-4'>
-                  <div className='flex items-center gap-3'>
-                    <div>
-                      <MdCalendarMonth color='black' size={32} />
-                    </div>
-                    <div className='flex flex-col '>
-                      <span className='font-semibold '>October 21, 2024 -</span>
-                      <span className='font-semibold'>October 23, 2024</span>
-                    </div>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <div>
-                      <MdLocationOn color='black' size={32} />
-                    </div>
-                    <span className='font-semibold '>{event.location}</span>
-                  </div>
-                  <div className='mt-4'>
-                    <BrutalButton
-                      text='View Event Site'
-                      background='bg-clemson'
-                      link='https://www.autopacksummit.com'
-                      textColor='text-white'
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='sticky z-20 top-2 mt-10 lg:!mt-28'>
-            <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
-              <div className='flex items-center gap-3'>
-                <div className='grid grid-cols-3 gap-4'>
-                  <div
-                    className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
-                    onClick={() => {
-                      router.push('#photos');
-                    }}
-                  >
-                    <MdPhotoLibrary
-                      color='white'
-                      size={24}
-                      className='hidden md:block lg:block'
-                    />
-                    <div className='font-semibold text-white text-sm lg:text-base'>
-                      Photos
-                    </div>
-                  </div>
-                  <div
-                    className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
-                    onClick={() => {
-                      router.push('#presentations');
-                    }}
-                  >
-                    <MdSlideshow
-                      color='white'
-                      size={24}
-                      className='hidden md:block lg:block'
-                    />
-                    <div className='font-semibold text-white text-sm lg:text-base'>
-                      Presentations
-                    </div>
-                  </div>
-                  <div
-                    className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
-                    onClick={() => {
-                      router.push('#agenda');
-                    }}
-                  >
-                    <MdCalendarMonth
-                      color='white'
-                      size={24}
-                      className='hidden md:block lg:block'
-                    />
-                    <div className='font-semibold text-white text-sm lg:text-base'>
-                      Agenda
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* PHOTOS */}
-          <div id='photos' className='scroll-mt-20 mb-12'>
-            <div className='flex flex-col gap-8 md:gap-10'>
-              {/* <div className='flex items-center gap-2'>
-            <MdPhotoLibrary color='black' size={24} />
-            <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
-          </div> */}
-              <APSImageGallery
-                images={isImages && isImages}
-                isLocked={isLocked}
-                unlockHandler={unlockHandler}
-                validatePasswordHandler={validatePasswordHandler}
-                downloadHandler={(image) => downloadHandler(image)}
-                isUnlocking={isUnlocking}
-                photoAddHandler={photoAddHandler}
-              />
-            </div>
-          </div>
-          <div className='flex flex-col gap-10 lg:gap-24'>
-            <CertCallout
-              headline='Master Automotive Packaging – Lead with Expertise and Innovation'
-              subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
-              linkText='Enroll Now and Accelerate Your Career'
-              cert={'APC'}
-              link='certifications/get-to-know-apc'
-              cardClickHandler={() => {
-                router.push('/certifications/get-to-know-apc');
-              }}
-            />
-            {/* PRESENTATIONS */}
-            <div id='presentations' className='scroll-mt-20'>
-              <div className='flex flex-col gap-8 md:gap-10'>
-                <APSPresentations presentations={presentations} />
-              </div>
-            </div>
-
-            {/* AGENDA */}
-            <div
-              id='agenda'
-              className='flex flex-col gap-8 md:gap-10 scroll-mt-20'
-            >
-              <APSAgenda
-                dayOne={dayOne}
-                dayTwo={dayTwo}
-                dayThree={dayThree}
-                enabled={true}
-              />
-            </div>
-          </div>
-
-          {/* Upload Modal */}
-          {isUploadOpen && (
-            <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
-              <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
-                <AnimatePresence>
-                  {isUploadSuccess && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      onAnimationComplete={() => {
-                        setTimeout(() => {
-                          setIsUploadSuccess(false);
-                        }, 2000);
-                      }}
-                      className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-green-600 text-white px-4 py-2 rounded-lg'
-                    >
-                      <MdCheckCircle color='white' size={24} />
-                      <div className='font-bold'>Photo Uploaded!</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <AnimatePresence>
-                  {isUploadError && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      onAnimationComplete={() => {
-                        setTimeout(() => {
-                          setIsUploadError(false);
-                        }, 2000);
-                      }}
-                      className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-red-600 text-white px-4 py-2 rounded-lg'
-                    >
-                      <MdError color='white' size={24} />
-                      <div className='font-bold'>Error Uploading Photo!</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <button
-                  onClick={() => {
-                    setIsUploadOpen(false);
-                    setUploadPreview(null);
-                    setUploadCaption('');
-                  }}
-                  className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
-                >
-                  ×
-                </button>
-
-                <div className='flex flex-col gap-6'>
-                  <h2 className='text-2xl font-bold text-brand-indigo'>
-                    Upload Photo
-                  </h2>
-
-                  {/* File Drop Zone */}
-                  <div
-                    className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400'
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      const file = e.dataTransfer.files[0];
-                      if (file.type.startsWith('image/')) {
-                        handleFileUpload(file);
-                      }
-                    }}
-                    onDragOver={(e) => e.preventDefault()}
-                  >
-                    {uploadPreview ? (
-                      <img
-                        src={uploadPreview}
-                        alt='Preview'
-                        className='max-h-48 mx-auto'
-                      />
-                    ) : (
-                      <div>
-                        <p>Drag and drop your image here or</p>
+                      <div className='relative'>
                         <input
-                          type='file'
-                          accept='image/*'
-                          onChange={(e) => handleFileUpload(e.target.files[0])}
-                          className='mt-2'
+                          type='email'
+                          id='email'
+                          value={isEmail}
+                          onChange={handleEmailChange}
+                          className='w-full p-2 border border-gray-300 rounded'
+                          placeholder='Enter your email'
+                        />
+                        {isEmailError && !isCheckingEmail && (
+                          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                            <div className='w-5 h-5 flex items-center justify-center'>
+                              <MdDoNotDisturb color='black' size={24} />
+                            </div>
+                          </div>
+                        )}
+                        {isCheckingEmail && (
+                          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                            <div className='w-5 h-5 animate-spin rounded-full flex items-center justify-center'>
+                              <MdSync color='black' size={24} />
+                            </div>
+                          </div>
+                        )}
+                        {isEmailConfirmed && (
+                          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                            <div className='w-5 h-5 rounded-full bg-green-500 flex items-center justify-center'>
+                              <svg
+                                className='w-3 h-3 text-white'
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth={2}
+                                  d='M5 13l4 4L19 7'
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {!isRecoverMode && (
+                      <div>
+                        <label
+                          htmlFor='password'
+                          className='block text-sm font-medium mb-1'
+                        >
+                          Password
+                        </label>
+                        <input
+                          type='password'
+                          id='password'
+                          value={isPassword}
+                          onChange={(e) => setIsPassword(e.target.value)}
+                          className='w-full p-2 border border-gray-300 rounded'
+                          placeholder='Enter password'
                         />
                       </div>
                     )}
-                  </div>
-
-                  {/* Caption Input */}
-                  <div>
-                    <label className='block text-sm font-medium mb-2'>
-                      Caption ({uploadCaption.length}/140 characters)
-                    </label>
-                    <textarea
-                      value={uploadCaption}
-                      onChange={(e) =>
-                        setUploadCaption(e.target.value.slice(0, 140))
-                      }
-                      className='w-full p-2 border border-gray-300 rounded'
-                      rows={3}
-                      placeholder='Add a caption to your photo...'
-                    />
-                  </div>
-
-                  {/* Buttons */}
-                  <div className='flex gap-4'>
                     <button
-                      onClick={handleUploadSubmit}
-                      disabled={!uploadPreview || isUploading}
-                      className={`flex-1 py-2 rounded ${
-                        !uploadPreview || isUploading
+                      onClick={
+                        isRecoverMode
+                          ? handleRecoverSubmit
+                          : validatePasswordHandler
+                      }
+                      disabled={!isEmail || (!isRecoverMode && !isPassword)}
+                      className={`w-full py-2 rounded mt-4 ${
+                        !isEmailConfirmed || (!isRecoverMode && !isPassword)
                           ? 'bg-gray-300 cursor-not-allowed'
-                          : 'bg-black hover:bg-gray-800 text-white'
-                      }`}
+                          : 'bg-black hover:bg-gray-800'
+                      } text-white ${isPasswordSending ? 'animate-pulse' : ''}`}
                     >
-                      {isUploading ? 'Uploading...' : 'Submit'}
+                      {isRecoverMode ? 'Send Recovery Email' : 'Submit'}
                     </button>
                     <button
                       onClick={() => {
-                        setIsUploadOpen(false);
-                        setUploadPreview(null);
-                        setUploadCaption('');
+                        setIsError(false);
+                        setIsRecoverMode(!isRecoverMode);
                       }}
-                      className='flex-1 py-2 border border-black rounded hover:bg-gray-100'
+                      className='underline text-sm flex w-full justify-center'
                     >
-                      Cancel
+                      {isRecoverMode
+                        ? 'Back to Login'
+                        : 'I did not receive a password'}
                     </button>
+                    {isError && (
+                      <p className='text-red-500 flex w-full justify-center'>
+                        {isRecoverMode
+                          ? 'Error sending recovery email. Please try again.'
+                          : 'Incorrect password. Please try again.'}
+                      </p>
+                    )}
                   </div>
-                  <div className='text-sm text-gray-500 leading-tight text-center'>
-                    Thank you for sharing your photos! Just a quick note: all
-                    images and captions will go through a brief approval
-                    process. By uploading, you grant us the right to feature
-                    your image in our marketing materials if selected. We’re
-                    excited to see what you’ll share!
+                </div>
+              </div>
+            )}
+            {/* HEADER */}
+            <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
+              <div className='flex flex-col gap-5 lg:col-span-9 '>
+                <H2 textColor='text-black'>
+                  AutoPack Summit 2024 – Paving the Way for the Future of
+                  Automotive Packaging
+                </H2>
+                <div>
+                  AutoPack Summit 2024 concluded on a high note, bringing
+                  together top industry leaders, experts, and innovators for a
+                  dynamic exchange of ideas and strategies. Held over three
+                  days, the summit explored critical topics shaping the future
+                  of automotive packaging, from sustainable innovations to
+                  cutting-edge technology integration.
+                </div>
+                <div>
+                  Throughout the summit, attendees actively participated in
+                  Mentimeter-powered Q&A sessions, fostering real-time
+                  interaction on topics like material innovations, regulatory
+                  impacts, and future trends. Networking opportunities,
+                  including speed networking rounds focused on Production
+                  Packaging and Expendable & Aftersales Packaging, provided
+                  valuable connections and insights.
+                </div>
+                <div>
+                  With an impressive lineup of speakers, case studies, and
+                  interactive discussions, AutoPack Summit 2024 solidified its
+                  role as a premier platform for advancing the automotive
+                  packaging industry. Attendees left with actionable strategies
+                  to implement in their organizations, paving the way for a more
+                  sustainable and efficient automotive supply chain.
+                </div>
+                <div>
+                  We look forward to welcoming everyone back next year for
+                  AutoPack Summit 2025!
+                </div>
+              </div>
+              <div className='lg:col-span-3 w-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
+                <div className='w-full aspect-video md:!aspect-square border bg-white p-16 lg:!p-8 flex items-center justify-center'>
+                  <Image
+                    src={
+                      'https://packschool.s3.us-east-1.amazonaws.com/AutoPackSummit+RGB+COLOR+on+Transparent+Back.png'
+                    }
+                    alt={event.title}
+                    width={1900}
+                    height={498}
+                    className='object-cover'
+                  />
+                </div>
+                <div className='p-8'>
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex items-center gap-3'>
+                      <div>
+                        <MdCalendarMonth color='black' size={32} />
+                      </div>
+                      <div className='flex flex-col '>
+                        <span className='font-semibold '>
+                          October 21, 2024 -
+                        </span>
+                        <span className='font-semibold'>October 23, 2024</span>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <div>
+                        <MdLocationOn color='black' size={32} />
+                      </div>
+                      <span className='font-semibold '>{event.location}</span>
+                    </div>
+                    <div className='mt-4'>
+                      <BrutalButton
+                        text='View Event Site'
+                        background='bg-clemson'
+                        link='https://www.autopacksummit.com'
+                        textColor='text-white'
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-        </div>
+            <div className='sticky z-20 top-2 mt-10 lg:!mt-28'>
+              <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
+                <div className='flex items-center gap-3'>
+                  <div className='grid grid-cols-3 gap-4'>
+                    <div
+                      className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
+                      onClick={() => {
+                        router.push('#photos');
+                      }}
+                    >
+                      <MdPhotoLibrary
+                        color='white'
+                        size={24}
+                        className='hidden md:block lg:block'
+                      />
+                      <div className='font-semibold text-white text-sm lg:text-base'>
+                        Photos
+                      </div>
+                    </div>
+                    <div
+                      className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
+                      onClick={() => {
+                        router.push('#presentations');
+                      }}
+                    >
+                      <MdSlideshow
+                        color='white'
+                        size={24}
+                        className='hidden md:block lg:block'
+                      />
+                      <div className='font-semibold text-white text-sm lg:text-base'>
+                        Presentations
+                      </div>
+                    </div>
+                    <div
+                      className='flex items-center gap-2 justify-center bg-black hover:bg-ap-yellow transition-colors duration-300 py-2 px-3 cursor-pointer'
+                      onClick={() => {
+                        router.push('#agenda');
+                      }}
+                    >
+                      <MdCalendarMonth
+                        color='white'
+                        size={24}
+                        className='hidden md:block lg:block'
+                      />
+                      <div className='font-semibold text-white text-sm lg:text-base'>
+                        Agenda
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* PHOTOS */}
+            <div id='photos' className='scroll-mt-20 mb-12'>
+              <div className='flex flex-col gap-8 md:gap-10'>
+                {/* <div className='flex items-center gap-2'>
+            <MdPhotoLibrary color='black' size={24} />
+            <h2 className='text-2xl md:text-3xl font-bold'>Gallery</h2>
+          </div> */}
+                <APSImageGallery
+                  images={isImages && isImages}
+                  isLocked={isLocked}
+                  unlockHandler={unlockHandler}
+                  validatePasswordHandler={validatePasswordHandler}
+                  downloadHandler={(image) => downloadHandler(image)}
+                  isUnlocking={isUnlocking}
+                  photoAddHandler={photoAddHandler}
+                />
+              </div>
+            </div>
+            <div className='flex flex-col gap-10 lg:gap-24'>
+              <CertCallout
+                headline='Master Automotive Packaging – Lead with Expertise and Innovation'
+                subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
+                linkText='Enroll Now and Accelerate Your Career'
+                cert={'APC'}
+                link='certifications/get-to-know-apc'
+                cardClickHandler={() => {
+                  router.push('/certifications/get-to-know-apc');
+                }}
+              />
+              {/* PRESENTATIONS */}
+              <div id='presentations' className='scroll-mt-20'>
+                <div className='flex flex-col gap-8 md:gap-10'>
+                  <APSPresentations presentations={presentations} />
+                </div>
+              </div>
+
+              {/* AGENDA */}
+              <div
+                id='agenda'
+                className='flex flex-col gap-8 md:gap-10 scroll-mt-20'
+              >
+                <APSAgenda
+                  dayOne={dayOne}
+                  dayTwo={dayTwo}
+                  dayThree={dayThree}
+                  enabled={true}
+                />
+              </div>
+            </div>
+
+            {/* Upload Modal */}
+            {isUploadOpen && (
+              <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
+                <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+                  <AnimatePresence>
+                    {isUploadSuccess && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        onAnimationComplete={() => {
+                          setTimeout(() => {
+                            setIsUploadSuccess(false);
+                          }, 2000);
+                        }}
+                        className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-green-600 text-white px-4 py-2 rounded-lg'
+                      >
+                        <MdCheckCircle color='white' size={24} />
+                        <div className='font-bold'>Photo Uploaded!</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence>
+                    {isUploadError && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        onAnimationComplete={() => {
+                          setTimeout(() => {
+                            setIsUploadError(false);
+                          }, 2000);
+                        }}
+                        className='flex gap-2 items-center absolute bottom-4 right-4 z-30 bg-red-600 text-white px-4 py-2 rounded-lg'
+                      >
+                        <MdError color='white' size={24} />
+                        <div className='font-bold'>Error Uploading Photo!</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <button
+                    onClick={() => {
+                      setIsUploadOpen(false);
+                      setUploadPreview(null);
+                      setUploadCaption('');
+                    }}
+                    className='absolute top-4 right-4 text-2xl font-bold hover:text-gray-600'
+                  >
+                    ×
+                  </button>
+
+                  <div className='flex flex-col gap-6'>
+                    <h2 className='text-2xl font-bold text-brand-indigo'>
+                      Upload Photo
+                    </h2>
+
+                    {/* File Drop Zone */}
+                    <div
+                      className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400'
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const file = e.dataTransfer.files[0];
+                        if (file.type.startsWith('image/')) {
+                          handleFileUpload(file);
+                        }
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                    >
+                      {uploadPreview ? (
+                        <img
+                          src={uploadPreview}
+                          alt='Preview'
+                          className='max-h-48 mx-auto'
+                        />
+                      ) : (
+                        <div>
+                          <p>Drag and drop your image here or</p>
+                          <input
+                            type='file'
+                            accept='image/*'
+                            onChange={(e) =>
+                              handleFileUpload(e.target.files[0])
+                            }
+                            className='mt-2'
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Caption Input */}
+                    <div>
+                      <label className='block text-sm font-medium mb-2'>
+                        Caption ({uploadCaption.length}/140 characters)
+                      </label>
+                      <textarea
+                        value={uploadCaption}
+                        onChange={(e) =>
+                          setUploadCaption(e.target.value.slice(0, 140))
+                        }
+                        className='w-full p-2 border border-gray-300 rounded'
+                        rows={3}
+                        placeholder='Add a caption to your photo...'
+                      />
+                    </div>
+
+                    {/* Buttons */}
+                    <div className='flex gap-4'>
+                      <button
+                        onClick={handleUploadSubmit}
+                        disabled={!uploadPreview || isUploading}
+                        className={`flex-1 py-2 rounded ${
+                          !uploadPreview || isUploading
+                            ? 'bg-gray-300 cursor-not-allowed'
+                            : 'bg-black hover:bg-gray-800 text-white'
+                        }`}
+                      >
+                        {isUploading ? 'Uploading...' : 'Submit'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsUploadOpen(false);
+                          setUploadPreview(null);
+                          setUploadCaption('');
+                        }}
+                        className='flex-1 py-2 border border-black rounded hover:bg-gray-100'
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <div className='text-sm text-gray-500 leading-tight text-center'>
+                      Thank you for sharing your photos! Just a quick note: all
+                      images and captions will go through a brief approval
+                      process. By uploading, you grant us the right to feature
+                      your image in our marketing materials if selected. We’re
+                      excited to see what you’ll share!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       ) : (
         <div>Loading...</div>
       )}
