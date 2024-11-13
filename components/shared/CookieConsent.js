@@ -24,8 +24,8 @@ const CookieConsent = (props) => {
 
   return (
     <div className='fixed z-[210]'>
-      <div className='fixed bottom-0 left-0 right-0 flex md:!flex-row flex-col md:gap-6 gap-4 justify-between px-4 md:px-12 md:py-8 py-4 bg-base-dark'>
-        <div className='text-white font-medium text-xs md:text-base mr-16 max-w-6xl'>
+      <div className='fixed bottom-0 left-0 right-0 flex md:!flex-row flex-col md:gap-6 gap-2 justify-between px-4 md:px-12 md:py-8 py-2 bg-base-dark'>
+        <div className='text-white font-medium text-xs md:text-base hidden md:!block'>
           We use cookies to improve your experience and analyze site traffic. We
           won&apos;t use your information for marketing without your request.
           For more information, see our{' '}
@@ -34,9 +34,19 @@ const CookieConsent = (props) => {
           </a>
           .
         </div>
-        <div className='w-fit flex gap-6 items-center'>
+        <div className='block md:hidden'>
+          <div className='text-white font-medium text-xs leading-tight'>
+            We use cookies to improve your experience and analyze site traffic.
+            For more information, see our{' '}
+            <a href='https://library.packagingschool.com/articles/privacy-policy'>
+              Privacy Policy
+            </a>
+            .
+          </div>
+        </div>
+        <div className='w-fit flex gap-5 items-center'>
           <button
-            className='bg-brand-yellow py-2 md:py-3 px-4 md:px-8 rounded text-neutral-900 font-bold text-xs md:text-base'
+            className='bg-brand-yellow py-0.5 md:py-3 px-4 md:px-8 rounded text-neutral-900 font-bold text-xs md:text-base'
             onClick={() => acceptCookie()}
           >
             Accept
