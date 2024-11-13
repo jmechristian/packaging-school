@@ -30,6 +30,7 @@ import APSAgenda from '../../components/shared/APSAgenda';
 
 import { presentations } from '../../data/presentations';
 import { sessionData } from '../../data/sessionData';
+import { apsAttendees } from '../../data/aps24';
 
 const EventPage = ({ event }) => {
   const router = useRouter();
@@ -71,8 +72,8 @@ const EventPage = ({ event }) => {
     setIsUnlocking(true);
   };
 
-  const validatePasswordHandler = () => {
-    if (isPassword.toLowerCase() === 'packphotos24') {
+  const validatePasswordHandler = async () => {
+    if (isPassword.toLowerCase() === 'autopack2024') {
       setIsPassword('');
       setIsUnlocking(false);
       setIsLocked(false);
@@ -94,16 +95,20 @@ const EventPage = ({ event }) => {
     return re.test(email);
   };
 
+  const checkLocalAttendee = async (email) => {
+    return apsAttendees.find(
+      (attendee) => attendee.email.toLowerCase() === email.toLowerCase()
+    );
+  };
+
   const handleEmailChange = async (e) => {
     const email = e.target.value;
     setIsEmail(email);
     if (validateEmail(email)) {
       setIsCheckingEmail(true);
-      const registrant = await checkRegistrantEmail(email);
-      if (
-        registrant.items.length > 0 ||
-        email.toLowerCase().includes('@packagingschool.com')
-      ) {
+      const attendee = await checkLocalAttendee(email);
+      if (attendee || email.toLowerCase().includes('@packagingschool.com')) {
+        setIsUser(attendee);
         setIsEmailError(false);
         setIsEmailConfirmed(true);
       } else {
@@ -115,7 +120,7 @@ const EventPage = ({ event }) => {
   };
 
   return event ? (
-    <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-16 relative'>
+    <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-20 relative'>
       {/*  LOGIN MODAL */}
       {isUnlocking && (
         <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
@@ -133,7 +138,7 @@ const EventPage = ({ event }) => {
               ×
             </button>
             <div className='flex flex-col gap-2'>
-              <h2 className='text-2xl font-bold text-clemson'>
+              <h2 className='text-2xl font-bold text-brand-indigo'>
                 {isRecoverMode ? 'Recover Password' : 'Registered Attendee?'}
               </h2>
               <p className='mb-4 font-medium'>
@@ -355,7 +360,7 @@ const EventPage = ({ event }) => {
           </div>
         </div>
       </div>
-      <div className='sticky z-20 top-2 mt-10 lg:!mt-24'>
+      <div className='sticky z-20 top-2 mt-10 lg:!mt-28'>
         <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
           <div className='flex items-center gap-3'>
             <div className='grid grid-cols-3 gap-4'>
