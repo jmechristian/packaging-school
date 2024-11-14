@@ -24,7 +24,7 @@ const Features = () => {
             <BrutalButton
               text='Enroll Now – No Application Required!'
               background='bg-clemson'
-              link='/'
+              link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
               textColor='text-black'
             />
           </div>

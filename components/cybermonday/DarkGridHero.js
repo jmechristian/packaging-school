@@ -98,7 +98,7 @@ const Content = () => {
           <BrutalButton
             text='Enroll Now'
             textColor='text-white'
-            link='/'
+            link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
             background='bg-clemson'
           />
           <GhostButton className='rounded-md px-4 py-2 text-zinc-100'>

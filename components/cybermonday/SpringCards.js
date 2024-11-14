@@ -87,7 +87,13 @@ const Card = ({ title, subtitle, className }) => {
               <p className='transition-[margin] duration-300 ease-in-out group-hover:mb-10 leading-[1.3]'>
                 {subtitle}
               </p>
-              <button className='absolute bottom-2 left-2 right-2 translate-y-full border-2 border-black bg-white px-4 py-2 text-black opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-0 group-hover:opacity-100'>
+              <button
+                className='absolute bottom-2 left-2 right-2 translate-y-full border-2 border-black bg-white px-4 py-2 text-black opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-0 group-hover:opacity-100'
+                onClick={() => {
+                  window.location.href =
+                    'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24';
+                }}
+              >
                 LET&apos;S GO
               </button>
             </div>
