@@ -24,7 +24,7 @@ export const SpringCards = () => {
         />
         <Card
           title='Choose Your Own Elective'
-          subtitle='Tailor your learning path with the CPS certification – choose an elective course at no extra cost.'
+          subtitle='Tailor your learning path with the CPS certification, choose an elective course at no extra cost.'
           className='bg-yellow-300 '
         />
       </div>
@@ -88,7 +88,7 @@ const Card = ({ title, subtitle, className }) => {
                 {subtitle}
               </p>
               <button className='absolute bottom-2 left-2 right-2 translate-y-full border-2 border-black bg-white px-4 py-2 text-black opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-0 group-hover:opacity-100'>
-                LET'S GO
+                LET&apos;S GO
               </button>
             </div>
 
