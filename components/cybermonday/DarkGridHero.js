@@ -72,8 +72,8 @@ const Content = () => {
           className='mb-9 max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed'
         >
           Invest in yourself and stand out in the packaging industry with CPS
-          certification. This Cyber Monday offer is available for a limited
-          time, so enroll today and start your journey.
+          certification. Save $1600 on the Certificate of Packaging Science this
+          Cyber Monday for a limited time. Enroll today and start your journey.
         </motion.p>
         <motion.div
           initial={{
