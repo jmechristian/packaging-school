@@ -15,21 +15,21 @@ export const TestimonialShuffle = () => {
       <div className='relative -ml-[100px] h-[450px] w-[320px] md:-ml-[175px]'>
         <Card
           imgUrl='https://packschool.s3.us-east-1.amazonaws.com/gera-headshot.jpeg'
-          testimonial='This rigorous coursework has deepened my understanding of packaging materials, design principles, sustainability practices and many more essential topics.'
+          testimonial={`This rigorous coursework has deepened my understanding of packaging materials, design principles, sustainability practices and many more essential topics.`}
           author='Saurabh G., Sr. Packaging Analyst @ Target'
           handleShuffle={handleShuffle}
           position={order[0]}
         />
         <Card
           imgUrl='https://packschool.s3.us-east-1.amazonaws.com/rafeal-r-headshot.png'
-          testimonial="Man, the The Packaging School (doesn't) play around. They truly are packing focused. My newly acquired Certificate of Packaging Science says it all."
+          testimonial={`Man, the The Packaging School (doesn't) play around. They truly are packing focused. My newly acquired Certificate of Packaging Science says it all.`}
           author='Rafael R., Sr. Packaging Engineer @ Primex'
           handleShuffle={handleShuffle}
           position={order[1]}
         />
         <Card
           imgUrl='https://packschool.s3.us-east-1.amazonaws.com/gislaine-headshot.jpeg'
-          testimonial="I'm thrilled to announce, I've successfully completed the 12-courses of The Packaging School Certification! This is a significant milestone in my career as a Packaging Engineer."
+          testimonial={`I'm thrilled to announce, I've successfully completed the 12-courses of The Packaging School Certification! This is a significant milestone in my career as a Packaging Engineer.`}
           author='Gislaine D., Packaging Engineering Leader @ Stabilus'
           handleShuffle={handleShuffle}
           position={order[2]}
