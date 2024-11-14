@@ -80,7 +80,8 @@
     "react-type-animation": "^3.0.1",
     "react-use-measure": "^2.1.1",
     "resize-observer-polyfill": "^1.5.1",
-    "stripe": "^12.0.0"
+    "stripe": "^12.0.0",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
