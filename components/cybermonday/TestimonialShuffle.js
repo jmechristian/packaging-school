@@ -22,7 +22,7 @@ export const TestimonialShuffle = () => {
         />
         <Card
           imgUrl='https://packschool.s3.us-east-1.amazonaws.com/rafeal-r-headshot.png'
-          testimonial="Man, the The Packaging School (doesn't) play around. They truly are packing focused. My newly acquired Certificate of Packaging Science says it all. "
+          testimonial="Man, the The Packaging School (doesn't) play around. They truly are packing focused. My newly acquired Certificate of Packaging Science says it all."
           author='Rafael R., Sr. Packaging Engineer @ Primex'
           handleShuffle={handleShuffle}
           position={order[1]}
