@@ -161,7 +161,7 @@ const Beams = () => {
       left: Math.floor(numColumns * 0.05) * GRID_BOX_SIZE,
       transition: {
         duration: 3.5,
-        repeatDelay: 5,
+        repeatDelay: 3,
         delay: 2,
       },
     },
