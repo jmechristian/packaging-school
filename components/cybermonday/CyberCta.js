@@ -51,13 +51,13 @@ const CyberCta = () => {
           />
           <ShimmerCard
             headline='2. Learn'
-            subheadline='We should tell them what to expect, sucinctly and clearly.'
+            subheadline='13 courses that cover all major aspects of packaging materials, processes, and design.'
             background='bg-neutral-800'
             textColor='text-neutral-500'
           />
           <ShimmerCard
             headline='3. Excel'
-            subheadline='Show off to your peers and strap in. Something.'
+            subheadline='Time to update that LinkedIn profile! Show off your new CPS certificate and shine.'
             background='bg-neutral-800'
             textColor='text-neutral-500'
           />
