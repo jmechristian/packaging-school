@@ -17,7 +17,7 @@ export const DarkGridHero = () => {
 
 const Content = () => {
   return (
-    <div className='relative z-20 mx-auto max-w-7xl grid grid-cols-1 py-24 md:grid-cols-2 md:py-24 gap-12'>
+    <div className='relative z-20 mx-auto max-w-7xl grid grid-cols-1 py-24 px-5 lg:px-16 xl:px-0 xl:grid-cols-2 xl:py-24 gap-12'>
       <div className='flex flex-col items-center justify-start gap-3'>
         <motion.div
           initial={{
@@ -69,7 +69,7 @@ const Content = () => {
             delay: 0.5,
             ease: 'easeInOut',
           }}
-          className='mb-9 max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed'
+          className='mb-5 max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed'
         >
           Invest in yourself and stand out in the packaging industry with CPS
           certification. Save $1600 on the Certificate of Packaging Science this
@@ -101,10 +101,13 @@ const Content = () => {
             link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
             background='bg-clemson'
           />
-          <GhostButton className='rounded-md px-4 py-2 text-zinc-100'>
+          {/* <GhostButton className='rounded-md px-4 py-2 text-zinc-100'>
             Learn more
-          </GhostButton>
+          </GhostButton> */}
         </motion.div>
+        <div className='text-sm text-zinc-400 mt-2'>
+          Offer Valid November 27 - December 4, 2024
+        </div>
       </div>
       <div className='flex flex-col items-center justify-center w-full'>
         <TestimonialShuffle />
@@ -115,7 +118,7 @@ const Content = () => {
 
 const GlowingChip = ({ children }) => {
   return (
-    <span className='relative z-10 mb-4 inline-block rounded-full border border-zinc-700 bg-zinc-900/20 px-3 py-1.5 text-xs md:text-lg text-zinc-50 md:mb-0'>
+    <span className='relative z-10 mb-4 inline-block rounded-full border border-zinc-700 bg-zinc-900/20 px-3 py-1.5 text-sm md:text-lg text-zinc-50 md:mb-0'>
       {children}
       <span className='absolute bottom-0 left-3 right-3 h-[1px] bg-gradient-to-r from-zinc-500/0 via-zinc-300 to-zinc-500/0' />
     </span>

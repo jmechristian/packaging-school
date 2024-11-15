@@ -17,7 +17,9 @@ const Page = () => {
       <DarkGridHero />
       <LogoGrid />
       <Features />
-      <CyberTestimonials />
+      <div className='w-full h-full overflow-hidden'>
+        <CyberTestimonials />
+      </div>
       <CyberCta />
     </>
   );

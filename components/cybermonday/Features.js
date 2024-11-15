@@ -8,8 +8,8 @@ const Features = () => {
         <div className='lg:col-span-1'>
           <SpringCards />
         </div>
-        <div className='w-full flex flex-col gap-6 pl-24'>
-          <h2 className='text-4xl font-semibold'>
+        <div className='w-full flex flex-col gap-6 lg:pl-10 xl:pl-24 text-center lg:text-left py-16 lg:py-0 px-5 xl:px-0'>
+          <h2 className='text-3xl md:text-4xl font-semibold'>
             Become a Certified Packaging Specialist and Stand Out in the
             Industry
           </h2>
@@ -20,7 +20,7 @@ const Features = () => {
             impact in your career. And today, it&apos;s more accessible than
             ever.
           </p>
-          <div className='w-full flex'>
+          <div className='w-full flex justify-center lg:justify-start'>
             <BrutalButton
               text='Enroll Now – No Application Required!'
               background='bg-clemson'

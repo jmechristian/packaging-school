@@ -6,7 +6,7 @@ import { BrutalButton } from '@jmechristian/ps-component-library';
 const CyberCta = () => {
   return (
     <div className='w-full h-full bg-zinc-900 py-32'>
-      <div className='grid grid-cols-2 max-w-7xl mx-auto'>
+      <div className='grid lg:grid-cols-2 lg:max-w-7xl mx-auto px-5 xl:px-0 gap-10 md:gap-20 lg:gap-8 xl:gap-20 md:max-w-2xl'>
         <div className='flex flex-col justify-center w-full gap-5'>
           <div className='flex items-center gap-2'>
             <div>
@@ -16,7 +16,7 @@ const CyberCta = () => {
               Your Path Starts Here
             </div>
           </div>
-          <h2 className='text-4xl font-semibold text-zinc-50'>
+          <h2 className='text-3xl lg:text-2xl md:text-4xl font-semibold text-zinc-50'>
             40% Off CPS Certification, No Application required. Seize this
             limited-time chance to step into a future of endless opportunities
             in packaging.

@@ -11,7 +11,7 @@ export const TestimonialShuffle = () => {
   };
 
   return (
-    <div className='grid place-content-center  text-slate-50 w-full'>
+    <div className='grid place-content-center  text-slate-50 w-full '>
       <div className='relative -ml-[100px] h-[450px] w-[320px] md:-ml-[175px]'>
         <Card
           imgUrl='https://packschool.s3.us-east-1.amazonaws.com/gera-headshot.jpeg'
@@ -45,9 +45,14 @@ export const TestimonialShuffle = () => {
 
 const Card = ({ handleShuffle, testimonial, position, imgUrl, author }) => {
   const mousePosRef = useRef(0);
+  const clickTimerRef = useRef(null);
 
   const onDragStart = (e) => {
     mousePosRef.current = e.clientX;
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+    }
   };
 
   const onDragEnd = (e) => {
@@ -58,6 +63,15 @@ const Card = ({ handleShuffle, testimonial, position, imgUrl, author }) => {
     }
 
     mousePosRef.current = 0;
+    clickTimerRef.current = setTimeout(() => {
+      clickTimerRef.current = null;
+    }, 100);
+  };
+
+  const handleClick = () => {
+    if (!clickTimerRef.current && position === 'front') {
+      handleShuffle();
+    }
   };
 
   const x = position === 'front' ? '0%' : position === 'middle' ? '33%' : '66%';
@@ -69,6 +83,7 @@ const Card = ({ handleShuffle, testimonial, position, imgUrl, author }) => {
 
   return (
     <motion.div
+      onClick={handleClick}
       style={{
         zIndex,
       }}
