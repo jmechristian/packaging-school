@@ -14,7 +14,7 @@ const CyberCta = () => {
     await registerCyberMondayClick({
       country: location.country,
       device: deviceType,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       object: 'bottom-cta-button',
     });
     router.push(
@@ -26,7 +26,7 @@ const CyberCta = () => {
     await registerCyberMondayClick({
       country: location.country,
       device: deviceType,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       object: `bottom-cta-shimmer`,
     });
     router.push(

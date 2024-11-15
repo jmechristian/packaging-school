@@ -15,7 +15,7 @@ export const SpringCards = () => {
     await registerCyberMondayClick({
       country: location.country,
       device: deviceType,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       object: `spring-cards-button--${type}`,
     });
     router.push(

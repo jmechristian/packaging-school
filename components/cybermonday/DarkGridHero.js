@@ -27,7 +27,7 @@ const Content = () => {
     await registerCyberMondayClick({
       country: location.country,
       device: deviceType,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       object: 'hero-button',
     });
     router.push(

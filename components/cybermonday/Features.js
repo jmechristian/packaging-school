@@ -13,7 +13,7 @@ const Features = () => {
     await registerCyberMondayClick({
       country: location.country,
       device: deviceType,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       object: 'features-button',
     });
     router.push(
