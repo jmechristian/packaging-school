@@ -788,6 +788,14 @@ type CourseSearch @model @auth(rules: [{ allow: public }]) {
   country: String
 }
 
+type CyberMondayClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  object: String
+  ipAddress: String
+  country: String
+  device: String
+}
+
 ######### INDIA #########
 
 type Click @model @auth(rules: [{ allow: public }]) {
@@ -896,6 +904,7 @@ type UserEventPhoto @model @auth(rules: [{ allow: public }]) {
   eventID: String
   event: String
   approved: Boolean @default(value: "false")
+  approvedId: String
 }
 
 type EventPresentation @model @auth(rules: [{ allow: public }]) {

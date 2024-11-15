@@ -1,9 +1,39 @@
 import React from 'react';
 import { MdMap } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import ShimmerCard from './ShimmerCard';
 import { BrutalButton } from '@jmechristian/ps-component-library';
-
+import { registerCyberMondayClick, getDeviceType } from '../../helpers/api';
 const CyberCta = () => {
+  const { location } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const deviceType = getDeviceType();
+
+  const handleCtaButtonClick = async () => {
+    await registerCyberMondayClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ipAddress,
+      object: 'bottom-cta-button',
+    });
+    router.push(
+      'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
+    );
+  };
+
+  const handleShimmerCardClick = async () => {
+    await registerCyberMondayClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ipAddress,
+      object: `bottom-cta-shimmer`,
+    });
+    router.push(
+      'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
+    );
+  };
+
   return (
     <div className='w-full h-full bg-zinc-900 py-32'>
       <div className='grid lg:grid-cols-2 lg:max-w-7xl mx-auto px-5 xl:px-0 gap-10 md:gap-20 lg:gap-8 xl:gap-20 md:max-w-2xl'>
@@ -35,6 +65,7 @@ const CyberCta = () => {
               background='bg-clemson'
               link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
               textColor='text-white'
+              clickFn={handleCtaButtonClick}
             />
           </div>
         </div>
@@ -44,10 +75,7 @@ const CyberCta = () => {
             subheadline='What is the process to get them in the system?'
             background='bg-brand-yellow'
             isHovering={true}
-            clickFn={() => {
-              window.location.href =
-                'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24';
-            }}
+            clickFn={handleShimmerCardClick}
           />
           <ShimmerCard
             headline='2. Learn'

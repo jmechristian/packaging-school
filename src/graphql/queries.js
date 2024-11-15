@@ -5221,6 +5221,43 @@ export const courseSearchesByTerm = /* GraphQL */ `
     }
   }
 `;
+export const getCyberMondayClick = /* GraphQL */ `
+  query GetCyberMondayClick($id: ID!) {
+    getCyberMondayClick(id: $id) {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCyberMondayClicks = /* GraphQL */ `
+  query ListCyberMondayClicks(
+    $filter: ModelCyberMondayClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCyberMondayClicks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        object
+        ipAddress
+        country
+        device
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getClick = /* GraphQL */ `
   query GetClick($id: ID!) {
     getClick(id: $id) {
@@ -5915,6 +5952,8 @@ export const getUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
@@ -5934,6 +5973,8 @@ export const listUserEventPhotos = /* GraphQL */ `
         uploadedBy
         eventID
         event
+        approved
+        approvedId
         createdAt
         updatedAt
       }

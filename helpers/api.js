@@ -16,6 +16,7 @@ import {
   createLessonClick,
   createUserEventPhoto,
   createEventClick,
+  createCyberMondayClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -344,4 +345,37 @@ export const sendAPSRecoveryEmail = async (email) => {
   });
 
   return (await res).status;
+};
+
+export const registerCyberMondayClick = async (data) => {
+  const res = await API.graphql({
+    query: createCyberMondayClick,
+    variables: {
+      input: {
+        country: data.country,
+        device: data.device,
+        ipAddress: data.ipAddress,
+        object: data.object,
+      },
+    },
+  });
+  return res.data.createCyberMondayClick;
+};
+
+export const getDeviceType = () => {
+  if (typeof window === 'undefined' || !window.navigator) {
+    return 'unknown';
+  }
+
+  const ua = window.navigator.userAgent;
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+    return 'tablet';
+  } else if (
+    /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+      ua
+    )
+  ) {
+    return 'mobile';
+  }
+  return 'desktop';
 };

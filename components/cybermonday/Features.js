@@ -1,7 +1,26 @@
 import React from 'react';
+import { registerCyberMondayClick, getDeviceType } from '../../helpers/api';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { SpringCards } from './SpringCards';
 import { BrutalButton } from '@jmechristian/ps-component-library';
 const Features = () => {
+  const { location } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const deviceType = getDeviceType();
+
+  const handleEnrollButtonClick = async () => {
+    await registerCyberMondayClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ipAddress,
+      object: 'features-button',
+    });
+    router.push(
+      'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
+    );
+  };
+
   return (
     <div className='w-full py-24'>
       <div className='max-w-7xl mx-auto grid lg:grid-cols-2 place-items-center'>
@@ -26,6 +45,7 @@ const Features = () => {
               background='bg-clemson'
               link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
               textColor='text-black'
+              clickFn={handleEnrollButtonClick}
             />
           </div>
         </div>

@@ -2,8 +2,27 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { MotionConfig, motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
+import { registerCyberMondayClick, getDeviceType } from '../../helpers/api';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 export const SpringCards = () => {
+  const { location } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const deviceType = getDeviceType();
+
+  const handleFeatureCardButtonClick = async (type) => {
+    await registerCyberMondayClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ipAddress,
+      object: `spring-cards-button--${type}`,
+    });
+    router.push(
+      'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
+    );
+  };
+
   return (
     <section>
       <div className='mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2'>
@@ -11,28 +30,32 @@ export const SpringCards = () => {
           title='Recognized Credential'
           subtitle='Join a network of professionals who have elevated their careers with CPS.'
           className='sm:-translate-y-5'
+          clickFn={() => handleFeatureCardButtonClick('recognized')}
         />
         <Card
           title='Industry-Relevant Knowledge'
           subtitle='Gain skills that employers demand and stand out in the competitive packaging industry.'
           className='bg-indigo-300 '
+          clickFn={() => handleFeatureCardButtonClick('industry')}
         />
         <Card
           title='Learn at Your Own Pace'
           subtitle='100% online and self-paced to fit your schedule.'
           className='bg-red-300 sm:-translate-y-5'
+          clickFn={() => handleFeatureCardButtonClick('pace')}
         />
         <Card
           title='Choose Your Own Elective'
           subtitle='Tailor your learning path with the CPS certification, choose an elective course at no extra cost.'
           className='bg-yellow-300 '
+          clickFn={() => handleFeatureCardButtonClick('path')}
         />
       </div>
     </section>
   );
 };
 
-const Card = ({ title, subtitle, className }) => {
+const Card = ({ title, subtitle, className, clickFn }) => {
   return (
     <MotionConfig
       transition={{
@@ -89,10 +112,7 @@ const Card = ({ title, subtitle, className }) => {
               </p>
               <button
                 className='absolute bottom-2 left-2 right-2 translate-y-full border-2 border-black bg-white px-4 py-2 text-black opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-0 group-hover:opacity-100'
-                onClick={() => {
-                  window.location.href =
-                    'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24';
-                }}
+                onClick={clickFn}
               >
                 LET&apos;S GO
               </button>

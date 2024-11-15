@@ -4,6 +4,9 @@ import { FiArrowRight } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
 import { TestimonialShuffle } from './TestimonialShuffle';
 import { BrutalButton } from '@jmechristian/ps-component-library';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { registerCyberMondayClick, getDeviceType } from '../../helpers/api';
 
 export const DarkGridHero = () => {
   return (
@@ -16,6 +19,22 @@ export const DarkGridHero = () => {
 };
 
 const Content = () => {
+  const { location } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const deviceType = getDeviceType();
+
+  const handleHeroButtonClick = async () => {
+    await registerCyberMondayClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ipAddress,
+      object: 'hero-button',
+    });
+    router.push(
+      'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
+    );
+  };
+
   return (
     <div className='relative z-20 mx-auto max-w-7xl grid grid-cols-1 py-24 px-5 lg:px-16 xl:px-0 xl:grid-cols-2 xl:py-24 gap-12'>
       <div className='flex flex-col items-center justify-start gap-3'>
@@ -100,6 +119,7 @@ const Content = () => {
             textColor='text-white'
             link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
             background='bg-clemson'
+            clickFn={handleHeroButtonClick}
           />
           {/* <GhostButton className='rounded-md px-4 py-2 text-zinc-100'>
             Learn more

@@ -6166,6 +6166,45 @@ export const onDeleteCourseSearch = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCyberMondayClick = /* GraphQL */ `
+  subscription OnCreateCyberMondayClick {
+    onCreateCyberMondayClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCyberMondayClick = /* GraphQL */ `
+  subscription OnUpdateCyberMondayClick {
+    onUpdateCyberMondayClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCyberMondayClick = /* GraphQL */ `
+  subscription OnDeleteCyberMondayClick {
+    onDeleteCyberMondayClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateClick = /* GraphQL */ `
   subscription OnCreateClick {
     onCreateClick {
@@ -6991,6 +7030,8 @@ export const onCreateUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
@@ -7005,6 +7046,8 @@ export const onUpdateUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
@@ -7019,6 +7062,8 @@ export const onDeleteUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }

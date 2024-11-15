@@ -6679,6 +6679,54 @@ export const deleteCourseSearch = /* GraphQL */ `
     }
   }
 `;
+export const createCyberMondayClick = /* GraphQL */ `
+  mutation CreateCyberMondayClick(
+    $input: CreateCyberMondayClickInput!
+    $condition: ModelCyberMondayClickConditionInput
+  ) {
+    createCyberMondayClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCyberMondayClick = /* GraphQL */ `
+  mutation UpdateCyberMondayClick(
+    $input: UpdateCyberMondayClickInput!
+    $condition: ModelCyberMondayClickConditionInput
+  ) {
+    updateCyberMondayClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCyberMondayClick = /* GraphQL */ `
+  mutation DeleteCyberMondayClick(
+    $input: DeleteCyberMondayClickInput!
+    $condition: ModelCyberMondayClickConditionInput
+  ) {
+    deleteCyberMondayClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createClick = /* GraphQL */ `
   mutation CreateClick(
     $input: CreateClickInput!
@@ -7588,6 +7636,8 @@ export const createUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
@@ -7605,6 +7655,8 @@ export const updateUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
@@ -7622,6 +7674,8 @@ export const deleteUserEventPhoto = /* GraphQL */ `
       uploadedBy
       eventID
       event
+      approved
+      approvedId
       createdAt
       updatedAt
     }
