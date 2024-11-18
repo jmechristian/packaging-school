@@ -183,12 +183,12 @@ function generateSiteMap(lessons, courses, articles, careers) {
 export async function getServerSideProps({ res }) {
   const lessons = await API.graphql({
     query: listLessons,
-    variables: { filter: { status: { eq: 'PUBLISHED' } } },
+    variables: { filter: { status: { eq: 'PUBLISHED' } }, limit: 500 },
   });
 
   const courses = await API.graphql({
     query: listLMSCourses,
-    variables: { filter: { collection: { contains: 'null' } } },
+    variables: { filter: { collection: { contains: 'null' } }, limit: 500 },
   });
 
   const getArticles = /* GraphQL */ `

@@ -76,6 +76,7 @@ export async function getServerSideProps({ res }) {
     query: listLessons,
     variables: {
       filter: { mediaType: { eq: 'VIDEO' }, status: { eq: 'PUBLISHED' } },
+      limit: 500,
     },
   });
 
@@ -86,6 +87,7 @@ export async function getServerSideProps({ res }) {
         preview: { attributeExists: true },
         collection: { contains: 'null' },
       },
+      limit: 500,
     },
   });
 
