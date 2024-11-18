@@ -25,22 +25,6 @@ const CMPMSessionInfo = ({ email, free }) => {
             <div className='flex items-center gap-x-3'>
               <input
                 {...register('sessionApplying', { required: true })}
-                id='fallSessionTwo'
-                name='sessionApplying'
-                type='radio'
-                value='fallSessionTwo'
-                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
-              />
-              <label
-                htmlFor='fallSessionTwo'
-                className='block font-medium font-greycliff leading-6 text-slate-900'
-              >
-                Fall Session 2
-              </label>
-            </div>
-            <div className='flex items-center gap-x-3'>
-              <input
-                {...register('sessionApplying', { required: true })}
                 id='winterSession'
                 name='sessionApplying'
                 type='radio'
@@ -51,7 +35,54 @@ const CMPMSessionInfo = ({ email, free }) => {
                 htmlFor='winterSession'
                 className='block font-medium font-greycliff leading-6 text-slate-900'
               >
-                Winter Session
+                Winter Session <br />
+                <span className='text-sm text-slate-500'>
+                  Dec 9, 2024 - Feb 27, 2025
+                  <br />
+                  Deadline: Dec 4, 2024
+                </span>
+              </label>
+            </div>
+            <div className='flex items-center gap-x-3'>
+              <input
+                {...register('sessionApplying', { required: true })}
+                id='springOne'
+                name='sessionApplying'
+                type='radio'
+                value='springOne'
+                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+              />
+              <label
+                htmlFor='springOne'
+                className='block font-medium font-greycliff leading-6 text-slate-900'
+              >
+                Spring One <br />
+                <span className='text-sm text-slate-500'>
+                  Feb 10, 2025 - Apr 28, 2025
+                  <br />
+                  Deadline: Feb 4, 2025
+                </span>
+              </label>
+            </div>
+            <div className='flex items-center gap-x-3'>
+              <input
+                {...register('sessionApplying', { required: true })}
+                id='springTwo'
+                name='sessionApplying'
+                type='radio'
+                value='springTwo'
+                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+              />
+              <label
+                htmlFor='springTwo'
+                className='block font-medium font-greycliff leading-6 text-slate-900'
+              >
+                Spring Two <br />
+                <span className='text-sm text-slate-500'>
+                  April 7, 2025 - Jun 23, 2025
+                  <br />
+                  Deadline: April 3, 2025
+                </span>
               </label>
             </div>
           </div>
