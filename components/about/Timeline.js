@@ -11,7 +11,7 @@ const timeline = [
     date: '2016',
   },
   {
-    name: 'SC Commission on Higher Eductation',
+    name: 'SC Commission on Higher Education',
     description:
       'Packaging School becomes a licensed postsecondary institution',
     date: '2017',
