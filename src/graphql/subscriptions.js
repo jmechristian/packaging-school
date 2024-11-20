@@ -6205,6 +6205,48 @@ export const onDeleteCyberMondayClick = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAPSPresentationClick = /* GraphQL */ `
+  subscription OnCreateAPSPresentationClick {
+    onCreateAPSPresentationClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSPresentationClick = /* GraphQL */ `
+  subscription OnUpdateAPSPresentationClick {
+    onUpdateAPSPresentationClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSPresentationClick = /* GraphQL */ `
+  subscription OnDeleteAPSPresentationClick {
+    onDeleteAPSPresentationClick {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateClick = /* GraphQL */ `
   subscription OnCreateClick {
     onCreateClick {

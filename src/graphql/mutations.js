@@ -6727,6 +6727,57 @@ export const deleteCyberMondayClick = /* GraphQL */ `
     }
   }
 `;
+export const createAPSPresentationClick = /* GraphQL */ `
+  mutation CreateAPSPresentationClick(
+    $input: CreateAPSPresentationClickInput!
+    $condition: ModelAPSPresentationClickConditionInput
+  ) {
+    createAPSPresentationClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSPresentationClick = /* GraphQL */ `
+  mutation UpdateAPSPresentationClick(
+    $input: UpdateAPSPresentationClickInput!
+    $condition: ModelAPSPresentationClickConditionInput
+  ) {
+    updateAPSPresentationClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSPresentationClick = /* GraphQL */ `
+  mutation DeleteAPSPresentationClick(
+    $input: DeleteAPSPresentationClickInput!
+    $condition: ModelAPSPresentationClickConditionInput
+  ) {
+    deleteAPSPresentationClick(input: $input, condition: $condition) {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createClick = /* GraphQL */ `
   mutation CreateClick(
     $input: CreateClickInput!

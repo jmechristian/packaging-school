@@ -796,6 +796,15 @@ type CyberMondayClick @model @auth(rules: [{ allow: public }]) {
   device: String
 }
 
+type APSPresentationClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  object: String
+  ipAddress: String
+  country: String
+  device: String
+  email: String
+}
+
 ######### INDIA #########
 
 type Click @model @auth(rules: [{ allow: public }]) {

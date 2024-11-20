@@ -6,23 +6,28 @@ import {
   ArrowRightIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
+import { handleAPSPresentationClick, getDeviceType } from '../../helpers/api';
+import { useSelector } from 'react-redux';
 
-const APSPresentations = ({
-  presentations,
-  isLocked,
-  unlockHandler,
-  validatePasswordHandler,
-}) => {
+const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
   const [toHover, setToHover] = useState(false);
   const [isPassword, setIsPassword] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isSelectedVid, setIsSelectedVid] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-
-  const clickHandler = (vid) => {
+  const { location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
+  const clickHandler = (vid, title) => {
     if (!isLocked) {
       setIsSelectedVid(vid);
       setIsOpen(true);
+      handleAPSPresentationClick({
+        country: location.country,
+        device: deviceType,
+        ipAddress: location.ip,
+        object: title,
+        email: user,
+      });
     }
   };
 
@@ -81,25 +86,11 @@ const APSPresentations = ({
           className='w-full rounded-b-xl relative bg-neutral-900 flex flex-col lg:flex-row items-center cursor-pointer'
           onClick={() =>
             clickHandler(
-              'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
+              'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+              'Keynote'
             )
           }
         >
-          {/* <div
-            className={`${
-              toHover
-                ? 'scale-115 transition-all ease-in shadow-xl bg-white'
-                : ' shadow-lg'
-            } cursor-pointer bg-gradient-to-r mt-4 gap-2 from-ap-darkblue to-ap-blue py-3 px-6 rounded-full h-12 w-12 flex justify-center items-center absolute -top-1 right-3 z-20`}
-          >
-            <div className={`${toHover ? 'scale-115' : ''}`}>
-              {isLocked ? (
-                <LockClosedIcon className='w-5 h-5 stroke-white' />
-              ) : (
-                <LockOpenIcon className='w-5 h-5 stroke-white' />
-              )}
-            </div>
-          </div> */}
           <div className='max-w-5xl flex flex-col mx-auto gap-4 w-full h-full justify-end lg:justify-center p-6 md:py-12 lg:py-10 relative'>
             <div className='flex items-center gap-1 py-2 px-3 bg-ap-yellow w-fit rounded'>
               <div>
@@ -143,7 +134,10 @@ const APSPresentations = ({
         <div className='w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 rounded-xl gap-1'>
           {presentations &&
             presentations.map((pres, i) => (
-              <div key={pres.title} onClick={() => clickHandler(pres.video)}>
+              <div
+                key={pres.title}
+                onClick={() => clickHandler(pres.video, pres.title)}
+              >
                 <PresentationBlock
                   backgroundColor={pres.backgroundColor}
                   title={pres.title}
@@ -235,21 +229,6 @@ const PresentationBlock = ({
           </div>
         </div>
       </div>
-      {/* <div
-        className={`${
-          toHover ? 'scale-115 transition ease-in shadow-xl' : 'shadow-lg'
-        } cursor-pointer bg-gradient-to-r mt-4 gap-2 from-ap-darkblue to-ap-blue py-3 px-6 rounded-full h-12 w-12 flex justify-center items-center absolute -top-1 right-3 z-30`}
-      >
-        {locked ? (
-          <div>
-            <LockClosedIcon className='w-6 h-6 stroke-white' />
-          </div>
-        ) : (
-          <div>
-            <LockOpenIcon className='w-6 h-6 stroke-white' />
-          </div>
-        )}
-      </div> */}
     </div>
   );
 };

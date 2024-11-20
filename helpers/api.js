@@ -18,6 +18,7 @@ import {
   createUserEventPhoto,
   createEventClick,
   createCyberMondayClick,
+  createAPSPresentationClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -393,4 +394,19 @@ export const getCoursesByCategory = async (category) => {
     },
   });
   return res.data.listLMSCourses.items;
+};
+
+export const handleAPSPresentationClick = async (data) => {
+  const res = await API.graphql({
+    query: createAPSPresentationClick,
+    variables: {
+      input: {
+        country: data.country,
+        device: data.device,
+        email: data.email,
+        ipAddress: data.ipAddress,
+        object: data.object,
+      },
+    },
+  });
 };

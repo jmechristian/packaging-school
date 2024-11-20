@@ -5258,6 +5258,45 @@ export const listCyberMondayClicks = /* GraphQL */ `
     }
   }
 `;
+export const getAPSPresentationClick = /* GraphQL */ `
+  query GetAPSPresentationClick($id: ID!) {
+    getAPSPresentationClick(id: $id) {
+      id
+      object
+      ipAddress
+      country
+      device
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAPSPresentationClicks = /* GraphQL */ `
+  query ListAPSPresentationClicks(
+    $filter: ModelAPSPresentationClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAPSPresentationClicks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        object
+        ipAddress
+        country
+        device
+        email
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getClick = /* GraphQL */ `
   query GetClick($id: ID!) {
     getClick(id: $id) {

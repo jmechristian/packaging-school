@@ -653,6 +653,7 @@ const EventPage = ({ event }) => {
                     isLocked={isLocked}
                     unlockHandler={unlockHandler}
                     validatePasswordHandler={validatePasswordHandler}
+                    user={isUser}
                   />
                 </div>
               </div>
