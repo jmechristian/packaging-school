@@ -51,8 +51,6 @@ const Page = () => {
         variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
       });
 
-      console.log(courses);
-
       setIsCourses(courses.data.listLMSCourses.items);
       filter &&
         setIsFilters(
@@ -256,7 +254,7 @@ const Page = () => {
           {/* SEARCH - FILTER */}
           <div className='grid grid-cols-3 lg:mb-5 border-b-2 border-b-black py-6 gap-2.5'>
             {/* SEARCH */}
-            <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
+            <div className='w-full col-span-3 lg:!col-span-2 border-2 border-black p-1'>
               <div className='flex gap-2 items-center'>
                 <input
                   type='text'
