@@ -8,6 +8,7 @@ import {
   listEventTemplates,
   eventTemplatesBySlug,
   aPSRegistrantsByEmail,
+  listLMSCourses,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -378,4 +379,18 @@ export const getDeviceType = () => {
     return 'mobile';
   }
   return 'desktop';
+};
+
+export const getCoursesByCategory = async (category) => {
+  const res = await API.graphql({
+    query: listLMSCourses,
+    variables: {
+      filter: {
+        categoryArray: { contains: category },
+        type: { ne: 'CUSTOMER' },
+      },
+      limit: 500,
+    },
+  });
+  return res.data.listLMSCourses.items;
 };

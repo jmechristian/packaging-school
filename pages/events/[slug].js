@@ -648,7 +648,12 @@ const EventPage = ({ event }) => {
               {/* PRESENTATIONS */}
               <div id='presentations' className='scroll-mt-20'>
                 <div className='flex flex-col gap-8 md:gap-10'>
-                  <APSPresentations presentations={presentations} />
+                  <APSPresentations
+                    presentations={presentations}
+                    isLocked={isLocked}
+                    unlockHandler={unlockHandler}
+                    validatePasswordHandler={validatePasswordHandler}
+                  />
                 </div>
               </div>
 

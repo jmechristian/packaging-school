@@ -24,7 +24,6 @@ import SortToggleItem from '../components/shared/SortToggleItem';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { listLMSCourses } from '../src/graphql/queries';
-// import { allCourseBackup } from '../data/allCourseBackup';
 
 const Page = () => {
   const dispatch = useDispatch();

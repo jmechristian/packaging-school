@@ -1,20 +1,32 @@
 export const presentations = [
   {
     backgroundColor: 'bg-ap-yellow',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/trienda-aps-2.png',
-    title: 'Tactical approaches for Optimizing Returnability',
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/panel-1-cover.png',
+    title:
+      'Sustainable Innovation and Compliance in Automotive Packaging: Challenges, Technologies, and Future Trends',
     video:
-      'https://player.vimeo.com/video/893772942?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1028971641?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Nate Franck',
-        company: 'TriEnda',
-        title: 'Vice President of Sales',
+        name: 'Tom Andrew',
+        title: 'Logistics Supervisor',
+        company: 'JTEKT Bearings NA',
       },
       {
-        name: 'David Krueger',
-        company: 'TriEnda',
-        title: 'President',
+        name: 'Dan Brunetti',
+        title: 'Senior Engineer SCM',
+        company: 'Rehau Automotive LLC',
+      },
+      {
+        name: 'Bridget Grewal',
+        title: 'Director of Packaging Continuous Improvement',
+        company: 'Magna',
+      },
+      {
+        name: 'Xavier Ovize',
+        title: 'CEO North America',
+        company: 'conTeyor International',
       },
     ],
     description:
@@ -22,25 +34,17 @@ export const presentations = [
   },
   {
     backgroundColor: 'bg-indigo-800',
-    title: 'Powering the future: Driving Towards a Circular Economy',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/campfire-2.png',
+    title:
+      "Bosch Rexroth's Aftersales Packaging Strategies:Adapting for High-Mix & Low Volume",
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/conner-cover.png',
     video:
-      'https://player.vimeo.com/video/893845442?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1029273988?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Bridget Grewal',
-        company: 'Magna',
-        title: 'Director of Packaging Continuous Improvement',
-      },
-      {
-        name: 'Linda Balwinski',
-        company: 'Primex Plastics',
-        title: 'Regional Manager',
-      },
-      {
-        name: 'Camille Chism',
-        company: 'TrueFleet, LLC',
-        title: 'CEO',
+        name: 'Connor DeYoung',
+        company: 'Bosch Rexroth Corporation',
+        title: 'Packaging Engineer',
       },
     ],
     description:
@@ -48,20 +52,36 @@ export const presentations = [
   },
   {
     backgroundColor: 'bg-ap-red',
-    title: 'Bumper to Bumper Complexities from Production through Assembly',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/barnes.png',
+    title: 'Aftersales Packaging Panel',
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/panel-2-cover.png',
     video:
-      'https://player.vimeo.com/video/892652116?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1029291078?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Brad Meredith',
-        company: 'BMW',
-        title: 'Packaging Planning Specialist',
+        name: 'Todd Meadows',
+        company: 'IPS Packaging and Automation',
+        title: 'Vice President of Sales',
       },
       {
-        name: 'Ashley Barnes',
-        company: 'Plastic Omnium',
-        title: 'Program Packaging Engineer',
+        name: 'Eric Fisher',
+        company: 'Volvo Group NA',
+        title: 'Packaging Engineer',
+      },
+      {
+        name: 'Malcolm Jewell',
+        company: 'Robert Bosch, LLC',
+        title: 'Packaging Engineer',
+      },
+      {
+        name: 'Vidya Seeram',
+        company: 'Volvo Group NA',
+        title: ' Senior Buyer',
+      },
+      {
+        name: 'Anthony Brownlow',
+        company: 'Nissan Group of North America',
+        title: 'Senior Manager Aftersales Logistics & Packaging',
       },
     ],
     description:
@@ -69,16 +89,21 @@ export const presentations = [
   },
   {
     backgroundColor: 'bg-ap-blue',
-    title:
-      'Aftermarket Design: Eliminate waste, Reduce Cost, and Improve Process Efficiency',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/patrick-aps.png',
+    title: 'Continuous Innovation in Fascia Protective Packaging',
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/panel-3-cover.png',
     video:
-      'https://player.vimeo.com/video/893484299?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1029767569?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Patrick Graham',
-        company: 'Magna',
-        title: 'Account Manager',
+        name: 'Michael Parks',
+        title: 'Lean Implementation Manager',
+        company: 'Veritiv Corporation',
+      },
+      {
+        name: 'Anthony Brownlow',
+        title: 'Senior Manager Aftersales Logistics & Packaging',
+        company: 'Nissan Motor Company',
       },
     ],
     description:
@@ -87,20 +112,21 @@ export const presentations = [
   {
     backgroundColor: 'bg-ap-red',
     title:
-      'Cross functional Seating Case Study: How a Volvo whiteboard sketch drove a successful design competition',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/jody-aps.png',
+      'Innovative Rust Prevention That Saves Money and Saves the Planet: ARMOR DEFENDER™ VCI Bag BMW Case Study',
+    backgroundImage:
+      'https://apsmedia.s3.us-east-1.amazonaws.com/armor-cover.png',
     video:
-      'https://player.vimeo.com/video/894197500?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1029806365?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Jody Owens',
-        company: 'C-P-S Automotive LP',
-        title: 'CEO',
+        name: 'Kristin Moore',
+        company: 'Armor Protective Packaging',
+        title: 'Manager – National Accounts & Training',
       },
       {
-        name: 'Tim Kinross',
-        company: 'Lear Corporation',
-        title: 'Engineering Director',
+        name: 'Jeff Short',
+        company: 'Armor Protective Packaging',
+        title: 'Business Developer',
       },
     ],
     description:
@@ -109,15 +135,16 @@ export const presentations = [
   {
     backgroundColor: 'bg-ap-yellow',
     title:
-      'EV Battery Packaging - Achieving Resilience for the Battery Supply Chain',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/mike-aps-2.png',
+      'GPX: Next-Gen Supply Chain Tracking: Driving ROI and Innovation in Automotive Packaging',
+    backgroundImage:
+      'https://apsmedia.s3.us-east-1.amazonaws.com/gpx-cover.png',
     video:
-      'https://player.vimeo.com/video/895829382?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1030085462?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Mike Pagel',
-        company: 'HazMat Safety Consulting',
-        title: 'Senior Consultant',
+        name: 'Mitch Belsley',
+        company: 'GPX Intelligence',
+        title: 'VP, Customer Experience',
       },
     ],
     description:
@@ -126,11 +153,39 @@ export const presentations = [
   {
     backgroundColor: 'bg-ap-red',
     title:
-      'Technology Solutions: How to choose the correct Sensor Technology for Automotive Asset Tracking',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/bridge-aps.png',
+      'Practical Applications of Vantage Plastics®: VanTech® Material in Automotive Packaging',
+    backgroundImage:
+      'https://apsmedia.s3.us-east-1.amazonaws.com/vantage-cover.png',
     video:
-      'https://player.vimeo.com/video/894117116?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1030161092?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
+      {
+        name: 'Paul Aultman',
+        company: 'Vantage Plastics',
+        title: 'CEO',
+      },
+      {
+        name: 'Megan Osier',
+        company: 'Vantage Plastics',
+        title: 'Sales',
+      },
+    ],
+    description:
+      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
+  },
+  {
+    backgroundColor: 'bg-ap-yellow',
+    title: 'Consolidation of Automotive Supply Chain: Packaging for Recycling',
+    backgroundImage:
+      'https://apsmedia.s3.us-east-1.amazonaws.com/consolidation-cover.png',
+    video:
+      'https://player.vimeo.com/video/1030913395?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+    speakers: [
+      {
+        name: 'Suzanne Fisher',
+        company: 'Fisher Packaging',
+        title: 'President',
+      },
       {
         name: 'Bridget Grewal',
         company: 'Magna',
@@ -141,106 +196,23 @@ export const presentations = [
       "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
   },
   {
-    backgroundColor: 'bg-ap-yellow',
-    title: 'PackPitch: Sustainability strides for Aftermarket Cummins-Bosch',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/pakpitch.png',
-    video:
-      'https://player.vimeo.com/video/900864713?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-    speakers: [
-      {
-        name: 'Gauri Awalgaonkar',
-        company: 'Bosch',
-        title: 'Sr. Packaging Engineer',
-      },
-      {
-        name: 'Saket Athavale',
-        company: 'Cummins Inc.',
-        title: 'Sr. Packaging Engineer',
-      },
-    ],
-    description:
-      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
-  },
-  {
     backgroundColor: 'bg-indigo-800',
-    title: 'PackPitch: ZERUST® Natur-VCI® Certified Compostable VCI Film',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/zatkoff-pitch.png',
+    title:
+      'Optimizing Automotive Supply Chains: Economic and Sustainable Reusable Packaging Systems',
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/trienda-cover.png',
     video:
-      'https://player.vimeo.com/video/899640154?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1031205741?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
-        name: 'Kevin Landmark, PhD',
-        company: 'Zerust Excor',
-        title: 'Technical Sales Manager',
-      },
-    ],
-    description:
-      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
-  },
-  {
-    backgroundColor: 'bg-ap-red',
-    title: 'PackPitch: Automated Block Pallet Production',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/pakpitch.png',
-    video:
-      'https://player.vimeo.com/video/900252395?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-    speakers: [
-      {
-        name: 'Michael Miller',
-        company: 'Tree Brand Packaging',
-        title: 'Regional VP',
-      },
-    ],
-    description:
-      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
-  },
-  {
-    backgroundColor: 'bg-ap-blue',
-    title: 'PackPitch: Automotive Supply Chain Efficiency',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/pakpitch.png',
-    video:
-      'https://player.vimeo.com/video/900223393?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-    speakers: [
-      {
-        name: 'Gabriel Weeks',
-        company: 'GPX Intelligence',
-        title: 'CEO',
-      },
-    ],
-    description:
-      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
-  },
-  {
-    backgroundColor: 'bg-ap-yellow',
-    title: 'PackPitch: An Innovative Approach to Business',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/vantage.png',
-    video:
-      'https://player.vimeo.com/video/899962216?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-    speakers: [
-      {
-        name: 'Greg Murphy',
-        company: 'Applications Engineer',
-        title: 'Vantage Plastics',
+        name: 'Nate Franck',
+        company: 'TriEnda',
+        title: 'Vice President of Sales',
       },
       {
-        name: 'Paul Altman',
-        company: 'President',
-        title: 'Vantage Plastics',
-      },
-    ],
-    description:
-      "Underestimate Tauriel servant pierce tower pulled shells rotten breach weren't. ",
-  },
-  {
-    backgroundColor: 'bg-indigo-800',
-    title: 'PackPitch: FlexZShock',
-    backgroundImage: 'https://packschool.s3.amazonaws.com/zatkoff.png',
-    video:
-      'https://player.vimeo.com/video/899876194?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-    speakers: [
-      {
-        name: 'Hamilton Marques',
-        company: 'Zatkoff Seals & Packings',
-        title: 'VP of Sales and Marketing',
+        name: 'David Kruger',
+        company: 'TriEnda',
+        title: 'President',
       },
     ],
     description:
