@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { getCoursesByCategory } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import { H2, H4 } from '@jmechristian/ps-component-library';
+import { updateCategoryMenu } from '../../../data/CategoryMenu';
 import {
   MdOutlineSearch,
   MdAutoStories,
@@ -135,9 +136,16 @@ const Page = () => {
     fetchCourses();
   }, [cat]);
 
+  const categoryNameHandler = (cat) => {
+    const category = updateCategoryMenu.find((c) => c.value === cat);
+    return category ? category.name : cat;
+  };
+
   return sortedAndSearchedCourses.length > 0 ? (
-    <div className='max-w-7xl mx-auto py-12 flex flex-col'>
-      <h2 className='mb-9 capitalize h2-base'>{cat} Courses</h2>
+    <div className='max-w-7xl mx-auto py-12 flex flex-col px-3 lg:px-0'>
+      <h2 className='mb-9 capitalize h2-base'>
+        {categoryNameHandler(cat)} Courses
+      </h2>
       <div className='grid grid-cols-3 border-b-2 border-b-black pb-6 gap-2.5'>
         {/* SEARCH */}
         <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
@@ -374,7 +382,9 @@ const Page = () => {
     </div>
   ) : (
     <div className='max-w-7xl mx-auto py-16 flex flex-col gap-5'>
-      <h2 className='mb-9 capitalize h2-base'>{cat} Courses</h2>
+      <h2 className='mb-9 capitalize h2-base'>
+        {categoryNameHandler(cat)} Courses
+      </h2>
       <div className='flex flex-col gap-3 w-full max-w-5xl border-2 border-black p-10 items-center'>
         <H4 textColor='text-black'>No courses found</H4>
         <div

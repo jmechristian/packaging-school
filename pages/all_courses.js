@@ -15,9 +15,8 @@ import {
   MdFilterList,
 } from 'react-icons/md';
 import Meta from '../components/shared/Meta';
-import { categoryMenu } from '../data/CategoryMenu';
+import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
-import { setSelectedFilter } from '../features/all_courses/courseFilterSlice';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import LMSCourseCard from '../components/shared/LMSCourseCard';
 import SortToggleItem from '../components/shared/SortToggleItem';
@@ -231,7 +230,7 @@ const Page = () => {
         image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
       />
       <div className='container-base px-3 xl:px-0'>
-        <div className='w-full flex flex-col gap-6'>
+        <div className='w-full flex flex-col gap-0'>
           {/* HEADING */}
           <div className='w-full pb-5 border-b-4 border-b-black flex justify-between items-center'>
             <div className='h2-base'>Browse All Courses</div>
@@ -255,7 +254,7 @@ const Page = () => {
             </div>
           </div>
           {/* SEARCH - FILTER */}
-          <div className='grid grid-cols-3 lg:mb-5 border-b-2 border-b-black pb-6 gap-2.5'>
+          <div className='grid grid-cols-3 lg:mb-5 border-b-2 border-b-black py-6 gap-2.5'>
             {/* SEARCH */}
             <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
               <div className='flex gap-2 items-center'>
@@ -496,6 +495,17 @@ const Page = () => {
                 <div className='font-semibold'>Sort</div>
               </div>
             </div>
+          </div>
+          <div className='flex flex-wrap lg:mb-5 border-b-2 border-b-black pb-6 gap-2.5'>
+            {updateCategoryMenu.map((cat) => (
+              <div
+                key={cat.value}
+                className='flex items-center gap-2 border-black border bg-neutral-200 hover:bg-base-light px-2 py-1.5 text-sm font-semibold cursor-pointer'
+                onClick={() => router.push(`/courses/categories/${cat.value}`)}
+              >
+                <div>{cat.name}</div>
+              </div>
+            ))}
           </div>
           {/* COURSES */}
           {sortedAndSearchedCourses &&
