@@ -17,6 +17,7 @@ import {
 import Meta from '../components/shared/Meta';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
+import { handleCategoryClick, getDeviceType } from '../helpers/api';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import LMSCourseCard from '../components/shared/LMSCourseCard';
 import SortToggleItem from '../components/shared/SortToggleItem';
@@ -27,7 +28,7 @@ import { listLMSCourses } from '../src/graphql/queries';
 const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const deviceType = getDeviceType();
   const { allCourses, selectedFilter } = useSelector(
     (state) => state.course_filter
   );
@@ -217,6 +218,17 @@ const Page = () => {
       sortedAndSearchedCourses.length === 0 &&
       sendSearchTracking();
   }, [isSearchTerm, location, sortedAndSearchedCourses]);
+
+  const handleCurrentCategoryClick = async (category) => {
+    await handleCategoryClick({
+      category,
+      country: location.country,
+      device: getDeviceType(),
+      ipAddress: location.ip,
+      page: '/all-courses',
+    });
+    router.push(`/courses/categories/${category}`);
+  };
 
   return (
     <>
@@ -499,7 +511,7 @@ const Page = () => {
               <div
                 key={cat.value}
                 className='flex items-center gap-2 border-black border bg-neutral-200 hover:bg-base-light px-2 py-1.5 text-sm font-semibold cursor-pointer'
-                onClick={() => router.push(`/courses/categories/${cat.value}`)}
+                onClick={() => handleCurrentCategoryClick(cat.value)}
               >
                 <div>{cat.name}</div>
               </div>

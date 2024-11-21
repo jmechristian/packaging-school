@@ -5297,6 +5297,43 @@ export const listAPSPresentationClicks = /* GraphQL */ `
     }
   }
 `;
+export const getCategoryClick = /* GraphQL */ `
+  query GetCategoryClick($id: ID!) {
+    getCategoryClick(id: $id) {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCategoryClicks = /* GraphQL */ `
+  query ListCategoryClicks(
+    $filter: ModelCategoryClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategoryClicks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        category
+        ipAddress
+        country
+        device
+        email
+        page
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getClick = /* GraphQL */ `
   query GetClick($id: ID!) {
     getClick(id: $id) {

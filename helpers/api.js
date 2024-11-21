@@ -19,6 +19,7 @@ import {
   createEventClick,
   createCyberMondayClick,
   createAPSPresentationClick,
+  createCategoryClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -406,6 +407,21 @@ export const handleAPSPresentationClick = async (data) => {
         email: data.email,
         ipAddress: data.ipAddress,
         object: data.object,
+      },
+    },
+  });
+};
+
+export const handleCategoryClick = async (data) => {
+  const res = await API.graphql({
+    query: createCategoryClick,
+    variables: {
+      input: {
+        category: data.category,
+        country: data.country,
+        device: data.device,
+        ipAddress: data.ipAddress,
+        page: data.page,
       },
     },
   });

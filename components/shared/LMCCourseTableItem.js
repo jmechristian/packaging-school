@@ -75,6 +75,7 @@ const LMCCourseTableItem = ({ course, id }) => {
   };
 
   const cardClickHandler = async () => {
+    setIsLoading(true);
     await registgerCourseClick(
       isCourse.id,
       router.asPath,
@@ -92,6 +93,7 @@ const LMCCourseTableItem = ({ course, id }) => {
               : 'courses'
           }/${isCourse.slug}`
         );
+    setIsLoading(false);
   };
 
   return (
@@ -99,7 +101,9 @@ const LMCCourseTableItem = ({ course, id }) => {
       <div
         className={`w-full border-2 border-black ${setColorByCategoryString(
           isCourse.categoryArray[0]
-        )} bg-opacity-20 relative group hover:bg-opacity-40 transition-all ease-in`}
+        )} bg-opacity-20 relative group hover:bg-opacity-40 transition-all ease-in ${
+          isLoading ? 'ring-4 ring-clemson' : ''
+        }`}
       >
         {/* VIDEO PLAYER */}
         <AnimatePresence>
@@ -114,7 +118,7 @@ const LMCCourseTableItem = ({ course, id }) => {
                   />
                 </div>
                 <div
-                  className='flex items-center justify-center gap-1 cursor-pointer'
+                  className='flex items-center justify-center gap-1 !cursor-pointer'
                   onClick={() => setIsPlaying(false)}
                 >
                   <div>
@@ -134,7 +138,7 @@ const LMCCourseTableItem = ({ course, id }) => {
 
         <div className='hidden lg:grid lg:grid-cols-12 gap-3 divide-x-black w-full px-2 py-2 min-h-[90px]'>
           <div
-            className='col-span-4 pl-2 content-center cursor-pointer'
+            className='col-span-4 pl-2 content-center !cursor-pointer'
             onClick={cardClickHandler}
           >
             <div className='grid grid-cols-4'>

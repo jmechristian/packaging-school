@@ -6247,6 +6247,51 @@ export const onDeleteAPSPresentationClick = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCategoryClick = /* GraphQL */ `
+  subscription OnCreateCategoryClick {
+    onCreateCategoryClick {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCategoryClick = /* GraphQL */ `
+  subscription OnUpdateCategoryClick {
+    onUpdateCategoryClick {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCategoryClick = /* GraphQL */ `
+  subscription OnDeleteCategoryClick {
+    onDeleteCategoryClick {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateClick = /* GraphQL */ `
   subscription OnCreateClick {
     onCreateClick {

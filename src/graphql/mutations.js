@@ -6778,6 +6778,60 @@ export const deleteAPSPresentationClick = /* GraphQL */ `
     }
   }
 `;
+export const createCategoryClick = /* GraphQL */ `
+  mutation CreateCategoryClick(
+    $input: CreateCategoryClickInput!
+    $condition: ModelCategoryClickConditionInput
+  ) {
+    createCategoryClick(input: $input, condition: $condition) {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCategoryClick = /* GraphQL */ `
+  mutation UpdateCategoryClick(
+    $input: UpdateCategoryClickInput!
+    $condition: ModelCategoryClickConditionInput
+  ) {
+    updateCategoryClick(input: $input, condition: $condition) {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCategoryClick = /* GraphQL */ `
+  mutation DeleteCategoryClick(
+    $input: DeleteCategoryClickInput!
+    $condition: ModelCategoryClickConditionInput
+  ) {
+    deleteCategoryClick(input: $input, condition: $condition) {
+      id
+      category
+      ipAddress
+      country
+      device
+      email
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createClick = /* GraphQL */ `
   mutation CreateClick(
     $input: CreateClickInput!

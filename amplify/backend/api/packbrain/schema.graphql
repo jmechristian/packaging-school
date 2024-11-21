@@ -805,6 +805,16 @@ type APSPresentationClick @model @auth(rules: [{ allow: public }]) {
   email: String
 }
 
+type CategoryClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  category: String
+  ipAddress: String
+  country: String
+  device: String
+  email: String
+  page: String
+}
+
 ######### INDIA #########
 
 type Click @model @auth(rules: [{ allow: public }]) {
