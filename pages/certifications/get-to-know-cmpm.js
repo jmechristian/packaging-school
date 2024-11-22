@@ -58,6 +58,15 @@ const Page = () => {
           buttonText='Get My PDP Plan'
           buttonLink='/cmpm-custom-development-plan-registration'
         />
+        {/* <div className='w-full max-w-7xl mx-auto'>
+          <iframe
+            src='https://calendar.google.com/calendar/appointments/schedules/AcZssZ2eiEThi0l71vZZ9rsXQ1nFF-4Tx7v_8ODrjYRgu0EnGTkLRttKa4-OSmoYtBI5DyqP7C9qegRr?gv=true'
+            style={{ border: '0' }}
+            width='100%'
+            height='1000'
+            frameborder='0'
+          ></iframe>
+        </div> */}
       </div>
     </>
   );

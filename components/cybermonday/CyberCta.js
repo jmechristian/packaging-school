@@ -47,21 +47,21 @@ const CyberCta = () => {
             </div>
           </div>
           <h2 className='text-3xl lg:text-2xl md:text-4xl font-semibold text-zinc-50'>
-            40% Off CPS Certification, No Application required. Seize this
-            limited-time chance to step into a future of endless opportunities
-            in packaging.
+            Seize this limited-time chance to step into a future of endless
+            opportunities in packaging with the Certificate of Packaging
+            Science.
           </h2>
           <p className='text-zinc-400'>
             Begin your journey to becoming a Certified Packaging Specialist
             today. This is more than a certification – it’s an opportunity to
             master the science and strategy of packaging, connect with industry
-            experts, and gain a credential that sets you apart. With 40% off and
-            no application needed, now’s your moment to invest in your career
-            and step confidently into the future of packaging.
+            experts, and gain a credential that sets you apart. Now’s your
+            moment to invest in your career and step confidently into the future
+            of packaging.
           </p>
           <div className='w-full flex'>
             <BrutalButton
-              text='Save $1600 – No Application Required!'
+              text='Reveal Your Offer'
               background='bg-clemson'
               link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
               textColor='text-white'

@@ -41,7 +41,7 @@ const Features = () => {
           </p>
           <div className='w-full flex justify-center lg:justify-start'>
             <BrutalButton
-              text='Enroll Now – No Application Required!'
+              text='Reveal Your Offer'
               background='bg-clemson'
               link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
               textColor='text-black'

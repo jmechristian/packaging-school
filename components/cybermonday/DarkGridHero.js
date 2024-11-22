@@ -71,8 +71,8 @@ const Content = () => {
           }}
           className='mb-3 text-center text-3xl font-semibold leading-tight text-zinc-50 sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight lg:leading-tight tracking-tighter'
         >
-          40% Off the Certificate of Packaging Science – Enroll Instantly, No
-          Application Required!
+          The offer is exclusive. The value is unmatched. Are you ready to find
+          out?
         </motion.h1>
         <motion.p
           initial={{
@@ -90,9 +90,11 @@ const Content = () => {
           }}
           className='mb-5 max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed'
         >
-          Invest in yourself and stand out in the packaging industry with CPS
-          certification. Save $1600 on the Certificate of Packaging Science this
-          Cyber Monday for a limited time. Enroll today and start your journey.
+          This Cyber Monday, we’re keeping things under wraps—but trust us, it’s
+          worth it. All it takes is one click to reveal the savings we’ve been
+          preparing just for you. Don&apos;t miss your chance to unlock your
+          career with the Certificate of Packaging Science at an astounding
+          value.
         </motion.p>
         <motion.div
           initial={{
@@ -115,7 +117,7 @@ const Content = () => {
             <FiArrowRight />
           </SplashButton> */}
           <BrutalButton
-            text='Enroll Now'
+            text='Reveal Your Offer.'
             textColor='text-white'
             link='https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=cybermonday24'
             background='bg-clemson'
