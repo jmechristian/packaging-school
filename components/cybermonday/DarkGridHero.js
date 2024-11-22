@@ -93,8 +93,11 @@ const Content = () => {
           This Cyber Monday, we’re keeping things under wraps—but trust us, it’s
           worth it. All it takes is one click to reveal the savings we’ve been
           preparing just for you. Don&apos;t miss your chance to unlock your
-          career with the Certificate of Packaging Science at an astounding
-          value.
+          career with the{' '}
+          <span className='font-semibold text-clemson'>
+            Certificate of Packaging Science
+          </span>{' '}
+          at an astounding value.
         </motion.p>
         <motion.div
           initial={{
