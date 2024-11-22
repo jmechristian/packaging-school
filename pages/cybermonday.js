@@ -10,8 +10,8 @@ const Page = () => {
   return (
     <>
       <Meta
-        title='Cyber Monday Sale! 40% off Certificate of Packaging Science'
-        description='Save $1600 on the Certificate of Packaging Science – Enroll Instantly, No Application Required!'
+        title='Cyber Monday Exclusive! The Certificate of Packaging Science'
+        description='Unmatched savings on the Certificate of Packaging Science – Enroll Instantly, No Application Required!'
         image='https://packmedia54032-staging.s3.amazonaws.com/public/all-courses-seoimagewebp'
       />
       <DarkGridHero />
