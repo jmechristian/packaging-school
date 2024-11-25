@@ -41,6 +41,14 @@ enum MediaType {
   SLIDES
 }
 
+type Category @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  value: String! @index(name: "categoryByValue")
+  certificates: [CertificateObject]
+    @manyToMany(relationName: "CertificateByCategory")
+}
+
 type Certificate @model @auth(rules: [{ allow: public }]) {
   id: ID!
   slug: String! @index(name: "certificateByTitle")
@@ -65,6 +73,25 @@ type Certificate @model @auth(rules: [{ allow: public }]) {
   price_features: [String]
   lmsLink: String
   demoLink: String
+}
+
+type CertificateObject @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String
+  title: String
+  description: String
+  seoImage: String
+  hours: Int
+  courses: Int
+  video: String
+  price: Int
+  link: String
+  applicationLink: String
+  callout: String
+  purchaseLink: String
+  categoryArray: [String]
+  abbreviation: String
+  category: [Category] @manyToMany(relationName: "CertificateByCategory")
 }
 
 type Course @model @auth(rules: [{ allow: public }]) {
@@ -973,4 +1000,24 @@ type EventClick @model @auth(rules: [{ allow: public }]) {
   type: String
   object: String
   objectId: String
+}
+
+type CertificateClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  page: String
+  ipAddress: String
+  country: String
+  type: String
+  object: String
+  device: String
+}
+
+######### IMAGES #########
+
+type ImageObject @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  url: String
+  caption: String
+  uploadedBy: String
+  alt: String
 }

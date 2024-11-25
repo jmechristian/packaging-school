@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { getCoursesByCategory } from '../../../helpers/api';
+import {
+  getCoursesByCategory,
+  getCertificateByCategory,
+} from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import { H2, H4 } from '@jmechristian/ps-component-library';
 import { updateCategoryMenu } from '../../../data/CategoryMenu';
@@ -16,7 +19,7 @@ import {
 import { EyeIcon } from '@heroicons/react/24/solid';
 
 import LMCCourseTableItem from '../../../components/shared/LMCCourseTableItem';
-
+import CertificateTableItem from '../../../components/shared/CertificateTableItem';
 const Page = () => {
   const router = useRouter();
   const { cat } = router.query;
@@ -25,6 +28,7 @@ const Page = () => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isCourses, setIsCourses] = useState([]);
   const [isSort, setIsSort] = useState({ value: 'title', direction: 'ASC' });
+  const [isCertificates, setIsCertificates] = useState([]);
 
   const sortedCourses = useMemo(() => {
     if (isSort.value === 'title' && isSort.direction === 'ASC') {
@@ -128,6 +132,136 @@ const Page = () => {
     }
   }, [isSearchTerm, sortedCourses]);
 
+  const searchCertificates = useMemo(() => {
+    if (!isSearchTerm && isCertificates) {
+      return isCertificates;
+    }
+
+    if (isSearchTerm && isCertificates) {
+      return isCertificates.filter(
+        (cert) =>
+          cert.certificateObject.title
+            .toLowerCase()
+            .includes(isSearchTerm.toLowerCase()) ||
+          cert.certificateObject.description
+            .toLowerCase()
+            .includes(isSearchTerm.toLowerCase())
+      );
+    }
+  }, [isCertificates, isSearchTerm]);
+
+  const sortedCertificates = useMemo(() => {
+    if (isSort.value === 'title' && isSort.direction === 'ASC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort((a, b) =>
+          a.certificateObject.title.localeCompare(b.certificateObject.title)
+        )
+      );
+    }
+
+    if (isSort.value === 'title' && isSort.direction === 'DSC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort((a, b) =>
+          b.certificateObject.title.localeCompare(a.certificateObject.title)
+        )
+      );
+    }
+
+    if (isSort.value === 'category' && isSort.direction === 'ASC') {
+      return searchCertificates;
+    }
+
+    if (isSort.value === 'category' && isSort.direction === 'DSC') {
+      return searchCertificates;
+    }
+
+    if (isSort.value === 'course id' && isSort.direction === 'ASC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort((a, b) =>
+          a.certificateObject.courseId.localeCompare(
+            b.certificateObject.courseId
+          )
+        )
+      );
+    }
+
+    if (isSort.value === 'course id' && isSort.direction === 'DSC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort((a, b) =>
+          b.certificateObject.courseId.localeCompare(
+            a.certificateObject.courseId
+          )
+        )
+      );
+    }
+
+    if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) => b.certificateObject.lessons - a.certificateObject.lessons
+        )
+      );
+    }
+
+    if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) => a.certificateObject.lessons - b.certificateObject.lessons
+        )
+      );
+    }
+
+    if (isSort.value === 'hours' && isSort.direction === 'ASC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) =>
+            parseFloat(a.certificateObject.hours) -
+            parseFloat(b.certificateObject.hours)
+        )
+      );
+    }
+
+    if (isSort.value === 'hours' && isSort.direction === 'DSC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) =>
+            parseFloat(b.certificateObject.hours) -
+            parseFloat(a.certificateObject.hours)
+        )
+      );
+    }
+
+    if (isSort.value === 'price' && isSort.direction === 'ASC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) =>
+            parseInt(a.certificateObject.price) -
+            parseInt(b.certificateObject.price)
+        )
+      );
+    }
+
+    if (isSort.value === 'price' && isSort.direction === 'DSC') {
+      return (
+        searchCertificates &&
+        [...searchCertificates].sort(
+          (a, b) =>
+            parseInt(b.certificateObject.price) -
+            parseInt(a.certificateObject.price)
+        )
+      );
+    }
+  }, [searchCertificates, isSort]);
+
   useEffect(() => {
     const fetchCourses = async () => {
       const res = await getCoursesByCategory(cat.toUpperCase());
@@ -135,6 +269,108 @@ const Page = () => {
     };
     fetchCourses();
   }, [cat]);
+
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      const res = await getCertificateByCategory(cat.toUpperCase());
+      setIsCertificates(res);
+    };
+    fetchCertificates();
+  }, [cat]);
+
+  // const sortedCertificates = useMemo(() => {
+  //   if (isCertificates.length > 0) {
+  //     if (isSort.value === 'title' && isSort.direction === 'ASC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) => a.title.localeCompare(b.title))
+  //       );
+  //     }
+
+  //     if (isSort.value === 'title' && isSort.direction === 'DSC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) => b.title.localeCompare(a.title))
+  //       );
+  //     }
+
+  //     if (isSort.value === 'category' && isSort.direction === 'ASC') {
+  //       return isCertificates;
+  //     }
+
+  //     if (isSort.value === 'category' && isSort.direction === 'DSC') {
+  //       return isCertificates;
+  //     }
+
+  //     if (isSort.value === 'course id' && isSort.direction === 'ASC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) =>
+  //           a.courseId.localeCompare(b.courseId)
+  //         )
+  //       );
+  //     }
+
+  //     if (isSort.value === 'course id' && isSort.direction === 'DSC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) =>
+  //           b.courseId.localeCompare(a.courseId)
+  //         )
+  //       );
+  //     }
+
+  //     if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) => b.lessons - a.lessons)
+  //       );
+  //     }
+
+  //     if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort((a, b) => a.lessons - b.lessons)
+  //       );
+  //     }
+
+  //     if (isSort.value === 'hours' && isSort.direction === 'ASC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort(
+  //           (a, b) => parseFloat(a.hours) - parseFloat(b.hours)
+  //         )
+  //       );
+  //     }
+
+  //     if (isSort.value === 'hours' && isSort.direction === 'DSC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort(
+  //           (a, b) => parseFloat(b.hours) - parseFloat(a.hours)
+  //         )
+  //       );
+  //     }
+
+  //     if (isSort.value === 'price' && isSort.direction === 'ASC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort(
+  //           (a, b) => parseInt(a.price) - parseInt(b.price)
+  //         )
+  //       );
+  //     }
+
+  //     if (isSort.value === 'price' && isSort.direction === 'DSC') {
+  //       return (
+  //         isCertificates &&
+  //         [...isCertificates].sort(
+  //           (a, b) => parseInt(b.price) - parseInt(a.price)
+  //         )
+  //       );
+  //     }
+  //   }
+  // }, [isCertificates, isSort]);
 
   const categoryNameHandler = (cat) => {
     const category = updateCategoryMenu.find((c) => c.value === cat);
@@ -374,6 +610,14 @@ const Page = () => {
           </div>
         </div>
         <div className='flex flex-col gap-1.5'>
+          {sortedCertificates &&
+            sortedCertificates.length > 0 &&
+            sortedCertificates.map((certificate) => (
+              <CertificateTableItem
+                certificate={certificate.certificateObject}
+                key={certificate.id}
+              />
+            ))}
           {sortedAndSearchedCourses.map((course, i) => (
             <LMCCourseTableItem course={course} key={course.id} />
           ))}

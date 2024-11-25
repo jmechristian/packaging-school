@@ -9,6 +9,7 @@ import {
   eventTemplatesBySlug,
   aPSRegistrantsByEmail,
   listLMSCourses,
+  listCertificateObjects,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -20,6 +21,7 @@ import {
   createCyberMondayClick,
   createAPSPresentationClick,
   createCategoryClick,
+  createCertificateClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -425,4 +427,140 @@ export const handleCategoryClick = async (data) => {
       },
     },
   });
+};
+
+export const getCertificate = async (id) => {
+  const getTemplate = /* GraphQL */ `
+    query MyQuery {
+      getCertificateObject(id: $id) {
+        abbreviation
+        applicationLink
+        callout
+        category {
+          items {
+            category {
+              name
+              value
+            }
+          }
+        }
+        courseId
+        courses
+        description
+        hours
+        link
+        price
+        seoImage
+        title
+        video
+      }
+    }
+  `;
+
+  const variables = {
+    id: id, // key is "input" based on the mutation above
+  };
+
+  const res = await API.graphql({
+    query: getTemplate,
+    variables: variables,
+  });
+
+  return res.data;
+};
+
+export const getCertificates = async () => {
+  const getAllCertificates = /* GraphQL */ `
+    query MyQuery {
+      listCertificateObjects {
+        items {
+          abbreviation
+          applicationLink
+          callout
+          category {
+            items {
+              category {
+                name
+                value
+              }
+            }
+          }
+          courseId
+          courses
+          createdAt
+          description
+          hours
+          id
+          link
+          price
+          purchaseLink
+          seoImage
+          title
+          video
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getAllCertificates,
+  });
+  return res.data.listCertificateObjects.items;
+};
+
+export const registerCertificateClick = async (data) => {
+  const res = await API.graphql({
+    query: createCertificateClick,
+    variables: {
+      input: {
+        country: data.country,
+        device: data.device,
+        ipAddress: data.ipAddress,
+        object: data.object,
+        page: data.page,
+        type: data.type,
+      },
+    },
+  });
+};
+
+export const getCertificateByCategory = async (category) => {
+  const getCertificatesByCat = /* GraphQL */ `
+    query MyQuery($category: String!) {
+      categoriesByValue(value: $category) {
+        items {
+          certificates {
+            items {
+              certificateObject {
+                abbreviation
+                applicationLink
+                callout
+                courseId
+                courses
+                description
+                hours
+                id
+                link
+                price
+                purchaseLink
+                seoImage
+                title
+                video
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    category: category,
+  };
+
+  const res = await API.graphql({
+    query: getCertificatesByCat,
+    variables: variables,
+  });
+  return res.data.categoriesByValue.items[0].certificates.items;
 };

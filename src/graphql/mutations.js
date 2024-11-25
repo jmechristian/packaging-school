@@ -163,6 +163,78 @@ export const deleteTags = /* GraphQL */ `
     }
   }
 `;
+export const createCategory = /* GraphQL */ `
+  mutation CreateCategory(
+    $input: CreateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    createCategory(input: $input, condition: $condition) {
+      id
+      name
+      value
+      certificates {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCategory = /* GraphQL */ `
+  mutation UpdateCategory(
+    $input: UpdateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    updateCategory(input: $input, condition: $condition) {
+      id
+      name
+      value
+      certificates {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCategory = /* GraphQL */ `
+  mutation DeleteCategory(
+    $input: DeleteCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    deleteCategory(input: $input, condition: $condition) {
+      id
+      name
+      value
+      certificates {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createCertificate = /* GraphQL */ `
   mutation CreateCertificate(
     $input: CreateCertificateInput!
@@ -287,6 +359,114 @@ export const deleteCertificate = /* GraphQL */ `
       price_features
       lmsLink
       demoLink
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCertificateObject = /* GraphQL */ `
+  mutation CreateCertificateObject(
+    $input: CreateCertificateObjectInput!
+    $condition: ModelCertificateObjectConditionInput
+  ) {
+    createCertificateObject(input: $input, condition: $condition) {
+      id
+      courseId
+      title
+      description
+      seoImage
+      hours
+      courses
+      video
+      price
+      link
+      applicationLink
+      callout
+      purchaseLink
+      categoryArray
+      abbreviation
+      category {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCertificateObject = /* GraphQL */ `
+  mutation UpdateCertificateObject(
+    $input: UpdateCertificateObjectInput!
+    $condition: ModelCertificateObjectConditionInput
+  ) {
+    updateCertificateObject(input: $input, condition: $condition) {
+      id
+      courseId
+      title
+      description
+      seoImage
+      hours
+      courses
+      video
+      price
+      link
+      applicationLink
+      callout
+      purchaseLink
+      categoryArray
+      abbreviation
+      category {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCertificateObject = /* GraphQL */ `
+  mutation DeleteCertificateObject(
+    $input: DeleteCertificateObjectInput!
+    $condition: ModelCertificateObjectConditionInput
+  ) {
+    deleteCertificateObject(input: $input, condition: $condition) {
+      id
+      courseId
+      title
+      description
+      seoImage
+      hours
+      courses
+      video
+      price
+      link
+      applicationLink
+      callout
+      purchaseLink
+      categoryArray
+      abbreviation
+      category {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -8662,6 +8842,108 @@ export const deleteEventClick = /* GraphQL */ `
     }
   }
 `;
+export const createCertificateClick = /* GraphQL */ `
+  mutation CreateCertificateClick(
+    $input: CreateCertificateClickInput!
+    $condition: ModelCertificateClickConditionInput
+  ) {
+    createCertificateClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      object
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCertificateClick = /* GraphQL */ `
+  mutation UpdateCertificateClick(
+    $input: UpdateCertificateClickInput!
+    $condition: ModelCertificateClickConditionInput
+  ) {
+    updateCertificateClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      object
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCertificateClick = /* GraphQL */ `
+  mutation DeleteCertificateClick(
+    $input: DeleteCertificateClickInput!
+    $condition: ModelCertificateClickConditionInput
+  ) {
+    deleteCertificateClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      object
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createImageObject = /* GraphQL */ `
+  mutation CreateImageObject(
+    $input: CreateImageObjectInput!
+    $condition: ModelImageObjectConditionInput
+  ) {
+    createImageObject(input: $input, condition: $condition) {
+      id
+      url
+      caption
+      uploadedBy
+      alt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateImageObject = /* GraphQL */ `
+  mutation UpdateImageObject(
+    $input: UpdateImageObjectInput!
+    $condition: ModelImageObjectConditionInput
+  ) {
+    updateImageObject(input: $input, condition: $condition) {
+      id
+      url
+      caption
+      uploadedBy
+      alt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteImageObject = /* GraphQL */ `
+  mutation DeleteImageObject(
+    $input: DeleteImageObjectInput!
+    $condition: ModelImageObjectConditionInput
+  ) {
+    deleteImageObject(input: $input, condition: $condition) {
+      id
+      url
+      caption
+      uploadedBy
+      alt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!
@@ -8837,6 +9119,144 @@ export const deleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCertificateByCategory = /* GraphQL */ `
+  mutation CreateCertificateByCategory(
+    $input: CreateCertificateByCategoryInput!
+    $condition: ModelCertificateByCategoryConditionInput
+  ) {
+    createCertificateByCategory(input: $input, condition: $condition) {
+      id
+      categoryId
+      certificateObjectId
+      category {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      certificateObject {
+        id
+        courseId
+        title
+        description
+        seoImage
+        hours
+        courses
+        video
+        price
+        link
+        applicationLink
+        callout
+        purchaseLink
+        categoryArray
+        abbreviation
+        category {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCertificateByCategory = /* GraphQL */ `
+  mutation UpdateCertificateByCategory(
+    $input: UpdateCertificateByCategoryInput!
+    $condition: ModelCertificateByCategoryConditionInput
+  ) {
+    updateCertificateByCategory(input: $input, condition: $condition) {
+      id
+      categoryId
+      certificateObjectId
+      category {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      certificateObject {
+        id
+        courseId
+        title
+        description
+        seoImage
+        hours
+        courses
+        video
+        price
+        link
+        applicationLink
+        callout
+        purchaseLink
+        categoryArray
+        abbreviation
+        category {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCertificateByCategory = /* GraphQL */ `
+  mutation DeleteCertificateByCategory(
+    $input: DeleteCertificateByCategoryInput!
+    $condition: ModelCertificateByCategoryConditionInput
+  ) {
+    deleteCertificateByCategory(input: $input, condition: $condition) {
+      id
+      categoryId
+      certificateObjectId
+      category {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      certificateObject {
+        id
+        courseId
+        title
+        description
+        seoImage
+        hours
+        courses
+        video
+        price
+        link
+        applicationLink
+        callout
+        purchaseLink
+        categoryArray
+        abbreviation
+        category {
+          nextToken
+        }
         createdAt
         updatedAt
       }

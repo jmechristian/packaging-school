@@ -133,6 +133,77 @@ export const tagsByTag = /* GraphQL */ `
     }
   }
 `;
+export const getCategory = /* GraphQL */ `
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
+      id
+      name
+      value
+      certificates {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCategories = /* GraphQL */ `
+  query ListCategories(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const categoriesByValue = /* GraphQL */ `
+  query CategoriesByValue(
+    $value: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    categoriesByValue(
+      value: $value
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getCertificate = /* GraphQL */ `
   query GetCertificate($id: ID!) {
     getCertificate(id: $id) {
@@ -254,6 +325,76 @@ export const certificatesBySlug = /* GraphQL */ `
         price_features
         lmsLink
         demoLink
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCertificateObject = /* GraphQL */ `
+  query GetCertificateObject($id: ID!) {
+    getCertificateObject(id: $id) {
+      id
+      courseId
+      title
+      description
+      seoImage
+      hours
+      courses
+      video
+      price
+      link
+      applicationLink
+      callout
+      purchaseLink
+      categoryArray
+      abbreviation
+      category {
+        items {
+          id
+          categoryId
+          certificateObjectId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCertificateObjects = /* GraphQL */ `
+  query ListCertificateObjects(
+    $filter: ModelCertificateObjectFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCertificateObjects(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        courseId
+        title
+        description
+        seoImage
+        hours
+        courses
+        video
+        price
+        link
+        applicationLink
+        callout
+        purchaseLink
+        categoryArray
+        abbreviation
+        category {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6526,6 +6667,80 @@ export const listEventClicks = /* GraphQL */ `
     }
   }
 `;
+export const getCertificateClick = /* GraphQL */ `
+  query GetCertificateClick($id: ID!) {
+    getCertificateClick(id: $id) {
+      id
+      page
+      ipAddress
+      country
+      type
+      object
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCertificateClicks = /* GraphQL */ `
+  query ListCertificateClicks(
+    $filter: ModelCertificateClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCertificateClicks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        page
+        ipAddress
+        country
+        type
+        object
+        device
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getImageObject = /* GraphQL */ `
+  query GetImageObject($id: ID!) {
+    getImageObject(id: $id) {
+      id
+      url
+      caption
+      uploadedBy
+      alt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listImageObjects = /* GraphQL */ `
+  query ListImageObjects(
+    $filter: ModelImageObjectFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listImageObjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        url
+        caption
+        uploadedBy
+        alt
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {
@@ -6749,6 +6964,201 @@ export const lessonTagsByLessonId = /* GraphQL */ `
           lastEditedBy
           videoLink
           screengrab
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCertificateByCategory = /* GraphQL */ `
+  query GetCertificateByCategory($id: ID!) {
+    getCertificateByCategory(id: $id) {
+      id
+      categoryId
+      certificateObjectId
+      category {
+        id
+        name
+        value
+        certificates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      certificateObject {
+        id
+        courseId
+        title
+        description
+        seoImage
+        hours
+        courses
+        video
+        price
+        link
+        applicationLink
+        callout
+        purchaseLink
+        categoryArray
+        abbreviation
+        category {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCertificateByCategories = /* GraphQL */ `
+  query ListCertificateByCategories(
+    $filter: ModelCertificateByCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCertificateByCategories(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        categoryId
+        certificateObjectId
+        category {
+          id
+          name
+          value
+          createdAt
+          updatedAt
+        }
+        certificateObject {
+          id
+          courseId
+          title
+          description
+          seoImage
+          hours
+          courses
+          video
+          price
+          link
+          applicationLink
+          callout
+          purchaseLink
+          categoryArray
+          abbreviation
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const certificateByCategoriesByCategoryId = /* GraphQL */ `
+  query CertificateByCategoriesByCategoryId(
+    $categoryId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCertificateByCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    certificateByCategoriesByCategoryId(
+      categoryId: $categoryId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        categoryId
+        certificateObjectId
+        category {
+          id
+          name
+          value
+          createdAt
+          updatedAt
+        }
+        certificateObject {
+          id
+          courseId
+          title
+          description
+          seoImage
+          hours
+          courses
+          video
+          price
+          link
+          applicationLink
+          callout
+          purchaseLink
+          categoryArray
+          abbreviation
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const certificateByCategoriesByCertificateObjectId = /* GraphQL */ `
+  query CertificateByCategoriesByCertificateObjectId(
+    $certificateObjectId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCertificateByCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    certificateByCategoriesByCertificateObjectId(
+      certificateObjectId: $certificateObjectId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        categoryId
+        certificateObjectId
+        category {
+          id
+          name
+          value
+          createdAt
+          updatedAt
+        }
+        certificateObject {
+          id
+          courseId
+          title
+          description
+          seoImage
+          hours
+          courses
+          video
+          price
+          link
+          applicationLink
+          callout
+          purchaseLink
+          categoryArray
+          abbreviation
           createdAt
           updatedAt
         }
