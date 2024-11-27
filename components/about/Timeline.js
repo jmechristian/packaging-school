@@ -1,4 +1,6 @@
 import React from 'react';
+import { useRouter } from 'next/router';
+
 const timeline = [
   {
     name: 'Founded company',
@@ -8,6 +10,16 @@ const timeline = [
     name: 'Clemson University Research Foundation',
     description:
       'Packaging School finalized our exclusive licensee of a professional packaging curriculum developed at Clemson University',
+    date: '2016',
+  },
+  {
+    name: 'Partner Educators',
+    description: 'First published courses as an education partner for Sonoco',
+    date: '2016',
+  },
+  {
+    name: 'Partner Educators',
+    description: 'Published courses as an education partner for UPM Raflatac',
     date: '2016',
   },
   {
@@ -23,6 +35,12 @@ const timeline = [
     date: '2017',
   },
   {
+    name: 'Partner Educators',
+    description:
+      'Published courses as the education partner for the International Society of Beverage Technologists and the Beverage Institute by ISBT®',
+    date: '2017',
+  },
+  {
     name: 'Beverage Academy',
     description:
       'Partnered with Beverage Institute by ISBT® to help them adapt to the educational needs of modern professionals—to take beverage training online.',
@@ -30,20 +48,21 @@ const timeline = [
   },
   {
     name: 'Automotive Packaging Summit',
+    link: '/events/aps-2024',
     description:
-      '300+ professionals across automotive come together to learn and connect',
+      'Inaugural event in October of 2017 at the Clemson ONE campus in downtown Greenville, SC. Today, APS attracts 400+ professionals from across the automotive industry to come together to learn and connect.',
     date: '2017',
   },
   {
     name: 'Clemson University Center for Corporate Learning',
     description:
-      'Packaging School initiates a professional education agreement for a cohort based online learning program, two additional courses and the Package Development Plan are created for the pending program.',
+      'Packaging School initiates a professional education agreement for a cohort based online learning program, two additional courses and the Package Development Plan (PDP) are created for the pending program.',
     date: '2017',
   },
   {
     name: 'Certificate of Mastery in Packaging Management',
     description:
-      'Dr. Julie Suggs comes onboard as the Educational Director and leads the first cohort for The Certificate of Mastery in Packaging Management, an official program offered by Clemson University',
+      'Dr. Julie Suggs comes onboard as the Educational Director and leads the first cohort for The Certificate of Mastery in Packaging Management, CMPM is an official program offered by Clemson University.',
     date: '2018',
   },
   {
@@ -53,19 +72,103 @@ const timeline = [
     date: '2019',
   },
   {
-    name: 'Hazmat Packaging Certificate',
-    description: 'Specialized training in land, sea, air transport modes',
-    date: '2020',
+    name: 'Partner Educators',
+    description:
+      'Private courses published as an education partner for Mondelez',
+    date: '2019',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Private courses published as an education partner for Pratt Industries',
+    date: '2019',
   },
   {
     name: 'Award Winning',
     description:
-      'Dr. Andrew Hurley is co-winner of 2020 Ralph D. Elliott Award',
+      'Dr. Andrew Hurley is co-winner of Clemson University’s 2020 Ralph D. Elliott Award for Outstanding Service to Off-Campus, Distance and Continuing Education in creating The Packaging School.',
     date: '2020',
+  },
+  {
+    name: 'Company Cohorts',
+    description:
+      'Adoption by Smurfit Kappa (Westrock) of CMPM cohorts for rising stars.',
+    date: '2020',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Published courses as the education partner for the  International Association of Diecutting and Diemaking and the Diecutting Academy with IADD.',
+    date: '2021',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Published courses as an education partner for Smurfit Kappa (Westrock).',
+    date: '2021',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Private courses published as an education partner for Colgate-Palmolive.',
+    date: '2021',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Private courses published as the education partner for LK Packaging.',
+    date: '2022',
+  },
+  {
+    name: 'Certificate of Sustainable Packaging',
+    description:
+      'CSP is launched based on industry demand to help navigate the complex trade-offs of materials, processes, and end of life scenarios using software tools specifically designed for the packaging industry.',
+    date: '2023',
+  },
+  {
+    name: 'Award Winning',
+    description:
+      'Nominated and awarded in two categories for learning advancements with our B2B custom services partner Colgate-Palmolive.',
+    date: '2023',
+  },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with Unilever.',
+    date: '2023',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for Milliken.',
+    date: '2023',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as the education partner for GreenBlue.org and Sustainable Packaging Coalition (SPC).',
+    date: '2024',
+  },
+  {
+    name: 'Government Contractor',
+    description:
+      'First US Federal customer via UEI, Cage Code, relevant Past Performance.',
+    date: '2024',
+  },
+  {
+    name: 'Publication',
+    description: 'Dr Andrew Hurley presented at TEDxClemsonU.',
+    date: '2024',
+  },
+  {
+    name: 'B2B Services',
+    description:
+      'Packaging School Library debut with PDA, Packaging Distributors of America.',
+    date: '2024',
   },
 ];
 
 const Timeline = () => {
+  const router = useRouter();
   return (
     <div className='mx-auto max-w-7xl px-6 lg:px-8 flex flex-col gap-16 py-32'>
       <div className='mx-auto max-w-2xl lg:mx-0'>
@@ -75,7 +178,11 @@ const Timeline = () => {
       </div>
       <div className='mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4'>
         {timeline.map((item) => (
-          <div key={item.name}>
+          <div
+            key={item.name}
+            className={`${item.link ? 'cursor-pointer' : ''}`}
+            onClick={() => item.link && router.push(item.link)}
+          >
             <time
               dateTime={item.dateTime}
               className='flex items-center text-sm font-semibold leading-6 text-indigo-600'
