@@ -17,6 +17,12 @@ const Mission = () => {
             expanded catalog will enable knowledge-seekers to connect with
             knowledge-providers in all facets of packaging and processing.
           </p>
+          <a
+            href='mailto:info@packagingschool.com?subject=Get%20in%20touch%20with%20the%20Packaging%20School'
+            className='mt-4 w-1/2 text-center font-bold inline-block bg-clemson px-4 py-2 text-white hover:bg-clemson/80'
+          >
+            Contact Us
+          </a>
         </div>
         <img
           src='https://packschool.s3.amazonaws.com/partner-3.webp'
