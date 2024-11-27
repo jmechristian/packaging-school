@@ -412,6 +412,17 @@ const Page = () => {
           </div>
         </div>
       </div>
+      <div className='flex flex-wrap lg:mb-5 border-b-2 border-b-black py-6 gap-2.5'>
+        {updateCategoryMenu.map((cat) => (
+          <div
+            key={cat.value}
+            className='flex items-center gap-2 border-black border bg-neutral-200 hover:bg-base-light px-2 py-1.5 text-sm font-semibold cursor-pointer'
+            onClick={() => handleCurrentCategoryClick(cat.value)}
+          >
+            <div>{cat.name}</div>
+          </div>
+        ))}
+      </div>
       <div className='hidden lg:grid lg:grid-cols-12 content-center gap-5 divide-x-black w-full mt-10 mb-2'>
         <div className='col-span-4'>
           <div className='grid grid-cols-4'>
