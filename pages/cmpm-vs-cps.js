@@ -16,7 +16,7 @@ const tiers = [
   {
     name: 'CMPM',
     id: 'tier-CMPM',
-    href: '/certification/get-to-know-cmpm',
+    href: '/certifications/get-to-know-cmpm',
     description: 'Quis eleifend a tincidunt pellentesque. A tempor in sed.',
     mostPopular: true,
   },
