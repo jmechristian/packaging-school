@@ -116,6 +116,12 @@ const timeline = [
   {
     name: 'Partner Educators',
     description:
+      'Private courses published as an education partner for Federigoni.',
+    date: '2022',
+  },
+  {
+    name: 'Partner Educators',
+    description:
       'Private courses published as the education partner for LK Packaging.',
     date: '2022',
   },
