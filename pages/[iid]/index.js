@@ -17,10 +17,16 @@ import {
   BasicCallout,
   CourseCardCallout,
   CertCallout,
+  ThumbnailGallery,
+  ImageSlider,
+  SingleImage,
+  TwoImage,
+  ImageQuote,
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import Meta from '../../components/shared/Meta';
+import VideoPlayer from '../../components/VideoPlayer';
 
 const Page = ({ indexPage }) => {
   const index = indexPage && JSON.parse(indexPage.content);
@@ -137,6 +143,27 @@ const Page = ({ indexPage }) => {
     );
   };
 
+  const setGalleryRow = (row) => {
+    switch (row.template) {
+      case 'THUMBNAIL':
+        return <ThumbnailGallery images={row.images} />;
+      case 'SLIDER':
+        return (
+          <div className='w-full'>
+            <ImageSlider images={row.images} />
+          </div>
+        );
+      case 'SINGLEIMAGE':
+        return <SingleImage images={row.images} />;
+      case 'TWOIMAGE':
+        return <TwoImage images={row.images} />;
+      case 'IMAGEQUOTE':
+        return <ImageQuote images={row.images} />;
+      default:
+        return <div>Default</div>;
+    }
+  };
+
   const setCourseRow = (row) => {
     switch (row.template) {
       case 'CARD':
@@ -176,6 +203,10 @@ const Page = ({ indexPage }) => {
         return setCtaRow(row);
       case 'CERT':
         return setCertRow(row);
+      case 'GALLERY':
+        return setGalleryRow(row);
+      case 'VIDEO':
+        return <VideoPlayer videoEmbedLink={row.url} />;
       default:
         return <div>Default</div>;
     }
