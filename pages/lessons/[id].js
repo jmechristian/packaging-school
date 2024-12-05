@@ -53,12 +53,6 @@ const Page = ({ lesson }) => {
     } else return null;
   }, [lesson]);
 
-  // const featured = useMemo(() => {
-  //   const item =
-  //     allCourses && allCourses.filter((cou) => cou.id === lesson.featured);
-  //   return item;
-  // }, [lesson, allCourses]);
-
   const setMedia = () => {
     switch (lesson.mediaType) {
       case 'IMAGE':
@@ -208,11 +202,6 @@ const Page = ({ lesson }) => {
                       dangerouslySetInnerHTML={{ __html: lesson.content }}
                       className='tiptap lg:text-lg'
                     ></div>
-                    {/* <div className='tiptap flex flex-col'>
-                {bodyContent.map((item, i) => (
-                  <div key={i}>{bodyCotentHandler(item)}</div>
-                ))}
-              </div> */}
                   </div>
                   {lesson.sources &&
                     sortedSources &&

@@ -4,24 +4,6 @@ import { CheckIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { listCMPMSessions } from '../../../src/graphql/queries';
 import Link from 'next/link';
 
-const schedule = [
-  // {
-  //   session: 'Fall Session 1',
-  //   dates: `Aug. 7, 2023 - \nOct. 27, 2023`,
-  //   deadline: 'July 28, 2023',
-  // },
-  {
-    session: 'Fall Session 2',
-    dates: `Sept. 25, 2023 - \nDec. 15, 2023`,
-    deadline: 'Sept 15, 2023',
-  },
-  {
-    session: 'Winter Session',
-    dates: 'Dec. 4, 2023 - Feb. 23, 2024',
-    deadline: 'Nov 24, 2023',
-  },
-];
-
 export default function CMPMPricing() {
   const [sessions, setSessions] = useState([]);
 
@@ -92,6 +74,7 @@ export default function CMPMPricing() {
           <div className='grid xl:grid-cols-3 gap-6 mt-6'>
             {sessions &&
               sessions
+                .filter((it) => new Date(it.deadline) > new Date())
                 .sort((a, b) => {
                   let dateA = new Date(a.deadline);
                   let dateB = new Date(b.deadline);
