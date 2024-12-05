@@ -22,7 +22,7 @@ const CMPMSessionInfo = ({ email, free }) => {
         </div>
         <div>
           <div className='mt-6 gap-x-12 gap-y-3 flex flex-wrap items-center text-sm md:text-base'>
-            <div className='flex items-center gap-x-3'>
+            {/* <div className='flex items-center gap-x-3'>
               <input
                 {...register('sessionApplying', { required: true })}
                 id='winterSession'
@@ -42,7 +42,7 @@ const CMPMSessionInfo = ({ email, free }) => {
                   Deadline: Dec 4, 2024
                 </span>
               </label>
-            </div>
+            </div> */}
             <div className='flex items-center gap-x-3'>
               <input
                 {...register('sessionApplying', { required: true })}
