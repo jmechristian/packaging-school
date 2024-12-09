@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 const Page = () => {
   const [email, setEmail] = useState('');
   const [student, setStudent] = useState(null);
+  const [loading, setLoading] = useState(false);
   const handleSubmit = () => {
+    setLoading(true);
     fetch(`/api/get-student?email=${email}`)
       .then((res) => res.json())
       .then((data) => {
@@ -11,6 +13,9 @@ const Page = () => {
           setStudent(data.data.items);
           console.log(data.data);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -29,7 +34,7 @@ const Page = () => {
           className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2'
           onClick={handleSubmit}
         >
-          Submit
+          {loading ? 'Loading...' : 'Submit'}
         </button>
       </div>
       <div className='mt-2'>
