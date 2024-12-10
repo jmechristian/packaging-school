@@ -564,3 +564,57 @@ export const getCertificateByCategory = async (category) => {
   });
   return res.data.categoriesByValue.items[0].certificates.items;
 };
+
+export const getAllPublishedLessons = async () => {
+  const getLessonsQuery = /* GraphQL */ `
+    query MyQuery($nextToken: String) {
+      listLessons(
+        limit: 15000
+        filter: { status: { eq: "PUBLISHED" } }
+        nextToken: $nextToken
+      ) {
+        items {
+          author
+          backdate
+          content
+          createdAt
+          id
+          objectives
+          screengrab
+          seoImage
+          slug
+          tags {
+            items {
+              tags {
+                id
+                tag
+              }
+            }
+          }
+          title
+          type
+          subhead
+        }
+        nextToken
+      }
+    }
+  `;
+
+  let allItems = [];
+  let nextToken = null;
+
+  do {
+    const result = await API.graphql({
+      query: getLessonsQuery,
+      variables: { nextToken },
+    });
+
+    // Append the items from this batch to the overall array
+    allItems = allItems.concat(result.data.listLessons.items);
+
+    // Update nextToken for the next iteration
+    nextToken = result.data.listLessons.nextToken;
+  } while (nextToken); // Keep fetching until there's no nextToken
+
+  return allItems;
+};

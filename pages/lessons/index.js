@@ -7,6 +7,7 @@ import { API } from 'aws-amplify';
 import LessonCardItem from '../../components/shared/LessonCardItem';
 import FeaturedLesson from '../../components/shared/FeaturedLesson';
 import Pagination from '../../components/shared/Pagination';
+import { getAllPublishedLessons } from '../../helpers/api';
 
 const Page = () => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
@@ -24,7 +25,7 @@ const Page = () => {
 
   const getLessonsQuery = /* GraphQL */ `
     query MyQuery {
-      listLessons(limit: 500, filter: { status: { eq: "PUBLISHED" } }) {
+      listLessons(limit: 1500, filter: { status: { eq: "PUBLISHED" } }) {
         items {
           author
           backdate
@@ -69,11 +70,8 @@ const Page = () => {
 
   useEffect(() => {
     const getLessons = async () => {
-      const lessons = await API.graphql({
-        query: getLessonsQuery,
-      });
-      setIsLessons(lessons.data.listLessons.items);
-      console.log(lessons.data.listLessons.items);
+      const lessons = await getAllPublishedLessons();
+      setIsLessons(lessons);
     };
 
     const getTags = async () => {
