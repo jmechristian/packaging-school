@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 const Page = () => {
   const [email, setEmail] = useState('');
   const [student, setStudent] = useState(null);
+  const [path, setPath] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const handleSubmit = () => {
     setLoading(true);
     fetch(`/api/get-student?email=${email}`)
@@ -11,12 +13,26 @@ const Page = () => {
       .then((data) => {
         if (data.message === 'success') {
           setStudent(data.data.items);
-          console.log(data.data);
+          setPath(
+            data.data.items
+              .filter((course) => course.course_name.includes('CPS-'))
+              .sort((a, b) => a.course_name.localeCompare(b.course_name))
+          );
         }
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const calculateAveragePercentage = () => {
+    if (!path || path.length === 0) return 0;
+    const total = path.reduce((acc, course) => {
+      // Ensure percentage_completed is a valid number
+      const percentage = Number(course.percentage_completed);
+      return acc + (isNaN(percentage) ? 0 : percentage);
+    }, 0);
+    return (total / path.length) * 100; // Convert to percentage
   };
 
   return (
@@ -72,6 +88,38 @@ const Page = () => {
         ) : (
           <div>No student found</div>
         )}
+      </div>
+      <div className='flex flex-col gap-2'>
+        <div className='flex flex-row items-center justify-between'>
+          <div className='text-xl font-semibold'>Path to Success</div>
+          <div className='text-sm text-gray-500'>
+            {calculateAveragePercentage().toFixed(2)}%
+          </div>
+        </div>
+        <div className='grid grid-flow-col'>
+          {path &&
+            path.map((course) => (
+              <div
+                className={`flex flex-row gap-2 border border-gray-200 p-2 ${
+                  course.percentage_completed > 0.75
+                    ? 'bg-green-200'
+                    : course.percentage_completed > 0.5
+                    ? 'bg-yellow-200'
+                    : 'bg-red-200'
+                }`}
+                key={course.id}
+              >
+                <div key={course.id}>
+                  <div className='font-semibold text-xs leading-tight'>
+                    {course.course_name}
+                  </div>
+                  <div className='text-sm text-gray-500'>
+                    {Math.floor(course.percentage_completed * 100)}%
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
