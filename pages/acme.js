@@ -23,9 +23,8 @@ import DemoOffering from '../components/library/DemoOffering';
 const faqs = [
   {
     id: 1,
-    question: 'How do you make holy water?',
-    answer:
-      'You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.',
+    question: 'What did the ocean say to the beach?',
+    answer: 'Nothing, it just waved.',
   },
   {
     id: 2,
