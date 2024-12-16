@@ -8197,6 +8197,48 @@ export const onDeleteCertificateClick = /* GraphQL */ `
     }
   }
 `;
+export const onCreateIndexClick = /* GraphQL */ `
+  subscription OnCreateIndexClick {
+    onCreateIndexClick {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndexClick = /* GraphQL */ `
+  subscription OnUpdateIndexClick {
+    onUpdateIndexClick {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndexClick = /* GraphQL */ `
+  subscription OnDeleteIndexClick {
+    onDeleteIndexClick {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateImageObject = /* GraphQL */ `
   subscription OnCreateImageObject {
     onCreateImageObject {

@@ -22,6 +22,7 @@ import {
   createAPSPresentationClick,
   createCategoryClick,
   createCertificateClick,
+  createIndexClick,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -637,3 +638,18 @@ export async function fetchAllIndexes() {
 
   return allItems;
 }
+
+export const registerIndexClick = async (data) => {
+  await API.graphql({
+    query: createIndexClick,
+    variables: {
+      input: {
+        country: data.country,
+        device: data.device,
+        ipAddress: data.ipAddress,
+        page: data.page,
+        type: data.type,
+      },
+    },
+  });
+};

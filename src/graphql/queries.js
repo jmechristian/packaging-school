@@ -6711,6 +6711,41 @@ export const listCertificateClicks = /* GraphQL */ `
     }
   }
 `;
+export const getIndexClick = /* GraphQL */ `
+  query GetIndexClick($id: ID!) {
+    getIndexClick(id: $id) {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndexClicks = /* GraphQL */ `
+  query ListIndexClicks(
+    $filter: ModelIndexClickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listIndexClicks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        page
+        ipAddress
+        country
+        type
+        device
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getImageObject = /* GraphQL */ `
   query GetImageObject($id: ID!) {
     getImageObject(id: $id) {

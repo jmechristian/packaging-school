@@ -8899,6 +8899,57 @@ export const deleteCertificateClick = /* GraphQL */ `
     }
   }
 `;
+export const createIndexClick = /* GraphQL */ `
+  mutation CreateIndexClick(
+    $input: CreateIndexClickInput!
+    $condition: ModelIndexClickConditionInput
+  ) {
+    createIndexClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateIndexClick = /* GraphQL */ `
+  mutation UpdateIndexClick(
+    $input: UpdateIndexClickInput!
+    $condition: ModelIndexClickConditionInput
+  ) {
+    updateIndexClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteIndexClick = /* GraphQL */ `
+  mutation DeleteIndexClick(
+    $input: DeleteIndexClickInput!
+    $condition: ModelIndexClickConditionInput
+  ) {
+    deleteIndexClick(input: $input, condition: $condition) {
+      id
+      page
+      ipAddress
+      country
+      type
+      device
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createImageObject = /* GraphQL */ `
   mutation CreateImageObject(
     $input: CreateImageObjectInput!

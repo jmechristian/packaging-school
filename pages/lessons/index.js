@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { MdApps, MdDehaze, MdSort, MdOutlineSearch } from 'react-icons/md';
 import { IoMdPricetags } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -12,9 +14,17 @@ import { API } from 'aws-amplify';
 import LessonCardItem from '../../components/shared/LessonCardItem';
 import FeaturedLesson from '../../components/shared/FeaturedLesson';
 import Pagination from '../../components/shared/Pagination';
-import { getAllPublishedLessons, fetchAllIndexes } from '../../helpers/api';
+import {
+  getAllPublishedLessons,
+  fetchAllIndexes,
+  registerIndexClick,
+  getDeviceType,
+} from '../../helpers/api';
 
 const Page = () => {
+  const { location } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const deviceType = getDeviceType();
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
@@ -202,6 +212,17 @@ const Page = () => {
     return array.slice(startIndex, endIndex);
   };
 
+  const handleHeroButtonClick = async (item) => {
+    await registerIndexClick({
+      country: location.country,
+      device: deviceType,
+      ipAddress: location.ip,
+      page: item.title,
+      type: 'INDEX',
+    });
+    router.push(item.link);
+  };
+
   const paginatedItems = useMemo(() => {
     if (lessonsToShow) {
       const currentPageData = GFG(lessonsToShow, isCurrentPage, pageSize);
@@ -231,6 +252,7 @@ const Page = () => {
             headline='Content Indices'
             subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
             content={isIndexes}
+            clickHandler={(item) => handleHeroButtonClick(item)}
           />
         </div>
         <div className='hidden lg:block'>
@@ -238,6 +260,7 @@ const Page = () => {
             headline='Content Indices'
             subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
             content={isIndexes}
+            clickHandler={(item) => handleHeroButtonClick(item)}
           />
         </div>
       </div>
@@ -270,7 +293,7 @@ const Page = () => {
         {/* SEARCH - FILTER */}
         <div className='!grid !grid-cols-3 lg:mb-5 gap-2.5'>
           {/* SEARCH */}
-          <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
+          <div className='w-full !col-span-3 lg:!col-span-2 border-2 border-black p-1'>
             <div className='flex gap-2 items-center'>
               <input
                 type='text'
@@ -284,7 +307,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className='col-span-3 lg:col-span-1 flex justify-end gap-5 relative w-full'>
+          <div className='!col-span-3 lg:!col-span-1 flex justify-end gap-5 relative w-full'>
             {/* FILTER */}
             <AnimatePresence>
               {isFilter && (

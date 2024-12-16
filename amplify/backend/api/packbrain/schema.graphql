@@ -1013,6 +1013,15 @@ type CertificateClick @model @auth(rules: [{ allow: public }]) {
   device: String
 }
 
+type IndexClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  page: String
+  ipAddress: String
+  country: String
+  type: String
+  device: String
+}
+
 ######### IMAGES #########
 
 type ImageObject @model @auth(rules: [{ allow: public }]) {
