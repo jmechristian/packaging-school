@@ -69,7 +69,7 @@ const LessonTableItem = ({ less }) => {
   return (
     <div
       key={less.id}
-      className={`w-full flex gap-3 cursor-pointer py-5 px-5 flex-col md:grid md:grid-cols-12 border-2 border-black content-center ${
+      className={`w-full flex gap-3 cursor-pointer py-5 px-5 flex-col md:!grid md:!grid-cols-12 border-2 border-black content-center ${
         less.type === 'LOTM'
           ? 'bg-brand-yellow'
           : less.type === 'REGULATORY'
@@ -108,7 +108,9 @@ const LessonTableItem = ({ less }) => {
                     {newDateBottom}
                   </div>
                 </div>
-                <div className='h4-base'>{less.title}</div>
+                <div className='text-lg font-semibold leading-tight'>
+                  {less.title}
+                </div>
                 <div className='flex gap-x-2 flex-wrap'>
                   {less.author.map((auth) => (
                     <div className='flex items-center gap-0.5' key={auth}>
@@ -188,7 +190,7 @@ const LessonTableItem = ({ less }) => {
             bgColor={'bg-[#ff9321]'}
             fn={clickHandler}
           >
-            <MdExitToApp color='white' size={22} />
+            <MdExitToApp color='black' size={22} />
           </BrutalCircleIconTooltip>
         </div>
       </div>

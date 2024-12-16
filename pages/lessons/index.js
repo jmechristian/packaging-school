@@ -3,11 +3,16 @@ import { MdApps, MdDehaze, MdSort, MdOutlineSearch } from 'react-icons/md';
 import { IoMdPricetags } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
 import LessonTableItem from '../../components/shared/LessonTableItem';
+import {
+  ContentScroller,
+  MobileSwipeableContent,
+} from '@jmechristian/ps-component-library';
+import '@jmechristian/ps-component-library/dist/style.css';
 import { API } from 'aws-amplify';
 import LessonCardItem from '../../components/shared/LessonCardItem';
 import FeaturedLesson from '../../components/shared/FeaturedLesson';
 import Pagination from '../../components/shared/Pagination';
-import { getAllPublishedLessons } from '../../helpers/api';
+import { getAllPublishedLessons, fetchAllIndexes } from '../../helpers/api';
 
 const Page = () => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
@@ -17,6 +22,7 @@ const Page = () => {
   const [isTable, setIsTable] = useState(true);
   const [isLessons, setIsLessons] = useState([]);
   const [isTags, setIsTags] = useState([]);
+  const [isIndexes, setIsIndexes] = useState([]);
   const [isCurrentPage, setIsCurrentPage] = useState(1);
 
   const pageSize = 15;
@@ -81,8 +87,32 @@ const Page = () => {
       setIsTags(tags.data.listTags.items);
     };
 
+    const getIndexes = async () => {
+      const indexes = await fetchAllIndexes();
+      const publishedIndexes = indexes
+        .filter((index) => index.status === 'PUBLISHED')
+        .map((index) => ({
+          id: index.id,
+          title: JSON.parse(index.content).title,
+          description: JSON.parse(index.content).description,
+          hero: index.seoImage, // Replace with your placeholder URL
+          link: `/${index.slug}`,
+          video: index.video || '', // Assuming video is a field in the index
+          authors: [
+            {
+              name: 'Mitch',
+              picture:
+                'https://packschool.s3.amazonaws.com/mitch-headshot-sm.png',
+            },
+          ],
+          createdAt: index.updatedAt ? index.updatedAt : index.createdAt,
+        }));
+      setIsIndexes(publishedIndexes);
+    };
+
     getLessons();
     getTags();
+    getIndexes();
   }, []);
 
   function parseDate(dateString) {
@@ -181,24 +211,43 @@ const Page = () => {
 
   return (
     <div className='container-base px-3 xl:px-0 flex flex-col gap-24'>
-      <div className='w-full flex flex-col gap-5'>
-        <div className='w-full pb-5 border-b-4 border-b-black'>
-          <div className='h2-base'>View The Latest</div>
+      <div className='flex flex-col gap-10 lg:gap-16'>
+        {/* <div className='block lg:hidden'>
+          <MobileSwipeableContent
+            headline='Learning of the Month'
+            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+            content={isIndexes}
+          />
         </div>
-        <div className='grid lg:grid-cols-2 gap-8'>
-          {/* LOTM */}
-          <FeaturedLesson less={isLOTM && isLOTM[0]} />
-          {/* ROTM */}
-          <FeaturedLesson less={isReg && isReg[0]} />
+        <div className='hidden lg:block'>
+          <ContentScroller
+            headline='Content Indices'
+            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+            content={isIndexes}
+          />
+        </div> */}
+        <div className='block lg:hidden'>
+          <MobileSwipeableContent
+            headline='Content Indices'
+            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+            content={isIndexes}
+          />
+        </div>
+        <div className='hidden lg:block'>
+          <ContentScroller
+            headline='Content Indices'
+            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+            content={isIndexes}
+          />
         </div>
       </div>
       <div className='w-full flex flex-col gap-5'>
         {/* HEADING */}
         <div
-          className='w-full pb-5 border-b-4 border-b-black flex justify-between items-center scroll-mt-6'
+          className='w-full pb-5 border-b-2 border-b-gray-300 flex justify-between items-center scroll-mt-6'
           ref={lessonTop}
         >
-          <div className='h2-base'>Browse Lesson Library</div>
+          <div className='h3-base'>Browse Lesson Library</div>
           <div className='grid grid-cols-2 w-fit'>
             <div
               className={`w-10 h-10 ${
@@ -219,7 +268,7 @@ const Page = () => {
           </div>
         </div>
         {/* SEARCH - FILTER */}
-        <div className='grid grid-cols-3 lg:mb-5 gap-2.5'>
+        <div className='!grid !grid-cols-3 lg:mb-5 gap-2.5'>
           {/* SEARCH */}
           <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
             <div className='flex gap-2 items-center'>
@@ -318,7 +367,7 @@ const Page = () => {
             ))}
           </div>
         ) : paginatedItems && paginatedItems.length > 0 && !isTable ? (
-          <div className='grid lg:grid-cols-3 md:grid-cols-2 gap-2 lg:gap-10'>
+          <div className='!grid lg:!grid-cols-3 md:!grid-cols-2 gap-2 lg:gap-10'>
             {paginatedItems.map((less) => (
               <LessonCardItem less={less} key={less.id} />
             ))}
@@ -328,7 +377,7 @@ const Page = () => {
             Gathering Intel...
           </div>
         )}
-        <div className='w-full flex justify-center items-center gap-1 mt-3'>
+        <div className='w-full flex flex-wrap justify-center items-center gap-1 mt-3'>
           <Pagination
             totalItems={lessonsToShow && lessonsToShow.length}
             itemsPerPage={pageSize}

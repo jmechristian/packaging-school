@@ -5793,6 +5793,7 @@ export const getIndexPage = /* GraphQL */ `
     getIndexPage(id: $id) {
       id
       content
+      seoImage
       slug
       discount
       status
@@ -5812,6 +5813,7 @@ export const listIndexPages = /* GraphQL */ `
       items {
         id
         content
+        seoImage
         slug
         discount
         status
@@ -5841,6 +5843,7 @@ export const indexPagesBySlug = /* GraphQL */ `
       items {
         id
         content
+        seoImage
         slug
         discount
         status

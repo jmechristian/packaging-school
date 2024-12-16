@@ -1,4 +1,4 @@
-import { Amplify, API, Storage } from 'aws-amplify';
+import { Amplify, API, Storage, graphqlOperation } from 'aws-amplify';
 import {
   getAuthor,
   listSalesBars,
@@ -618,3 +618,22 @@ export const getAllPublishedLessons = async () => {
 
   return allItems;
 };
+
+export async function fetchAllIndexes() {
+  let allItems = [];
+  let nextToken = null;
+
+  do {
+    const result = await API.graphql(
+      graphqlOperation(listIndexPages, { nextToken }) // Pass the nextToken if it exists
+    );
+
+    // Append the items from this batch to the overall array
+    allItems = allItems.concat(result.data.listIndexPages.items);
+
+    // Update nextToken for the next iteration
+    nextToken = result.data.listIndexPages.nextToken;
+  } while (nextToken); // Keep fetching until there's no nextToken
+
+  return allItems;
+}

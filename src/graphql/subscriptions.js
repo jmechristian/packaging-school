@@ -6762,6 +6762,7 @@ export const onCreateIndexPage = /* GraphQL */ `
     onCreateIndexPage {
       id
       content
+      seoImage
       slug
       discount
       status
@@ -6776,6 +6777,7 @@ export const onUpdateIndexPage = /* GraphQL */ `
     onUpdateIndexPage {
       id
       content
+      seoImage
       slug
       discount
       status
@@ -6790,6 +6792,7 @@ export const onDeleteIndexPage = /* GraphQL */ `
     onDeleteIndexPage {
       id
       content
+      seoImage
       slug
       discount
       status

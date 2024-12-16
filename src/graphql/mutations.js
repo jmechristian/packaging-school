@@ -7368,6 +7368,7 @@ export const createIndexPage = /* GraphQL */ `
     createIndexPage(input: $input, condition: $condition) {
       id
       content
+      seoImage
       slug
       discount
       status
@@ -7385,6 +7386,7 @@ export const updateIndexPage = /* GraphQL */ `
     updateIndexPage(input: $input, condition: $condition) {
       id
       content
+      seoImage
       slug
       discount
       status
@@ -7402,6 +7404,7 @@ export const deleteIndexPage = /* GraphQL */ `
     deleteIndexPage(input: $input, condition: $condition) {
       id
       content
+      seoImage
       slug
       discount
       status
