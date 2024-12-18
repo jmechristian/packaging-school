@@ -369,6 +369,10 @@ const Page = () => {
     return category ? category.name : cat;
   };
 
+  const handleCurrentCategoryClick = (cat) => {
+    router.push(`/courses/categories/${cat}`);
+  };
+
   return (
     <>
       <Meta

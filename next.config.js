@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: [
+      'files.cdn.printful.com',
       'res.cloudinary.com',
       'packschool.s3.amazonaws.com',
       'psheadshots.s3.amazonaws.com',
