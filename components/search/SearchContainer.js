@@ -60,7 +60,7 @@ export function CertItem({ hit }) {
       <div className='w-full !flex !flex-col'>
         <div className='w-full !flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
           <div
-            className='aspect-[1/1] md:!aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+            className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[90px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
             style={{ backgroundImage: `url(${hit.seoImage})` }}
           ></div>
           <div className='flex flex-col md:flex-row !h-[90px] md:!h-[120px] py-1.5 justify-between items-center w-full'>
@@ -72,7 +72,7 @@ export function CertItem({ hit }) {
                 <Highlight hit={hit} attribute='subheadline' />
               </div>
             </div>
-            <div className='flex md:flex-col md:items-center justify-end gap-1.5 pr-2 w-full md:w-fit'>
+            <div className='!flex md:!flex-col md:!items-center justify-end gap-1.5 pr-2 w-full md:w-fit'>
               {/* <div className='w-8 h-8 rounded-full bg-base-mid flex items-center justify-center shadow border border-0.5 border-black/50'>
                 <FaceSmileIcon className='w-5 h-5 stroke-white' />
               </div>
@@ -109,7 +109,7 @@ export function CourseItem({ hit }) {
         <div className='w-full flex flex-col lg:!h-[120px]'>
           <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
             <div
-              className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[100px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+              className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[100px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
               style={{ backgroundImage: `url(${hit.seoImage})` }}
             ></div>
             <div className='flex flex-col md:flex-row h-[100px] md:h-[120px] py-1.5 justify-between items-center w-full'>
@@ -168,7 +168,7 @@ export function LOTMItem({ hit }) {
         <div className='w-full flex flex-col lg:!h-[120px]'>
           <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
             <div
-              className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+              className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[90px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
               style={{
                 backgroundImage: `url(${
                   hit.screengrab ? hit.screengrab : hit.seoImage
