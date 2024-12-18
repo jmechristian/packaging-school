@@ -55,20 +55,20 @@ export function CertItem({ hit }) {
   return (
     <a
       href={hit.slug}
-      className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
+      className='w-full !grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
     >
-      <div className='w-full flex flex-col lg:h-[120px]'>
-        <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
+      <div className='w-full !flex !flex-col'>
+        <div className='w-full !flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
           <div
-            className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+            className='aspect-[1/1] md:!aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
             style={{ backgroundImage: `url(${hit.seoImage})` }}
           ></div>
-          <div className='flex flex-col md:flex-row h-[90px] md:h-[120px] py-1.5 justify-between items-center w-full'>
+          <div className='flex flex-col md:flex-row !h-[90px] md:!h-[120px] py-1.5 justify-between items-center w-full'>
             <div className='flex flex-col gap-2 w-full'>
               <div className='font-greycliff font-semibold leading-tight lg:text-lg dark:text-white pr-3'>
                 <Highlight hit={hit} attribute='title' />
               </div>
-              <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-md hidden md:block'>
+              <div className='!aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-md hidden md:block'>
                 <Highlight hit={hit} attribute='subheadline' />
               </div>
             </div>
@@ -83,11 +83,11 @@ export function CertItem({ hit }) {
           </div>
         </div>
         {/* HIDDEN MD */}
-        <div className='w-full flex flex-col px-3 py-4 bg-neutral-100 dark:bg-black md:hidden'>
+        <div className='w-full !flex !flex-col h-full px-3 py-4 bg-neutral-100 dark:bg-black md:!hidden'>
           <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-white hidden'>
             <Highlight hit={hit} attribute='title' />
           </div>
-          <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60'>
+          <div className='!aa-ItemTitle text-xs leading-snug dark:text-white/60'>
             <Highlight hit={hit} attribute='subheadline' />
           </div>
         </div>
@@ -106,7 +106,7 @@ export function CourseItem({ hit }) {
         className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
         onClick={() => dispatch(closeSearch())}
       >
-        <div className='w-full flex flex-col lg:h-[120px]'>
+        <div className='w-full flex flex-col lg:!h-[120px]'>
           <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
             <div
               className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[100px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
@@ -165,7 +165,7 @@ export function LOTMItem({ hit }) {
         className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
         onClick={() => dispatch(closeSearch())}
       >
-        <div className='w-full flex flex-col lg:h-[120px]'>
+        <div className='w-full flex flex-col lg:!h-[120px]'>
           <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
             <div
               className='aspect-[1/1] md:aspect-[3/5] w-full max-w-[90px] md:max-w-[120px] md:max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
@@ -319,7 +319,7 @@ const SearchContainer = () => {
       </div> */}
       <div className='dark:bg-black fixed max-w-7xl z-[115] max-h-[92vh] top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 max-auto bg-base-light w-full h-full lg:rounded-xl lg:max-w-7xl lg:mx-auto  grid lg:grid-cols-3 gap-6 lg:gap-8 p-3 pt-4 md:p-9'>
         <div
-          className='z-10 col-span-1 w-full lg:col-span-2 p-3 lg:p-6 flex flex-col overflow-y-scroll relative bg-white dark:bg-dark-mid rounded-xl shadow lg:shadow-xl'
+          className='z-10 col-span-1 w-full lg:!col-span-2 p-3 lg:p-6 flex flex-col overflow-y-scroll relative bg-white dark:bg-dark-mid rounded-xl shadow lg:shadow-xl'
           id='scrollers'
         >
           <InstantSearch

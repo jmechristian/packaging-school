@@ -105,7 +105,7 @@ export function Autocomplete(props) {
         }
 
         panelRootRef.current.render(
-          <div className='flex flex-col lg:grid lg:grid-cols-2 bg-white text-slate-700'>
+          <div className='flex flex-col lg:!grid lg:!grid-cols-2 bg-white text-slate-700'>
             <div className='py-3'>
               {!state.query ? (
                 elements.querySuggestionsPlugin
