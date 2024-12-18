@@ -188,20 +188,6 @@ export function LOTMItem({ hit }) {
                   />
                 </div>
               </div>
-              {/* <div className='grid grid-cols-2 md:items-center justify-end gap-1.5 pr-3 w-full md:w-fit'>
-                <div className='w-8 h-8 rounded-full bg-base-mid flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <FaceSmileIcon className='w-5 h-5 stroke-white' />
-                </div>
-                <div className='w-8 h-8 rounded-full bg-clemson flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <RocketLaunchIcon className='w-5 h-5 stroke-white' />
-                </div>
-                <div className='w-8 h-8 rounded-full bg-brand-red flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <AcademicCapIcon className='w-5 h-5 stroke-white' />
-                </div>
-                <div className='w-8 h-8 rounded-full bg-green-600 flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <ScaleIcon className='w-5 h-5 stroke-white' />
-                </div>
-              </div> */}
             </div>
           </div>
           {/* HIDDEN MD */}

@@ -80,8 +80,8 @@ const AndrewHero = () => {
                   passionate about packaging.
                 </p>
                 <p className='relative mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none'>
-                  Dr. Andrew Hurley is an Associate Professor of Food, Nutrition
-                  and Packaging Science at Clemson University. Andrew chairs the
+                  Dr. Andrew Hurley is a Professor of Food, Nutrition and
+                  Packaging Science at Clemson University. Andrew chairs the
                   curriculum committee, manages an internationally recognized
                   consumer behavior research program, and has delivered over 100
                   presentations on package design globally.
