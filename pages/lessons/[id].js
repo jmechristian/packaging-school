@@ -123,7 +123,7 @@ const Page = ({ lesson }) => {
                         {newDate}
                       </div>
                       {lesson.author && (
-                        <div className='flex flex-col w-full md:flex-row gap-3 md:gap-9 md:items-center'>
+                        <div className='flex flex-col w-full md:!flex-row gap-3 md:!gap-9 md:!items-center'>
                           {lesson.author.map((a) => (
                             <div
                               key={a}
