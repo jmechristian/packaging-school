@@ -9,12 +9,8 @@ import {
   setPreviewClosed,
 } from '../all_courses/courseFilterSlice';
 import { setLocation, setUser } from '../auth/authslice';
-import {
-  setDark,
-  setLight,
-  toggleSignInModal,
-  toggleIndiaBanner,
-} from './layoutSlice';
+import { setDark, setLight, toggleSignInModal } from './layoutSlice';
+import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -35,7 +31,7 @@ const Layout = ({ children }) => {
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { searchOpen } = useSelector((state) => state.nav);
   const { preview } = useSelector((state) => state.course_filter);
-  const { location } = useSelector((state) => state.auth);
+  const { location, cart } = useSelector((state) => state.auth);
   const { user } = useUser();
 
   useEffect(() => {
@@ -197,6 +193,7 @@ const Layout = ({ children }) => {
           {location && location.country === 'India' && <IndiaBanner />}
           <Loading />
           <HeaderNew />
+          {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />
           <main className='relative h-full w-full'>{children}</main>
           <Footer />
