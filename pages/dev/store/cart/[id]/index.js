@@ -5,7 +5,7 @@ import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import {
   removeFromCart,
   updateCartItemQuantity,
-} from '../../../../../../features/auth/authslice';
+} from '../../../../../features/auth/authslice';
 const CartPage = () => {
   const router = useRouter();
   const { id } = router.query;

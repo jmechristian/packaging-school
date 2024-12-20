@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import {
   removeFromCart,
-  addToCart,
   updateCartItemQuantity,
-} from '../../../../../features/auth/authslice';
+} from '../../../../features/auth/authslice';
 const CartPage = () => {
   const router = useRouter();
   const { id } = router.query;
