@@ -259,6 +259,7 @@ const CheckoutPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            shipping: selectedShippingRate.id,
             recipient: {
               name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
               company: formData.shippingAddress.company,

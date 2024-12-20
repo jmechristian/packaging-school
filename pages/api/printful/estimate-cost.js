@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     const printfulPayload = {
       recipient: requestData.recipient,
       items: requestData.items,
+      shipping: requestData.shipping,
     };
 
     const response = await fetch(
