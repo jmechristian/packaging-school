@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -8,6 +8,8 @@ const CheckoutPage = () => {
   const { cart, user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     email: '',
+    phone: '',
+    phoneCountryCode: '+1',
     shippingAddress: {
       firstName: '',
       lastName: '',
@@ -15,9 +17,15 @@ const CheckoutPage = () => {
       address: '',
       apartment: '',
       city: '',
-      state: '',
+      state: {
+        code: '',
+        name: '',
+      },
       postalCode: '',
-      country: '',
+      country: {
+        code: '',
+        name: '',
+      },
     },
     billingAddress: {
       firstName: '',
@@ -26,9 +34,15 @@ const CheckoutPage = () => {
       address: '',
       apartment: '',
       city: '',
-      state: '',
+      state: {
+        code: '',
+        name: '',
+      },
       postalCode: '',
-      country: '',
+      country: {
+        code: '',
+        name: '',
+      },
     },
     sameAsShipping: false,
   });
@@ -39,12 +53,14 @@ const CheckoutPage = () => {
     shipping: [],
     billing: [],
   });
+  const [shippingRates, setShippingRates] = useState([]);
+  const [selectedShippingRate, setSelectedShippingRate] = useState(null);
+  const [costDetails, setCostDetails] = useState(null);
 
   useEffect(() => {
     const fetchCountries = async () => {
       const response = await fetch('/api/printful/get-countries');
       const data = await response.json();
-      console.log(data);
       setIsCountries(data.data);
     };
     fetchCountries();
@@ -52,10 +68,10 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const shippingCountry = isCountries.find(
-      (c) => c.code === formData.shippingAddress.country
+      (c) => c.code === formData.shippingAddress.country.code
     );
     const billingCountry = isCountries.find(
-      (c) => c.code === formData.billingAddress.country
+      (c) => c.code === formData.billingAddress.country.code
     );
 
     setStates({
@@ -63,8 +79,8 @@ const CheckoutPage = () => {
       billing: billingCountry?.states || [],
     });
   }, [
-    formData.shippingAddress.country,
-    formData.billingAddress.country,
+    formData.shippingAddress.country.code,
+    formData.billingAddress.country.code,
     isCountries,
   ]);
 
@@ -75,18 +91,50 @@ const CheckoutPage = () => {
     const { name, value } = e.target;
     const [section, field] = name.split('.');
 
-    setFormData((prev) => ({
-      ...prev,
-      [section]:
-        section === 'sameAsShipping'
-          ? value
-          : section === 'email'
-          ? value
-          : {
-              ...prev[section],
-              [field]: value,
-            },
-    }));
+    if (section === 'email' || section === 'phone') {
+      setFormData((prev) => ({
+        ...prev,
+        [section]: value,
+      }));
+    } else if (field === 'state') {
+      const selectedState = states[
+        section === 'shippingAddress' ? 'shipping' : 'billing'
+      ].find((state) => state.code === value);
+
+      setFormData((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          state: {
+            code: selectedState?.code || '',
+            name: selectedState?.name || '',
+          },
+        },
+      }));
+    } else if (field === 'country') {
+      const selectedCountry = isCountries.find(
+        (country) => country.code === value
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          country: {
+            code: selectedCountry?.code || '',
+            name: selectedCountry?.name || '',
+          },
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [field]: value,
+        },
+      }));
+    }
   };
 
   const handleSameAsShipping = (e) => {
@@ -112,6 +160,142 @@ const CheckoutPage = () => {
     // setAppliedCoupon({ code: couponCode, discount: 10 });
   };
 
+  const isShippingComplete = (address) => {
+    const requiredFields = [
+      'firstName',
+      'lastName',
+      'address',
+      'city',
+      'postalCode',
+    ];
+
+    // Check all basic fields first
+    const basicFieldsComplete = requiredFields.every((field) =>
+      address[field]?.trim()
+    );
+
+    // Check state and country separately since they're objects
+    const stateComplete = address.state?.code?.trim();
+    const countryComplete = address.country?.code?.trim();
+
+    return basicFieldsComplete && stateComplete && countryComplete;
+  };
+
+  const getFullPhoneNumber = () => {
+    return formData.phone
+      ? `${formData.phoneCountryCode}${formData.phone}`
+      : '';
+  };
+
+  useEffect(() => {
+    const calculateShipping = async () => {
+      if (
+        !isShippingComplete(formData.shippingAddress) ||
+        !cart?.items?.length
+      ) {
+        return;
+      }
+
+      const response = await fetch('/api/printful/calculate-shipping', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipient: {
+            name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
+            company: formData.shippingAddress.company,
+            address1: formData.shippingAddress.address,
+            address2: formData.shippingAddress.apartment,
+            city: formData.shippingAddress.city,
+            country_code: formData.shippingAddress.country.code,
+            country_name: formData.shippingAddress.country.name,
+            state_code: formData.shippingAddress.state.code,
+            state_name: formData.shippingAddress.state.name,
+            zip: formData.shippingAddress.postalCode,
+            phone: getFullPhoneNumber(),
+            email: formData.email,
+          },
+          items: cart.items.map((item) => ({
+            variant_id: item.variant_id,
+            external_variant_id: item.external_id,
+            warehouse_product_variant_id: item.warehouse_product_variant_id,
+            quantity: item.quantity,
+            value: item.retail_price,
+          })),
+          currency: 'USD',
+          locale: 'en_US',
+        }),
+      });
+      const data = await response.json();
+      setShippingRates(data.data);
+      if (data.data && data.data.length > 0) {
+        setSelectedShippingRate(data.data[0]);
+      }
+    };
+
+    calculateShipping();
+  }, [
+    formData.shippingAddress,
+    formData.phone,
+    formData.phoneCountryCode,
+    cart?.items,
+  ]);
+
+  useEffect(() => {
+    const calculateCost = async () => {
+      if (
+        !selectedShippingRate ||
+        !isShippingComplete(formData.shippingAddress) ||
+        !cart?.items?.length
+      ) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/printful/estimate-cost', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            recipient: {
+              name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
+              company: formData.shippingAddress.company,
+              address1: formData.shippingAddress.address,
+              address2: formData.shippingAddress.apartment,
+              city: formData.shippingAddress.city,
+              country_code: formData.shippingAddress.country.code,
+              country_name: formData.shippingAddress.country.name,
+              state_code: formData.shippingAddress.state.code,
+              state_name: formData.shippingAddress.state.name,
+              zip: formData.shippingAddress.postalCode,
+              phone: getFullPhoneNumber(),
+              email: formData.email,
+            },
+            items: cart.items.map((item) => ({
+              variant_id: item.variant_id,
+              external_variant_id: item.external_id,
+              warehouse_product_variant_id: item.warehouse_product_variant_id,
+              quantity: item.quantity,
+              value: item.retail_price,
+            })),
+            shipping_rate: selectedShippingRate.id,
+            currency: 'USD',
+            locale: 'en_US',
+          }),
+        });
+
+        const data = await response.json();
+        setCostDetails(data.data);
+      } catch (error) {
+        console.error('Error calculating costs:', error);
+      }
+    };
+
+    calculateCost();
+  }, [selectedShippingRate, formData.shippingAddress, cart?.items]);
+
   return (
     <div className='container mx-auto px-4 py-8 lg:py-16'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
@@ -135,14 +319,32 @@ const CheckoutPage = () => {
                 placeholder='Email'
                 className='p-2 border rounded'
               />
-              <input
-                type='tel'
-                name='phone'
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder='Phone'
-                className='p-2 border rounded'
-              />
+              <div className='flex gap-2'>
+                <select
+                  name='phoneCountryCode'
+                  value={formData.phoneCountryCode}
+                  onChange={handleChange}
+                  className='p-2 border rounded w-24'
+                >
+                  <option value='+1'>🇺🇸 +1</option>
+                  <option value='+44'>🇬🇧 +44</option>
+                  <option value='+61'>🇦🇺 +61</option>
+                  <option value='+33'>🇫🇷 +33</option>
+                  <option value='+49'>🇩🇪 +49</option>
+                  <option value='+81'>🇯🇵 +81</option>
+                  <option value='+86'>🇨🇳 +86</option>
+                  <option value='+91'>🇮🇳 +91</option>
+                  {/* Add more country codes as needed */}
+                </select>
+                <input
+                  type='tel'
+                  name='phone'
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder='Phone number'
+                  className='flex-1 p-2 border rounded'
+                />
+              </div>
             </div>
             <div className='flex justify-end'>
               <button className='bg-blue-600 text-white px-4 py-2 rounded'>
@@ -208,7 +410,7 @@ const CheckoutPage = () => {
                 />
                 <select
                   name='shippingAddress.state'
-                  value={formData.shippingAddress.state}
+                  value={formData.shippingAddress.state.code}
                   onChange={handleChange}
                   className='p-2 border rounded'
                   disabled={!states.shipping.length}
@@ -232,7 +434,7 @@ const CheckoutPage = () => {
                 />
                 <select
                   name='shippingAddress.country'
-                  value={formData.shippingAddress.country}
+                  value={formData.shippingAddress.country.code}
                   onChange={handleChange}
                   className='p-2 border rounded'
                 >
@@ -244,6 +446,34 @@ const CheckoutPage = () => {
                   ))}
                 </select>
               </div>
+              {shippingRates.length > 0 && (
+                <div className='mt-4'>
+                  <h3 className='text-lg font-semibold'>Shipping Rates</h3>
+                  <div className='space-y-2 mt-2'>
+                    {shippingRates.map((r) => (
+                      <label
+                        key={r.id}
+                        className='flex items-center space-x-3 cursor-pointer'
+                      >
+                        <input
+                          type='radio'
+                          name='shippingRate'
+                          value={r.id}
+                          checked={selectedShippingRate?.id === r.id}
+                          onChange={() => setSelectedShippingRate(r)}
+                          className='form-radio'
+                        />
+                        <span>
+                          {r.name} - $
+                          {typeof r.rate === 'number'
+                            ? r.rate.toFixed(2)
+                            : r.rate}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
             </form>
           </section>
 
@@ -316,7 +546,7 @@ const CheckoutPage = () => {
                   />
                   <select
                     name='billingAddress.state'
-                    value={formData.billingAddress.state}
+                    value={formData.billingAddress.state.code}
                     onChange={handleChange}
                     className='p-2 border rounded'
                     disabled={!states.billing.length}
@@ -340,7 +570,7 @@ const CheckoutPage = () => {
                   />
                   <select
                     name='billingAddress.country'
-                    value={formData.billingAddress.country}
+                    value={formData.billingAddress.country.code}
                     onChange={handleChange}
                     className='p-2 border rounded'
                   >
@@ -403,9 +633,7 @@ const CheckoutPage = () => {
                     Quantity: {item.quantity} / {item.retail_price}
                   </p>
                 </div>
-                <div className='font-medium text-sm'>
-                  ${(item.retail_price * item.quantity).toFixed(2)}
-                </div>
+                <div>${(item.retail_price * item.quantity).toFixed(2)}</div>
               </div>
             ))}
           </div>
@@ -416,12 +644,13 @@ const CheckoutPage = () => {
               <span>Subtotal</span>
               <span>
                 $
-                {cart?.items
-                  ?.reduce(
-                    (acc, item) => acc + item.retail_price * item.quantity,
-                    0
-                  )
-                  .toFixed(2)}
+                {costDetails?.subtotal ||
+                  cart?.items
+                    ?.reduce(
+                      (acc, item) => acc + item.retail_price * item.quantity,
+                      0
+                    )
+                    .toFixed(2)}
               </span>
             </div>
             {appliedCoupon && (
@@ -432,22 +661,26 @@ const CheckoutPage = () => {
             )}
             <div className='flex justify-between'>
               <span>Shipping</span>
-              <span>Enter Shipping Address</span>
+              <span>
+                {costDetails?.costs?.shipping
+                  ? `$${Number(costDetails.costs.shipping).toFixed(2)}`
+                  : 'Enter Shipping Address'}
+              </span>
             </div>
             <div className='flex justify-between'>
               <span>Tax</span>
-              <span>Enter Billing Address</span>
+              <span>
+                {costDetails?.costs?.tax
+                  ? `$${Number(costDetails.costs.tax).toFixed(2)}`
+                  : 'Enter Shipping Address'}
+              </span>
             </div>
             <div className='flex justify-between font-semibold text-lg pt-4 border-t'>
               <span>Total</span>
               <span>
-                $
-                {cart?.items
-                  ?.reduce(
-                    (acc, item) => acc + item.retail_price * item.quantity,
-                    0
-                  )
-                  .toFixed(2)}
+                {costDetails?.costs?.total
+                  ? `$${Number(costDetails.costs.total).toFixed(2)}`
+                  : 'Enter Shipping Address'}
               </span>
             </div>
           </div>

@@ -14,7 +14,7 @@ const ProductItem = ({ product }) => {
       );
       const data = await response.json();
       setIsProduct(data.data);
-      console.log(data.data);
+      // console.log(data.data);
 
       // Updated variant selection logic
       if (data.data?.sync_variants) {
