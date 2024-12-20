@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -32,6 +32,41 @@ const CheckoutPage = () => {
     },
     sameAsShipping: false,
   });
+
+  const [isCountriesLoading, setIsCountriesLoading] = useState(true);
+  const [isCountries, setIsCountries] = useState([]);
+  const [states, setStates] = useState({
+    shipping: [],
+    billing: [],
+  });
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const response = await fetch('/api/printful/get-countries');
+      const data = await response.json();
+      console.log(data);
+      setIsCountries(data.data);
+    };
+    fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    const shippingCountry = isCountries.find(
+      (c) => c.code === formData.shippingAddress.country
+    );
+    const billingCountry = isCountries.find(
+      (c) => c.code === formData.billingAddress.country
+    );
+
+    setStates({
+      shipping: shippingCountry?.states || [],
+      billing: billingCountry?.states || [],
+    });
+  }, [
+    formData.shippingAddress.country,
+    formData.billingAddress.country,
+    isCountries,
+  ]);
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -77,15 +112,6 @@ const CheckoutPage = () => {
     // setAppliedCoupon({ code: couponCode, discount: 10 });
   };
 
-  // Country codes array
-  const countries = [
-    { code: 'US', name: 'United States' },
-    { code: 'CA', name: 'Canada' },
-    { code: 'GB', name: 'United Kingdom' },
-    { code: 'AU', name: 'Australia' },
-    // Add more countries as needed
-  ];
-
   return (
     <div className='container mx-auto px-4 py-8 lg:py-16'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
@@ -100,15 +126,25 @@ const CheckoutPage = () => {
           {/* Contact Section */}
           <section className='border rounded-lg p-4'>
             <h2 className='text-xl font-semibold mb-4'>Contact</h2>
-            <div className='flex justify-between items-center mb-4'>
+            <div className='grid grid-cols-2 gap-4 mb-4'>
               <input
                 type='email'
                 name='email'
                 value={formData.email}
                 onChange={handleChange}
                 placeholder='Email'
-                className='flex-1 p-2 border rounded mr-4'
+                className='p-2 border rounded'
               />
+              <input
+                type='tel'
+                name='phone'
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder='Phone'
+                className='p-2 border rounded'
+              />
+            </div>
+            <div className='flex justify-end'>
               <button className='bg-blue-600 text-white px-4 py-2 rounded'>
                 Login
               </button>
@@ -175,9 +211,14 @@ const CheckoutPage = () => {
                   value={formData.shippingAddress.state}
                   onChange={handleChange}
                   className='p-2 border rounded'
+                  disabled={!states.shipping.length}
                 >
                   <option value=''>Select State</option>
-                  {/* Add state options here */}
+                  {states.shipping.map((state) => (
+                    <option key={state.code} value={state.code}>
+                      {state.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className='grid grid-cols-2 gap-4'>
@@ -196,7 +237,7 @@ const CheckoutPage = () => {
                   className='p-2 border rounded'
                 >
                   <option value=''>Select Country</option>
-                  {countries.map((country) => (
+                  {isCountries.map((country) => (
                     <option key={country.code} value={country.code}>
                       {country.name}
                     </option>
@@ -278,9 +319,14 @@ const CheckoutPage = () => {
                     value={formData.billingAddress.state}
                     onChange={handleChange}
                     className='p-2 border rounded'
+                    disabled={!states.billing.length}
                   >
                     <option value=''>Select State</option>
-                    {/* Add state options here */}
+                    {states.billing.map((state) => (
+                      <option key={state.code} value={state.code}>
+                        {state.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className='grid grid-cols-2 gap-4'>
@@ -299,7 +345,7 @@ const CheckoutPage = () => {
                     className='p-2 border rounded'
                   >
                     <option value=''>Select Country</option>
-                    {countries.map((country) => (
+                    {isCountries.map((country) => (
                       <option key={country.code} value={country.code}>
                         {country.name}
                       </option>
