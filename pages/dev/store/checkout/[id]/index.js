@@ -324,7 +324,7 @@ const CheckoutPage = () => {
             <h2 className='text-xl font-semibold'>Order Summary</h2>
             <button
               className='text-base-brand hover:text-base-brand-dark text-sm font-semibold'
-              onClick={() => router.push(`/store/cart/${id}`)}
+              onClick={() => router.push(`/dev/store/cart/${id}`)}
             >
               Edit Cart
             </button>
