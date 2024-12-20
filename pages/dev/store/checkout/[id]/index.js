@@ -302,12 +302,6 @@ const CheckoutPage = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
         {/* Left Column - Forms */}
         <div className='space-y-6'>
-          {/* Express Checkout Section */}
-          <section className='border rounded-lg p-4'>
-            <h2 className='text-xl font-semibold mb-4'>Express Checkout</h2>
-            {/* Add payment buttons here */}
-          </section>
-
           {/* Contact Section */}
           <section className='border rounded-lg p-4'>
             <h2 className='text-xl font-semibold mb-4'>Contact</h2>
