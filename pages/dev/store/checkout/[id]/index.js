@@ -298,14 +298,17 @@ const CheckoutPage = () => {
   }, [selectedShippingRate, formData.shippingAddress, cart?.items]);
 
   return (
-    <div className='container mx-auto px-4 py-8 lg:py-16'>
+    <div className='container mx-auto px-4 py-8 lg:py-16 max-w-7xl'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
         {/* Left Column - Forms */}
         <div className='space-y-6'>
           {/* Contact Section */}
           <section className='border rounded-lg p-4'>
-            <h2 className='text-xl font-semibold mb-4'>Contact</h2>
-            <div className='grid grid-cols-2 gap-4 mb-4'>
+            <div className='flex items-center justify-between w-full'>
+              <h2 className='text-xl font-semibold mb-4'>Contact*</h2>
+              <span className='text-sm text-gray-500'>*Required</span>
+            </div>
+            <div className='grid grid-cols-1 gap-4 mb-4'>
               <input
                 type='email'
                 name='email'
@@ -314,7 +317,7 @@ const CheckoutPage = () => {
                 placeholder='Email'
                 className='p-2 border rounded'
               />
-              <div className='flex gap-2'>
+              <div className='flex gap-2 w-full'>
                 <select
                   name='phoneCountryCode'
                   value={formData.phoneCountryCode}
@@ -341,16 +344,14 @@ const CheckoutPage = () => {
                 />
               </div>
             </div>
-            <div className='flex justify-end'>
-              <button className='bg-blue-600 text-white px-4 py-2 rounded'>
-                Login
-              </button>
-            </div>
           </section>
 
           {/* Shipping Address Section */}
           <section className='border rounded-lg p-4'>
-            <h2 className='text-xl font-semibold mb-4'>Shipping Address</h2>
+            <div className='flex items-center justify-between w-full'>
+              <h2 className='text-xl font-semibold mb-4'>Shipping Address*</h2>
+              <span className='text-sm text-gray-500'>*Required</span>
+            </div>
             <form className='space-y-4'>
               <div className='grid grid-cols-2 gap-4'>
                 <input
@@ -474,7 +475,10 @@ const CheckoutPage = () => {
 
           {/* Billing Address Section */}
           <section className='border rounded-lg p-4'>
-            <h2 className='text-xl font-semibold mb-4'>Billing Address</h2>
+            <div className='flex items-center justify-between w-full'>
+              <h2 className='text-xl font-semibold mb-4'>Billing Address*</h2>
+              <span className='text-sm text-gray-500'>*Required</span>
+            </div>
             <div className='mb-4'>
               <label className='flex items-center space-x-2'>
                 <input
@@ -580,13 +584,6 @@ const CheckoutPage = () => {
               </form>
             )}
           </section>
-
-          <button
-            onClick={handleSubmit}
-            className='w-full bg-blue-600 text-white py-3 rounded'
-          >
-            Pay Now
-          </button>
         </div>
 
         {/* Right Column - Order Summary */}
@@ -701,6 +698,12 @@ const CheckoutPage = () => {
                 Coupon {appliedCoupon.code} applied!
               </div>
             )}
+            <button
+              onClick={handleSubmit}
+              className='w-full bg-blue-600 text-white py-3 rounded mt-5'
+            >
+              Proceed to Payment (stripe logo)
+            </button>
           </div>
         </div>
       </div>
