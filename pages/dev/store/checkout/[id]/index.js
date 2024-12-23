@@ -57,6 +57,14 @@ const CheckoutPage = () => {
   const [selectedShippingRate, setSelectedShippingRate] = useState(null);
   const [costDetails, setCostDetails] = useState(null);
 
+  // Add new error state
+  const [errors, setErrors] = useState({
+    email: '',
+    phone: '',
+    shippingAddress: {},
+    billingAddress: {},
+  });
+
   useEffect(() => {
     const fetchCountries = async () => {
       const response = await fetch('/api/printful/get-countries');
@@ -148,10 +156,81 @@ const CheckoutPage = () => {
     }));
   };
 
+  // Add validation function
+  const validateForm = () => {
+    const newErrors = {
+      email: '',
+      phone: '',
+      shippingAddress: {},
+      billingAddress: {},
+    };
+    let isValid = true;
+
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+      isValid = false;
+    }
+
+    // Phone validation
+    if (!formData.phone) {
+      newErrors.phone = 'Phone number is required';
+      isValid = false;
+    }
+
+    // Shipping address validation - excluding state and company
+    const shippingFields = {
+      firstName: 'First name',
+      lastName: 'Last name',
+      address: 'Address',
+      city: 'City',
+      postalCode: 'Postal code',
+      country: 'Country',
+    };
+
+    Object.entries(shippingFields).forEach(([field, label]) => {
+      if (field === 'country') {
+        if (!formData.shippingAddress[field].code) {
+          newErrors.shippingAddress[field] = `${label} is required`;
+          isValid = false;
+        }
+      } else if (!formData.shippingAddress[field]) {
+        newErrors.shippingAddress[field] = `${label} is required`;
+        isValid = false;
+      }
+    });
+
+    // Billing address validation (if not same as shipping)
+    if (!formData.sameAsShipping) {
+      Object.entries(shippingFields).forEach(([field, label]) => {
+        if (field === 'country') {
+          if (!formData.billingAddress[field].code) {
+            newErrors.billingAddress[field] = `${label} is required`;
+            isValid = false;
+          }
+        } else if (!formData.billingAddress[field]) {
+          newErrors.billingAddress[field] = `${label} is required`;
+          isValid = false;
+        }
+      });
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Update handleSubmit
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form data:', formData);
-    // Handle submission logic here
+    if (validateForm()) {
+      console.log('Form data:', formData);
+      // Handle submission logic here
+    } else {
+      console.log('Form validation failed');
+    }
   };
 
   const handleApplyCoupon = () => {
@@ -299,9 +378,9 @@ const CheckoutPage = () => {
 
   return (
     <div className='container mx-auto px-4 py-8 lg:py-16 max-w-7xl'>
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+      <div className='grid grid-cols-1 lg:grid-cols-5 gap-8 w-full'>
         {/* Left Column - Forms */}
-        <div className='space-y-6'>
+        <div className='space-y-6 col-span-3 w-full'>
           {/* Contact Section */}
           <section className='border rounded-lg p-4'>
             <div className='flex items-center justify-between w-full'>
@@ -309,39 +388,53 @@ const CheckoutPage = () => {
               <span className='text-sm text-gray-500'>*Required</span>
             </div>
             <div className='grid grid-cols-1 gap-4 mb-4'>
-              <input
-                type='email'
-                name='email'
-                value={formData.email}
-                onChange={handleChange}
-                placeholder='Email'
-                className='p-2 border rounded'
-              />
-              <div className='flex gap-2 w-full'>
-                <select
-                  name='phoneCountryCode'
-                  value={formData.phoneCountryCode}
-                  onChange={handleChange}
-                  className='p-2 border rounded w-24'
-                >
-                  <option value='+1'>🇺🇸 +1</option>
-                  <option value='+44'>🇬🇧 +44</option>
-                  <option value='+61'>🇦🇺 +61</option>
-                  <option value='+33'>🇫🇷 +33</option>
-                  <option value='+49'>🇩🇪 +49</option>
-                  <option value='+81'>🇯🇵 +81</option>
-                  <option value='+86'>🇨🇳 +86</option>
-                  <option value='+91'>🇮🇳 +91</option>
-                  {/* Add more country codes as needed */}
-                </select>
+              <div className='flex flex-col'>
                 <input
-                  type='tel'
-                  name='phone'
-                  value={formData.phone}
+                  type='email'
+                  name='email'
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder='Phone number'
-                  className='flex-1 p-2 border rounded'
+                  placeholder='Email'
+                  className={`p-2 border rounded ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
                 />
+                {errors.email && (
+                  <p className='text-red-500 text-sm mt-1'>{errors.email}</p>
+                )}
+              </div>
+              <div className='flex flex-col'>
+                <div className='flex gap-2 w-full'>
+                  <select
+                    name='phoneCountryCode'
+                    value={formData.phoneCountryCode}
+                    onChange={handleChange}
+                    className='p-2 border rounded w-24'
+                  >
+                    <option value='+1'>🇺🇸 +1</option>
+                    <option value='+44'>🇬🇧 +44</option>
+                    <option value='+61'>🇦🇺 +61</option>
+                    <option value='+33'>🇫🇷 +33</option>
+                    <option value='+49'>🇩🇪 +49</option>
+                    <option value='+81'>🇯🇵 +81</option>
+                    <option value='+86'>🇨🇳 +86</option>
+                    <option value='+91'>🇮🇳 +91</option>
+                    {/* Add more country codes as needed */}
+                  </select>
+                  <input
+                    type='tel'
+                    name='phone'
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder='Phone number'
+                    className={`flex-1 p-2 border rounded ${
+                      errors.phone ? 'border-red-500' : ''
+                    }`}
+                  />
+                </div>
+                {errors.phone && (
+                  <p className='text-red-500 text-sm mt-1'>{errors.phone}</p>
+                )}
               </div>
             </div>
           </section>
@@ -353,40 +446,74 @@ const CheckoutPage = () => {
               <span className='text-sm text-gray-500'>*Required</span>
             </div>
             <form className='space-y-4'>
-              <div className='grid grid-cols-2 gap-4'>
+              <div className='space-y-4'>
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='shippingAddress.firstName'
+                      value={formData.shippingAddress.firstName}
+                      onChange={handleChange}
+                      placeholder='First Name'
+                      className={`p-2 border rounded ${
+                        errors.shippingAddress?.firstName
+                          ? 'border-red-500'
+                          : ''
+                      }`}
+                    />
+                    {errors.shippingAddress?.firstName && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.shippingAddress.firstName}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='shippingAddress.lastName'
+                      value={formData.shippingAddress.lastName}
+                      onChange={handleChange}
+                      placeholder='Last Name'
+                      className={`p-2 border rounded ${
+                        errors.shippingAddress?.lastName ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.shippingAddress?.lastName && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.shippingAddress.lastName}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Company field - no validation needed */}
                 <input
                   type='text'
-                  name='shippingAddress.firstName'
-                  value={formData.shippingAddress.firstName}
+                  name='shippingAddress.company'
+                  value={formData.shippingAddress.company}
                   onChange={handleChange}
-                  placeholder='First Name'
-                  className='p-2 border rounded'
+                  placeholder='Company (optional)'
+                  className='w-full p-2 border rounded'
                 />
-                <input
-                  type='text'
-                  name='shippingAddress.lastName'
-                  value={formData.shippingAddress.lastName}
-                  onChange={handleChange}
-                  placeholder='Last Name'
-                  className='p-2 border rounded'
-                />
+
+                <div className='flex flex-col'>
+                  <input
+                    type='text'
+                    name='shippingAddress.address'
+                    value={formData.shippingAddress.address}
+                    onChange={handleChange}
+                    placeholder='Address'
+                    className={`w-full p-2 border rounded ${
+                      errors.shippingAddress?.address ? 'border-red-500' : ''
+                    }`}
+                  />
+                  {errors.shippingAddress?.address && (
+                    <p className='text-red-500 text-sm mt-1'>
+                      {errors.shippingAddress.address}
+                    </p>
+                  )}
+                </div>
               </div>
-              <input
-                type='text'
-                name='shippingAddress.company'
-                value={formData.shippingAddress.company}
-                onChange={handleChange}
-                placeholder='Company (optional)'
-                className='w-full p-2 border rounded'
-              />
-              <input
-                type='text'
-                name='shippingAddress.address'
-                value={formData.shippingAddress.address}
-                onChange={handleChange}
-                placeholder='Address'
-                className='w-full p-2 border rounded'
-              />
               <input
                 type='text'
                 name='shippingAddress.apartment'
@@ -395,52 +522,85 @@ const CheckoutPage = () => {
                 placeholder='Apartment, suite, etc. (optional)'
                 className='w-full p-2 border rounded'
               />
-              <div className='grid grid-cols-2 gap-4'>
-                <input
-                  type='text'
-                  name='shippingAddress.city'
-                  value={formData.shippingAddress.city}
-                  onChange={handleChange}
-                  placeholder='City'
-                  className='p-2 border rounded'
-                />
-                <select
-                  name='shippingAddress.state'
-                  value={formData.shippingAddress.state.code}
-                  onChange={handleChange}
-                  className='p-2 border rounded'
-                  disabled={!states.shipping.length}
-                >
-                  <option value=''>Select State</option>
-                  {states.shipping.map((state) => (
-                    <option key={state.code} value={state.code}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='grid grid-cols-2 gap-4'>
-                <input
-                  type='text'
-                  name='shippingAddress.postalCode'
-                  value={formData.shippingAddress.postalCode}
-                  onChange={handleChange}
-                  placeholder='Postal Code'
-                  className='p-2 border rounded'
-                />
-                <select
-                  name='shippingAddress.country'
-                  value={formData.shippingAddress.country.code}
-                  onChange={handleChange}
-                  className='p-2 border rounded'
-                >
-                  <option value=''>Select Country</option>
-                  {isCountries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
+              <div className='space-y-4'>
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='shippingAddress.city'
+                      value={formData.shippingAddress.city}
+                      onChange={handleChange}
+                      placeholder='City'
+                      className={`p-2 border rounded ${
+                        errors.shippingAddress?.city ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.shippingAddress?.city && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.shippingAddress.city}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <select
+                      name='shippingAddress.state'
+                      value={formData.shippingAddress.state.code}
+                      onChange={handleChange}
+                      className='p-2 border rounded'
+                      disabled={!states.shipping.length}
+                    >
+                      <option value=''>Select State (optional)</option>
+                      {states.shipping.map((state) => (
+                        <option key={state.code} value={state.code}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='shippingAddress.postalCode'
+                      value={formData.shippingAddress.postalCode}
+                      onChange={handleChange}
+                      placeholder='Postal Code'
+                      className={`p-2 border rounded ${
+                        errors.shippingAddress?.postalCode
+                          ? 'border-red-500'
+                          : ''
+                      }`}
+                    />
+                    {errors.shippingAddress?.postalCode && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.shippingAddress.postalCode}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <select
+                      name='shippingAddress.country'
+                      value={formData.shippingAddress.country.code}
+                      onChange={handleChange}
+                      className={`p-2 border rounded ${
+                        errors.shippingAddress?.country ? 'border-red-500' : ''
+                      }`}
+                    >
+                      <option value=''>Select Country</option>
+                      {isCountries.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.shippingAddress?.country && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.shippingAddress.country}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
               {shippingRates.length > 0 && (
                 <div className='mt-4'>
@@ -474,7 +634,7 @@ const CheckoutPage = () => {
           </section>
 
           {/* Billing Address Section */}
-          <section className='border rounded-lg p-4'>
+          <section className='border rounded-lg p-4 '>
             <div className='flex items-center justify-between w-full'>
               <h2 className='text-xl font-semibold mb-4'>Billing Address*</h2>
               <span className='text-sm text-gray-500'>*Required</span>
@@ -493,23 +653,42 @@ const CheckoutPage = () => {
             {!formData.sameAsShipping && (
               <form className='space-y-4'>
                 <div className='grid grid-cols-2 gap-4'>
-                  <input
-                    type='text'
-                    name='billingAddress.firstName'
-                    value={formData.billingAddress.firstName}
-                    onChange={handleChange}
-                    placeholder='First Name'
-                    className='p-2 border rounded'
-                  />
-                  <input
-                    type='text'
-                    name='billingAddress.lastName'
-                    value={formData.billingAddress.lastName}
-                    onChange={handleChange}
-                    placeholder='Last Name'
-                    className='p-2 border rounded'
-                  />
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='billingAddress.firstName'
+                      value={formData.billingAddress.firstName}
+                      onChange={handleChange}
+                      placeholder='First Name'
+                      className={`p-2 border rounded ${
+                        errors.billingAddress?.firstName ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.billingAddress?.firstName && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.billingAddress.firstName}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='billingAddress.lastName'
+                      value={formData.billingAddress.lastName}
+                      onChange={handleChange}
+                      placeholder='Last Name'
+                      className={`p-2 border rounded ${
+                        errors.billingAddress?.lastName ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.billingAddress?.lastName && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.billingAddress.lastName}
+                      </p>
+                    )}
+                  </div>
                 </div>
+
                 <input
                   type='text'
                   name='billingAddress.company'
@@ -518,14 +697,25 @@ const CheckoutPage = () => {
                   placeholder='Company (optional)'
                   className='w-full p-2 border rounded'
                 />
-                <input
-                  type='text'
-                  name='billingAddress.address'
-                  value={formData.billingAddress.address}
-                  onChange={handleChange}
-                  placeholder='Address'
-                  className='w-full p-2 border rounded'
-                />
+
+                <div className='flex flex-col'>
+                  <input
+                    type='text'
+                    name='billingAddress.address'
+                    value={formData.billingAddress.address}
+                    onChange={handleChange}
+                    placeholder='Address'
+                    className={`w-full p-2 border rounded ${
+                      errors.billingAddress?.address ? 'border-red-500' : ''
+                    }`}
+                  />
+                  {errors.billingAddress?.address && (
+                    <p className='text-red-500 text-sm mt-1'>
+                      {errors.billingAddress.address}
+                    </p>
+                  )}
+                </div>
+
                 <input
                   type='text'
                   name='billingAddress.apartment'
@@ -534,52 +724,85 @@ const CheckoutPage = () => {
                   placeholder='Apartment, suite, etc. (optional)'
                   className='w-full p-2 border rounded'
                 />
+
                 <div className='grid grid-cols-2 gap-4'>
-                  <input
-                    type='text'
-                    name='billingAddress.city'
-                    value={formData.billingAddress.city}
-                    onChange={handleChange}
-                    placeholder='City'
-                    className='p-2 border rounded'
-                  />
-                  <select
-                    name='billingAddress.state'
-                    value={formData.billingAddress.state.code}
-                    onChange={handleChange}
-                    className='p-2 border rounded'
-                    disabled={!states.billing.length}
-                  >
-                    <option value=''>Select State</option>
-                    {states.billing.map((state) => (
-                      <option key={state.code} value={state.code}>
-                        {state.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='billingAddress.city'
+                      value={formData.billingAddress.city}
+                      onChange={handleChange}
+                      placeholder='City'
+                      className={`p-2 border rounded ${
+                        errors.billingAddress?.city ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.billingAddress?.city && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.billingAddress.city}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <select
+                      name='billingAddress.state'
+                      value={formData.billingAddress.state.code}
+                      onChange={handleChange}
+                      className='p-2 border rounded'
+                      disabled={!states.billing.length}
+                    >
+                      <option value=''>Select State (optional)</option>
+                      {states.billing.map((state) => (
+                        <option key={state.code} value={state.code}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
                 <div className='grid grid-cols-2 gap-4'>
-                  <input
-                    type='text'
-                    name='billingAddress.postalCode'
-                    value={formData.billingAddress.postalCode}
-                    onChange={handleChange}
-                    placeholder='Postal Code'
-                    className='p-2 border rounded'
-                  />
-                  <select
-                    name='billingAddress.country'
-                    value={formData.billingAddress.country.code}
-                    onChange={handleChange}
-                    className='p-2 border rounded'
-                  >
-                    <option value=''>Select Country</option>
-                    {isCountries.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className='flex flex-col'>
+                    <input
+                      type='text'
+                      name='billingAddress.postalCode'
+                      value={formData.billingAddress.postalCode}
+                      onChange={handleChange}
+                      placeholder='Postal Code'
+                      className={`p-2 border rounded ${
+                        errors.billingAddress?.postalCode
+                          ? 'border-red-500'
+                          : ''
+                      }`}
+                    />
+                    {errors.billingAddress?.postalCode && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.billingAddress.postalCode}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex flex-col'>
+                    <select
+                      name='billingAddress.country'
+                      value={formData.billingAddress.country.code}
+                      onChange={handleChange}
+                      className={`p-2 border rounded ${
+                        errors.billingAddress?.country ? 'border-red-500' : ''
+                      }`}
+                    >
+                      <option value=''>Select Country</option>
+                      {isCountries.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.billingAddress?.country && (
+                      <p className='text-red-500 text-sm mt-1'>
+                        {errors.billingAddress.country}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </form>
             )}
@@ -587,7 +810,7 @@ const CheckoutPage = () => {
         </div>
 
         {/* Right Column - Order Summary */}
-        <div className='border rounded-lg p-4'>
+        <div className='border rounded-lg p-4 col-span-2 w-full'>
           <div className='flex justify-between items-center mb-4'>
             <h2 className='text-xl font-semibold'>Order Summary</h2>
             <button
@@ -599,7 +822,7 @@ const CheckoutPage = () => {
           </div>
 
           {/* Items List */}
-          <div className='space-y-5 mb-6'>
+          <div className='space-y-6 mb-6'>
             {cart?.items?.map((item) => (
               <div key={item.id} className='flex items-center space-x-4'>
                 <div className='w-16 h-16 bg-gray-200 rounded'>
@@ -620,7 +843,7 @@ const CheckoutPage = () => {
                   )}
                 </div>
                 <div className='flex-1'>
-                  <h3 className='font-semibold max-w-md'>{item.name}</h3>
+                  <h3 className='font-semibold max-w-[200px]'>{item.name}</h3>
                   <p className='text-gray-500 text-sm'>
                     Quantity: {item.quantity} / {item.retail_price}
                   </p>
