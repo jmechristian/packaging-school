@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearCart } from '../../../../../features/auth/authslice';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import {
@@ -18,6 +19,7 @@ const CheckoutPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { cart, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: '',
     phone: '',
@@ -574,6 +576,7 @@ const CheckoutPage = () => {
                 },
               }),
             });
+            dispatch(clearCart());
             router.push(`/dev/store/order-confirmation/${draftOrderId}`);
           } catch (error) {
             console.error('Error retrieving payment method:', error);
