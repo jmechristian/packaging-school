@@ -6779,6 +6779,124 @@ export const listImageObjects = /* GraphQL */ `
     }
   }
 `;
+export const getPurchase = /* GraphQL */ `
+  query GetPurchase($id: ID!) {
+    getPurchase(id: $id) {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPurchases = /* GraphQL */ `
+  query ListPurchases(
+    $filter: ModelPurchaseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPurchases(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        name
+        company
+        title
+        phone
+        address
+        zip
+        state
+        city
+        country
+        code
+        status
+        total
+        subtotal
+        shippingMethod
+        shipping
+        tax
+        items
+        paymentConfirmation
+        paymentMethod
+        paymentLast4
+        printfulConfirmed
+        printfulOrderId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const purchasesByEmail = /* GraphQL */ `
+  query PurchasesByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPurchaseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    purchasesByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        company
+        title
+        phone
+        address
+        zip
+        state
+        city
+        country
+        code
+        status
+        total
+        subtotal
+        shippingMethod
+        shipping
+        tax
+        items
+        paymentConfirmation
+        paymentMethod
+        paymentLast4
+        printfulConfirmed
+        printfulOrderId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {

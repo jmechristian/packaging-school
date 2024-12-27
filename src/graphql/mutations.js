@@ -8998,6 +8998,111 @@ export const deleteImageObject = /* GraphQL */ `
     }
   }
 `;
+export const createPurchase = /* GraphQL */ `
+  mutation CreatePurchase(
+    $input: CreatePurchaseInput!
+    $condition: ModelPurchaseConditionInput
+  ) {
+    createPurchase(input: $input, condition: $condition) {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePurchase = /* GraphQL */ `
+  mutation UpdatePurchase(
+    $input: UpdatePurchaseInput!
+    $condition: ModelPurchaseConditionInput
+  ) {
+    updatePurchase(input: $input, condition: $condition) {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePurchase = /* GraphQL */ `
+  mutation DeletePurchase(
+    $input: DeletePurchaseInput!
+    $condition: ModelPurchaseConditionInput
+  ) {
+    deletePurchase(input: $input, condition: $condition) {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!

@@ -10,6 +10,7 @@ import {
   aPSRegistrantsByEmail,
   listLMSCourses,
   listCertificateObjects,
+  getPurchase,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -652,4 +653,12 @@ export const registerIndexClick = async (data) => {
       },
     },
   });
+};
+
+export const getStorePurchase = async (id) => {
+  const res = await API.graphql({
+    query: getPurchase,
+    variables: { id: id },
+  });
+  return res.data.getPurchase;
 };

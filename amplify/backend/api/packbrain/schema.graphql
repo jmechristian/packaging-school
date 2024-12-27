@@ -1031,3 +1031,32 @@ type ImageObject @model @auth(rules: [{ allow: public }]) {
   uploadedBy: String
   alt: String
 }
+
+######### IMAGES #########
+
+type Purchase @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "purchaseByEmail")
+  name: String
+  company: String
+  title: String
+  phone: String
+  address: String
+  zip: String
+  state: String
+  city: String
+  country: String
+  code: String
+  status: String @default(value: "DRAFT")
+  total: String
+  subtotal: String
+  shippingMethod: String
+  shipping: String
+  tax: String
+  items: [String]
+  paymentConfirmation: String
+  paymentMethod: String
+  paymentLast4: String
+  printfulConfirmed: Boolean @default(value: "false")
+  printfulOrderId: String
+}

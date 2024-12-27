@@ -8278,6 +8278,102 @@ export const onDeleteImageObject = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePurchase = /* GraphQL */ `
+  subscription OnCreatePurchase {
+    onCreatePurchase {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePurchase = /* GraphQL */ `
+  subscription OnUpdatePurchase {
+    onUpdatePurchase {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePurchase = /* GraphQL */ `
+  subscription OnDeletePurchase {
+    onDeletePurchase {
+      id
+      email
+      name
+      company
+      title
+      phone
+      address
+      zip
+      state
+      city
+      country
+      code
+      status
+      total
+      subtotal
+      shippingMethod
+      shipping
+      tax
+      items
+      paymentConfirmation
+      paymentMethod
+      paymentLast4
+      printfulConfirmed
+      printfulOrderId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {

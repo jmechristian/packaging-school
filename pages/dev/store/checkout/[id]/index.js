@@ -2,6 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import {
+  PaymentElement,
+  useStripe,
+  useElements,
+  Elements,
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
+
 const CheckoutPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -64,6 +76,11 @@ const CheckoutPage = () => {
     shippingAddress: {},
     billingAddress: {},
   });
+
+  const [draftOrder, setDraftOrder] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [draftOrderId, setDraftOrderId] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState({ last4: '', type: '' });
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -223,13 +240,101 @@ const CheckoutPage = () => {
   };
 
   // Update handleSubmit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form data:', formData);
-      // Handle submission logic here
-    } else {
-      console.log('Form validation failed');
+      try {
+        const payload = {
+          recipient: {
+            name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
+            company: formData.shippingAddress.company,
+            address1: formData.shippingAddress.address,
+            address2: formData.shippingAddress.apartment,
+            city: formData.shippingAddress.city,
+            state_code: formData.shippingAddress.state.code,
+            country_code: formData.shippingAddress.country.code,
+            zip: formData.shippingAddress.postalCode,
+            email: formData.email,
+            phone: getFullPhoneNumber(),
+          },
+          items: cart.items.map((item) => ({
+            name: item.name,
+            id: item.id,
+            external_id: item.external_id,
+
+            variant_id: item.variant_id,
+            quantity: item.quantity,
+            retail_price: parseFloat(item.retail_price).toFixed(2), // Ensure price is a number with 2 decimal places
+            files: item.files,
+          })),
+          shippingMethod: selectedShippingRate?.id,
+          costs: costDetails,
+          subtotal: costDetails.retail_costs.subtotal,
+          shipping_cost: costDetails.retail_costs.shipping,
+          tax: costDetails.costs.tax,
+          total: costDetails.retail_costs.total,
+        };
+
+        console.log('Full payload:', payload);
+
+        const response = await fetch('/api/printful/create-draft-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to create draft order: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setDraftOrder(data.data);
+        setDraftOrderId(data.id);
+
+        // Create payment intent after draft order is created
+        const paymentResponse = await fetch('/api/printful/handle-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount:
+              Math.round(
+                Number(costDetails.retail_costs.total) +
+                  Number(costDetails.costs.tax)
+              ) * 100,
+            currency: data.data.retail_costs.currency,
+            customer: {
+              name: data.data.recipient.name,
+              email: data.data.recipient.email,
+              shipping: {
+                name: data.data.recipient.name,
+                address: {
+                  line1: data.data.recipient.address1,
+                  line2: data.data.recipient.address2,
+                  city: data.data.recipient.city,
+                  state: data.data.recipient.state_code,
+                  postal_code: data.data.recipient.zip,
+                  country: data.data.recipient.country_code,
+                },
+              },
+              orderId: data.data.id,
+            },
+            items: data.data.items.map((item) => ({
+              id: item.id,
+              name: item.name,
+              description: item.product.name,
+              price: Math.round(item.retail_price * 100), // Convert to cents
+              quantity: item.quantity,
+            })),
+          }),
+        });
+
+        const { clientSecret } = await paymentResponse.json();
+        setClientSecret(clientSecret);
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
 
@@ -375,6 +480,128 @@ const CheckoutPage = () => {
 
     calculateCost();
   }, [selectedShippingRate, formData.shippingAddress, cart?.items]);
+
+  // Add payment confirmation component
+  const PaymentConfirmation = () => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [error, setError] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const router = useRouter();
+
+    const handlePaymentSubmit = async (e) => {
+      e.preventDefault();
+      if (!stripe || !elements) return;
+
+      setProcessing(true);
+
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setError(submitError.message);
+        setProcessing(false);
+        return;
+      }
+
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          payment_method_data: {
+            billing_details: {
+              email: formData.email,
+              name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
+            },
+          },
+        },
+        redirect: 'if_required', // This prevents automatic redirect
+      });
+
+      if (result.error) {
+        setError(result.error.message);
+      } else if (result.paymentIntent) {
+        // Payment successful!
+
+        // Send payment method ID to the server
+        const paymentMethodId = result.paymentIntent.payment_method;
+        if (paymentMethodId) {
+          try {
+            const response = await fetch(
+              '/api/printful/retrieve-payment-method',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ paymentMethodId }),
+              }
+            );
+            const data = await response.json();
+            await fetch('/api/printful/confirm-order', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: draftOrderId,
+                paymentConfirmation: result.paymentIntent.id,
+                printfulOrderId: draftOrder.id,
+                paymentMethod: data.cardType,
+                paymentLast4: data.last4,
+              }),
+            });
+            await fetch('/api/printful/send-confirmation-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                data: {
+                  id: draftOrderId,
+                  name: `${formData.shippingAddress.firstName} ${formData.shippingAddress.lastName}`,
+                  email: formData.email,
+                  address: formData.shippingAddress.address,
+                  city: formData.shippingAddress.city,
+                  state: formData.shippingAddress.state.name,
+                  zip: formData.shippingAddress.postalCode,
+                  country: formData.shippingAddress.country.name,
+                  items: cart.items,
+                  printfulOrderId: draftOrder.id,
+                  total: costDetails.retail_costs.total,
+                  shipping: costDetails.retail_costs.shipping,
+                  shippingMethod: selectedShippingRate?.id,
+                  tax: costDetails.costs.tax,
+                  subtotal: costDetails.retail_costs.subtotal,
+                  phone: getFullPhoneNumber(),
+                  paymentMethod: data.cardType,
+                  paymentLast4: data.last4,
+                },
+              }),
+            });
+            router.push(`/dev/store/order-confirmation/${draftOrderId}`);
+          } catch (error) {
+            console.error('Error retrieving payment method:', error);
+          }
+        } else {
+          console.log('Payment method ID or customer ID not available');
+        }
+      }
+
+      setProcessing(false);
+    };
+
+    return (
+      <form onSubmit={handlePaymentSubmit}>
+        <PaymentElement />
+        {error && <div className='text-red-500 mt-2'>{error}</div>}
+        <button
+          type='submit'
+          disabled={!stripe || processing}
+          className='mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded disabled:opacity-50'
+        >
+          {processing
+            ? 'Processing...'
+            : `Pay $${draftOrder.retail_costs.total}`}
+        </button>
+      </form>
+    );
+  };
 
   return (
     <div className='container mx-auto px-4 py-8 lg:py-16 max-w-7xl'>
@@ -859,7 +1086,7 @@ const CheckoutPage = () => {
               <span>Subtotal</span>
               <span>
                 $
-                {costDetails?.subtotal ||
+                {costDetails?.retail_costs?.subtotal.toFixed(2) ||
                   cart?.items
                     ?.reduce(
                       (acc, item) => acc + item.retail_price * item.quantity,
@@ -878,7 +1105,7 @@ const CheckoutPage = () => {
               <span>Shipping</span>
               <span>
                 {costDetails?.costs?.shipping
-                  ? `$${Number(costDetails.costs.shipping).toFixed(2)}`
+                  ? `$${Number(costDetails.retail_costs.shipping).toFixed(2)}`
                   : 'Enter Shipping Address'}
               </span>
             </div>
@@ -893,8 +1120,11 @@ const CheckoutPage = () => {
             <div className='flex justify-between font-semibold text-lg pt-4 border-t'>
               <span>Total</span>
               <span>
-                {costDetails?.costs?.total
-                  ? `$${Number(costDetails.costs.total).toFixed(2)}`
+                {costDetails?.retail_costs?.total
+                  ? `$${(
+                      Number(costDetails.retail_costs.total) +
+                      Number(costDetails.costs.tax)
+                    ).toFixed(2)}`
                   : 'Enter Shipping Address'}
               </span>
             </div>
@@ -921,13 +1151,24 @@ const CheckoutPage = () => {
                 Coupon {appliedCoupon.code} applied!
               </div>
             )}
-            <button
-              onClick={handleSubmit}
-              className='w-full bg-blue-600 text-white py-3 rounded mt-5'
-            >
-              Proceed to Payment (stripe logo)
-            </button>
+            {!draftOrder ? (
+              <button
+                onClick={handleSubmit}
+                className='w-full bg-blue-600 text-white py-3 rounded mt-5'
+              >
+                Continue to Payment
+              </button>
+            ) : clientSecret ? (
+              <div className='mt-5'>
+                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <PaymentConfirmation />
+                </Elements>
+              </div>
+            ) : (
+              <div>Loading payment form...</div>
+            )}
           </div>
+          {/* PAYMENT HERE */}
         </div>
       </div>
     </div>
