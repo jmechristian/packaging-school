@@ -22,7 +22,8 @@ export default async function handler(req, res) {
         CcAddresses: [
           /* more items */
         ],
-        ToAddresses: [toAddress],
+        BccAddresses: ['jamie@packagingschool.com', 'info@packagingschool.com'],
+        ToAddresses: [body.data.email],
       },
       Message: {
         /* required */

@@ -101,7 +101,7 @@ export const StorePurchaseConfirmation = ({
                     .
                   </Text>
                   <Button
-                    href={`https://packagingschool.com/dev/order-confirmation/${data.data.id}`}
+                    href={`https://packagingschool.com/dev/store/order-confirmation/${data.data.id}`}
                     className='bg-[#1f97bf] text-white font-[HelveticaNeue] text-lg px-4 py-3 mb-5'
                   >
                     View Order
