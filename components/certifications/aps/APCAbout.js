@@ -41,7 +41,7 @@ const APCAbout = () => {
           <FadeIn>
             <div className='grid grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-9'>
               <StatCard stat='22' title='Certificate Hours' />
-              <StatCard stat='11' title='Certificate Courses' />
+              <StatCard stat='10' title='Certificate Courses' />
               <StatCard stat='2' title={`CEU \nCredits`} />
               <StatCard
                 stat={
