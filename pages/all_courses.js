@@ -17,18 +17,20 @@ import {
 import Meta from '../components/shared/Meta';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
+import { CourseCard } from '@jmechristian/ps-component-library';
 import {
   handleCategoryClick,
   getDeviceType,
   getCertificates,
+  registgerCourseClick,
 } from '../helpers/api';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import CertificateTableItem from '../components/shared/CertificateTableItem';
-import LMSCourseCard from '../components/shared/LMSCourseCard';
 import SortToggleItem from '../components/shared/SortToggleItem';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { listLMSCourses } from '../src/graphql/queries';
+import '@jmechristian/ps-component-library/dist/style.css';
 
 const Page = () => {
   const router = useRouter();
@@ -39,7 +41,7 @@ const Page = () => {
   const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
   const [openSort, setOpenSort] = useState(false);
-  const [isTable, setIsTable] = useState(true);
+  const [isTable, setIsTable] = useState(false);
   const [isCourses, setIsCourses] = useState([]);
   const [isCertificates, setIsCertificates] = useState([]);
 
@@ -334,6 +336,32 @@ const Page = () => {
     router.push(`/courses/categories/${category}`);
   };
 
+  const cardClickHandler = async (id, slug, altlink, type) => {
+    await registgerCourseClick(
+      course.id,
+      router.asPath,
+      location,
+      course.slug,
+      'GRID'
+    );
+
+    course.altLink
+      ? router.push(course.altLink)
+      : router.push(
+          `/${
+            course.type && course.type === 'COLLECTION'
+              ? 'collections'
+              : 'courses'
+          }/${course.slug}`
+        );
+  };
+
+  const cardPurchaseHandler = async (id, link) => {
+    await registgerCourseClick(id, router.asPath, location, link, 'GRID');
+
+    router.push(link);
+  };
+
   return (
     <>
       <Meta
@@ -610,7 +638,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-wrap lg:mb-5 border-b-2 border-b-black pb-6 gap-2.5'>
+          <div className='flex flex-wrap lg:mb-5 border-b-2 border-b-black pb-6 gap-2.5 mt-5 md:mt-0'>
             {updateCategoryMenu.map((cat) => (
               <div
                 key={cat.value}
@@ -843,14 +871,24 @@ const Page = () => {
               ))}
             </div>
           ) : sortedAndSearchedCourses && !isTable ? (
-            <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-10'>
+            <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-10 mt-5'>
               {sortedAndSearchedCourses &&
                 sortedAndSearchedCourses.length > 0 &&
                 [...sortedAndSearchedCourses].map((course) => (
-                  <LMSCourseCard
-                    id={course.id}
+                  <CourseCard
+                    course={course}
                     key={course.id}
-                    courses={isCourses}
+                    cardClickHandler={() =>
+                      cardClickHandler(
+                        course.id,
+                        course.slug,
+                        course.altLink,
+                        course.type
+                      )
+                    }
+                    cardPurchaseHandler={() =>
+                      cardPurchaseHandler(course.id, course.link)
+                    }
                   />
                 ))}
             </div>
