@@ -337,22 +337,14 @@ const Page = () => {
   };
 
   const cardClickHandler = async (id, slug, altlink, type) => {
-    await registgerCourseClick(
-      course.id,
-      router.asPath,
-      location,
-      course.slug,
-      'GRID'
-    );
+    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
 
-    course.altLink
-      ? router.push(course.altLink)
+    altlink
+      ? router.push(altlink)
       : router.push(
           `/${
-            course.type && course.type === 'COLLECTION'
-              ? 'collections'
-              : 'courses'
-          }/${course.slug}`
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
         );
   };
 
