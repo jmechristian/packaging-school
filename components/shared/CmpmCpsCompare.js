@@ -62,33 +62,33 @@ const CmpmCpsCompare = () => {
   return (
     <div className='container mx-auto'>
       <div className='overflow-x-auto'>
-        <table className='min-w-full border-collapse block md:table mb-4'>
-          <thead className='block md:table-header-group'>
-            <tr className='border border-neutral-300 md:border-none block md:table-row'>
-              <th className='hidden bg-neutral-800 text-white px-2 py-3 font-semibold text-left md:table-cell'></th>
-              <th className='bg-neutral-800 text-white px-2 py-3 font-semibold text-left block md:table-cell'>
+        <table className='min-w-full border-collapse block md:!table mb-4'>
+          <thead className='block md:!table-header-group'>
+            <tr className='border border-neutral-300 md:!border-none block md:!table-row'>
+              <th className='hidden bg-neutral-800 text-white px-2 py-3 font-semibold text-left md:!table-cell'></th>
+              <th className='bg-neutral-800 text-white px-2 py-3 font-semibold text-left block md:!table-cell'>
                 Certificate of Mastery In Packaging Management
               </th>
-              <th className='bg-neutral-800 text-white px-2 py-3 font-semibold text-left block md:table-cell'>
+              <th className='bg-neutral-800 text-white px-2 py-3 font-semibold text-left block md:!table-cell'>
                 Certificate of Packaging Science
               </th>
             </tr>
           </thead>
-          <tbody className='block md:table-row-group'>
+          <tbody className='block md:!table-row-group'>
             {Object.keys(data.CMPM)
               .filter((key) => key !== 'Courses')
               .map((key) => (
-                <tr key={key} className='md:table-row border-b border-black'>
-                  <td className='px-2 py-3 text-neutral-800 font-semibold block md:table-cell lg:min-w-[280px]'>
+                <tr key={key} className='md:!table-row border-b border-black'>
+                  <td className='px-2 py-3 text-neutral-800 font-semibold block md:!table-cell lg:min-w-[280px]'>
                     {key}
                   </td>
-                  <td className='px-2 py-3 text-neutral-800 block md:table-cell'>
+                  <td className='px-2 py-3 text-neutral-800 block md:!table-cell'>
                     <span className='md:hidden text-xs font-bold text-white mr-1.5 bg-black px-1.5 py-1'>
                       CMPM
                     </span>
                     {data.CMPM[key]}
                   </td>
-                  <td className='px-2 py-3 text-neutral-800 block md:table-cell'>
+                  <td className='px-2 py-3 text-neutral-800 block md:!table-cell'>
                     <span className='md:hidden text-xs font-bold text-white mr-1.5 bg-black px-1.5 py-1'>
                       CPS
                     </span>
@@ -96,13 +96,13 @@ const CmpmCpsCompare = () => {
                   </td>
                 </tr>
               ))}
-            <tr className='bg-neutral-100 md:border border-neutral-300 md:border-none block md:table-row'>
-              <td className='px-2 py-3 text-neutral-800 block md:table-cell border-y-2 border-y-black bg-neutral-200'>
+            <tr className='bg-neutral-100 md:!border border-neutral-300 md:!border-none block md:!table-row'>
+              <td className='px-2 py-3 text-neutral-800 block md:!table-cell border-y-2 border-y-black bg-neutral-200'>
                 <strong>Courses</strong>
               </td>
 
               <td
-                className='px-2 py-3 transition-all ease-in text-neutral-800 block md:table-cell border-y-2 border-y-black bg-neutral-200'
+                className='px-2 py-3 transition-all ease-in text-neutral-800 block md:!table-cell border-y-2 border-y-black bg-neutral-200'
                 colSpan={2}
               >
                 <div
@@ -126,18 +126,18 @@ const CmpmCpsCompare = () => {
               allCourses.map((course) => (
                 <tr
                   key={course}
-                  className='border border-neutral-300 md:border-none block md:table-row'
+                  className='border border-neutral-300 md:!border-none block md:!table-row'
                 >
-                  <td className='px-2 py-4 text-neutral-800 block md:table-cell border-y border-y-black'>
+                  <td className='px-2 py-4 text-neutral-800 block md:!table-cell border-y border-y-black'>
                     {course}
                   </td>
-                  <td className='px-5 py-4 text-neutral-800 block md:table-cell border-y border-y-black'>
+                  <td className='px-5 py-4 text-neutral-800 block md:!table-cell border-y border-y-black'>
                     <span className='md:hidden text-xs font-bold text-white mr-1.5 bg-black px-1.5 py-1'>
                       CMPM
                     </span>
                     {data.CMPM.Courses.includes(course) ? '✔️' : '✖'}
                   </td>
-                  <td className='px-5 py-4 text-neutral-800 block md:table-cell border-y border-y-black'>
+                  <td className='px-5 py-4 text-neutral-800 block md:!table-cell border-y border-y-black'>
                     <span className='md:hidden text-xs font-bold text-white mr-1.5 bg-black px-1.5 py-1'>
                       CPS
                     </span>

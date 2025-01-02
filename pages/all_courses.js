@@ -17,7 +17,7 @@ import {
 import Meta from '../components/shared/Meta';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
-import { CourseCard } from '@jmechristian/ps-component-library';
+import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
 import {
   handleCategoryClick,
   getDeviceType,
@@ -34,7 +34,7 @@ import '@jmechristian/ps-component-library/dist/style.css';
 
 const Page = () => {
   const router = useRouter();
-
+  const deviceType = getDeviceType();
   const { location } = useSelector((state) => state.auth);
 
   const [isSearchTerm, setIsSearchTerm] = useState('');
@@ -352,6 +352,30 @@ const Page = () => {
     await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
     router.push(link);
+  };
+
+  const handleCertCardClick = async (
+    abbreviation,
+    type,
+    link,
+    applicationLink
+  ) => {
+    await registerCertificateClick({
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: '/all_courses',
+      type: type,
+    });
+
+    if (type === 'CERTIFICATE-VIEW') {
+      router.push(link);
+    } else if (type === 'CERTIFICATE-APPLY') {
+      router.push(applicationLink);
+    } else {
+      router.push(link);
+    }
   };
 
   return (
@@ -863,7 +887,34 @@ const Page = () => {
               ))}
             </div>
           ) : sortedAndSearchedCourses && !isTable ? (
-            <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-10 mt-5'>
+            <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-8 gap-x-7 mt-5'>
+              {sortedCertificates &&
+                sortedCertificates.length > 0 &&
+                [...sortedCertificates].map((cert) => (
+                  <CertCard
+                    cert={cert}
+                    key={cert.id}
+                    purchaseText={
+                      cert.abbreviation === 'CPS' ||
+                      cert.abbreviation === 'CMPM'
+                        ? 'Apply Now'
+                        : 'Enroll Now'
+                    }
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCertCardClick(
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
+                    }
+                  />
+                ))}
               {sortedAndSearchedCourses &&
                 sortedAndSearchedCourses.length > 0 &&
                 [...sortedAndSearchedCourses].map((course) => (

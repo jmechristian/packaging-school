@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
-import { getCertificates } from '../../helpers/api';
+import { useRive } from '@rive-app/react-canvas';
+import {
+  getCertificates,
+  registerCertificateClick,
+  getDeviceType,
+} from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
 import CPSCard from '../../components/rive/CPSCard';
@@ -14,6 +19,9 @@ import FPCCard from '../../components/rive/FPCCard';
 import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
 import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
+
+import { CertCard } from '@jmechristian/ps-component-library';
+import '@jmechristian/ps-component-library/dist/style.css';
 
 export const RiveDemo = () => {
   const { RiveComponent } = useRive({
@@ -30,10 +38,29 @@ export const RiveDemo = () => {
 };
 
 const Index = ({ certificates }) => {
-  const [isIndex, setIsIndex] = useState(0);
-  const [isTestimonials, setIsTestimonials] = useState([]);
+  const { location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
 
   const router = useRouter();
+
+  const handleCardClick = async (abbreviation, type, link, applicationLink) => {
+    await registerCertificateClick({
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: '/certifications',
+      type: type,
+    });
+
+    if (type === 'CERTIFICATE-VIEW') {
+      router.push(link);
+    } else if (type === 'CERTIFICATE-APPLY') {
+      router.push(applicationLink);
+    } else {
+      router.push(link);
+    }
+  };
 
   return (
     <>
@@ -66,7 +93,7 @@ const Index = ({ certificates }) => {
           </div>
 
           {/* LOGOS */}
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 w-full gap-10 lg:gap-16 px-6 xl:px-0 max-w-7xl mx-auto'>
+          <div className='!grid !grid-cols-2 md:!grid-cols-3 lg:!grid-cols-5 w-full gap-10 lg:gap-16 px-6 xl:px-0 max-w-7xl mx-auto'>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
               <Link href={'#cmpm'} passHref shallow>
                 <Image
@@ -111,8 +138,8 @@ const Index = ({ certificates }) => {
                 />
               </Link>
             </div>
-            <div className='flex justify-center items-center col-span-2 md:col-span-1 hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <div className='w-1/2 md:w-full mx-auto '>
+            <div className='flex justify-center items-center !col-span-2 md:!col-span-1 hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
+              <div className='w-1/2 md:!w-full mx-auto '>
                 <Link href={'#fpc'} passHref shallow>
                   <Image
                     src={'https://packschool.s3.amazonaws.com/fpc-black.png'}
@@ -145,22 +172,39 @@ const Index = ({ certificates }) => {
                 procurement, and organizational management.
               </div>
             </div>
-            <div className='flex flex-col gap-5 w-full max-w-6xl mx-auto'>
-              <div className='w-full grid md:grid-cols-12 md:h-[550px] mb-5'>
-                <div className='hidden lg:col-span-2 lg:block'></div>
-                <div
-                  className='md:col-span-6 lg:col-span-5 cursor-pointer min-h-[550px]'
-                  onClick={() =>
-                    router.push('/certifications/get-to-know-cmpm')
-                  }
-                >
-                  <CMPMCard />
+            <div className='flex flex-col gap-10 lg:gap-16 max-w-6xl mx-auto'>
+              <div className='w-full flex flex-col md:!flex-row gap-10 lg:!gap-40 mb-5 items-center justify-center'>
+                <div className='items-center'>
+                  <CertCard
+                    cert={certificates.find(
+                      (cert) => cert.abbreviation === 'CMPM'
+                    )}
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCardClick(abbreviation, type, link, applicationLink)
+                    }
+                    purchaseText='Apply Now'
+                  />
                 </div>
-                <div
-                  className='md:col-span-6 lg:col-span-5 cursor-pointer min-h-[550px]'
-                  onClick={() => router.push('/certifications/get-to-know-cps')}
-                >
-                  <CPSCard />
+                <div className='items-center'>
+                  <CertCard
+                    cert={certificates.find(
+                      (cert) => cert.abbreviation === 'CPS'
+                    )}
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCardClick(abbreviation, type, link, applicationLink)
+                    }
+                    purchaseText='Enroll Now'
+                  />
                 </div>
               </div>
               <CmpmCpsCompare />
@@ -180,7 +224,7 @@ const Index = ({ certificates }) => {
                   backgroundColor={'bg-base-brand'}
                 />
                 <div>
-                  <h2 className='h2-base'>
+                  <h2 className='h3-base'>
                     Revolutionize Your Career in Automotive Packaging with the
                     First 100% Online Academic Program Tailored for Industry
                     Professionals.
@@ -197,12 +241,22 @@ const Index = ({ certificates }) => {
                   </div>
                 </Link>
               </div>
-              <div className='w-full flex justify-center lg:justify-start items-center'>
-                <div
-                  className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'
-                  onClick={() => router.push('/certifications/get-to-know-apc')}
-                >
-                  <APCCard />
+              <div className='w-full flex justify-center lg:!justify-start items-center'>
+                <div className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'>
+                  <CertCard
+                    cert={certificates.find(
+                      (cert) => cert.abbreviation === 'APC'
+                    )}
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCardClick(abbreviation, type, link, applicationLink)
+                    }
+                    purchaseText='Enroll Now'
+                  />
                 </div>
               </div>
             </div>
@@ -214,7 +268,7 @@ const Index = ({ certificates }) => {
                   textColor={'text-black'}
                 />
                 <div>
-                  <h2 className='h2-base' id='csp'>
+                  <h2 className='h3-base' id='csp'>
                     Transform Your Packaging: Empower Your Team with Our
                     Revolutionary Sustainable Design Program.
                   </h2>
@@ -233,12 +287,22 @@ const Index = ({ certificates }) => {
                   </div>
                 </Link>
               </div>
-              <div className='w-full flex justify-center lg:justify-start items-center'>
-                <div
-                  className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'
-                  onClick={() => router.push('/certifications/get-to-know-csp')}
-                >
-                  <CSPCard />
+              <div className='w-full flex justify-center lg:!justify-start items-center'>
+                <div className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'>
+                  <CertCard
+                    cert={certificates.find(
+                      (cert) => cert.abbreviation === 'CSP'
+                    )}
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCardClick(abbreviation, type, link, applicationLink)
+                    }
+                    purchaseText='Enroll Now'
+                  />
                 </div>
               </div>
             </div>
@@ -263,7 +327,7 @@ const Index = ({ certificates }) => {
                     textColor={'text-black'}
                   />
                 </div>
-                <h2 className='h2-base'>
+                <h2 className='h3-base'>
                   Lead the Way in Food Packaging Innovation: Sponsorship
                   Opportunities to Showcase Your Brand and Expertise.
                 </h2>
@@ -285,11 +349,21 @@ const Index = ({ certificates }) => {
                 </div>
               </div>
               <div className='w-full flex justify-center items-center'>
-                <div
-                  className='w-full max-w-[400px] h-[520px] cursor-pointer'
-                  onClick={() => router.push('/food-packaging')}
-                >
-                  <FPCCard />
+                <div className='w-full'>
+                  <CertCard
+                    cert={certificates.find(
+                      (cert) => cert.abbreviation === 'FPC'
+                    )}
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCardClick(abbreviation, type, link, applicationLink)
+                    }
+                    purchaseText='Get Involved'
+                  />
                 </div>
               </div>
             </div>
