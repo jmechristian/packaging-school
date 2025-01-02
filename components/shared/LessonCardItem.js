@@ -83,7 +83,7 @@ const LessonCardItem = ({ less }) => {
       <div className='bg-white border-black border flex flex-col gap-2 p-5 h-full relative'>
         <div className='absolute w-full h-16 bg-gradient-to-t from-white via-white z-10 bottom-0 left-0 right-0'></div>
         <div className='text-sm'>{newDate}</div>
-        <div className='h3-base leading-tight'>{less.title}</div>
+        <div className='!h4-base leading-tight'>{less.title}</div>
         <div className='flex flex-wrap max-w-[75%] gap-x-1.5 gap-y-1'>
           {less.author.map((auth) => (
             <div className='flex items-center gap-0.5' key={auth}>
@@ -123,7 +123,7 @@ const LessonCardItem = ({ less }) => {
             bgColor={'bg-[#ff9321]'}
             fn={clickHandler}
           >
-            <MdExitToApp color='white' size={22} />
+            <MdExitToApp color='black' size={20} />
           </BrutalCircleIconTooltip>
           {less.mediaType === 'VIDEO' ? (
             <BrutalCircleIconTooltip
