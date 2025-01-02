@@ -23,6 +23,7 @@ import {
   getDeviceType,
   getCertificates,
   registgerCourseClick,
+  registerCertificateClick,
 } from '../helpers/api';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import CertificateTableItem from '../components/shared/CertificateTableItem';
