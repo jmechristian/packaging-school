@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
+import { getCertificates } from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
 import CPSCard from '../../components/rive/CPSCard';
@@ -28,7 +29,7 @@ export const RiveDemo = () => {
   return <RiveComponent />;
 };
 
-const Index = () => {
+const Index = ({ certificates }) => {
   const [isIndex, setIsIndex] = useState(0);
   const [isTestimonials, setIsTestimonials] = useState([]);
 
@@ -323,3 +324,10 @@ const Index = () => {
 };
 
 export default Index;
+
+export async function getStaticProps() {
+  const certificates = await getCertificates();
+  return {
+    props: { certificates },
+  };
+}
