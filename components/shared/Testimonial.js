@@ -1,6 +1,6 @@
 import React, { useId } from 'react';
 import clsx from 'clsx';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import FadeIn from '../../helpers/FadeIn';
 import VideoPlayer from '../VideoPlayer';
 

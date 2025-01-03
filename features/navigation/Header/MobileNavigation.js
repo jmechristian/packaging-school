@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, useScroll } from 'framer-motion';
 import { showSearch, showMobileMenu } from '../navigationSlice';

@@ -4,7 +4,7 @@ import AuthorName from './AuthorName';
 import { MdAccountCircle } from 'react-icons/md';
 import { API } from 'aws-amplify';
 import { lessonTagsByLessonId } from '../../src/graphql/queries';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 const FeaturedLesson = ({ less }) => {
   const [isTags, setIsTags] = useState([]);

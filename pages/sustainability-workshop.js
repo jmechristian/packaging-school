@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { API } from 'aws-amplify';
 import { createWorkshopForm } from '../src/graphql/mutations';
 import { useRouter } from 'next/router';

@@ -56,7 +56,35 @@ const SalesBar = () => {
   }, [isActive]);
 
   return (
-    <div className='bg-gray-900 dark:bg-dark-dark flex items-center justify-center'>
+    // <div className='bg-gray-900 dark:bg-dark-dark flex items-center justify-center lg:grid lg:grid-cols-2'>
+    //   <div className='flex min-h-10 max-w-7xl items-center justify-between w-full px-3 xl:px-0 py-3'>
+    //     <div
+    //       className='flex justify-center items-center lg:flex-none cursor-pointer w-full'
+    //       onClick={() =>
+    //         router.push('/certificate-of-mastery-in-packaging-management')
+    //       }
+    //     >
+    //       <div className='flex gap-2 items-center font-greycliff'>
+    //         <div>
+    //           <BoltIcon className='w-5 h-5 fill-brand-yellow' />
+    //         </div>
+    //         <div className='text-neutral-200 text-sm md:text-base leading-[1.2] max-w-[70%] lg:max-w-full'>
+    //           Deadline Alert! CMPM registration for Winter ends Nov. 24
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div className='flex gap-1 items-center w-fit'>
+    //       <div>
+    //         <ChevronLeftIcon className='w-5 h-5 fill-neutral-400' />
+    //       </div>
+    //       <div className='text-neutral-400 text-sm'> 1/2</div>
+    //       <div>
+    //         <ChevronRightIcon className='w-5 h-5 fill-neutral-400' />
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+    (<div className='bg-gray-900 dark:bg-dark-dark flex items-center justify-center'>
       <div className='w-full h-16 lg:h-12 max-w-7xl px-3 xl:px-0 mx-auto lg:grid lg:grid-cols-5'>
         <div className='w-full flex gap-2 cursor-pointer h-full items-center lg:col-span-4'>
           <div className='w-fit flex h-full items-center'>
@@ -105,35 +133,7 @@ const SalesBar = () => {
           </a>
         </div>
       </div>
-    </div>
-    // <div className='bg-gray-900 dark:bg-dark-dark flex items-center justify-center lg:grid lg:grid-cols-2'>
-    //   <div className='flex min-h-10 max-w-7xl items-center justify-between w-full px-3 xl:px-0 py-3'>
-    //     <div
-    //       className='flex justify-center items-center lg:flex-none cursor-pointer w-full'
-    //       onClick={() =>
-    //         router.push('/certificate-of-mastery-in-packaging-management')
-    //       }
-    //     >
-    //       <div className='flex gap-2 items-center font-greycliff'>
-    //         <div>
-    //           <BoltIcon className='w-5 h-5 fill-brand-yellow' />
-    //         </div>
-    //         <div className='text-neutral-200 text-sm md:text-base leading-[1.2] max-w-[70%] lg:max-w-full'>
-    //           Deadline Alert! CMPM registration for Winter ends Nov. 24
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className='flex gap-1 items-center w-fit'>
-    //       <div>
-    //         <ChevronLeftIcon className='w-5 h-5 fill-neutral-400' />
-    //       </div>
-    //       <div className='text-neutral-400 text-sm'> 1/2</div>
-    //       <div>
-    //         <ChevronRightIcon className='w-5 h-5 fill-neutral-400' />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
+    </div>)
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 export function classNames(...classes) {
   return classes.filter(Boolean).join(' ');

@@ -149,7 +149,7 @@ const CertificationsCTA = ({ darkMode }) => {
     //     </div>
     //   </div>
     // </div>
-    <div className='bg-gradient-to-tr from-clemson via-base-dark to-base-brand mt-16'>
+    (<div className='bg-gradient-to-tr from-clemson via-base-dark to-base-brand mt-16'>
       <div className='mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:justify-between lg:px-8'>
         <h2 className='text-3xl font-bold font-greycliff tracking-tight text-white sm:text-5xl'>
           Ready to dive in?
@@ -171,7 +171,7 @@ const CertificationsCTA = ({ darkMode }) => {
           </a>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

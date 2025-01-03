@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import BrutalButton from '../../components/shared/BrutalButton';
 import MagnetButton from '../../components/shared/MagnetButton';
 import Head from 'next/head';

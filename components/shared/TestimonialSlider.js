@@ -1,7 +1,7 @@
 import React, { useId, useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/solid';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import FadeIn from '../../helpers/FadeIn';
 import { AnimatePresence, motion } from 'framer-motion';
 

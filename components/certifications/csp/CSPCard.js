@@ -1,7 +1,7 @@
 import React from 'react';
 import { KeyIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 const CSPCard = () => {
   return (

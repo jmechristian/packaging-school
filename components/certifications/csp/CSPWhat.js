@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import CSPMissionStatement from './CSPMissionStatement';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import OneSheetDownload from './OneSheetDownload';
 
 const CSPWhat = () => {

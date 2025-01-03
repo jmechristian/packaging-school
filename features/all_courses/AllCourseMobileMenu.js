@@ -3,7 +3,7 @@ import AllCourseMenu from './AllCourseMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMobileFilterClosed } from './courseFilterSlice';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import Logo from '../../components/layout/Logo';
 

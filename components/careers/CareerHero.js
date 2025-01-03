@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PatternBackground from '../layout/PatternBackground';
 

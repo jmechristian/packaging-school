@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { PlayIcon, ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 const ScrollingCards = ({ testimonials }) => {
   const [isOpen, setIsOpen] = useState(false);

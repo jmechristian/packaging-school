@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { getStorePurchase } from '../../../../../helpers/api';
 import GoogleMapReact from 'google-map-react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import {
   FaCcVisa,
   FaCcMastercard,

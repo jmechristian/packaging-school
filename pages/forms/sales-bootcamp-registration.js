@@ -1,7 +1,7 @@
 import React from 'react';
 import CenteredTextHeader from '../../components/layout/CenteredTextHeader';
 import { useForm } from 'react-hook-form';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import Meta from '../../components/shared/Meta';
 
 const Index = () => {

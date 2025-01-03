@@ -9,7 +9,7 @@ import {
   SwatchIcon,
   TruckIcon,
 } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import CourseCardVideoHeader from '../components/shared/CourseCardVideoHeader';
 import Head from 'next/head';
 

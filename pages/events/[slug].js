@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import {
   getAllEvents,
   getEventBySlug,

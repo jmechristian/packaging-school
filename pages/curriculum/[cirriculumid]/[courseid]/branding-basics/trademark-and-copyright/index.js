@@ -1,7 +1,7 @@
 import React from 'react';
 import VideoHeading from '../../../../../../components/lms/video/VideoHeading';
 import CourseMenuWrapper from '../../../../../../components/lms/shared/courseMenu/CourseMenuWrapper';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 const Page = () => {
   return (

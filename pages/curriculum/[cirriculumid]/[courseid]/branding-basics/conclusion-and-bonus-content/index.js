@@ -1,6 +1,6 @@
 import React from 'react';
 import CourseMenuWrapper from '../../../../../../components/lms/shared/courseMenu/CourseMenuWrapper';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useRouter } from 'next/router';
 import VideoBody from '../../../../../../components/lms/video/VideoBody';
 import Lottie from 'lottie-react';

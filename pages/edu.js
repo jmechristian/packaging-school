@@ -1,6 +1,6 @@
 import React from 'react';
 import Script from 'next/script';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import CourseCard from '../components/course-card/CourseCard';
 import Meta from '../components/shared/Meta';
 

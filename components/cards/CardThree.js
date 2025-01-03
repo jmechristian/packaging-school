@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import React, { useMemo, useState } from 'react';
 import { MdAccessTime, MdExtension } from 'react-icons/md';
 import { useSelector } from 'react-redux';

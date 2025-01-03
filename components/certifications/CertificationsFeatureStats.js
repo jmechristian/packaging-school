@@ -3,7 +3,7 @@ import { EyeIcon } from '@heroicons/react/24/outline';
 import { useCycle } from 'framer-motion';
 import CPSCourses from './CPSCourses';
 import SlideUp from '../SlideUp';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 const CertificationsFeatureStats = ({
   stats,
