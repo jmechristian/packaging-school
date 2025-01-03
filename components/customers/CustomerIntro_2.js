@@ -9,10 +9,6 @@ import {
 } from '@heroicons/react/24/solid';
 import dynamic from 'next/dynamic';
 
-const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
-  ssr: false,
-});
-
 import VideoPlayer from '../VideoPlayer';
 
 const CustomerIntro_2 = () => {
@@ -49,14 +45,13 @@ const CustomerIntro_2 = () => {
       </div>
       <div className='flex flex-col justify-center items-center border rounded-xl h-full w-full max-w-[500px] lg:mt-9'>
         <div className='w-full aspect-[16/9] bg-neutral-700'>
-          <ReactGoogleSlides
-            width={'100%'}
-            height={'100%'}
-            slidesLink='https://docs.google.com/presentation/d/15DjazbEB9njTkkU6z2EdTKCKsN5FtvWW4s10urJhT_M/edit?usp=sharing'
-            position={1}
-            showControls
-            loop
-          />
+          <iframe
+            src='https://docs.google.com/presentation/d/15DjazbEB9njTkkU6z2EdTKCKsN5FtvWW4s10urJhT_M/embed?start=false&loop=false&delayms=3000'
+            frameBorder='0'
+            width='100%'
+            height='100%'
+            allowFullScreen
+          ></iframe>
         </div>
         <div
           className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'

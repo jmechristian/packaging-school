@@ -10,10 +10,6 @@ import {
 import dynamic from 'next/dynamic';
 import { MdArrowCircleDown } from 'react-icons/md';
 
-const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
-  ssr: false,
-});
-
 const LibraryHeader = ({
   displayName,
   email,
@@ -73,18 +69,17 @@ const LibraryHeader = ({
       <div className='hidden lg:flex gap-5 xl:hidden w-full h-full'>
         <div className='flex flex-col justify-center items-center border-2 border-black bg-white shadow-[6px_6px_0px_rgba(0,0,0,0.20)] h-full  w-[580px]'>
           <div className='w-[580px] aspect-[16/9]'>
-            <ReactGoogleSlides
-              width={'100%'}
-              height={'100%'}
-              slidesLink={
+            <iframe
+              src={
                 slides
                   ? slides
-                  : 'https://docs.google.com/presentation/d/1njv_Q25JTyNzsDVjP7GqIq_U3Udfg7DSpgoBP-gqLWg/edit?usp=sharing'
+                  : 'https://docs.google.com/presentation/d/1njv_Q25JTyNzsDVjP7GqIq_U3Udfg7DSpgoBP-gqLWg/embed?start=false&loop=false&delayms=3000'
               }
-              position={1}
-              showControls
-              loop
-            />
+              frameBorder='0'
+              width='100%'
+              height='100%'
+              allowFullScreen
+            ></iframe>
           </div>
           {pdf ? (
             <div
@@ -119,18 +114,17 @@ const LibraryHeader = ({
       </div>
       <div className='flex flex-col justify-center items-center border-2 border-black bg-white shadow-[6px_6px_0px_rgba(0,0,0,0.20)] h-full w-full max-w-[625px] lg:hidden xl:flex'>
         <div className='w-full aspect-[16/9]'>
-          <ReactGoogleSlides
-            width={'100%'}
-            height={'100%'}
-            slidesLink={
+          <iframe
+            src={
               slides
                 ? slides
-                : 'https://docs.google.com/presentation/d/1njv_Q25JTyNzsDVjP7GqIq_U3Udfg7DSpgoBP-gqLWg/edit?usp=sharing'
+                : 'https://docs.google.com/presentation/d/1njv_Q25JTyNzsDVjP7GqIq_U3Udfg7DSpgoBP-gqLWg/embed?start=false&loop=false&delayms=3000'
             }
-            position={1}
-            showControls
-            loop
-          />
+            frameBorder='0'
+            width='100%'
+            height='100%'
+            allowFullScreen
+          ></iframe>
         </div>
         {pdf ? (
           <div

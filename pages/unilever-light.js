@@ -38,10 +38,6 @@ import UnileverCourses from '../components/unilever/UnileverCourses';
 import UnileverLessons from '../components/unilever/UnileverLessons';
 import { getCustomer, listUnilevers } from '../src/graphql/queries';
 
-const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
-  ssr: false,
-});
-
 const supportLinks = [
   {
     name: 'Packaging Bootcamp 101',
@@ -321,14 +317,13 @@ const Page = ({ unilever }) => {
           <div className='flex w-full flex-col gap-4 p-3 md:p-6 lg:p-9 md:col-span-3 lg:col-span-3 lg:gap-x-16'>
             <div className='md:w-full  aspect-[16/9] md:max-w-none max-w-xs mx-auto bg-indigo-300 h-full flex items-center justify-center text-2xl'>
               <div className='w-full h-full '>
-                <ReactGoogleSlides
-                  width={'100%'}
-                  height={'100%'}
-                  slidesLink='https://docs.google.com/presentation/d/1frh5qJEeQQ-kMIKpSi3MHaamjPUlSHKCudoPHX8vDXs'
-                  position={1}
-                  showControls
-                  loop
-                />
+                <iframe
+                  src='https://docs.google.com/presentation/d/1frh5qJEeQQ-kMIKpSi3MHaamjPUlSHKCudoPHX8vDXs/embed?start=false&loop=false&delayms=3000'
+                  frameBorder='0'
+                  width='100%'
+                  height='100%'
+                  allowFullScreen
+                ></iframe>
               </div>
             </div>
 
