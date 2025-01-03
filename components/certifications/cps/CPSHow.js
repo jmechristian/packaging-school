@@ -1,40 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FadeIn from '../../../helpers/FadeIn';
 import { SectionHeading } from '../../shared/SectionHeading';
-import {
-  ChatBubbleLeftRightIcon,
-  LightBulbIcon,
-  RssIcon,
-  TrophyIcon,
-} from '@heroicons/react/24/outline';
+import { getCPSCourses } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import CourseCard from '../../course-card/CourseCard';
 
 const CPSHow = () => {
-  const { allCourses } = useSelector((state) => state.course_filter);
+  const [cpsCourses, setCpsCourses] = useState([]);
   const { user } = useSelector((state) => state.auth);
 
-  const cpsCourses = [
-    { id: 'CPS-C01' },
-    { id: 'CPS-C02' },
-    { id: 'CPS-C03' },
-    { id: 'CPS-C04-C05' },
-    { id: 'CPS-C06' },
-    { id: 'CPS-C07' },
-    { id: 'CPS-C08' },
-    { id: 'CPS-C09' },
-    { id: 'CPS-C10' },
-    { id: 'CPS-C11' },
-    { id: 'CPS-C12' },
-  ];
-
-  const filterArray =
-    allCourses &&
-    allCourses.filter((el) => {
-      return cpsCourses.some((f) => {
-        return f.id === el.courseId;
-      });
-    });
+  useEffect(() => {
+    const getCourses = async () => {
+      const courses = await getCPSCourses();
+      setCpsCourses(courses);
+    };
+    getCourses();
+  }, []);
 
   return (
     <section id='how'>
@@ -99,9 +80,8 @@ const CPSHow = () => {
           </div>
           <FadeIn>
             <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-9'>
-              {allCourses &&
-                filterArray &&
-                filterArray
+              {cpsCourses &&
+                cpsCourses
                   .sort((p1, p2) =>
                     p2.courseId < p1.courseId
                       ? 1
@@ -109,7 +89,6 @@ const CPSHow = () => {
                       ? -1
                       : 0
                   )
-
                   .map((course) => (
                     <div key={course.id}>
                       <CourseCard

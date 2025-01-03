@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, animate, useScroll } from 'framer-motion';
-import Scroller from '../Scroller';
-import CourseCard from '../course-card/CourseCard';
+import { getCPSCourses } from '../../helpers/api';
 import { useSelector } from 'react-redux';
 import LMSCourseCard from '../shared/LMSCourseCard';
+import { CourseCard } from '@jmechristian/ps-component-library';
+import '@jmechristian/ps-component-library/dist/style.css';
 
 const RelatedCourses = ({ category, id }) => {
   const desktopRef = useRef();
@@ -17,13 +18,16 @@ const RelatedCourses = ({ category, id }) => {
   const dragX = useMotionValue(0);
 
   useEffect(() => {
-    allCourses &&
+    const getRelatedCourses = async () => {
+      const courses = await getCPSCourses();
       setIsRelated(
-        allCourses.filter((c) => c.category === category && c.id != id)
+        courses.filter((c) => c.category === category && c.id != id)
       );
+    };
+    getRelatedCourses();
 
     setWidth(desktopRef.current.offsetWidth - desktopRef.current.scrollWidth);
-  }, [allCourses, category, id]);
+  }, [category, id]);
 
   const resetDrag = () => {
     animate(dragX, 0);
@@ -34,13 +38,25 @@ const RelatedCourses = ({ category, id }) => {
     console.log(scrollRef.current);
   };
 
+  const cardClickHandler = (id, slug, altLink, type) => {
+    console.log(id, slug, altLink, type);
+  };
+
+  const cardPurchaseHandler = (id, link) => {
+    console.log(id, link);
+  };
+
   return (
-    <div className='overflow-hidden' ref={desktopRef}>
-      <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container-7xl gap-4'>
+    <div ref={desktopRef}>
+      <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container-7xl gap-5 lg:gap-10'>
         {isRelated &&
           isRelated.slice(0, 8).map((course, i) => (
-            <div key={course.id} className='inline-block'>
-              <LMSCourseCard id={course.id} courses={isRelated} />
+            <div key={course.id}>
+              <CourseCard
+                course={course}
+                cardClickHandler={cardClickHandler}
+                cardPurchaseHandler={cardPurchaseHandler}
+              />
             </div>
           ))}
       </div>

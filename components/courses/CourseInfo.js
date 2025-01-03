@@ -40,15 +40,15 @@ const CourseInfo = ({
             )}
             <div className='flex flex-col gap-6'>
               <div className='flex flex-col gap-4'>
-                <div className='h3-base'>Future Proof Your Skills</div>
+                <div className='h4-base'>Future Proof Your Skills</div>
                 {subscriptionLink && subscriptionPrice ? (
                   <div className='grid grid-cols-2 border border-black'>
                     <div
                       className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
                       onClick={() => window.open(`${link}`, '_blank')}
                     >
-                      <div className='h4-base'>Buy Now</div>
-                      <div className='h2-base'>${price}</div>
+                      <div className='h3-base'>Buy Now</div>
+                      <div className='h3-base'>${price}</div>
                       <div className='text-sm font-semibold text-neutral-500'>
                         12-Month Access
                       </div>

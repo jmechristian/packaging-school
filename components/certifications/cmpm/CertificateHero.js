@@ -1,7 +1,7 @@
 import React from 'react';
 import VideoPlayer from '../../VideoPlayer';
 import FadeIn from '../../../helpers/FadeIn';
-import CertHeroImage from '../../../slices/CertificateHero/components/CertHeroImage';
+
 import Link from 'next/link';
 import {
   ArrowLongRightIcon,

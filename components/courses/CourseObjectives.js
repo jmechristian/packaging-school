@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { PrismicRichText } from '@prismicio/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import RotatingCaret from '../RotatingCaret';

@@ -7,7 +7,7 @@ import {
 
 const CourseDetails = ({ hours, lessons, videos }) => {
   return (
-    <div className='flex flex-col md:flex-row gap-3'>
+    <div className='flex flex-col md:!flex-row gap-3'>
       <div className='flex gap-2'>
         <ClockIcon className='w-6 h-6 stroke-base-dark dark:stroke-base-brand' />
         <div className='dark:text-base-brand text-base-dark'>{hours} Hours</div>

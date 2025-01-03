@@ -27,6 +27,7 @@ import IndiaBanner from '../../components/shared/IndiaBanner';
 import { allCourseBackup } from '../../data/allCourseBackup';
 
 const Layout = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { searchOpen } = useSelector((state) => state.nav);
@@ -136,27 +137,28 @@ const Layout = ({ children }) => {
       const articles = await API.graphql(graphqlOperation(getArticles));
       dispatch(setAllArticles(articles.data.listBlogs.items));
     };
-
+    setIsLoading(true);
     getCourses();
     setLessons();
     setArticles();
+    setIsLoading(false);
   }, [dispatch]);
 
-  useEffect(() => {
-    if (window.matchMedia) {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        dispatch(setDark());
-        document.body.classList.add('dark');
-      } else {
-        dispatch(setLight());
-        document.body.classList.remove('dark');
-      }
+  // useEffect(() => {
+  //   if (window.matchMedia) {
+  //     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  //       dispatch(setDark());
+  //       document.body.classList.add('dark');
+  //     } else {
+  //       dispatch(setLight());
+  //       document.body.classList.remove('dark');
+  //     }
 
-      if (!window.matchMedia) {
-        dispatch(setLight());
-      }
-    }
-  }, []);
+  //     if (!window.matchMedia) {
+  //       dispatch(setLight());
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')

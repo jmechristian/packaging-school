@@ -19,7 +19,6 @@ import CourseCard from '../../course-card/CourseCard';
 import { AnimatePresence, useInView, motion } from 'framer-motion';
 
 const APCHow = () => {
-  const { allCourses } = useSelector((state) => state.course_filter);
   const { user } = useSelector((state) => state.auth);
 
   const imageRef = useRef(null);

@@ -662,3 +662,16 @@ export const getStorePurchase = async (id) => {
   });
   return res.data.getPurchase;
 };
+
+export const getCPSCourses = async () => {
+  const res = await API.graphql({
+    query: listLMSCourses,
+    variables: {
+      filter: {
+        courseId: { contains: 'CPS' },
+      },
+      limit: 500,
+    },
+  });
+  return res.data.listLMSCourses.items;
+};

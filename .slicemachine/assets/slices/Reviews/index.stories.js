@@ -1,9 +1,0 @@
-import MyComponent from '../../../../slices/Reviews';
-
-export default {
-  title: 'slices/Reviews'
-}
-
-
-export const _Default = () => <MyComponent slice={{"variation":"default","version":"sktwi1xtmkfgx8626","items":[{"review_name":"fellow","review_title":"changing","review_content":[{"type":"paragraph","text":"Aliquip in ex non do sit deserunt. Mollit adipisicing dolore anim exercitation do fugiat. Sint et est mollit exercitation aliqua ut.","spans":[]}],"review_image":{"dimensions":{"width":900,"height":500},"alt":null,"copyright":null,"url":"https://images.unsplash.com/photo-1541807084-5c52b6b3adef"},"review_social":{"link_type":"Web","url":"http://google.com"},"review_social_image":{"dimensions":{"width":900,"height":500},"alt":null,"copyright":null,"url":"https://images.unsplash.com/photo-1493119508027-2b584f234d6c"}}],"primary":{"title":[{"type":"heading1","text":"Themselves","spans":[]}],"description":[{"type":"paragraph","text":"Incididunt sint enim Lorem veniam. Et quis culpa reprehenderit consectetur voluptate voluptate quis excepteur velit aliqua irure sit eu laboris esse.","spans":[]}]},"slice_type":"reviews","id":"_Default"}} />
-_Default.storyName = ''
