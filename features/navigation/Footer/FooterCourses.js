@@ -16,13 +16,13 @@ const FooterCourses = () => {
   };
 
   return (
-    <div className='flex flex-col gap-1 lg:gap-2 text-sm w-full'>
+    (<div className='flex flex-col gap-1 lg:gap-2 text-sm w-full'>
       <div className='font-extrabold text-sm uppercase tracking-widest dark:text-gray-200 font-greycliff'>
         Courses
       </div>
       <div className='grid grid-cols-2 gap-y-1 gap-x-8 lg:gap-x-4 justify-between'>
         <div className='flex flex-col gap-1'>
-          <Link className='w-fit' href='/all_courses'>
+          <Link className='w-fit' href='/all_courses' legacyBehavior>
             <div className='text-gray-500 dark:text-gray-500 cursor-pointer'>
               All Courses
             </div>
@@ -79,7 +79,7 @@ const FooterCourses = () => {
           </p>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

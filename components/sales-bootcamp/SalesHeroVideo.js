@@ -15,7 +15,7 @@ export default function SalesHeroVideo() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className='bg-white'>
+    (<div className='bg-white'>
       <div className='relative isolate'>
         <div className='py-24 sm:py-32 lg:pb-40'>
           <div className='mx-auto max-w-7xl px-6 lg:px-8'>
@@ -36,10 +36,12 @@ export default function SalesHeroVideo() {
                 improve performance.
               </p>
               <div className='mt-10 flex items-center justify-center gap-x-6'>
-                <Link href='/sales-bootcamp-registration-page'>
-                  <a className='rounded-md bg-clemson px-3.5 py-2.5 font-greycliff font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+                <Link
+                  href='/sales-bootcamp-registration-page'
+                  className='rounded-md bg-clemson px-3.5 py-2.5 font-greycliff font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+                  
                     Get started Today
-                  </a>
+                  
                 </Link>
                 <a
                   href='https://packschool.s3.amazonaws.com/Sales-Bootcamp-Program-Outline.pdf'
@@ -78,6 +80,6 @@ export default function SalesHeroVideo() {
           />
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

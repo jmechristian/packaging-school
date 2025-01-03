@@ -67,7 +67,7 @@ export default function HeaderNew() {
   };
 
   return (
-    <div className='bg-white'>
+    (<div className='bg-white'>
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -99,7 +99,7 @@ export default function HeaderNew() {
             >
               <Dialog.Panel className='relative flex w-full h-full max-w-full flex-col justify-between overflow-y-scroll bg-base-brand dark:bg-dark-dark shadow-xl'>
                 <div className='flex w-full justify-between p-4 mb-5'>
-                  <Link href='/'>
+                  <Link href='/' legacyBehavior>
                     <div className=' w-44'>
                       <LogoWhite />
                     </div>
@@ -123,35 +123,34 @@ export default function HeaderNew() {
                       className='flow-root'
                       onClick={() => setOpen(false)}
                     >
-                      <Link href={page.href}>
-                        <a
-                          href={page.href}
-                          className='-m-2 block p-2 h1-base text-white dark:text-white'
-                        >
-                          {page.name}
-                        </a>
+                      <Link
+                        href={page.href}
+                        className='-m-2 block p-2 h1-base text-white dark:text-white'>
+
+                        {page.name}
+
                       </Link>
                     </div>
                   ))}
                 </div>
                 <div className='space-y-2 text-white px-4 py-6'>
                   <div className='flow-root'>
-                    <Link href={'/partner-with-us'}>
-                      <a className='-m-2 block p-2 h3-base text-white'>
+                    <Link href={'/partner-with-us'} className='-m-2 block p-2 h3-base text-white'>
+                      
                         Collaborate
-                      </a>
+                      
                     </Link>
                   </div>
                   <div className='flow-root'>
-                    <Link href={'/faq'}>
-                      <a className='-m-2 block p-2 h3-base text-white'>FAQs</a>
+                    <Link href={'/faq'} className='-m-2 block p-2 h3-base text-white'>
+                      FAQs
                     </Link>
                   </div>
                   <div className='flow-root'>
-                    <Link href={'/certificates'}>
-                      <a className='-m-2 block p-2 h3-base text-white'>
+                    <Link href={'/certificates'} className='-m-2 block p-2 h3-base text-white'>
+                      
                         Team Learning
-                      </a>
+                      
                     </Link>
                   </div>
                 </div>
@@ -173,10 +172,10 @@ export default function HeaderNew() {
                           ? '/api/auth/logout'
                           : `/api/auth/login?returnTo=${currentPath}`
                       }
-                    >
-                      <a className='-m-2 block p-2 font-medium text-neutral-400'>
-                        {user ? 'Sign Out' : 'Sign In to Packagingschool.com'}
-                      </a>
+                      className='-m-2 block p-2 font-medium text-neutral-400'>
+
+                      {user ? 'Sign Out' : 'Sign In to Packagingschool.com'}
+
                     </Link>
                   </div>
                 </div>
@@ -185,7 +184,6 @@ export default function HeaderNew() {
           </div>
         </Dialog>
       </Transition.Root>
-
       <header className='relative'>
         <nav aria-label='Top'>
           {/* Top navigation */}
@@ -200,7 +198,7 @@ export default function HeaderNew() {
                 <div className='flex h-24 items-center justify-between px-4 md:px-8 xl:pl-0 mx-auto max-w-7xl'>
                   {/* Logo (lg+) */}
                   <div className='hidden lg:flex lg:items-center'>
-                    <Link href='/'>
+                    <Link href='/' legacyBehavior>
                       <div className='h-full w-44'>
                         <Logo />
                       </div>
@@ -244,10 +242,14 @@ export default function HeaderNew() {
                         </Popover> */}
 
                         {navigation.pages.map((page) => (
-                          <Link passHref href={page.href} key={page.name}>
-                            <a className='flex items-center font-semibold font-greycliff text-slate-700 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'>
-                              {page.name}
-                            </a>
+                          <Link
+                            passHref
+                            href={page.href}
+                            key={page.name}
+                            className='flex items-center font-semibold font-greycliff text-slate-700 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'>
+
+                            {page.name}
+
                           </Link>
                         ))}
                       </div>
@@ -280,11 +282,11 @@ export default function HeaderNew() {
                   </div>
 
                   {/* Logo (lg-) */}
-                  <Link href='/'>
-                    <a className='lg:hidden'>
-                      <span className='sr-only'>Packaging School</span>
-                      <LogoSquare className='w-6 h-6' />
-                    </a>
+                  <Link href='/' className='lg:hidden'>
+
+                    <span className='sr-only'>Packaging School</span>
+                    <LogoSquare className='w-6 h-6' />
+
                   </Link>
 
                   <div className='flex flex-1 items-center justify-end'>
@@ -306,13 +308,15 @@ export default function HeaderNew() {
 
                         <div className='flex'>
                           {user ? (
-                            <Link href='/profile'>
-                              <a className='-m-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40 cursor-pointer'>
-                                <UserIcon
-                                  className='h-6 w-6'
-                                  aria-hidden='true'
-                                />
-                              </a>
+                            <Link
+                              href='/profile'
+                              className='-m-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40 cursor-pointer'>
+
+                              <UserIcon
+                                className='h-6 w-6'
+                                aria-hidden='true'
+                              />
+
                             </Link>
                           ) : (
                             <div
@@ -365,6 +369,6 @@ export default function HeaderNew() {
           </div>
         </nav>
       </header>
-    </div>
+    </div>)
   );
 }

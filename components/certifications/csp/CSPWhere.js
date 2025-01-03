@@ -6,7 +6,7 @@ import { SectionHeading } from '../../shared/SectionHeading';
 
 const CSPWhere = () => {
   return (
-    <div className='container-7xl flex flex-col gap-9 scroll-mt-36' id='where'>
+    (<div className='container-7xl flex flex-col gap-9 scroll-mt-36' id='where'>
       <SectionHeading number='3'>Where do I start?</SectionHeading>
       <div className='flex flex-col lg:grid-cols-5 xl:grid xl:grid-cols-5 gap-9 lg:gap-16 overflow-hidden'>
         <div className='lg:col-span-3 flex flex-col gap-6'>
@@ -56,10 +56,12 @@ const CSPWhere = () => {
                   USD
                 </span>
               </p>
-              <Link href='https://learn.packagingschool.com/enroll/2772370?price_id=3600658'>
-                <a className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+              <Link
+                href='https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
+                className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+                
                   Enroll Now
-                </a>
+                
               </Link>
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
@@ -85,7 +87,7 @@ const CSPWhere = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

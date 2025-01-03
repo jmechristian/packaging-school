@@ -36,18 +36,19 @@ const searchClient = algoliasearch(
 export function ProductItem({ hit }) {
   const dispatch = useDispatch();
   return (
-    <div className='flex justify-between items-center w-full'>
-      <Link href={`/articles/${hit.slug}`} passHref>
-        <a
-          className='aa-ItemLink hover:bg-slate-700 cursor-pointer w-full'
-          onClick={() => dispatch(closeSearch())}
-        >
-          <div className='font-greycliff font-semibold leading-snug  dark:text-white w-full'>
-            <Highlight hit={hit} attribute='title' />
-          </div>
-        </a>
+    (<div className='flex justify-between items-center w-full'>
+      <Link
+        href={`/articles/${hit.slug}`}
+        passHref
+        className='aa-ItemLink hover:bg-slate-700 cursor-pointer w-full'
+        onClick={() => dispatch(closeSearch())}>
+
+        <div className='font-greycliff font-semibold leading-snug  dark:text-white w-full'>
+          <Highlight hit={hit} attribute='title' />
+        </div>
+
       </Link>
-    </div>
+    </div>)
   );
 }
 
@@ -100,55 +101,55 @@ export function CourseItem({ hit }) {
   const dispatch = useDispatch();
 
   return (
-    <Link passHref href={hit.altLink ? hit.altLink : `/courses/${hit.slug}`}>
-      <a
-        href={hit.slug}
-        className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
-        onClick={() => dispatch(closeSearch())}
-      >
-        <div className='w-full flex flex-col lg:!h-[120px]'>
-          <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
-            <div
-              className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[100px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
-              style={{ backgroundImage: `url(${hit.seoImage})` }}
-            ></div>
-            <div className='flex flex-col md:flex-row h-[100px] md:h-[120px] py-1.5 justify-between items-center w-full'>
-              <div className='flex flex-col gap-1 w-full'>
-                <div className='font-greycliff font-semibold leading-tight text-sm lg:text-lg dark:text-white pr-3'>
-                  <Highlight hit={hit} attribute='title' />
-                </div>
-                <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-lg hidden md:block'>
-                  <Highlight hit={hit} attribute='subheadline' />
-                </div>
+    (<Link
+      passHref
+      href={hit.altLink ? hit.altLink : `/courses/${hit.slug}`}
+      className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
+      onClick={() => dispatch(closeSearch())}>
+
+      <div className='w-full flex flex-col lg:!h-[120px]'>
+        <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
+          <div
+            className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[100px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+            style={{ backgroundImage: `url(${hit.seoImage})` }}
+          ></div>
+          <div className='flex flex-col md:flex-row h-[100px] md:h-[120px] py-1.5 justify-between items-center w-full'>
+            <div className='flex flex-col gap-1 w-full'>
+              <div className='font-greycliff font-semibold leading-tight text-sm lg:text-lg dark:text-white pr-3'>
+                <Highlight hit={hit} attribute='title' />
               </div>
-              <div className='flex items-end flex-col gap-1 pr-2'>
-                {/* <div className='w-8 h-8 rounded-full bg-base-mid flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <FaceSmileIcon className='w-5 h-5 stroke-white' />
-                </div>
-                <div className='w-8 h-8 rounded-full bg-clemson flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <RocketLaunchIcon className='w-5 h-5 stroke-white' />
-                </div> */}
-                {/* <div className='w-8 h-8 rounded-full bg-brand-red flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <AcademicCapIcon className='w-5 h-5 stroke-white' />
-                </div>
-                <div className='w-8 h-8 rounded-full bg-green-600 flex items-center justify-center shadow border border-0.5 border-black/50'>
-                  <ScaleIcon className='w-5 h-5 stroke-white' />
-                </div> */}
+              <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-lg hidden md:block'>
+                <Highlight hit={hit} attribute='subheadline' />
               </div>
             </div>
-          </div>
-          {/* HIDDEN MD */}
-          <div className='w-full flex flex-col px-3 py-4 bg-neutral-100 dark:bg-black md:hidden'>
-            <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-white hidden'>
-              <Highlight hit={hit} attribute='title' />
-            </div>
-            <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60'>
-              <Highlight hit={hit} attribute='subheadline' />
+            <div className='flex items-end flex-col gap-1 pr-2'>
+              {/* <div className='w-8 h-8 rounded-full bg-base-mid flex items-center justify-center shadow border border-0.5 border-black/50'>
+                <FaceSmileIcon className='w-5 h-5 stroke-white' />
+              </div>
+              <div className='w-8 h-8 rounded-full bg-clemson flex items-center justify-center shadow border border-0.5 border-black/50'>
+                <RocketLaunchIcon className='w-5 h-5 stroke-white' />
+              </div> */}
+              {/* <div className='w-8 h-8 rounded-full bg-brand-red flex items-center justify-center shadow border border-0.5 border-black/50'>
+                <AcademicCapIcon className='w-5 h-5 stroke-white' />
+              </div>
+              <div className='w-8 h-8 rounded-full bg-green-600 flex items-center justify-center shadow border border-0.5 border-black/50'>
+                <ScaleIcon className='w-5 h-5 stroke-white' />
+              </div> */}
             </div>
           </div>
         </div>
-      </a>
-    </Link>
+        {/* HIDDEN MD */}
+        <div className='w-full flex flex-col px-3 py-4 bg-neutral-100 dark:bg-black md:hidden'>
+          <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-white hidden'>
+            <Highlight hit={hit} attribute='title' />
+          </div>
+          <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60'>
+            <Highlight hit={hit} attribute='subheadline' />
+          </div>
+        </div>
+      </div>
+
+    </Link>)
   );
 }
 
@@ -156,52 +157,49 @@ export function LOTMItem({ hit }) {
   const dispatch = useDispatch();
 
   return (
-    <Link
+    (<Link
       passHref
       href={hit.type === 'INDEX' ? `/${hit.slug}` : `/lessons/${hit.slug}`}
-    >
-      <a
-        href={hit.slug}
-        className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
-        onClick={() => dispatch(closeSearch())}
-      >
-        <div className='w-full flex flex-col lg:!h-[120px]'>
-          <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
-            <div
-              className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[90px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
-              style={{
-                backgroundImage: `url(${
-                  hit.screengrab ? hit.screengrab : hit.seoImage
-                })`,
-              }}
-            ></div>
-            <div className='flex flex-col md:flex-row h-[90px] md:h-[120px] py-1.5 justify-between items-center w-full'>
-              <div className='flex flex-col gap-2 w-full'>
-                <div className='font-greycliff font-semibold leading-tight lg:text-lg dark:text-white pr-3'>
-                  <Highlight hit={hit} attribute='title' />
-                </div>
-                <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-lg hidden md:block line-clamp-3'>
-                  <Highlight
-                    hit={hit}
-                    attribute='subhead'
-                    classNames={{ root: 'line-clamp-3' }}
-                  />
-                </div>
+      className='w-full grid group cursor-pointer bg-white dark:bg-black transition-all ease-in hover:bg-base-light/50 rounded-xl border border-neutral-400 dark:border-neutral-600 shadow hover:shadow-xl overflow-hidden'
+      onClick={() => dispatch(closeSearch())}>
+
+      <div className='w-full flex flex-col lg:!h-[120px]'>
+        <div className='w-full flex items-center gap-3 md:gap-5 border-b border-b-neutral-400 md:border-0'>
+          <div
+            className='aspect-[1/1] md:!aspect-[3/5] w-full !max-w-[90px] md:!max-w-[120px] md:!max-h-[120px] bg-black bg-cover bg-center group-hover:scale-110  transition-all ease-in '
+            style={{
+              backgroundImage: `url(${
+                hit.screengrab ? hit.screengrab : hit.seoImage
+              })`,
+            }}
+          ></div>
+          <div className='flex flex-col md:flex-row h-[90px] md:h-[120px] py-1.5 justify-between items-center w-full'>
+            <div className='flex flex-col gap-2 w-full'>
+              <div className='font-greycliff font-semibold leading-tight lg:text-lg dark:text-white pr-3'>
+                <Highlight hit={hit} attribute='title' />
+              </div>
+              <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 max-w-lg hidden md:block line-clamp-3'>
+                <Highlight
+                  hit={hit}
+                  attribute='subhead'
+                  classNames={{ root: 'line-clamp-3' }}
+                />
               </div>
             </div>
           </div>
-          {/* HIDDEN MD */}
-          <div className='w-full flex flex-col px-3 py-4 bg-neutral-100 dark:bg-black md:hidden'>
-            <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-white hidden'>
-              <Highlight hit={hit} attribute='title' />
-            </div>
-            <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 line-clamp-3'>
-              <Highlight hit={hit} attribute='subhead' />
-            </div>
+        </div>
+        {/* HIDDEN MD */}
+        <div className='w-full flex flex-col px-3 py-4 bg-neutral-100 dark:bg-black md:hidden'>
+          <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-white hidden'>
+            <Highlight hit={hit} attribute='title' />
+          </div>
+          <div className='aa-ItemTitle text-xs leading-snug dark:text-white/60 line-clamp-3'>
+            <Highlight hit={hit} attribute='subhead' />
           </div>
         </div>
-      </a>
-    </Link>
+      </div>
+
+    </Link>)
   );
 }
 

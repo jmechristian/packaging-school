@@ -13,7 +13,7 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 
 const APCPricing = () => {
   return (
-    <div>
+    (<div>
       <div className='mx-auto max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-12 lg:mx-0 lg:flex lg:max-w-none'>
         <div className='p-8 sm:p-10 lg:flex lg:flex-col gap-6 lg:h-full'>
           <SectionHeading number='3'>Where do I start?</SectionHeading>
@@ -112,10 +112,12 @@ const APCPricing = () => {
                   USD
                 </span>
               </p>
-              <Link href='https://learn.packagingschool.com/enroll/735516'>
-                <a className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+              <Link
+                href='https://learn.packagingschool.com/enroll/735516'
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+                
                   Enroll Now
-                </a>
+                
               </Link>
               <p className='text-base font-semibold text-gray-600 mt-12'>
                 Payment Plans are Available
@@ -128,10 +130,12 @@ const APCPricing = () => {
                   /mo
                 </span>
               </p>
-              <Link href='https://learn.packagingschool.com/enroll/735516?price_id=2898851'>
-                <a className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+              <Link
+                href='https://learn.packagingschool.com/enroll/735516?price_id=2898851'
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+                
                   Enroll Now
-                </a>
+                
               </Link>
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
@@ -140,7 +144,7 @@ const APCPricing = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

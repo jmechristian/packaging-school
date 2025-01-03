@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const WhyUs = () => {
   return (
-    <div className='py-16 md:py-24'>
+    (<div className='py-16 md:py-24'>
       <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
         <div className='mx-auto flex max-w-2xl flex-col gap-16 bg-white/5 py-16 px-6 ring-1 ring-white/10 sm:rounded-3xl sm:p-8 lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:py-20 xl:gap-x-20 xl:px-20'>
           <div className='w-full flex-auto'>
@@ -21,10 +21,11 @@ const WhyUs = () => {
               come take a journey of discovery with us..
             </p>
             <div className='mt-10 flex cursor-pointer'>
-              <Link href='/about'>
-                <a className='text-lg font-greycliff font-bold leading-6 text-clemson'>
-                  Why Choose Us? <span aria-hidden='true'>&rarr;</span>
-                </a>
+              <Link
+                href='/about'
+                className='text-lg font-greycliff font-bold leading-6 text-clemson'>
+                Why Choose Us? <span aria-hidden='true'>&rarr;</span>
+
               </Link>
             </div>
           </div>
@@ -33,7 +34,7 @@ const WhyUs = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

@@ -38,7 +38,7 @@ const CertMenuItem = ({
   };
 
   return (
-    <div className='flex flex-col bg-white/70 dark:bg-dark-mid rounded-xl p-5 gap-4 h-full justify-between'>
+    (<div className='flex flex-col bg-white/70 dark:bg-dark-mid rounded-xl p-5 gap-4 h-full justify-between'>
       <div className='flex items-center justify-center h-full'>
         <div className='flex flex-col gap-3 h-full overflow-hidden'>
           <div className='flex gap-3 items-center w-full overflow-hidden'>
@@ -66,7 +66,7 @@ const CertMenuItem = ({
               className='rounded-lg px-3 py-1.5 font-greycliff text-sm w-fit  text-clemson font-bold'
               onClick={() => onClose()}
             >
-              <Link href={apply}>{enroll ? 'Enroll Now' : 'Apply Now'}</Link>
+              <Link href={apply} legacyBehavior>{enroll ? 'Enroll Now' : 'Apply Now'}</Link>
             </div>
           )}
           {learnMore && (
@@ -84,7 +84,7 @@ const CertMenuItem = ({
           </div>
         )}
       </div>
-    </div>
+    </div>)
   );
 };
 

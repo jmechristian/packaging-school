@@ -25,7 +25,7 @@ export default function CMPMPricing() {
   };
 
   return (
-    <div>
+    (<div>
       <div className='mx-auto'>
         <h2 className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-5xl'>
           Future Proof Your Skills
@@ -120,10 +120,12 @@ export default function CMPMPricing() {
                   USD
                 </span>
               </p>
-              <Link href='/certificate-of-mastery-in-packaging-management'>
-                <a className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+              <Link
+                href='/certificate-of-mastery-in-packaging-management'
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
+                
                   Apply Now
-                </a>
+                
               </Link>
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
@@ -132,6 +134,6 @@ export default function CMPMPricing() {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

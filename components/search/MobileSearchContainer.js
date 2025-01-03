@@ -19,7 +19,7 @@ const searchClient = algoliasearch(
 
 function Hit({ hit }) {
   return (
-    <article className='w-full py-4 text-white my-3'>
+    (<article className='w-full py-4 text-white my-3'>
       <div className='flex flex-col gap-3'>
         <div className='font-greycliff font-semibold text-base-brand text-lg leading-tight'>
           {hit.title}
@@ -27,13 +27,15 @@ function Hit({ hit }) {
         <div className=' text-slate-300 text-sm line-clamp-3'>
           {hit.subheadline}
         </div>
-        <Link href={`/courses/${hit.slug}`}>
-          <a className='text-white font-semibold bg-clemson rounded-lg py-1.5 px-3 text-sm w-fit'>
+        <Link
+          href={`/courses/${hit.slug}`}
+          className='text-white font-semibold bg-clemson rounded-lg py-1.5 px-3 text-sm w-fit'>
+          
             View Course
-          </a>
+          
         </Link>
       </div>
-    </article>
+    </article>)
   );
 }
 

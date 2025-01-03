@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const BMWCirriculum = () => {
   return (
-    <div className='border  border-gray-200 rounded-lg p-4 shadow-lg'>
+    (<div className='border  border-gray-200 rounded-lg p-4 shadow-lg'>
       <div className='bg-base-light rounded-t-lg w-full aspect-[1/1]'>
         <div className='w-full h-full flex flex-col justify-between p-6'>
           <div className='flex justify-between items-center w-full'>
@@ -31,12 +31,12 @@ const BMWCirriculum = () => {
       </div>
       <div className='w-full mt-6 bg-clemson  py-4 text-center rounded'>
         <Link href={'/sws-bmw-start-survey'} className='w-full'>
-          <a className='w-full rounded-lg  text-white font-bold text-lg'>
+          
             Start Here: Survey
-          </a>
+          
         </Link>
       </div>
-    </div>
+    </div>)
   );
 };
 

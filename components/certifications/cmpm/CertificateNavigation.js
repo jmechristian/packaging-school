@@ -38,7 +38,7 @@ const CertificateNavigation = () => {
   let mobileActiveIndex = activeIndex === null ? 0 : activeIndex;
 
   return (
-    <div ref={navBarRef} className='sticky top-0 z-50'>
+    (<div ref={navBarRef} className='sticky top-0 z-50'>
       <Popover className='sm:hidden'>
         {({ open }) => (
           <>
@@ -99,18 +99,20 @@ const CertificateNavigation = () => {
                   </a>
                 </Popover.Button>
               ))}
-              <Link href={'/certificate-of-mastery-in-packaging-management'}>
-                <a className='flex items-center px-4 py-3'>
-                  <span
-                    aria-hidden='true'
-                    className='font-mono text-sm text-base-brand'
-                  >
-                    05
-                  </span>
-                  <span className='ml-4 text-base font-medium text-slate-900 dark:text-white'>
-                    Apply Now
-                  </span>
-                </a>
+              <Link
+                href={'/certificate-of-mastery-in-packaging-management'}
+                className='flex items-center px-4 py-3'>
+
+                <span
+                  aria-hidden='true'
+                  className='font-mono text-sm text-base-brand'
+                >
+                  05
+                </span>
+                <span className='ml-4 text-base font-medium text-slate-900 dark:text-white'>
+                  Apply Now
+                </span>
+
               </Link>
             </Popover.Panel>
             <div className='absolute inset-x-0 bottom-full z-10 h-4 bg-white dark:bg-dark-dark' />
@@ -155,7 +157,7 @@ const CertificateNavigation = () => {
           </li>
         </ol>
       </div>
-    </div>
+    </div>)
   );
 };
 

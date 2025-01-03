@@ -7,7 +7,7 @@ const HomeCertItem = ({ cert }) => {
   const [isHover, setIsHover] = useState(false);
 
   return (
-    <div
+    (<div
       className='bg-slate-200 rounded-lg py-9 px-6 h-full cursor-pointer'
       key={1}
       onMouseEnter={() => setIsHover(true)}
@@ -29,7 +29,7 @@ const HomeCertItem = ({ cert }) => {
         </div>
         <div className='flex gap-4'>
           {cert.apply && (
-            <Link href={cert.apply}>
+            <Link href={cert.apply} legacyBehavior>
               <div
                 className={`${
                   isHover ? 'bg-clemson-dark shadow-lg' : 'bg-clemson'
@@ -39,14 +39,14 @@ const HomeCertItem = ({ cert }) => {
               </div>
             </Link>
           )}
-          <Link href={cert.link}>
+          <Link href={cert.link} legacyBehavior>
             <div className='border cursor-pointer border-slate-600 text-slate-800 font-greycliff font-semibold rounded-lg p-2'>
               More Info
             </div>
           </Link>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

@@ -16,7 +16,7 @@ export default function ProfileStats({ user }) {
     (state) => state.course_filter
   );
   return (
-    <div className='lg:px-16 pb-16 py-16 flex flex-col gap-16 dark:bg-neutral-800'>
+    (<div className='lg:px-16 pb-16 py-16 flex flex-col gap-16 dark:bg-neutral-800'>
       <div>
         <h3 className='text-lg font-bold leading-6 text-gray-900 dark:text-white font-greycliff px-8 lg:px-0 mb-6'>
           Your Saved Courses
@@ -31,8 +31,8 @@ export default function ProfileStats({ user }) {
           ) : (
             <div className='text-gray-500'>
               No courses saved,{' '}
-              <Link href={'/all_courses'}>
-                <a className='font-semibold'>start browsing.</a>
+              <Link href={'/all_courses'} className='font-semibold'>
+                start browsing.
               </Link>
             </div>
           )}
@@ -49,8 +49,8 @@ export default function ProfileStats({ user }) {
             ) : (
               <div className='text-gray-500'>
                 No courses saved,{' '}
-                <Link href={'/all_courses'}>
-                  <a className='font-semibold'>start browsing.</a>
+                <Link href={'/all_courses'} className='font-semibold'>
+                  start browsing.
                 </Link>
               </div>
             )}
@@ -81,8 +81,8 @@ export default function ProfileStats({ user }) {
           {user && user.savedLessons && user.savedLessons.length === 0 && (
             <div className='text-gray-500'>
               No lessons saved,{' '}
-              <Link href={'/library'}>
-                <a className='font-semibold'>start browsing.</a>
+              <Link href={'/library'} className='font-semibold'>
+                start browsing.
               </Link>
             </div>
           )}
@@ -107,8 +107,8 @@ export default function ProfileStats({ user }) {
             ) : (
               <div className='text-gray-500'>
                 No lessons saved,{' '}
-                <Link href={'/library'}>
-                  <a className='font-semibold'>start browsing.</a>
+                <Link href={'/library'} className='font-semibold'>
+                  start browsing.
                 </Link>
               </div>
             )}
@@ -139,8 +139,8 @@ export default function ProfileStats({ user }) {
           {user && user.savedArticles && user.savedArticles.length === 0 && (
             <div className='text-gray-500'>
               No lessons saved,{' '}
-              <Link href={'/library'}>
-                <a className='font-semibold'>start browsing.</a>
+              <Link href={'/library'} className='font-semibold'>
+                start browsing.
               </Link>
             </div>
           )}
@@ -165,14 +165,14 @@ export default function ProfileStats({ user }) {
             ) : (
               <div className='text-gray-500'>
                 No lessons saved,{' '}
-                <Link href={'/library'}>
-                  <a className='font-semibold'>start browsing.</a>
+                <Link href={'/library'} className='font-semibold'>
+                  start browsing.
                 </Link>
               </div>
             )}
           </Scroller>
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

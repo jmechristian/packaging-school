@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const CourseCertificate = ({ certification }) => {
   return (
-    <div className='flex flex-col gap-8'>
+    (<div className='flex flex-col gap-8'>
       {certification.length > 0 && certification[0].certificate_link.data ? (
         <>
           <div className='flex gap-2 items-center'>
@@ -39,12 +39,12 @@ const CourseCertificate = ({ certification }) => {
         <div className='black__white text-lg'>
           Differentiate yourself from your peers with the comprehensive
           knowledge of a full certificate program.{' '}
-          <Link href='/certifications'>
+          <Link href='/certifications' legacyBehavior>
             <u className='cursor-pointer'>Enroll now!</u>
           </Link>
         </div>
       )}
-    </div>
+    </div>)
   );
 };
 

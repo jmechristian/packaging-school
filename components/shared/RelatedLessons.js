@@ -4,7 +4,7 @@ import React from 'react';
 
 const RelatedLessons = ({ relatedLessons, lessonId }) => {
   return (
-    <div className='py-16 sm:py-32'>
+    (<div className='py-16 sm:py-32'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div className='mx-auto max-w-4xl lg:mx-0'>
           <h2 className='text-3xl font-bold font-greycliff tracking-tight text-gray-900 dark:text-white'>
@@ -34,16 +34,10 @@ const RelatedLessons = ({ relatedLessons, lessonId }) => {
                     <div className='group relative'>
                       <h3 className='mt-6 text-xl font-greycliff font-semibold leading-6 text-gray-900 dark:text-base-brand group-hover:text-base-dark'>
                         <Link href={`/lessons/${course.slug}`}>
-                          <a
-                          // onClick={() =>
-                          //   gtag('event', 'related_lesson_click', {
-                          //     lesson_title: course.title,
-                          //   })
-                          // }
-                          >
-                            <span className='absolute inset-0' />
-                            {course.title}
-                          </a>
+
+                          <span className='absolute inset-0' />
+                          {course.title}
+
                         </Link>
                       </h3>
                       <p className='mt-5 leading-6 text-gray-600 dark:text-white/60 line-clamp-3'>
@@ -55,7 +49,7 @@ const RelatedLessons = ({ relatedLessons, lessonId }) => {
               ))}
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 
