@@ -5,21 +5,22 @@ import { useSelector } from 'react-redux';
 import Scroller from '../Scroller';
 import Link from 'next/link';
 import { toggleSignInModal } from '../../features/layout/layoutSlice';
+import { getCoursesByCategory } from '../../helpers/api';
 
-const HomeFree = ({ courses }) => {
+const HomeFree = () => {
   const dispatch = useDispatch();
   const [freeCourses, setFreeCourses] = useState([]);
 
-  const { allCourses } = useSelector((state) => state.course_filter);
   const { user } = useSelector((state) => state.auth);
   const scrollRef = useRef();
 
   useEffect(() => {
-    allCourses &&
-      setFreeCourses(
-        allCourses.filter((c) => c.price === 'FREE' || c.price === '0')
-      );
-  }, [setFreeCourses, allCourses]);
+    const getFreeCourses = async () => {
+      const courses = await getCoursesByCategory('FREE');
+      setFreeCourses(courses);
+    };
+    getFreeCourses();
+  }, [setFreeCourses]);
 
   return (
     <div className='relative lg:overflow-hidden flex flex-col bg-gray-100 rounded-lg lg:items-start gap-9 py-12 lg:max-w-7xl lg:mx-auto w-full'>
@@ -27,7 +28,7 @@ const HomeFree = ({ courses }) => {
       <div className='flex w-full flex-col lg:flex-row lg:justify-between gap-3'>
         <div className='flex flex-row justify-between w-full items-center  px-6'>
           <div className='flex flex-col gap-3'>
-            <div className='text-lg text-center lg:text-left gap-2 flex flex-col'>
+            <div className='text-lg text-center lg:!text-left gap-2 flex flex-col'>
               <div className='font-greycliff font-bold text-2xl md:text-3xl'>
                 Get Started for Free Today!
               </div>

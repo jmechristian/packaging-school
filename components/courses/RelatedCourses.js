@@ -12,7 +12,6 @@ const RelatedCourses = ({ category, id }) => {
   const [width, setWidth] = useState(0);
   const [isRelated, setIsRelated] = useState(null);
 
-  const { allCourses } = useSelector((state) => state.course_filter);
   const { user } = useSelector((state) => state.auth);
 
   const dragX = useMotionValue(0);
