@@ -347,6 +347,23 @@ export const onCreateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -380,6 +397,23 @@ export const onUpdateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -410,6 +444,23 @@ export const onDeleteCertificateObject = /* GraphQL */ `
           certificateObjectId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
         }
         nextToken
       }
@@ -1064,6 +1115,54 @@ export const onDeleteCareer = /* GraphQL */ `
       electiveCopy
       freeCopy
       beverageCopy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSBoard = /* GraphQL */ `
+  subscription OnCreateAPSBoard {
+    onCreateAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSBoard = /* GraphQL */ `
+  subscription OnUpdateAPSBoard {
+    onUpdateAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSBoard = /* GraphQL */ `
+  subscription OnDeleteAPSBoard {
+    onDeleteAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
       createdAt
       updatedAt
     }
@@ -2281,6 +2380,7 @@ export const onCreateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2491,6 +2591,7 @@ export const onUpdateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2701,6 +2802,7 @@ export const onDeleteUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2795,6 +2897,7 @@ export const onCreateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2808,6 +2911,7 @@ export const onUpdateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2821,6 +2925,7 @@ export const onDeleteCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2899,6 +3004,7 @@ export const onCreateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3035,6 +3141,7 @@ export const onUpdateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3171,6 +3278,7 @@ export const onDeleteCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3307,6 +3415,7 @@ export const onCreateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3358,6 +3467,7 @@ export const onCreateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3444,6 +3554,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3495,6 +3606,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3581,6 +3693,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3632,6 +3745,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -4721,6 +4835,7 @@ export const onCreateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -4868,6 +4983,7 @@ export const onUpdateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5015,6 +5131,7 @@ export const onDeleteStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5162,6 +5279,7 @@ export const onCreateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5283,6 +5401,7 @@ export const onUpdateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5404,6 +5523,7 @@ export const onDeleteInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -8583,6 +8703,13 @@ export const onCreateCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8626,6 +8753,13 @@ export const onUpdateCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8667,6 +8801,13 @@ export const onDeleteCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -9210,6 +9351,7 @@ export const onCreateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9340,6 +9482,7 @@ export const onUpdateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9470,6 +9613,7 @@ export const onDeleteAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut

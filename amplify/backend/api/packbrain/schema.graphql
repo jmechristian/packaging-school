@@ -92,6 +92,11 @@ type CertificateObject @model @auth(rules: [{ allow: public }]) {
   categoryArray: [String]
   abbreviation: String
   category: [Category] @manyToMany(relationName: "CertificateByCategory")
+  whereText: String
+  whatText: String
+  howText: String
+  deadline: String
+  sessions: [CMPMSession] @hasMany
 }
 
 type Course @model @auth(rules: [{ allow: public }]) {
@@ -200,6 +205,17 @@ type Career @model @auth(rules: [{ allow: public }]) {
 }
 
 # Autopack Summit
+
+type APSBoard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  title: String
+  bio: String
+  company: String!
+  email: String!
+  linkedin: String
+  profilePic: String
+}
 
 type APS @model @auth(rules: [{ allow: public }]) {
   id: ID!
@@ -477,6 +493,7 @@ type CPSForm
   payment: String
   yearGoals: String
   cpsGoals: String
+  paymentType: String
   moreAboutYou: String
   elective: String
   optOut: Boolean

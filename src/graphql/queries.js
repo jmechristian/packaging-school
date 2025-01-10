@@ -360,6 +360,23 @@ export const getCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -393,6 +410,13 @@ export const listCertificateObjects = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -1018,6 +1042,45 @@ export const careersBySlug = /* GraphQL */ `
         electiveCopy
         freeCopy
         beverageCopy
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAPSBoard = /* GraphQL */ `
+  query GetAPSBoard($id: ID!) {
+    getAPSBoard(id: $id) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAPSBoards = /* GraphQL */ `
+  query ListAPSBoards(
+    $filter: ModelAPSBoardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAPSBoards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        title
+        bio
+        company
+        email
+        linkedin
+        profilePic
         createdAt
         updatedAt
       }
@@ -2077,6 +2140,7 @@ export const getUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2239,6 +2303,7 @@ export const listUsers = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -2359,6 +2424,7 @@ export const usersByName = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -2479,6 +2545,7 @@ export const usersByEmail = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -2599,6 +2666,7 @@ export const usersByCompanyID = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -2643,6 +2711,7 @@ export const getCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2661,6 +2730,7 @@ export const listCMPMSessions = /* GraphQL */ `
         id
         createdAt
         updatedAt
+        certificateObjectSessionsId
       }
       nextToken
     }
@@ -2689,6 +2759,7 @@ export const cMPMSessionsByEndDate = /* GraphQL */ `
         id
         createdAt
         updatedAt
+        certificateObjectSessionsId
       }
       nextToken
     }
@@ -2717,6 +2788,7 @@ export const cMPMSessionsByDeadline = /* GraphQL */ `
         id
         createdAt
         updatedAt
+        certificateObjectSessionsId
       }
       nextToken
     }
@@ -2797,6 +2869,7 @@ export const getCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -2998,6 +3071,7 @@ export const getCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3049,6 +3123,7 @@ export const getCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3113,6 +3188,7 @@ export const listCPSForms = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -4163,6 +4239,7 @@ export const getStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -4353,6 +4430,7 @@ export const getInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -7165,6 +7243,13 @@ export const getCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7211,6 +7296,10 @@ export const listCertificateByCategories = /* GraphQL */ `
           purchaseLink
           categoryArray
           abbreviation
+          whereText
+          whatText
+          howText
+          deadline
           createdAt
           updatedAt
         }
@@ -7263,6 +7352,10 @@ export const certificateByCategoriesByCategoryId = /* GraphQL */ `
           purchaseLink
           categoryArray
           abbreviation
+          whereText
+          whatText
+          howText
+          deadline
           createdAt
           updatedAt
         }
@@ -7315,6 +7408,10 @@ export const certificateByCategoriesByCertificateObjectId = /* GraphQL */ `
           purchaseLink
           categoryArray
           abbreviation
+          whereText
+          whatText
+          howText
+          deadline
           createdAt
           updatedAt
         }
@@ -8042,6 +8139,7 @@ export const getAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut

@@ -395,6 +395,23 @@ export const createCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -431,6 +448,23 @@ export const updateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -464,6 +498,23 @@ export const deleteCertificateObject = /* GraphQL */ `
           certificateObjectId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
         }
         nextToken
       }
@@ -1181,6 +1232,63 @@ export const deleteCareer = /* GraphQL */ `
       electiveCopy
       freeCopy
       beverageCopy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSBoard = /* GraphQL */ `
+  mutation CreateAPSBoard(
+    $input: CreateAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    createAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSBoard = /* GraphQL */ `
+  mutation UpdateAPSBoard(
+    $input: UpdateAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    updateAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSBoard = /* GraphQL */ `
+  mutation DeleteAPSBoard(
+    $input: DeleteAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    deleteAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
       createdAt
       updatedAt
     }
@@ -2545,6 +2653,7 @@ export const createUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2758,6 +2867,7 @@ export const updateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2971,6 +3081,7 @@ export const deleteUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -3068,6 +3179,7 @@ export const createCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3084,6 +3196,7 @@ export const updateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3100,6 +3213,7 @@ export const deleteCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3181,6 +3295,7 @@ export const createCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3320,6 +3435,7 @@ export const updateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3459,6 +3575,7 @@ export const deleteCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3598,6 +3715,7 @@ export const createCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3649,6 +3767,7 @@ export const createCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3738,6 +3857,7 @@ export const updateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3789,6 +3909,7 @@ export const updateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3878,6 +3999,7 @@ export const deleteCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3929,6 +4051,7 @@ export const deleteCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -5102,6 +5225,7 @@ export const createStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5252,6 +5376,7 @@ export const updateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5402,6 +5527,7 @@ export const deleteStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5552,6 +5678,7 @@ export const createInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5676,6 +5803,7 @@ export const updateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5800,6 +5928,7 @@ export const deleteInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9324,6 +9453,13 @@ export const createCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9370,6 +9506,13 @@ export const updateCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9414,6 +9557,13 @@ export const deleteCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -9987,6 +10137,7 @@ export const createAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -10120,6 +10271,7 @@ export const updateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -10253,6 +10405,7 @@ export const deleteAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
