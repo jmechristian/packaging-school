@@ -9,19 +9,24 @@ import {
   LockClosedIcon,
   LockOpenIcon,
 } from '@heroicons/react/24/outline';
-import NewCouseCard from '../../../components/shared/NewCouseCard';
 import VideoHero from '../../../components/lessons/VideoHero';
 import LessonSlides from '../../../components/lessons/LessonSlides';
 import ImageHero from '../../../components/lessons/ImageHero';
 import WiredLessonCard from '../../../components/shared/WiredLessonCard';
 import WiredCourseCard from '../../../components/shared/WiredCourseCard';
 
+import { listLessons } from '../../../src/graphql/queries';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSignInModal } from '../../../features/layout/layoutSlice';
 import AuthorBlock from '../../../components/shared/AuthorBlock';
+import Meta from '../../../components/shared/Meta';
 
 const Page = ({ lesson }) => {
-  const newDate = lesson && new Date(lesson.updatedAt).toDateString();
+  const newDate =
+    lesson &&
+    new Date(
+      lesson.backdate ? lesson.backdate : lesson.updatedAt
+    ).toLocaleDateString('en-US');
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { allCourses } = useSelector((state) => state.course_filter);
@@ -56,10 +61,17 @@ const Page = ({ lesson }) => {
             date={newDate}
             author={lesson.author}
             media={lesson.seoImage}
+            backdate={lesson.backdate}
           />
         );
       case 'VIDEO':
-        return <VideoHero videoUrl={lesson.media} />;
+        return (
+          <VideoHero
+            videoUrl={lesson.media}
+            videoLink={lesson.videoLink}
+            slug={lesson.slug}
+          />
+        );
       case 'SLIDES':
         return <LessonSlides slides={lesson.slides ? lesson.slides : []} />;
       default:
@@ -86,23 +98,11 @@ const Page = ({ lesson }) => {
   return (
     lesson && (
       <>
-        <Head>
-          <title>{lesson.title}</title>
-          <meta name='robots' content='noindex,nofollow' />
-          <meta
-            name='image'
-            property='og:image'
-            content={lesson?.seoImage}
-            key='image'
-          />
-          <meta property='og:title' content={lesson.title} key='title' />
-          <meta
-            property='og:description'
-            content={lesson?.subhead}
-            key='desc'
-          />
-          <meta name='description' content={lesson?.subhead} key='desc' />
-        </Head>
+        <Meta
+          title={lesson.title}
+          description={lesson.subhead}
+          image={lesson.seoImage}
+        />
         <div className='w-full lg:pt-6 pb-12 relative dark:bg-dark-dark'>
           <div className='w-full flex flex-col gap-6 lg:gap-9 max-w-6xl mx-auto'>
             {setMedia()}
@@ -122,7 +122,7 @@ const Page = ({ lesson }) => {
                         {newDate}
                       </div>
                       {lesson.author && (
-                        <div className='flex flex-col w-full md:flex-row gap-3 md:gap-9 md:items-center'>
+                        <div className='flex flex-col w-full md:!flex-row gap-3 md:!gap-9 md:!items-center'>
                           {lesson.author.map((a) => (
                             <div
                               key={a}
@@ -193,7 +193,7 @@ const Page = ({ lesson }) => {
                     </div>
                   )}
                   <div
-                    className={`relative px-6 lg:px-0 ${
+                    className={`relative px-6 xl:px-0 ${
                       lesson.mediaType === 'IMAGE' ? 'mt-0' : 'mt-6'
                     }`}
                   >
@@ -201,11 +201,6 @@ const Page = ({ lesson }) => {
                       dangerouslySetInnerHTML={{ __html: lesson.content }}
                       className='tiptap lg:text-lg'
                     ></div>
-                    {/* <div className='tiptap flex flex-col'>
-                {bodyContent.map((item, i) => (
-                  <div key={i}>{bodyCotentHandler(item)}</div>
-                ))}
-              </div> */}
                   </div>
                   {lesson.sources &&
                     sortedSources &&
@@ -244,7 +239,7 @@ const Page = ({ lesson }) => {
               </div>
 
               {/* Sidebar */}
-              <div className='w-full lg:max-w-[280px] h-full bg-dark-dark dark:bg-dark-mid text-white rounded-xl flex flex-col md:items-start md:grid md:grid-cols-3 lg:flex lg:flex-col gap-6 py-2 px-6 md:px-0'>
+              <div className='w-full lg:max-w-[280px] h-full bg-dark-dark dark:bg-dark-mid text-white flex flex-col md:items-start md:grid md:grid-cols-3 lg:flex lg:flex-col gap-6 py-2 px-6 md:px-0'>
                 <div className='flex flex-col justify-center md:items-start items-center gap-6 p-4 mx-auto'>
                   <div className='flex flex-col gap-1.5 '>
                     <div className='flex gap-1 items-center'>
@@ -265,33 +260,20 @@ const Page = ({ lesson }) => {
                     />
                   ) : (
                     <>
-                      <NewCouseCard
-                        title={'Packaging Foundations'}
-                        description={
-                          'Learn the intricate dynamics of packaging as a system, integrating roles from marketing to warehousing, to become an effective stakeholder in package design.'
-                        }
-                        background={
-                          'https://packschool.s3.amazonaws.com/packaging-foundations-seoImage-2-sm.png'
-                        }
-                        link={'https://learn.packagingschool.com/enroll/35691'}
-                        link_text={'Enroll Now'}
-                        Icon={AcademicCapIcon}
-                        video={'https://www.youtube.com/watch?v=L4Q6sZlXoe4'}
-                        // id={'806c0e2e-c4db-4c13-94f9-b49d4e8b2239'}
+                      <WiredCourseCard
+                        id={'ff174f01-5f76-486c-8d7a-849d6d3ff914'}
                       />
                     </>
                   )}
                 </div>
                 <div className='w-full h-0.5 bg-white/30 px-3'></div>
                 <div className='flex flex-col justify-center items-start md:col-span-2 py-2'>
-                  {lesson.related && lesson.related.length > 0 && (
-                    <div className='flex gap-2 items-center px-4 md:py-4 lg:py-0'>
-                      <MdScreenShare size={24} color='orange' />
-                      <div className='font-bold tracking-tight text-lg'>
-                        Related Lessons
-                      </div>
+                  <div className='flex gap-2 items-center px-4 md:py-4 lg:py-0'>
+                    <MdScreenShare size={24} color='orange' />
+                    <div className='font-bold tracking-tight text-lg'>
+                      Related Lessons
                     </div>
-                  )}
+                  </div>
                   <div className='md:grid md:grid-cols-2 lg:flex lg:flex-col'>
                     {lesson.related && lesson.related.length > 0 ? (
                       lesson.related.map((cou) => (
@@ -303,7 +285,26 @@ const Page = ({ lesson }) => {
                         </div>
                       ))
                     ) : (
-                      <></>
+                      <>
+                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
+                          <WiredLessonCard
+                            link_text={'Enroll Now'}
+                            id={'66a95671-feb8-4d74-8a87-033d71431de8'}
+                          />
+                        </div>
+                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
+                          <WiredLessonCard
+                            link_text={'Enroll Now'}
+                            id={'f2d26420-1ac4-4172-8af2-f70e8010770d'}
+                          />
+                        </div>
+                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
+                          <WiredLessonCard
+                            link_text={'Enroll Now'}
+                            id={'7b90c1b2-1226-4b1e-b086-ef26871d7963'}
+                          />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -312,14 +313,14 @@ const Page = ({ lesson }) => {
             {lesson.sources && sortedSources && sortedSources.length > 0 && (
               <div className='lg:hidden flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
                 <div className='font-bold dark:text-white'>Sources</div>
-                <div className='grid lg:grid-cols-2 dark:text-white gap-3 text-xs'>
+                <div className='flex flex-col dark:text-white gap-3 text-xs'>
                   <div className='flex flex-col gap-3'>
                     {sortedSources[0].map((sou) => (
                       <div className='flex gap-1' key={sou.id}>
                         <div>
                           <sup>{sou.position}</sup>
                         </div>
-                        <div className='break-all w-full'>
+                        <div className='break-all'>
                           <a href={sou.link}>{sou.name}</a>
                         </div>
                       </div>
@@ -331,7 +332,7 @@ const Page = ({ lesson }) => {
                         <div>
                           <sup>{sou.position}</sup>
                         </div>
-                        <div className='break-all w-full'>
+                        <div className='break-all'>
                           <a href={sou.link}>{sou.name}</a>
                         </div>
                       </div>
@@ -347,57 +348,79 @@ const Page = ({ lesson }) => {
   );
 };
 
-export default Page;
+export async function getStaticPaths() {
+  const res = await API.graphql({
+    query: listLessons,
+  });
+  const paths = res.data.listLessons.items
+    .filter((it) => it.status != 'DRAFT')
+    .map((lesson) => ({
+      params: { id: lesson.slug },
+    }));
 
-export async function getServerSideProps({ params }) {
+  return { paths, fallback: true };
+}
+
+export async function getStaticProps({ params }) {
+  const { id } = params;
+
   const getLesson = /* GraphQL */ `
-    query MyQuery($id: ID!) {
-      getLesson(id: $id) {
-        actionCTA
-        actionExample
-        actionLink
-        actionLinkTitle
-        actionSubhead
-        author
-        content
-        createdAt
-        id
-        links {
-          items {
-            id
-            link
-            name
+    query MyQuery($slug: String!) {
+      lessonsBySlug(slug: $slug) {
+        items {
+          id
+          links {
+            items {
+              name
+              link
+              lessonLinksId
+            }
           }
-        }
-        media
-        mediaType
-        objectives
-        seoImage
-        slides
-        slug
-        sources {
-          items {
-            id
-            link
-            name
-            position
+          author
+          videoLink
+          backdate
+          media
+          mediaType
+          content
+          objectives
+          seoImage
+          slides
+          slug
+          actionCTA
+          actionLink
+          actionSubhead
+          actionExample
+          actionLinkTitle
+          sources {
+            items {
+              name
+              link
+              lessonSourcesId
+              position
+            }
           }
+          subhead
+          title
+          featured
+          related
+          type
+          updatedAt
         }
-        subhead
-        title
-        featured
-        type
-        related
-        updatedAt
       }
     }
   `;
 
+  const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
+  const GRAPHQL_API_KEY = process.env.GRAPHQL_API_KEY;
+
   const variables = {
-    id: params.id, // key is "input" based on the mutation above
+    slug: id, // key is "input" based on the mutation above
   };
 
-  const res = await API.graphql(graphqlOperation(getLesson, variables));
-  const lesson = await res.data.getLesson;
-  return { props: { lesson } };
+  const res = await API.graphql({ query: getLesson, variables: variables });
+  const lesson = res.data.lessonsBySlug.items[0];
+
+  return { props: { lesson }, revalidate: 10 };
 }
+
+export default Page;
