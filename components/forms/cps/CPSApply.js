@@ -332,6 +332,58 @@ const CPSApply = ({ email, free }) => {
           </div>
         )}
       </fieldset>
+
+      <fieldset>
+        <div>
+          <div className='flex justify-between items-center pt-6 text-sm md:text-base'>
+            <legend className='font-semibold leading-6 text-slate-700 font-greycliff text-sm md:text-base'>
+              How would you like to pay for this program?
+            </legend>
+            <span className='leading-6 text-red-500' id='email-optional'>
+              Required
+            </span>
+          </div>
+          <div className='mt-6 gap-4 lg:gap-12 flex flex-wrap items-center text-sm md:text-base'>
+            <div className='flex items-center gap-x-3'>
+              <input
+                {...register('paymentType', { required: true })}
+                id='pay-full'
+                name='paymentType'
+                value='pay-full'
+                type='radio'
+                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+              />
+              <label
+                htmlFor='pay-full'
+                className='block font-medium font-greycliff leading-6 text-slate-900'
+              >
+                Pay in Full
+              </label>
+            </div>
+            <div className='flex items-center gap-x-3'>
+              <input
+                {...register('paymentType', { required: true })}
+                id='pay-installment'
+                name='paymentType'
+                value='pay-installment'
+                type='radio'
+                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+              />
+              <label
+                htmlFor='pay-installment'
+                className='block font-medium font-greycliff leading-6 text-slate-900'
+              >
+                Monthly Subscription
+              </label>
+            </div>
+          </div>
+        </div>
+        {formState.errors.hasOwnProperty('paymentType') && (
+          <div className='text-sm text-red-600 mt-4 mb-2'>
+            Please fill out field.
+          </div>
+        )}
+      </fieldset>
       <div className='flex flex-col gap-3'>
         <div className='flex justify-between'>
           <label

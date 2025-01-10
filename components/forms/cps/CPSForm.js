@@ -62,6 +62,7 @@ const CPSForm = ({ methods, email, free }) => {
             cpsGoals: methods.getValues('cpsGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
             elective: methods.getValues('elective'),
+            paymentType: methods.getValues('paymentType'),
             paymentConfirmation: free
               ? 'WAIVED'
               : methods.getValues('paymentConfirmation'),
@@ -101,6 +102,7 @@ const CPSForm = ({ methods, email, free }) => {
             cpsGoals: methods.getValues('cpsGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
             elective: methods.getValues('elective'),
+            paymentType: methods.getValues('paymentType'),
             paymentConfirmation: free
               ? 'WAIVED'
               : methods.getValues('paymentConfirmation'),
@@ -152,6 +154,7 @@ const CPSForm = ({ methods, email, free }) => {
             cpsGoals: methods.getValues('cpsGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
             elective: methods.getValues('elective'),
+            paymentType: methods.getValues('paymentType'),
             paymentConfirmation: free
               ? 'WAIVED'
               : methods.getValues('paymentConfirmation'),
@@ -193,6 +196,7 @@ const CPSForm = ({ methods, email, free }) => {
             cpsGoals: methods.getValues('cpsGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
             elective: methods.getValues('elective'),
+            paymentType: methods.getValues('paymentType'),
             paymentConfirmation: free
               ? 'WAIVED'
               : methods.getValues('paymentConfirmation'),
@@ -234,6 +238,7 @@ const CPSForm = ({ methods, email, free }) => {
             cpsGoals: methods.getValues('cpsGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
             elective: methods.getValues('elective'),
+            paymentType: methods.getValues('paymentType'),
             paymentConfirmation: free
               ? 'WAIVED'
               : methods.getValues('paymentConfirmation'),
