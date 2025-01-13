@@ -34,45 +34,33 @@ const Page = ({ lesson }) => {
 
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
 
-  const getFeaturedCard = async (type, id) => {
-    if (type === 'CERT') {
-      const featuredCard = await API.graphql({
-        query: getCertificateObject,
-        variables: {
-          id: id,
-        },
-      });
-      setIsFeaturedCard({
-        type: 'CERT',
-        obj: featuredCard.data.getCertificateObject,
-      });
-      console.log(
-        'featuredCard',
-        isFeaturedCard,
-        'isFeaturedCourse',
-        isFeaturedCourse
-      );
-    } else if (type === 'COURSE') {
-      const featuredCard = await API.graphql({
-        query: getLMSCourse,
-        variables: {
-          id: id,
-        },
-      });
-      setIsFeaturedCard({
-        type: 'COURSE',
-        obj: featuredCard.data.getLMSCourse,
-      });
-      console.log(
-        'featuredCard',
-        isFeaturedCard,
-        'isFeaturedCourse',
-        isFeaturedCourse
-      );
-    }
-  };
-
   useEffect(() => {
+    const getFeaturedCard = async (type, id) => {
+      if (type === 'CERT') {
+        const featuredCard = await API.graphql({
+          query: getCertificateObject,
+          variables: {
+            id: id,
+          },
+        });
+        setIsFeaturedCard({
+          type: 'CERT',
+          obj: featuredCard.data.getCertificateObject,
+        });
+      } else if (type === 'COURSE') {
+        const featuredCard = await API.graphql({
+          query: getLMSCourse,
+          variables: {
+            id: id,
+          },
+        });
+        setIsFeaturedCard({
+          type: 'COURSE',
+          obj: featuredCard.data.getLMSCourse,
+        });
+      }
+    };
+
     let featuredData;
     if (lesson && lesson.featured) {
       try {
@@ -178,7 +166,7 @@ const Page = ({ lesson }) => {
                     </div>
                   )}
                   {lesson.mediaType === 'VIDEO' ? (
-                    <div className='flex flex-col md:flex-row md:items-center gap-3 lg:gap-5 font-medium border-b border-b-neutral-900 dark:border-b-white pb-6 px-4 xl:px-0'>
+                    <div className='flex flex-col md:!flex-row md:!items-center gap-3 lg:gap-5 font-medium border-b border-b-neutral-900 dark:border-b-white pb-6 px-4 xl:px-0'>
                       <div className='w-fit font-bold dark:text-white text-sm uppercase bg-brand-yellow/40 px-2 py-4 flex items-center justify-center text-center leading-tighter'>
                         {newDate}
                       </div>
