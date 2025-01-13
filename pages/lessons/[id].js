@@ -12,8 +12,8 @@ import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import '@jmechristian/ps-component-library/dist/style.css';
 import {
   registerCertificateClick,
-  registgerCourseClick,
   getDeviceType,
+  registgerCourseClick,
 } from '../../helpers/api';
 import {
   listLessons,
@@ -165,15 +165,13 @@ const Page = ({ lesson }) => {
   };
 
   const handleCourseClick = async (id, slug, altLink, type) => {
-    const data = {
-      country: location.country,
-      ipAddress: location.ipAddress,
-      device: deviceType,
-      object: id,
-      page: router.asPath,
-      type: 'COURSE-VIEW',
-    };
-    await registgerCourseClick(data);
+    await registgerCourseClick(
+      id,
+      router.asPath,
+      location,
+      slug,
+      'COURSE-VIEW'
+    );
     altLink
       ? router.push(altLink)
       : router.push(
@@ -184,15 +182,13 @@ const Page = ({ lesson }) => {
   };
 
   const handleCoursePurchase = async (id, link) => {
-    const data = {
-      country: location.country,
-      ipAddress: location.ipAddress,
-      device: deviceType,
-      object: id,
-      page: router.asPath,
-      type: 'COURSE-PURCHASE',
-    };
-    await registgerCourseClick(data);
+    await registgerCourseClick(
+      id,
+      router.asPath,
+      location,
+      link,
+      'COURSE-PURCHASE'
+    );
     router.push(link);
   };
 
