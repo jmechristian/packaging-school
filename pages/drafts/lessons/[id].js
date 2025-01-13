@@ -1,5 +1,5 @@
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
 import React, { useMemo, useEffect, useState } from 'react';
 import { MdTrackChanges, MdFastForward, MdScreenShare } from 'react-icons/md';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -10,7 +10,11 @@ import LessonSlides from '../../../components/lessons/LessonSlides';
 import ImageHero from '../../../components/lessons/ImageHero';
 import WiredLessonCard from '../../../components/shared/WiredLessonCard';
 import '@jmechristian/ps-component-library/dist/style.css';
-
+import {
+  registerCertificateClick,
+  getDeviceType,
+  registgerCourseClick,
+} from '../../../helpers/api';
 import {
   listLessons,
   getCertificateObject,
@@ -22,6 +26,9 @@ import AuthorBlock from '../../../components/shared/AuthorBlock';
 import Meta from '../../../components/shared/Meta';
 
 const Page = ({ lesson }) => {
+  const router = useRouter();
+  const deviceType = getDeviceType();
+  const { location } = useSelector((state) => state.auth);
   const newDate =
     lesson &&
     new Date(
@@ -142,6 +149,47 @@ const Page = ({ lesson }) => {
     } else {
       dispatch(toggleSignInModal());
     }
+  };
+
+  const handleCertClick = async (abbreviation, link) => {
+    const data = {
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: router.asPath,
+      type: 'CERTIFICATE-VIEW',
+    };
+    await registerCertificateClick(data);
+    router.push(link);
+  };
+
+  const handleCourseClick = async (id, slug, altLink, type) => {
+    await registgerCourseClick(
+      id,
+      router.asPath,
+      location,
+      slug,
+      'COURSE-VIEW'
+    );
+    altLink
+      ? router.push(altLink)
+      : router.push(
+          `/${
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
+        );
+  };
+
+  const handleCoursePurchase = async (id, link) => {
+    await registgerCourseClick(
+      id,
+      router.asPath,
+      location,
+      link,
+      'COURSE-PURCHASE'
+    );
+    router.push(link);
   };
 
   return (
@@ -305,8 +353,12 @@ const Page = ({ lesson }) => {
                   {isFeaturedCard && isFeaturedCard.type === 'COURSE' ? (
                     <CourseCard
                       course={isFeaturedCard.obj}
-                      cardClickHandler={(id, slug, altLink, type) => {}}
-                      cardPurchaseHandler={(id, link) => {}}
+                      cardClickHandler={(id, slug, altLink, type) => {
+                        handleCourseClick(id, slug, altLink, type);
+                      }}
+                      cardPurchaseHandler={(id, link) => {
+                        handleCoursePurchase(id, link);
+                      }}
                     />
                   ) : isFeaturedCard && isFeaturedCard.type === 'CERT' ? (
                     <CertCard
@@ -316,7 +368,9 @@ const Page = ({ lesson }) => {
                         type,
                         link,
                         applicationLink
-                      ) => {}}
+                      ) => {
+                        handleCertClick(abbreviation, link);
+                      }}
                       purchaseText='Start Today'
                     />
                   ) : (

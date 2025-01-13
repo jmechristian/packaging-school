@@ -10,7 +10,11 @@ import LessonSlides from '../../components/lessons/LessonSlides';
 import ImageHero from '../../components/lessons/ImageHero';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import '@jmechristian/ps-component-library/dist/style.css';
-import { registerCertificateClick, getDeviceType } from '../../helpers/api';
+import {
+  registerCertificateClick,
+  registgerCourseClick,
+  getDeviceType,
+} from '../../helpers/api';
 import {
   listLessons,
   getCertificateObject,
@@ -157,6 +161,38 @@ const Page = ({ lesson }) => {
       type: 'CERTIFICATE-VIEW',
     };
     await registerCertificateClick(data);
+    router.push(link);
+  };
+
+  const handleCourseClick = async (id, slug, altLink, type) => {
+    const data = {
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: id,
+      page: router.asPath,
+      type: 'COURSE-VIEW',
+    };
+    await registgerCourseClick(data);
+    altLink
+      ? router.push(altLink)
+      : router.push(
+          `/${
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
+        );
+  };
+
+  const handleCoursePurchase = async (id, link) => {
+    const data = {
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: id,
+      page: router.asPath,
+      type: 'COURSE-PURCHASE',
+    };
+    await registgerCourseClick(data);
     router.push(link);
   };
 
@@ -321,8 +357,12 @@ const Page = ({ lesson }) => {
                   {isFeaturedCard && isFeaturedCard.type === 'COURSE' ? (
                     <CourseCard
                       course={isFeaturedCard.obj}
-                      cardClickHandler={(id, slug, altLink, type) => {}}
-                      cardPurchaseHandler={(id, link) => {}}
+                      cardClickHandler={(id, slug, altLink, type) => {
+                        handleCourseClick(id, slug, altLink, type);
+                      }}
+                      cardPurchaseHandler={(id, link) => {
+                        handleCoursePurchase(id, link);
+                      }}
                     />
                   ) : isFeaturedCard && isFeaturedCard.type === 'CERT' ? (
                     <CertCard

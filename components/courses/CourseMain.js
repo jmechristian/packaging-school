@@ -21,8 +21,8 @@ const CourseMain = ({ data }) => {
           }}
           key={data.courseId}
         >
-          <div className='grid grid-cols-1 lg:grid-cols-5 '>
-            <div className='flex flex-col gap-16 lg:col-span-3'>
+          <div className='grid grid-cols-1 lg:!grid-cols-5 '>
+            <div className='flex flex-col gap-16 lg:!col-span-3'>
               <CourseIntro
                 id={data.courseId}
                 category={data.category}
@@ -35,7 +35,7 @@ const CourseMain = ({ data }) => {
                 lessons={data.lessons}
                 videos={data.videos}
               />
-              <div className='lg:hidden'>
+              <div className='lg:!hidden'>
                 <CourseInfo
                   embedid={data.preview}
                   price={data.price}
@@ -57,7 +57,7 @@ const CourseMain = ({ data }) => {
                 items={data.objectives}
               />
             </div>
-            <div className='hidden lg:inline-grid lg:col-span-2 pl-8'>
+            <div className='hidden lg:!inline-grid lg:!col-span-2 lg:!pl-8'>
               <CourseInfo
                 embedid={data.preview}
                 videos={data.videos}
