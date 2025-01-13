@@ -17,15 +17,15 @@ const CertificateTableItem = ({ certificate }) => {
 
   const { location } = useSelector((state) => state.auth);
 
-  const cardClickHandler = async (link) => {
+  const cardClickHandler = async (abbreviation, link) => {
     setIsLoading(true);
     await registerCertificateClick({
       country: location.country,
       device: getDeviceType(),
       ipAddress: location.ip,
-      object: 'TABLE',
+      object: abbreviation,
       page: router.asPath,
-      type: certificate.abbreviation,
+      type: 'CERTIFICATE-VIEW',
     });
 
     router.push(link);
@@ -73,7 +73,9 @@ const CertificateTableItem = ({ certificate }) => {
         <div className='hidden lg:grid lg:grid-cols-12 gap-3 divide-x-black w-full px-2 py-2 min-h-[90px]'>
           <div
             className='col-span-4 pl-2 content-center !cursor-pointer'
-            onClick={() => cardClickHandler(certificate.link)}
+            onClick={() =>
+              cardClickHandler(certificate.abbreviation, certificate.link)
+            }
           >
             <div className='grid grid-cols-4'>
               <div className='col-span-1 text-xs content-center'>
@@ -105,7 +107,9 @@ const CertificateTableItem = ({ certificate }) => {
           </div>
           <div
             className='col-span-1 content-center cursor-pointer'
-            onClick={() => cardClickHandler(certificate.link)}
+            onClick={() =>
+              cardClickHandler(certificate.abbreviation, certificate.link)
+            }
           >
             <div className='font-semibold text-sm'>${certificate.price}</div>
           </div>
@@ -117,13 +121,17 @@ const CertificateTableItem = ({ certificate }) => {
             <div className='grid grid-cols-3 w-full gap-3 text-center text-sm'>
               <div
                 className='font-bold content-center'
-                onClick={() => cardClickHandler(certificate.link)}
+                onClick={() =>
+                  cardClickHandler(certificate.abbreviation, certificate.link)
+                }
               >
                 {certificate.hours}
               </div>
               <div
                 className='font-bold content-center'
-                onClick={() => cardClickHandler(certificate.link)}
+                onClick={() =>
+                  cardClickHandler(certificate.abbreviation, certificate.link)
+                }
               >
                 {certificate.courses}
               </div>
