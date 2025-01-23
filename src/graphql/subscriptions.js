@@ -347,6 +347,23 @@ export const onCreateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -380,6 +397,23 @@ export const onUpdateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -410,6 +444,23 @@ export const onDeleteCertificateObject = /* GraphQL */ `
           certificateObjectId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
         }
         nextToken
       }
@@ -596,8 +647,20 @@ export const onCreateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -662,8 +725,20 @@ export const onUpdateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -728,8 +803,20 @@ export const onDeleteLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -1064,6 +1151,54 @@ export const onDeleteCareer = /* GraphQL */ `
       electiveCopy
       freeCopy
       beverageCopy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSBoard = /* GraphQL */ `
+  subscription OnCreateAPSBoard {
+    onCreateAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSBoard = /* GraphQL */ `
+  subscription OnUpdateAPSBoard {
+    onUpdateAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSBoard = /* GraphQL */ `
+  subscription OnDeleteAPSBoard {
+    onDeleteAPSBoard {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
       createdAt
       updatedAt
     }
@@ -1435,6 +1570,402 @@ export const onDeleteAPSSpeaker2024 = /* GraphQL */ `
       id
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onCreateAPSCompany = /* GraphQL */ `
+  subscription OnCreateAPSCompany {
+    onCreateAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSCompany = /* GraphQL */ `
+  subscription OnUpdateAPSCompany {
+    onUpdateAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSCompany = /* GraphQL */ `
+  subscription OnDeleteAPSCompany {
+    onDeleteAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSAddOn2025 = /* GraphQL */ `
+  subscription OnCreateAPSAddOn2025 {
+    onCreateAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSAddOn2025 = /* GraphQL */ `
+  subscription OnUpdateAPSAddOn2025 {
+    onUpdateAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSAddOn2025 = /* GraphQL */ `
+  subscription OnDeleteAPSAddOn2025 {
+    onDeleteAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnCreateAPSRegistrant2025 {
+    onCreateAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const onUpdateAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnUpdateAPSRegistrant2025 {
+    onUpdateAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const onDeleteAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnDeleteAPSRegistrant2025 {
+    onDeleteAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
     }
   }
 `;
@@ -2281,6 +2812,7 @@ export const onCreateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2491,6 +3023,7 @@ export const onUpdateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2701,6 +3234,7 @@ export const onDeleteUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2795,6 +3329,7 @@ export const onCreateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2808,6 +3343,7 @@ export const onUpdateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2821,6 +3357,7 @@ export const onDeleteCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -2899,6 +3436,7 @@ export const onCreateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3035,6 +3573,7 @@ export const onUpdateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3171,6 +3710,7 @@ export const onDeleteCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3307,6 +3847,7 @@ export const onCreateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3358,6 +3899,7 @@ export const onCreateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3444,6 +3986,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3495,6 +4038,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3581,6 +4125,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3632,6 +4177,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3929,6 +4475,7 @@ export const onCreateLMSCourse = /* GraphQL */ `
   subscription OnCreateLMSCourse {
     onCreateLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -3996,6 +4543,7 @@ export const onUpdateLMSCourse = /* GraphQL */ `
   subscription OnUpdateLMSCourse {
     onUpdateLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4063,6 +4611,7 @@ export const onDeleteLMSCourse = /* GraphQL */ `
   subscription OnDeleteLMSCourse {
     onDeleteLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4721,6 +5270,7 @@ export const onCreateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -4754,6 +5304,7 @@ export const onCreateStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -4868,6 +5419,7 @@ export const onUpdateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -4901,6 +5453,7 @@ export const onUpdateStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -5015,6 +5568,7 @@ export const onDeleteStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5048,6 +5602,7 @@ export const onDeleteStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -5162,6 +5717,7 @@ export const onCreateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5283,6 +5839,7 @@ export const onUpdateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5404,6 +5961,7 @@ export const onDeleteInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -8374,6 +8932,93 @@ export const onDeletePurchase = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAnalysis = /* GraphQL */ `
+  subscription OnCreateAnalysis {
+    onCreateAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAnalysis = /* GraphQL */ `
+  subscription OnUpdateAnalysis {
+    onUpdateAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAnalysis = /* GraphQL */ `
+  subscription OnDeleteAnalysis {
+    onDeleteAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAchievement = /* GraphQL */ `
+  subscription OnCreateAchievement {
+    onCreateAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAchievement = /* GraphQL */ `
+  subscription OnUpdateAchievement {
+    onUpdateAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAchievement = /* GraphQL */ `
+  subscription OnDeleteAchievement {
+    onDeleteAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {
@@ -8424,8 +9069,20 @@ export const onCreateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -8482,8 +9139,20 @@ export const onUpdateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -8540,8 +9209,20 @@ export const onDeleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -8581,6 +9262,13 @@ export const onCreateCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -8626,6 +9314,13 @@ export const onUpdateCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8667,6 +9362,13 @@ export const onDeleteCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -9210,6 +9912,7 @@ export const onCreateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9340,6 +10043,7 @@ export const onUpdateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9470,6 +10174,7 @@ export const onDeleteAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9652,6 +10357,216 @@ export const onDeleteAPSSponsor = /* GraphQL */ `
     }
   }
 `;
+export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnCreateApsRegistrantAddOns25 {
+    onCreateApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnUpdateApsRegistrantAddOns25 {
+    onUpdateApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnDeleteApsRegistrantAddOns25 {
+    onDeleteApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateCirriculumCourses = /* GraphQL */ `
   subscription OnCreateCirriculumCourses {
     onCreateCirriculumCourses {
@@ -9672,6 +10587,7 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9737,6 +10653,7 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9802,6 +10719,7 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9855,6 +10773,7 @@ export const onCreateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9926,6 +10845,7 @@ export const onUpdateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9997,6 +10917,7 @@ export const onDeleteCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10068,6 +10989,7 @@ export const onCreateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10153,6 +11075,7 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10238,6 +11161,7 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray

@@ -395,6 +395,23 @@ export const createCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -431,6 +448,23 @@ export const updateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -464,6 +498,23 @@ export const deleteCertificateObject = /* GraphQL */ `
           certificateObjectId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      whereText
+      whatText
+      howText
+      deadline
+      sessions {
+        items {
+          startDate
+          endDate
+          deadline
+          title
+          id
+          createdAt
+          updatedAt
+          certificateObjectSessionsId
         }
         nextToken
       }
@@ -662,8 +713,20 @@ export const createLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -731,8 +794,20 @@ export const updateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -800,8 +875,20 @@ export const deleteLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -1181,6 +1268,63 @@ export const deleteCareer = /* GraphQL */ `
       electiveCopy
       freeCopy
       beverageCopy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSBoard = /* GraphQL */ `
+  mutation CreateAPSBoard(
+    $input: CreateAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    createAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSBoard = /* GraphQL */ `
+  mutation UpdateAPSBoard(
+    $input: UpdateAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    updateAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSBoard = /* GraphQL */ `
+  mutation DeleteAPSBoard(
+    $input: DeleteAPSBoardInput!
+    $condition: ModelAPSBoardConditionInput
+  ) {
+    deleteAPSBoard(input: $input, condition: $condition) {
+      id
+      name
+      title
+      bio
+      company
+      email
+      linkedin
+      profilePic
       createdAt
       updatedAt
     }
@@ -1588,6 +1732,429 @@ export const deleteAPSSpeaker2024 = /* GraphQL */ `
       id
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createAPSCompany = /* GraphQL */ `
+  mutation CreateAPSCompany(
+    $input: CreateAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    createAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSCompany = /* GraphQL */ `
+  mutation UpdateAPSCompany(
+    $input: UpdateAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    updateAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSCompany = /* GraphQL */ `
+  mutation DeleteAPSCompany(
+    $input: DeleteAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    deleteAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSAddOn2025 = /* GraphQL */ `
+  mutation CreateAPSAddOn2025(
+    $input: CreateAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    createAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSAddOn2025 = /* GraphQL */ `
+  mutation UpdateAPSAddOn2025(
+    $input: UpdateAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    updateAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSAddOn2025 = /* GraphQL */ `
+  mutation DeleteAPSAddOn2025(
+    $input: DeleteAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    deleteAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSRegistrant2025 = /* GraphQL */ `
+  mutation CreateAPSRegistrant2025(
+    $input: CreateAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    createAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const updateAPSRegistrant2025 = /* GraphQL */ `
+  mutation UpdateAPSRegistrant2025(
+    $input: UpdateAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    updateAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const deleteAPSRegistrant2025 = /* GraphQL */ `
+  mutation DeleteAPSRegistrant2025(
+    $input: DeleteAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    deleteAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
     }
   }
 `;
@@ -2545,6 +3112,7 @@ export const createUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2758,6 +3326,7 @@ export const updateUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -2971,6 +3540,7 @@ export const deleteUser = /* GraphQL */ `
         payment
         yearGoals
         cpsGoals
+        paymentType
         moreAboutYou
         elective
         optOut
@@ -3068,6 +3638,7 @@ export const createCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3084,6 +3655,7 @@ export const updateCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3100,6 +3672,7 @@ export const deleteCMPMSession = /* GraphQL */ `
       id
       createdAt
       updatedAt
+      certificateObjectSessionsId
     }
   }
 `;
@@ -3181,6 +3754,7 @@ export const createCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3320,6 +3894,7 @@ export const updateCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3459,6 +4034,7 @@ export const deleteCMPMForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3598,6 +4174,7 @@ export const createCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3649,6 +4226,7 @@ export const createCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3738,6 +4316,7 @@ export const updateCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3789,6 +4368,7 @@ export const updateCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -3878,6 +4458,7 @@ export const deleteCPSForm = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -3929,6 +4510,7 @@ export const deleteCPSForm = /* GraphQL */ `
       payment
       yearGoals
       cpsGoals
+      paymentType
       moreAboutYou
       elective
       optOut
@@ -4274,6 +4856,7 @@ export const createLMSCourse = /* GraphQL */ `
   ) {
     createLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4344,6 +4927,7 @@ export const updateLMSCourse = /* GraphQL */ `
   ) {
     updateLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4414,6 +4998,7 @@ export const deleteLMSCourse = /* GraphQL */ `
   ) {
     deleteLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -5102,6 +5687,7 @@ export const createStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5135,6 +5721,7 @@ export const createStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -5252,6 +5839,7 @@ export const updateStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5285,6 +5873,7 @@ export const updateStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -5402,6 +5991,7 @@ export const deleteStudent = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5435,6 +6025,7 @@ export const deleteStudent = /* GraphQL */ `
       courseEnrolled {
         items {
           id
+          thinkificId
           courseId
           category
           categoryArray
@@ -5552,6 +6143,7 @@ export const createInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5676,6 +6268,7 @@ export const updateInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -5800,6 +6393,7 @@ export const deleteInstructor = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -9103,6 +9697,111 @@ export const deletePurchase = /* GraphQL */ `
     }
   }
 `;
+export const createAnalysis = /* GraphQL */ `
+  mutation CreateAnalysis(
+    $input: CreateAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    createAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAnalysis = /* GraphQL */ `
+  mutation UpdateAnalysis(
+    $input: UpdateAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    updateAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAnalysis = /* GraphQL */ `
+  mutation DeleteAnalysis(
+    $input: DeleteAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    deleteAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAchievement = /* GraphQL */ `
+  mutation CreateAchievement(
+    $input: CreateAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    createAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAchievement = /* GraphQL */ `
+  mutation UpdateAchievement(
+    $input: UpdateAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    updateAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAchievement = /* GraphQL */ `
+  mutation DeleteAchievement(
+    $input: DeleteAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    deleteAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!
@@ -9156,8 +9855,20 @@ export const createLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9217,8 +9928,20 @@ export const updateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9278,8 +10001,20 @@ export const deleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9322,6 +10057,13 @@ export const createCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -9370,6 +10112,13 @@ export const updateCertificateByCategory = /* GraphQL */ `
         category {
           nextToken
         }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9414,6 +10163,13 @@ export const deleteCertificateByCategory = /* GraphQL */ `
         categoryArray
         abbreviation
         category {
+          nextToken
+        }
+        whereText
+        whatText
+        howText
+        deadline
+        sessions {
           nextToken
         }
         createdAt
@@ -9987,6 +10743,7 @@ export const createAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -10120,6 +10877,7 @@ export const updateAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -10253,6 +11011,7 @@ export const deleteAPSUser = /* GraphQL */ `
           payment
           yearGoals
           cpsGoals
+          paymentType
           moreAboutYou
           elective
           optOut
@@ -10444,6 +11203,225 @@ export const deleteAPSSponsor = /* GraphQL */ `
     }
   }
 `;
+export const createApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation CreateApsRegistrantAddOns25(
+    $input: CreateApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    createApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation UpdateApsRegistrantAddOns25(
+    $input: UpdateApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    updateApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation DeleteApsRegistrantAddOns25(
+    $input: DeleteApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    deleteApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createCirriculumCourses = /* GraphQL */ `
   mutation CreateCirriculumCourses(
     $input: CreateCirriculumCoursesInput!
@@ -10467,6 +11445,7 @@ export const createCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10535,6 +11514,7 @@ export const updateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10603,6 +11583,7 @@ export const deleteCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10659,6 +11640,7 @@ export const createCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10733,6 +11715,7 @@ export const updateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10807,6 +11790,7 @@ export const deleteCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10881,6 +11865,7 @@ export const createCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10969,6 +11954,7 @@ export const updateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -11057,6 +12043,7 @@ export const deleteCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
