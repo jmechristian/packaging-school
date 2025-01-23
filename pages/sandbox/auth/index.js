@@ -15,7 +15,8 @@ const SSOButton = () => {
         email: 'jamie@packagingschool.com',
         first_name: 'Jamie',
         last_name: 'Christian',
-        return_to: 'localhost:3000', // Optional
+        return_to:
+          'https://packaging-school-git-dev-packaging-school.vercel.app/sandbox/auth', // Optional
       }),
     });
 
