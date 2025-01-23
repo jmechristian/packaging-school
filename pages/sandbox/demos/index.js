@@ -13,7 +13,7 @@ const App = () => {
     const rotationAngle = useRef(0);
 
     // Load textures for the cards
-    const textures = [
+    const textureUrls = [
       '/test-card.png',
       '/test-card.png',
       '/test-card.png',
@@ -23,7 +23,9 @@ const App = () => {
       '/test-card.png',
       '/test-card.png',
       '/test-card.png',
-    ].map((src) => useLoader(TextureLoader, src));
+    ];
+
+    const textures = useLoader(TextureLoader, textureUrls);
 
     // Rotate the group of cards and each individual card
     useFrame(() => {
