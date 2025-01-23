@@ -32,6 +32,8 @@ export default function handler(req, res) {
       return_to ? `&return_to=${encodeURIComponent(return_to)}` : ''
     }`;
 
+    console.log(thinkificUrl);
+
     res.status(200).json({ url: thinkificUrl });
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate JWT' });
