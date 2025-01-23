@@ -28,7 +28,7 @@ export default function handler(req, res) {
     const token = jwt.sign(payload, THINKIFIC_API_KEY);
 
     // Construct the redirect URL
-    const thinkificUrl = `https://packagingschool-dev.thinkific.com/api/sso/v2/sso/jwt?jwt=${token}${
+    const thinkificUrl = `https://packagingschool.thinkific.com/api/sso/v2/sso/jwt?jwt=${token}${
       return_to ? `&return_to=${encodeURIComponent(return_to)}` : ''
     }`;
 
