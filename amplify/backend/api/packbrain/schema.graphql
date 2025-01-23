@@ -92,6 +92,11 @@ type CertificateObject @model @auth(rules: [{ allow: public }]) {
   categoryArray: [String]
   abbreviation: String
   category: [Category] @manyToMany(relationName: "CertificateByCategory")
+  whereText: String
+  whatText: String
+  howText: String
+  deadline: String
+  sessions: [CMPMSession] @hasMany
 }
 
 type Course @model @auth(rules: [{ allow: public }]) {
@@ -139,6 +144,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   lastEditedBy: String
   videoLink: String
   screengrab: String
+  analysis: Analysis @hasOne
 }
 
 type Author @model @auth(rules: [{ allow: public }]) {
@@ -201,6 +207,17 @@ type Career @model @auth(rules: [{ allow: public }]) {
 
 # Autopack Summit
 
+type APSBoard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  title: String
+  bio: String
+  company: String!
+  email: String!
+  linkedin: String
+  profilePic: String
+}
+
 type APS @model @auth(rules: [{ allow: public }]) {
   id: ID!
   Registrants: [User] @manyToMany(relationName: "APSUser")
@@ -260,6 +277,57 @@ type APSSpeaker2024 @model @auth(rules: [{ allow: public }]) {
   headshot: String!
   mediaConsent: Boolean
   privacyConsent: Boolean
+}
+
+type APSCompany @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String! @index(name: "apsCompanyByEmail")
+  apsRegistrants: [APSRegistrant2025] @hasMany
+}
+
+type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
+  title: String!
+  description: String!
+  location: String!
+  date: String!
+  time: String!
+  company: String!
+  altLink: String
+  apsRegistrants: [APSRegistrant2025]
+    @manyToMany(relationName: "apsRegistrantAddOns25")
+}
+
+type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String! @index(name: "apsRegistrantByEmail25")
+  phone: String
+  companyName: APSCompany @hasOne
+  jobTitle: String
+  attendeeType: String
+  termsAccepted: Boolean
+  interests: [String]
+  otherInterest: String
+  speedNetworking: Boolean
+  billingAddressFirstName: String
+  billingAddressLastName: String
+  billingAddressEmail: String
+  billingAddressPhone: String
+  billingAddressStreet: String
+  billingAddressCity: String
+  billingAddressState: String
+  billingAddressZip: String
+  sameAsAttendee: Boolean
+  speakerTopic: String
+  learningObjectives: String
+  totalAmount: Int
+  discountCode: String
+  status: String @default(value: "PENDING")
+  addOns: [APSAddOn2025] @manyToMany(relationName: "apsRegistrantAddOns25")
+  paymentConfirmation: String
+  registrationEmailReceived: Boolean
+  welcomeEmailSent: Boolean
 }
 
 type APSTicket @model @auth(rules: [{ allow: public }]) {
@@ -477,6 +545,7 @@ type CPSForm
   payment: String
   yearGoals: String
   cpsGoals: String
+  paymentType: String
   moreAboutYou: String
   elective: String
   optOut: Boolean
@@ -553,6 +622,7 @@ type LMSCirriculum @model @auth(rules: [{ allow: public }]) {
 
 type LMSCourse @model @auth(rules: [{ allow: public }]) {
   id: ID!
+  thinkificId: String
   courseId: String
   category: CategoryType @default(value: "MATERIALS")
   categoryArray: [String]
@@ -1059,4 +1129,23 @@ type Purchase @model @auth(rules: [{ allow: public }]) {
   paymentLast4: String
   printfulConfirmed: Boolean @default(value: "false")
   printfulOrderId: String
+}
+
+type Analysis @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  wordCount: Int
+  readingTime: String
+  quizQuestion: String
+  quizOptions: [String]
+  quizCorrectAnswer: String
+  lessonId: String
+}
+
+type Achievement @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  courses: [String]
+  coursesRequired: Int
 }

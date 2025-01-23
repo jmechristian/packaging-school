@@ -76,89 +76,20 @@ const Layout = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    const getLessons = /* GraphQL */ `
-      query MyQuery {
-        listLessons(limit: 250, filter: { status: { eq: "PUBLISHED" } }) {
-          items {
-            author
-            backdate
-            content
-            createdAt
-            id
-            objectives
-            screengrab
-            seoImage
-            slug
-            tags {
-              items {
-                tags {
-                  id
-                  tag
-                }
-              }
-            }
-            title
-            type
-            subhead
-          }
-        }
+    if (window.matchMedia) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        dispatch(setDark());
+        document.body.classList.add('dark');
+      } else {
+        dispatch(setLight());
+        document.body.classList.remove('dark');
       }
-    `;
 
-    const getArticles = /* GraphQL */ `
-      query MyQuery {
-        listBlogs {
-          items {
-            id
-            slug
-            title
-            content
-            date
-          }
-        }
+      if (!window.matchMedia) {
+        dispatch(setLight());
       }
-    `;
-
-    const getCourses = async () => {
-      // const courses = await API.graphql({
-      //   query: listLMSCourses,
-      //   variables: { filter: { collection: { contains: 'null' } } },
-      // });
-
-      dispatch(setAllCourses(allCourseBackup));
-    };
-
-    const setLessons = async () => {
-      const lessons = await API.graphql(graphqlOperation(getLessons));
-      dispatch(setAllLessons(lessons.data.listLessons.items));
-    };
-
-    const setArticles = async () => {
-      const articles = await API.graphql(graphqlOperation(getArticles));
-      dispatch(setAllArticles(articles.data.listBlogs.items));
-    };
-    setIsLoading(true);
-    getCourses();
-    setLessons();
-    setArticles();
-    setIsLoading(false);
-  }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (window.matchMedia) {
-  //     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  //       dispatch(setDark());
-  //       document.body.classList.add('dark');
-  //     } else {
-  //       dispatch(setLight());
-  //       document.body.classList.remove('dark');
-  //     }
-
-  //     if (!window.matchMedia) {
-  //       dispatch(setLight());
-  //     }
-  //   }
-  // }, []);
+    }
+  }, []);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
