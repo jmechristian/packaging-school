@@ -12,7 +12,7 @@ export default function handler(req, res) {
   }
 
   // Your Thinkific API Key
-  const THINKIFIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Use an environment variable
+  const THINKIFIC_API_KEY = process.env.THINKIFIC_API_KEY; // Use an environment variable
 
   // Payload for the JWT
   const payload = {
