@@ -12,11 +12,11 @@ const SSOButton = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: 'jamie@packagingschool.com',
-        first_name: 'Jamie',
-        last_name: 'Christian',
+        email: 'julie@packagingschool.com',
+        first_name: 'Julie',
+        last_name: 'Suggs',
         return_to:
-          'https://packaging-school-git-dev-packaging-school.vercel.app/sandbox/auth', // Optional
+          'https://packaging-school-git-dev-packaging-school.vercel.app', // Optional
       }),
     });
 

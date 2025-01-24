@@ -12,7 +12,7 @@ export default function handler(req, res) {
   }
 
   // Your Thinkific API Key
-  const THINKIFIC_API_KEY = process.env.THINKIFIC_API_KEY; // Use an environment variable
+  const THINKIFIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Use an environment variable
 
   // Payload for the JWT
   const payload = {
@@ -31,8 +31,6 @@ export default function handler(req, res) {
     const thinkificUrl = `https://packagingschool.thinkific.com/api/sso/v2/sso/jwt?jwt=${token}${
       return_to ? `&return_to=${encodeURIComponent(return_to)}` : ''
     }`;
-
-    console.log(thinkificUrl);
 
     res.status(200).json({ url: thinkificUrl });
   } catch (error) {
