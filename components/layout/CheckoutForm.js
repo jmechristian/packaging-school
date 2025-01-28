@@ -90,7 +90,9 @@ export default function CheckoutForm({
             <button
               disabled={!stripe || !isValid}
               className={`text-white font-greycliff rounded-lg font-semibold px-6 py-4
-              5 shadow text-lg bg-clemson  border-black border-2`}
+              5 shadow text-lg ${
+                isValid ? 'bg-clemson' : 'bg-slate-500'
+              }  border-black border-2`}
             >
               {isValid ? buttonText : 'Please fill out all form fields'}
             </button>
