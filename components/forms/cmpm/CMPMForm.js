@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { API } from 'aws-amplify';
 import {
   updateCMPMForm,
@@ -15,13 +15,15 @@ import CMPMProfessionalInfo from './CMPMProfessionalInfo';
 import { useRouter } from 'next/router';
 import CMPMGoals from './CMPMGoals';
 import CMPMSessionInfo from './CMPMSessionInfo';
-
+import CMPMPricing from './CMPMPricing';
 const CMPMForm = ({ methods, email, free }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [cookieData, setCookieData] = useState(undefined);
   const [isEmail, setIsEmail] = useState('');
   const router = useRouter();
+
+  const paymentConfirmed = methods.watch('paymentConfirmation');
 
   useEffect(() => {
     if (email) {
@@ -266,7 +268,7 @@ const CMPMForm = ({ methods, email, free }) => {
   const saveHandler = async (e) => {
     e.preventDefault();
     const data = methods.getValues();
-    // console.log(data);
+    console.log(data);
     const rawData = JSON.stringify(data);
     if (user) {
       await sendFormToAWS(data);
@@ -335,24 +337,27 @@ const CMPMForm = ({ methods, email, free }) => {
           Session Info
         </div>
         <CMPMSessionInfo email={isEmail} free={free} />
+        <CMPMPricing
+          email={isEmail}
+          free={free}
+          onSubmit={methods.handleSubmit(onSubmit, onError)}
+          payment={paymentConfirmed}
+        />
       </div>
-      <div className='flex justify-between items-center bg-slate-300 dark:bg-dark-dark px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'>
-        <div className='w-fit font-greycliff font-semibold h-full text-green-600 text-lg'>
+      <div
+        id='submit-button'
+        className='flex justify-between items-center dark:bg-dark-dark bg-gray-300 px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'
+      >
+        <div className='w-fit font-greycliff font-semibold h-full text-green-500 text-lg'>
           {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
         </div>
         <div className='flex gap-2 items-center'>
           <div
-            className='flex cursor-pointer justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-500 font-greycliff font-semibold '
+            className='flex cursor-pointer bg-white/80 justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-700 font-greycliff font-semibold '
             onClick={(e) => saveHandler(e)}
           >
             Save Form
           </div>
-          <button
-            type='submit'
-            className='flex cursor-pointer justify-center items-center w-fit px-6 py-3 rounded-lg bg-clemson font-greycliff font-semibold text-white text-sm md:text-base'
-          >
-            Submit Form
-          </button>
         </div>
       </div>
     </form>

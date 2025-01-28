@@ -436,7 +436,6 @@ const CMPMSessionInfo = ({ email, free }) => {
           </div>
         )}
       </fieldset>
-      <CMPMPricing email={email} free={free} />
     </div>
   );
 };

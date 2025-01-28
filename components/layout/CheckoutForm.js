@@ -3,15 +3,30 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useFormContext } from 'react-hook-form';
 import { MdInfo } from 'react-icons/md';
 
-export default function CheckoutForm({ setConfirmation, email, type }) {
+export default function CheckoutForm({
+  setConfirmation,
+  email,
+  type,
+  onSubmit,
+}) {
   const stripe = useStripe();
   const elements = useElements();
-  const { setValue } = useFormContext();
+  const {
+    setValue,
+    formState: { isValid },
+  } = useFormContext();
 
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isApproved, setApproved] = useState(false);
-  const [buttonText, setButtonText] = useState('Pay Application Fee');
+  const [buttonText, setButtonText] = useState('Pay Application Fee & Submit');
+
+  const handleSubmitFromCheckout = () => {
+    setButtonText('Submitting...');
+    setTimeout(() => {
+      onSubmit();
+    }, 2000);
+  };
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -59,30 +74,31 @@ export default function CheckoutForm({ setConfirmation, email, type }) {
         setLoading(false);
         setApproved(true);
         setValue('paymentConfirmation', result.paymentIntent.id);
+        setConfirmation(result.paymentIntent.id);
         setButtonText('Payment Approved!');
+        handleSubmitFromCheckout();
       }
     }
   };
 
   return (
     <div className='flex flex-col gap-2 w-full max-w-2xl mx-auto'>
-      <div onClick={handleSubmit} className='flex flex-col gap-4'>
+      <div onClick={handleSubmit} className='flex flex-col gap-6'>
         <CardElement className='border border-slate-300 py-2 px-3' />
         <div className='flex flex-col gap-3'>
           <div className='w-full flex-end'>
             <button
-              disabled={!stripe}
-              className={`${
-                isApproved ? 'text-green-600' : 'text-slate-700 '
-              } font-greycliff rounded-lg font-semibold px-4 py-1.5 shadow text-lg bg-white border-black border-2`}
+              disabled={!stripe || !isValid}
+              className={`text-white font-greycliff rounded-lg font-semibold px-6 py-4
+              5 shadow text-lg bg-clemson  border-black border-2`}
             >
-              {buttonText}
+              {isValid ? buttonText : 'Please fill out all form fields'}
             </button>
           </div>
         </div>
       </div>
       <div className='text-red-600 w-full text-center'>{message}</div>
-      <div className='w-full mt-3 max-w-xl mx-auto bg-base-brand/70 rounded-lg px-6 py-2 flex items-center gap-2  text-white font-semibold'>
+      {/* <div className='w-full mt-3 max-w-xl mx-auto bg-base-brand/70 rounded-lg px-6 py-2 flex items-center gap-2  text-white font-semibold'>
         <div>
           <MdInfo color='white' size={'40'} />
         </div>
@@ -90,7 +106,7 @@ export default function CheckoutForm({ setConfirmation, email, type }) {
           Please remain on this page upon payment approval or ensure you hit
           SAVE or SUBMIT below
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
