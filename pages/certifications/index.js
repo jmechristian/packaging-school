@@ -95,7 +95,7 @@ const Index = ({ certificates }) => {
           {/* LOGOS */}
           <div className='!grid !grid-cols-2 md:!grid-cols-3 lg:!grid-cols-5 w-full gap-10 lg:gap-16 px-6 xl:px-0 max-w-7xl mx-auto'>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#cmpm'} passHref shallow>
+              <Link href={'/certifications/get-to-know-cmpm'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/cmpm-black.png'}
                   className='group-hover:invert'
@@ -106,7 +106,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#cmpm'} passHref shallow>
+              <Link href={'/certifications/get-to-know-cps'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/cps-black.png'}
                   width={430}
@@ -117,7 +117,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#apc'} passHref shallow>
+              <Link href={'/certifications/get-to-know-apc'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/aps-black.png'}
                   className='group-hover:invert'
@@ -128,7 +128,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#csp'} passHref shallow>
+              <Link href={'/certifications/get-to-know-csp'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/csp-black.png'}
                   className='group-hover:invert'
@@ -140,7 +140,7 @@ const Index = ({ certificates }) => {
             </div>
             <div className='flex justify-center items-center !col-span-2 md:!col-span-1 hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
               <div className='w-1/2 md:!w-full mx-auto '>
-                <Link href={'#fpc'} passHref shallow>
+                <Link href={'/food-packaging'} passHref shallow>
                   <Image
                     src={'https://packschool.s3.amazonaws.com/fpc-black.png'}
                     className='group-hover:invert'
