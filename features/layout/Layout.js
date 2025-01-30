@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  setAllArticles,
-  setAllCourses,
-  setAllLessons,
-  setPreviewClosed,
-} from '../all_courses/courseFilterSlice';
 import { setLocation, setUser } from '../auth/authslice';
 import { setDark, setLight, toggleSignInModal } from './layoutSlice';
 import CartToggle from './CartToggle';
@@ -24,14 +17,15 @@ import Loading from '../../components/shared/Loading';
 import SignInModal from '../../components/shared/SignInModal';
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
-import { allCourseBackup } from '../../data/allCourseBackup';
+import { handleSSO } from '../../helpers/api';
+import { useRouter } from 'next/router';
 
 const Layout = ({ children }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { searchOpen } = useSelector((state) => state.nav);
-  const { preview } = useSelector((state) => state.course_filter);
   const { location, cart } = useSelector((state) => state.auth);
   const { user } = useUser();
 
@@ -60,6 +54,13 @@ const Layout = ({ children }) => {
           dispatch(setUser(createNewUser.data.createUser));
         }
       };
+      handleSSO({
+        email: user.email,
+        first_name: user.name.split(' ')[0],
+        last_name: user.name.split(' ')[1],
+        return_to:
+          'https://packaging-school-git-dev-packaging-school.vercel.app',
+      });
       getAndSetUser();
     }
 

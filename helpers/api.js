@@ -675,3 +675,30 @@ export const getCPSCourses = async () => {
   });
   return res.data.listLMSCourses.items;
 };
+
+export const handleSSO = async ({
+  email,
+  first_name,
+  last_name,
+  return_to,
+}) => {
+  const response = await fetch('/api/generateJWT', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      return_to: return_to,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    // Redirect the user to the Thinkific SSO URL
+    window.location.href = data.url;
+  } else {
+    console.error(data.error);
+  }
+};
