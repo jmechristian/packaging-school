@@ -7,21 +7,22 @@ import {
   UserIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import {
+  MdLogin,
+  MdVerifiedUser,
+  MdAccountCircle,
+  MdShoppingCart,
+  MdOutlineShoppingCart,
+  MdNotificationsNone,
+  MdOutlineNotifications,
+} from 'react-icons/md';
+
 import Logo from '../../../components/layout/Logo';
 import Link from 'next/link';
 import CertMegaMenu from '../../../components/nav/CertMegaMenu';
 import CertMegaCallout from '../../../components/nav/CertMegaCallout';
 import { showSearch } from '../navigationSlice';
-import { setDark, setLight, toggleSignInModal } from '../../layout/layoutSlice';
-import { setSelectedFilter } from '../../all_courses/courseFilterSlice';
-import {
-  setMenuItem,
-  setSelectedNav,
-  closeMobileMenu,
-} from '../../navigation/navigationSlice';
 import { useDispatch } from 'react-redux';
-import { LightBulbIcon } from '@heroicons/react/24/outline';
-import { MoonIcon, ArrowLongRightIcon } from '@heroicons/react/24/solid';
 import LogoSquare from '../../../components/layout/LogoSquare';
 import { useRouter } from 'next/router';
 import SalesBar from './SalesBar';
@@ -33,21 +34,12 @@ function classNames(...classes) {
 
 export default function HeaderNew() {
   const [open, setOpen] = useState(false);
-  const [isPath, setIsPath] = useState('/');
+
+  const [searchQuery, setSearchQuery] = useState('');
   const { user } = useSelector((state) => state.auth);
-  const { darkMode } = useSelector((state) => state.layout);
   const dispatch = useDispatch();
   const router = useRouter();
   const currentPath = router.asPath;
-
-  const categoryClickHandler = (name, value) => {
-    let newVal = value?.toUpperCase();
-    router.push(`/all_courses?category=${newVal}`);
-    dispatch(setSelectedFilter({ name: name, value: value }));
-    dispatch(closeMobileMenu());
-    dispatch(setMenuItem());
-    dispatch(setSelectedNav(null));
-  };
 
   const navigation = {
     categories: [
@@ -67,7 +59,7 @@ export default function HeaderNew() {
   };
 
   return (
-    (<div className='bg-white'>
+    <div className='bg-white'>
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -125,32 +117,36 @@ export default function HeaderNew() {
                     >
                       <Link
                         href={page.href}
-                        className='-m-2 block p-2 h1-base text-white dark:text-white'>
-
+                        className='-m-2 block p-2 h1-base text-white dark:text-white'
+                      >
                         {page.name}
-
                       </Link>
                     </div>
                   ))}
                 </div>
                 <div className='space-y-2 text-white px-4 py-6'>
                   <div className='flow-root'>
-                    <Link href={'/partner-with-us'} className='-m-2 block p-2 h3-base text-white'>
-                      
-                        Collaborate
-                      
+                    <Link
+                      href={'/partner-with-us'}
+                      className='-m-2 block p-2 h3-base text-white'
+                    >
+                      Collaborate
                     </Link>
                   </div>
                   <div className='flow-root'>
-                    <Link href={'/faq'} className='-m-2 block p-2 h3-base text-white'>
+                    <Link
+                      href={'/faq'}
+                      className='-m-2 block p-2 h3-base text-white'
+                    >
                       FAQs
                     </Link>
                   </div>
                   <div className='flow-root'>
-                    <Link href={'/certificates'} className='-m-2 block p-2 h3-base text-white'>
-                      
-                        Team Learning
-                      
+                    <Link
+                      href={'/certificates'}
+                      className='-m-2 block p-2 h3-base text-white'
+                    >
+                      Team Learning
                     </Link>
                   </div>
                 </div>
@@ -172,10 +168,9 @@ export default function HeaderNew() {
                           ? '/api/auth/logout'
                           : `/api/auth/login?returnTo=${currentPath}`
                       }
-                      className='-m-2 block p-2 font-medium text-neutral-400'>
-
+                      className='-m-2 block p-2 font-medium text-neutral-400'
+                    >
                       {user ? 'Sign Out' : 'Sign In to Packagingschool.com'}
-
                     </Link>
                   </div>
                 </div>
@@ -185,17 +180,12 @@ export default function HeaderNew() {
         </Dialog>
       </Transition.Root>
       <header className='relative'>
-        <nav aria-label='Top'>
-          {/* Top navigation */}
-          <Suspense>
-            <SalesBar />
-          </Suspense>
-
+        <nav aria-label='Top' className='sticky top-0 z-50'>
           {/* Secondary navigation */}
           <div className='bg-white dark:bg-dark-mid'>
             <div className=''>
               <div className='border-b border-t lg:border-t-0 border-slate-400 dark:border-gray-700'>
-                <div className='flex h-24 items-center justify-between px-4 md:px-8 xl:pl-0 mx-auto max-w-7xl'>
+                <div className='flex h-20 items-center justify-between px-4 md:px-8 xl:px-0 mx-auto max-w-7xl'>
                   {/* Logo (lg+) */}
                   <div className='hidden lg:flex lg:items-center'>
                     <Link href='/' legacyBehavior>
@@ -209,47 +199,14 @@ export default function HeaderNew() {
                     {/* Mega menus */}
                     <Popover.Group className='ml-8'>
                       <div className='flex h-full justify-center space-x-8'>
-                        {/* <Popover
-                          key={navigation.categories[0].name}
-                          className='flex'
-                        >
-                          {({ open, close }) => (
-                            <>
-                              <div className='relative flex'>
-                                <Popover.Button
-                                  className={classNames(
-                                    open
-                                      ? 'border-transparent text-base-brand dark:text-white/80'
-                                      : 'border-transparent text-gray-700 dark:hover:text-gray-500 hover:text-gray-800 dark:text-white/80',
-                                    'relative z-10 -mb-px flex items-center border-b-2 pt-px font-semibold font-greycliff transition-colors duration-200 ease-out'
-                                  )}
-                                >
-                                  {navigation.categories[0].name}
-                                </Popover.Button>
-                              </div>
-
-                              <Transition
-                                as={Fragment}
-                                enter='transition ease-out duration-200'
-                                enterFrom='opacity-0'
-                                enterTo='opacity-100'
-                                leave='transition ease-in duration-150'
-                                leaveFrom='opacity-100'
-                                leaveTo='opacity-0'
-                              ></Transition>
-                            </>
-                          )}
-                        </Popover> */}
-
                         {navigation.pages.map((page) => (
                           <Link
                             passHref
                             href={page.href}
                             key={page.name}
-                            className='flex items-center font-semibold font-greycliff text-slate-700 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'>
-
+                            className='flex items-center font-semibold font-greycliff text-slate-700 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'
+                          >
                             {page.name}
-
                           </Link>
                         ))}
                       </div>
@@ -283,61 +240,50 @@ export default function HeaderNew() {
 
                   {/* Logo (lg-) */}
                   <Link href='/' className='lg:hidden'>
-
                     <span className='sr-only'>Packaging School</span>
                     <LogoSquare className='w-6 h-6' />
-
                   </Link>
 
                   <div className='flex flex-1 items-center justify-end'>
                     <div className='flex items-center lg:ml-8'>
-                      <div className='flex space-x-8'>
+                      <div className='flex space-x-5'>
                         <div className='hidden lg:flex'>
-                          <a
-                            href='#'
-                            className='-m-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40'
-                            onClick={() => dispatch(showSearch())}
-                          >
-                            <span className='sr-only'>Search</span>
-                            <MagnifyingGlassIcon
-                              className='h-6 w-6'
-                              aria-hidden='true'
-                            />
-                          </a>
+                          <input
+                            type='text'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder='Search...'
+                            className='px-2 py-1.5 w-72 rounded-md border border-slate-300 dark:border-gray-700 bg-white dark:bg-dark-mid text-slate-700 dark:text-white/80 focus:ring-0 text-sm placeholder:text-sm'
+                          />
                         </div>
 
-                        <div className='flex'>
-                          {user ? (
-                            <Link
-                              href='/profile'
-                              className='-m-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40 cursor-pointer'>
-
-                              <UserIcon
-                                className='h-6 w-6'
-                                aria-hidden='true'
-                              />
-
-                            </Link>
-                          ) : (
-                            <div
-                              className='-m-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40 cursor-pointer'
-                              onClick={() => dispatch(toggleSignInModal())}
-                            >
-                              <UserIcon
-                                className='h-6 w-6'
-                                aria-hidden='true'
-                              />
-                            </div>
-                          )}
+                        <div className='flex items-center gap-1.5'>
+                          <div
+                            className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'
+                            onClick={() =>
+                              router.push(
+                                `/api/auth/login?returnTo=${currentPath}`
+                              )
+                            }
+                          >
+                            {user ? (
+                              <div className='rounded-full ring-2 ring-clemson'>
+                                <MdAccountCircle color='#6B7A8F' size={24} />
+                              </div>
+                            ) : (
+                              <MdLogin color='#6B7A8F' size={24} />
+                            )}
+                          </div>
+                          <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                            <MdOutlineNotifications color='#6B7A8F' size={24} />
+                          </div>
+                          <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                            <MdOutlineShoppingCart color='#6B7A8F' size={24} />
+                          </div>
                         </div>
                       </div>
 
-                      <span
-                        className='mx-4 h-6 w-px bg-slate-200 dark:bg-white/40 lg:mx-6'
-                        aria-hidden='true'
-                      />
-
-                      <div className='flow-root'>
+                      {/* <div className='flow-root'>
                         {darkMode ? (
                           <div
                             onClick={() => {
@@ -360,15 +306,19 @@ export default function HeaderNew() {
                             />
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          {/* Top navigation */}
+          <Suspense>
+            <SalesBar />
+          </Suspense>
         </nav>
       </header>
-    </div>)
+    </div>
   );
 }

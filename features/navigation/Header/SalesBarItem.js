@@ -23,13 +23,13 @@ const SalesBarItem = ({ link, icon, text, zIdx }) => {
   const setIcon = (icon) => {
     switch (icon) {
       case 'ARTICLE':
-        return <BookmarkIcon className='w-5 h-5 fill-amber-400' />;
+        return <BookmarkIcon className='w-4 h-4 fill-amber-400' />;
       case 'COURSE':
-        return <AcademicCapIcon className='w-5 h-5 fill-amber-400' />;
+        return <AcademicCapIcon className='w-4 h-4 fill-amber-400' />;
       case 'NEWS':
-        return <BoltIcon className='w-5 h-5 fill-amber-400' />;
+        return <BoltIcon className='w-4 h-4 fill-amber-400' />;
       default:
-        return <BoltIcon className='w-5 h-5 fill-amber-400' />;
+        return <BoltIcon className='w-4 h-4 fill-amber-400' />;
     }
   };
 
@@ -52,9 +52,7 @@ const SalesBarItem = ({ link, icon, text, zIdx }) => {
   return (
     <div className='flex items-center gap-2 lg:gap-1' onClick={clickHandler}>
       <div>{setIcon(icon)}</div>
-      <div className='text-white text-xs md:!text-base leading-none'>
-        {text}
-      </div>
+      <div className='text-white text-xs md:!text-sm leading-none'>{text}</div>
     </div>
   );
 };

@@ -114,18 +114,18 @@ const Layout = ({ children }) => {
       <div className={`${darkMode ? 'dark' : ''} relative`}>
         <div className='flex flex-col justify-between'>
           {searchOpen && <SearchContainer />}
-          {signInModal && (
+          {/* {signInModal && (
             <SignInModal
               open={signInModal}
               setOpen={() => dispatch(toggleSignInModal())}
             />
-          )}
-          {preview && (
+          )} */}
+          {/* {preview && (
             <CoursePreview close={() => dispatch(setPreviewClosed())} />
-          )}
-          {location && location.country === 'India' && <IndiaBanner />}
+          )} */}
+          {/* {location && location.country === 'India' && <IndiaBanner />} */}
           <Loading />
-          <HeaderNew />
+          <HeaderNew user={user} />
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />
           <main className='relative h-full w-full'>{children}</main>
