@@ -692,14 +692,17 @@ export const handleSSO = async ({ email, first_name, last_name }) => {
 
   console.log('SSO Payload:', payload);
 
-  const response = await fetch('http://localhost:3000/api/generateJWT', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    'https://packaging-school-git-dev-packaging-school.vercel.app/api/generateJWT',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
   const data = await response.json();
 
