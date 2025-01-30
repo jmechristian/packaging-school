@@ -676,29 +676,38 @@ export const getCPSCourses = async () => {
   return res.data.listLMSCourses.items;
 };
 
-export const handleSSO = async ({
-  email,
-  first_name,
-  last_name,
-  return_to,
-}) => {
-  const response = await fetch('/api/generateJWT', {
+export const handleSSO = async ({ email, first_name, last_name }) => {
+  console.log('SSO Parameters:', { email, first_name, last_name });
+
+  if (!email || !first_name || !last_name) {
+    throw new Error('Missing required fields for SSO');
+  }
+
+  const payload = {
+    email,
+    first_name,
+    last_name,
+    return_to: 'https://packaging-school-git-dev-packaging-school.vercel.app',
+  };
+
+  console.log('SSO Payload:', payload);
+
+  const response = await fetch('http://localhost:3000/api/generateJWT', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      first_name: first_name,
-      last_name: last_name,
-      return_to: return_to,
-    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
   });
 
   const data = await response.json();
 
   if (response.ok) {
-    // Redirect the user to the Thinkific SSO URL
-    window.location.href = data.url;
+    // Return the URL instead of redirecting directly
+    return data.url;
   } else {
-    console.error(data.error);
+    console.error('SSO Error:', data.error);
+    throw new Error(data.error || 'SSO request failed');
   }
 };

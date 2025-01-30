@@ -260,11 +260,7 @@ export default function HeaderNew() {
                         <div className='flex items-center gap-1.5'>
                           <div
                             className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'
-                            onClick={() =>
-                              router.push(
-                                `/api/auth/login?returnTo=${currentPath}`
-                              )
-                            }
+                            onClick={() => router.push(`/api/auth/login`)}
                           >
                             {user ? (
                               <div className='rounded-full ring-2 ring-clemson'>

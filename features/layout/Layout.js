@@ -54,13 +54,6 @@ const Layout = ({ children }) => {
           dispatch(setUser(createNewUser.data.createUser));
         }
       };
-      handleSSO({
-        email: user.email,
-        first_name: user.name.split(' ')[0],
-        last_name: user.name.split(' ')[1],
-        return_to:
-          'https://packaging-school-git-dev-packaging-school.vercel.app',
-      });
       getAndSetUser();
     }
 

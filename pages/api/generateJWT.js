@@ -6,6 +6,7 @@ export default function handler(req, res) {
   }
 
   const { email, first_name, last_name, return_to } = req.body;
+  console.log(req.body);
 
   if (!email || !first_name || !last_name) {
     return res.status(400).json({ error: 'Missing required fields' });
