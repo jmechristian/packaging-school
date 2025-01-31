@@ -472,12 +472,12 @@ type User @model @auth(rules: [{ allow: public }]) {
   cmpmForm: CMPMForm @hasOne(fields: ["cmpmFormID"])
   cpsFormID: ID
   cpsForm: CPSForm @hasOne(fields: ["cpsFormID"])
-  instructorId: Instructor @hasOne
-  studentId: Student @hasOne
+  thinkificId: String
   savedCourses: [String]
   savedLessons: [String]
   savedArticles: [String]
   source: String
+  achievements: [Achievement] @manyToMany(relationName: "AchievementUsers")
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {
@@ -622,7 +622,7 @@ type LMSCirriculum @model @auth(rules: [{ allow: public }]) {
 
 type LMSCourse @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  thinkificId: String
+  thinkificId: String! @index(name: "LMSCourseByThinkificId")
   courseId: String
   category: CategoryType @default(value: "MATERIALS")
   categoryArray: [String]
@@ -693,17 +693,9 @@ type LMSQuiz @model @auth(rules: [{ allow: public }]) {
   correctAnswer: String
 }
 
-type Student @model @auth(rules: [{ allow: public }]) {
-  id: ID!
-  studentId: ID
-  student: User @belongsTo(fields: ["studentId"])
-  courseEnrolled: [LMSCourse] @hasMany
-}
-
 type Instructor @model @auth(rules: [{ allow: public }]) {
   id: ID!
   userId: ID
-  instructor: User! @belongsTo(fields: ["userId"])
   coursesTaught: [LMSCourse] @manyToMany(relationName: "CourseInstructors")
 }
 
@@ -1148,4 +1140,5 @@ type Achievement @model @auth(rules: [{ allow: public }]) {
   image: String
   courses: [String]
   coursesRequired: Int
+  users: [User] @manyToMany(relationName: "AchievementUsers")
 }

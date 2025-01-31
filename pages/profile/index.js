@@ -17,12 +17,6 @@ export default withPageAuthRequired(function Page() {
     setIsEditing(!isEditing);
   };
 
-  useEffect(() => {
-    if (!currentUser) {
-      router.push('/');
-    }
-  }, [currentUser]);
-
   return (
     <>
       <Head>

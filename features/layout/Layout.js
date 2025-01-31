@@ -107,7 +107,7 @@ const Layout = ({ children }) => {
       <CookieConsent />
       <div className={`${darkMode ? 'dark' : ''} relative`}>
         <div className='flex flex-col justify-between'>
-          {searchOpen && <SearchContainer />}
+          {/* {searchOpen && <SearchContainer />} */}
           {/* {signInModal && (
             <SignInModal
               open={signInModal}

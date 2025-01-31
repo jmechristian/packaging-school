@@ -676,9 +676,7 @@ export const getCPSCourses = async () => {
   return res.data.listLMSCourses.items;
 };
 
-export const handleSSO = async ({ email, first_name, last_name }) => {
-  console.log('SSO Parameters:', { email, first_name, last_name });
-
+export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
   if (!email || !first_name || !last_name) {
     throw new Error('Missing required fields for SSO');
   }
@@ -689,8 +687,6 @@ export const handleSSO = async ({ email, first_name, last_name }) => {
     last_name,
     return_to: 'https://packaging-school-git-dev-packaging-school.vercel.app',
   };
-
-  console.log('SSO Payload:', payload);
 
   const response = await fetch(
     'https://packaging-school-git-dev-packaging-school.vercel.app/api/generateJWT',

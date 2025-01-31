@@ -258,16 +258,22 @@ export default function HeaderNew() {
                         </div>
 
                         <div className='flex items-center gap-1.5'>
-                          <div
-                            className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'
-                            onClick={() => router.push(`/api/auth/login`)}
-                          >
+                          <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
                             {user ? (
-                              <div className='rounded-full ring-2 ring-clemson'>
+                              <div
+                                className='rounded-full ring-2 ring-clemson'
+                                onClick={() => router.push(`/profile`)}
+                              >
                                 <MdAccountCircle color='#6B7A8F' size={24} />
                               </div>
                             ) : (
-                              <MdLogin color='#6B7A8F' size={24} />
+                              <Link
+                                href={`/api/auth/login?returnTo=${currentPath}`}
+                              >
+                                <div>
+                                  <MdLogin color='#6B7A8F' size={24} />
+                                </div>
+                              </Link>
                             )}
                           </div>
                           <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
