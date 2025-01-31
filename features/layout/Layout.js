@@ -55,7 +55,7 @@ const Layout = ({ children }) => {
       //   }
       // };
       // getAndSetUser();
-      console.log('user', user);
+      dispatch(setUser(user));
     }
 
     // const sub = API.graphql(graphqlOperation(onUpdateUser)).subscribe({
