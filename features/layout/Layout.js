@@ -31,42 +31,43 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      const getAndSetUser = async () => {
-        const currentUser = await API.graphql({
-          query: usersByEmail,
-          variables: { email: user.email },
-        });
+      // const getAndSetUser = async () => {
+      //   const currentUser = await API.graphql({
+      //     query: usersByEmail,
+      //     variables: { email: user.email },
+      //   });
 
-        if (currentUser.data.usersByEmail.items[0]) {
-          dispatch(setUser(currentUser.data.usersByEmail.items[0]));
-        } else {
-          const createNewUser = await API.graphql({
-            query: createUser,
-            variables: {
-              input: {
-                name: user.name,
-                email: user.email,
-                picture: user.picture,
-                source: 'website',
-              },
-            },
-          });
-          dispatch(setUser(createNewUser.data.createUser));
-        }
-      };
-      getAndSetUser();
+      //   if (currentUser.data.usersByEmail.items[0]) {
+      //     dispatch(setUser(currentUser.data.usersByEmail.items[0]));
+      //   } else {
+      //     const createNewUser = await API.graphql({
+      //       query: createUser,
+      //       variables: {
+      //         input: {
+      //           name: user.name,
+      //           email: user.email,
+      //           picture: user.picture,
+      //           source: 'website',
+      //         },
+      //       },
+      //     });
+      //     dispatch(setUser(createNewUser.data.createUser));
+      //   }
+      // };
+      // getAndSetUser();
+      console.log('user', user);
     }
 
-    const sub = API.graphql(graphqlOperation(onUpdateUser)).subscribe({
-      next: ({ value }) => {
-        if (user && value.data.onUpdateUser.email === user.email)
-          dispatch(setUser(value.data.onUpdateUser));
-      },
-    });
+    // const sub = API.graphql(graphqlOperation(onUpdateUser)).subscribe({
+    //   next: ({ value }) => {
+    //     if (user && value.data.onUpdateUser.email === user.email)
+    //       dispatch(setUser(value.data.onUpdateUser));
+    //   },
+    // });
 
-    return () => {
-      sub.unsubscribe();
-    };
+    // return () => {
+    //   sub.unsubscribe();
+    // };
   }, [user]);
 
   useEffect(() => {
