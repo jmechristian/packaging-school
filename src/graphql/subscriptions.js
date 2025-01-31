@@ -647,8 +647,20 @@ export const onCreateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -713,8 +725,20 @@ export const onUpdateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -779,8 +803,20 @@ export const onDeleteLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -1537,6 +1573,402 @@ export const onDeleteAPSSpeaker2024 = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAPSCompany = /* GraphQL */ `
+  subscription OnCreateAPSCompany {
+    onCreateAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSCompany = /* GraphQL */ `
+  subscription OnUpdateAPSCompany {
+    onUpdateAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSCompany = /* GraphQL */ `
+  subscription OnDeleteAPSCompany {
+    onDeleteAPSCompany {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSAddOn2025 = /* GraphQL */ `
+  subscription OnCreateAPSAddOn2025 {
+    onCreateAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSAddOn2025 = /* GraphQL */ `
+  subscription OnUpdateAPSAddOn2025 {
+    onUpdateAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSAddOn2025 = /* GraphQL */ `
+  subscription OnDeleteAPSAddOn2025 {
+    onDeleteAPSAddOn2025 {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnCreateAPSRegistrant2025 {
+    onCreateAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const onUpdateAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnUpdateAPSRegistrant2025 {
+    onUpdateAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const onDeleteAPSRegistrant2025 = /* GraphQL */ `
+  subscription OnDeleteAPSRegistrant2025 {
+    onDeleteAPSRegistrant2025 {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
 export const onCreateAPSTicket = /* GraphQL */ `
   subscription OnCreateAPSTicket {
     onCreateAPSTicket {
@@ -1683,14 +2115,13 @@ export const onCreateCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -1737,14 +2168,13 @@ export const onUpdateCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -1791,14 +2221,13 @@ export const onDeleteCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -2295,14 +2724,13 @@ export const onCreateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2350,14 +2778,13 @@ export const onCreateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2390,78 +2817,23 @@ export const onCreateUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -2506,14 +2878,13 @@ export const onUpdateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2561,14 +2932,13 @@ export const onUpdateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2601,78 +2971,23 @@ export const onUpdateUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -2717,14 +3032,13 @@ export const onDeleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2772,14 +3086,13 @@ export const onDeleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2812,78 +3125,23 @@ export const onDeleteUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -3014,26 +3272,16 @@ export const onCreateCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3151,26 +3399,16 @@ export const onUpdateCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3288,26 +3526,16 @@ export const onDeleteCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3425,26 +3653,16 @@ export const onCreateCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3564,26 +3782,16 @@ export const onUpdateCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3703,26 +3911,16 @@ export const onDeleteCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -4043,6 +4241,7 @@ export const onCreateLMSCourse = /* GraphQL */ `
   subscription OnCreateLMSCourse {
     onCreateLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4102,7 +4301,6 @@ export const onCreateLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -4110,6 +4308,7 @@ export const onUpdateLMSCourse = /* GraphQL */ `
   subscription OnUpdateLMSCourse {
     onUpdateLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4169,7 +4368,6 @@ export const onUpdateLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -4177,6 +4375,7 @@ export const onDeleteLMSCourse = /* GraphQL */ `
   subscription OnDeleteLMSCourse {
     onDeleteLMSCourse {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4236,7 +4435,6 @@ export const onDeleteLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -4759,557 +4957,11 @@ export const onDeleteLMSQuiz = /* GraphQL */ `
     }
   }
 `;
-export const onCreateStudent = /* GraphQL */ `
-  subscription OnCreateStudent {
-    onCreateStudent {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStudent = /* GraphQL */ `
-  subscription OnUpdateStudent {
-    onUpdateStudent {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStudent = /* GraphQL */ `
-  subscription OnDeleteStudent {
-    onDeleteStudent {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateInstructor = /* GraphQL */ `
   subscription OnCreateInstructor {
     onCreateInstructor {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -5330,108 +4982,6 @@ export const onUpdateInstructor = /* GraphQL */ `
     onUpdateInstructor {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -5452,108 +5002,6 @@ export const onDeleteInstructor = /* GraphQL */ `
     onDeleteInstructor {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -8494,6 +7942,123 @@ export const onDeletePurchase = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAnalysis = /* GraphQL */ `
+  subscription OnCreateAnalysis {
+    onCreateAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAnalysis = /* GraphQL */ `
+  subscription OnUpdateAnalysis {
+    onUpdateAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAnalysis = /* GraphQL */ `
+  subscription OnDeleteAnalysis {
+    onDeleteAnalysis {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAchievement = /* GraphQL */ `
+  subscription OnCreateAchievement {
+    onCreateAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAchievement = /* GraphQL */ `
+  subscription OnUpdateAchievement {
+    onUpdateAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAchievement = /* GraphQL */ `
+  subscription OnDeleteAchievement {
+    onDeleteAchievement {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {
@@ -8544,8 +8109,20 @@ export const onCreateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -8602,8 +8179,20 @@ export const onUpdateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -8660,8 +8249,20 @@ export const onDeleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9361,26 +8962,16 @@ export const onCreateAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -9492,26 +9083,16 @@ export const onUpdateAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -9623,26 +9204,16 @@ export const onDeleteAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -9796,6 +9367,564 @@ export const onDeleteAPSSponsor = /* GraphQL */ `
     }
   }
 `;
+export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnCreateApsRegistrantAddOns25 {
+    onCreateApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnUpdateApsRegistrantAddOns25 {
+    onUpdateApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
+  subscription OnDeleteApsRegistrantAddOns25 {
+    onDeleteApsRegistrantAddOns25 {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAchievementUsers = /* GraphQL */ `
+  subscription OnCreateAchievementUsers {
+    onCreateAchievementUsers {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAchievementUsers = /* GraphQL */ `
+  subscription OnUpdateAchievementUsers {
+    onUpdateAchievementUsers {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAchievementUsers = /* GraphQL */ `
+  subscription OnDeleteAchievementUsers {
+    onDeleteAchievementUsers {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateCirriculumCourses = /* GraphQL */ `
   subscription OnCreateCirriculumCourses {
     onCreateCirriculumCourses {
@@ -9816,6 +9945,7 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9854,7 +9984,6 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -9881,6 +10010,7 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9919,7 +10049,6 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -9946,6 +10075,7 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -9984,7 +10114,6 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -9999,6 +10128,7 @@ export const onCreateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10037,7 +10167,6 @@ export const onCreateCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -10070,6 +10199,7 @@ export const onUpdateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10108,7 +10238,6 @@ export const onUpdateCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -10141,6 +10270,7 @@ export const onDeleteCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10179,7 +10309,6 @@ export const onDeleteCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -10212,6 +10341,7 @@ export const onCreateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10250,34 +10380,10 @@ export const onCreateCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }
@@ -10297,6 +10403,7 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10335,34 +10442,10 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }
@@ -10382,6 +10465,7 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10420,34 +10504,10 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }

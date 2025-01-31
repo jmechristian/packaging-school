@@ -713,8 +713,20 @@ export const createLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -782,8 +794,20 @@ export const updateLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -851,8 +875,20 @@ export const deleteLesson = /* GraphQL */ `
       lastEditedBy
       videoLink
       screengrab
+      analysis {
+        id
+        wordCount
+        readingTime
+        quizQuestion
+        quizOptions
+        quizCorrectAnswer
+        lessonId
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
+      lessonAnalysisId
     }
   }
 `;
@@ -1699,6 +1735,429 @@ export const deleteAPSSpeaker2024 = /* GraphQL */ `
     }
   }
 `;
+export const createAPSCompany = /* GraphQL */ `
+  mutation CreateAPSCompany(
+    $input: CreateAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    createAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSCompany = /* GraphQL */ `
+  mutation UpdateAPSCompany(
+    $input: UpdateAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    updateAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSCompany = /* GraphQL */ `
+  mutation DeleteAPSCompany(
+    $input: DeleteAPSCompanyInput!
+    $condition: ModelAPSCompanyConditionInput
+  ) {
+    deleteAPSCompany(input: $input, condition: $condition) {
+      name
+      email
+      apsRegistrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          paymentConfirmation
+          registrationEmailReceived
+          welcomeEmailSent
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSRegistrant2025CompanyNameId
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSAddOn2025 = /* GraphQL */ `
+  mutation CreateAPSAddOn2025(
+    $input: CreateAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    createAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAPSAddOn2025 = /* GraphQL */ `
+  mutation UpdateAPSAddOn2025(
+    $input: UpdateAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    updateAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAPSAddOn2025 = /* GraphQL */ `
+  mutation DeleteAPSAddOn2025(
+    $input: DeleteAPSAddOn2025Input!
+    $condition: ModelAPSAddOn2025ConditionInput
+  ) {
+    deleteAPSAddOn2025(input: $input, condition: $condition) {
+      title
+      description
+      location
+      date
+      time
+      company
+      altLink
+      apsRegistrants {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAPSRegistrant2025 = /* GraphQL */ `
+  mutation CreateAPSRegistrant2025(
+    $input: CreateAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    createAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const updateAPSRegistrant2025 = /* GraphQL */ `
+  mutation UpdateAPSRegistrant2025(
+    $input: UpdateAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    updateAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
+export const deleteAPSRegistrant2025 = /* GraphQL */ `
+  mutation DeleteAPSRegistrant2025(
+    $input: DeleteAPSRegistrant2025Input!
+    $condition: ModelAPSRegistrant2025ConditionInput
+  ) {
+    deleteAPSRegistrant2025(input: $input, condition: $condition) {
+      id
+      firstName
+      lastName
+      email
+      phone
+      companyName {
+        name
+        email
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      jobTitle
+      attendeeType
+      termsAccepted
+      interests
+      otherInterest
+      speedNetworking
+      billingAddressFirstName
+      billingAddressLastName
+      billingAddressEmail
+      billingAddressPhone
+      billingAddressStreet
+      billingAddressCity
+      billingAddressState
+      billingAddressZip
+      sameAsAttendee
+      speakerTopic
+      learningObjectives
+      totalAmount
+      discountCode
+      status
+      addOns {
+        items {
+          id
+          aPSAddOn2025Id
+          aPSRegistrant2025Id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      paymentConfirmation
+      registrationEmailReceived
+      welcomeEmailSent
+      createdAt
+      updatedAt
+      aPSCompanyApsRegistrantsId
+      aPSRegistrant2025CompanyNameId
+    }
+  }
+`;
 export const createAPSTicket = /* GraphQL */ `
   mutation CreateAPSTicket(
     $input: CreateAPSTicketInput!
@@ -1875,14 +2334,13 @@ export const createCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -1932,14 +2390,13 @@ export const updateCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -1989,14 +2446,13 @@ export const deleteCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         nextToken
       }
@@ -2568,14 +3024,13 @@ export const createUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2623,14 +3078,13 @@ export const createUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2663,78 +3117,23 @@ export const createUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -2782,14 +3181,13 @@ export const updateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2837,14 +3235,13 @@ export const updateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -2877,78 +3274,23 @@ export const updateUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -2996,14 +3338,13 @@ export const deleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -3051,14 +3392,13 @@ export const deleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
+          thinkificId
           savedCourses
           savedLessons
           savedArticles
           source
           createdAt
           updatedAt
-          userInstructorIdId
-          userStudentIdId
         }
         firstName
         lastName
@@ -3091,78 +3431,23 @@ export const deleteUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      instructorId {
-        id
-        userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        coursesTaught {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentId {
-        id
-        studentId
-        student {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
-        courseEnrolled {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      thinkificId
       savedCourses
       savedLessons
       savedArticles
       source
+      achievements {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      userInstructorIdId
-      userStudentIdId
     }
   }
 `;
@@ -3305,26 +3590,16 @@ export const createCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3445,26 +3720,16 @@ export const updateCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3585,26 +3850,16 @@ export const deleteCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3725,26 +3980,16 @@ export const createCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -3867,26 +4112,16 @@ export const updateCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -4009,26 +4244,16 @@ export const deleteCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       firstName
       lastName
@@ -4397,6 +4622,7 @@ export const createLMSCourse = /* GraphQL */ `
   ) {
     createLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4456,7 +4682,6 @@ export const createLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -4467,6 +4692,7 @@ export const updateLMSCourse = /* GraphQL */ `
   ) {
     updateLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4526,7 +4752,6 @@ export const updateLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -4537,6 +4762,7 @@ export const deleteLMSCourse = /* GraphQL */ `
   ) {
     deleteLMSCourse(input: $input, condition: $condition) {
       id
+      thinkificId
       courseId
       category
       categoryArray
@@ -4596,7 +4822,6 @@ export const deleteLMSCourse = /* GraphQL */ `
       stripeLink
       createdAt
       updatedAt
-      studentCourseEnrolledId
     }
   }
 `;
@@ -5146,459 +5371,6 @@ export const deleteLMSQuiz = /* GraphQL */ `
     }
   }
 `;
-export const createStudent = /* GraphQL */ `
-  mutation CreateStudent(
-    $input: CreateStudentInput!
-    $condition: ModelStudentConditionInput
-  ) {
-    createStudent(input: $input, condition: $condition) {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStudent = /* GraphQL */ `
-  mutation UpdateStudent(
-    $input: UpdateStudentInput!
-    $condition: ModelStudentConditionInput
-  ) {
-    updateStudent(input: $input, condition: $condition) {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStudent = /* GraphQL */ `
-  mutation DeleteStudent(
-    $input: DeleteStudentInput!
-    $condition: ModelStudentConditionInput
-  ) {
-    deleteStudent(input: $input, condition: $condition) {
-      id
-      studentId
-      student {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
-      courseEnrolled {
-        items {
-          id
-          courseId
-          category
-          categoryArray
-          type
-          price
-          hours
-          lessons
-          videos
-          preview
-          seoImage
-          infoSheet
-          title
-          subheadline
-          what_learned
-          objectives
-          link
-          trial_link
-          percentComplete
-          slug
-          collection
-          demo
-          partOf
-          altLink
-          shortDescription
-          subscriptionLink
-          subscriptionPrice
-          stripeLink
-          createdAt
-          updatedAt
-          studentCourseEnrolledId
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createInstructor = /* GraphQL */ `
   mutation CreateInstructor(
     $input: CreateInstructorInput!
@@ -5607,108 +5379,6 @@ export const createInstructor = /* GraphQL */ `
     createInstructor(input: $input, condition: $condition) {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -5732,108 +5402,6 @@ export const updateInstructor = /* GraphQL */ `
     updateInstructor(input: $input, condition: $condition) {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -5857,108 +5425,6 @@ export const deleteInstructor = /* GraphQL */ `
     deleteInstructor(input: $input, condition: $condition) {
       id
       userId
-      instructor {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        createdAt
-        updatedAt
-        userInstructorIdId
-        userStudentIdId
-      }
       coursesTaught {
         items {
           id
@@ -9232,6 +8698,141 @@ export const deletePurchase = /* GraphQL */ `
     }
   }
 `;
+export const createAnalysis = /* GraphQL */ `
+  mutation CreateAnalysis(
+    $input: CreateAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    createAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAnalysis = /* GraphQL */ `
+  mutation UpdateAnalysis(
+    $input: UpdateAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    updateAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAnalysis = /* GraphQL */ `
+  mutation DeleteAnalysis(
+    $input: DeleteAnalysisInput!
+    $condition: ModelAnalysisConditionInput
+  ) {
+    deleteAnalysis(input: $input, condition: $condition) {
+      id
+      wordCount
+      readingTime
+      quizQuestion
+      quizOptions
+      quizCorrectAnswer
+      lessonId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAchievement = /* GraphQL */ `
+  mutation CreateAchievement(
+    $input: CreateAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    createAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAchievement = /* GraphQL */ `
+  mutation UpdateAchievement(
+    $input: UpdateAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    updateAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAchievement = /* GraphQL */ `
+  mutation DeleteAchievement(
+    $input: DeleteAchievementInput!
+    $condition: ModelAchievementConditionInput
+  ) {
+    deleteAchievement(input: $input, condition: $condition) {
+      id
+      title
+      description
+      image
+      courses
+      coursesRequired
+      users {
+        items {
+          id
+          userId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!
@@ -9285,8 +8886,20 @@ export const createLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9346,8 +8959,20 @@ export const updateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -9407,8 +9032,20 @@ export const deleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
+        lessonAnalysisId
       }
       createdAt
       updatedAt
@@ -10147,26 +9784,16 @@ export const createAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -10281,26 +9908,16 @@ export const updateAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -10415,26 +10032,16 @@ export const deleteAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        instructorId {
-          id
-          userId
-          createdAt
-          updatedAt
-        }
-        studentId {
-          id
-          studentId
-          createdAt
-          updatedAt
-        }
+        thinkificId
         savedCourses
         savedLessons
         savedArticles
         source
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
-        userInstructorIdId
-        userStudentIdId
       }
       createdAt
       updatedAt
@@ -10597,6 +10204,582 @@ export const deleteAPSSponsor = /* GraphQL */ `
     }
   }
 `;
+export const createApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation CreateApsRegistrantAddOns25(
+    $input: CreateApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    createApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation UpdateApsRegistrantAddOns25(
+    $input: UpdateApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    updateApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteApsRegistrantAddOns25 = /* GraphQL */ `
+  mutation DeleteApsRegistrantAddOns25(
+    $input: DeleteApsRegistrantAddOns25Input!
+    $condition: ModelApsRegistrantAddOns25ConditionInput
+  ) {
+    deleteApsRegistrantAddOns25(input: $input, condition: $condition) {
+      id
+      aPSAddOn2025Id
+      aPSRegistrant2025Id
+      aPSAddOn2025 {
+        title
+        description
+        location
+        date
+        time
+        company
+        altLink
+        apsRegistrants {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      aPSRegistrant2025 {
+        id
+        firstName
+        lastName
+        email
+        phone
+        companyName {
+          name
+          email
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        paymentConfirmation
+        registrationEmailReceived
+        welcomeEmailSent
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSRegistrant2025CompanyNameId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAchievementUsers = /* GraphQL */ `
+  mutation CreateAchievementUsers(
+    $input: CreateAchievementUsersInput!
+    $condition: ModelAchievementUsersConditionInput
+  ) {
+    createAchievementUsers(input: $input, condition: $condition) {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAchievementUsers = /* GraphQL */ `
+  mutation UpdateAchievementUsers(
+    $input: UpdateAchievementUsersInput!
+    $condition: ModelAchievementUsersConditionInput
+  ) {
+    updateAchievementUsers(input: $input, condition: $condition) {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAchievementUsers = /* GraphQL */ `
+  mutation DeleteAchievementUsers(
+    $input: DeleteAchievementUsersInput!
+    $condition: ModelAchievementUsersConditionInput
+  ) {
+    deleteAchievementUsers(input: $input, condition: $condition) {
+      id
+      userId
+      achievementId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        cell
+        picture
+        linkedin
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createCirriculumCourses = /* GraphQL */ `
   mutation CreateCirriculumCourses(
     $input: CreateCirriculumCoursesInput!
@@ -10620,6 +10803,7 @@ export const createCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10658,7 +10842,6 @@ export const createCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -10688,6 +10871,7 @@ export const updateCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10726,7 +10910,6 @@ export const updateCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -10756,6 +10939,7 @@ export const deleteCirriculumCourses = /* GraphQL */ `
       }
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10794,7 +10978,6 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       createdAt
       updatedAt
@@ -10812,6 +10995,7 @@ export const createCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10850,7 +11034,6 @@ export const createCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -10886,6 +11069,7 @@ export const updateCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10924,7 +11108,6 @@ export const updateCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -10960,6 +11143,7 @@ export const deleteCourseLessons = /* GraphQL */ `
       lMSLessonId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -10998,7 +11182,6 @@ export const deleteCourseLessons = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       lMSLesson {
         id
@@ -11034,6 +11217,7 @@ export const createCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -11072,34 +11256,10 @@ export const createCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }
@@ -11122,6 +11282,7 @@ export const updateCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -11160,34 +11321,10 @@ export const updateCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }
@@ -11210,6 +11347,7 @@ export const deleteCourseInstructors = /* GraphQL */ `
       instructorId
       lMSCourse {
         id
+        thinkificId
         courseId
         category
         categoryArray
@@ -11248,34 +11386,10 @@ export const deleteCourseInstructors = /* GraphQL */ `
         stripeLink
         createdAt
         updatedAt
-        studentCourseEnrolledId
       }
       instructor {
         id
         userId
-        instructor {
-          id
-          name
-          title
-          company
-          email
-          office
-          bio
-          cell
-          picture
-          linkedin
-          companyID
-          cmpmFormID
-          cpsFormID
-          savedCourses
-          savedLessons
-          savedArticles
-          source
-          createdAt
-          updatedAt
-          userInstructorIdId
-          userStudentIdId
-        }
         coursesTaught {
           nextToken
         }
