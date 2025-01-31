@@ -32,11 +32,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function HeaderNew({ user }) {
+export default function HeaderNew() {
   const [open, setOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
-  // const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const router = useRouter();
