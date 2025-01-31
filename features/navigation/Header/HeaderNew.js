@@ -1,6 +1,5 @@
-import { Fragment, Suspense, useState } from 'react';
+import { Fragment, Suspense, useState, useMemo } from 'react';
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react';
-import { useSelector } from 'react-redux';
 import {
   Bars3Icon,
   MagnifyingGlassIcon,
@@ -22,7 +21,7 @@ import Link from 'next/link';
 import CertMegaMenu from '../../../components/nav/CertMegaMenu';
 import CertMegaCallout from '../../../components/nav/CertMegaCallout';
 import { showSearch } from '../navigationSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LogoSquare from '../../../components/layout/LogoSquare';
 import { useRouter } from 'next/router';
 import SalesBar from './SalesBar';
@@ -43,6 +42,10 @@ export default function HeaderNew() {
   const currentPath = router.asPath;
 
   console.log('user', user);
+
+  const isUser = useMemo(() => {
+    return user && user.email;
+  }, [user]);
 
   const navigation = {
     categories: [
@@ -262,7 +265,7 @@ export default function HeaderNew() {
 
                         <div className='flex items-center gap-1.5'>
                           <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
-                            {user ? (
+                            {isUser ? (
                               <div
                                 className='rounded-full ring-2 ring-clemson'
                                 onClick={() => router.push(`/profile`)}
