@@ -5,23 +5,49 @@ console.log('Auth0 API route initialized'); // Log when the API route is loaded
 
 export default handleAuth({
   async callback(req, res) {
+    console.log('Callback endpoint hit'); // Log when callback is triggered
     try {
       await handleCallback(req, res, {
         afterCallback: async (req, res, session) => {
-          // Log the user information after successful authentication
-          if (session?.user) {
-            console.log('User session:', session.user);
+          console.log('afterCallback triggered'); // Log when afterCallback starts
+
+          if (!session?.user) {
+            console.log('No user in session');
+            return session;
+          }
+
+          try {
+            console.log('Processing user:', {
+              email: session.user.email,
+              given_name: session.user.given_name,
+              family_name: session.user.family_name,
+            });
+
+            // Handle potentially missing name fields
+            const firstName =
+              session.user.given_name || session.user.name?.split(' ')[0] || '';
+            const lastName =
+              session.user.family_name ||
+              session.user.name?.split(' ').slice(1).join(' ') ||
+              '';
+
             const redirectUrl = await handleSSO({
               email: session.user.email,
-              first_name: session.user.given_name,
-              last_name: session.user.family_name,
+              first_name: firstName,
+              last_name: lastName,
               returnTo:
                 'https://packaging-school-git-dev-packaging-school.vercel.app',
             });
-            // Perform the redirect from the server side
-            res.redirect(redirectUrl);
+
+            console.log('SSO redirect URL generated:', redirectUrl);
+            session.user.redirectUrl = redirectUrl;
+            console.log('Updated session:', session);
+            return session;
+          } catch (ssoError) {
+            console.error('SSO handling error:', ssoError);
+            // Still return session even if SSO fails
+            return session;
           }
-          return session;
         },
       });
     } catch (error) {

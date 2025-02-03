@@ -26,47 +26,18 @@ const Layout = ({ children }) => {
   const { user } = useUser();
 
   useEffect(() => {
-    if (user) {
-      // const getAndSetUser = async () => {
-      //   const currentUser = await API.graphql({
-      //     query: usersByEmail,
-      //     variables: { email: user.email },
-      //   });
+    if (user?.redirectUrl) {
+      console.log('Redirecting to SSO URL:', user.redirectUrl);
+      window.location.href = user.redirectUrl;
+      return;
+    }
 
-      //   if (currentUser.data.usersByEmail.items[0]) {
-      //     dispatch(setUser(currentUser.data.usersByEmail.items[0]));
-      //   } else {
-      //     const createNewUser = await API.graphql({
-      //       query: createUser,
-      //       variables: {
-      //         input: {
-      //           name: user.name,
-      //           email: user.email,
-      //           picture: user.picture,
-      //           source: 'website',
-      //         },
-      //       },
-      //     });
-      //     dispatch(setUser(createNewUser.data.createUser));
-      //   }
-      // };
-      // getAndSetUser();
+    if (user) {
       dispatch(setUser(user));
-      console.log('user', user);
+      console.log('User set in Redux');
     } else {
       console.log('No user found');
     }
-
-    // const sub = API.graphql(graphqlOperation(onUpdateUser)).subscribe({
-    //   next: ({ value }) => {
-    //     if (user && value.data.onUpdateUser.email === user.email)
-    //       dispatch(setUser(value.data.onUpdateUser));
-    //   },
-    // });
-
-    // return () => {
-    //   sub.unsubscribe();
-    // };
   }, [user]);
 
   // useEffect(() => {
