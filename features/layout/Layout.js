@@ -30,14 +30,11 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (!userIsLoading && user) {
       console.log('🔍 Current user state:', user);
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
 
-      // Check if we're already on the returnTo URL to prevent loops
-      const isOnReturnUrl =
-        window.location.origin ===
-        'https://packaging-school-git-dev-packaging-school.vercel.app';
-
-      if (user.ssoRedirectUrl && !isOnReturnUrl) {
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
         console.log('🔄 Found SSO redirect URL:', user.ssoRedirectUrl);
+        sessionStorage.setItem('ssoComplete', 'true');
         setTimeout(() => {
           window.location.href = user.ssoRedirectUrl;
         }, 100);
@@ -48,6 +45,13 @@ const Layout = ({ children }) => {
       console.log('👤 User set in Redux');
     }
   }, [user, userIsLoading]);
+
+  // Clear SSO state when component unmounts
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('ssoComplete');
+    };
+  }, []);
 
   // useEffect(() => {
   //   if (window.matchMedia) {
@@ -84,9 +88,8 @@ const Layout = ({ children }) => {
 
   // Show loading state while we process
   if (
-    userIsLoading ||
-    (user?.ssoRedirectUrl &&
-      !window.location.origin.includes('packaging-school'))
+    isLoading ||
+    (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete'))
   ) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
