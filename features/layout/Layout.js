@@ -29,20 +29,18 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (!userIsLoading && user) {
-      // Check for ssoRedirectUrl in the session
+      console.log('🔍 Current user state:', user);
+
       if (user.ssoRedirectUrl) {
-        const redirectUrl = user.ssoRedirectUrl;
-        // Clear the URL from session storage to prevent loops
-        window.sessionStorage.setItem('ssoComplete', 'true');
-        window.location.href = redirectUrl;
+        console.log('🔄 Found SSO redirect URL:', user.ssoRedirectUrl);
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
         return;
       }
 
-      // If no redirect needed or already completed SSO, set up the user
-      if (!window.sessionStorage.getItem('ssoComplete')) {
-        dispatch(setUser(user));
-        console.log('User set in Redux');
-      }
+      dispatch(setUser(user));
+      console.log('👤 User set in Redux');
     }
   }, [user, userIsLoading]);
 
@@ -79,8 +77,8 @@ const Layout = ({ children }) => {
       .catch((error) => console.log(error));
   }, [dispatch]);
 
-  // Only show loading state during initial load or actual redirect
-  if (userIsLoading) {
+  // Show loading state while we process
+  if (userIsLoading || user?.ssoRedirectUrl) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>

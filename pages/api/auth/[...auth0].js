@@ -40,8 +40,8 @@ export default handleAuth({
             });
 
             console.log('SSO redirect URL generated:', redirectUrl);
-            // Store the redirect URL in a separate session property
-            session.ssoRedirectUrl = redirectUrl; // Changed from session.user.redirectUrl
+            // Store the redirect URL in the user object
+            session.user.ssoRedirectUrl = redirectUrl;
             console.log('Updated session:', session);
             return session;
           } catch (ssoError) {
