@@ -52,6 +52,9 @@ const Layout = ({ children }) => {
       // };
       // getAndSetUser();
       dispatch(setUser(user));
+      console.log('user', user);
+    } else {
+      console.log('No user found');
     }
 
     // const sub = API.graphql(graphqlOperation(onUpdateUser)).subscribe({
