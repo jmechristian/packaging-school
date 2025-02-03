@@ -28,25 +28,22 @@ const Layout = ({ children }) => {
   const [hasProcessedUser, setHasProcessedUser] = useState(false);
 
   useEffect(() => {
-    // Skip if still loading or already processed
-    if (userIsLoading || hasProcessedUser) return;
+    if (!userIsLoading && user) {
+      // Check for ssoRedirectUrl in the session
+      if (user.ssoRedirectUrl) {
+        const redirectUrl = user.ssoRedirectUrl;
+        // Clear the URL from session storage to prevent loops
+        window.sessionStorage.setItem('ssoComplete', 'true');
+        window.location.href = redirectUrl;
+        return;
+      }
 
-    if (user?.redirectUrl && !isRedirecting) {
-      setIsRedirecting(true);
-      console.log('Redirecting to SSO URL:', user.redirectUrl);
-      // Add a small delay to prevent potential race conditions
-      setTimeout(() => {
-        window.location.href = user.redirectUrl;
-      }, 100);
-      return;
+      // If no redirect needed or already completed SSO, set up the user
+      if (!window.sessionStorage.getItem('ssoComplete')) {
+        dispatch(setUser(user));
+        console.log('User set in Redux');
+      }
     }
-
-    if (user && !user.redirectUrl) {
-      dispatch(setUser(user));
-      console.log('User set in Redux');
-    }
-
-    setHasProcessedUser(true);
   }, [user, userIsLoading]);
 
   // useEffect(() => {
@@ -83,7 +80,7 @@ const Layout = ({ children }) => {
   }, [dispatch]);
 
   // Only show loading state during initial load or actual redirect
-  if ((userIsLoading && !hasProcessedUser) || isRedirecting) {
+  if (userIsLoading) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
