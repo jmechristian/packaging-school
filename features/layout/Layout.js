@@ -31,7 +31,12 @@ const Layout = ({ children }) => {
     if (!userIsLoading && user) {
       console.log('🔍 Current user state:', user);
 
-      if (user.ssoRedirectUrl) {
+      // Check if we're already on the returnTo URL to prevent loops
+      const isOnReturnUrl =
+        window.location.origin ===
+        'https://packaging-school-git-dev-packaging-school.vercel.app';
+
+      if (user.ssoRedirectUrl && !isOnReturnUrl) {
         console.log('🔄 Found SSO redirect URL:', user.ssoRedirectUrl);
         setTimeout(() => {
           window.location.href = user.ssoRedirectUrl;
@@ -78,7 +83,11 @@ const Layout = ({ children }) => {
   }, [dispatch]);
 
   // Show loading state while we process
-  if (userIsLoading || user?.ssoRedirectUrl) {
+  if (
+    userIsLoading ||
+    (user?.ssoRedirectUrl &&
+      !window.location.origin.includes('packaging-school'))
+  ) {
     return (
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
