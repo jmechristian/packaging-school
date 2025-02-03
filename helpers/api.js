@@ -685,7 +685,7 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
     email,
     first_name,
     last_name,
-    return_to: 'https://packaging-school-git-dev-packaging-school.vercel.app',
+    return_to: returnTo,
   };
 
   const response = await fetch(

@@ -11,13 +11,15 @@ export default handleAuth({
           // Log the user information after successful authentication
           if (session?.user) {
             console.log('User session:', session.user);
-            // const redirectUrl = await handleSSO({
-            //   email: session.user.email,
-            //   first_name: session.user.given_name,
-            //   last_name: session.user.family_name,
-            // });
-            // // Perform the redirect from the server side
-            // res.redirect(redirectUrl);
+            const redirectUrl = await handleSSO({
+              email: session.user.email,
+              first_name: session.user.given_name,
+              last_name: session.user.family_name,
+              returnTo:
+                'https://packaging-school-git-dev-packaging-school.vercel.app',
+            });
+            // Perform the redirect from the server side
+            res.redirect(redirectUrl);
           }
           return session;
         },
