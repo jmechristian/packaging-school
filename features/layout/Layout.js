@@ -23,22 +23,31 @@ const Layout = ({ children }) => {
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { searchOpen } = useSelector((state) => state.nav);
   const { location, cart } = useSelector((state) => state.auth);
-  const { user } = useUser();
+  const { user, isLoading: userIsLoading } = useUser();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [hasProcessedUser, setHasProcessedUser] = useState(false);
 
   useEffect(() => {
-    if (user?.redirectUrl) {
+    // Skip if still loading or already processed
+    if (userIsLoading || hasProcessedUser) return;
+
+    if (user?.redirectUrl && !isRedirecting) {
+      setIsRedirecting(true);
       console.log('Redirecting to SSO URL:', user.redirectUrl);
-      window.location.href = user.redirectUrl;
+      // Add a small delay to prevent potential race conditions
+      setTimeout(() => {
+        window.location.href = user.redirectUrl;
+      }, 100);
       return;
     }
 
-    if (user) {
+    if (user && !user.redirectUrl) {
       dispatch(setUser(user));
       console.log('User set in Redux');
-    } else {
-      console.log('No user found');
     }
-  }, [user]);
+
+    setHasProcessedUser(true);
+  }, [user, userIsLoading]);
 
   // useEffect(() => {
   //   if (window.matchMedia) {
@@ -72,6 +81,18 @@ const Layout = ({ children }) => {
       })
       .catch((error) => console.log(error));
   }, [dispatch]);
+
+  // Only show loading state during initial load or actual redirect
+  if ((userIsLoading && !hasProcessedUser) || isRedirecting) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center'>
+          <div className='spinner' />
+          <p className='mt-2'>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
