@@ -41,8 +41,6 @@ export default function HeaderNew() {
   const router = useRouter();
   const currentPath = router.asPath;
 
-  console.log('user', user);
-
   const isUser = useMemo(() => {
     return user && user.email;
   }, [user]);
@@ -188,7 +186,7 @@ export default function HeaderNew() {
       <header className='relative'>
         <nav aria-label='Top' className='sticky top-0 z-50'>
           {/* Secondary navigation */}
-          <div className='bg-white dark:bg-dark-mid'>
+          <div className='bg-white dark:bg-dark-dark'>
             <div className=''>
               <div className='border-b border-t lg:border-t-0 border-slate-400 dark:border-gray-700'>
                 <div className='flex h-20 items-center justify-between px-4 md:px-8 xl:px-0 mx-auto max-w-7xl'>

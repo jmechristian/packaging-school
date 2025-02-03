@@ -2,22 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLocation, setUser } from '../auth/authslice';
-import { setDark, setLight, toggleSignInModal } from './layoutSlice';
+
 import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { API, graphqlOperation } from 'aws-amplify';
-import CoursePreview from '../../components/course-card/CoursePreview';
-import { usersByEmail, listLMSCourses } from '../../src/graphql/queries';
-import { createUser, updateLMSCourse } from '../../src/graphql/mutations';
-import { onUpdateUser } from '../../src/graphql/subscriptions';
+
 import HeaderNew from '../navigation/Header/HeaderNew';
-import SearchContainer from '../../components/search/SearchContainer';
+
 import Loading from '../../components/shared/Loading';
-import SignInModal from '../../components/shared/SignInModal';
+
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
-import { handleSSO } from '../../helpers/api';
+
 import { useRouter } from 'next/router';
 
 const Layout = ({ children }) => {
@@ -70,21 +66,21 @@ const Layout = ({ children }) => {
     // };
   }, [user]);
 
-  useEffect(() => {
-    if (window.matchMedia) {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        dispatch(setDark());
-        document.body.classList.add('dark');
-      } else {
-        dispatch(setLight());
-        document.body.classList.remove('dark');
-      }
+  // useEffect(() => {
+  //   if (window.matchMedia) {
+  //     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  //       dispatch(setDark());
+  //       document.body.classList.add('dark');
+  //     } else {
+  //       dispatch(setLight());
+  //       document.body.classList.remove('dark');
+  //     }
 
-      if (!window.matchMedia) {
-        dispatch(setLight());
-      }
-    }
-  }, []);
+  //     if (!window.matchMedia) {
+  //       dispatch(setLight());
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
