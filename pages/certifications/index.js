@@ -11,11 +11,6 @@ import {
 } from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
-import CPSCard from '../../components/rive/CPSCard';
-import CMPMCard from '../../components/rive/CMPMCard';
-import APCCard from '../../components/rive/APCCard';
-import CSPCard from '../../components/rive/CSPCard';
-import FPCCard from '../../components/rive/FPCCard';
 import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
 import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
