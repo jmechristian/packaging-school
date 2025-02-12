@@ -29,8 +29,8 @@ const CertificateHero = () => {
         </div>
         <div className='flex flex-col gap-4 bg-black rounded-b-xl px-6 pt-7 pb-7 items-center'>
           <div className='font-bold text-white'>
-            <span className=' text-white/50'>Deadline to Apply:</span> Feb 7,
-            2025
+            <span className=' text-white/50'>Deadline to Apply:</span> April
+            3rd, 2025
           </div>
           <CountdownTimer />
         </div>
