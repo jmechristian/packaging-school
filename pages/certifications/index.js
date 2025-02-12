@@ -403,5 +403,6 @@ export async function getStaticProps() {
   const certificates = await getCertificates();
   return {
     props: { certificates },
+    revalidate: 10,
   };
 }
