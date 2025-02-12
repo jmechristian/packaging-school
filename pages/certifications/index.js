@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { useRive } from '@rive-app/react-canvas';
 import {
   getCertificates,
@@ -11,7 +11,11 @@ import {
 } from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
-
+import CPSCard from '../../components/rive/CPSCard';
+import CMPMCard from '../../components/rive/CMPMCard';
+import APCCard from '../../components/rive/APCCard';
+import CSPCard from '../../components/rive/CSPCard';
+import FPCCard from '../../components/rive/FPCCard';
 import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
 import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
@@ -91,7 +95,7 @@ const Index = ({ certificates }) => {
           {/* LOGOS */}
           <div className='!grid !grid-cols-2 md:!grid-cols-3 lg:!grid-cols-5 w-full gap-10 lg:gap-16 px-6 xl:px-0 max-w-7xl mx-auto'>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#cmpm'} passHref shallow legacyBehavior>
+              <Link href={'/certifications/get-to-know-cmpm'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/cmpm-black.png'}
                   className='group-hover:invert'
@@ -102,7 +106,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#cmpm'} passHref shallow legacyBehavior>
+              <Link href={'/certifications/get-to-know-cps'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/cps-black.png'}
                   width={430}
@@ -113,7 +117,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#apc'} passHref shallow legacyBehavior>
+              <Link href={'/certifications/get-to-know-apc'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/aps-black.png'}
                   className='group-hover:invert'
@@ -124,7 +128,7 @@ const Index = ({ certificates }) => {
               </Link>
             </div>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
-              <Link href={'#csp'} passHref shallow legacyBehavior>
+              <Link href={'/certifications/get-to-know-csp'} passHref shallow>
                 <Image
                   src={'https://packschool.s3.amazonaws.com/csp-black.png'}
                   className='group-hover:invert'
@@ -136,7 +140,7 @@ const Index = ({ certificates }) => {
             </div>
             <div className='flex justify-center items-center !col-span-2 md:!col-span-1 hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
               <div className='w-1/2 md:!w-full mx-auto '>
-                <Link href={'#fpc'} passHref shallow legacyBehavior>
+                <Link href={'/food-packaging'} passHref shallow>
                   <Image
                     src={'https://packschool.s3.amazonaws.com/fpc-black.png'}
                     className='group-hover:invert'
@@ -231,11 +235,7 @@ const Index = ({ certificates }) => {
                   designed for packaging and logistics professionals, engineers,
                   sales, and customer service teams in the automotive industry.
                 </div>
-                <Link
-                  passHref
-                  href={'/certifications/get-to-know-apc'}
-                  legacyBehavior
-                >
+                <Link passHref href={'/certifications/get-to-know-apc'}>
                   <div className='lg:hidden font-semibold text-brand-indigo'>
                     View Certificate
                   </div>
@@ -281,11 +281,7 @@ const Index = ({ certificates }) => {
                   and don&apos;ts of sustainable packaging, creating a positive
                   force for change within organizations.
                 </div>
-                <Link
-                  passHref
-                  href={'/certifications/get-to-know-csp'}
-                  legacyBehavior
-                >
+                <Link passHref href={'/certifications/get-to-know-csp'}>
                   <div className='lg:hidden font-semibold text-brand-indigo'>
                     View Certificate
                   </div>
