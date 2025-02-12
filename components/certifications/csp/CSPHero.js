@@ -23,13 +23,14 @@ const CSPHero = () => {
             <div>
               <FadeIn>
                 <p className='lg:text-lg lg:leading-normal font-greycliff text-slate-700 dark:text-gray-500 tracking-wide'>
-                  In the quest for sustainable packaging, the Packaging School
-                  introduces a transformative program empowering industry
-                  professionals to navigate the complexities of sustainable
-                  design. This initiative equips companies with internal
-                  champions, well-versed in the dos and don&apos;ts of
-                  sustainable packaging, fostering a positive force for change
-                  within organizations.
+                  Navigating the trade offs of sustainable packaging design is
+                  no easy feat, that is why the Packaging School has developed a
+                  program to empower industry professionals to navigate the
+                  complexities of sustainable packaging design. The Certificate
+                  of Sustainable Packaging equips companies with internal
+                  champions, seasoned in the do’s and don’ts of sustainable
+                  packaging, catalyzing a positive change in the realms of
+                  sustainability, cost savings, and more.
                 </p>
               </FadeIn>
             </div>

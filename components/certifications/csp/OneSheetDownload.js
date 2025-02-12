@@ -82,7 +82,7 @@ const OneSheetDownload = () => {
       >
         <div className='flex items-center justify-between w-full'>
           <div className='font-bold text-2xl flex flex-col items-start w-full tracking-tight'>
-            <div>Download The One-Sheet</div>
+            <div>Download The One-Pager</div>
           </div>
           <div>
             <MdArrowOutward color='black' size={'50'} />

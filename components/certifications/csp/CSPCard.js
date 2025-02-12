@@ -1,7 +1,7 @@
 import React from 'react';
 import { KeyIcon, ArrowRightCircleIcon } from '@heroicons/react/24/solid';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 
 const CSPCard = () => {
   return (
@@ -20,9 +20,10 @@ const CSPCard = () => {
         <div className='col-span-2 w-full p-6 border-b border-b-base-brand'>
           <div className='text-lg'>
             This 40-hour workshop unlocks the Sustainability Leader achievement,
-            empowering companies to cultivate internal heroes mastering the dos
-            and don&apos;ts of sustainable packaging, transforming intentions
-            into impactful actions.
+            empowering companies to develop internal leaders who can navigate
+            the trade offs and align sustainable packaging goals with
+            company-wide sustainability targets, transforming intentions into
+            impactful actions.
           </div>
         </div>
         <div className='p-6 flex flex-col w-full'>
@@ -73,7 +74,8 @@ const CSPCard = () => {
                 <div className='text-lg font-semibold'>Objective 2</div>
               </div>
               <div className='pl-7'>
-                Construct UN-based sustainability targets and goals
+                Develop packaging sustainability targets and goals based on the
+                17 UN Sustainable Development Goals
               </div>
             </div>
             <div className='flex flex-col gap-1'>
@@ -84,7 +86,8 @@ const CSPCard = () => {
                 <div className='text-lg font-semibold'>Objective 3</div>
               </div>
               <div className='pl-7'>
-                Develop sustainable system designs (on the material level)
+                Learn to create systems designs that reduce environmental
+                impacts (on a material level)
               </div>
             </div>
             <div className='flex flex-col gap-1'>
@@ -118,10 +121,11 @@ const CSPCard = () => {
                 <div className='text-lg font-semibold'>Objective 6</div>
               </div>
               <div className='pl-7'>
-                Assess your environmental performance criteria through a license
-                to cutting-edge sustainability tools (ISO 14040/14044 compliant
-                life cycle analysis software) into your concept development and
-                material selection steps of packaging design
+                Learn to assess the environmental impacts of your packaging
+                using a ISO 14040 compliant life cycle assessment (LCA)
+                software—enabling you to bake sustainability considerations into
+                your packaging design workflow from the concept development
+                phase and consider the impacts across the package’s useful life
               </div>
             </div>
           </div>
