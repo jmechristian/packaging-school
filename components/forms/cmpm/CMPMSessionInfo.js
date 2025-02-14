@@ -1,11 +1,20 @@
-import React from 'react';
-import CMPMPricing from './CMPMPricing';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import TextInput from '../TextInput';
-import Link from 'next/link';
+import { getCurrentCMPMSessions } from '../../../helpers/api';
 
 const CMPMSessionInfo = ({ email, free }) => {
   const { register, formState } = useFormContext();
+  const [sessions, setSessions] = useState([]);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      const sessions = await getCurrentCMPMSessions();
+      console.log(sessions);
+      setSessions(sessions);
+    };
+    fetchSessions();
+  }, []);
   return (
     <div className='flex flex-col gap-12'>
       <fieldset>
@@ -22,69 +31,29 @@ const CMPMSessionInfo = ({ email, free }) => {
         </div>
         <div>
           <div className='mt-6 gap-x-12 gap-y-3 flex flex-wrap items-center text-sm md:text-base'>
-            {/* <div className='flex items-center gap-x-3'>
-              <input
-                {...register('sessionApplying', { required: true })}
-                id='winterSession'
-                name='sessionApplying'
-                type='radio'
-                value='winterSession'
-                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
-              />
-              <label
-                htmlFor='winterSession'
-                className='block font-medium font-greycliff leading-6 text-slate-900'
-              >
-                Winter Session <br />
-                <span className='text-sm text-slate-500'>
-                  Dec 9, 2024 - Feb 27, 2025
-                  <br />
-                  Deadline: Dec 4, 2024
-                </span>
-              </label>
-            </div> */}
-            <div className='flex items-center gap-x-3'>
-              <input
-                {...register('sessionApplying', { required: true })}
-                id='springOne'
-                name='sessionApplying'
-                type='radio'
-                value='springOne'
-                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
-              />
-              <label
-                htmlFor='springOne'
-                className='block font-medium font-greycliff leading-6 text-slate-900'
-              >
-                Spring One <br />
-                <span className='text-sm text-slate-500'>
-                  Feb 10, 2025 - Apr 28, 2025
-                  <br />
-                  Deadline: Feb 4, 2025
-                </span>
-              </label>
-            </div>
-            <div className='flex items-center gap-x-3'>
-              <input
-                {...register('sessionApplying', { required: true })}
-                id='springTwo'
-                name='sessionApplying'
-                type='radio'
-                value='springTwo'
-                className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
-              />
-              <label
-                htmlFor='springTwo'
-                className='block font-medium font-greycliff leading-6 text-slate-900'
-              >
-                Spring Two <br />
-                <span className='text-sm text-slate-500'>
-                  April 7, 2025 - Jun 23, 2025
-                  <br />
-                  Deadline: April 3, 2025
-                </span>
-              </label>
-            </div>
+            {sessions.map((session) => (
+              <div className='flex items-center gap-x-3' key={session.id}>
+                <input
+                  {...register('sessionApplying', { required: true })}
+                  id={session.title.replace(/\s+/g, '')}
+                  name='sessionApplying'
+                  type='radio'
+                  value={session.title.replace(/\s+/g, '')}
+                  className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+                />
+                <label
+                  htmlFor={session.title.replace(/\s+/g, '')}
+                  className='block font-medium font-greycliff leading-6 text-slate-900'
+                >
+                  {session.title} <br />
+                  <span className='text-sm text-slate-700'>
+                    {session.startDate} - {session.endDate}
+                    <br />
+                    Deadline: {session.deadline}
+                  </span>
+                </label>
+              </div>
+            ))}
           </div>
           {formState.errors.hasOwnProperty('sessionApplying') && (
             <div className='text-sm text-red-600 mt-3 mb-2'>

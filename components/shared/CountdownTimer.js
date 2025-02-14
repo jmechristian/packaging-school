@@ -9,7 +9,7 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-const CountdownTimer = () => {
+const CountdownTimer = ({ deadline }) => {
   const intervalRef = useRef(null);
 
   const [remaining, setRemaining] = useState({
@@ -26,7 +26,7 @@ const CountdownTimer = () => {
   }, []);
 
   const handleCountdown = () => {
-    const end = new Date(COUNTDOWN_FROM);
+    const end = new Date(deadline);
 
     const now = new Date();
 
