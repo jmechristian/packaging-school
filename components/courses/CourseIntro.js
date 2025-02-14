@@ -4,6 +4,7 @@ import CourseItems from './CourseItems';
 import CourseDetails from './CourseDetails';
 
 import { setTextColor, setCategoryText } from '../../helpers/utils';
+import { MdRocketLaunch } from 'react-icons/md';
 
 const CourseIntro = ({
   id,
@@ -16,9 +17,20 @@ const CourseIntro = ({
   hours,
   lessons,
   videos,
+  callout,
 }) => {
   return (
     <div className='flex flex-col gap-4 md:gap-5 lg:max-w-prose'>
+      {callout ? (
+        <div className='bg-base-brand text-white px-3 py-3 leading-tight flex items-center justify-center w-full gap-3 rounded-md'>
+          <div className='flex items-center justify-center gap-3'>
+            <div className='w-10 h-10 bg-white/80 flex items-center justify-center'>
+              <MdRocketLaunch className='text-base-brand' size={28} />
+            </div>
+            <div className='w-fit font-medium'>{callout}</div>
+          </div>
+        </div>
+      ) : null}
       <div className='flex flex-wrap flex-row gap-3'>
         <div className='flex flex-wrap items-center gap-3'>
           <div className='bg-base-dark max-w-fit rounded-md'>

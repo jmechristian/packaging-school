@@ -288,6 +288,7 @@ type APSCompany @model @auth(rules: [{ allow: public }]) {
 type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String!
+  subheadline: String
   location: String!
   date: String!
   time: String!
@@ -295,6 +296,7 @@ type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
   altLink: String
   apsRegistrants: [APSRegistrant2025]
     @manyToMany(relationName: "apsRegistrantAddOns25")
+  type: String
 }
 
 type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
@@ -310,6 +312,7 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   interests: [String]
   otherInterest: String
   speedNetworking: Boolean
+  speedNetworkingStatus: String
   billingAddressFirstName: String
   billingAddressLastName: String
   billingAddressEmail: String
@@ -325,9 +328,39 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   discountCode: String
   status: String @default(value: "PENDING")
   addOns: [APSAddOn2025] @manyToMany(relationName: "apsRegistrantAddOns25")
+  morrisetteTransportation: String
+  morrisetteStatus: String
   paymentConfirmation: String
+  registrationEmailSent: Boolean
+  registrationEmailSentDate: String
   registrationEmailReceived: Boolean
+  registrationEmailReceivedDate: String
   welcomeEmailSent: Boolean
+  welcomeEmailSentDate: String
+  welcomeEmailReceived: Boolean
+  welcomeEmailReceivedDate: String
+  paymentMethod: String
+  paymentLast4: String
+  approvedAt: String
+  headshot: String
+  presentation: String
+  presentationTitle: String
+  presentationSummary: String
+  magnaStatus: String
+  magnaTransportation: String
+}
+
+type APSCode2025 @model @auth(rules: [{ allow: public }]) {
+  code: String!
+  limit: Int!
+  used: Int!
+  discount: Int!
+}
+
+type APSActivity2025 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  type: String!
+  activity: String!
 }
 
 type APSTicket @model @auth(rules: [{ allow: public }]) {
@@ -653,6 +686,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   subscriptionLink: String
   subscriptionPrice: String
   stripeLink: String
+  callout: String
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
