@@ -24,8 +24,6 @@ const Layout = ({ children }) => {
   const { searchOpen } = useSelector((state) => state.nav);
   const { location, cart } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-  const [hasProcessedUser, setHasProcessedUser] = useState(false);
 
   useEffect(() => {
     if (!userIsLoading && user) {
