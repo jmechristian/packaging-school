@@ -11,6 +11,7 @@ import {
   listLMSCourses,
   listCertificateObjects,
   getPurchase,
+  listCMPMSessions,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -709,4 +710,27 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
     console.error('SSO Error:', data.error);
     throw new Error(data.error || 'SSO request failed');
   }
+};
+
+export const getLatestCMPMSessions = async () => {
+  const res = await API.graphql({
+    query: listCMPMSessions,
+  });
+
+  const now = new Date();
+  const futureSessions = res.data.listCMPMSessions.items
+    .filter((session) => new Date(session.deadline) > now)
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+  return futureSessions[0] || null; // Return first future session or null if none found
+};
+
+export const getCurrentCMPMSessions = async () => {
+  const res = await API.graphql({
+    query: listCMPMSessions,
+  });
+  const now = new Date();
+  return res.data.listCMPMSessions.items
+    .filter((session) => new Date(session.deadline) > now)
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 };

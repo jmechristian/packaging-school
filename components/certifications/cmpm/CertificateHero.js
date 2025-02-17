@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import VideoPlayer from '../../VideoPlayer';
 import FadeIn from '../../../helpers/FadeIn';
-
-import Link from 'next/link';
+import { getLatestCMPMSessions } from '../../../helpers/api';
 import {
   ArrowLongRightIcon,
   BoltIcon,
@@ -13,6 +12,24 @@ import CountdownTimer from '../../shared/CountdownTimer';
 
 const CertificateHero = () => {
   const router = useRouter();
+  const [latestSession, setLatestSession] = useState(null);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  useEffect(() => {
+    const fetchLatestSession = async () => {
+      const session = await getLatestCMPMSessions();
+      setLatestSession(session);
+    };
+    fetchLatestSession();
+  }, []);
   return (
     <div className='flex flex-col gap-12 xl:gap-24 lg:flex-row items-center pt-6 md:pt-16 lg:pt-24 container-7xl text-center lg:text-left'>
       <div className='w-full max-w-sm md:max-w-md xl:max-w-2xl flex flex-col shadow-xl'>
@@ -27,13 +44,15 @@ const CertificateHero = () => {
             </div>
           </FadeIn>
         </div>
-        <div className='flex flex-col gap-4 bg-black rounded-b-xl px-6 pt-7 pb-7 items-center'>
-          <div className='font-bold text-white'>
-            <span className=' text-white/50'>Deadline to Apply:</span> Feb 4,
-            2025
+        {latestSession ? (
+          <div className='flex flex-col gap-4 bg-black rounded-b-xl px-6 pt-7 pb-7 items-center'>
+            <div className='font-bold text-white'>
+              <span className=' text-white/50'>Deadline to Apply:</span>{' '}
+              {latestSession && formatDate(latestSession.deadline)}
+            </div>
+            <CountdownTimer deadline={latestSession.deadline} />
           </div>
-          <CountdownTimer />
-        </div>
+        ) : null}
       </div>
       <div className='flex flex-col gap-6 xl:gap-9 flex-1'>
         <div>

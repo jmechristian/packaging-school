@@ -1573,402 +1573,6 @@ export const onDeleteAPSSpeaker2024 = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAPSCompany = /* GraphQL */ `
-  subscription OnCreateAPSCompany {
-    onCreateAPSCompany {
-      name
-      email
-      apsRegistrants {
-        items {
-          id
-          firstName
-          lastName
-          email
-          phone
-          jobTitle
-          attendeeType
-          termsAccepted
-          interests
-          otherInterest
-          speedNetworking
-          billingAddressFirstName
-          billingAddressLastName
-          billingAddressEmail
-          billingAddressPhone
-          billingAddressStreet
-          billingAddressCity
-          billingAddressState
-          billingAddressZip
-          sameAsAttendee
-          speakerTopic
-          learningObjectives
-          totalAmount
-          discountCode
-          status
-          paymentConfirmation
-          registrationEmailReceived
-          welcomeEmailSent
-          createdAt
-          updatedAt
-          aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAPSCompany = /* GraphQL */ `
-  subscription OnUpdateAPSCompany {
-    onUpdateAPSCompany {
-      name
-      email
-      apsRegistrants {
-        items {
-          id
-          firstName
-          lastName
-          email
-          phone
-          jobTitle
-          attendeeType
-          termsAccepted
-          interests
-          otherInterest
-          speedNetworking
-          billingAddressFirstName
-          billingAddressLastName
-          billingAddressEmail
-          billingAddressPhone
-          billingAddressStreet
-          billingAddressCity
-          billingAddressState
-          billingAddressZip
-          sameAsAttendee
-          speakerTopic
-          learningObjectives
-          totalAmount
-          discountCode
-          status
-          paymentConfirmation
-          registrationEmailReceived
-          welcomeEmailSent
-          createdAt
-          updatedAt
-          aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAPSCompany = /* GraphQL */ `
-  subscription OnDeleteAPSCompany {
-    onDeleteAPSCompany {
-      name
-      email
-      apsRegistrants {
-        items {
-          id
-          firstName
-          lastName
-          email
-          phone
-          jobTitle
-          attendeeType
-          termsAccepted
-          interests
-          otherInterest
-          speedNetworking
-          billingAddressFirstName
-          billingAddressLastName
-          billingAddressEmail
-          billingAddressPhone
-          billingAddressStreet
-          billingAddressCity
-          billingAddressState
-          billingAddressZip
-          sameAsAttendee
-          speakerTopic
-          learningObjectives
-          totalAmount
-          discountCode
-          status
-          paymentConfirmation
-          registrationEmailReceived
-          welcomeEmailSent
-          createdAt
-          updatedAt
-          aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAPSAddOn2025 = /* GraphQL */ `
-  subscription OnCreateAPSAddOn2025 {
-    onCreateAPSAddOn2025 {
-      title
-      description
-      location
-      date
-      time
-      company
-      altLink
-      apsRegistrants {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAPSAddOn2025 = /* GraphQL */ `
-  subscription OnUpdateAPSAddOn2025 {
-    onUpdateAPSAddOn2025 {
-      title
-      description
-      location
-      date
-      time
-      company
-      altLink
-      apsRegistrants {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAPSAddOn2025 = /* GraphQL */ `
-  subscription OnDeleteAPSAddOn2025 {
-    onDeleteAPSAddOn2025 {
-      title
-      description
-      location
-      date
-      time
-      company
-      altLink
-      apsRegistrants {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAPSRegistrant2025 = /* GraphQL */ `
-  subscription OnCreateAPSRegistrant2025 {
-    onCreateAPSRegistrant2025 {
-      id
-      firstName
-      lastName
-      email
-      phone
-      companyName {
-        name
-        email
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      jobTitle
-      attendeeType
-      termsAccepted
-      interests
-      otherInterest
-      speedNetworking
-      billingAddressFirstName
-      billingAddressLastName
-      billingAddressEmail
-      billingAddressPhone
-      billingAddressStreet
-      billingAddressCity
-      billingAddressState
-      billingAddressZip
-      sameAsAttendee
-      speakerTopic
-      learningObjectives
-      totalAmount
-      discountCode
-      status
-      addOns {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      paymentConfirmation
-      registrationEmailReceived
-      welcomeEmailSent
-      createdAt
-      updatedAt
-      aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
-    }
-  }
-`;
-export const onUpdateAPSRegistrant2025 = /* GraphQL */ `
-  subscription OnUpdateAPSRegistrant2025 {
-    onUpdateAPSRegistrant2025 {
-      id
-      firstName
-      lastName
-      email
-      phone
-      companyName {
-        name
-        email
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      jobTitle
-      attendeeType
-      termsAccepted
-      interests
-      otherInterest
-      speedNetworking
-      billingAddressFirstName
-      billingAddressLastName
-      billingAddressEmail
-      billingAddressPhone
-      billingAddressStreet
-      billingAddressCity
-      billingAddressState
-      billingAddressZip
-      sameAsAttendee
-      speakerTopic
-      learningObjectives
-      totalAmount
-      discountCode
-      status
-      addOns {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      paymentConfirmation
-      registrationEmailReceived
-      welcomeEmailSent
-      createdAt
-      updatedAt
-      aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
-    }
-  }
-`;
-export const onDeleteAPSRegistrant2025 = /* GraphQL */ `
-  subscription OnDeleteAPSRegistrant2025 {
-    onDeleteAPSRegistrant2025 {
-      id
-      firstName
-      lastName
-      email
-      phone
-      companyName {
-        name
-        email
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      jobTitle
-      attendeeType
-      termsAccepted
-      interests
-      otherInterest
-      speedNetworking
-      billingAddressFirstName
-      billingAddressLastName
-      billingAddressEmail
-      billingAddressPhone
-      billingAddressStreet
-      billingAddressCity
-      billingAddressState
-      billingAddressZip
-      sameAsAttendee
-      speakerTopic
-      learningObjectives
-      totalAmount
-      discountCode
-      status
-      addOns {
-        items {
-          id
-          aPSAddOn2025Id
-          aPSRegistrant2025Id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      paymentConfirmation
-      registrationEmailReceived
-      welcomeEmailSent
-      createdAt
-      updatedAt
-      aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
-    }
-  }
-`;
 export const onCreateAPSTicket = /* GraphQL */ `
   subscription OnCreateAPSTicket {
     onCreateAPSTicket {
@@ -4299,6 +3903,7 @@ export const onCreateLMSCourse = /* GraphQL */ `
       subscriptionLink
       subscriptionPrice
       stripeLink
+      callout
       createdAt
       updatedAt
     }
@@ -4366,6 +3971,7 @@ export const onUpdateLMSCourse = /* GraphQL */ `
       subscriptionLink
       subscriptionPrice
       stripeLink
+      callout
       createdAt
       updatedAt
     }
@@ -4433,6 +4039,7 @@ export const onDeleteLMSCourse = /* GraphQL */ `
       subscriptionLink
       subscriptionPrice
       stripeLink
+      callout
       createdAt
       updatedAt
     }
@@ -9367,564 +8974,6 @@ export const onDeleteAPSSponsor = /* GraphQL */ `
     }
   }
 `;
-export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
-  subscription OnCreateApsRegistrantAddOns25 {
-    onCreateApsRegistrantAddOns25 {
-      id
-      aPSAddOn2025Id
-      aPSRegistrant2025Id
-      aPSAddOn2025 {
-        title
-        description
-        location
-        date
-        time
-        company
-        altLink
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      aPSRegistrant2025 {
-        id
-        firstName
-        lastName
-        email
-        phone
-        companyName {
-          name
-          email
-          id
-          createdAt
-          updatedAt
-        }
-        jobTitle
-        attendeeType
-        termsAccepted
-        interests
-        otherInterest
-        speedNetworking
-        billingAddressFirstName
-        billingAddressLastName
-        billingAddressEmail
-        billingAddressPhone
-        billingAddressStreet
-        billingAddressCity
-        billingAddressState
-        billingAddressZip
-        sameAsAttendee
-        speakerTopic
-        learningObjectives
-        totalAmount
-        discountCode
-        status
-        addOns {
-          nextToken
-        }
-        paymentConfirmation
-        registrationEmailReceived
-        welcomeEmailSent
-        createdAt
-        updatedAt
-        aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
-  subscription OnUpdateApsRegistrantAddOns25 {
-    onUpdateApsRegistrantAddOns25 {
-      id
-      aPSAddOn2025Id
-      aPSRegistrant2025Id
-      aPSAddOn2025 {
-        title
-        description
-        location
-        date
-        time
-        company
-        altLink
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      aPSRegistrant2025 {
-        id
-        firstName
-        lastName
-        email
-        phone
-        companyName {
-          name
-          email
-          id
-          createdAt
-          updatedAt
-        }
-        jobTitle
-        attendeeType
-        termsAccepted
-        interests
-        otherInterest
-        speedNetworking
-        billingAddressFirstName
-        billingAddressLastName
-        billingAddressEmail
-        billingAddressPhone
-        billingAddressStreet
-        billingAddressCity
-        billingAddressState
-        billingAddressZip
-        sameAsAttendee
-        speakerTopic
-        learningObjectives
-        totalAmount
-        discountCode
-        status
-        addOns {
-          nextToken
-        }
-        paymentConfirmation
-        registrationEmailReceived
-        welcomeEmailSent
-        createdAt
-        updatedAt
-        aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
-  subscription OnDeleteApsRegistrantAddOns25 {
-    onDeleteApsRegistrantAddOns25 {
-      id
-      aPSAddOn2025Id
-      aPSRegistrant2025Id
-      aPSAddOn2025 {
-        title
-        description
-        location
-        date
-        time
-        company
-        altLink
-        apsRegistrants {
-          nextToken
-        }
-        id
-        createdAt
-        updatedAt
-      }
-      aPSRegistrant2025 {
-        id
-        firstName
-        lastName
-        email
-        phone
-        companyName {
-          name
-          email
-          id
-          createdAt
-          updatedAt
-        }
-        jobTitle
-        attendeeType
-        termsAccepted
-        interests
-        otherInterest
-        speedNetworking
-        billingAddressFirstName
-        billingAddressLastName
-        billingAddressEmail
-        billingAddressPhone
-        billingAddressStreet
-        billingAddressCity
-        billingAddressState
-        billingAddressZip
-        sameAsAttendee
-        speakerTopic
-        learningObjectives
-        totalAmount
-        discountCode
-        status
-        addOns {
-          nextToken
-        }
-        paymentConfirmation
-        registrationEmailReceived
-        welcomeEmailSent
-        createdAt
-        updatedAt
-        aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAchievementUsers = /* GraphQL */ `
-  subscription OnCreateAchievementUsers {
-    onCreateAchievementUsers {
-      id
-      userId
-      achievementId
-      user {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        thinkificId
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        achievements {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      achievement {
-        id
-        title
-        description
-        image
-        courses
-        coursesRequired
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAchievementUsers = /* GraphQL */ `
-  subscription OnUpdateAchievementUsers {
-    onUpdateAchievementUsers {
-      id
-      userId
-      achievementId
-      user {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        thinkificId
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        achievements {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      achievement {
-        id
-        title
-        description
-        image
-        courses
-        coursesRequired
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAchievementUsers = /* GraphQL */ `
-  subscription OnDeleteAchievementUsers {
-    onDeleteAchievementUsers {
-      id
-      userId
-      achievementId
-      user {
-        id
-        name
-        title
-        company
-        email
-        office
-        bio
-        cell
-        picture
-        linkedin
-        companyID
-        apss {
-          nextToken
-        }
-        cmpmFormID
-        cmpmForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cmpmGoals
-          moreAboutYou
-          birthYear
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cMPMFormUserId
-        }
-        cpsFormID
-        cpsForm {
-          id
-          firstName
-          lastName
-          email
-          phone
-          streetAddress
-          addressExtra
-          city
-          state
-          country
-          birthYear
-          companyName
-          companyTitle
-          linkedin
-          background
-          whyPackaging
-          areaOfInterest
-          sessionApplying
-          referral
-          payment
-          yearGoals
-          cpsGoals
-          paymentType
-          moreAboutYou
-          elective
-          optOut
-          paymentConfirmation
-          status
-          createdOn
-          updatedOn
-          cPSFormUserId
-        }
-        thinkificId
-        savedCourses
-        savedLessons
-        savedArticles
-        source
-        achievements {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      achievement {
-        id
-        title
-        description
-        image
-        courses
-        coursesRequired
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateCirriculumCourses = /* GraphQL */ `
   subscription OnCreateCirriculumCourses {
     onCreateCirriculumCourses {
@@ -9982,6 +9031,7 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10047,6 +9097,7 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10112,6 +9163,7 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10165,6 +9217,7 @@ export const onCreateCourseLessons = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10236,6 +9289,7 @@ export const onUpdateCourseLessons = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10307,6 +9361,7 @@ export const onDeleteCourseLessons = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10378,6 +9433,7 @@ export const onCreateCourseInstructors = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10440,6 +9496,7 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }
@@ -10502,6 +9559,7 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
         subscriptionLink
         subscriptionPrice
         stripeLink
+        callout
         createdAt
         updatedAt
       }

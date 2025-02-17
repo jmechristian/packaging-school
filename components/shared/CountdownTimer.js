@@ -2,14 +2,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 // NOTE: Change this date to whatever date you want to countdown to :)
-const COUNTDOWN_FROM = '02/04/2025';
+const COUNTDOWN_FROM = '04/03/2025';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-const CountdownTimer = () => {
+const CountdownTimer = ({ deadline }) => {
   const intervalRef = useRef(null);
 
   const [remaining, setRemaining] = useState({
@@ -26,7 +26,7 @@ const CountdownTimer = () => {
   }, []);
 
   const handleCountdown = () => {
-    const end = new Date(COUNTDOWN_FROM);
+    const end = new Date(deadline);
 
     const now = new Date();
 

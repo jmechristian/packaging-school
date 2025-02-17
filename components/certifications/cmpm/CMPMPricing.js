@@ -10,6 +10,7 @@ export default function CMPMPricing() {
   useEffect(() => {
     const getSessions = async () => {
       const res = await API.graphql({ query: listCMPMSessions });
+      console.log(res.data.listCMPMSessions.items);
       setSessions(res.data.listCMPMSessions.items);
     };
 

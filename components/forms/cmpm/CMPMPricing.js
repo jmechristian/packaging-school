@@ -5,14 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
-const includedFeatures = [
-  'Private forum access',
-  'Member resources',
-  'Entry to annual conference',
-  'Official member t-shirt',
-];
-
-const CMPMPricing = ({ email, free }) => {
+const CMPMPricing = ({ email, free, onSubmit, payment }) => {
   const { user } = useSelector((state) => state.auth);
   const [stripePromise, setStripePromise] = useState(() =>
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -56,6 +49,7 @@ const CMPMPricing = ({ email, free }) => {
                       }
                       type={'CMPM'}
                       email={email}
+                      onSubmit={onSubmit}
                     />
                   </Elements>
                 ) : (
@@ -66,9 +60,7 @@ const CMPMPricing = ({ email, free }) => {
                     type='hidden'
                     value={free ? 'WAIVED' : paymentConfirmation}
                     name='paymentConfirmation'
-                    {...register('paymentConfirmation', {
-                      required: true,
-                    })}
+                    {...register('paymentConfirmation')}
                   />
                   {formState.errors.hasOwnProperty('paymentConfirmation') && (
                     <div className='text-sm text-red-600 mt-3 mb-2'>

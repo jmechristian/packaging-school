@@ -116,6 +116,9 @@ export default async function handler(req, res) {
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How will you be paying for this program?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.payment}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Payment Type?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.paymentType}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Payment Confirmation</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.paymentConfirmation}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +

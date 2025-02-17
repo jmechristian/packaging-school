@@ -10,8 +10,10 @@ import { updateCategoryMenu } from '../../../data/CategoryMenu';
 import { MdOutlineSearch, MdCached } from 'react-icons/md';
 import { EyeIcon } from '@heroicons/react/24/solid';
 import Meta from '../../../components/shared/Meta';
-import LMCCourseTableItem from '../../../components/shared/LMCCourseTableItem';
-import CertificateTableItem from '../../../components/shared/CertificateTableItem';
+
+import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
+import '@jmechristian/ps-component-library/dist/style.css';
+
 const Page = () => {
   const router = useRouter();
   const { cat } = router.query;
@@ -265,6 +267,7 @@ const Page = () => {
   useEffect(() => {
     const fetchCertificates = async () => {
       const res = await getCertificateByCategory(cat.toUpperCase());
+      console.log(res);
       setIsCertificates(res);
     };
     fetchCertificates();
@@ -373,6 +376,48 @@ const Page = () => {
     router.push(`/courses/categories/${cat}`);
   };
 
+  const cardClickHandler = async (id, slug, altlink, type) => {
+    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
+
+    altlink
+      ? router.push(altlink)
+      : router.push(
+          `/${
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
+        );
+  };
+
+  const cardPurchaseHandler = async (id, link) => {
+    await registgerCourseClick(id, router.asPath, location, link, 'GRID');
+
+    router.push(link);
+  };
+
+  const handleCertCardClick = async (
+    abbreviation,
+    type,
+    link,
+    applicationLink
+  ) => {
+    await registerCertificateClick({
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: '/all_courses',
+      type: type,
+    });
+
+    if (type === 'CERTIFICATE-VIEW') {
+      router.push(link);
+    } else if (type === 'CERTIFICATE-APPLY') {
+      router.push(applicationLink);
+    } else {
+      router.push(link);
+    }
+  };
+
   return (
     <>
       <Meta
@@ -383,13 +428,13 @@ const Page = () => {
         image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
       />
       {sortedAndSearchedCourses.length > 0 ? (
-        <div className='max-w-7xl mx-auto py-12 flex flex-col px-3 lg:px-0'>
+        <div className='max-w-7xl mx-auto py-12 flex flex-col px-3 lg:!px-0'>
           <h2 className='mb-9 capitalize h2-base'>
             {categoryNameHandler(cat)} Courses
           </h2>
           <div className='grid grid-cols-3 border-b-2 border-b-black pb-6 gap-2.5'>
             {/* SEARCH */}
-            <div className='w-full col-span-3 lg:col-span-2 border-2 border-black p-1'>
+            <div className='w-full col-span-3 lg:!col-span-2 border-2 border-black p-1'>
               <div className='flex gap-2 items-center'>
                 <input
                   type='text'
@@ -403,7 +448,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div className='w-full col-span-3 lg:col-span-1 content-center'>
+            <div className='w-full col-span-3 lg:!col-span-1 content-center'>
               <div
                 className='flex gap-1 w-full items-center justify-end hover:underline'
                 onClick={() => router.push('/all_courses')}
@@ -417,7 +462,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-wrap lg:mb-5 border-b-2 border-b-black py-6 gap-2.5'>
+          <div className='flex flex-wrap lg:!mb-5 border-b-2 border-b-black py-6 gap-2.5'>
             {updateCategoryMenu.map((cat) => (
               <div
                 key={cat.value}
@@ -428,117 +473,7 @@ const Page = () => {
               </div>
             ))}
           </div>
-          <div className='hidden lg:grid lg:grid-cols-12 content-center gap-5 divide-x-black w-full mt-10 mb-2'>
-            <div className='col-span-4'>
-              <div className='grid grid-cols-4'>
-                <div
-                  className={`${
-                    isSort.value === 'course id' ? 'underline' : ''
-                  } cursor-pointer col-span-1 text-sm font-semibold`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'course id',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Course Id
-                </div>
-                <div className='text-sm font-semibold col-span-3'>
-                  <div>
-                    <span
-                      className={`${
-                        isSort.value === 'category' ? 'underline' : ''
-                      } cursor-pointer`}
-                      onClick={() =>
-                        setIsSort({
-                          value: 'category',
-                          direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                        })
-                      }
-                    >
-                      Category
-                    </span>{' '}
-                    /{' '}
-                    <span
-                      className={`${
-                        isSort.value === 'title' ? 'underline' : ''
-                      } cursor-pointer`}
-                      onClick={() =>
-                        setIsSort({
-                          value: 'title',
-                          direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                        })
-                      }
-                    >
-                      Title
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='col-span-1'>
-              <div className='text-sm font-semibold cursor-pointer'>
-                <div
-                  className={`${
-                    isSort.value === 'price' ? 'underline' : ''
-                  } cursor-pointer`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'price',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Price
-                </div>
-              </div>
-            </div>
-            <div className='col-span-5'>
-              <div className='text-sm font-semibold'>
-                <div>Description</div>
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <div className='grid grid-cols-3 w-full gap-3 text-center'>
-                <div className='text-sm font-semibold cursor-pointer'>
-                  <div
-                    className={`${
-                      isSort.value === 'hours' ? 'underline' : ''
-                    } cursor-pointer`}
-                    onClick={() =>
-                      setIsSort({
-                        value: 'hours',
-                        direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                      })
-                    }
-                  >
-                    Hours
-                  </div>
-                </div>
-                <div className='text-sm font-semibold cursor-pointer'>
-                  <div
-                    className={`${
-                      isSort.value === 'lessons' ? 'underline' : ''
-                    } cursor-pointer`}
-                    onClick={() =>
-                      setIsSort({
-                        value: 'lessons',
-                        direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                      })
-                    }
-                  >
-                    Lessons
-                  </div>
-                </div>
 
-                <div className='text-sm font-semibold'>
-                  <div className='lg:hidden xl:block'>Preview</div>
-                </div>
-                <div className='text-sm font-semibold'></div>
-              </div>
-            </div>
-          </div>
           <div className='flex flex-col gap-0'>
             <div className='grid lg:hidden grid-cols-6 content-center gap-5 divide-x-black w-full px-2 py-2'>
               <div
@@ -625,17 +560,50 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col gap-1.5'>
+            <div className='grid lg:!grid-cols-3 xl:!grid-cols-4 md:!grid-cols-2 gap-y-8 gap-x-7 mt-5'>
               {sortedCertificates &&
                 sortedCertificates.length > 0 &&
-                sortedCertificates.map((certificate) => (
-                  <CertificateTableItem
-                    certificate={certificate.certificateObject}
-                    key={certificate.id}
+                sortedCertificates.map((cert) => (
+                  <CertCard
+                    cert={cert.certificateObject}
+                    key={cert.certificateObject.id}
+                    purchaseText={
+                      cert.certificateObject.abbreviation === 'CPS' ||
+                      cert.certificateObject.abbreviation === 'CMPM'
+                        ? 'Apply Now'
+                        : 'Enroll Now'
+                    }
+                    cardClickHandler={(
+                      abbreviation,
+                      type,
+                      link,
+                      applicationLink
+                    ) =>
+                      handleCertCardClick(
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
+                    }
                   />
                 ))}
               {sortedAndSearchedCourses.map((course, i) => (
-                <LMCCourseTableItem course={course} key={course.id} />
+                <CourseCard
+                  course={course}
+                  key={course.id}
+                  cardClickHandler={() =>
+                    cardClickHandler(
+                      course.id,
+                      course.slug,
+                      course.altLink,
+                      course.type
+                    )
+                  }
+                  cardPurchaseHandler={() =>
+                    cardPurchaseHandler(course.id, course.link)
+                  }
+                />
               ))}
             </div>
           </div>

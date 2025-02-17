@@ -34,8 +34,9 @@ const CourseMain = ({ data }) => {
                 hours={data.hours}
                 lessons={data.lessons}
                 videos={data.videos}
+                callout={data.callout}
               />
-              <div className='lg:hidden'>
+              <div className='lg:!hidden'>
                 <CourseInfo
                   embedid={data.preview}
                   price={data.price}
