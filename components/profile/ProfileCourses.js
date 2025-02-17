@@ -9,15 +9,27 @@ const ProfileCourses = ({ userCourses }) => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await fetch(
-        `/api/thinkific/get-enrollments?email=marketing@packagingschool.com`
-      );
-      const data = await response.json();
-      console.log('courses', data.items);
-      setCourses(data.items);
+      try {
+        const response = await fetch(
+          `/api/thinkific/get-enrollments?email=marketing@packagingschool.com`
+        );
+        const data = await response.json();
+        setCourses(data.items || []);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        setCourses([]);
+      }
     };
     fetchCourses();
   }, [user]);
+
+  const getCompletionPercentage = (courseId) => {
+    if (!courses || !Array.isArray(courses)) return 0;
+    const matchingCourse = courses.find(
+      (c) => c.course_id === parseInt(courseId)
+    );
+    return (matchingCourse?.percentage_completed || 0) * 100;
+  };
 
   return (
     userCourses && (
@@ -49,11 +61,7 @@ const ProfileCourses = ({ userCourses }) => {
                     <div
                       className='h-1 bg-green-500'
                       style={{
-                        width: `${
-                          (courses.find(
-                            (c) => c.course_id === parseInt(course.id)
-                          )?.percentage_completed || 0) * 100
-                        }%`,
+                        width: `${getCompletionPercentage(course.id)}%`,
                       }}
                     ></div>
                   </div>
