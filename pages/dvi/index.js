@@ -3,6 +3,14 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { MdSearch, MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
 import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
+import {
+  BoltIcon,
+  MinusIcon,
+  PlusIcon,
+  AcademicCapIcon,
+  BookmarkSquareIcon,
+} from '@heroicons/react/24/outline';
+import { Disclosure } from '@headlessui/react';
 const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
@@ -31,22 +39,29 @@ const LOTMCard = ({ lesson }) => {
   return (
     <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
-        <div className='w-full aspect-[16/9] bg-black'></div>
+        <div
+          className='w-full aspect-[16/9] bg-black bg-cover bg-center'
+          style={{
+            backgroundImage: `url(${lesson.seoImage})`,
+          }}
+        ></div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
-          <div className='font-semibold leading-tight text-[#fd3841] w-full h-16 mt-1 line-clamp-3'>
-            <span className='text-gray-700'>{lesson.title}</span>
+          <div className='font-semibold leading-tight text-[#fd3841] w-full h-16 mt-1 line-clamp-3  max-w-[90%]'>
+            <span className='text-gray-700 leading-tight'>{lesson.title}</span>
           </div>
-          <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
-            <div className='font-semibold'>{formatDate(lesson.createdAt)}</div>
+          <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-gray-700'>
+            <div className='font-semibold text-xs'>
+              {formatDate(lesson.createdAt)}
+            </div>
             <div className='font-semibold flex items-center gap-1'>
               <MdOutlineTimer />
             </div>
           </div>
-          <div className='text-xs text-gray-700 h-20 mb-2'>
-            {lesson.subheadline}
+          <div className='text-xs text-gray-700 h-20 mb-2 line-clamp-5'>
+            {lesson.subhead}
           </div>
           <div className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'>
-            Begin Lesson
+            Read Lesson
           </div>
         </div>
       </div>
@@ -104,9 +119,31 @@ const CourseCard = ({ course }) => {
 };
 
 const Page = () => {
+  const faqs = [
+    {
+      id: 1,
+      question: 'Who is my PDA contact?',
+      answer:
+        'If you have any questions regarding curriculum, reach out to Barb@pdachain.com.',
+    },
+    {
+      id: 2,
+      question: 'What if I run into technical difficulties?',
+      answer:
+        'We are happy to help at the Packaging School—email info@packagingschool.com.',
+    },
+    {
+      id: 3,
+      question: 'How do I sign up?',
+      answer:
+        'Refer to the slide deck / PDF at the top of the page or email info@packagingschool.com.',
+    },
+  ];
   const [searchQuery, setSearchQuery] = useState('');
   const [learningOfTheMonthQuery, setLearningOfTheMonthQuery] = useState('');
   const [learningOfTheMonths, setLearningOfTheMonths] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     const fetchLearningOfTheMonths = async () => {
@@ -115,6 +152,24 @@ const Page = () => {
     };
     fetchLearningOfTheMonths();
   }, []);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  // Add filtering before pagination
+  const filteredItems = learningOfTheMonths.filter(
+    (lesson) =>
+      lesson.title
+        .toLowerCase()
+        .includes(learningOfTheMonthQuery.toLowerCase()) ||
+      lesson.subhead
+        .toLowerCase()
+        .includes(learningOfTheMonthQuery.toLowerCase())
+  );
+
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
   return (
     <div className='w-full flex flex-col pt-10 pb-40'>
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
@@ -228,8 +283,8 @@ const Page = () => {
           <div className='relative flex items-center'>
             <input
               type='text'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={learningOfTheMonthQuery}
+              onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
               placeholder='Search courses...'
               className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fd3841] focus:border-transparent'
             />
@@ -239,10 +294,75 @@ const Page = () => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
         <div className='grid grid-cols-4 gap-8'>
-          {learningOfTheMonths.map((lesson) => (
+          {currentItems.map((lesson) => (
             <LOTMCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
+        {totalPages > 1 && (
+          <div className='flex justify-center items-center gap-4 mt-8'>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`flex items-center gap-1 ${
+                currentPage === 1
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-gray-700 hover:text-[#fd3841]'
+              } transition-all duration-300`}
+            >
+              ←
+            </button>
+            <span className='text-gray-700'>
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={`flex items-center gap-1 ${
+                currentPage === totalPages
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-gray-700 hover:text-[#fd3841]'
+              } transition-all duration-300`}
+            >
+              →
+            </button>
+          </div>
+        )}
+      </div>
+      <div className='mx-auto divide-y divide-gray-900/10 w-full max-w-7xl bg-[#f4f4f5] rounded-lg p-10 mt-10'>
+        <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>
+          Frequently asked questions
+        </h2>
+        <dl className='mt-10 space-y-6 divide-y divide-gray-900/10'>
+          {faqs.map((faq) => (
+            <Disclosure as='div' key={faq.question} className='pt-6'>
+              {({ open }) => (
+                <>
+                  <dt>
+                    <Disclosure.Button className='flex w-full items-start justify-between text-left text-gray-900'>
+                      <span className='text-base font-semibold leading-7'>
+                        {faq.question}
+                      </span>
+                      <span className='ml-6 flex h-7 items-center'>
+                        {open ? (
+                          <MinusIcon className='h-6 w-6' aria-hidden='true' />
+                        ) : (
+                          <PlusIcon className='h-6 w-6' aria-hidden='true' />
+                        )}
+                      </span>
+                    </Disclosure.Button>
+                  </dt>
+                  <Disclosure.Panel as='dd' className='mt-2 pr-12'>
+                    <p className='text-base leading-7 text-gray-600'>
+                      {faq.answer}
+                    </p>
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          ))}
+        </dl>
       </div>
     </div>
   );
