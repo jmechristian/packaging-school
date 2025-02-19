@@ -175,10 +175,10 @@ const Page = () => {
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
         <div
           className='bg-[#fd3841] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-repeat flex items-center'
-          //   style={{
-          //     backgroundImage:
-          //       'url(https://packschool.s3.us-east-1.amazonaws.com/dvi-logo-96.png)',
-          //   }}
+          style={{
+            backgroundImage:
+              'url(https://packschool.s3.us-east-1.amazonaws.com/dvi-back.png)',
+          }}
         >
           <div className='w-1/2 flex flex-col gap-5 px-16'>
             <div className='text-4xl font-bold text- tracking-wide'>
