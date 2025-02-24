@@ -202,7 +202,7 @@ const Page = () => {
               width={'100%'}
               height={'100%'}
               slidesLink={
-                'https://docs.google.com/presentation/d/1njv_Q25JTyNzsDVjP7GqIq_U3Udfg7DSpgoBP-gqLWg/edit?usp=sharing'
+                'https://docs.google.com/presentation/d/1rjivCaylWO7XMraFO6fpL13g4-DlnSO50Zi92aDNoFk/edit#slide=id.p'
               }
               position={1}
               showControls
