@@ -496,9 +496,12 @@ type User @model @auth(rules: [{ allow: public }]) {
   email: String! @index(name: "userByEmail")
   office: String
   bio: String
+  interests: String
+  goals: String
   cell: String
   picture: String
   linkedin: String
+  location: String
   companyID: ID @index(name: "userByCompany")
   apss: [APS] @manyToMany(relationName: "APSUser")
   cmpmFormID: ID
@@ -511,6 +514,12 @@ type User @model @auth(rules: [{ allow: public }]) {
   savedArticles: [String]
   source: String
   achievements: [Achievement] @manyToMany(relationName: "AchievementUsers")
+  onboardingComplete: Boolean @default(value: "false")
+  onboardingCompleteDate: String
+  totalXp: Int
+  level: Int
+  xpToNextLevel: Int
+  lastLogin: String
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {

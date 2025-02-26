@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   user: null,
+  awsUser: null,
   loginOpen: true,
   location: {
     ip: null,
@@ -60,6 +61,12 @@ export const authSlice = createSlice({
         state.cart.items[itemIndex].quantity = quantity;
       }
     },
+    setAWSUser: (state, action) => {
+      state.awsUser = action.payload;
+    },
+    updateUser: (state, action) => {
+      state.awsUser = { ...state.awsUser, ...action.payload };
+    },
   },
 });
 
@@ -73,6 +80,8 @@ export const {
   setCartId,
   updateCartItemQuantity,
   clearCart,
+  setAWSUser,
+  updateUser,
 } = authSlice.actions;
 
 export default authSlice.reducer;

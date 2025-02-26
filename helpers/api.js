@@ -12,6 +12,7 @@ import {
   listCertificateObjects,
   getPurchase,
   listCMPMSessions,
+  usersByEmail,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -25,6 +26,8 @@ import {
   createCategoryClick,
   createCertificateClick,
   createIndexClick,
+  createUser,
+  updateUser,
 } from '../src/graphql/mutations';
 
 export const getSalesBarItems = async () => {
@@ -733,4 +736,28 @@ export const getCurrentCMPMSessions = async () => {
   return res.data.listCMPMSessions.items
     .filter((session) => new Date(session.deadline) > now)
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+};
+
+export const getAWSUser = async (email) => {
+  const res = await API.graphql({
+    query: usersByEmail,
+    variables: { email: email },
+  });
+  return res.data.usersByEmail.items[0];
+};
+
+export const createAWSUser = async (data) => {
+  const res = await API.graphql({
+    query: createUser,
+    variables: { input: data },
+  });
+  return res.data.createUser;
+};
+
+export const updateAWSUser = async (data) => {
+  const res = await API.graphql({
+    query: updateUser,
+    variables: { input: data },
+  });
+  return res.data.updateUser;
 };

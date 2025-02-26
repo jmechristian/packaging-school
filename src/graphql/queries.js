@@ -2093,9 +2093,12 @@ export const getCompany = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -2104,6 +2107,12 @@ export const getCompany = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -2531,9 +2540,12 @@ export const getUser = /* GraphQL */ `
       email
       office
       bio
+      interests
+      goals
       cell
       picture
       linkedin
+      location
       companyID
       apss {
         items {
@@ -2556,9 +2568,12 @@ export const getUser = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -2567,6 +2582,12 @@ export const getUser = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -2610,9 +2631,12 @@ export const getUser = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -2621,6 +2645,12 @@ export const getUser = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -2670,6 +2700,12 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      onboardingComplete
+      onboardingCompleteDate
+      totalXp
+      level
+      xpToNextLevel
+      lastLogin
       createdAt
       updatedAt
     }
@@ -2690,9 +2726,12 @@ export const listUsers = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -2771,6 +2810,12 @@ export const listUsers = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -2801,9 +2846,12 @@ export const usersByName = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -2882,6 +2930,12 @@ export const usersByName = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -2912,9 +2966,12 @@ export const usersByEmail = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -2993,6 +3050,12 @@ export const usersByEmail = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -3023,9 +3086,12 @@ export const usersByCompanyID = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -3104,6 +3170,12 @@ export const usersByCompanyID = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -3216,9 +3288,12 @@ export const getCMPMForm = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -3297,6 +3372,12 @@ export const getCMPMForm = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -3348,9 +3429,12 @@ export const listCMPMForms = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -3359,6 +3443,12 @@ export const listCMPMForms = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -3407,9 +3497,12 @@ export const getCPSForm = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -3488,6 +3581,12 @@ export const getCPSForm = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -3541,9 +3640,12 @@ export const listCPSForms = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -3552,6 +3654,12 @@ export const listCPSForms = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -8313,9 +8421,12 @@ export const getAPSUser = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -8394,6 +8505,12 @@ export const getAPSUser = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -8427,9 +8544,12 @@ export const listAPSUsers = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -8438,6 +8558,12 @@ export const listAPSUsers = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -8481,9 +8607,12 @@ export const aPSUsersByAPSId = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -8492,6 +8621,12 @@ export const aPSUsersByAPSId = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -8535,9 +8670,12 @@ export const aPSUsersByUserId = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -8546,6 +8684,12 @@ export const aPSUsersByUserId = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -9111,9 +9255,12 @@ export const getAchievementUsers = /* GraphQL */ `
         email
         office
         bio
+        interests
+        goals
         cell
         picture
         linkedin
+        location
         companyID
         apss {
           nextToken
@@ -9192,6 +9339,12 @@ export const getAchievementUsers = /* GraphQL */ `
         achievements {
           nextToken
         }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
         createdAt
         updatedAt
       }
@@ -9236,9 +9389,12 @@ export const listAchievementUsers = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -9247,6 +9403,12 @@ export const listAchievementUsers = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -9294,9 +9456,12 @@ export const achievementUsersByUserId = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -9305,6 +9470,12 @@ export const achievementUsersByUserId = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }
@@ -9352,9 +9523,12 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           email
           office
           bio
+          interests
+          goals
           cell
           picture
           linkedin
+          location
           companyID
           cmpmFormID
           cpsFormID
@@ -9363,6 +9537,12 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           savedLessons
           savedArticles
           source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
           createdAt
           updatedAt
         }

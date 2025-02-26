@@ -28,7 +28,7 @@
     "@aws-sdk/lib-dynamodb": "^3.312.0",
     "@headlessui/react": "^1.7.12",
     "@heroicons/react": "^2.0.11",
-    "@jmechristian/ps-component-library": "^2.5.87",
+    "@jmechristian/ps-component-library": "^2.5.90",
     "@popmotion/popcorn": "^0.4.4",
     "@react-email/components": "^0.0.14",
     "@react-email/render": "^0.0.12",

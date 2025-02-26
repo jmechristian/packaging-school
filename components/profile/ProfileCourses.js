@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { MdStar, MdStarBorder } from 'react-icons/md';
-
+import { MdStar, MdStarBorder, MdSearch } from 'react-icons/md';
+import { useRouter } from 'next/router';
 const ProfileCourses = ({ userCourses }) => {
   console.log('userCourses', userCourses);
   const { user } = useSelector((state) => state.auth);
   const [courses, setCourses] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -37,7 +37,7 @@ const ProfileCourses = ({ userCourses }) => {
         {userCourses.map((course) => (
           <div
             key={course.id}
-            className='bg-white border border-slate-300 rounded w-full h-[300px] pb-3'
+            className='bg-white border border-slate-300 rounded w-full h-[250px] pb-1.5'
           >
             <div className='flex flex-col justify-between h-full'>
               <div className='flex flex-col gap-3'>
@@ -46,7 +46,7 @@ const ProfileCourses = ({ userCourses }) => {
                   style={{ backgroundImage: `url(${course.cardImage.url})` }}
                 ></div>
                 <div className='flex flex-col gap-1'>
-                  <div className='text-sm font-bold px-2 leading-tight'>
+                  <div className='text-xs font-bold px-2 leading-tight'>
                     {course.name}
                   </div>
                   <div className='text-xs text-slate-500 px-2'>
@@ -98,6 +98,20 @@ const ProfileCourses = ({ userCourses }) => {
             </div>
           </div>
         ))}
+        <div
+          className='group w-full h-full border-dashed border-gray-300 rounded-lg border-2 flex flex-col gap-3 items-center justify-center hover:bg-gray-200 cursor-pointer transition-all duration-300'
+          onClick={() => router.push('/all_courses')}
+        >
+          <div className='w-16 h-16 rounded-full flex items-center justify-center bg-gray-300 group-hover:bg-gray-400 transition-all duration-300'>
+            <MdSearch
+              size={38}
+              className='text-gray-500 group-hover:text-gray-100 transition-all duration-100 group-hover:animate-rotate'
+            />
+          </div>
+          <div className='text-sm text-gray-500 font-bold'>
+            Find Your Next Course
+          </div>
+        </div>
       </div>
     )
   );

@@ -1,37 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLocation, setUser } from '../auth/authslice';
-
+import { setLocation, setUser, setAWSUser } from '../auth/authslice';
+import { getAWSUser, createAWSUser } from '../../helpers/api';
 import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
-
 import HeaderNew from '../navigation/Header/HeaderNew';
-
 import Loading from '../../components/shared/Loading';
-
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
 
 import { useRouter } from 'next/router';
 
 const Layout = ({ children }) => {
-  const router = useRouter();
+  // const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
-  const { searchOpen } = useSelector((state) => state.nav);
+  // const { searchOpen } = useSelector((state) => state.nav);
   const { location, cart } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
 
   useEffect(() => {
+    const checkUser = async () => {
+      const dbUser = await getAWSUser(user.email);
+      if (!dbUser) {
+        const newUser = await createAWSUser({
+          email: user.email,
+          name: user.name,
+        });
+        dispatch(setAWSUser(newUser));
+      } else {
+        dispatch(setAWSUser(dbUser));
+      }
+    };
+
     if (!userIsLoading && user) {
-      console.log('🔍 Current user state:', user);
+      // console.log('🔍 Current user state:', user);
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
 
       if (user.ssoRedirectUrl && !hasCompletedSSO) {
-        console.log('🔄 Found SSO redirect URL:', user.ssoRedirectUrl);
         sessionStorage.setItem('ssoComplete', 'true');
         setTimeout(() => {
           window.location.href = user.ssoRedirectUrl;
@@ -40,7 +49,8 @@ const Layout = ({ children }) => {
       }
 
       dispatch(setUser(user));
-      console.log('👤 User set in Redux');
+      checkUser();
+      // TODO: Check for user in database, if not there, create user
     }
   }, [user, userIsLoading]);
 

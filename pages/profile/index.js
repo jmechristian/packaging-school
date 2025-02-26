@@ -11,8 +11,14 @@ import {
   TbFileCertificate,
   TbBrain,
   TbBook,
+  TbLocation,
+  TbWorld,
+  TbEdit,
 } from 'react-icons/tb';
-
+import { updateAWSUser } from '../../helpers/api';
+import { API, graphqlOperation } from 'aws-amplify';
+import { onUpdateUser } from '../../src/graphql/subscriptions';
+import { updateUser } from '../../features/auth/authslice';
 const LEVELS_CONFIG = [
   {
     level: 1,
@@ -167,8 +173,222 @@ const LEVELS_CONFIG = [
   // ... add more levels as needed
 ];
 
+const EditProfileForm = ({ onClose, user }) => {
+  const [formData, setFormData] = useState({
+    company: user?.company || '',
+    title: user?.title || '',
+    location: user?.location || '',
+    bio: user?.bio || '',
+    interests: user?.interests || '',
+    goals: user?.goals || '',
+    linkedin: user?.linkedin || '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { awsUser } = useSelector((state) => state.auth);
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await updateAWSUser({
+        id: awsUser.id,
+        ...formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      onClose();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center'>
+      <div className='bg-white dark:bg-dark-dark rounded-lg p-8 max-w-2xl w-full'>
+        <div className='flex justify-between items-center mb-6'>
+          <h2 className='text-2xl font-bold text-gray-900'>Edit Profile</h2>
+          <button
+            onClick={onClose}
+            className='text-gray-500 hover:text-gray-700'
+          >
+            <svg
+              className='w-6 h-6'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M6 18L18 6M6 6l12 12'
+              />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleEditSubmit} className='space-y-4'>
+          <div className='grid grid-cols-2 gap-4'>
+            <div>
+              <label className='block mb-2 text-sm font-medium text-slate-600'>
+                Company
+              </label>
+              <input
+                type='text'
+                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+                value={formData.company}
+                onChange={(e) =>
+                  setFormData({ ...formData, company: e.target.value })
+                }
+                placeholder='Your company name'
+              />
+            </div>
+            <div>
+              <label className='block mb-2 text-sm font-medium text-slate-600'>
+                Title
+              </label>
+              <input
+                type='text'
+                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder='Your job title'
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              Location
+            </label>
+            <input
+              type='text'
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+              value={formData.location}
+              onChange={(e) =>
+                setFormData({ ...formData, location: e.target.value })
+              }
+              placeholder='City, State, Country'
+            />
+          </div>
+
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              LinkedIn Profile
+            </label>
+            <div className='flex items-center'>
+              <span className='bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg px-3 py-2.5 text-gray-500'>
+                linkedin.com/in/
+              </span>
+              <input
+                type='text'
+                className='flex-1 p-2.5 rounded-r-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+                value={formData.linkedin}
+                onChange={(e) =>
+                  setFormData({ ...formData, linkedin: e.target.value })
+                }
+                placeholder='username'
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              Bio
+            </label>
+            <textarea
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+              value={formData.bio}
+              onChange={(e) =>
+                setFormData({ ...formData, bio: e.target.value })
+              }
+              placeholder='Tell us about your professional background and experience...'
+            />
+          </div>
+
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              Interests
+            </label>
+            <textarea
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+              value={formData.interests}
+              onChange={(e) =>
+                setFormData({ ...formData, interests: e.target.value })
+              }
+              placeholder='What areas of packaging are you most interested in?'
+            />
+          </div>
+
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              Professional Goals
+            </label>
+            <textarea
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+              value={formData.goals}
+              onChange={(e) =>
+                setFormData({ ...formData, goals: e.target.value })
+              }
+              placeholder='What are your professional development goals?'
+            />
+          </div>
+
+          <div className='flex justify-end gap-3 pt-4 border-t'>
+            <button
+              type='button'
+              onClick={onClose}
+              disabled={isSubmitting}
+              className='px-4 py-2 text-gray-600 hover:text-gray-800 font-medium disabled:opacity-50'
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              disabled={isSubmitting}
+              className='px-6 py-2 bg-clemson text-white rounded-lg font-bold hover:bg-clemson/90 transition-colors disabled:opacity-50 flex items-center gap-2'
+            >
+              {isSubmitting ? (
+                <>
+                  <svg className='animate-spin h-5 w-5' viewBox='0 0 24 24'>
+                    <circle
+                      className='opacity-25'
+                      cx='12'
+                      cy='12'
+                      r='10'
+                      stroke='currentColor'
+                      strokeWidth='4'
+                      fill='none'
+                    />
+                    <path
+                      className='opacity-75'
+                      fill='currentColor'
+                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                    />
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default withPageAuthRequired(function Page() {
-  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const { user, awsUser } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState(0);
   const [currentXP, setCurrentXP] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
@@ -183,9 +403,50 @@ export default withPageAuthRequired(function Page() {
   const [currentAchievement, setCurrentAchievement] = useState(null);
   const [isAchievementProgress, setIsAchievementProgress] = useState([]);
   const [shownAchievements, setShownAchievements] = useState(new Set());
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [formData, setFormData] = useState({
+    company: '',
+    title: '',
+    location: '',
+    bio: '',
+    interests: '',
+    goals: '',
+    linkedin: '',
+  });
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const profileItems = [
+    {
+      title: 'Daily Streak',
+      icon: TbBolt,
+      value: 0,
+    },
+    {
+      title: 'Total XP',
+      icon: TbFlame,
+      value: 0,
+    },
+    {
+      title: 'Achievements',
+      icon: TbTrophy,
+      value: 0,
+    },
+    {
+      title: 'Certificates',
+      icon: TbFileCertificate,
+      value: 0,
+    },
+    {
+      title: 'Courses Enrolled',
+      icon: TbBrain,
+      value: 0,
+    },
+    {
+      title: 'Lessons Completed',
+      icon: TbBook,
+      value: 0,
+    },
+  ];
 
   useEffect(() => {
     const getThinkificUser = async (email) => {
@@ -206,6 +467,35 @@ export default withPageAuthRequired(function Page() {
       getThinkificUser(user.email);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!awsUser?.onboardingComplete) {
+      setShowOnboardingModal(true);
+    }
+  }, [awsUser]);
+
+  useEffect(() => {
+    let subscription;
+
+    if (awsUser?.id) {
+      // Subscribe to user updates
+      subscription = API.graphql(
+        graphqlOperation(onUpdateUser, { id: awsUser.id })
+      ).subscribe({
+        next: ({ value }) => {
+          const updatedUser = value.data.onUpdateUser;
+          // Update Redux store with new user data
+          dispatch(updateUser(updatedUser));
+        },
+        error: (error) => console.error('Subscription error:', error),
+      });
+    }
+
+    // Cleanup subscription on unmount
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
+  }, [awsUser?.id, dispatch]);
 
   const calculateLevelProgress = (xp) => {
     let currentLevel = 1;
@@ -275,187 +565,300 @@ export default withPageAuthRequired(function Page() {
     }, 0);
   }, [thinkificUser, calculateCourseXP]);
 
+  const userLevel = useMemo(() => {
+    return calculateLevelProgress(currentUserXP);
+  }, [currentUserXP]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await updateAWSUser({
+        id: awsUser.id,
+        ...formData,
+        onboardingComplete: true,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      setShowOnboardingModal(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
   return (
-    <div className='flex flex-col w-full h-full relative bg-gray-800'>
-      <div className={`w-full pt-16 flex flex-col gap-16`}>
-        <div className='grid lg:grid-cols-2 gap-20 max-w-6xl mx-auto w-full'>
-          {/* LEFT SIDE */}
-          <div className='flex items-center gap-5 w-full h-full'>
-            <div className='flex flex-col justify-end gap-4 w-full h-full'>
-              <div className='flex items-center gap-6'>
-                <div className='w-[90px] h-[90px] overflow-hidden rounded-full ring-4 ring-clemson ml-2'>
-                  <img
-                    src={user?.picture || ''}
-                    alt='Profile'
-                    className='w-full h-full object-cover'
-                    loading='lazy'
-                    onError={(e) => {
-                      e.currentTarget.src = ''; // Fallback image
-                    }}
-                  />
-                </div>
-                <div className='flex flex-col gap-0 leading-snug'>
-                  <div className='text-white text-2xl font-semibold leading-none'>
-                    {user?.name}
+    <div className='flex flex-col w-full h-full relative bg-gray-100'>
+      {showOnboardingModal && (
+        <div className='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center'>
+          <div className='bg-white dark:bg-dark-dark rounded-lg p-5 max-w-4xl w-full'>
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-4 grid grid-cols-5 gap-6'
+            >
+              <div
+                className='w-full h-full bg-cover bg-center col-span-2 flex flex-col justify-between p-5'
+                style={{
+                  backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/reg-form-image.png')`,
+                }}
+              >
+                <div className='flex flex-col gap-3'>
+                  <div className='text-3xl font-bold text-white tracking-tight leading-[1.1]'>
+                    Welcome to{' '}
+                    <span className='text-white/60'>Packaging School</span>
                   </div>
-                  <div className='text-white text-sm'>{user?.email}</div>
-                  <div className='text-gray-500 text-sm'>
-                    Web Director / Packaging School
+                  <div className='text-white font-medium leading-snug'>
+                    We are excited to have you onboard! Tell us a little bit
+                    about yourself so our learning community can best serve you.
+                  </div>
+                </div>
+                <div className='flex justify-end text-right text-white font-medium text-xs w-full'>
+                  <div className='w-2/3'>
+                    Thomas Roudebush, <br />
+                    Certificate of Mastery in Packaging Management, 2018
                   </div>
                 </div>
               </div>
-              <div className='flex items-center gap-3 rounded-lg p-3 max-w-lg'>
-                <div className='text-yellow-500 text-sm bg-gray-700 dark:bg-dark-mid px-2 py-1 rounded font-bold w-24 flex flex-col items-center justify-center'>
-                  <div>Level</div>{' '}
-                  <div className='text-white text-2xl font-bold'>
-                    {calculateLevelProgress(currentUserXP).level}
+              <div className='col-span-3 flex flex-col gap-4'>
+                <div className='grid grid-cols-2 gap-4 w-full'>
+                  <div>
+                    <label className='block mb-2 text-sm font-medium text-slate-600'>
+                      Company
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 rounded border border-gray-500 focus:border-clemson focus:ring-1 focus:ring-clemson'
+                      value={formData.company}
+                      onChange={(e) =>
+                        setFormData({ ...formData, company: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className='block mb-2 text-sm font-medium text-slate-600'>
+                      Title
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 rounded border border-gray-500 focus:border-clemson focus:ring-1 focus:ring-clemson'
+                      value={formData.title}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
+                    />
                   </div>
                 </div>
-                <div className='flex flex-col gap-0 mt-1 w-full'>
-                  <div className='w-full h-2.5 bg-gray-200 rounded-full'>
-                    <div
-                      className='h-2.5 bg-green-500 rounded-full'
-                      style={{
-                        width: `${
-                          calculateLevelProgress(currentUserXP).progress
-                        }%`,
-                      }}
-                    ></div>
+                <div>
+                  <label className='block mb-2 text-sm font-medium text-slate-600'>
+                    Tell us about your background.
+                  </label>
+                  <textarea
+                    className='w-full p-2 rounded border border-gray-500 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+                    value={formData.bio}
+                    onChange={(e) =>
+                      setFormData({ ...formData, bio: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className='block mb-2 text-sm font-medium text-slate-600'>
+                    What are you most interested in studying?
+                  </label>
+                  <textarea
+                    className='w-full p-2 rounded border border-gray-500 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+                    value={formData.interests}
+                    onChange={(e) =>
+                      setFormData({ ...formData, interests: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className='block mb-2 text-sm font-medium text-slate-600'>
+                    What are your education goals?
+                  </label>
+                  <textarea
+                    className='w-full p-2 rounded border border-gray-500 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
+                    value={formData.goals}
+                    onChange={(e) =>
+                      setFormData({ ...formData, goals: e.target.value })
+                    }
+                  />
+                </div>
+                <div className='flex justify-end gap-3 mt-6 '>
+                  <button
+                    type='button'
+                    onClick={() => setShowOnboardingModal(false)}
+                    className='px-4 py-2  hover:text-gray-500 cursor-pointer'
+                  >
+                    Skip
+                  </button>
+                  <div className='relative group'>
+                    <button
+                      type='submit'
+                      className={`px-6 py-2 rounded font-bold ${'bg-clemson text-white hover:bg-clemson/80'}`}
+                    >
+                      Let&apos;s go! (+50 PXP)
+                    </button>
+                    <div className='absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48'>
+                      <div className='bg-gray-900 text-white text-xs rounded py-1.5 px-2 text-center'>
+                        PXP (PackSchool Experience Points) help track your
+                        learning progress, level up, and unlock bonuses.
+                        <div className='absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900'></div>
+                      </div>
+                    </div>
                   </div>
-                  <div className='text-gray-200 text-xs text-right mt-1.5 mr-1'>
-                    <span className='text-green-500'>
-                      {calculateLevelProgress(currentUserXP).xpNeeded} Pack XP
-                    </span>{' '}
-                    till level {calculateLevelProgress(currentUserXP).level + 1}
-                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      <div className='grid grid-cols-12 gap-8 max-w-7xl mx-auto py-16'>
+        <div className='col-span-3 w-full flex justify-end'>
+          <div className='flex flex-col gap-5 w-full bg-white px-8 py-8 h-fit rounded-lg'>
+            <div
+              className='aspect-[1/1] w-28 bg-cover bg-center'
+              style={{
+                backgroundImage: `url(${user?.picture})`,
+              }}
+            ></div>
+            <div className='flex flex-col gap-0 leading-tight'>
+              <div className='text-2xl font-bold text-gray-900'>
+                {user?.name}
+              </div>
+              <div className='text-sm font-medium text-gray-500'>
+                {user?.email}
+              </div>
+            </div>
+
+            <div className='flex flex-col gap-2'>
+              <div className='text-lg text-gray-900 leading-tight'>
+                {awsUser?.title || 'Your Title'} at{' '}
+                <span className='font-bold'>
+                  {awsUser?.company || 'Your Company'}
+                </span>
+              </div>
+              <div className='flex items-center gap-1'>
+                <TbWorld className='text-gray-500' />
+                <div className='text-gray-500'>
+                  {awsUser?.location || 'Your Location'}
                 </div>
               </div>
             </div>
-          </div>
-          <div>
-            {/* RIGHT SIDE */}
-            <div className='grid grid-cols-3 gap-2.5 w-full'>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase font-medium'>
-                  Daily Streak
-                </div>
-                <div className='flex items-center gap-1'>
-                  <div className='text-white/60'>
-                    <TbFlame className='text-red-400 w-6 h-6' />
-                  </div>
-                  <div className='text-white font-medium text-3xl'>10</div>
-                </div>
-              </div>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase font-medium'>
-                  Total XP
-                </div>
-                <div className='flex items-center gap-1'>
-                  <div className='text-white/60'>
-                    <TbBolt className='text-yellow-400 w-6 h-6' />
-                  </div>
-                  <div className='text-white font-medium text-3xl'>
-                    {currentUserXP ? currentUserXP : 0}
-                  </div>
-                </div>
-              </div>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase font-medium'>
-                  Achievements
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div className='text-white/60'>
-                    <TbTrophy className='text-amber-500 w-6 h-6' />
-                  </div>
-                  <div className='text-white font-medium text-3xl'>
-                    {totalAchievements.length}
-                  </div>
-                </div>
-              </div>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase font-medium'>
-                  Certificates
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div className='text-white/60'>
-                    <TbFileCertificate className='text-indigo-300 w-6 h-6' />
-                  </div>
-                  <div className='text-white font-medium text-3xl'>0</div>
+            <button
+              className='flex border bg-gray-100 border-gray-300 rounded-md px-2 py-1 w-fit items-center gap-2 text-xs text-gray-600 hover:text-clemson transition-colors'
+              onClick={() => setShowEditModal(true)}
+            >
+              <TbEdit size={16} />
+              <span>Edit Profile</span>
+            </button>
+            <hr className='w-full border-gray-500 mt-2.5' />
+            <div className='flex flex-col gap-2 items-center'>
+              <div className='relative w-40 h-40'>
+                {/* XP Progress Ring */}
+                <svg className='w-full h-full transform -rotate-90'>
+                  <circle
+                    cx='80'
+                    cy='80'
+                    r='64'
+                    stroke='#e5e7eb'
+                    strokeWidth='12'
+                    fill='transparent'
+                  />
+                  <circle
+                    cx='80'
+                    cy='80'
+                    r='64'
+                    stroke='#F66733'
+                    strokeWidth='12'
+                    fill='transparent'
+                    strokeDasharray={`${2 * Math.PI * 64}`}
+                    strokeDashoffset={`${
+                      2 * Math.PI * 64 * (1 - userLevel.progress / 100)
+                    }`}
+                    className='transition-all duration-700'
+                  />
+                </svg>
+                {/* Level Number */}
+                <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
+                  <span className='text-4xl font-bold'>{userLevel.level}</span>
+                  <span className='text-sm text-gray-500'>Level</span>
                 </div>
               </div>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase'>
-                  Courses Enrolled
+              {/* XP Info */}
+              <div className='flex flex-col gap-0 text-center'>
+                <div className='text-sm font-medium'>
+                  {userLevel.xpNeeded.toLocaleString()} XP to next level
                 </div>
-                <div className='flex items-center gap-2'>
-                  <div className='text-white/60'>
-                    <TbBrain className='text-pink-500 w-6 h-6' />
-                  </div>
-                  <div className='text-white font-medium text-3xl'>
-                    {userCourses ? userCourses.length : 0}
-                  </div>
+                <div className='text-sm text-gray-500'>
+                  Total XP: {currentUserXP.toLocaleString()}
                 </div>
               </div>
-              <div className='rounded-xl bg-dark-dark p-4 flex flex-col gap-2 items-center justify-center shadow-lg'>
-                <div className='text-white/60 text-xs uppercase'>
-                  Lessons Complete
-                </div>
-                <div className='flex items-center gap-3'>
-                  <div className='text-white/60'>
-                    <TbBook className='text-green-500 w-6 h-6' />
+            </div>
+            <hr className='w-full border-gray-500 mt-2.5 mb-2.5' />
+            <div className='flex flex-col gap-2.5'>
+              {profileItems.map((item) => (
+                <div
+                  className='flex w-full justify-between items-center'
+                  key={item.title}
+                >
+                  <div className='flex items-center gap-2'>
+                    <item.icon size={16} />
+                    <div className='font-medium'>{item.title}</div>
                   </div>
-                  <div className='text-white font-medium text-3xl'>
-                    {totalLessons.length}
-                  </div>
+                  <div className='font-medium'>{item.value}</div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
-        <div className='relative'>
-          <div className='flex flex-col w-full'>
-            {/* Tab Navigation */}
-            <div className='w-full max-w-6xl mx-auto dark:bg-dark-dark flex items-center py-3'>
-              <nav className='flex gap-4 items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  {[
-                    'My Courses',
-                    'My Certificates',
-                    'Learning Paths',
-                    'Achievements',
-                    'Saved Content',
-                    'Wishlist',
-                  ].map((tab, index) => (
-                    <button
-                      key={tab}
-                      className={`py-2 px-2 text-sm transition-colors relative
+        {/* MAIN CONTENT */}
+        <div className={`col-span-9 w-full flex flex-col `}>
+          <div className='relative'>
+            <div className='flex flex-col w-full'>
+              {/* Tab Navigation */}
+              <div className='w-full flex items-center rounded-t-lg overflow-hidden'>
+                <nav className='flex gap-4 items-center justify-between'>
+                  <div className='flex items-center gap-1.5'>
+                    {[
+                      'My Courses',
+                      'My Certificates',
+                      'Learning Paths',
+                      'Achievements',
+                      'Saved Content',
+                      'Wishlist',
+                    ].map((tab, index) => (
+                      <button
+                        key={tab}
+                        className={`py-2.5 px-4 text-sm transition-colors relative  rounded-t-lg
                   ${
                     activeTab === index
-                      ? 'text-clemson font-bold'
-                      : ' hover:text-clemson text-white/70 font-medium'
+                      ? 'text-white bg-base-dark font-bold'
+                      : ' hover:text-white text-gray-500 font-medium hover:bg-base-mid'
                   }`}
-                      onClick={() => setActiveTab(index)}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
-              </nav>
-            </div>
-
-            {/* Tab Content */}
-            <div className='min-h-[600px] w-full bg-white dark:bg-dark-mid'>
-              <div className='max-w-6xl mx-auto py-16'>
-                {/* My Courses */}
-                {activeTab === 0 && (
-                  <div className='flex flex-col gap-5'>
-                    <ProfileCourses
-                      userCourses={thinkificUser?.courses?.nodes}
-                    />
+                        onClick={() => setActiveTab(index)}
+                      >
+                        {tab}
+                      </button>
+                    ))}
                   </div>
-                )}
-                {/* Learning Paths */}
-                {/* {activeTab === 2 && (
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              <div className='min-h-[600px] w-full bg-white p-10 rounded-b-lg'>
+                <div className='max-w-5xl'>
+                  {/* My Courses */}
+                  {activeTab === 0 && (
+                    <div className='flex flex-col gap-5'>
+                      <ProfileCourses
+                        userCourses={thinkificUser?.courses?.nodes}
+                      />
+                    </div>
+                  )}
+                  {/* Learning Paths */}
+                  {/* {activeTab === 2 && (
                 <div className='flex flex-col gap-4'>
                   <div className='grid grid-cols-4 gap-8'>
                     <PathCard
@@ -529,8 +932,8 @@ export default withPageAuthRequired(function Page() {
                 </div>
               )} */}
 
-                {/* Achievements */}
-                {/* {activeTab === 3 && (
+                  {/* Achievements */}
+                  {/* {activeTab === 3 && (
                 <div className='flex flex-col gap-4'>
                   <div className='grid grid-cols-4 gap-5'>
                     {achievements.map((achievement) => (
@@ -543,19 +946,23 @@ export default withPageAuthRequired(function Page() {
                   </div>
                 </div>
               )} */}
-                {/* Saved Content */}
-                {/* {activeTab === 4 && (
+                  {/* Saved Content */}
+                  {/* {activeTab === 4 && (
                 <div className='flex flex-col gap-2'>
                   {totalLessons.map((lesson) => (
                     <div key={lesson}>{lesson}</div>
                   ))}
                 </div>
               )} */}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {showEditModal && (
+        <EditProfileForm onClose={() => setShowEditModal(false)} user={user} />
+      )}
     </div>
   );
 });
