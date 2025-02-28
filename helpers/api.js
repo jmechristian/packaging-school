@@ -13,6 +13,7 @@ import {
   getPurchase,
   listCMPMSessions,
   usersByEmail,
+  listCohorts,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -760,4 +761,11 @@ export const updateAWSUser = async (data) => {
     variables: { input: data },
   });
   return res.data.updateUser;
+};
+
+export const getCohorts = async () => {
+  const res = await API.graphql({
+    query: listCohorts,
+  });
+  return res.data.listCohorts.items;
 };

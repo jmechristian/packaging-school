@@ -3390,6 +3390,16 @@ export const createUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      cohorts {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3574,6 +3584,16 @@ export const updateUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      cohorts {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3758,8 +3778,162 @@ export const deleteUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      cohorts {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createCohort = /* GraphQL */ `
+  mutation CreateCohort(
+    $input: CreateCohortInput!
+    $condition: ModelCohortConditionInput
+  ) {
+    createCohort(input: $input, condition: $condition) {
+      id
+      name
+      startDate
+      endDate
+      deadline
+      users {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      instructor {
+        id
+        userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
+        coursesTaught {
+          nextToken
+        }
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      createdAt
+      updatedAt
+      instructorCohortsId
+      cohortInstructorId
+    }
+  }
+`;
+export const updateCohort = /* GraphQL */ `
+  mutation UpdateCohort(
+    $input: UpdateCohortInput!
+    $condition: ModelCohortConditionInput
+  ) {
+    updateCohort(input: $input, condition: $condition) {
+      id
+      name
+      startDate
+      endDate
+      deadline
+      users {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      instructor {
+        id
+        userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
+        coursesTaught {
+          nextToken
+        }
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      createdAt
+      updatedAt
+      instructorCohortsId
+      cohortInstructorId
+    }
+  }
+`;
+export const deleteCohort = /* GraphQL */ `
+  mutation DeleteCohort(
+    $input: DeleteCohortInput!
+    $condition: ModelCohortConditionInput
+  ) {
+    deleteCohort(input: $input, condition: $condition) {
+      id
+      name
+      startDate
+      endDate
+      deadline
+      users {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      instructor {
+        id
+        userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
+        coursesTaught {
+          nextToken
+        }
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      createdAt
+      updatedAt
+      instructorCohortsId
+      cohortInstructorId
     }
   }
 `;
@@ -3919,6 +4093,9 @@ export const createCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4058,6 +4235,9 @@ export const updateCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4197,6 +4377,9 @@ export const deleteCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4336,6 +4519,9 @@ export const createCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4477,6 +4663,9 @@ export const updateCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4618,6 +4807,9 @@ export const deleteCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5748,6 +5940,12 @@ export const createInstructor = /* GraphQL */ `
     createInstructor(input: $input, condition: $condition) {
       id
       userId
+      name
+      image
+      bio
+      linkedIn
+      company
+      title
       coursesTaught {
         items {
           id
@@ -5755,6 +5953,22 @@ export const createInstructor = /* GraphQL */ `
           instructorId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      cohorts {
+        items {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
         }
         nextToken
       }
@@ -5771,6 +5985,12 @@ export const updateInstructor = /* GraphQL */ `
     updateInstructor(input: $input, condition: $condition) {
       id
       userId
+      name
+      image
+      bio
+      linkedIn
+      company
+      title
       coursesTaught {
         items {
           id
@@ -5778,6 +5998,22 @@ export const updateInstructor = /* GraphQL */ `
           instructorId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      cohorts {
+        items {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
         }
         nextToken
       }
@@ -5794,6 +6030,12 @@ export const deleteInstructor = /* GraphQL */ `
     deleteInstructor(input: $input, condition: $condition) {
       id
       userId
+      name
+      image
+      bio
+      linkedIn
+      company
+      title
       coursesTaught {
         items {
           id
@@ -5801,6 +6043,22 @@ export const deleteInstructor = /* GraphQL */ `
           instructorId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      cohorts {
+        items {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
         }
         nextToken
       }
@@ -10170,6 +10428,9 @@ export const createAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10303,6 +10564,9 @@ export const updateAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10436,6 +10700,9 @@ export const deleteAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10986,6 +11253,9 @@ export const createAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11114,6 +11384,9 @@ export const updateAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11242,6 +11515,9 @@ export const deleteAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11257,6 +11533,444 @@ export const deleteAchievementUsers = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCohortUsers = /* GraphQL */ `
+  mutation CreateCohortUsers(
+    $input: CreateCohortUsersInput!
+    $condition: ModelCohortUsersConditionInput
+  ) {
+    createCohortUsers(input: $input, condition: $condition) {
+      id
+      userId
+      cohortId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      cohort {
+        id
+        name
+        startDate
+        endDate
+        deadline
+        users {
+          nextToken
+        }
+        type
+        instructor {
+          id
+          userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
+          createdAt
+          updatedAt
+        }
+        description
+        createdAt
+        updatedAt
+        instructorCohortsId
+        cohortInstructorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCohortUsers = /* GraphQL */ `
+  mutation UpdateCohortUsers(
+    $input: UpdateCohortUsersInput!
+    $condition: ModelCohortUsersConditionInput
+  ) {
+    updateCohortUsers(input: $input, condition: $condition) {
+      id
+      userId
+      cohortId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      cohort {
+        id
+        name
+        startDate
+        endDate
+        deadline
+        users {
+          nextToken
+        }
+        type
+        instructor {
+          id
+          userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
+          createdAt
+          updatedAt
+        }
+        description
+        createdAt
+        updatedAt
+        instructorCohortsId
+        cohortInstructorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCohortUsers = /* GraphQL */ `
+  mutation DeleteCohortUsers(
+    $input: DeleteCohortUsersInput!
+    $condition: ModelCohortUsersConditionInput
+  ) {
+    deleteCohortUsers(input: $input, condition: $condition) {
+      id
+      userId
+      cohortId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      cohort {
+        id
+        name
+        startDate
+        endDate
+        deadline
+        users {
+          nextToken
+        }
+        type
+        instructor {
+          id
+          userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
+          createdAt
+          updatedAt
+        }
+        description
+        createdAt
+        updatedAt
+        instructorCohortsId
+        cohortInstructorId
       }
       createdAt
       updatedAt
@@ -11750,7 +12464,16 @@ export const createCourseInstructors = /* GraphQL */ `
       instructor {
         id
         userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
         coursesTaught {
+          nextToken
+        }
+        cohorts {
           nextToken
         }
         createdAt
@@ -11816,7 +12539,16 @@ export const updateCourseInstructors = /* GraphQL */ `
       instructor {
         id
         userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
         coursesTaught {
+          nextToken
+        }
+        cohorts {
           nextToken
         }
         createdAt
@@ -11882,7 +12614,16 @@ export const deleteCourseInstructors = /* GraphQL */ `
       instructor {
         id
         userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
         coursesTaught {
+          nextToken
+        }
+        cohorts {
           nextToken
         }
         createdAt

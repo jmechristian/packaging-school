@@ -2706,6 +2706,16 @@ export const getUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      cohorts {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2816,6 +2826,9 @@ export const listUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2936,6 +2949,9 @@ export const usersByName = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3056,6 +3072,9 @@ export const usersByEmail = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3176,8 +3195,95 @@ export const usersByCompanyID = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCohort = /* GraphQL */ `
+  query GetCohort($id: ID!) {
+    getCohort(id: $id) {
+      id
+      name
+      startDate
+      endDate
+      deadline
+      users {
+        items {
+          id
+          userId
+          cohortId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      instructor {
+        id
+        userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
+        coursesTaught {
+          nextToken
+        }
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      description
+      createdAt
+      updatedAt
+      instructorCohortsId
+      cohortInstructorId
+    }
+  }
+`;
+export const listCohorts = /* GraphQL */ `
+  query ListCohorts(
+    $filter: ModelCohortFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCohorts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        startDate
+        endDate
+        deadline
+        users {
+          nextToken
+        }
+        type
+        instructor {
+          id
+          userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
+          createdAt
+          updatedAt
+        }
+        description
+        createdAt
+        updatedAt
+        instructorCohortsId
+        cohortInstructorId
       }
       nextToken
     }
@@ -3378,6 +3484,9 @@ export const getCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3587,6 +3696,9 @@ export const getCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4729,6 +4841,12 @@ export const getInstructor = /* GraphQL */ `
     getInstructor(id: $id) {
       id
       userId
+      name
+      image
+      bio
+      linkedIn
+      company
+      title
       coursesTaught {
         items {
           id
@@ -4736,6 +4854,22 @@ export const getInstructor = /* GraphQL */ `
           instructorId
           createdAt
           updatedAt
+        }
+        nextToken
+      }
+      cohorts {
+        items {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
         }
         nextToken
       }
@@ -4754,7 +4888,16 @@ export const listInstructors = /* GraphQL */ `
       items {
         id
         userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
         coursesTaught {
+          nextToken
+        }
+        cohorts {
           nextToken
         }
         createdAt
@@ -8511,6 +8654,9 @@ export const getAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9345,6 +9491,9 @@ export const getAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        cohorts {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9555,6 +9704,351 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           coursesRequired
           createdAt
           updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCohortUsers = /* GraphQL */ `
+  query GetCohortUsers($id: ID!) {
+    getCohortUsers(id: $id) {
+      id
+      userId
+      cohortId
+      user {
+        id
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        thinkificId
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      cohort {
+        id
+        name
+        startDate
+        endDate
+        deadline
+        users {
+          nextToken
+        }
+        type
+        instructor {
+          id
+          userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
+          createdAt
+          updatedAt
+        }
+        description
+        createdAt
+        updatedAt
+        instructorCohortsId
+        cohortInstructorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCohortUsers = /* GraphQL */ `
+  query ListCohortUsers(
+    $filter: ModelCohortUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCohortUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        cohortId
+        user {
+          id
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          thinkificId
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        cohort {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const cohortUsersByUserId = /* GraphQL */ `
+  query CohortUsersByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCohortUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    cohortUsersByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cohortId
+        user {
+          id
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          thinkificId
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        cohort {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const cohortUsersByCohortId = /* GraphQL */ `
+  query CohortUsersByCohortId(
+    $cohortId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCohortUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    cohortUsersByCohortId(
+      cohortId: $cohortId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cohortId
+        user {
+          id
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          thinkificId
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          level
+          xpToNextLevel
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        cohort {
+          id
+          name
+          startDate
+          endDate
+          deadline
+          type
+          description
+          createdAt
+          updatedAt
+          instructorCohortsId
+          cohortInstructorId
         }
         createdAt
         updatedAt
@@ -10164,7 +10658,16 @@ export const getCourseInstructors = /* GraphQL */ `
       instructor {
         id
         userId
+        name
+        image
+        bio
+        linkedIn
+        company
+        title
         coursesTaught {
+          nextToken
+        }
+        cohorts {
           nextToken
         }
         createdAt
@@ -10227,6 +10730,12 @@ export const listCourseInstructors = /* GraphQL */ `
         instructor {
           id
           userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
           createdAt
           updatedAt
         }
@@ -10293,6 +10802,12 @@ export const courseInstructorsByLMSCourseId = /* GraphQL */ `
         instructor {
           id
           userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
           createdAt
           updatedAt
         }
@@ -10359,6 +10874,12 @@ export const courseInstructorsByInstructorId = /* GraphQL */ `
         instructor {
           id
           userId
+          name
+          image
+          bio
+          linkedIn
+          company
+          title
           createdAt
           updatedAt
         }
