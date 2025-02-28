@@ -75,8 +75,8 @@ const SubscriptionWhat = () => {
         </h3>
         <p className='text-xl text-center'>
           With hundreds of lessons and courses, choosing can feel overwhelming.
-          That's why we've made it easy—get full access with a certificate or
-          alumni subscription.
+          That&apos;s why we&apos;ve made it easy—get full access with a
+          certificate or alumni subscription.
         </p>
       </div>
       <div className='w-full text-center text-xl uppercase font-bold text-gray-500 tracking-[0.5em]'>
