@@ -59,6 +59,9 @@ const SubscriptionWhat = () => {
           alumni subscription.
         </p>
       </div>
+      <div className='w-full text-center text-xl uppercase font-bold text-gray-500 tracking-[0.5em]'>
+        Choose Your Path
+      </div>
       <div className='grid lg:grid-cols-3 gap-5 w-full items-center'>
         {/* COHORT */}
         <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg'>
