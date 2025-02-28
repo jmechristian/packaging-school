@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getCohorts } from '../../lib/api';
+// import { getCohorts } from '../../lib/api';
 
 const Page = () => {
-  const [cohorts, setCohorts] = useState([]);
+  //   const [cohorts, setCohorts] = useState([]);
 
-  useEffect(() => {
-    const fetchCohorts = async () => {
-      const cohorts = await getCohorts();
-      setCohorts(cohorts);
-    };
-    fetchCohorts();
-  }, []);
+  //   useEffect(() => {
+  //     const fetchCohorts = async () => {
+  //       const cohorts = await getCohorts();
+  //       setCohorts(cohorts);
+  //     };
+  //     fetchCohorts();
+  //   }, []);
 
   return (
     <div className='w-full max-w-7xl mx-auto flex flex-col gap-12'>
