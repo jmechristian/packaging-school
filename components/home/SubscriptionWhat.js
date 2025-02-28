@@ -48,7 +48,7 @@ const SubscriptionWhat = () => {
   }, []);
 
   return (
-    <div className='w-full max-w-7xl mx-auto flex flex-col gap-16'>
+    <div className='w-full max-w-7xl mx-auto flex flex-col gap-12'>
       <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-4xl'>
         <h3 className='h3-base'>
           Stop Scrolling, Start Learning—Unlock Full Access Today.
