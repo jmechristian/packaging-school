@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getCohorts } from '../../helpers/api';
+import CohortModal from '../shared/CohortModal';
 
 const SubscriptionWhat = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [cohorts, setCohorts] = useState([]);
+  const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
   const features = [
     {
       title: 'Full Course Catalog Access',
@@ -47,15 +49,33 @@ const SubscriptionWhat = () => {
     fetchCohorts();
   }, []);
 
+  const handleCohortModalToggle = () => {
+    setIsCohortModalOpen(!isCohortModalOpen);
+  };
+
+  const handleSelectCohort = (cohort) => {
+    console.log('Selected cohort:', cohort);
+    // Add your cohort selection logic here
+    setIsCohortModalOpen(false);
+  };
+
   return (
-    <div className='w-full max-w-7xl mx-auto flex flex-col gap-12'>
+    <div className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative'>
+      {isCohortModalOpen && (
+        <CohortModal
+          isOpen={isCohortModalOpen}
+          setIsOpen={setIsCohortModalOpen}
+          cohorts={cohorts}
+          onSelectCohort={handleSelectCohort}
+        />
+      )}
       <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-4xl'>
         <h3 className='h3-base'>
           Stop Scrolling, Start Learning—Unlock Full Access Today.
         </h3>
         <p className='text-xl text-center'>
           With hundreds of lessons and courses, choosing can feel overwhelming.
-          That’s why we’ve made it easy—get full access with a certificate or
+          That's why we've made it easy—get full access with a certificate or
           alumni subscription.
         </p>
       </div>
@@ -64,7 +84,7 @@ const SubscriptionWhat = () => {
       </div>
       <div className='grid lg:grid-cols-3 gap-5 w-full items-center'>
         {/* COHORT */}
-        <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg'>
+        <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-clemson hover:shadow-xl transition-shadow duration-300 select-none'>
           <div className='w-full text-2xl font-semibold leading-tight'>
             Comprehensive Certificate Cohorts
           </div>
@@ -91,7 +111,10 @@ const SubscriptionWhat = () => {
                   </span>
                 </div>
               </div>
-              <div className='w-full font-bold text-white bg-clemson rounded-lg px-4 py-2 mt-5 text-center'>
+              <div
+                className='w-full font-bold text-white bg-clemson hover:bg-clemson-dark transition-colors duration-300 rounded-lg px-4 py-2 mt-5 text-center cursor-pointer'
+                onClick={handleCohortModalToggle}
+              >
                 View Available Cohorts
               </div>
               <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5'>
@@ -114,7 +137,7 @@ const SubscriptionWhat = () => {
           </div>
         </div>
         {/* CERTS */}
-        <div className='w-full h-full flex flex-col gap-3 p-5 border rounded-lg shadow-lg'>
+        <div className='w-full h-full flex flex-col gap-3 p-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-base-brand hover:shadow-xl transition-shadow duration-300 select-none'>
           <div className='w-full text-2xl font-semibold leading-tight'>
             Individual Certificate
             <br /> Access
@@ -172,7 +195,7 @@ const SubscriptionWhat = () => {
           </div>
         </div>
         {/* ALUMNI */}
-        <div className='w-full h-full flex flex-col gap-5 p-4 border rounded-lg shadow-lg'>
+        <div className='w-full h-full flex flex-col gap-5 p-4 border rounded-lg shadow-lg hover:ring-4 hover:ring-brand-yellow hover:shadow-xl transition-shadow duration-300 select-none'>
           <div className='w-full text-2xl font-semibold'>
             Alumni Library
             <br /> Access
