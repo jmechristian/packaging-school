@@ -4,6 +4,7 @@ import { getCohorts } from '../../helpers/api';
 import CohortModal from '../shared/CohortModal';
 
 const SubscriptionWhat = () => {
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
@@ -43,7 +44,6 @@ const SubscriptionWhat = () => {
   useEffect(() => {
     const fetchCohorts = async () => {
       const cohorts = await getCohorts();
-      console.log(cohorts);
       setCohorts(cohorts);
     };
     fetchCohorts();
@@ -84,18 +84,18 @@ const SubscriptionWhat = () => {
       </div>
       <div className='grid lg:grid-cols-3 gap-5 w-full items-center'>
         {/* COHORT */}
-        <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-clemson hover:shadow-xl transition-shadow duration-300 select-none'>
-          <div className='w-full text-2xl font-semibold leading-tight'>
+        <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-clemson hover:shadow-xl transition-shadow duration-300'>
+          <div className='w-full text-2xl font-semibold leading-tight select-none'>
             Comprehensive Certificate Cohorts
           </div>
-          <div className='w-full text-lg leading-snug'>
+          <div className='w-full text-lg leading-snug select-none'>
             Join one of our immersive, expert-led certificate cohorts for a
             fully structured, group-learning experience complete with full
             catalog access.
           </div>
           <div className='grid w-full gap-5 mt-2'>
             <div className='w-full p-5 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-clemson flex flex-col gap-4'>
-              <div className='w-full flex items-center justify-between'>
+              <div className='w-full flex items-center justify-between select-none'>
                 <div className='font-semibold text-gray-500'>
                   12-Month Access
                 </div>
@@ -103,7 +103,7 @@ const SubscriptionWhat = () => {
                   Most Immersive!
                 </div>
               </div>
-              <div className='w-full flex items-center justify-between border border-gray-300 rounded-lg py-4 px-5 h-[100px]'>
+              <div className='w-full flex items-center justify-between border border-gray-300 rounded-lg py-4 px-5 h-[100px] select-none'>
                 <div className='w-full text-5xl font-bold'>
                   $7,000
                   <span className='text-gray-500 text-lg font-medium'>
@@ -117,7 +117,13 @@ const SubscriptionWhat = () => {
               >
                 View Available Cohorts
               </div>
-              <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5'>
+              <div
+                className='text-sm text-brand-indigo text-center cursor-pointer'
+                onClick={() => router.push('/cohorts')}
+              >
+                Why Cohort Learning?
+              </div>
+              <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5 select-none'>
                 <div className='w-full h-full py-1 text-sm'>
                   Clemson University Certificate. 100% online.
                 </div>
@@ -137,7 +143,7 @@ const SubscriptionWhat = () => {
           </div>
         </div>
         {/* CERTS */}
-        <div className='w-full h-full flex flex-col gap-3 p-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-base-brand hover:shadow-xl transition-shadow duration-300 select-none'>
+        <div className='w-full h-full flex flex-col gap-3 p-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-base-brand hover:shadow-xl transition-shadow duration-300'>
           <div className='w-full text-2xl font-semibold leading-tight'>
             Individual Certificate
             <br /> Access
@@ -195,7 +201,7 @@ const SubscriptionWhat = () => {
           </div>
         </div>
         {/* ALUMNI */}
-        <div className='w-full h-full flex flex-col gap-5 p-4 border rounded-lg shadow-lg hover:ring-4 hover:ring-brand-yellow hover:shadow-xl transition-shadow duration-300 select-none'>
+        <div className='w-full h-full flex flex-col gap-5 p-4 border rounded-lg shadow-lg hover:ring-4 hover:ring-brand-yellow hover:shadow-xl transition-shadow duration-300'>
           <div className='w-full text-2xl font-semibold'>
             Alumni Library
             <br /> Access

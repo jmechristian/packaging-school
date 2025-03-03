@@ -767,5 +767,7 @@ export const getCohorts = async () => {
   const res = await API.graphql({
     query: listCohorts,
   });
-  return res.data.listCohorts.items;
+  return res.data.listCohorts.items.sort(
+    (a, b) => new Date(a.deadline) - new Date(b.deadline)
+  );
 };

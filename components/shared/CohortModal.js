@@ -3,6 +3,14 @@ import { Dialog } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const CohortModal = ({ isOpen, setIsOpen, cohorts, onSelectCohort }) => {
+  const renderCohortType = (type) => {
+    if (type === 'CMPM') {
+      return 'Certificate of Mastery in Packaging Management';
+    } else if (type === 'CPS') {
+      return 'Certificate of Packaging Science';
+    }
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -34,38 +42,38 @@ const CohortModal = ({ isOpen, setIsOpen, cohorts, onSelectCohort }) => {
             {cohorts.map((cohort) => (
               <div
                 key={cohort.id}
-                className='border rounded-lg p-6 space-y-4 hover:shadow-md transition-shadow'
+                className='border rounded-lg p-5 space-y-4 hover:shadow-md transition-shadow'
               >
-                <div className='flex justify-between items-start'>
+                <div className='flex justify-between items-start border-b pb-4 border-gray-200'>
                   <div>
-                    <h3 className='text-xl font-semibold text-gray-900'>
-                      {cohort.name}
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      {renderCohortType(cohort.type)}
                     </h3>
-                    <p className='text-gray-600'>Type: {cohort.type}</p>
+                    <p className='text-gray-600'>{cohort.name}</p>
                   </div>
                   <button
                     onClick={() => onSelectCohort(cohort)}
-                    className='bg-clemson text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors'
+                    className='bg-clemson font-medium text-sm text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors'
                   >
-                    Select Cohort
+                    Apply Now
                   </button>
                 </div>
-
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div>
-                    <p className='text-gray-600'>
-                      <span className='font-medium'>Start Date:</span>{' '}
-                      {new Date(cohort.startDate).toLocaleDateString()}
-                    </p>
-                    <p className='text-gray-600'>
-                      <span className='font-medium'>End Date:</span>{' '}
-                      {new Date(cohort.endDate).toLocaleDateString()}
-                    </p>
-                    <p className='text-gray-600'>
-                      <span className='font-medium'>Application Deadline:</span>{' '}
-                      {new Date(cohort.deadline).toLocaleDateString()}
-                    </p>
-                  </div>
+                <div>
+                  <p className='text-gray-600 text-sm border-b pb-4 border-gray-200 w-full'>
+                    {cohort.description}
+                  </p>
+                </div>
+                <div className='grid grid-cols-1 md:!grid-cols-3 gap-4'>
+                  <p className='text-gray-600'>
+                    {new Date(cohort.startDate).toLocaleDateString()}
+                  </p>
+                  <p className='text-gray-600'>
+                    {new Date(cohort.endDate).toLocaleDateString()}
+                  </p>
+                  <p className='text-gray-600'>
+                    <span className='font-medium'>Application Deadline:</span>{' '}
+                    {new Date(cohort.deadline).toLocaleDateString()}
+                  </p>
 
                   {cohort.instructor && (
                     <div className='flex items-center gap-4'>
