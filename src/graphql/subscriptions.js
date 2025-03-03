@@ -3507,6 +3507,7 @@ export const onCreateCohort = /* GraphQL */ `
         updatedAt
       }
       description
+      link
       createdAt
       updatedAt
       instructorCohortsId
@@ -3552,6 +3553,7 @@ export const onUpdateCohort = /* GraphQL */ `
         updatedAt
       }
       description
+      link
       createdAt
       updatedAt
       instructorCohortsId
@@ -3597,6 +3599,7 @@ export const onDeleteCohort = /* GraphQL */ `
         updatedAt
       }
       description
+      link
       createdAt
       updatedAt
       instructorCohortsId
@@ -5521,6 +5524,7 @@ export const onCreateInstructor = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -5563,6 +5567,7 @@ export const onUpdateInstructor = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -5605,6 +5610,7 @@ export const onDeleteInstructor = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -10790,6 +10796,7 @@ export const onCreateCohortUsers = /* GraphQL */ `
           updatedAt
         }
         description
+        link
         createdAt
         updatedAt
         instructorCohortsId
@@ -10933,6 +10940,7 @@ export const onUpdateCohortUsers = /* GraphQL */ `
           updatedAt
         }
         description
+        link
         createdAt
         updatedAt
         instructorCohortsId
@@ -11076,6 +11084,7 @@ export const onDeleteCohortUsers = /* GraphQL */ `
           updatedAt
         }
         description
+        link
         createdAt
         updatedAt
         instructorCohortsId

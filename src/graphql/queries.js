@@ -3243,6 +3243,7 @@ export const getCohort = /* GraphQL */ `
         updatedAt
       }
       description
+      link
       createdAt
       updatedAt
       instructorCohortsId
@@ -3280,6 +3281,7 @@ export const listCohorts = /* GraphQL */ `
           updatedAt
         }
         description
+        link
         createdAt
         updatedAt
         instructorCohortsId
@@ -4866,6 +4868,7 @@ export const getInstructor = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -9845,6 +9848,7 @@ export const getCohortUsers = /* GraphQL */ `
           updatedAt
         }
         description
+        link
         createdAt
         updatedAt
         instructorCohortsId
@@ -9905,6 +9909,7 @@ export const listCohortUsers = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -9975,6 +9980,7 @@ export const cohortUsersByUserId = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId
@@ -10045,6 +10051,7 @@ export const cohortUsersByCohortId = /* GraphQL */ `
           deadline
           type
           description
+          link
           createdAt
           updatedAt
           instructorCohortsId

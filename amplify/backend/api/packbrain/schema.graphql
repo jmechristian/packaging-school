@@ -533,6 +533,7 @@ type Cohort @model @auth(rules: [{ allow: public }]) {
   type: String!
   instructor: Instructor @hasOne
   description: String
+  link: String
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {
