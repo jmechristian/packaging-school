@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { MdSearch, MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
+import {
+  MdSearch,
+  MdOutlineTimer,
+  MdOutlineBook,
+  MdDownloadForOffline,
+} from 'react-icons/md';
 import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
 import {
   BoltIcon,
@@ -97,9 +103,13 @@ const CourseCard = ({ course }) => {
             </span>
           </div>
           <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
-            <div className='font-semibold'>
-              ${courseData && courseData.price}
+            <div className='flex items-center gap-1'>
+              <div className='font-semibold line-through text-gray-400'>
+                ${courseData && courseData.price}
+              </div>
+              <div className='font-semibold'>$0</div>
             </div>
+
             <div className='font-semibold flex items-center gap-1'>
               {courseData && courseData.hours}
               <MdOutlineTimer /> / {courseData && courseData.lessons}{' '}
@@ -109,7 +119,12 @@ const CourseCard = ({ course }) => {
           <div className='text-xs text-gray-700 h-20 mb-2'>
             {courseData && courseData.subheadline}
           </div>
-          <div className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'>
+          <div
+            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
+            onClick={() => {
+              window.open(courseData && courseData.link, '_blank');
+            }}
+          >
             Begin Course
           </div>
         </div>
@@ -122,9 +137,9 @@ const Page = () => {
   const faqs = [
     {
       id: 1,
-      question: 'Who is my PDA contact?',
+      question: 'Who is my DVI contact?',
       answer:
-        'If you have any questions regarding curriculum, reach out to Barb@pdachain.com.',
+        'If you have any questions regarding curriculum, reach out to schmelzer@verpackung.org.',
     },
     {
       id: 2,
@@ -172,6 +187,9 @@ const Page = () => {
 
   return (
     <div className='w-full flex flex-col pt-10 pb-40'>
+      <Head>
+        <title>DVI | The Packaging School</title>
+      </Head>
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
         <div
           className='bg-[#fd3841] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-repeat flex items-center'
@@ -182,7 +200,7 @@ const Page = () => {
         >
           <div className='w-1/2 flex flex-col gap-5 px-16'>
             <div className='text-4xl font-bold text- tracking-wide'>
-              Willkommen!
+              Welcome!
             </div>
             <div className='w-[380px]'>
               <Image
@@ -208,17 +226,29 @@ const Page = () => {
               showControls
               loop
             />
+            <div
+              className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
+              onClick={() => {
+                window.open(
+                  'https://packschool.s3.us-east-1.amazonaws.com/DVI-Instructions-for-Library.pdf',
+                  '_blank'
+                );
+              }}
+            >
+              <div className='text-gray-700'>Download as PDF</div>
+              <MdDownloadForOffline className='text-gray-700' size={20} />
+            </div>
           </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-16 border-b border-gray-300'>
         <div className='max-w-lg w-full text-xl text-gray-700'>
-          Die Packaging School bietet erstklassige Ausbildung für
-          Verpackungsprofis. Unsere Programme umfassen Materialwissenschaften,
-          industrielle Prozesse, Design und Management. Wir aktualisieren
-          kontinuierlich unsere über 4.000 Lernressourcen. In Zusammenarbeit mit
-          DVI bieten wir unseren Mitarbeitern umfassende Schulungen an, um ihre
-          Fähigkeiten und Kenntnisse zu erweitern.
+          The Packaging School offers first-class training for Packaging
+          professionals. Our programs include materials science, industrial
+          processes, design and management. We update continuously our over
+          4,000 learning resources. In collaboration with DVI we offer our
+          employees comprehensive training to ensure their expand skills and
+          knowledge.
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
@@ -258,7 +288,12 @@ const Page = () => {
                   <span className='text-gray-700'>{cpsExam.title}</span>
                 </div>
                 <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
-                  <div className='font-semibold'>${cpsExam.price}</div>
+                  <div className='flex items-center gap-1'>
+                    <div className='font-semibold line-through text-gray-400'>
+                      ${cpsExam.price}
+                    </div>
+                    <div className='font-semibold'>$0</div>
+                  </div>
                   <div className='font-semibold flex items-center gap-1'>
                     {cpsExam.hours}
                     <MdOutlineTimer /> / {cpsExam.lessons} <MdOutlineBook />
@@ -267,7 +302,15 @@ const Page = () => {
                 <div className='text-xs text-gray-700 h-20 mb-2'>
                   {cpsExam.subheadline}
                 </div>
-                <div className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'>
+                <div
+                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
+                  onClick={() => {
+                    window.open(
+                      'https://learn.packagingschool.com/enroll/235882?price_id=242074',
+                      '_blank'
+                    );
+                  }}
+                >
                   Begin Course
                 </div>
               </div>
