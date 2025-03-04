@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getCohorts } from '../../helpers/api';
+import { getCohorts, getCertificates } from '../../helpers/api';
 import CohortModal from '../shared/CohortModal';
-
+import CertificateModal from '../shared/CertificateModal';
 const SubscriptionWhat = () => {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [certificates, setCertificates] = useState([]);
   const features = [
     {
       title: 'Full Course Catalog Access',
@@ -46,7 +48,12 @@ const SubscriptionWhat = () => {
       const cohorts = await getCohorts();
       setCohorts(cohorts);
     };
+    const fetchCertificates = async () => {
+      const certificates = await getCertificates();
+      setCertificates(certificates);
+    };
     fetchCohorts();
+    fetchCertificates();
   }, []);
 
   const handleCohortModalToggle = () => {
@@ -67,6 +74,17 @@ const SubscriptionWhat = () => {
           setIsOpen={setIsCohortModalOpen}
           cohorts={cohorts}
           onSelectCohort={handleSelectCohort}
+        />
+      )}
+      {isCertificateModalOpen && (
+        <CertificateModal
+          isOpen={isCertificateModalOpen}
+          setIsOpen={setIsCertificateModalOpen}
+          certificates={certificates.filter(
+            (certificate) =>
+              certificate.abbreviation !== 'CMPM' &&
+              certificate.abbreviation !== 'FPC'
+          )}
         />
       )}
       <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-4xl'>
@@ -178,7 +196,10 @@ const SubscriptionWhat = () => {
                   <div className='text-4xl tracking-tight font-bold'>$800</div>
                 </div>
               </div>
-              <div className='font-bold text-white bg-base-brand rounded-lg px-4 py-2 mt-5 text-center'>
+              <div
+                className='font-bold text-white bg-base-brand rounded-lg px-4 py-2 mt-5 text-center cursor-pointer'
+                onClick={() => setIsCertificateModalOpen(true)}
+              >
                 Choose Your Certificate
               </div>
               <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5'>
