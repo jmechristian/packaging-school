@@ -57,11 +57,17 @@ const LibraryCourseGrid = ({ courses, coupon, discount }) => {
       </div>
       <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10'>
         {initCourses ? (
-          coursesToShow.map((cou) => (
-            <div key={cou.id}>
-              <LMSCourseCard id={cou.id} coupon={coupon} discount={discount} />
-            </div>
-          ))
+          coursesToShow
+            .sort((a, b) => a.courseId.localeCompare(b.courseId))
+            .map((cou) => (
+              <div key={cou.id}>
+                <LMSCourseCard
+                  id={cou.id}
+                  coupon={coupon}
+                  discount={discount}
+                />
+              </div>
+            ))
         ) : (
           <></>
         )}
