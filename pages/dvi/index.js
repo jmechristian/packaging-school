@@ -248,12 +248,13 @@ const Page = () => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-16 border-b border-gray-300'>
         <div className='max-w-lg w-full text-xl text-gray-700'>
-          The Packaging School offers first-class training for Packaging
-          professionals. Our programs include materials science, industrial
-          processes, design and management. We update continuously our over
-          4,000 learning resources. In collaboration with DVI we offer our
-          employees comprehensive training to ensure their expand skills and
-          knowledge.
+          The Packaging School offers top-tier training for packaging
+          professionals, covering key areas such as materials science,
+          industrial processes, design, and management. With over 4,000 learning
+          resources that are continually updated, we ensure that our programs
+          stay at the forefront of industry trends. In collaboration with DVI,
+          we provide our employees with comprehensive training to help them
+          expand their skills and knowledge.
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
