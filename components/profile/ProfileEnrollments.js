@@ -15,7 +15,7 @@ const ProfileEnrollments = ({ email, courses }) => {
       try {
         setLoading(true);
         const enrollments = await fetch(
-          `/api/thinkific/get-enrollments?email=marketing@packagingschool.com`
+          `/api/thinkific/get-enrollments?email=${email}`
         );
         const data = await enrollments.json();
         console.log(data);

@@ -450,9 +450,7 @@ export default withPageAuthRequired(function Page() {
 
   useEffect(() => {
     const getThinkificUser = async (email) => {
-      const response = await fetch(
-        `/api/thinkific/get-user?email=marketing@packagingschool.com`
-      );
+      const response = await fetch(`/api/thinkific/get-user?email=${email}`);
       const data = await response.json();
 
       // The userByEmail is nested inside data.data.data
