@@ -93,7 +93,7 @@ const ProfileEnrollments = ({ email, courses }) => {
     <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='h4-base text-gray-900'>
-          Enrollments: {enrollments.items.length} Total
+          Enrollments: {enrollments.items && enrollments.items.length} Total
         </div>
         <div className='flex items-center bg-yellow-300 rounded-lg py-1.5 px-3 border-4 border-yellow-200'>
           <div>
