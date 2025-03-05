@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { getCohorts, getCertificates } from '../../helpers/api';
 import CohortModal from '../shared/CohortModal';
 import CertificateModal from '../shared/CertificateModal';
+import { MdAccessAlarm } from 'react-icons/md';
 const SubscriptionWhat = () => {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -108,11 +109,11 @@ const SubscriptionWhat = () => {
           </div>
           <div className='w-full text-lg leading-snug select-none'>
             Join one of our immersive, expert-led certificate cohorts for a
-            fully structured, group-learning experience complete with full
+            collaborative learning experience complete with 12-month full
             catalog access.
           </div>
           <div className='grid w-full gap-5 mt-2'>
-            <div className='w-full p-5 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-clemson flex flex-col gap-4'>
+            <div className='w-full p-4 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-clemson flex flex-col gap-4'>
               <div className='w-full flex items-center justify-between select-none'>
                 <div className='font-semibold text-gray-500'>
                   12-Month Access
@@ -130,33 +131,45 @@ const SubscriptionWhat = () => {
                 </div>
               </div>
               <div
-                className='w-full font-bold text-white bg-clemson hover:bg-clemson-dark transition-colors duration-300 rounded-lg px-4 py-2 mt-5 text-center cursor-pointer'
+                className='w-full font-bold text-white bg-clemson hover:bg-clemson-dark transition-colors duration-300 rounded-lg px-4 py-2 text-center cursor-pointer'
                 onClick={handleCohortModalToggle}
               >
                 View Available Cohorts
               </div>
               <div
-                className='text-sm text-brand-indigo text-center cursor-pointer'
+                className='text-sm text-brand-indigo text-center cursor-pointer mt-2'
                 onClick={() => router.push('/cohorts')}
               >
                 Why Cohort Learning?
               </div>
-              <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5 select-none'>
-                <div className='w-full h-full py-1 text-sm'>
-                  Clemson University Certificate. 100% online.
+              {cohorts.length > 0 && (
+                <div className='flex flex-col gap-2 bg-gray-100 p-4 rounded-lg mt-2 select-none h-[235px]'>
+                  <div className='w-full h-full text-sm font-bold border-b border-gray-300 pb-2'>
+                    Featured Cohort: {cohorts[0].type} - {cohorts[0].name}
+                  </div>
+                  <div className='flex items-center gap-1'>
+                    <div className='text-sm font-bold'>
+                      <MdAccessAlarm size={16} />
+                    </div>
+                    <div className='text-sm font-bold'>
+                      Deadline: {cohorts[0].deadline}
+                    </div>
+                  </div>
+                  <div className='flex flex-col gap-1 divide-y divide-gray-500 divide-dashed'>
+                    <div className='w-full h-full py-1 text-sm'>
+                      Clemson University Certificate. 100% online.
+                    </div>
+                    <div className='w-full h-full py-1 text-sm'>
+                      Structured 12-week program with custom project related to
+                      your goals.
+                    </div>
+                    <div className='w-full h-full py-1 text-sm'>
+                      12-month access to all courses and a dynamic lesson
+                      library.
+                    </div>
+                  </div>
                 </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  Structured 12-week program with custom project related to your
-                  goals.
-                </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  12-month access to all courses and a dynamic lesson library.
-                </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  Enjoy optional certificates in Sustainability and Autmotive
-                  Packaging for free.
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -172,7 +185,7 @@ const SubscriptionWhat = () => {
             and exclusive content.
           </div>
           <div className='grid w-full gap-5 mt-2'>
-            <div className='w-full p-5 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-base-brand flex flex-col gap-4'>
+            <div className='w-full p-4 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-base-brand flex flex-col gap-4'>
               <div className='w-full flex items-center justify-between'>
                 <div className='font-semibold text-gray-500'>
                   12-Month Access
@@ -197,25 +210,34 @@ const SubscriptionWhat = () => {
                 </div>
               </div>
               <div
-                className='font-bold text-white bg-base-brand rounded-lg px-4 py-2 mt-5 text-center cursor-pointer'
+                className='font-bold text-white bg-base-brand rounded-lg px-4 py-2 text-center cursor-pointer'
                 onClick={() => setIsCertificateModalOpen(true)}
               >
                 Choose Your Certificate
               </div>
-              <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5'>
-                <div className='py-1 text-sm'>
-                  Clemson University Certificate. 100% online.
+              <div
+                className='text-sm text-brand-indigo text-center cursor-pointer mt-2'
+                onClick={() => router.push('/certifications')}
+              >
+                Learn More About Certificates
+              </div>
+              <div className='flex flex-col gap-2 bg-gray-100 p-4 rounded-lg mt-2 select-none h-[235px]'>
+                <div className='w-full h-full text-sm font-bold '>
+                  Featured Certification: Certificate of Packaging Science
                 </div>
-                <div className='py-1 text-sm'>
-                  Structured 12-week program with custom project related to your
-                  goals.
-                </div>
-                <div className='py-1 text-sm'>
-                  12-month access to all courses and a dynamic lesson library.
-                </div>
-                <div className='py-1 text-sm'>
-                  Enjoy optional certificates in Sustainability and Autmotive
-                  Packaging for free.
+
+                <div className='flex flex-col gap-1 divide-y divide-gray-500 divide-dashed'>
+                  <div className='w-full h-full py-1 text-sm'>
+                    Learn at your own pace, 100% online. Earn a certificate upon
+                    completion.
+                  </div>
+                  <div className='w-full h-full py-1 text-sm'>
+                    60 hours curriculum. Choose your own elective course.
+                  </div>
+
+                  <div className='w-full h-full py-1 text-sm'>
+                    12-month access to all courses and a dynamic lesson library.
+                  </div>
                 </div>
               </div>
             </div>
@@ -232,7 +254,7 @@ const SubscriptionWhat = () => {
             journey with 12-month access to our curated Alumni Library.
           </div>
           <div className='grid w-full gap-5 mt-2'>
-            <div className='w-full p-5 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-brand-yellow flex flex-col gap-4'>
+            <div className='w-full p-4 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-brand-yellow flex flex-col gap-4'>
               <div className='w-full flex items-center justify-between'>
                 <div className='font-semibold text-gray-500'>
                   12-Month Access
@@ -249,23 +271,34 @@ const SubscriptionWhat = () => {
                   </span>
                 </div>
               </div>
-              <div className='w-full font-bold text-white bg-yellow-500 rounded-lg px-4 py-2 mt-5 text-center'>
+              <div className='w-full font-bold text-white bg-yellow-500 rounded-lg px-4 py-2 text-center'>
                 Purchase Alumni Access
               </div>
-              <div className='flex flex-col gap-2 divide-y divide-gray-500 divide-dashed mt-5'>
-                <div className='w-full h-full py-1 text-sm'>
-                  Clemson University Certificate. 100% online.
+              <div
+                className='text-sm text-brand-indigo text-center cursor-pointer mt-2'
+                onClick={() => router.push('/all_courses')}
+              >
+                View Course Catalog
+              </div>
+              <div className='flex flex-col gap-2 bg-gray-100 p-4 rounded-lg mt-2 select-none h-[235px]'>
+                <div className='w-full text-sm font-bold leading-tight'>
+                  You must have completed one of the following certificates to
+                  qualify for alumni access:
                 </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  Structured 12-week program with custom project related to your
-                  goals.
-                </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  12-month access to all courses and a dynamic lesson library.
-                </div>
-                <div className='w-full h-full py-1 text-sm'>
-                  Enjoy optional certificates in Sustainability and Autmotive
-                  Packaging for free.
+                <div className='flex flex-col gap-1 divide-y divide-gray-500 divide-dashed'>
+                  <div className='w-full h-full py-1 text-sm leading-tight'>
+                    Certificate of Mastery in Packaging Management
+                  </div>
+                  <div className='w-full h-full py-1 text-sm leading-tight'>
+                    Certificate of Packaging Science
+                  </div>
+
+                  <div className='w-full h-full py-1 text-sm leading-tight'>
+                    Automotive Packaging Certificate
+                  </div>
+                  <div className='w-full h-full py-1 text-sm leading-tight'>
+                    Certificate of Sustainable Packaging
+                  </div>
                 </div>
               </div>
             </div>
