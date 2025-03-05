@@ -864,7 +864,7 @@ export default withPageAuthRequired(function Page() {
                       <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
                         <div>No courses or certificates selected</div>
                         <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
-                          Select Curriculum
+                          Browse Library
                         </button>
                       </div>
                     </div>
