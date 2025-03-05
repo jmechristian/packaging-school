@@ -1,6 +1,5 @@
 import { API } from 'aws-amplify';
 import * as queries from '../../src/graphql/queries';
-import { setUser } from '../../features/auth/authslice';
 
 export default async function CreateUser(req, res) {
   const params = {

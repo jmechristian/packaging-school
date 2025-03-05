@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import ProfileEnrollments from '../../components/profile/ProfileEnrollments';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ProfileCourses from '../../components/profile/ProfileCourses';
@@ -389,7 +390,6 @@ const EditProfileForm = ({ onClose, user }) => {
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { user, awsUser } = useSelector((state) => state.auth);
-  const [activeTab, setActiveTab] = useState(0);
   const [currentXP, setCurrentXP] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
   const [totalSpent, setTotalSpent] = useState(0);
@@ -459,7 +459,6 @@ export default withPageAuthRequired(function Page() {
 
       if (data?.data?.data?.userByEmail) {
         setThinkificUser(data.data.data.userByEmail);
-        console.log('thinkificUser', data.data.data.userByEmail);
       }
     };
 
@@ -589,7 +588,7 @@ export default withPageAuthRequired(function Page() {
   };
 
   return (
-    <div className='flex flex-col w-full h-full relative bg-gray-100'>
+    <div className='flex flex-col w-full h-full relative bg-gray-100 border-b border-gray-200'>
       {showOnboardingModal && (
         <div className='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center'>
           <div className='bg-white dark:bg-dark-dark rounded-lg p-5 max-w-4xl w-full'>
@@ -714,34 +713,34 @@ export default withPageAuthRequired(function Page() {
           </div>
         </div>
       )}
-      <div className='grid grid-cols-12 gap-8 max-w-7xl mx-auto py-16'>
-        <div className='col-span-3 w-full flex justify-end'>
-          <div className='flex flex-col gap-5 w-full bg-white px-8 py-8 h-fit rounded-lg'>
+      <div className='grid grid-cols-12 w-full'>
+        <div className='col-span-2 w-full h-full flex justify-end'>
+          <div className='flex flex-col gap-4 h-full w-full bg-base-dark px-9 py-8'>
             <div
-              className='aspect-[1/1] w-28 bg-cover bg-center'
+              className='aspect-[1/1] w-24 bg-cover bg-center'
               style={{
                 backgroundImage: `url(${user?.picture})`,
               }}
             ></div>
             <div className='flex flex-col gap-0 leading-tight'>
-              <div className='text-2xl font-bold text-gray-900'>
+              <div className='text-2xl font-bold text-gray-100'>
                 {user?.name}
               </div>
-              <div className='text-sm font-medium text-gray-500'>
+              <div className='text-sm font-medium text-gray-300'>
                 {user?.email}
               </div>
             </div>
 
             <div className='flex flex-col gap-2'>
-              <div className='text-lg text-gray-900 leading-tight'>
+              <div className='text-lg text-gray-100 leading-tight'>
                 {awsUser?.title || 'Your Title'} at{' '}
                 <span className='font-bold'>
                   {awsUser?.company || 'Your Company'}
                 </span>
               </div>
               <div className='flex items-center gap-1'>
-                <TbWorld className='text-gray-500' />
-                <div className='text-gray-500'>
+                <TbWorld className='text-gray-300' />
+                <div className='text-gray-300'>
                   {awsUser?.location || 'Your Location'}
                 </div>
               </div>
@@ -753,7 +752,7 @@ export default withPageAuthRequired(function Page() {
               <TbEdit size={16} />
               <span>Edit Profile</span>
             </button>
-            <hr className='w-full border-gray-500 mt-2.5' />
+            <hr className='w-full border-gray-400 mt-2.5' />
             <div className='flex flex-col gap-2 items-center'>
               <div className='relative w-40 h-40'>
                 {/* XP Progress Ring */}
@@ -783,24 +782,24 @@ export default withPageAuthRequired(function Page() {
                 {/* Level Number */}
                 <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
                   <span className='text-4xl font-bold'>{userLevel.level}</span>
-                  <span className='text-sm text-gray-500'>Level</span>
+                  <span className='text-sm text-gray-100'>Level</span>
                 </div>
               </div>
               {/* XP Info */}
               <div className='flex flex-col gap-0 text-center'>
-                <div className='text-sm font-medium'>
+                <div className='text-sm font-medium text-gray-100'>
                   {userLevel.xpNeeded.toLocaleString()} XP to next level
                 </div>
-                <div className='text-sm text-gray-500'>
+                <div className='text-sm text-gray-300'>
                   Total XP: {currentUserXP.toLocaleString()}
                 </div>
               </div>
             </div>
-            <hr className='w-full border-gray-500 mt-2.5 mb-2.5' />
+            <hr className='w-full border-gray-400 mt-2.5 mb-2.5' />
             <div className='flex flex-col gap-2.5'>
               {profileItems.map((item) => (
                 <div
-                  className='flex w-full justify-between items-center'
+                  className='flex w-full justify-between items-center text-gray-100'
                   key={item.title}
                 >
                   <div className='flex items-center gap-2'>
@@ -814,146 +813,73 @@ export default withPageAuthRequired(function Page() {
           </div>
         </div>
         {/* MAIN CONTENT */}
-        <div className={`col-span-9 w-full flex flex-col `}>
+        <div className={`col-span-10 w-full h-full flex flex-col `}>
           <div className='relative'>
             <div className='flex flex-col w-full'>
-              {/* Tab Navigation */}
-              <div className='w-full flex items-center rounded-t-lg overflow-hidden'>
-                <nav className='flex gap-4 items-center justify-between'>
-                  <div className='flex items-center gap-1.5'>
-                    {[
-                      'My Courses',
-                      'My Certificates',
-                      'Learning Paths',
-                      'Achievements',
-                      'Saved Content',
-                      'Wishlist',
-                    ].map((tab, index) => (
-                      <button
-                        key={tab}
-                        className={`py-2.5 px-4 text-sm transition-colors relative  rounded-t-lg
-                  ${
-                    activeTab === index
-                      ? 'text-white bg-base-dark font-bold'
-                      : ' hover:text-white text-gray-500 font-medium hover:bg-base-mid'
-                  }`}
-                        onClick={() => setActiveTab(index)}
-                      >
-                        {tab}
-                      </button>
-                    ))}
-                  </div>
-                </nav>
-              </div>
-
               {/* Tab Content */}
-              <div className='min-h-[600px] w-full bg-white p-10 rounded-b-lg'>
-                <div className='max-w-5xl'>
-                  {/* My Courses */}
-                  {activeTab === 0 && (
-                    <div className='flex flex-col gap-5'>
-                      <ProfileCourses
-                        userCourses={thinkificUser?.courses?.nodes}
-                      />
+              <div className='min-h-[600px] w-full bg-gray-100 p-7 rounded-b-lg'>
+                <div className='max-w-7xl w-full grid grid-cols-12 gap-8'>
+                  <div className='col-span-8 flex flex-col gap-8 h-full'>
+                    <ProfileEnrollments
+                      courses={thinkificUser && thinkificUser.courses.nodes}
+                    />
+                  </div>
+                  <div className='col-span-4 flex flex-col gap-8 h-full'>
+                    <div className='flex flex-col gap-6 bg-white rounded-lg p-6'>
+                      <div className='font-bold text-gray-900 w-full'>
+                        Achievements
+                      </div>
+                      <div className='flex flex-wrap gap-4'>
+                        <div className='w-9 h-9 rounded-full bg-red-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-blue-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-green-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-yellow-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-purple-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-pink-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-indigo-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-teal-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-orange-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-cyan-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-lime-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-emerald-500/10'></div>
+                        <div className='w-9 h-9 rounded-full bg-rose-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-fuchsia-500'></div>
+                      </div>
                     </div>
-                  )}
-                  {/* Learning Paths */}
-                  {/* {activeTab === 2 && (
-                <div className='flex flex-col gap-4'>
-                  <div className='grid grid-cols-4 gap-8'>
-                    <PathCard
-                      title='Packaging Science'
-                      description='Ideal for packaging pros in sales, marketing, engineering, and more. Gain industry insights with 1-year access to expand your expertise!'
-                      courses={[
-                        'ff174f01-5f76-486c-8d7a-849d6d3ff914',
-                        '672c1d2b-ba6c-4e02-8c34-83e8c3e4f7b3',
-                        '2418801f-a352-4eae-a394-87a5c0c55f79',
-                        '4e6c079e-b396-4762-8b7f-4fa4dea64969',
-                        'f2fad11c-4548-41ea-b39d-be5a4913a4f5',
-                        '452ec0d8-7464-4bd6-bfc2-eab051a9b40b',
-                        '431ce262-cf48-4a7c-8ff1-2909f548149b',
-                        '5d84ef6e-3fa3-423d-8e33-67d32605cb93',
-                        'f2bd57ba-adbf-45ab-88f0-d68ac20c5b7e',
-                        '73139212-0b15-4d96-9942-1757fa058fdf',
-                        'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
-                      ]}
-                      userCourses={userCourses}
-                    />
-                    <PathCard
-                      title='Material Mastery'
-                      description='Perfect for professionals seeking 1-year access to deep insights on corrugated, plastics, and other packaging materials expertise!'
-                      courses={[
-                        '672c1d2b-ba6c-4e02-8c34-83e8c3e4f7b3',
-                        '2418801f-a352-4eae-a394-87a5c0c55f79',
-                        'a8cced4f-d854-4bb5-9650-c55e686a6498',
-                        '62fe0081-a7e4-4eff-bc36-9fa07786c91f',
-                        '4e6c079e-b396-4762-8b7f-4fa4dea64969',
-                        '08855f6b-b7c3-466d-a649-0cdeaf40bacb',
-                        'f63dbfb7-6305-46bb-9845-cf7f17376491',
-                        'ee2f8da3-caca-4300-8e13-6aab4ee7bfb1',
-                        '73139212-0b15-4d96-9942-1757fa058fdf',
-                      ]}
-                      userCourses={userCourses}
-                    />
-                    <PathCard
-                      title='Automotive Packaging Specialist'
-                      description='Ideal for professionals in automotive packaging design. Gain 1-year access to insights on efficiency, innovation, and industry expertise!'
-                      courses={[
-                        '86d25aa4-620b-4632-ac11-60f7bab6f3a8',
-                        'a0353804-b928-4513-bde6-3ba429804ace',
-                        '5c1db625-5367-45b5-8c29-a78beaeb9371',
-                        '35844454-d9a7-4e50-ab62-2298e53764c9',
-                        '08855f6b-b7c3-466d-a649-0cdeaf40bacb',
-                        'e277266c-e0b5-403e-ae0e-a06312da7a19',
-                        '401f89b2-6967-40a1-9131-dff8293cbaa3',
-                        '8c90539f-5dc5-48ba-a9ab-7e3fa186336f',
-                        '7ee53b3f-3f91-4b45-9281-5623ddbded33',
-                        'd61653c9-80b1-492a-9fde-88f6059ca37a',
-                        '109b5c0b-b533-483e-b445-33955d59caef',
-                      ]}
-                      userCourses={userCourses}
-                    />
-                    <PathCard
-                      title='Form & Function'
-                      description='Explore the intersection of creativity and engineering with courses on structural design, materials, and innovation in packaging solutions.'
-                      courses={[
-                        'ff174f01-5f76-486c-8d7a-849d6d3ff914',
-                        '431ce262-cf48-4a7c-8ff1-2909f548149b',
-                        'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
-                        '5928b3b2-dd49-4d5c-86ea-e343b7ffaa75',
-                        '4e32d164-d4d9-4ba2-bcc5-ce882df75b71',
-                        '7dcbae38-2cf5-4d71-9266-4f11cbb0d2ff',
-                        '8cffe7f0-c08a-456f-8e5b-962f4a30ab5c',
-                        '3f9643f5-a1cb-43af-a35e-e1245b2525d9',
-                      ]}
-                      userCourses={userCourses}
-                    />
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
+                      <div className='font-bold text-gray-900 w-full'>
+                        Learning Paths
+                      </div>
+                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
+                        <div>No Paths Selected</div>
+                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
+                          Select a Path
+                        </button>
+                      </div>
+                    </div>
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
+                      <div className='font-bold text-gray-900 w-full'>
+                        Saved Lessons
+                      </div>
+                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
+                        <div>No courses or certificates selected</div>
+                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
+                          Select Curriculum
+                        </button>
+                      </div>
+                    </div>
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
+                      <div className='font-bold text-gray-900 w-full'>
+                        Wish List
+                      </div>
+                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
+                        <div>No courses or certificates selected</div>
+                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
+                          Select Curriculum
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )} */}
-
-                  {/* Achievements */}
-                  {/* {activeTab === 3 && (
-                <div className='flex flex-col gap-4'>
-                  <div className='grid grid-cols-4 gap-5'>
-                    {achievements.map((achievement) => (
-                      <AchievementCard
-                        key={achievement.id}
-                        achievement={achievement}
-                        userCourses={totalCourses}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )} */}
-                  {/* Saved Content */}
-                  {/* {activeTab === 4 && (
-                <div className='flex flex-col gap-2'>
-                  {totalLessons.map((lesson) => (
-                    <div key={lesson}>{lesson}</div>
-                  ))}
-                </div>
-              )} */}
                 </div>
               </div>
             </div>
