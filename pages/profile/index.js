@@ -830,20 +830,19 @@ export default withPageAuthRequired(function Page() {
                         Achievements
                       </div>
                       <div className='flex flex-wrap gap-4'>
-                        <div className='w-9 h-9 rounded-full bg-red-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-blue-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-green-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-yellow-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-purple-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-pink-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-indigo-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-teal-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-orange-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-cyan-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-lime-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-emerald-500/10'></div>
-                        <div className='w-9 h-9 rounded-full bg-rose-500'></div>
-                        <div className='w-9 h-9 rounded-full bg-fuchsia-500'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
                       </div>
                     </div>
                     <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
