@@ -2113,6 +2113,9 @@ export const getCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2588,6 +2591,9 @@ export const getUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2651,6 +2657,9 @@ export const getUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2716,6 +2725,9 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      allAccess
+      allAccessStartDate
+      allAccessEndDate
       createdAt
       updatedAt
     }
@@ -2829,6 +2841,9 @@ export const listUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -2952,6 +2967,9 @@ export const usersByName = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3075,6 +3093,9 @@ export const usersByEmail = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3198,6 +3219,9 @@ export const usersByCompanyID = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3489,6 +3513,9 @@ export const getCMPMForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3560,6 +3587,9 @@ export const listCMPMForms = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3701,6 +3731,9 @@ export const getCPSForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3774,6 +3807,9 @@ export const listCPSForms = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -8660,6 +8696,9 @@ export const getAPSUser = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -8713,6 +8752,9 @@ export const listAPSUsers = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -8776,6 +8818,9 @@ export const aPSUsersByAPSId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -8839,6 +8884,9 @@ export const aPSUsersByUserId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -9497,6 +9545,9 @@ export const getAchievementUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -9561,6 +9612,9 @@ export const listAchievementUsers = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -9628,6 +9682,9 @@ export const achievementUsersByUserId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -9695,6 +9752,9 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -9822,6 +9882,9 @@ export const getCohortUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -9898,6 +9961,9 @@ export const listCohortUsers = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -9969,6 +10035,9 @@ export const cohortUsersByUserId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -10040,6 +10109,9 @@ export const cohortUsersByCohortId = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }

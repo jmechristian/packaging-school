@@ -14,77 +14,90 @@ export default handleAuth({
             return session;
           }
 
-          // console.log('session', session);
+          console.log('session', session);
 
-          // try {
-          //   console.log('Processing user:');
+          try {
+            console.log('Processing user:');
 
-          //   const thinkificUser = await fetch(
-          //     `http://localhost:3000/api/thinkific/get-user?email=${session.user.email}`
-          //   );
-          //   const data = await thinkificUser.json();
+            const baseUrl =
+              process.env.NODE_ENV === 'development'
+                ? 'http://localhost:3000'
+                : 'https://packaging-school-git-dev-packaging-school.vercel.app';
 
-          //   if (data?.data?.data?.userByEmail) {
-          //     console.log('thinkificUser', data.data.data.userByEmail);
-          //     // Handle potentially missing name fields
-          //     const firstName =
-          //       session.user.given_name ||
-          //       session.user.name?.split(' ')[0] ||
-          //       '';
-          //     const lastName =
-          //       session.user.family_name ||
-          //       session.user.name?.split(' ').slice(1).join(' ') ||
-          //       '';
+            const thinkificUser = await fetch(
+              `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
+            );
+            const data = await thinkificUser.json();
 
-          //     const redirectUrl = await handleSSO({
-          //       email: session.user.email,
-          //       first_name: firstName,
-          //       last_name: lastName,
-          //       returnTo: 'http://localhost:3000',
-          //     });
+            if (data?.data?.data?.userByEmail) {
+              console.log('thinkificUser', data.data.data.userByEmail);
+              // Handle potentially missing name fields
+              // const firstName =
+              //   session.user.given_name ||
+              //   session.user.name?.split(' ')[0] ||
+              //   '';
+              // const lastName =
+              //   session.user.family_name ||
+              //   session.user.name?.split(' ').slice(1).join(' ') ||
+              //   '';
 
-          //     console.log('SSO redirect URL generated:', redirectUrl);
-          //     // Store the redirect URL in the user object
-          //     session.user.ssoRedirectUrl = redirectUrl;
-          //   } else {
-          //     console.log('No user found in Thinkific');
+              // const redirectUrl = await handleSSO({
+              //   email: session.user.email,
+              //   first_name: firstName,
+              //   last_name: lastName,
+              //   returnTo: 'http://localhost:3000',
+              // });
 
-          //     const firstName =
-          //       session.user.given_name ||
-          //       session.user.name?.split(' ')[0] ||
-          //       '';
-          //     const lastName =
-          //       session.user.family_name ||
-          //       session.user.name?.split(' ').slice(1).join(' ') ||
-          //       '';
+              // console.log('SSO redirect URL generated:', redirectUrl);
+              // // Store the redirect URL in the user object
+              // session.user.ssoRedirectUrl = redirectUrl;
+            } else {
+              console.log('No user found in Thinkific');
 
-          //     // create user in thinkific
-          //     const createUser = await fetch(
-          //       `http://localhost:3000/api/thinkific/create-user?email=${session.user.email}&first_name=${firstName}&last_name=${lastName}`,
-          //       {
-          //         method: 'POST',
-          //       }
-          //     );
-          //     const createUserResponse = await createUser.json();
-          //     console.log('Create user response:', createUserResponse);
+              const firstName =
+                session.user.given_name ||
+                session.user.name?.split(' ')[0] ||
+                '';
+              const lastName =
+                session.user.family_name ||
+                session.user.name?.split(' ').slice(1).join(' ') ||
+                '';
 
-          //     // redirect to thinkific
-          //     const redirectUrl = await handleSSO({
-          //       email: session.user.email,
-          //       first_name: firstName,
-          //       last_name: lastName,
-          //       returnTo:
-          //         'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
-          //     });
-          //     session.user.ssoRedirectUrl = redirectUrl;
-          //   }
+              // create user in thinkific
+              const createUser = await fetch(
+                `${baseUrl}/api/thinkific/create-user`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: session.user.email,
+                    first_name: firstName,
+                    last_name: lastName,
+                  }),
+                }
+              );
+              const createUserResponse = await createUser.json();
+              console.log('New User Created:', createUserResponse);
 
-          //   return session;
-          // } catch (ssoError) {
-          //   console.error('SSO handling error:', ssoError);
-          //   // Still return session even if SSO fails
-          //   return session;
-          // }
+              // redirect to thinkific
+              // const redirectUrl = await handleSSO({
+              //   email: session.user.email,
+              //   first_name: firstName,
+              //   last_name: lastName,
+              //   returnTo:
+              //     'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              // });
+              // session.user.ssoRedirectUrl = redirectUrl;
+            }
+
+            return session;
+          } catch (ssoError) {
+            console.error('SSO handling error:', ssoError);
+            // Still return session even if SSO fails
+            return session;
+          }
 
           return session;
         },

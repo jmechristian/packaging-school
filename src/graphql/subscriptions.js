@@ -2315,6 +2315,9 @@ export const onCreateCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2377,6 +2380,9 @@ export const onUpdateCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2439,6 +2445,9 @@ export const onDeleteCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -2954,6 +2963,9 @@ export const onCreateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3017,6 +3029,9 @@ export const onCreateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3082,6 +3097,9 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
+      allAccess
+      allAccessStartDate
+      allAccessEndDate
       createdAt
       updatedAt
     }
@@ -3145,6 +3163,9 @@ export const onUpdateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3208,6 +3229,9 @@ export const onUpdateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3273,6 +3297,9 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
+      allAccess
+      allAccessStartDate
+      allAccessEndDate
       createdAt
       updatedAt
     }
@@ -3336,6 +3363,9 @@ export const onDeleteUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3399,6 +3429,9 @@ export const onDeleteUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
           createdAt
           updatedAt
         }
@@ -3464,6 +3497,9 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      allAccess
+      allAccessStartDate
+      allAccessEndDate
       createdAt
       updatedAt
     }
@@ -3754,6 +3790,9 @@ export const onCreateCMPMForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -3893,6 +3932,9 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -4032,6 +4074,9 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -4171,6 +4216,9 @@ export const onCreateCPSForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -4312,6 +4360,9 @@ export const onUpdateCPSForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -4453,6 +4504,9 @@ export const onDeleteCPSForm = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -9588,6 +9642,9 @@ export const onCreateAPSUser = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -9721,6 +9778,9 @@ export const onUpdateAPSUser = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -9854,6 +9914,9 @@ export const onDeleteAPSUser = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -10386,6 +10449,9 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -10514,6 +10580,9 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -10642,6 +10711,9 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -10770,6 +10842,9 @@ export const onCreateCohortUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -10914,6 +10989,9 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }
@@ -11058,6 +11136,9 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         cohorts {
           nextToken
         }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
         createdAt
         updatedAt
       }

@@ -4,7 +4,6 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import ProfileEnrollments from '../../components/profile/ProfileEnrollments';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import ProfileCourses from '../../components/profile/ProfileCourses';
 import {
   TbFlame,
   TbBolt,
@@ -174,18 +173,18 @@ const LEVELS_CONFIG = [
   // ... add more levels as needed
 ];
 
-const EditProfileForm = ({ onClose, user }) => {
+const EditProfileForm = ({ onClose }) => {
+  const { awsUser } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
-    company: user?.company || '',
-    title: user?.title || '',
-    location: user?.location || '',
-    bio: user?.bio || '',
-    interests: user?.interests || '',
-    goals: user?.goals || '',
-    linkedin: user?.linkedin || '',
+    company: awsUser?.company || '',
+    title: awsUser?.title || '',
+    location: awsUser?.location || '',
+    bio: awsUser?.bio || '',
+    interests: awsUser?.interests || '',
+    goals: awsUser?.goals || '',
+    linkedin: awsUser?.linkedin || '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { awsUser } = useSelector((state) => state.auth);
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
@@ -199,12 +198,11 @@ const EditProfileForm = ({ onClose, user }) => {
       if (!response.ok) {
         throw new Error('Failed to update profile');
       }
-
-      onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
     } finally {
       setIsSubmitting(false);
+      onClose();
     }
   };
 
@@ -884,7 +882,7 @@ export default withPageAuthRequired(function Page() {
         </div>
       </div>
       {showEditModal && (
-        <EditProfileForm onClose={() => setShowEditModal(false)} user={user} />
+        <EditProfileForm onClose={() => setShowEditModal(false)} />
       )}
     </div>
   );
