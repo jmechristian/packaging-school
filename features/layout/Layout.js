@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLocation, setUser, setAWSUser } from '../auth/authslice';
-import { getAWSUser, createAWSUser } from '../../helpers/api';
+import {
+  setLocation,
+  setUser,
+  setAWSUser,
+  setThinkificUser,
+} from '../auth/authslice';
+import { getAWSUser, createAWSUser, updateAWSUser } from '../../helpers/api';
 import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -29,10 +34,28 @@ const Layout = ({ children }) => {
         const newUser = await createAWSUser({
           email: user.email,
           name: user.name,
+          lastLogin: new Date().toISOString(),
         });
         dispatch(setAWSUser(newUser));
       } else {
         dispatch(setAWSUser(dbUser));
+        updateAWSUser({
+          id: dbUser.id,
+          lastLogin: new Date().toISOString(),
+        });
+      }
+    };
+
+    const checkThinkificUser = async () => {
+      const thinkificUser = await fetch(
+        `/api/thinkific/get-user?email=${user.email}`
+      );
+
+      const data = await thinkificUser.json();
+      if (data?.data?.data?.userByEmail) {
+        dispatch(setThinkificUser(data.data.data.userByEmail));
+      } else {
+        dispatch(setThinkificUser(null));
       }
     };
 
@@ -50,6 +73,7 @@ const Layout = ({ children }) => {
 
       dispatch(setUser(user));
       checkUser();
+      checkThinkificUser();
       // TODO: Check for user in database, if not there, create user
     }
   }, [user, userIsLoading]);

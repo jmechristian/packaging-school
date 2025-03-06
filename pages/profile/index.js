@@ -176,15 +176,29 @@ const LEVELS_CONFIG = [
 const EditProfileForm = ({ onClose }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
-    company: awsUser?.company || '',
-    title: awsUser?.title || '',
-    location: awsUser?.location || '',
-    bio: awsUser?.bio || '',
-    interests: awsUser?.interests || '',
-    goals: awsUser?.goals || '',
-    linkedin: awsUser?.linkedin || '',
+    company: '',
+    title: '',
+    location: '',
+    bio: '',
+    interests: '',
+    goals: '',
+    linkedin: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (awsUser) {
+      setFormData({
+        company: awsUser.company || '',
+        title: awsUser.title || '',
+        location: awsUser.location || '',
+        bio: awsUser.bio || '',
+        interests: awsUser.interests || '',
+        goals: awsUser.goals || '',
+        linkedin: awsUser.linkedin || '',
+      });
+    }
+  }, [awsUser]);
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
@@ -387,7 +401,7 @@ const EditProfileForm = ({ onClose }) => {
 
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
-  const { user, awsUser } = useSelector((state) => state.auth);
+  const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
   const [currentXP, setCurrentXP] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
   const [totalSpent, setTotalSpent] = useState(0);
@@ -396,7 +410,7 @@ export default withPageAuthRequired(function Page() {
   const [totalLessons, setTotalLessons] = useState([]);
   const [totalCourses, setTotalCourses] = useState([]);
   const [totalAchievements, setTotalAchievements] = useState([]);
-  const [thinkificUser, setThinkificUser] = useState(null);
+  // const [thinkificUser, setThinkificUser] = useState(null);
   const [achievements, setAchievements] = useState([]);
   const [currentAchievement, setCurrentAchievement] = useState(null);
   const [isAchievementProgress, setIsAchievementProgress] = useState([]);
@@ -412,6 +426,7 @@ export default withPageAuthRequired(function Page() {
     goals: '',
     linkedin: '',
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const profileItems = [
     {
@@ -447,25 +462,25 @@ export default withPageAuthRequired(function Page() {
   ];
 
   useEffect(() => {
-    const getThinkificUser = async (email) => {
-      const response = await fetch(`/api/thinkific/get-user?email=${email}`);
-      const data = await response.json();
-
-      // The userByEmail is nested inside data.data.data
-
-      if (data?.data?.data?.userByEmail) {
-        setThinkificUser(data.data.data.userByEmail);
+    if (awsUser) {
+      if (
+        awsUser.onboardingComplete === null ||
+        awsUser.onboardingComplete === false
+      ) {
+        setShowOnboardingModal(true);
+        // Initialize form data when opening onboarding modal
+        setFormData({
+          company: awsUser.company || '',
+          title: awsUser.title || '',
+          location: awsUser.location || '',
+          bio: awsUser.bio || '',
+          interests: awsUser.interests || '',
+          goals: awsUser.goals || '',
+          linkedin: awsUser.linkedin || '',
+        });
+      } else {
+        setShowOnboardingModal(false);
       }
-    };
-
-    if (user && user.email) {
-      getThinkificUser(user.email);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!awsUser?.onboardingComplete) {
-      setShowOnboardingModal(true);
     }
   }, [awsUser]);
 
@@ -491,6 +506,12 @@ export default withPageAuthRequired(function Page() {
       if (subscription) subscription.unsubscribe();
     };
   }, [awsUser?.id, dispatch]);
+
+  useEffect(() => {
+    if (awsUser && thinkificUser) {
+      setIsLoading(false);
+    }
+  }, [awsUser, thinkificUser]);
 
   const calculateLevelProgress = (xp) => {
     let currentLevel = 1;
@@ -543,15 +564,7 @@ export default withPageAuthRequired(function Page() {
     }
   };
 
-  const userCourses = useMemo(() => {
-    if (!thinkificUser?.courses?.nodes) return [];
-    const courseIds = thinkificUser.courses.nodes.map((course) =>
-      course.id.toString()
-    );
-    return courseIds;
-  }, [thinkificUser]);
-
-  const currentUserXP = useMemo(() => {
+  const thinkificXp = useMemo(() => {
     if (!thinkificUser?.courses?.nodes) return 0;
 
     return thinkificUser.courses.nodes.reduce((total, course) => {
@@ -561,8 +574,24 @@ export default withPageAuthRequired(function Page() {
   }, [thinkificUser, calculateCourseXP]);
 
   const userLevel = useMemo(() => {
-    return calculateLevelProgress(currentUserXP);
-  }, [currentUserXP]);
+    if (!awsUser) return { level: 1, progress: 0, xpNeeded: 100 };
+    return calculateLevelProgress(thinkificXp + (awsUser.psXp || 0));
+  }, [thinkificXp, awsUser]);
+
+  useEffect(() => {
+    const updateUserXP = async () => {
+      await updateAWSUser({
+        id: awsUser.id,
+        totalXp: thinkificXp + (awsUser.psXp || 0),
+        psXp: awsUser.psXp || 0,
+        thinkificXp: thinkificXp,
+        level: userLevel.level,
+        xpToNextLevel: userLevel.xpNeeded,
+      });
+    };
+
+    awsUser && thinkificUser && updateUserXP();
+  }, [thinkificUser, thinkificXp, userLevel]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -571,6 +600,8 @@ export default withPageAuthRequired(function Page() {
         id: awsUser.id,
         ...formData,
         onboardingComplete: true,
+        onboardingCompleteDate: new Date().toISOString(),
+        psXp: awsUser.psXp + 50,
       });
 
       if (!response.ok) {
@@ -582,6 +613,36 @@ export default withPageAuthRequired(function Page() {
       console.error('Error updating profile:', error);
     }
   };
+
+  const handleSkip = async () => {
+    try {
+      const response = await updateAWSUser({
+        id: awsUser.id,
+        onboardingComplete: true,
+        onboardingCompleteDate: new Date().toISOString(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+    setShowOnboardingModal(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
+        <div className='flex flex-col items-center gap-4'>
+          <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
+          <div className='text-gray-600 font-medium'>
+            Loading your profile...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-col w-full h-full relative bg-gray-100 border-b border-gray-200'>
@@ -683,7 +744,7 @@ export default withPageAuthRequired(function Page() {
                 <div className='flex justify-end gap-3 mt-6 '>
                   <button
                     type='button'
-                    onClick={() => setShowOnboardingModal(false)}
+                    onClick={() => handleSkip()}
                     className='px-4 py-2  hover:text-gray-500 cursor-pointer'
                   >
                     Skip
@@ -787,7 +848,7 @@ export default withPageAuthRequired(function Page() {
                   {userLevel.xpNeeded.toLocaleString()} XP to next level
                 </div>
                 <div className='text-sm text-gray-300'>
-                  Total XP: {currentUserXP.toLocaleString()}
+                  Total XP: {awsUser.totalXp.toLocaleString()}
                 </div>
               </div>
             </div>

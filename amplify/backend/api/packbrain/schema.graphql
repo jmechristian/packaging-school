@@ -490,6 +490,7 @@ type EmailTracking @model @auth(rules: [{ allow: public }]) {
 
 type User @model @auth(rules: [{ allow: public }]) {
   id: ID!
+  thinkificId: String
   name: String! @index(name: "userByName")
   title: String
   company: String
@@ -508,7 +509,6 @@ type User @model @auth(rules: [{ allow: public }]) {
   cmpmForm: CMPMForm @hasOne(fields: ["cmpmFormID"])
   cpsFormID: ID
   cpsForm: CPSForm @hasOne(fields: ["cpsFormID"])
-  thinkificId: String
   savedCourses: [String]
   savedLessons: [String]
   savedArticles: [String]
@@ -517,6 +517,8 @@ type User @model @auth(rules: [{ allow: public }]) {
   onboardingComplete: Boolean @default(value: "false")
   onboardingCompleteDate: String
   totalXp: Int
+  thinkificXp: Int
+  psXp: Int
   level: Int
   xpToNextLevel: Int
   lastLogin: String

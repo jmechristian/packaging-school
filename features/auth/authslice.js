@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 const initialState = {
   user: null,
   awsUser: null,
+  thinkificUser: null,
   loginOpen: true,
   location: {
     ip: null,
@@ -67,6 +68,9 @@ export const authSlice = createSlice({
     updateUser: (state, action) => {
       state.awsUser = { ...state.awsUser, ...action.payload };
     },
+    setThinkificUser: (state, action) => {
+      state.thinkificUser = action.payload;
+    },
   },
 });
 
@@ -82,6 +86,7 @@ export const {
   clearCart,
   setAWSUser,
   updateUser,
+  setThinkificUser,
 } = authSlice.actions;
 
 export default authSlice.reducer;

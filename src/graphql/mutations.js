@@ -2526,6 +2526,7 @@ export const createCompany = /* GraphQL */ `
       Employees {
         items {
           id
+          thinkificId
           name
           title
           company
@@ -2541,7 +2542,6 @@ export const createCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -2549,6 +2549,8 @@ export const createCompany = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -2594,6 +2596,7 @@ export const updateCompany = /* GraphQL */ `
       Employees {
         items {
           id
+          thinkificId
           name
           title
           company
@@ -2609,7 +2612,6 @@ export const updateCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -2617,6 +2619,8 @@ export const updateCompany = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -2662,6 +2666,7 @@ export const deleteCompany = /* GraphQL */ `
       Employees {
         items {
           id
+          thinkificId
           name
           title
           company
@@ -2677,7 +2682,6 @@ export const deleteCompany = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -2685,6 +2689,8 @@ export const deleteCompany = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3227,6 +3233,7 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
+      thinkificId
       name
       title
       company
@@ -3255,6 +3262,7 @@ export const createUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3270,7 +3278,6 @@ export const createUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3278,6 +3285,8 @@ export const createUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3321,6 +3330,7 @@ export const createUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3336,7 +3346,6 @@ export const createUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3344,6 +3353,8 @@ export const createUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3384,7 +3395,6 @@ export const createUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      thinkificId
       savedCourses
       savedLessons
       savedArticles
@@ -3402,6 +3412,8 @@ export const createUser = /* GraphQL */ `
       onboardingComplete
       onboardingCompleteDate
       totalXp
+      thinkificXp
+      psXp
       level
       xpToNextLevel
       lastLogin
@@ -3430,6 +3442,7 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
+      thinkificId
       name
       title
       company
@@ -3458,6 +3471,7 @@ export const updateUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3473,7 +3487,6 @@ export const updateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3481,6 +3494,8 @@ export const updateUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3524,6 +3539,7 @@ export const updateUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3539,7 +3555,6 @@ export const updateUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3547,6 +3562,8 @@ export const updateUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3587,7 +3604,6 @@ export const updateUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      thinkificId
       savedCourses
       savedLessons
       savedArticles
@@ -3605,6 +3621,8 @@ export const updateUser = /* GraphQL */ `
       onboardingComplete
       onboardingCompleteDate
       totalXp
+      thinkificXp
+      psXp
       level
       xpToNextLevel
       lastLogin
@@ -3633,6 +3651,7 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      thinkificId
       name
       title
       company
@@ -3661,6 +3680,7 @@ export const deleteUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3676,7 +3696,6 @@ export const deleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3684,6 +3703,8 @@ export const deleteUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3727,6 +3748,7 @@ export const deleteUser = /* GraphQL */ `
         id
         user {
           id
+          thinkificId
           name
           title
           company
@@ -3742,7 +3764,6 @@ export const deleteUser = /* GraphQL */ `
           companyID
           cmpmFormID
           cpsFormID
-          thinkificId
           savedCourses
           savedLessons
           savedArticles
@@ -3750,6 +3771,8 @@ export const deleteUser = /* GraphQL */ `
           onboardingComplete
           onboardingCompleteDate
           totalXp
+          thinkificXp
+          psXp
           level
           xpToNextLevel
           lastLogin
@@ -3790,7 +3813,6 @@ export const deleteUser = /* GraphQL */ `
         updatedOn
         cPSFormUserId
       }
-      thinkificId
       savedCourses
       savedLessons
       savedArticles
@@ -3808,6 +3830,8 @@ export const deleteUser = /* GraphQL */ `
       onboardingComplete
       onboardingCompleteDate
       totalXp
+      thinkificXp
+      psXp
       level
       xpToNextLevel
       lastLogin
@@ -4036,6 +4060,7 @@ export const createCMPMForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4118,7 +4143,6 @@ export const createCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4129,6 +4153,8 @@ export const createCMPMForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -4181,6 +4207,7 @@ export const updateCMPMForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4263,7 +4290,6 @@ export const updateCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4274,6 +4300,8 @@ export const updateCMPMForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -4326,6 +4354,7 @@ export const deleteCMPMForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4408,7 +4437,6 @@ export const deleteCMPMForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4419,6 +4447,8 @@ export const deleteCMPMForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -4471,6 +4501,7 @@ export const createCPSForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4553,7 +4584,6 @@ export const createCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4564,6 +4594,8 @@ export const createCPSForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -4618,6 +4650,7 @@ export const updateCPSForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4700,7 +4733,6 @@ export const updateCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4711,6 +4743,8 @@ export const updateCPSForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -4765,6 +4799,7 @@ export const deleteCPSForm = /* GraphQL */ `
       id
       user {
         id
+        thinkificId
         name
         title
         company
@@ -4847,7 +4882,6 @@ export const deleteCPSForm = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -4858,6 +4892,8 @@ export const deleteCPSForm = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -10392,6 +10428,7 @@ export const createAPSUser = /* GraphQL */ `
       }
       user {
         id
+        thinkificId
         name
         title
         company
@@ -10474,7 +10511,6 @@ export const createAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -10485,6 +10521,8 @@ export const createAPSUser = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -10531,6 +10569,7 @@ export const updateAPSUser = /* GraphQL */ `
       }
       user {
         id
+        thinkificId
         name
         title
         company
@@ -10613,7 +10652,6 @@ export const updateAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -10624,6 +10662,8 @@ export const updateAPSUser = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -10670,6 +10710,7 @@ export const deleteAPSUser = /* GraphQL */ `
       }
       user {
         id
+        thinkificId
         name
         title
         company
@@ -10752,7 +10793,6 @@ export const deleteAPSUser = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -10763,6 +10803,8 @@ export const deleteAPSUser = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11226,6 +11268,7 @@ export const createAchievementUsers = /* GraphQL */ `
       achievementId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -11308,7 +11351,6 @@ export const createAchievementUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -11319,6 +11361,8 @@ export const createAchievementUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11360,6 +11404,7 @@ export const updateAchievementUsers = /* GraphQL */ `
       achievementId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -11442,7 +11487,6 @@ export const updateAchievementUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -11453,6 +11497,8 @@ export const updateAchievementUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11494,6 +11540,7 @@ export const deleteAchievementUsers = /* GraphQL */ `
       achievementId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -11576,7 +11623,6 @@ export const deleteAchievementUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -11587,6 +11633,8 @@ export const deleteAchievementUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11628,6 +11676,7 @@ export const createCohortUsers = /* GraphQL */ `
       cohortId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -11710,7 +11759,6 @@ export const createCohortUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -11721,6 +11769,8 @@ export const createCohortUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11778,6 +11828,7 @@ export const updateCohortUsers = /* GraphQL */ `
       cohortId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -11860,7 +11911,6 @@ export const updateCohortUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -11871,6 +11921,8 @@ export const updateCohortUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
@@ -11928,6 +11980,7 @@ export const deleteCohortUsers = /* GraphQL */ `
       cohortId
       user {
         id
+        thinkificId
         name
         title
         company
@@ -12010,7 +12063,6 @@ export const deleteCohortUsers = /* GraphQL */ `
           updatedOn
           cPSFormUserId
         }
-        thinkificId
         savedCourses
         savedLessons
         savedArticles
@@ -12021,6 +12073,8 @@ export const deleteCohortUsers = /* GraphQL */ `
         onboardingComplete
         onboardingCompleteDate
         totalXp
+        thinkificXp
+        psXp
         level
         xpToNextLevel
         lastLogin
