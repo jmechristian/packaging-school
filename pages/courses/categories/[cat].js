@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import {
   getCoursesByCategory,
   getCertificateByCategory,
+  registerCertificateClick,
+  registgerCourseClick,
 } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import { H2, H4 } from '@jmechristian/ps-component-library';

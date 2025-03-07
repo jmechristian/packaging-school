@@ -6,6 +6,7 @@ import {
   setUser,
   setAWSUser,
   setThinkificUser,
+  updateUser,
 } from '../auth/authslice';
 import { getAWSUser, createAWSUser, updateAWSUser } from '../../helpers/api';
 import CartToggle from './CartToggle';
@@ -15,6 +16,8 @@ import HeaderNew from '../navigation/Header/HeaderNew';
 import Loading from '../../components/shared/Loading';
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
+import { API, graphqlOperation } from 'aws-amplify';
+import { onUpdateUser } from '../../src/graphql/subscriptions';
 
 import { useRouter } from 'next/router';
 
@@ -24,7 +27,7 @@ const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   // const { searchOpen } = useSelector((state) => state.nav);
-  const { location, cart } = useSelector((state) => state.auth);
+  const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
 
   useEffect(() => {
@@ -35,6 +38,11 @@ const Layout = ({ children }) => {
           email: user.email,
           name: user.name,
           lastLogin: new Date().toISOString(),
+          totalXp: 0,
+          level: 1,
+          xpToNextLevel: 100,
+          psXp: 0,
+          thinkificXp: 0,
         });
         dispatch(setAWSUser(newUser));
       } else {
@@ -100,6 +108,29 @@ const Layout = ({ children }) => {
   //     }
   //   }
   // }, []);
+
+  useEffect(() => {
+    let subscription;
+
+    if (awsUser?.id) {
+      // Subscribe to user updates
+      subscription = API.graphql(
+        graphqlOperation(onUpdateUser, { id: awsUser.id })
+      ).subscribe({
+        next: ({ value }) => {
+          const updatedUser = value.data.onUpdateUser;
+          // Update Redux store with new user data
+          dispatch(updateUser(updatedUser));
+        },
+        error: (error) => console.error('Subscription error:', error),
+      });
+    }
+
+    // Cleanup subscription on unmount
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
+  }, [awsUser?.id, dispatch]);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')

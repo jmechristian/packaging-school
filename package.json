@@ -26,7 +26,7 @@
     "@aws-sdk/client-s3": "^3.312.0",
     "@aws-sdk/client-ses": "^3.370.0",
     "@aws-sdk/lib-dynamodb": "^3.312.0",
-    "@headlessui/react": "^1.7.12",
+    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.11",
     "@jmechristian/ps-component-library": "^2.5.90",
     "@popmotion/popcorn": "^0.4.4",

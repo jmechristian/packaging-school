@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MdBolt } from 'react-icons/md';
 import EnrollmentItem from './EnrollmentItem';
+import NoPassEnrollments from './NoPassEnrollments';
+import PackPassToggle from './PackPassToggle';
+import { useSelector } from 'react-redux';
 
 const ProfileEnrollments = ({ email, courses }) => {
-  console.log(courses);
+  const { awsUser } = useSelector((state) => state.auth);
+  const [packPass, setPackPass] = useState(awsUser.allAccess);
   const [enrollments, setEnrollments] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -18,7 +22,7 @@ const ProfileEnrollments = ({ email, courses }) => {
           `/api/thinkific/get-enrollments?email=${email}`
         );
         const data = await enrollments.json();
-        console.log(data);
+        console.log('enrollments', data);
         setEnrollments(data);
       } catch (error) {
         console.error('Error fetching enrollments:', error);
@@ -28,6 +32,10 @@ const ProfileEnrollments = ({ email, courses }) => {
     };
     fetchEnrollments();
   }, [email]);
+
+  useEffect(() => {
+    setPackPass(awsUser.allAccess);
+  }, [awsUser]);
 
   const filteredEnrollments = useMemo(() => {
     if (!enrollments.items) return [];
@@ -93,16 +101,9 @@ const ProfileEnrollments = ({ email, courses }) => {
     <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='h4-base text-gray-900'>
-          Enrollments: {enrollments.items && enrollments.items.length} Total
+          Courses: {enrollments.items && enrollments.items.length} Total
         </div>
-        <div className='flex items-center bg-yellow-300 rounded-lg py-1.5 px-3 border-4 border-yellow-200'>
-          <div>
-            <MdBolt size={20} />
-          </div>
-          <div className='text-sm text-gray-900 font-bold'>
-            PackPass(TM) ACTIVE
-          </div>
-        </div>
+        <PackPassToggle enabled={packPass} onChange={setPackPass} />
       </div>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='flex items-center gap-2'>
@@ -143,24 +144,14 @@ const ProfileEnrollments = ({ email, courses }) => {
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-4'>
-        {enrollments.items &&
-          paginatedEnrollments.map((enrollment, index) => {
-            const matchedCourse =
-              courses &&
-              courses.find((course) => {
-                return course.id === enrollment.course_id.toString();
-              });
-            return (
-              <EnrollmentItem
-                active={index === 0}
-                key={enrollment.id}
-                enrollment={enrollment}
-                course={matchedCourse}
-              />
-            );
-          })}
-      </div>
+      {packPass ? (
+        <div className='flex flex-col gap-4'>Chill</div>
+      ) : (
+        <NoPassEnrollments
+          enrollments={paginatedEnrollments}
+          courses={courses}
+        />
+      )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (

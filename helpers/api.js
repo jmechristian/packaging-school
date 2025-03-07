@@ -771,3 +771,14 @@ export const getCohorts = async () => {
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 };
+
+export const updateThinkificUser = async (data) => {
+  const res = await fetch('/api/thinkific/update-user', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};

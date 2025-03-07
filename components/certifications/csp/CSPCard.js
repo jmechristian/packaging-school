@@ -98,7 +98,8 @@ const CSPCard = () => {
                 <div className='text-lg font-semibold'>Objective 4</div>
               </div>
               <div className='pl-7'>
-                Measure the carbon footprint of your packaging
+                Measure and manage the carbon footprint of your packaging
+                solutions
               </div>
             </div>
             <div className='flex flex-col gap-1'>
