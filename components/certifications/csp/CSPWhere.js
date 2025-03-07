@@ -23,7 +23,7 @@ const CSPWhere = () => {
               initiatives that make a lasting impact.
             </div>
             <div
-              className='w-full md:w-fit py-2 md:pl-6 md:pr-9 bg-base-brand cursor-pointer rounded-lg mt-9 flex gap-2 justify-center items-center'
+              className='w-full md:w-fit py-2 md:pl-6 md:pr-9 !bg-base-brand cursor-pointer rounded-lg mt-9 flex gap-2 justify-center items-center'
               onClick={() =>
                 window.open(
                   'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
