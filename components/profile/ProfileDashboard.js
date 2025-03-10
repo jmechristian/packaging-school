@@ -645,7 +645,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                         </button>
                       </div>
                     </div>
-                    <SavedLessons />
+                    {/* <SavedLessons /> */}
                     <div className='flex flex-col gap-4 bg-white rounded-lg p-5'>
                       <div className='font-bold text-gray-900 w-full'>
                         Wish List
