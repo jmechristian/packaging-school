@@ -4,10 +4,10 @@ import AuthorBlock from '../shared/AuthorBlock';
 const ImageHero = ({ title, date, author, media }) => {
   return (
     <div className='flex flex-col gap-8 lg:gap-16 md:!flex-row items-center justify-between md:!px-6 xl:!px-0 pt-6'>
-      <div
+      {/* <div
         className='aspect-[16/9] w-full max-w-[450px] border border-neutral-400 bg-black bg-cover bg-center bg-no-repeat md:!rounded-2xl'
         style={{ backgroundImage: `url(${media})` }}
-      ></div>
+      ></div> */}
       <div className='flex flex-col h-full w-full gap-5 px-6 lg:!px-0'>
         <div className='w-full font-bold max-w-3xl text-3xl lg:!text-4xl xl:!text-5xl leading-none lg:!tracking-tight tracking-tighter dark:text-white'>
           {title}

@@ -35,15 +35,15 @@ const PackPassToggle = ({ enabled, onChange }) => {
           checked={enabled}
           onChange={(newValue) => onChange(newValue)}
           className={`${
-            enabled ? 'bg-base-brand' : 'bg-gray-200'
-          } relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-base-brand focus:ring-offset-1`}
+            enabled ? 'bg-clemson' : 'bg-gray-200'
+          } relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-base-brand focus:ring-offset-1`}
         >
           <span
             aria-hidden='true'
             className={`
             transform transition-transform duration-200 ease-in-out
             ${enabled ? 'translate-x-5' : 'translate-x-0'}
-            pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm
+            pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm
           `}
           />
         </Switch>

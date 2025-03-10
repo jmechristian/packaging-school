@@ -658,6 +658,16 @@ export const onCreateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      usersCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -736,6 +746,16 @@ export const onUpdateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      usersCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -813,6 +833,16 @@ export const onDeleteLesson = /* GraphQL */ `
         lessonId
         createdAt
         updatedAt
+      }
+      usersCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -3112,6 +3142,16 @@ export const onCreateUser = /* GraphQL */ `
       allAccess
       allAccessStartDate
       allAccessEndDate
+      lessonsCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3318,6 +3358,16 @@ export const onUpdateUser = /* GraphQL */ `
       allAccess
       allAccessStartDate
       allAccessEndDate
+      lessonsCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3524,6 +3574,16 @@ export const onDeleteUser = /* GraphQL */ `
       allAccess
       allAccessStartDate
       allAccessEndDate
+      lessonsCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3819,6 +3879,9 @@ export const onCreateCMPMForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3963,6 +4026,9 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4107,6 +4173,9 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4251,6 +4320,9 @@ export const onCreateCPSForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4397,6 +4469,9 @@ export const onUpdateCPSForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4543,6 +4618,9 @@ export const onDeleteCPSForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8816,6 +8894,9 @@ export const onCreateLessonTags = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        usersCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
         lessonAnalysisId
@@ -8886,6 +8967,9 @@ export const onUpdateLessonTags = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        usersCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
         lessonAnalysisId
@@ -8955,6 +9039,9 @@ export const onDeleteLessonTags = /* GraphQL */ `
           lessonId
           createdAt
           updatedAt
+        }
+        usersCompleted {
+          nextToken
         }
         createdAt
         updatedAt
@@ -9439,6 +9526,534 @@ export const onDeleteArticleRelatedCourses = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUserCompletedLessons = /* GraphQL */ `
+  subscription OnCreateUserCompletedLessons {
+    onCreateUserCompletedLessons {
+      id
+      lessonId
+      userId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        sources {
+          nextToken
+        }
+        links {
+          nextToken
+        }
+        tags {
+          nextToken
+        }
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
+        usersCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        lessonAnalysisId
+      }
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserCompletedLessons = /* GraphQL */ `
+  subscription OnUpdateUserCompletedLessons {
+    onUpdateUserCompletedLessons {
+      id
+      lessonId
+      userId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        sources {
+          nextToken
+        }
+        links {
+          nextToken
+        }
+        tags {
+          nextToken
+        }
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
+        usersCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        lessonAnalysisId
+      }
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserCompletedLessons = /* GraphQL */ `
+  subscription OnDeleteUserCompletedLessons {
+    onDeleteUserCompletedLessons {
+      id
+      lessonId
+      userId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        sources {
+          nextToken
+        }
+        links {
+          nextToken
+        }
+        tags {
+          nextToken
+        }
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
+        usersCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        lessonAnalysisId
+      }
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateAuthorTemplates = /* GraphQL */ `
   subscription OnCreateAuthorTemplates {
     onCreateAuthorTemplates {
@@ -9683,6 +10298,9 @@ export const onCreateAPSUser = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9821,6 +10439,9 @@ export const onUpdateAPSUser = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9959,6 +10580,9 @@ export const onDeleteAPSUser = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10496,6 +11120,9 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10629,6 +11256,9 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10762,6 +11392,9 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10895,6 +11528,9 @@ export const onCreateCohortUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11044,6 +11680,9 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11193,6 +11832,9 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }

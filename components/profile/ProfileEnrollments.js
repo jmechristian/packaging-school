@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { MdBolt } from 'react-icons/md';
-import EnrollmentItem from './EnrollmentItem';
+
 import NoPassEnrollments from './NoPassEnrollments';
+import PassEnrollments from './PassEnrollments';
 import PackPassToggle from './PackPassToggle';
 import { useSelector } from 'react-redux';
 
@@ -22,7 +22,6 @@ const ProfileEnrollments = ({ email, courses }) => {
           `/api/thinkific/get-enrollments?email=${email}`
         );
         const data = await enrollments.json();
-        console.log('enrollments', data);
         setEnrollments(data);
       } catch (error) {
         console.error('Error fetching enrollments:', error);
@@ -100,9 +99,7 @@ const ProfileEnrollments = ({ email, courses }) => {
   return (
     <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
-        <div className='h4-base text-gray-900'>
-          Courses: {enrollments.items && enrollments.items.length} Total
-        </div>
+        <div className='h4-base text-gray-900'>Your Courses</div>
         <PackPassToggle enabled={packPass} onChange={setPackPass} />
       </div>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
@@ -145,7 +142,7 @@ const ProfileEnrollments = ({ email, courses }) => {
         </div>
       </div>
       {packPass ? (
-        <div className='flex flex-col gap-4'>Chill</div>
+        <PassEnrollments enrollments={paginatedEnrollments} courses={courses} />
       ) : (
         <NoPassEnrollments
           enrollments={paginatedEnrollments}

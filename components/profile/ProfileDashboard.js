@@ -547,7 +547,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     cx='80'
                     cy='80'
                     r='64'
-                    stroke='#e5e7eb'
+                    stroke='rgba(255, 255, 255, 0.2)'
                     strokeWidth='12'
                     fill='transparent'
                   />
@@ -567,7 +567,9 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                 </svg>
                 {/* Level Number */}
                 <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
-                  <span className='text-4xl font-bold'>{userLevel.level}</span>
+                  <span className='text-4xl font-bold text-white'>
+                    {userLevel.level}
+                  </span>
                   <span className='text-sm text-gray-100'>Level</span>
                 </div>
               </div>

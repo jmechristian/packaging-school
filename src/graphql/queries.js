@@ -609,6 +609,16 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      usersCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -667,6 +677,9 @@ export const listLessons = /* GraphQL */ `
           lessonId
           createdAt
           updatedAt
+        }
+        usersCompleted {
+          nextToken
         }
         createdAt
         updatedAt
@@ -736,6 +749,9 @@ export const lessonsBySlug = /* GraphQL */ `
           lessonId
           createdAt
           updatedAt
+        }
+        usersCompleted {
+          nextToken
         }
         createdAt
         updatedAt
@@ -2736,6 +2752,16 @@ export const getUser = /* GraphQL */ `
       allAccess
       allAccessStartDate
       allAccessEndDate
+      lessonsCompleted {
+        items {
+          id
+          lessonId
+          userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2854,6 +2880,9 @@ export const listUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2982,6 +3011,9 @@ export const usersByName = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3110,6 +3142,9 @@ export const usersByEmail = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3238,6 +3273,9 @@ export const usersByCompanyID = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3534,6 +3572,9 @@ export const getCMPMForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3756,6 +3797,9 @@ export const getCPSForm = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7572,6 +7616,9 @@ export const getLessonTags = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        usersCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
         lessonAnalysisId
@@ -8433,6 +8480,454 @@ export const articleRelatedCoursesByArticleId = /* GraphQL */ `
     }
   }
 `;
+export const getUserCompletedLessons = /* GraphQL */ `
+  query GetUserCompletedLessons($id: ID!) {
+    getUserCompletedLessons(id: $id) {
+      id
+      lessonId
+      userId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        sources {
+          nextToken
+        }
+        links {
+          nextToken
+        }
+        tags {
+          nextToken
+        }
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
+        usersCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        lessonAnalysisId
+      }
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserCompletedLessons = /* GraphQL */ `
+  query ListUserCompletedLessons(
+    $filter: ModelUserCompletedLessonsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserCompletedLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        userId
+        lesson {
+          id
+          slug
+          title
+          subhead
+          type
+          media
+          mediaType
+          slides
+          seoImage
+          content
+          objectives
+          actionCTA
+          actionSubhead
+          actionLink
+          actionLinkTitle
+          actionExample
+          author
+          status
+          related
+          featured
+          backdate
+          createdBy
+          lastEditedBy
+          videoLink
+          screengrab
+          createdAt
+          updatedAt
+          lessonAnalysisId
+        }
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userCompletedLessonsByLessonId = /* GraphQL */ `
+  query UserCompletedLessonsByLessonId(
+    $lessonId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserCompletedLessonsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userCompletedLessonsByLessonId(
+      lessonId: $lessonId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        userId
+        lesson {
+          id
+          slug
+          title
+          subhead
+          type
+          media
+          mediaType
+          slides
+          seoImage
+          content
+          objectives
+          actionCTA
+          actionSubhead
+          actionLink
+          actionLinkTitle
+          actionExample
+          author
+          status
+          related
+          featured
+          backdate
+          createdBy
+          lastEditedBy
+          videoLink
+          screengrab
+          createdAt
+          updatedAt
+          lessonAnalysisId
+        }
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userCompletedLessonsByUserId = /* GraphQL */ `
+  query UserCompletedLessonsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserCompletedLessonsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userCompletedLessonsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        userId
+        lesson {
+          id
+          slug
+          title
+          subhead
+          type
+          media
+          mediaType
+          slides
+          seoImage
+          content
+          objectives
+          actionCTA
+          actionSubhead
+          actionLink
+          actionLinkTitle
+          actionExample
+          author
+          status
+          related
+          featured
+          backdate
+          createdBy
+          lastEditedBy
+          videoLink
+          screengrab
+          createdAt
+          updatedAt
+          lessonAnalysisId
+        }
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getAuthorTemplates = /* GraphQL */ `
   query GetAuthorTemplates($id: ID!) {
     getAuthorTemplates(id: $id) {
@@ -8725,6 +9220,9 @@ export const getAPSUser = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9582,6 +10080,9 @@ export const getAchievementUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9927,6 +10428,9 @@ export const getCohortUsers = /* GraphQL */ `
         allAccess
         allAccessStartDate
         allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
         createdAt
         updatedAt
       }

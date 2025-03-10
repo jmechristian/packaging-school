@@ -19,7 +19,7 @@ const VideoPlayer = ({
 
   return (
     <div
-      className={`relative w-full h-full flex items-center justify-center bg-black ${
+      className={`relative w-full flex items-center justify-center bg-black ${
         rounded ? 'rounded-t-xl' : ''
       }`}
     >
@@ -76,7 +76,7 @@ const VideoPlayer = ({
           height={'100%'}
           onError={() => setIsError(true)}
           controls
-          light={light}
+          light={true}
           playing={playing}
         />
         {/* )} */}

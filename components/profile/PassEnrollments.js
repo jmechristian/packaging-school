@@ -1,9 +1,7 @@
 import React from 'react';
-import CourseItem from './CourseItem';
-import { useRouter } from 'next/router';
+import EnrollmentItem from './EnrollmentItem';
 
-const NoPassEnrollments = ({ enrollments, courses }) => {
-  const router = useRouter();
+const PassEnrollments = ({ enrollments, courses }) => {
   return (
     <div className='flex flex-col gap-4'>
       {enrollments.length > 0 ? (
@@ -14,7 +12,7 @@ const NoPassEnrollments = ({ enrollments, courses }) => {
               return course.id === enrollment.course_id.toString();
             });
           return (
-            <CourseItem
+            <EnrollmentItem
               active={index === 0}
               key={enrollment.id}
               enrollment={enrollment}
@@ -42,4 +40,4 @@ const NoPassEnrollments = ({ enrollments, courses }) => {
   );
 };
 
-export default NoPassEnrollments;
+export default PassEnrollments;

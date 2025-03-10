@@ -14,8 +14,6 @@ export default handleAuth({
             return session;
           }
 
-          console.log('session', session);
-
           try {
             console.log('Processing user:');
 
@@ -30,7 +28,6 @@ export default handleAuth({
             const data = await thinkificUser.json();
 
             if (data?.data?.data?.userByEmail) {
-              console.log('thinkificUser', data.data.data.userByEmail);
               // Handle potentially missing name fields
               // const firstName =
               //   session.user.given_name ||
@@ -40,14 +37,12 @@ export default handleAuth({
               //   session.user.family_name ||
               //   session.user.name?.split(' ').slice(1).join(' ') ||
               //   '';
-
               // const redirectUrl = await handleSSO({
               //   email: session.user.email,
               //   first_name: firstName,
               //   last_name: lastName,
               //   returnTo: 'http://localhost:3000',
               // });
-
               // console.log('SSO redirect URL generated:', redirectUrl);
               // // Store the redirect URL in the user object
               // session.user.ssoRedirectUrl = redirectUrl;
@@ -79,7 +74,6 @@ export default handleAuth({
                 }
               );
               const createUserResponse = await createUser.json();
-              console.log('New User Created:', createUserResponse);
 
               // redirect to thinkific
               // const redirectUrl = await handleSSO({

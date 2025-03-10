@@ -145,6 +145,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   videoLink: String
   screengrab: String
   analysis: Analysis @hasOne
+  usersCompleted: [User] @manyToMany(relationName: "userCompletedLessons")
 }
 
 type Author @model @auth(rules: [{ allow: public }]) {
@@ -526,6 +527,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   allAccess: Boolean @default(value: "false")
   allAccessStartDate: String
   allAccessEndDate: String
+  lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
 }
 
 type Cohort @model @auth(rules: [{ allow: public }]) {

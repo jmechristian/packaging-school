@@ -1,31 +1,22 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { MdStarBorder } from 'react-icons/md';
-import { expireEnrollment } from '../../helpers/api';
-
-const EnrollmentItem = ({ course, enrollment, active }) => {
+const CourseItem = ({ course, enrollment, active }) => {
   const router = useRouter();
   return (
     course && (
       <div
         key={course.id}
-        className={`border rounded-lg space-y-1 hover:shadow-md transition-shadow bg-gray-100 ${
-          active ? 'ring-2 ring-indigo-500 px-2 pb-3 pt-1 ' : 'opacity-50 p-2'
-        }`}
+        className={`border rounded-lg space-y-1 hover:shadow-md transition-shadow bg-gray-100 p-2`}
       >
-        <div className='flex justify-between items-center px-1'>
-          <div className='flex items-center gap-2'>
+        <div className='flex justify-between items-center'>
+          <div className='flex items-center gap-2 px-1'>
             <h3 className='text-lg font-semibold text-gray-900'>
               {course.title}
             </h3>
-            {active && (
-              <div className='text-xs bg-indigo-500 text-white px-2 py-0.5 rounded-lg'>
-                Current Enrollment
-              </div>
-            )}
           </div>
           <button
-            onClick={() => expireEnrollment(enrollment.id)}
+            onClick={() => router.push(course.slug)}
             className='text-gray-700 text-sm font-bold'
           >
             Continue &gt;
@@ -69,4 +60,4 @@ const EnrollmentItem = ({ course, enrollment, active }) => {
   );
 };
 
-export default EnrollmentItem;
+export default CourseItem;
