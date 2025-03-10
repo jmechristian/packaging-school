@@ -1,6 +1,7 @@
 import { Amplify, API, Storage, graphqlOperation } from 'aws-amplify';
 import {
   getAuthor,
+  getLesson,
   listSalesBars,
   getLMSCourse,
   listFaqs,
@@ -1041,4 +1042,12 @@ export const handleBookmarkAdd = async (lessons, userId) => {
       },
     },
   });
+};
+
+export const getSavedLesson = async (lessonId) => {
+  const res = await API.graphql({
+    query: getLesson,
+    variables: { id: lessonId },
+  });
+  return res.data.getLesson;
 };

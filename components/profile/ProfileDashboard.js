@@ -12,7 +12,7 @@ import {
 import ProfileEnrollments from './ProfileEnrollments';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
 import { useSelector } from 'react-redux';
-
+import SavedLessons from './SavedLessons';
 const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
   const EditProfileForm = ({ onClose }) => {
     const { awsUser } = useSelector((state) => state.auth);
@@ -606,7 +606,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
             <div className='flex flex-col w-full'>
               {/* Tab Content */}
               <div className='min-h-[600px] w-full bg-gray-100 p-7 rounded-b-lg'>
-                <div className='max-w-7xl w-full grid grid-cols-12 gap-8'>
+                <div className='max-w-7xl w-full grid grid-cols-12 gap-4'>
                   <div className='col-span-8 flex flex-col gap-8 h-full'>
                     <ProfileEnrollments
                       courses={thinkificUser && thinkificUser.courses.nodes}
@@ -614,7 +614,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     />
                   </div>
                   <div className='col-span-4 flex flex-col gap-8 h-full'>
-                    <div className='flex flex-col gap-6 bg-white rounded-lg p-6'>
+                    <div className='flex flex-col gap-6 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Achievements
                       </div>
@@ -634,7 +634,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                         <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
                       </div>
                     </div>
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Learning Paths
                       </div>
@@ -645,18 +645,8 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                         </button>
                       </div>
                     </div>
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
-                      <div className='font-bold text-gray-900 w-full'>
-                        Saved Lessons
-                      </div>
-                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
-                        <div>No courses or certificates selected</div>
-                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
-                          Browse Library
-                        </button>
-                      </div>
-                    </div>
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-6'>
+                    <SavedLessons />
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-5'>
                       <div className='font-bold text-gray-900 w-full'>
                         Wish List
                       </div>
