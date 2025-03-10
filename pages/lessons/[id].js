@@ -280,7 +280,9 @@ const Page = ({ lesson }) => {
                         className='flex gap-2 items-center cursor-pointer'
                         onClick={() =>
                           handleBookmarkAdd(
-                            [...awsUser.savedLessons, lesson.id],
+                            awsUser.savedLessons
+                              ? [...awsUser.savedLessons, lesson.id]
+                              : [lesson.id],
                             awsUser.id
                           )
                         }
