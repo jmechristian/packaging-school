@@ -669,7 +669,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
             <div className='flex flex-col w-full'>
               {/* Tab Content */}
               <div className='min-h-[600px] w-full bg-gray-100 p-7 rounded-b-lg'>
-                <div className='max-w-7xl w-full grid grid-cols-12 gap-4'>
+                <div className='max-w-7xl w-full grid grid-cols-12 gap-8'>
                   <div className='col-span-8 flex flex-col gap-8 h-full'>
                     <ProfileEnrollments
                       courses={thinkificUser && thinkificUser.courses.nodes}

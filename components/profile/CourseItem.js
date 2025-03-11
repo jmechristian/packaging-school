@@ -16,7 +16,11 @@ const CourseItem = ({ course, enrollment, active }) => {
             </h3>
           </div>
           <button
-            onClick={() => router.push(course.slug)}
+            onClick={() =>
+              router.push(
+                `https://learn.packagingschool.com/courses/take/${course.slug}`
+              )
+            }
             className='text-gray-700 text-sm font-bold'
           >
             Continue &gt;

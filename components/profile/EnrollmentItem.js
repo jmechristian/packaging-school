@@ -25,7 +25,11 @@ const EnrollmentItem = ({ course, enrollment, active }) => {
             )}
           </div>
           <button
-            onClick={() => expireEnrollment(enrollment.id)}
+            onClick={() =>
+              router.push(
+                `https://learn.packagingschool.com/courses/take/${course.slug}`
+              )
+            }
             className='text-gray-700 text-sm font-bold'
           >
             Continue &gt;
