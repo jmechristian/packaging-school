@@ -677,6 +677,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     />
                   </div>
                   <div className='col-span-4 flex flex-col gap-8 h-full'>
+                    <SavedLessons />
                     <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Learning Paths
@@ -699,7 +700,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                         </button>
                       </div>
                     </div>
-                    <SavedLessons />
+
                     <div className='flex flex-col gap-6 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Achievements
@@ -726,8 +727,19 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                       </div>
                       <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
                         <div>No courses or certificates selected</div>
-                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
-                          Select Curriculum
+                        <button
+                          className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
+                          onClick={() =>
+                            dispatch(
+                              showToast({
+                                message: 'Coming Soon',
+                                description: 'This feature is coming soon.',
+                                type: 'test',
+                              })
+                            )
+                          }
+                        >
+                          Add to Wish List
                         </button>
                       </div>
                     </div>

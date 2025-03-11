@@ -11,8 +11,7 @@ const ProfileEnrollments = ({ email, courses }) => {
   const [enrollments, setEnrollments] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const enrollmentsPerPage = 7;
+  const enrollmentsPerPage = 6;
 
   useEffect(() => {
     const fetchEnrollments = async () => {
@@ -22,6 +21,7 @@ const ProfileEnrollments = ({ email, courses }) => {
           `/api/thinkific/get-enrollments?email=${email}`
         );
         const data = await enrollments.json();
+        console.log(data);
         setEnrollments(data);
       } catch (error) {
         console.error('Error fetching enrollments:', error);
@@ -61,22 +61,8 @@ const ProfileEnrollments = ({ email, courses }) => {
     );
   }, [filteredEnrollments]);
 
-  const paginatedEnrollments = useMemo(() => {
-    const startIndex = (currentPage - 1) * enrollmentsPerPage;
-    const endIndex = startIndex + enrollmentsPerPage;
-    return activeEnrollments.slice(startIndex, endIndex);
-  }, [activeEnrollments, currentPage]);
-
-  const totalPages = useMemo(() => {
-    return Math.ceil(activeEnrollments.length / enrollmentsPerPage);
-  }, [activeEnrollments]);
-
   const handleSearch = (e) => {
     setSearch(e.target.value);
-  };
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
   };
 
   if (loading) {
@@ -142,47 +128,19 @@ const ProfileEnrollments = ({ email, courses }) => {
         </div>
       </div>
       {packPass ? (
-        <PassEnrollments enrollments={paginatedEnrollments} courses={courses} />
+        <PassEnrollments
+          activeEnrollments={activeEnrollments}
+          expiredEnrollments={expiredEnrollments}
+          courses={courses}
+          enrollmentsPerPage={enrollmentsPerPage}
+        />
       ) : (
         <NoPassEnrollments
-          enrollments={paginatedEnrollments}
+          activeEnrollments={activeEnrollments}
+          expiredEnrollments={expiredEnrollments}
           courses={courses}
+          enrollmentsPerPage={enrollmentsPerPage}
         />
-      )}
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className='flex items-center justify-center gap-2 mt-4'>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className='px-3 py-1 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50'
-          >
-            Previous
-          </button>
-
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-3 py-1 rounded ${
-                currentPage === index + 1
-                  ? 'bg-clemson text-white'
-                  : 'border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className='px-3 py-1 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50'
-          >
-            Next
-          </button>
-        </div>
       )}
     </div>
   );
