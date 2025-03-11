@@ -677,7 +677,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     />
                   </div>
                   <div className='col-span-4 flex flex-col gap-8 h-full'>
-                    <SavedLessons />
+                    {/* <SavedLessons /> */}
                     <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Learning Paths

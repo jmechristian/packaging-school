@@ -30,7 +30,7 @@ const ProfileEnrollments = ({ email, courses }) => {
       }
     };
     fetchEnrollments();
-  }, [email]);
+  }, [email, awsUser]);
 
   useEffect(() => {
     setPackPass(awsUser.allAccess);
@@ -133,6 +133,7 @@ const ProfileEnrollments = ({ email, courses }) => {
           expiredEnrollments={expiredEnrollments}
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
+          enrollments={enrollments}
         />
       ) : (
         <NoPassEnrollments

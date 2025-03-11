@@ -1,14 +1,27 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import EnrollmentItem from './EnrollmentItem';
+import { expireEnrollment, updateAWSUser } from '../../helpers/api';
+import { useSelector } from 'react-redux';
 
 const PassEnrollments = ({
   activeEnrollments,
   expiredEnrollments,
   courses,
   enrollmentsPerPage,
+  enrollments,
 }) => {
+  const { awsUser } = useSelector((state) => state.auth);
   const [currentActivePage, setCurrentActivePage] = useState(1);
   const [currentExpiredPage, setCurrentExpiredPage] = useState(1);
+  const [isValid, setIsValid] = useState(false);
+  console.log(activeEnrollments);
+  useEffect(() => {
+    if (activeEnrollments.length > 1) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
+  }, [activeEnrollments]);
 
   const paginatedActiveEnrollments = useMemo(() => {
     const startIndex = (currentActivePage - 1) * enrollmentsPerPage;
@@ -64,64 +77,106 @@ const PassEnrollments = ({
     </div>
   );
 
-  return (
-    <div className='flex flex-col gap-4'>
-      {/* Active Enrollments Section */}
-      <div>
-        <h3 className='h4-base text-gray-900 mb-4'>Active Courses</h3>
-        {paginatedActiveEnrollments.map((enrollment, index) => {
-          const matchedCourse =
-            courses &&
-            courses.find((course) => {
-              return course.id === enrollment.course_id.toString();
-            });
-          return (
-            <EnrollmentItem
-              active={index === 0}
-              key={enrollment.id}
-              enrollment={enrollment}
-              course={matchedCourse}
-            />
-          );
-        })}
-        {totalActivePages > 1 && (
-          <PaginationControls
-            currentPage={currentActivePage}
-            totalPages={totalActivePages}
-            onPageChange={setCurrentActivePage}
-          />
-        )}
-      </div>
+  const handleEnrollmentClick = async (enrollmentId) => {
+    try {
+      // Expire all enrollments except the selected one
+      const expirePromises = enrollments.items
+        .filter((enrollment) => enrollment.id !== enrollmentId)
+        .map((enrollment) => expireEnrollment(enrollment.id));
 
-      {/* Expired Enrollments Section */}
-      {expiredEnrollments.length > 0 && (
-        <div className='mt-8'>
-          <h3 className='h4-base text-gray-900 mb-4'>Expired Courses</h3>
-          {paginatedExpiredEnrollments.map((enrollment, index) => {
-            const matchedCourse =
-              courses &&
-              courses.find((course) => {
-                return course.id === enrollment.course_id.toString();
-              });
-            return (
-              <EnrollmentItem
-                active={index === 0}
-                key={enrollment.id}
-                enrollment={enrollment}
-                course={matchedCourse}
-              />
-            );
-          })}
-          {totalExpiredPages > 1 && (
-            <PaginationControls
-              currentPage={currentExpiredPage}
-              totalPages={totalExpiredPages}
-              onPageChange={setCurrentExpiredPage}
-            />
+      await Promise.all(expirePromises);
+
+      // Update AWS user with all access settings
+      await updateAWSUser({
+        id: awsUser.id,
+        allAccess: true,
+        allAccessStartDate: new Date().toISOString(),
+      });
+
+      // Update local state to show valid enrollment
+      setIsValid(true);
+    } catch (error) {
+      console.error('Error handling enrollment selection:', error);
+      // You may want to add error handling UI here
+    }
+  };
+
+  return (
+    <>
+      {isValid ? (
+        <div className='flex flex-col gap-4'>
+          {/* Active Enrollments Section */}
+          <div>
+            <h3 className='h4-base text-gray-900 mb-4'>Active Courses</h3>
+            {paginatedActiveEnrollments.map((enrollment, index) => {
+              const matchedCourse =
+                courses &&
+                courses.find((course) => {
+                  return course.id === enrollment.course_id.toString();
+                });
+              return (
+                <EnrollmentItem
+                  active={index === 0}
+                  key={enrollment.id}
+                  enrollment={enrollment}
+                  course={matchedCourse}
+                />
+              );
+            })}
+          </div>
+
+          {/* Expired Enrollments Section */}
+          {expiredEnrollments.length > 0 && (
+            <div className='mt-8'>
+              <h3 className='h4-base text-gray-900 mb-4'>Expired Courses</h3>
+              {paginatedExpiredEnrollments.map((enrollment, index) => {
+                const matchedCourse =
+                  courses &&
+                  courses.find((course) => {
+                    return course.id === enrollment.course_id.toString();
+                  });
+                return (
+                  <EnrollmentItem
+                    key={enrollment.id}
+                    enrollment={enrollment}
+                    course={matchedCourse}
+                  />
+                );
+              })}
+              {totalExpiredPages > 1 && (
+                <PaginationControls
+                  currentPage={currentExpiredPage}
+                  totalPages={totalExpiredPages}
+                  onPageChange={setCurrentExpiredPage}
+                />
+              )}
+            </div>
           )}
         </div>
+      ) : (
+        <div className='flex flex-col gap-4'>
+          <div className='h4-base text-gray-900 mb-4 leading-6'>
+            Choose your current enrollment: This will be your active course.
+            This is placeholder instructions/ UI, but it is live. This will
+            unenroll you from every other enrollment.
+          </div>
+          <div className='flex flex-col gap-4'>
+            {enrollments.items.map((enrollment) => (
+              <div
+                key={enrollment.id}
+                className='flex items-center gap-2 hover:bg-gray-200 cursor-pointer p-2'
+                onClick={() => handleEnrollmentClick(enrollment.id)}
+              >
+                <div className='flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 '>
+                  <div>+</div>
+                </div>
+                <div>{enrollment.course_name}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
