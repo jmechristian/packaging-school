@@ -33,6 +33,8 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     const checkUser = async () => {
+      if (!user?.email) return;
+
       const dbUser = await getAWSUser(user.email);
       if (!dbUser) {
         const newUser = await createAWSUser({
@@ -48,7 +50,7 @@ const Layout = ({ children }) => {
         dispatch(setAWSUser(newUser));
       } else {
         dispatch(setAWSUser(dbUser));
-        updateAWSUser({
+        await updateAWSUser({
           id: dbUser.id,
           lastLogin: new Date().toISOString(),
         });

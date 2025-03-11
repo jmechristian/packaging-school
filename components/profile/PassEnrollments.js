@@ -15,7 +15,6 @@ const PassEnrollments = ({
   const [currentActivePage, setCurrentActivePage] = useState(1);
   const [currentExpiredPage, setCurrentExpiredPage] = useState(1);
   const [isValid, setIsValid] = useState(false);
-  console.log(activeEnrollments);
   useEffect(() => {
     if (activeEnrollments.length > 1) {
       setIsValid(false);
