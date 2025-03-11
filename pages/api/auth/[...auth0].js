@@ -73,7 +73,7 @@ export default handleAuth({
                   }),
                 }
               );
-              const createUserResponse = await createUser.json();
+              await createUser.json();
 
               // redirect to thinkific
               const redirectUrl = await handleSSO({
