@@ -32,6 +32,14 @@ const ProfileEnrollments = ({ email, courses }) => {
     fetchEnrollments();
   }, [email]);
 
+  const refreshEnrollments = async () => {
+    const enrollments = await fetch(
+      `/api/thinkific/get-enrollments?email=${email}`
+    );
+    const data = await enrollments.json();
+    setEnrollments(data);
+  };
+
   useEffect(() => {
     setPackPass(awsUser.allAccess);
   }, [awsUser]);

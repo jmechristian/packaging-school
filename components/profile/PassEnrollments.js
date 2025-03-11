@@ -9,6 +9,7 @@ const PassEnrollments = ({
   courses,
   enrollmentsPerPage,
   enrollments,
+  refreshEnrollments,
 }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [currentActivePage, setCurrentActivePage] = useState(1);
@@ -95,6 +96,7 @@ const PassEnrollments = ({
 
       // Update local state to show valid enrollment
       setIsValid(true);
+      refreshEnrollments();
     } catch (error) {
       console.error('Error handling enrollment selection:', error);
       // You may want to add error handling UI here

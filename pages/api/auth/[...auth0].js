@@ -28,24 +28,24 @@ export default handleAuth({
             const data = await thinkificUser.json();
 
             if (data?.data?.data?.userByEmail) {
-              // Handle potentially missing name fields
-              // const firstName =
-              //   session.user.given_name ||
-              //   session.user.name?.split(' ')[0] ||
-              //   '';
-              // const lastName =
-              //   session.user.family_name ||
-              //   session.user.name?.split(' ').slice(1).join(' ') ||
-              //   '';
-              // const redirectUrl = await handleSSO({
-              //   email: session.user.email,
-              //   first_name: firstName,
-              //   last_name: lastName,
-              //   returnTo: 'http://localhost:3000',
-              // });
-              // console.log('SSO redirect URL generated:', redirectUrl);
-              // // Store the redirect URL in the user object
-              // session.user.ssoRedirectUrl = redirectUrl;
+              const firstName =
+                session.user.given_name ||
+                session.user.name?.split(' ')[0] ||
+                '';
+              const lastName =
+                session.user.family_name ||
+                session.user.name?.split(' ').slice(1).join(' ') ||
+                '';
+              const redirectUrl = await handleSSO({
+                email: session.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                returnTo:
+                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              });
+              console.log('SSO redirect URL generated:', redirectUrl);
+              // Store the redirect URL in the user object
+              session.user.ssoRedirectUrl = redirectUrl;
             } else {
               console.log('No user found in Thinkific');
 
@@ -76,14 +76,14 @@ export default handleAuth({
               const createUserResponse = await createUser.json();
 
               // redirect to thinkific
-              // const redirectUrl = await handleSSO({
-              //   email: session.user.email,
-              //   first_name: firstName,
-              //   last_name: lastName,
-              //   returnTo:
-              //     'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
-              // });
-              // session.user.ssoRedirectUrl = redirectUrl;
+              const redirectUrl = await handleSSO({
+                email: session.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                returnTo:
+                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              });
+              session.user.ssoRedirectUrl = redirectUrl;
             }
 
             return session;
