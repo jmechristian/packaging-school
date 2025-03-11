@@ -7,6 +7,12 @@ const initialState = {
   darkHeader: true,
   menuItemOpen: false,
   menuItem: null,
+  showToast: false,
+  toast: {
+    message: '',
+    type: '',
+    description: '',
+  },
 };
 
 export const navSlice = createSlice({
@@ -37,6 +43,13 @@ export const navSlice = createSlice({
     setSelectedNav: (state, action) => {
       state.menuItem = action.payload;
     },
+    showToast: (state, action) => {
+      state.toast = action.payload;
+      state.showToast = true;
+    },
+    hideToast: (state) => {
+      state.showToast = false;
+    },
   },
 });
 
@@ -49,6 +62,8 @@ export const {
   setDarkHeader,
   setMenuItem,
   setSelectedNav,
+  showToast,
+  hideToast,
 } = navSlice.actions;
 
 export default navSlice.reducer;

@@ -98,7 +98,7 @@ const ProfileEnrollments = ({ email, courses }) => {
 
   return (
     <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
-      <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
+      <div className='flex items-center justify-between w-full border-b border-gray-300 pb-6'>
         <div className='h4-base text-gray-900'>Your Courses</div>
         <PackPassToggle enabled={packPass} onChange={setPackPass} />
       </div>

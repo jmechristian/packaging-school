@@ -11,9 +11,12 @@ import {
 } from 'react-icons/tb';
 import ProfileEnrollments from './ProfileEnrollments';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import SavedLessons from './SavedLessons';
+import { showToast } from '../../features/navigation/navigationSlice';
+
 const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
+  const dispatch = useDispatch();
   const EditProfileForm = ({ onClose }) => {
     const { awsUser } = useSelector((state) => state.auth);
     const [formData, setFormData] = useState({
@@ -261,13 +264,9 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
     {
       title: 'Daily Streak',
       icon: TbBolt,
-      value: 0,
+      value: awsUser?.dailyStreak || 1,
     },
-    {
-      title: 'Total XP',
-      icon: TbFlame,
-      value: 0,
-    },
+
     {
       title: 'Achievements',
       icon: TbTrophy,
@@ -279,14 +278,14 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
       value: 0,
     },
     {
-      title: 'Courses Enrolled',
+      title: 'Courses Completed',
       icon: TbBrain,
       value: 0,
     },
     {
       title: 'Lessons Completed',
       icon: TbBook,
-      value: 0,
+      value: awsUser?.lessonsCompleted?.items?.length || 0,
     },
   ];
 
@@ -345,6 +344,13 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
         if (!thinkificResponse.ok) {
           console.error('Thinkific update failed, but AWS update succeeded');
         }
+
+        dispatch(
+          showToast({
+            message: 'Profile updated successfully!',
+            description: 'You have earned 50 PXP',
+          })
+        );
       } catch (thinkificError) {
         // Log Thinkific error but don't prevent completion
         console.error('Error updating Thinkific profile:', thinkificError);
@@ -373,6 +379,63 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
     }
     setShowOnboardingModal(false);
   };
+
+  const updateLoginStreak = async () => {
+    if (!awsUser) return;
+
+    const now = new Date();
+    const lastLogin = new Date(awsUser.lastLogin);
+
+    // Reset time to midnight for accurate day comparison
+    now.setHours(0, 0, 0, 0);
+    lastLogin.setHours(0, 0, 0, 0);
+
+    const timeDiff = now.getTime() - lastLogin.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+    let newStreak = awsUser.dailyStreak || 1;
+
+    // If last login was yesterday, increment streak
+    if (daysDiff === 1) {
+      newStreak += 1;
+    }
+    // If last login was more than 1 day ago, reset streak
+    else if (daysDiff > 1) {
+      newStreak = 1;
+    }
+    // If last login was today, keep current streak
+    else if (daysDiff === 0) {
+      return; // No need to update
+    }
+
+    try {
+      await updateAWSUser({
+        id: awsUser.id,
+        lastLogin: new Date().toISOString(),
+        dailyStreak: newStreak,
+      });
+    } catch (error) {
+      console.error('Error updating login streak:', error);
+    }
+  };
+
+  useEffect(() => {
+    updateLoginStreak();
+  }, [awsUser]); // Run once when component mounts
+
+  if (!awsUser) {
+    return (
+      <div className='flex items-center justify-center w-full h-screen bg-gray-100'>
+        <div className='flex flex-col items-center gap-4'>
+          <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
+          <div className='text-lg font-medium text-gray-600'>
+            Loading profile...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='flex flex-col w-full h-full relative bg-gray-100 border-b border-gray-200'>
       {showOnboardingModal && (
@@ -614,6 +677,29 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     />
                   </div>
                   <div className='col-span-4 flex flex-col gap-8 h-full'>
+                    <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
+                      <div className='font-bold text-gray-900 w-full'>
+                        Learning Paths
+                      </div>
+                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
+                        <div>No Paths Selected</div>
+                        <button
+                          className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
+                          onClick={() =>
+                            dispatch(
+                              showToast({
+                                message: 'Coming Soon',
+                                description: 'This feature is coming soon.',
+                                type: 'test',
+                              })
+                            )
+                          }
+                        >
+                          Select a Path
+                        </button>
+                      </div>
+                    </div>
+                    <SavedLessons />
                     <div className='flex flex-col gap-6 bg-white rounded-lg p-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Achievements
@@ -634,18 +720,6 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                         <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
                       </div>
                     </div>
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
-                      <div className='font-bold text-gray-900 w-full'>
-                        Learning Paths
-                      </div>
-                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
-                        <div>No Paths Selected</div>
-                        <button className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'>
-                          Select a Path
-                        </button>
-                      </div>
-                    </div>
-                    {/* <SavedLessons /> */}
                     <div className='flex flex-col gap-4 bg-white rounded-lg p-5'>
                       <div className='font-bold text-gray-900 w-full'>
                         Wish List

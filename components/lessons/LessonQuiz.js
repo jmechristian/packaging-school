@@ -1,14 +1,15 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import MiniProfile from '../profile/MiniProfile';
 import { completeLesson } from '../../helpers/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { showToast } from '../../features/navigation/navigationSlice';
 
 const LessonQuiz = ({ analysis, lessonId }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const dispatch = useDispatch();
   // Check if lesson is already completed
   const isLessonCompleted = useMemo(() => {
     return awsUser?.lessonsCompleted?.items?.some(
@@ -58,6 +59,12 @@ const LessonQuiz = ({ analysis, lessonId }) => {
         pxp: awsUser.psXp,
         thinkificXp: awsUser.thinkificXp,
       });
+      dispatch(
+        showToast({
+          message: 'Lesson Completed!',
+          description: 'You have earned 5 PXP',
+        })
+      );
     }
   };
 

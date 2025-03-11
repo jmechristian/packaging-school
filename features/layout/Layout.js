@@ -9,6 +9,7 @@ import {
   updateUser,
 } from '../auth/authslice';
 import { getAWSUser, createAWSUser, updateAWSUser } from '../../helpers/api';
+import Toast from '../../components/shared/Toast';
 import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -26,7 +27,7 @@ const Layout = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
-  // const { searchOpen } = useSelector((state) => state.nav);
+  const { showToast } = useSelector((state) => state.nav);
   const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
 
@@ -186,6 +187,7 @@ const Layout = ({ children }) => {
           <ScrollTop />
           <main className='relative h-full w-full'>{children}</main>
           <Footer />
+          <Toast show={showToast} />
         </div>
       </div>
     </>

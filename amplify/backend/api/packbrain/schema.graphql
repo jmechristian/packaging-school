@@ -523,6 +523,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   level: Int
   xpToNextLevel: Int
   lastLogin: String
+  dailyStreak: Int
   cohorts: [Cohort] @manyToMany(relationName: "CohortUsers")
   allAccess: Boolean @default(value: "false")
   allAccessStartDate: String
