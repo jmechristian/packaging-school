@@ -11,14 +11,13 @@ import {
 } from 'react-icons/tb';
 import ProfileEnrollments from './ProfileEnrollments';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
-import { useSelector, useDispatch } from 'react-redux';
-import SavedLessons from './SavedLessons';
+import { useDispatch } from 'react-redux';
+
 import { showToast } from '../../features/navigation/navigationSlice';
 
 const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
   const dispatch = useDispatch();
   const EditProfileForm = ({ onClose }) => {
-    const { awsUser } = useSelector((state) => state.auth);
     const [formData, setFormData] = useState({
       company: '',
       title: '',
@@ -423,7 +422,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
     updateLoginStreak();
   }, [awsUser]); // Run once when component mounts
 
-  if (!awsUser) {
+  if (!awsUser || !thinkificUser) {
     return (
       <div className='flex items-center justify-center w-full h-screen bg-gray-100'>
         <div className='flex flex-col items-center gap-4'>
@@ -605,7 +604,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
             <div className='flex flex-col gap-2 items-center'>
               <div className='relative w-40 h-40'>
                 {/* XP Progress Ring */}
-                <svg className='w-full h-full transform -rotate-90'>
+                {/* <svg className='w-full h-full transform -rotate-90'>
                   <circle
                     cx='80'
                     cy='80'
@@ -627,24 +626,24 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     }`}
                     className='transition-all duration-700'
                   />
-                </svg>
+                </svg> */}
                 {/* Level Number */}
-                <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
+                {/* <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
                   <span className='text-4xl font-bold text-white'>
                     {userLevel.level}
                   </span>
                   <span className='text-sm text-gray-100'>Level</span>
-                </div>
+                </div> */}
               </div>
               {/* XP Info */}
-              <div className='flex flex-col gap-0 text-center'>
+              {/* <div className='flex flex-col gap-0 text-center'>
                 <div className='text-sm font-medium text-gray-100'>
                   {userLevel.xpNeeded.toLocaleString()} XP to next level
                 </div>
                 <div className='text-sm text-gray-300'>
                   Total XP: {awsUser.totalXp.toLocaleString()}
                 </div>
-              </div>
+              </div> */}
             </div>
             <hr className='w-full border-gray-400 mt-2.5 mb-2.5' />
             <div className='flex flex-col gap-2.5'>

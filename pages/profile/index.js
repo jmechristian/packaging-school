@@ -32,7 +32,11 @@ export default withPageAuthRequired(function Page() {
 
   return (
     <ProfileWrapper>
-      <ProfileDashboard />
+      <ProfileDashboard
+        awsUser={awsUser}
+        thinkificUser={thinkificUser}
+        user={user}
+      />
     </ProfileWrapper>
   );
 });

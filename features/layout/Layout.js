@@ -17,10 +17,6 @@ import HeaderNew from '../navigation/Header/HeaderNew';
 import Loading from '../../components/shared/Loading';
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
-import { API, graphqlOperation } from 'aws-amplify';
-import { onUpdateUser } from '../../src/graphql/subscriptions';
-
-import { useRouter } from 'next/router';
 
 const Layout = ({ children }) => {
   // const router = useRouter();
@@ -112,28 +108,28 @@ const Layout = ({ children }) => {
   //   }
   // }, []);
 
-  useEffect(() => {
-    let subscription;
+  // useEffect(() => {
+  //   let subscription;
 
-    if (awsUser?.id) {
-      // Subscribe to user updates
-      subscription = API.graphql(
-        graphqlOperation(onUpdateUser, { id: awsUser.id })
-      ).subscribe({
-        next: ({ value }) => {
-          const updatedUser = value.data.onUpdateUser;
-          // Update Redux store with new user data
-          dispatch(updateUser(updatedUser));
-        },
-        error: (error) => console.error('Subscription error:', error),
-      });
-    }
+  //   if (awsUser?.id) {
+  //     // Subscribe to user updates
+  //     subscription = API.graphql(
+  //       graphqlOperation(onUpdateUser, { id: awsUser.id })
+  //     ).subscribe({
+  //       next: ({ value }) => {
+  //         const updatedUser = value.data.onUpdateUser;
+  //         // Update Redux store with new user data
+  //         dispatch(updateUser(updatedUser));
+  //       },
+  //       error: (error) => console.error('Subscription error:', error),
+  //     });
+  //   }
 
-    // Cleanup subscription on unmount
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  }, [awsUser?.id, dispatch]);
+  //   // Cleanup subscription on unmount
+  //   return () => {
+  //     if (subscription) subscription.unsubscribe();
+  //   };
+  // }, [awsUser?.id, dispatch]);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')

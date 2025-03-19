@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { MdStarBorder } from 'react-icons/md';
-import { expireEnrollment } from '../../helpers/api';
+import { expireEnrollment, reEnroll } from '../../helpers/api';
 
 const EnrollmentItem = ({ course, enrollment, active }) => {
   const router = useRouter();
@@ -25,14 +25,18 @@ const EnrollmentItem = ({ course, enrollment, active }) => {
             )}
           </div>
           <button
-            onClick={() =>
-              router.push(
-                `https://learn.packagingschool.com/courses/take/${course.slug}`
-              )
-            }
+            onClick={() => {
+              if (active) {
+                router.push(
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`
+                );
+              } else {
+                reEnroll(enrollment.id);
+              }
+            }}
             className='text-gray-700 text-sm font-bold'
           >
-            Continue &gt;
+            {active ? 'Continue' : `Re-Enroll`} &gt;
           </button>
         </div>
 

@@ -130,20 +130,22 @@ const PassEnrollments = ({
           {expiredEnrollments.length > 0 && (
             <div className='mt-8'>
               <h3 className='h4-base text-gray-900 mb-4'>Expired Courses</h3>
-              {paginatedExpiredEnrollments.map((enrollment, index) => {
-                const matchedCourse =
-                  courses &&
-                  courses.find((course) => {
-                    return course.id === enrollment.course_id.toString();
-                  });
-                return (
-                  <EnrollmentItem
-                    key={enrollment.id}
-                    enrollment={enrollment}
-                    course={matchedCourse}
-                  />
-                );
-              })}
+              <div className='flex flex-col gap-4'>
+                {paginatedExpiredEnrollments.map((enrollment, index) => {
+                  const matchedCourse =
+                    courses &&
+                    courses.find((course) => {
+                      return course.id === enrollment.course_id.toString();
+                    });
+                  return (
+                    <EnrollmentItem
+                      key={enrollment.id}
+                      enrollment={enrollment}
+                      course={matchedCourse}
+                    />
+                  );
+                })}
+              </div>
               {totalExpiredPages > 1 && (
                 <PaginationControls
                   currentPage={currentExpiredPage}

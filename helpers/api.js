@@ -997,6 +997,17 @@ export const expireEnrollment = async (id) => {
   return res.json();
 };
 
+export const reEnroll = async (id) => {
+  const res = await fetch('/api/thinkific/re-enroll', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id }),
+  });
+  return res.json();
+};
+
 export const completeLesson = async ({
   lessonId,
   userId,
