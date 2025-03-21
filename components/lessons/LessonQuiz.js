@@ -3,7 +3,7 @@ import MiniProfile from '../profile/MiniProfile';
 import { completeLesson, getAWSUser } from '../../helpers/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { showToast } from '../../features/navigation/navigationSlice';
-import { setAWSUser } from '../../features/auth/authSlice';
+import { setAWSUser } from '../../features/auth/authslice';
 import { useUser } from '@auth0/nextjs-auth0/client';
 const LessonQuiz = ({ analysis, lessonId }) => {
   const { awsUser } = useSelector((state) => state.auth);

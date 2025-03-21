@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setThinkificUser, setAWSUser } from '../../features/auth/authSlice';
+import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import ProfileWrapper from '../../components/profile/ProfileWrapper';
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
