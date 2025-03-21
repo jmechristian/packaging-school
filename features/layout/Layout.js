@@ -53,29 +53,29 @@ const Layout = ({ children }) => {
       }
     };
 
-    // if (!userIsLoading && user) {
-    //   // console.log('🔍 Current user state:', user);
-    //   const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+    if (!userIsLoading && user) {
+      // console.log('🔍 Current user state:', user);
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
 
-    //   if (user.ssoRedirectUrl && !hasCompletedSSO) {
-    //     sessionStorage.setItem('ssoComplete', 'true');
-    //     setTimeout(() => {
-    //       window.location.href = user.ssoRedirectUrl;
-    //     }, 100);
-    //     return;
-    //   }
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+        return;
+      }
 
-    user && dispatch(setUser(user));
-    user && checkUser();
-    // TODO: Check for user in database, if not there, create user
-  }, [user]);
+      user && dispatch(setUser(user));
+      user && checkUser();
+    }
+  }, [user, userIsLoading]);
 
-  // // Clear SSO state when component unmounts
-  // useEffect(() => {
-  //   return () => {
-  //     sessionStorage.removeItem('ssoComplete');
-  //   };
-  // }, []);
+  // Clear SSO state when component unmounts
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('ssoComplete');
+    };
+  }, []);
 
   useEffect(() => {
     const checkThinkificUser = async () => {
