@@ -41,6 +41,7 @@ const NoPassEnrollments = ({
   expiredEnrollments,
   courses,
   enrollmentsPerPage,
+  refreshUser,
 }) => {
   const router = useRouter();
   const [currentActivePage, setCurrentActivePage] = useState(1);
@@ -80,6 +81,7 @@ const NoPassEnrollments = ({
                 key={enrollment.id}
                 enrollment={enrollment}
                 course={matchedCourse}
+                refreshUser={refreshUser}
               />
             );
           })}
@@ -124,6 +126,7 @@ const NoPassEnrollments = ({
                   key={enrollment.id}
                   enrollment={enrollment}
                   course={matchedCourse}
+                  refreshUser={refreshUser}
                 />
               </div>
             );

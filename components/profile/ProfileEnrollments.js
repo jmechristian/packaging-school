@@ -32,13 +32,13 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
     fetchEnrollments();
   }, [email]);
 
-  const refreshEnrollments = async () => {
-    const enrollments = await fetch(
-      `/api/thinkific/get-enrollments?email=${email}`
-    );
-    const data = await enrollments.json();
-    setEnrollments(data);
-  };
+  // const refreshEnrollments = async () => {
+  //   const enrollments = await fetch(
+  //     `/api/thinkific/get-enrollments?email=${email}`
+  //   );
+  //   const data = await enrollments.json();
+  //   setEnrollments(data);
+  // };
 
   useEffect(() => {
     setPackPass(awsUser.allAccess);
@@ -153,7 +153,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
           enrollments={enrollments}
-          refreshEnrollments={refreshEnrollments}
+          refreshUser={refreshUser}
         />
       ) : (
         <NoPassEnrollments
@@ -161,7 +161,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
           expiredEnrollments={expiredEnrollments}
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
-          refreshEnrollments={refreshEnrollments}
+          refreshUser={refreshUser}
         />
       )}
     </div>

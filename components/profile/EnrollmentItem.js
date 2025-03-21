@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { MdStarBorder } from 'react-icons/md';
 import { expireEnrollment, reEnroll } from '../../helpers/api';
 
-const EnrollmentItem = ({ course, enrollment, active }) => {
+const EnrollmentItem = ({ course, enrollment, active, refreshUser }) => {
   const router = useRouter();
   return (
     course && (
@@ -32,6 +32,7 @@ const EnrollmentItem = ({ course, enrollment, active }) => {
                 );
               } else {
                 reEnroll(enrollment.id);
+                refreshUser();
               }
             }}
             className='text-gray-700 text-sm font-bold'

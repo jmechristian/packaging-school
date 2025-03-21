@@ -18,6 +18,7 @@ export default withPageAuthRequired(function Page() {
   }, [awsUser, thinkificUser]);
 
   const refreshUser = async () => {
+    setIsLoading(true);
     const thinkificUser = await fetch(
       `/api/thinkific/get-user?email=${user.email}`
     );
@@ -31,6 +32,7 @@ export default withPageAuthRequired(function Page() {
     if (dbUser) {
       dispatch(setAWSUser(dbUser));
     }
+    setIsLoading(false);
   };
 
   if (isLoading) {
