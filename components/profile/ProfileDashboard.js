@@ -15,7 +15,14 @@ import { useDispatch } from 'react-redux';
 
 import { showToast } from '../../features/navigation/navigationSlice';
 
-const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
+const ProfileDashboard = ({
+  awsUser,
+  thinkificUser,
+  userLevel,
+  user,
+  refreshUser,
+  isLoading,
+}) => {
   const dispatch = useDispatch();
   const EditProfileForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -65,6 +72,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
       } catch (error) {
         console.error('Error updating profile:', error);
       } finally {
+        refreshUser();
         setIsSubmitting(false);
         onClose();
       }
@@ -604,7 +612,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
             <div className='flex flex-col gap-2 items-center'>
               <div className='relative w-40 h-40'>
                 {/* XP Progress Ring */}
-                {/* <svg className='w-full h-full transform -rotate-90'>
+                <svg className='w-full h-full transform -rotate-90'>
                   <circle
                     cx='80'
                     cy='80'
@@ -626,24 +634,24 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     }`}
                     className='transition-all duration-700'
                   />
-                </svg> */}
+                </svg>
                 {/* Level Number */}
-                {/* <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
+                <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
                   <span className='text-4xl font-bold text-white'>
                     {userLevel.level}
                   </span>
                   <span className='text-sm text-gray-100'>Level</span>
-                </div> */}
+                </div>
               </div>
               {/* XP Info */}
-              {/* <div className='flex flex-col gap-0 text-center'>
+              <div className='flex flex-col gap-0 text-center'>
                 <div className='text-sm font-medium text-gray-100'>
                   {userLevel.xpNeeded.toLocaleString()} XP to next level
                 </div>
                 <div className='text-sm text-gray-300'>
                   Total XP: {awsUser.totalXp.toLocaleString()}
                 </div>
-              </div> */}
+              </div>
             </div>
             <hr className='w-full border-gray-400 mt-2.5 mb-2.5' />
             <div className='flex flex-col gap-2.5'>
@@ -673,6 +681,7 @@ const ProfileDashboard = ({ awsUser, thinkificUser, userLevel, user }) => {
                     <ProfileEnrollments
                       courses={thinkificUser && thinkificUser.courses.nodes}
                       email={user?.email}
+                      refreshUser={refreshUser}
                     />
                   </div>
                   <div className='col-span-4 flex flex-col gap-8 h-full'>

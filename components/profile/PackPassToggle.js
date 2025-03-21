@@ -2,17 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Switch, Label, Field } from '@headlessui/react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { MdBolt } from 'react-icons/md';
 
 const PackPassToggle = ({ enabled, onChange }) => {
-  const dispatch = useDispatch();
-  const { awsUser } = useSelector((state) => state.auth);
-
-  //   useEffect(() => {
-  //     setEnabled(awsUser.allAccess);
-  //   }, [awsUser]);
-
   return (
     <div className='w-72 flex items-center justify-between bg-yellow-300 rounded-lg py-2 px-2 border-4 border-yellow-100'>
       <Field

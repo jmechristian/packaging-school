@@ -1,21 +1,30 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import MiniProfile from '../profile/MiniProfile';
-import { completeLesson } from '../../helpers/api';
+import { completeLesson, getAWSUser } from '../../helpers/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { showToast } from '../../features/navigation/navigationSlice';
-
+import { setAWSUser } from '../../features/auth/authSlice';
+import { useUser } from '@auth0/nextjs-auth0/client';
 const LessonQuiz = ({ analysis, lessonId }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const { user } = useUser();
   // Check if lesson is already completed
   const isLessonCompleted = useMemo(() => {
     return awsUser?.lessonsCompleted?.items?.some(
       (lesson) => lesson.lessonId === lessonId
     );
   }, [awsUser?.lessonsCompleted?.items, lessonId]);
+
+  const refreshAWSUser = async () => {
+    const dbUser = await getAWSUser(user.email);
+    if (dbUser) {
+      dispatch(setAWSUser(dbUser));
+    }
+  };
 
   // Set initial state if lesson is completed
   useEffect(() => {
@@ -44,7 +53,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
     }
   }, [analysis?.quizOptions]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setShowResult(true);
 
     // Check if the answer is correct
@@ -52,7 +61,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
       // Add your logic here for correct answer
       // For example: update points, show celebration, etc.
       console.log('Correct answer submitted!');
-      completeLesson({
+      await completeLesson({
         lessonId: lessonId,
         userId: awsUser.id,
         xpAwarded: 5,
@@ -65,6 +74,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
           description: 'You have earned 5 PXP',
         })
       );
+      refreshAWSUser();
     }
   };
 

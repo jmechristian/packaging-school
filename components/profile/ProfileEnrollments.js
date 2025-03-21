@@ -4,8 +4,8 @@ import NoPassEnrollments from './NoPassEnrollments';
 import PassEnrollments from './PassEnrollments';
 import PackPassToggle from './PackPassToggle';
 import { useSelector } from 'react-redux';
-
-const ProfileEnrollments = ({ email, courses }) => {
+import { updateAWSUser } from '../../helpers/api';
+const ProfileEnrollments = ({ email, courses, refreshUser }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [packPass, setPackPass] = useState(awsUser.allAccess);
   const [enrollments, setEnrollments] = useState([]);
@@ -43,6 +43,14 @@ const ProfileEnrollments = ({ email, courses }) => {
   useEffect(() => {
     setPackPass(awsUser.allAccess);
   }, [awsUser]);
+
+  const updateAccessPass = async () => {
+    const res = await updateAWSUser({
+      id: awsUser.id,
+      allAccess: !packPass,
+    });
+    refreshUser();
+  };
 
   const filteredEnrollments = useMemo(() => {
     if (!enrollments.items) return [];
@@ -94,7 +102,10 @@ const ProfileEnrollments = ({ email, courses }) => {
     <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-6'>
         <div className='h4-base text-gray-900'>Your Courses</div>
-        <PackPassToggle enabled={packPass} onChange={setPackPass} />
+        <PackPassToggle
+          enabled={packPass}
+          onChange={() => updateAccessPass(!packPass)}
+        />
       </div>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='flex items-center gap-2'>
@@ -142,6 +153,7 @@ const ProfileEnrollments = ({ email, courses }) => {
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
           enrollments={enrollments}
+          refreshEnrollments={refreshEnrollments}
         />
       ) : (
         <NoPassEnrollments
@@ -149,6 +161,7 @@ const ProfileEnrollments = ({ email, courses }) => {
           expiredEnrollments={expiredEnrollments}
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
+          refreshEnrollments={refreshEnrollments}
         />
       )}
     </div>

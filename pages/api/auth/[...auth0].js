@@ -92,8 +92,6 @@ export default handleAuth({
             // Still return session even if SSO fails
             return session;
           }
-
-          return session;
         },
       });
     } catch (error) {

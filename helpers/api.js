@@ -937,8 +937,90 @@ export const getCurrentCMPMSessions = async () => {
 };
 
 export const getAWSUser = async (email) => {
+  const userQuery = /* GraphQL */ `
+    query MyQuery($email: String!) {
+      usersByEmail(email: $email) {
+        items {
+          allAccess
+          allAccessEndDate
+          allAccessStartDate
+          bio
+          cmpmFormID
+          achievements {
+            items {
+              achievementId
+              achievement {
+                title
+                id
+              }
+            }
+          }
+          cohorts {
+            items {
+              cohortId
+              userId
+              id
+              cohort {
+                id
+                endDate
+                description
+                deadline
+                instructor {
+                  company
+                  name
+                  title
+                  image
+                  linkedIn
+                  id
+                }
+                link
+                name
+                startDate
+                type
+              }
+            }
+          }
+          company
+          companyID
+          cpsFormID
+          dailyStreak
+          email
+          goals
+          id
+          interests
+          lastLogin
+          lessonsCompleted {
+            items {
+              lessonId
+            }
+          }
+          level
+          linkedin
+          location
+          name
+          office
+          onboardingComplete
+          onboardingCompleteDate
+          picture
+          psXp
+          savedArticles
+          savedCourses
+          savedLessons
+          source
+          thinkificId
+          thinkificXp
+          title
+          totalXp
+          updatedAt
+          xpToNextLevel
+          cell
+        }
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: usersByEmail,
+    query: userQuery,
     variables: { email: email },
   });
   return res.data.usersByEmail.items[0];
