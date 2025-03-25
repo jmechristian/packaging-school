@@ -384,7 +384,7 @@ const Page = ({ customer }) => {
                     className='w-16 h-16 rounded-full bg-unilever-blue hover:bg-unilever-darkblue cursor-pointer shadow-md flex items-center justify-center'
                     onClick={() =>
                       window.open(
-                        'https://packschool.s3.amazonaws.com/unilever-instructions-20240205.pdf',
+                        'https://packschool.s3.us-east-1.amazonaws.com/Unilever-instructions.pdf',
                         '_blank'
                       )
                     }
