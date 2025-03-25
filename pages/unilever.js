@@ -199,7 +199,7 @@ const faqs = [
     id: 1,
     question: 'Who is my Unilever contact?',
     answer:
-      'If you have any questions regarding curriculum, reach out to ruth.alvarez@unilever.com.',
+      'If you have any questions regarding curriculum, reach out to Ezgi.Kuru@unilever.com.',
   },
   {
     id: 2,
@@ -210,7 +210,7 @@ const faqs = [
   {
     id: 3,
     question: 'How do I sign up?',
-    answer: `Refer to the slide deck/PDF at the top of the page or email ruth.alvarez@unilever.com`,
+    answer: `Refer to the slide deck/PDF at the top of the page or email Ezgi.Kuru@unilever.com`,
   },
 ];
 
@@ -408,11 +408,8 @@ const Page = ({ customer }) => {
               <div className='text-left leading-tight text-sm md:text-base'>
                 Find your library of courses below. If you have any questions,
                 please reach out to{' '}
-                <a
-                  href='mailto:ruth.alvarez@unilever.com'
-                  className='underline'
-                >
-                  ruth.alvarez@unilever.com
+                <a href='mailto:Ezgi.Kuru@unilever.com' className='underline'>
+                  Ezgi.Kuru@unilever.com
                 </a>
               </div>
             </div>
