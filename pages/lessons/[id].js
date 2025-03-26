@@ -1,19 +1,23 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import React, { useMemo, useEffect, useState } from 'react';
-import { MdTrackChanges, MdFastForward, MdScreenShare } from 'react-icons/md';
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+} from 'react-share';
 import { API, graphqlOperation } from 'aws-amplify';
-import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline';
-import VideoHero from '../../components/lessons/VideoHero';
-import LessonSlides from '../../components/lessons/LessonSlides';
-import ImageHero from '../../components/lessons/ImageHero';
-import WiredLessonCard from '../../components/shared/WiredLessonCard';
+import VideoPlayer from '../../components/VideoPlayer';
 import '@jmechristian/ps-component-library/dist/style.css';
 import {
   registerCertificateClick,
   getDeviceType,
   registgerCourseClick,
+  handleBookmarkAdd,
+  handleBookmarkRemove,
+  getCertificate,
+  getCourse,
 } from '../../helpers/api';
 import {
   listLessons,
@@ -24,11 +28,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleSignInModal } from '../../features/layout/layoutSlice';
 import AuthorBlock from '../../components/shared/AuthorBlock';
 import Meta from '../../components/shared/Meta';
-
+import {
+  MdBookmarkAdd,
+  MdBookmark,
+  MdBookmarkRemove,
+  MdRocket,
+  MdBolt,
+} from 'react-icons/md';
+import { MdExpandMore } from 'react-icons/md';
+import WiredLessonCard from '../../components/shared/WiredLessonCard';
 const Page = ({ lesson }) => {
   const router = useRouter();
   const deviceType = getDeviceType();
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
   const newDate =
     lesson &&
     new Date(
@@ -108,41 +120,6 @@ const Page = ({ lesson }) => {
     } else return null;
   }, [lesson]);
 
-  const setMedia = () => {
-    switch (lesson.mediaType) {
-      case 'IMAGE':
-        return (
-          <ImageHero
-            title={lesson.title}
-            date={newDate}
-            author={lesson.author}
-            media={lesson.seoImage}
-            backdate={lesson.backdate}
-          />
-        );
-      case 'VIDEO':
-        return (
-          <VideoHero
-            videoUrl={lesson.media}
-            videoLink={lesson.videoLink}
-            slug={lesson.slug}
-          />
-        );
-      case 'SLIDES':
-        return <LessonSlides slides={lesson.slides ? lesson.slides : []} />;
-      default:
-        return (
-          <ImageHero
-            url={lesson.media}
-            title={lesson.title}
-            date={newDate}
-            author={lesson.author}
-            media={lesson.seoImage}
-          />
-        );
-    }
-  };
-
   const actionClickHandler = () => {
     if (user) {
       window.open(lesson.actionLink);
@@ -192,6 +169,22 @@ const Page = ({ lesson }) => {
     router.push(link);
   };
 
+  const getFeaturedCard = async ({ featured }) => {
+    if (featured && featured.type === 'COURSE') {
+      const course = await getCourse(featured.id);
+      setIsFeaturedCard(course);
+    } else if (featured && featured.type === 'CERT') {
+      const cert = await getCertificate(featured.id);
+      setIsFeaturedCard(cert);
+    }
+  };
+
+  useEffect(() => {
+    if (lesson && lesson.featured) {
+      getFeaturedCard(lesson.featured);
+    }
+  }, [lesson]);
+
   return (
     lesson && (
       <>
@@ -200,258 +193,272 @@ const Page = ({ lesson }) => {
           description={lesson.subhead}
           image={lesson.seoImage}
         />
-        <div className='w-full lg:pt-6 pb-12 relative dark:bg-dark-dark'>
-          <div className='w-full flex flex-col gap-6 lg:gap-9 max-w-7xl mx-auto'>
-            {setMedia()}
-            <div className='w-full flex flex-col lg:!flex-row gap-6 lg:!gap-12'>
-              <div className='flex w-full'>
-                <div className='flex flex-col gap-6 w-full'>
-                  {lesson.mediaType != 'IMAGE' && (
-                    <div className='border-b-8 border-b-neutral-900 dark:border-white pb-9'>
-                      <div className='w-full dark:text-white font-bold max-w-xs md:max-w-3xl text-3xl lg:text-4xl xl:text-5xl leading-none lg:tracking-tight tracking-tighter px-4 xl:px-0'>
-                        {lesson.title}
+        <div className='w-full max-w-7xl mx-auto py-16 flex flex-col'>
+          <div className='w-full grid grid-cols-12 gap-10'>
+            <div className='col-span-12 lg:!col-span-9 flex flex-col gap-10'>
+              <div className='w-full flex flex-col gap-6 lg:!gap-9  max-w-4xl'>
+                <div className='h2-base'>{lesson.title}</div>
+                <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
+              </div>
+              {lesson.mediaType === 'VIDEO' && (
+                <div className='max-w-7xl mx-auto object-cover w-full border-b border-b-gray-400 mb-5'>
+                  <VideoPlayer light={false} videoEmbedLink={lesson.media} />
+                  {lesson.videoLink && (
+                    <div className='w-full py-2 flex items-center justify-center bg-base-dark'>
+                      <div className='text-white font-semibold'>
+                        Trouble viewing video? Try{' '}
+                        <Link
+                          href={`/alt/lessons/${lesson.slug}`}
+                          className='text-brand-yellow underline'
+                        >
+                          Alt Link 1
+                        </Link>
+                        ,{' '}
+                        <a
+                          href={lesson.videoLink}
+                          className='text-brand-yellow underline'
+                        >
+                          Alt Link 2
+                        </a>
+                        .
                       </div>
                     </div>
                   )}
-                  {lesson.mediaType === 'VIDEO' ? (
-                    <div className='flex flex-col md:!flex-row md:!items-center gap-3 lg:gap-5 font-medium border-b border-b-neutral-900 dark:border-b-white pb-6 px-4 xl:px-0'>
-                      <div className='w-fit font-bold dark:text-white text-sm uppercase bg-brand-yellow/40 px-2 py-4 flex items-center justify-center text-center leading-tighter'>
-                        {newDate}
+                </div>
+              )}
+              <div
+                dangerouslySetInnerHTML={{ __html: lesson.content }}
+                className='tiptap lg:text-lg'
+              ></div>
+              {/* {lesson.analysis && (
+                <div className='w-full'>
+                  <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
+                </div>
+              )} */}
+            </div>
+            <div className='col-span-12 lg:col-span-3 border-l border-l-gray-400'>
+              <div className='w-full flex flex-col'>
+                <div className='flex flex-col gap-5 px-4'>
+                  <div className='text-sm text-gray-700'>{newDate}</div>
+                  {lesson.author && (
+                    <div className='flex flex-col w-full gap-3 '>
+                      {lesson.author.map((a) => (
+                        <div key={a} className='w-fit'>
+                          <AuthorBlock id={a} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className='w-full border-b border-b-gray-400 py-2'></div>
+                <div className='flex flex-col gap-5 py-5 px-4'>
+                  {/* <div className='grid grid-cols-3 gap-2 w-fit'>
+                    {awsUser &&
+                    awsUser.savedLessons &&
+                    awsUser.savedLessons.length > 0 &&
+                    awsUser.savedLessons.includes(lesson.id) ? (
+                      <div
+                        className='flex gap-2 items-center cursor-pointer'
+                        onClick={() =>
+                          handleBookmarkAdd(
+                            awsUser.savedLessons.filter(
+                              (id) => id !== lesson.id
+                            ),
+                            awsUser.id
+                          )
+                        }
+                      >
+                        <MdBookmarkRemove size={32} color='gray' />
                       </div>
-                      {lesson.author && (
-                        <div className='flex flex-col w-full md:!flex-row gap-3 md:!gap-9 md:!items-center'>
-                          {lesson.author.map((a) => (
+                    ) : (
+                      <div
+                        className='flex gap-2 items-center cursor-pointer'
+                        onClick={() =>
+                          handleBookmarkAdd(
+                            awsUser.savedLessons
+                              ? [...awsUser.savedLessons, lesson.id]
+                              : [lesson.id],
+                            awsUser.id
+                          )
+                        }
+                      >
+                        <MdBookmarkAdd size={32} color='green' />
+                      </div>
+                    )}
+                    <FacebookShareButton
+                      url={router.asPath}
+                      quote={lesson.subhead}
+                      // onClick={() => socialShareClickHandler('facebook')}
+                      data-click-target='social_share'
+                      data-click-name='Facebook'
+                    >
+                      <FacebookIcon round size={32} />
+                    </FacebookShareButton>
+                    <LinkedinShareButton
+                      url={router.asPath}
+                      title={lesson.title}
+                      source='PackagingSchool.com'
+                      summary={lesson.subhead}
+                      // onClick={() => socialShareClickHandler('linkedin')}
+                      data-click-target='social_share'
+                      data-click-name='LinkedIn'
+                    >
+                      <LinkedinIcon round size={32} />
+                    </LinkedinShareButton>
+                  </div> */}
+                  {lesson.analysis && (
+                    <div className='flex flex-col gap-0'>
+                      <div className='font-bold text-sm'>
+                        Estimated Reading Time
+                      </div>
+                      <div className='italic text-sm'>
+                        {lesson.analysis.readingTime} minutes
+                      </div>
+                    </div>
+                  )}
+                  {lesson.tags &&
+                    lesson.tags.items &&
+                    lesson.tags.items.length > 0 && (
+                      <div className='flex flex-col gap-2'>
+                        <div className='font-bold text-sm'>Tags</div>
+                        <div className='text-sm flex flex-wrap gap-1'>
+                          {lesson.tags.items.map((tag) => (
                             <div
-                              key={a}
-                              className='w-fit md:border-r md:!border-r-neutral-600 md:!last:border-r-0 pr-4'
+                              key={tag.tags.tag}
+                              className='bg-gray-900 text-white px-1.5 py-0.5 rounded'
                             >
-                              <AuthorBlock id={a} />
+                              {tag.tags.tag}
                             </div>
                           ))}
                         </div>
-                      )}
-                    </div>
-                  ) : lesson.mediaType === 'SLIDES' ? (
-                    <></>
-                  ) : (
-                    <div className='border-t-8 border-t-neutral-900 pt-9'></div>
-                  )}
-                  {lesson.objectives && lesson.objectives.length > 0 ? (
-                    <div className='flex flex-col md:flex-row gap-6 w-full bg-brand-yellow/20 dark:bg-base-mid dark:text-white lg:rounded-xl p-9'>
-                      <div className='aspect-[4/3] w-full lg:max-w-[250px] bg-clemson dark:bg-brand-yellow flex items-center justify-center'>
-                        <div className='w-full p-3'>
-                          <Image
-                            src={
-                              'https://packschool.s3.amazonaws.com/LOTM-Logo-Final-White-sm.png'
-                            }
-                            width={600}
-                            height={309}
-                            layout='responsive'
-                            alt='Learning of the Month'
-                          />
-                        </div>
-                      </div>
-
-                      <div className='flex flex-col gap-4'>
-                        <div className='font-bold tracking-tight text-lg lg:text-xl lg:leading-none'>
-                          Learning Objectives
-                        </div>
-                        {lesson.objectives.map((ob) => (
-                          <div className='flex gap-2' key={ob}>
-                            <div>
-                              <MdTrackChanges color='black' size={32} />
-                            </div>
-                            <div className='leading-tight'>{ob}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  {lesson.actionLink && (
-                    <div className='w-full bg-base-dark flex flex-col gap-4 md:flex-row text-center md:text-left justify-between items-center lg:rounded-lg px-6 py-6 lg:py-4'>
-                      <div className='text-white text-lg font-semibold leading-tight'>
-                        {lesson.actionLinkTitle}
-                      </div>
-                      <div
-                        className='w-fit flex gap-1 items-center px-6 py-2 text-white cursor-pointer font-bold bg-clemson rounded shadow-lg'
-                        onClick={actionClickHandler}
-                      >
-                        <div>
-                          {user ? (
-                            <LockOpenIcon className='w-5 h-5 stroke-white' />
-                          ) : (
-                            <LockClosedIcon className='w-5 h-5 stroke-white' />
-                          )}
-                        </div>
-                        <div>Download</div>
-                      </div>
-                    </div>
-                  )}
-                  <div
-                    className={`relative px-6 xl:px-0 ${
-                      lesson.mediaType === 'IMAGE' ? 'mt-0' : 'mt-6'
-                    }`}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{ __html: lesson.content }}
-                      className='tiptap lg:text-lg'
-                    ></div>
-                  </div>
-                  {lesson.sources &&
-                    sortedSources &&
-                    sortedSources.length > 0 && (
-                      <div className='hidden lg:flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
-                        <div className='font-bold dark:text-white'>Sources</div>
-                        <div className='grid lg:grid-cols-2 dark:text-white gap-3 text-xs'>
-                          <div className='flex flex-col gap-3'>
-                            {sortedSources[0].map((sou) => (
-                              <div className='flex gap-1' key={sou.id}>
-                                <div>
-                                  <sup>{sou.position}</sup>
-                                </div>
-                                <div className='break-all w-full'>
-                                  <a href={sou.link}>{sou.name}</a>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <div className='flex flex-col gap-3'>
-                            {sortedSources[1].map((sou) => (
-                              <div className='flex gap-1' key={sou.id}>
-                                <div>
-                                  <sup>{sou.position}</sup>
-                                </div>
-                                <div className='break-all w-full'>
-                                  <a href={sou.link}>{sou.name}</a>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
                       </div>
                     )}
                 </div>
               </div>
-
-              {/* Sidebar */}
-              <div className='w-full lg:max-w-[360px] h-full bg-dark-dark dark:bg-dark-mid flex flex-col md:!items-start md:!grid md:!grid-cols-3 lg:!flex lg:!flex-col gap-6 py-2 px-6 md:!px-0'>
-                <div className='flex flex-col justify-center md:!items-start items-center gap-6 p-4 mx-auto'>
-                  <div className='flex flex-col gap-1.5 '>
-                    <div className='flex gap-1 items-center'>
-                      <MdFastForward size={28} color='orange' />
-                      <div className='font-bold tracking-tight text-lg text-white'>
-                        Want to Go Further?
-                      </div>
+              <div className='w-full border-b border-b-gray-400 py-2'></div>
+              <div className='flex flex-col gap-5 py-5 pl-2'>
+                <div className='flex flex-col gap-3 bg-brand-yellow/20 dark:bg-base-mid dark:text-white px-3 py-4 lg:rounded'>
+                  <div className='flex items-center gap-0'>
+                    <div>
+                      <MdBolt size={22} color='black' />
                     </div>
-                    <div className='text-sm text-white/60 leading-snug'>
-                      Dive into a comprehensive course crafted by subject-matter
-                      experts.
+                    <div>
+                      <div className='font-bold'>Expand Your Knowledge</div>
                     </div>
                   </div>
                   {isFeaturedCard && isFeaturedCard.type === 'COURSE' ? (
-                    <CourseCard
-                      course={isFeaturedCard.obj}
-                      cardClickHandler={(id, slug, altLink, type) => {
-                        handleCourseClick(id, slug, altLink, type);
-                      }}
-                      cardPurchaseHandler={(id, link) => {
-                        handleCoursePurchase(id, link);
-                      }}
-                    />
+                    <div className='w-full flex flex-col gap-2'>
+                      <div className='w-full aspect-[16/9] bg-black'>
+                        <VideoPlayer
+                          videoEmbedLink={isFeaturedCard.obj.preview}
+                          light={false}
+                          playing={false}
+                        />
+                      </div>
+                      <div className='font-bold text-sm'>
+                        {isFeaturedCard.obj.title}
+                      </div>
+                      <div className='text-xs'>
+                        {isFeaturedCard.obj.subheadline}
+                      </div>
+                      <div
+                        className='w-full flex justify-end text-sm font-bold gap-3 text-clemson-dark cursor-pointer'
+                        onClick={() => {
+                          handleCourseClick(
+                            isFeaturedCard.obj.id,
+                            isFeaturedCard.obj.slug,
+                            isFeaturedCard.obj.altLink,
+                            isFeaturedCard.obj.type
+                          );
+                        }}
+                      >
+                        Get Started &rarr;
+                      </div>
+                    </div>
                   ) : isFeaturedCard && isFeaturedCard.type === 'CERT' ? (
-                    <CertCard
-                      cert={isFeaturedCard.obj}
-                      cardClickHandler={(
-                        abbreviation,
-                        type,
-                        link,
-                        applicationLink
-                      ) => {
-                        handleCertClick(abbreviation, link);
-                      }}
-                      purchaseText='Start Today'
-                    />
+                    <div className='w-full flex flex-col gap-3'>
+                      <div
+                        className='w-full aspect-[4/3] bg-black bg-center bg-cover'
+                        style={{
+                          backgroundImage: `url(${isFeaturedCard.obj.seoImage})`,
+                        }}
+                      ></div>
+                      <div className='font-bold text-sm'>
+                        {isFeaturedCard.obj.title}
+                      </div>
+                      <div className='text-xs'>
+                        {isFeaturedCard.obj.description}
+                      </div>
+                      <div
+                        className='w-full flex justify-end text-sm font-bold gap-3 text-clemson-dark cursor-pointer'
+                        onClick={() => {
+                          handleCertClick(
+                            isFeaturedCard.obj.abbreviation,
+                            isFeaturedCard.obj.link
+                          );
+                        }}
+                      >
+                        Get Started &rarr;
+                      </div>
+                    </div>
                   ) : (
                     <></>
                   )}
                 </div>
-                <div className='w-full h-0.5 bg-white/30 px-3'></div>
-                <div className='flex flex-col justify-center items-start md:col-span-2 py-2'>
-                  <div className='flex gap-2 items-center px-4 md:py-4 lg:py-0'>
-                    <MdScreenShare size={24} color='orange' />
-                    <div className='font-bold tracking-tight text-lg text-white'>
-                      Related Lessons
-                    </div>
-                  </div>
-                  <div className='md:grid md:grid-cols-2 lg:flex lg:flex-col'>
-                    {lesson.related && lesson.related.length > 0 ? (
-                      lesson.related.map((cou) => (
-                        <div
-                          className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'
-                          key={cou}
-                        >
-                          <WiredLessonCard link_text={'Enroll Now'} id={cou} />
-                        </div>
-                      ))
-                    ) : (
-                      <>
-                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
-                          <WiredLessonCard
-                            link_text={'Enroll Now'}
-                            id={'66a95671-feb8-4d74-8a87-033d71431de8'}
-                          />
-                        </div>
-                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
-                          <WiredLessonCard
-                            link_text={'Enroll Now'}
-                            id={'f2d26420-1ac4-4172-8af2-f70e8010770d'}
-                          />
-                        </div>
-                        <div className='pt-3 pb-7 hover:bg-dark-mid transition-colors ease-in px-4 rounded-xl'>
-                          <WiredLessonCard
-                            link_text={'Enroll Now'}
-                            id={'7b90c1b2-1226-4b1e-b086-ef26871d7963'}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
+              </div>
+              <div className='w-full border-b border-b-gray-400 pt-2'></div>
+
+              <div className='flex flex-col pl-5 py-5 gap-3'>
+                <div className='font-bold text-sm'>Related Lessons</div>
+                <div className='flex flex-col gap-5'>
+                  {lesson.related && lesson.related.length > 0 ? (
+                    lesson.related.map((cou) => (
+                      <WiredLessonCard
+                        key={cou}
+                        id={cou}
+                        external={true}
+                        reference={`/lessons/${cou}`}
+                      />
+                    ))
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </div>
-            {lesson.sources && sortedSources && sortedSources.length > 0 && (
-              <div className='lg:hidden flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
-                <div className='font-bold dark:text-white'>Sources</div>
-                <div className='flex flex-col dark:text-white gap-3 text-xs'>
-                  <div className='flex flex-col gap-3'>
-                    {sortedSources[0].map((sou) => (
-                      <div className='flex gap-1' key={sou.id}>
-                        <div>
-                          <sup>{sou.position}</sup>
+            <div className='col-span-full'>
+              {lesson.sources && sortedSources && sortedSources.length > 0 && (
+                <div className='hidden lg:flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
+                  <div className='font-bold dark:text-white'>Sources</div>
+                  <div className='grid lg:grid-cols-2 dark:text-white gap-3 text-xs'>
+                    <div className='flex flex-col gap-3'>
+                      {sortedSources[0].map((sou) => (
+                        <div className='flex gap-1' key={sou.id}>
+                          <div>
+                            <sup>{sou.position}</sup>
+                          </div>
+                          <div className='break-all w-full'>
+                            <a href={sou.link}>{sou.name}</a>
+                          </div>
                         </div>
-                        <div className='break-all'>
-                          <a href={sou.link}>{sou.name}</a>
+                      ))}
+                    </div>
+                    <div className='flex flex-col gap-3'>
+                      {sortedSources[1].map((sou) => (
+                        <div className='flex gap-1' key={sou.id}>
+                          <div>
+                            <sup>{sou.position}</sup>
+                          </div>
+                          <div className='break-all w-full'>
+                            <a href={sou.link}>{sou.name}</a>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className='flex flex-col gap-3'>
-                    {sortedSources[1].map((sou) => (
-                      <div className='flex gap-1' key={sou.id}>
-                        <div>
-                          <sup>{sou.position}</sup>
-                        </div>
-                        <div className='break-all'>
-                          <a href={sou.link}>{sou.name}</a>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </>
@@ -487,6 +494,13 @@ export async function getStaticProps({ params }) {
               lessonLinksId
             }
           }
+          analysis {
+            id
+            quizCorrectAnswer
+            quizOptions
+            quizQuestion
+            readingTime
+          }
           author
           videoLink
           backdate
@@ -502,6 +516,13 @@ export async function getStaticProps({ params }) {
           actionSubhead
           actionExample
           actionLinkTitle
+          tags {
+            items {
+              tags {
+                tag
+              }
+            }
+          }
           sources {
             items {
               name
