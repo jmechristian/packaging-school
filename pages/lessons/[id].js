@@ -1,12 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import React, { useMemo, useEffect, useState } from 'react';
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
-} from 'react-share';
 import { API, graphqlOperation } from 'aws-amplify';
 import VideoPlayer from '../../components/VideoPlayer';
 import '@jmechristian/ps-component-library/dist/style.css';
