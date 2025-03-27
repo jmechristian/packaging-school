@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useMemo, useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import VideoPlayer from '../../components/VideoPlayer';
-import '@jmechristian/ps-component-library/dist/style.css';
+
 import {
   registerCertificateClick,
   getDeviceType,
@@ -187,10 +187,10 @@ const Page = ({ lesson }) => {
           description={lesson.subhead}
           image={lesson.seoImage}
         />
-        <div className='w-full max-w-7xl mx-auto py-16 flex flex-col'>
-          <div className='w-full grid grid-cols-12 gap-10'>
-            <div className='col-span-12 lg:!col-span-9 flex flex-col gap-10'>
-              <div className='w-full flex flex-col gap-6 lg:!gap-9  max-w-4xl'>
+        <div className='w-full max-w-7xl mx-auto py-16 flex flex-col px-4 lg:px-0'>
+          <div className='w-full grid lg:grid-cols-12 gap-10 '>
+            <div className='col-span-1 lg:!col-span-9 flex flex-col gap-10'>
+              <div className='w-full flex flex-col gap-6 lg:!gap-9 max-w-4xl'>
                 <div className='h2-base'>{lesson.title}</div>
                 <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
               </div>
@@ -224,13 +224,8 @@ const Page = ({ lesson }) => {
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
                 className='tiptap lg:text-lg'
               ></div>
-              {/* {lesson.analysis && (
-                <div className='w-full'>
-                  <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
-                </div>
-              )} */}
             </div>
-            <div className='col-span-12 lg:col-span-3 border-l border-l-gray-400'>
+            <div className='col-span-1 lg:!col-span-3 border-l border-l-gray-400 w-full'>
               <div className='w-full flex flex-col'>
                 <div className='flex flex-col gap-5 px-4'>
                   <div className='text-sm text-gray-700'>{newDate}</div>
@@ -246,60 +241,6 @@ const Page = ({ lesson }) => {
                 </div>
                 <div className='w-full border-b border-b-gray-400 py-2'></div>
                 <div className='flex flex-col gap-5 py-5 px-4'>
-                  {/* <div className='grid grid-cols-3 gap-2 w-fit'>
-                    {awsUser &&
-                    awsUser.savedLessons &&
-                    awsUser.savedLessons.length > 0 &&
-                    awsUser.savedLessons.includes(lesson.id) ? (
-                      <div
-                        className='flex gap-2 items-center cursor-pointer'
-                        onClick={() =>
-                          handleBookmarkAdd(
-                            awsUser.savedLessons.filter(
-                              (id) => id !== lesson.id
-                            ),
-                            awsUser.id
-                          )
-                        }
-                      >
-                        <MdBookmarkRemove size={32} color='gray' />
-                      </div>
-                    ) : (
-                      <div
-                        className='flex gap-2 items-center cursor-pointer'
-                        onClick={() =>
-                          handleBookmarkAdd(
-                            awsUser.savedLessons
-                              ? [...awsUser.savedLessons, lesson.id]
-                              : [lesson.id],
-                            awsUser.id
-                          )
-                        }
-                      >
-                        <MdBookmarkAdd size={32} color='green' />
-                      </div>
-                    )}
-                    <FacebookShareButton
-                      url={router.asPath}
-                      quote={lesson.subhead}
-                      // onClick={() => socialShareClickHandler('facebook')}
-                      data-click-target='social_share'
-                      data-click-name='Facebook'
-                    >
-                      <FacebookIcon round size={32} />
-                    </FacebookShareButton>
-                    <LinkedinShareButton
-                      url={router.asPath}
-                      title={lesson.title}
-                      source='PackagingSchool.com'
-                      summary={lesson.subhead}
-                      // onClick={() => socialShareClickHandler('linkedin')}
-                      data-click-target='social_share'
-                      data-click-name='LinkedIn'
-                    >
-                      <LinkedinIcon round size={32} />
-                    </LinkedinShareButton>
-                  </div> */}
                   {lesson.analysis && (
                     <div className='flex flex-col gap-0'>
                       <div className='font-bold text-sm'>
