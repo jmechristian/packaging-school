@@ -225,7 +225,7 @@ const Page = ({ lesson }) => {
                 className='tiptap lg:text-lg'
               ></div>
             </div>
-            <div className='col-span-1 lg:!col-span-3 border-l border-l-gray-400 w-full'>
+            <div className='col-span-1 lg:!col-span-3 md:border-l md:border-l-gray-400 w-full'>
               <div className='w-full flex flex-col'>
                 <div className='flex flex-col gap-5 px-4'>
                   <div className='text-sm text-gray-700'>{newDate}</div>
