@@ -16,7 +16,7 @@ const AuthorBlock = ({ id }) => {
           href={isAuthor.getAuthor.linkedIn ? isAuthor.getAuthor.linkedIn : '#'}
           rel='noreferrer'
           target='_blank'
-          className='font-bold uppercase text-sm dark:text-white'
+          className='font-bold uppercase text-sm'
         >
           {isAuthor.getAuthor.name}
         </a>
@@ -26,7 +26,7 @@ const AuthorBlock = ({ id }) => {
           href={isAuthor.getAuthor.linkedIn ? isAuthor.getAuthor.linkedIn : '#'}
           rel='noreferrer'
           target='_blank'
-          className='text-xs dark:text-white/60'
+          className='text-xs '
         >
           {isAuthor.getAuthor.title}
         </a>
