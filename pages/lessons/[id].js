@@ -199,7 +199,7 @@ const Page = ({ lesson }) => {
                   <VideoPlayer light={false} videoEmbedLink={lesson.media} />
                   {lesson.videoLink && (
                     <div className='w-full py-2 flex items-center justify-center bg-base-dark'>
-                      <div className='text-white font-semibold'>
+                      <div className='text-sm md:text-base text-white font-semibold'>
                         Trouble viewing video? Try{' '}
                         <Link
                           href={`/alt/lessons/${lesson.slug}`}
