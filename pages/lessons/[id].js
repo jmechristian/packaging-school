@@ -272,7 +272,7 @@ const Page = ({ lesson }) => {
               </div>
               <div className='w-full border-b border-b-gray-400 py-2'></div>
               <div className='flex flex-col gap-5 py-5 pl-2'>
-                <div className='flex flex-col gap-3 bg-brand-yellow/20 dark:bg-base-mid dark:text-white px-3 py-4 lg:rounded'>
+                <div className='flex flex-col gap-3 bg-brand-yellow/20  px-3 py-4 lg:rounded'>
                   <div className='flex items-center gap-0'>
                     <div>
                       <MdBolt size={22} color='black' />
@@ -363,9 +363,9 @@ const Page = ({ lesson }) => {
             </div>
             <div className='col-span-full'>
               {lesson.sources && sortedSources && sortedSources.length > 0 && (
-                <div className='hidden lg:flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
-                  <div className='font-bold dark:text-white'>Sources</div>
-                  <div className='grid lg:grid-cols-2 dark:text-white gap-3 text-xs'>
+                <div className='hidden lg:flex flex-col gap-3 border-t border-t-black  pt-6  px-6 lg:px-0'>
+                  <div className='font-bold '>Sources</div>
+                  <div className='grid lg:grid-cols-2  gap-3 text-xs'>
                     <div className='flex flex-col gap-3'>
                       {sortedSources[0].map((sou) => (
                         <div className='flex gap-1' key={sou.id}>
