@@ -18,7 +18,7 @@ const UnileverCourses = ({ featured, reference }) => {
     <div className='w-full h-full max-w-5xl mx-auto bg-white border-2 border-black rounded-xl overflow-hidden'>
       <div className='flex flex-col items-center w-full lg:justify-between gap-6 md:gap-10'>
         <div className='flex flex-col gap-4'>
-          <div className='grid grid-cols-2 gap-3'>
+          <div className='grid lg:grid-cols-2 gap-3'>
             <div className='aspect-[16/9] bg-black w-full h-full'>
               <VideoPlayer
                 videoEmbedLink={
