@@ -247,7 +247,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-8 pt-8 pb-16 border-b border-gray-300'>
-        <div className='w-full flex flex-col gap-5'>
+        <div className='w-full flex flex-col gap-5 mt-12 lg:mt-0'>
           <div className='max-w-lg w-full text-xl text-gray-700'>
             At dvi, we are pleased to be able to offer a high-quality e-learning
             program for the packaging industry in cooperation with the Packaging
@@ -281,7 +281,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='grid lg:grid-cols-4 gap-8'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {cpsCourses.map((course) => (
             <CourseCard key={course} course={course} />
           ))}
@@ -348,7 +348,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='grid lg:grid-cols-4 gap-8'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {currentItems.map((lesson) => (
             <LOTMCard key={lesson.id} lesson={lesson} />
           ))}
