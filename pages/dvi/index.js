@@ -246,15 +246,21 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-16 border-b border-gray-300'>
-        <div className='max-w-lg w-full text-xl text-gray-700'>
-          The Packaging School offers top-tier training for packaging
-          professionals, covering key areas such as materials science,
-          industrial processes, design, and management. With over 4,000 learning
-          resources that are continually updated, we ensure that our programs
-          stay at the forefront of industry trends. In collaboration with DVI,
-          we provide our employees with comprehensive training to help them
-          expand their skills and knowledge.
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-8 pt-8 pb-16 border-b border-gray-300'>
+        <div className='w-full flex flex-col gap-5'>
+          <div className='max-w-lg w-full text-xl text-gray-700'>
+            At dvi, we are pleased to be able to offer a high-quality e-learning
+            program for the packaging industry in cooperation with the Packaging
+            School.
+          </div>
+          <div className='max-w-lg w-full text-xl text-gray-700'>
+            Take part in our seminar modules on packaging materials, design,
+            industrial processes, distribution and much more and become a
+            packaging expert.
+          </div>
+          <div className='max-w-lg w-full text-xl text-gray-700'>
+            Let&apos;s go!
+          </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
