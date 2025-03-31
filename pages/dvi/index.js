@@ -281,7 +281,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='grid grid-cols-4 gap-8'>
+        <div className='grid lg:grid-cols-4 gap-8'>
           {cpsCourses.map((course) => (
             <CourseCard key={course} course={course} />
           ))}
@@ -348,7 +348,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='grid grid-cols-4 gap-8'>
+        <div className='grid lg:grid-cols-4 gap-8'>
           {currentItems.map((lesson) => (
             <LOTMCard key={lesson.id} lesson={lesson} />
           ))}
