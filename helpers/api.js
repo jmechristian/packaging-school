@@ -740,7 +740,7 @@ export const createNewEmailSubscription = async (
         email: email,
         country: location.country,
         device: device,
-        ipAddress: location.ipAddress,
+        ipAddress: location.ip,
         page: page,
       },
     },
