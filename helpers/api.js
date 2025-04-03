@@ -26,6 +26,7 @@ import {
   createCategoryClick,
   createCertificateClick,
   createIndexClick,
+  createEmailSubscription,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -724,4 +725,25 @@ export const getAllLearningOfTheMonths = async () => {
   return res.data.listLessons.items.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+};
+
+export const createNewEmailSubscription = async (
+  email,
+  location,
+  device,
+  page
+) => {
+  const res = await API.graphql({
+    query: createEmailSubscription,
+    variables: {
+      input: {
+        email: email,
+        country: location.country,
+        device: device,
+        ipAddress: location.ipAddress,
+        page: page,
+      },
+    },
+  });
+  return res.data.createEmailSubscription;
 };

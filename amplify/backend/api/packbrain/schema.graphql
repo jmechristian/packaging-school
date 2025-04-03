@@ -25,6 +25,12 @@ enum ModuleType {
   ARTICLE
 }
 
+enum CompanyType {
+  OEMTIER1
+  SOLUTIONPROVIDER
+  SPONSOR
+}
+
 enum CategoryType {
   MATERIALS
   INDUSTRY
@@ -145,6 +151,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   videoLink: String
   screengrab: String
   analysis: Analysis @hasOne
+  usersCompleted: [User] @manyToMany(relationName: "userCompletedLessons")
 }
 
 type Author @model @auth(rules: [{ allow: public }]) {
@@ -283,6 +290,8 @@ type APSCompany @model @auth(rules: [{ allow: public }]) {
   name: String!
   email: String! @index(name: "apsCompanyByEmail")
   apsRegistrants: [APSRegistrant2025] @hasMany
+  type: CompanyType
+  registrants: [APSRegistrant2025] @hasMany
 }
 
 type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
@@ -305,7 +314,7 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   lastName: String
   email: String! @index(name: "apsRegistrantByEmail25")
   phone: String
-  companyName: APSCompany @hasOne
+  company: APSCompany @belongsTo
   jobTitle: String
   attendeeType: String
   termsAccepted: Boolean
@@ -348,6 +357,9 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   presentationSummary: String
   magnaStatus: String
   magnaTransportation: String
+  aristoStatus: String
+  aristoTransportation: String
+  bio: String
 }
 
 type APSCode2025 @model @auth(rules: [{ allow: public }]) {
@@ -355,6 +367,7 @@ type APSCode2025 @model @auth(rules: [{ allow: public }]) {
   limit: Int!
   used: Int!
   discount: Int!
+  type: String
 }
 
 type APSActivity2025 @model @auth(rules: [{ allow: public }]) {
@@ -490,27 +503,77 @@ type EmailTracking @model @auth(rules: [{ allow: public }]) {
 
 type User @model @auth(rules: [{ allow: public }]) {
   id: ID!
+  thinkificId: String
   name: String! @index(name: "userByName")
   title: String
   company: String
   email: String! @index(name: "userByEmail")
   office: String
   bio: String
+  interests: String
+  goals: String
   cell: String
   picture: String
   linkedin: String
+  location: String
   companyID: ID @index(name: "userByCompany")
   apss: [APS] @manyToMany(relationName: "APSUser")
   cmpmFormID: ID
   cmpmForm: CMPMForm @hasOne(fields: ["cmpmFormID"])
   cpsFormID: ID
   cpsForm: CPSForm @hasOne(fields: ["cpsFormID"])
-  thinkificId: String
   savedCourses: [String]
   savedLessons: [String]
   savedArticles: [String]
   source: String
   achievements: [Achievement] @manyToMany(relationName: "AchievementUsers")
+  onboardingComplete: Boolean @default(value: "false")
+  onboardingCompleteDate: String
+  totalXp: Int
+  thinkificXp: Int
+  psXp: Int
+  level: Int
+  xpToNextLevel: Int
+  lastLogin: String
+  dailyStreak: Int
+  cohorts: [Cohort] @manyToMany(relationName: "CohortUsers")
+  allAccess: Boolean @default(value: "false")
+  allAccessStartDate: String
+  allAccessEndDate: String
+  lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
+  learningPaths: [LearningPath] @manyToMany(relationName: "LearningPathUsers")
+}
+
+type Cohort @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  startDate: String!
+  endDate: String!
+  deadline: String!
+  users: [User] @manyToMany(relationName: "CohortUsers")
+  type: String!
+  instructor: Instructor @hasOne
+  description: String
+  link: String
+}
+
+type LearningPath @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  courses: [LearningPathCourse] @hasMany
+  users: [User] @manyToMany(relationName: "LearningPathUsers")
+  displayOrder: Int
+  hours: Int
+  slug: String! @index(name: "learningPathBySlug")
+}
+
+type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String
+  learningPath: LearningPath @belongsTo
+  order: Int
+  thinkificId: String
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {
@@ -730,7 +793,14 @@ type LMSQuiz @model @auth(rules: [{ allow: public }]) {
 type Instructor @model @auth(rules: [{ allow: public }]) {
   id: ID!
   userId: ID
+  name: String
+  image: String
+  bio: String
+  linkedIn: String
+  company: String
+  title: String
   coursesTaught: [LMSCourse] @manyToMany(relationName: "CourseInstructors")
+  cohorts: [Cohort] @hasMany
 }
 
 type Objective @model @auth(rules: [{ allow: public }]) {
@@ -1116,6 +1186,15 @@ type IndexClick @model @auth(rules: [{ allow: public }]) {
   country: String
   type: String
   device: String
+}
+
+type EmailSubscription @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "emailSubscriptionByEmail")
+  ipAddress: String
+  country: String
+  device: String
+  page: String
 }
 
 ######### IMAGES #########

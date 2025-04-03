@@ -29,8 +29,8 @@ import {
   MdRocket,
   MdBolt,
 } from 'react-icons/md';
-import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
+import LessonSubscribe from '../../components/shared/LessonSubscribe';
 const Page = ({ lesson }) => {
   const router = useRouter();
   const deviceType = getDeviceType();
@@ -342,7 +342,6 @@ const Page = ({ lesson }) => {
                 </div>
               </div>
               <div className='w-full border-b border-b-gray-400 pt-2'></div>
-
               <div className='flex flex-col pl-5 py-5 gap-3'>
                 <div className='font-bold text-sm'>Related Lessons</div>
                 <div className='flex flex-col gap-5'>
@@ -359,6 +358,10 @@ const Page = ({ lesson }) => {
                     <></>
                   )}
                 </div>
+              </div>
+              <div className='w-full border-b border-b-gray-400 pt-2'></div>
+              <div className='flex flex-col gap-5 py-5 pl-2 mt-3'>
+                <LessonSubscribe />
               </div>
             </div>
             <div className='col-span-full'>

@@ -37,6 +37,7 @@ module.exports = {
         trans: 'transducer, sans-serif',
         transLong: '"transducer-extended", sans-serif',
         bit: 'bitcount-mono-single-square, sans-serif',
+        oswald: 'oswald, sans-serif',
       },
       colors: {
         'base-brand': '#1f97bf',
