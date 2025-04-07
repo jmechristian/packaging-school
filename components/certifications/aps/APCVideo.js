@@ -26,7 +26,11 @@ const APCVideo = () => {
         </div>
         <FadeIn>
           <div className='w-full h-full aspect-[16/9] lg:mt-8'>
-            <VideoPlayer videoEmbedLink={'https://vimeo.com/358392462'} />
+            <VideoPlayer
+              videoEmbedLink={
+                'https://player.vimeo.com/video/358392462?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
+              }
+            />
           </div>
         </FadeIn>
       </div>
