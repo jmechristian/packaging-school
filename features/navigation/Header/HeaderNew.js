@@ -62,7 +62,7 @@ export default function HeaderNew() {
       { name: 'Courses', href: '/all_courses' },
       { name: 'Lessons', href: '/lessons' },
       { name: 'About', href: '/about' },
-      // { name: 'Campus Store', href: '#' },
+      { name: 'Campus Store', href: 'https://packagingschool.printful.me' },
     ],
   };
 
