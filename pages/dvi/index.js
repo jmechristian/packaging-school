@@ -261,6 +261,16 @@ const Page = () => {
           <div className='max-w-lg w-full text-xl text-gray-700'>
             Let&apos;s go!
           </div>
+          <div className='max-w-lg w-full text-sm gap-0.5 text-gray-700'>
+            Don’t have a coupon code yet? Simply book through{' '}
+            <a
+              href='https://www.verpackung.org/weiterbildung'
+              className='text-[#fd3841] font-bold'
+            >
+              this link
+            </a>{' '}
+            to receive one.
+          </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
