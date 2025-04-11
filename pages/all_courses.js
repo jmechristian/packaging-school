@@ -215,7 +215,8 @@ const Page = () => {
     return isCertificates.filter(
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-        cert.description.toLowerCase().includes(isSearchTerm.toLowerCase())
+        cert.description.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase())
     );
   }, [isCertificates, isSearchTerm]);
 
