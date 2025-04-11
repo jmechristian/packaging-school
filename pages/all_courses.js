@@ -202,6 +202,7 @@ const Page = () => {
         (cour) =>
           cour.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           cour.subheadline.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+          cour.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           (cour.what_learned &&
             cour.what_learned
               .toLowerCase()
