@@ -648,10 +648,12 @@ const ProfileDashboard = ({
               {/* XP Info */}
               <div className='flex flex-col gap-0 text-center'>
                 <div className='text-sm font-medium text-gray-100'>
-                  {userLevel.xpNeeded.toLocaleString()} XP to next level
+                  {(userLevel && userLevel.xpNeeded.toLocaleString()) || '0'} XP
+                  to next level
                 </div>
                 <div className='text-sm text-gray-300'>
-                  Total XP: {awsUser.totalXp.toLocaleString()}
+                  Total XP:{' '}
+                  {(awsUser && awsUser.totalXp.toLocaleString()) || '0'}
                 </div>
               </div>
             </div>
