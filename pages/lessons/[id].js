@@ -41,8 +41,8 @@ import {
 } from 'react-icons/md';
 import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
+import LessonSubscribe from '../../components/shared/LessonSubscribe';
 const Page = ({ lesson }) => {
-  console.log(lesson);
   const router = useRouter();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
@@ -429,6 +429,10 @@ const Page = ({ lesson }) => {
                     <></>
                   )}
                 </div>
+              </div>
+              <div className='w-full border-b border-b-gray-400 pt-2'></div>
+              <div className='flex flex-col gap-5 py-5 pl-2 mt-3'>
+                <LessonSubscribe />
               </div>
             </div>
             <div className='col-span-full'>

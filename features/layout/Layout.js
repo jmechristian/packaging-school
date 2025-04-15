@@ -7,6 +7,7 @@ import {
   setAWSUser,
   setThinkificUser,
   updateUser,
+  setEnrollments,
 } from '../auth/authslice';
 import { getAWSUser, createAWSUser, updateAWSUser } from '../../helpers/api';
 import Toast from '../../components/shared/Toast';
@@ -86,6 +87,11 @@ const Layout = ({ children }) => {
       const data = await thinkificUser.json();
       if (data?.data?.data?.userByEmail) {
         dispatch(setThinkificUser(data.data.data.userByEmail));
+        const enrollments = await fetch(
+          `/api/thinkific/get-enrollments?email=${user.email}`
+        );
+        const enrollmentsData = await enrollments.json();
+        dispatch(setEnrollments(enrollmentsData.items));
       } else {
         dispatch(setThinkificUser(null));
       }

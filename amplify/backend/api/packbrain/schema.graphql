@@ -25,6 +25,12 @@ enum ModuleType {
   ARTICLE
 }
 
+enum CompanyType {
+  OEMTIER1
+  SOLUTIONPROVIDER
+  SPONSOR
+}
+
 enum CategoryType {
   MATERIALS
   INDUSTRY
@@ -284,6 +290,8 @@ type APSCompany @model @auth(rules: [{ allow: public }]) {
   name: String!
   email: String! @index(name: "apsCompanyByEmail")
   apsRegistrants: [APSRegistrant2025] @hasMany
+  type: CompanyType
+  registrants: [APSRegistrant2025] @hasMany
 }
 
 type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
@@ -298,6 +306,16 @@ type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
   apsRegistrants: [APSRegistrant2025]
     @manyToMany(relationName: "apsRegistrantAddOns25")
   type: String
+  limit: Int
+}
+
+type APSCodeRequest25 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "apsCodeRequestByEmail")
+  company: String
+  status: String @default(value: "PENDING")
+  firstName: String
+  lastName: String
 }
 
 type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
@@ -306,7 +324,7 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   lastName: String
   email: String! @index(name: "apsRegistrantByEmail25")
   phone: String
-  companyName: APSCompany @hasOne
+  company: APSCompany @belongsTo
   jobTitle: String
   attendeeType: String
   termsAccepted: Boolean
@@ -349,6 +367,9 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   presentationSummary: String
   magnaStatus: String
   magnaTransportation: String
+  aristoStatus: String
+  aristoTransportation: String
+  bio: String
 }
 
 type APSCode2025 @model @auth(rules: [{ allow: public }]) {
@@ -356,6 +377,7 @@ type APSCode2025 @model @auth(rules: [{ allow: public }]) {
   limit: Int!
   used: Int!
   discount: Int!
+  type: String
 }
 
 type APSActivity2025 @model @auth(rules: [{ allow: public }]) {
@@ -529,6 +551,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   allAccessStartDate: String
   allAccessEndDate: String
   lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
+  learningPaths: [LearningPath] @manyToMany(relationName: "LearningPathUsers")
 }
 
 type Cohort @model @auth(rules: [{ allow: public }]) {
@@ -542,6 +565,27 @@ type Cohort @model @auth(rules: [{ allow: public }]) {
   instructor: Instructor @hasOne
   description: String
   link: String
+}
+
+type LearningPath @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  courses: [LearningPathCourse] @hasMany
+  users: [User] @manyToMany(relationName: "LearningPathUsers")
+  displayOrder: Int
+  hours: Int
+  slug: String! @index(name: "learningPathBySlug")
+  status: String @default(value: "DRAFT")
+}
+
+type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String
+  course: LMSCourse @belongsTo
+  learningPath: LearningPath @belongsTo
+  order: Int
+  thinkificId: String
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {
@@ -687,6 +731,7 @@ type LMSCirriculum @model @auth(rules: [{ allow: public }]) {
 type LMSCourse @model @auth(rules: [{ allow: public }]) {
   id: ID!
   thinkificId: String! @index(name: "LMSCourseByThinkificId")
+  learningPaths: [LearningPathCourse] @hasMany
   courseId: String
   category: CategoryType @default(value: "MATERIALS")
   categoryArray: [String]
@@ -1154,6 +1199,15 @@ type IndexClick @model @auth(rules: [{ allow: public }]) {
   country: String
   type: String
   device: String
+}
+
+type EmailSubscription @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "emailSubscriptionByEmail")
+  ipAddress: String
+  country: String
+  device: String
+  page: String
 }
 
 ######### IMAGES #########

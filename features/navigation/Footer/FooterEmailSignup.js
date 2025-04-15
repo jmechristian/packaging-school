@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FooterEmailSignup = ({ header }) => {
+const FooterEmailSignup = ({ header, sm }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -63,18 +63,26 @@ const FooterEmailSignup = ({ header }) => {
             value={email}
             placeholder='you@email.com'
             onChange={(e) => setEmail(e.target.value)}
-            className='flex w-full border border-gray-500  bg-gray-300 rounded-l text-gray-700 focus:ring-base-light focus:border-none'
+            className={`${
+              sm ? 'text-sm' : ''
+            } flex w-full border border-gray-500  bg-gray-300 rounded-l text-gray-700 focus:ring-base-light focus:border-none`}
           />
           <button
             type='submit'
             className='bg-clemson flex justify-center items-center border-none rounded-r border border-gray-500'
           >
-            <div className='text-gray-700 font-medium uppercase text-xs tracking-widest px-3'>
-              {isLoading ? 'Sending...' : 'Subscribe'}
-            </div>
+            {sm ? (
+              <div className='text-gray-700 font-medium uppercase text-xs px-3'>
+                {isLoading ? '...' : '>'}
+              </div>
+            ) : (
+              <div className='text-gray-700 font-medium uppercase text-xs tracking-widest px-3'>
+                {isLoading ? 'Sending...' : 'Subscribe'}
+              </div>
+            )}
           </button>
         </form>
-        <p className='text-xs text-gray-600 dark:text-gray-500 max-w-prose'>
+        <p className='text-xs text-gray-500 max-w-prose'>
           By signing up you indicate you have read and agree to our Terms of
           Use. Packaging School will always respect your privacy.
         </p>

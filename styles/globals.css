@@ -20,11 +20,11 @@
   }
 
   .h3-base {
-    @apply font-semibold text-xl md:text-2xl lg:text-3xl leading-tight lg:leading-[1.1em] tracking-[-0.03em];
+    @apply font-semibold text-xl md:text-2xl lg:text-4xl leading-tight lg:leading-[1.1em] tracking-[-0.03em];
   }
 
   .h4-base {
-    @apply text-lg font-semibold md:text-xl leading-tight lg:leading-[1.1em] tracking-[-0.02em];
+    @apply text-lg font-semibold md:text-xl lg:text-2xl leading-tight lg:leading-[1.1em] tracking-[-0.02em];
   }
 
   .container-7xl {

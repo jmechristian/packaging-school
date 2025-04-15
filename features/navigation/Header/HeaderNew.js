@@ -56,6 +56,7 @@ export default function HeaderNew() {
     pages: [
       { name: 'Certifications', href: '/certifications' },
       { name: 'Courses', href: '/all_courses' },
+      { name: 'Learning Paths', href: '/paths' },
       { name: 'Lessons', href: '/lessons' },
       { name: 'About', href: '/about' },
       // { name: 'Campus Store', href: '#' },
@@ -201,8 +202,8 @@ export default function HeaderNew() {
 
                   <div className='hidden h-full lg:flex'>
                     {/* Mega menus */}
-                    <Popover.Group className='ml-8'>
-                      <div className='flex h-full justify-center space-x-8'>
+                    <Popover.Group className='ml-6'>
+                      <div className='flex h-full justify-center space-x-6'>
                         {navigation.pages.map((page) => (
                           <Link
                             passHref
@@ -261,7 +262,7 @@ export default function HeaderNew() {
                           />
                         </div>
 
-                        <div className='flex items-center gap-1.5'>
+                        <div className='flex items-center gap-1'>
                           {isUser ? (
                             <Popover className='relative'>
                               <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>

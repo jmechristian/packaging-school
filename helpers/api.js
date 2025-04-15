@@ -15,9 +15,12 @@ import {
   listCMPMSessions,
   usersByEmail,
   listCohorts,
+  listLearningPaths,
+  learningPathsBySlug,
 } from '../src/graphql/queries';
 import {
   createClick,
+  createLearningPathUsers,
   createCourseClick,
   createIndiaClick,
   createLessonClick,
@@ -31,6 +34,7 @@ import {
   createUser,
   updateUser,
   createUserCompletedLessons,
+  deleteLearningPathUsers,
 } from '../src/graphql/mutations';
 
 export const LEVELS_CONFIG = [
@@ -994,6 +998,14 @@ export const getAWSUser = async (email) => {
               lessonId
             }
           }
+          learningPaths {
+            items {
+              learningPath {
+                id
+                title
+              }
+            }
+          }
           level
           linkedin
           location
@@ -1143,4 +1155,112 @@ export const getSavedLesson = async (lessonId) => {
     variables: { id: lessonId },
   });
   return res.data.getLesson;
+};
+
+export const getPaths = async () => {
+  const getPathsQuery = /* GraphQL */ `
+    query MyQuery {
+      listLearningPaths {
+        items {
+          courses {
+            items {
+              course {
+                hours
+                id
+                title
+              }
+              id
+              thinkificId
+            }
+          }
+          title
+          description
+          displayOrder
+          id
+          slug
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getPathsQuery,
+  });
+  return res.data.listLearningPaths.items;
+};
+
+export const getAllPathCourses = async (courseIds) => {
+  const courses = await Promise.all(
+    courseIds.map((id) => getPathCourseById(id.thinkificId))
+  );
+  return courses;
+};
+
+export const getPathCourseById = async (id) => {
+  const res = await fetch(`/api/thinkific/get-course-by-id?id=${id}`);
+  return res.json();
+};
+
+export const getPathBySlug = async (slug) => {
+  const getPathBySlugQuery = /* GraphQL */ `
+    query MyQuery($slug: String!) {
+      learningPathsBySlug(slug: $slug) {
+        items {
+          courses {
+            items {
+              course {
+                hours
+                id
+                title
+              }
+              courseId
+              id
+              order
+              thinkificId
+            }
+          }
+          description
+          displayOrder
+          hours
+          id
+          slug
+          title
+          users {
+            items {
+              id
+              user {
+                email
+                name
+                linkedin
+                id
+                company
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getPathBySlugQuery,
+    variables: { slug: slug },
+  });
+  return res.data.learningPathsBySlug;
+};
+
+export const addStudentToPath = async (pathId, userId) => {
+  const res = await API.graphql({
+    query: createLearningPathUsers,
+    variables: { input: { learningPathId: pathId, userId } },
+  });
+  return res.data.createLearningPathUsers;
+};
+
+export const removeStudentFromPath = async (id) => {
+  const res = await API.graphql({
+    query: deleteLearningPathUsers,
+    variables: { input: { id } },
+  });
+  return res.data.deleteLearningPathUsers;
 };

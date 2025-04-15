@@ -1656,10 +1656,72 @@ export const onCreateAPSCompany = /* GraphQL */ `
           presentationSummary
           magnaStatus
           magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
           createdAt
           updatedAt
           aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
+          aPSCompanyRegistrantsId
+        }
+        nextToken
+      }
+      type
+      registrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
         }
         nextToken
       }
@@ -1722,10 +1784,72 @@ export const onUpdateAPSCompany = /* GraphQL */ `
           presentationSummary
           magnaStatus
           magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
           createdAt
           updatedAt
           aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
+          aPSCompanyRegistrantsId
+        }
+        nextToken
+      }
+      type
+      registrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
         }
         nextToken
       }
@@ -1788,10 +1912,72 @@ export const onDeleteAPSCompany = /* GraphQL */ `
           presentationSummary
           magnaStatus
           magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
           createdAt
           updatedAt
           aPSCompanyApsRegistrantsId
-          aPSRegistrant2025CompanyNameId
+          aPSCompanyRegistrantsId
+        }
+        nextToken
+      }
+      type
+      registrants {
+        items {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
         }
         nextToken
       }
@@ -1823,6 +2009,7 @@ export const onCreateAPSAddOn2025 = /* GraphQL */ `
         nextToken
       }
       type
+      limit
       id
       createdAt
       updatedAt
@@ -1851,6 +2038,7 @@ export const onUpdateAPSAddOn2025 = /* GraphQL */ `
         nextToken
       }
       type
+      limit
       id
       createdAt
       updatedAt
@@ -1879,7 +2067,50 @@ export const onDeleteAPSAddOn2025 = /* GraphQL */ `
         nextToken
       }
       type
+      limit
       id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAPSCodeRequest25 = /* GraphQL */ `
+  subscription OnCreateAPSCodeRequest25 {
+    onCreateAPSCodeRequest25 {
+      id
+      email
+      company
+      status
+      firstName
+      lastName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAPSCodeRequest25 = /* GraphQL */ `
+  subscription OnUpdateAPSCodeRequest25 {
+    onUpdateAPSCodeRequest25 {
+      id
+      email
+      company
+      status
+      firstName
+      lastName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAPSCodeRequest25 = /* GraphQL */ `
+  subscription OnDeleteAPSCodeRequest25 {
+    onDeleteAPSCodeRequest25 {
+      id
+      email
+      company
+      status
+      firstName
+      lastName
       createdAt
       updatedAt
     }
@@ -1893,10 +2124,14 @@ export const onCreateAPSRegistrant2025 = /* GraphQL */ `
       lastName
       email
       phone
-      companyName {
+      company {
         name
         email
         apsRegistrants {
+          nextToken
+        }
+        type
+        registrants {
           nextToken
         }
         id
@@ -1954,10 +2189,13 @@ export const onCreateAPSRegistrant2025 = /* GraphQL */ `
       presentationSummary
       magnaStatus
       magnaTransportation
+      aristoStatus
+      aristoTransportation
+      bio
       createdAt
       updatedAt
       aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
+      aPSCompanyRegistrantsId
     }
   }
 `;
@@ -1969,10 +2207,14 @@ export const onUpdateAPSRegistrant2025 = /* GraphQL */ `
       lastName
       email
       phone
-      companyName {
+      company {
         name
         email
         apsRegistrants {
+          nextToken
+        }
+        type
+        registrants {
           nextToken
         }
         id
@@ -2030,10 +2272,13 @@ export const onUpdateAPSRegistrant2025 = /* GraphQL */ `
       presentationSummary
       magnaStatus
       magnaTransportation
+      aristoStatus
+      aristoTransportation
+      bio
       createdAt
       updatedAt
       aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
+      aPSCompanyRegistrantsId
     }
   }
 `;
@@ -2045,10 +2290,14 @@ export const onDeleteAPSRegistrant2025 = /* GraphQL */ `
       lastName
       email
       phone
-      companyName {
+      company {
         name
         email
         apsRegistrants {
+          nextToken
+        }
+        type
+        registrants {
           nextToken
         }
         id
@@ -2106,10 +2355,13 @@ export const onDeleteAPSRegistrant2025 = /* GraphQL */ `
       presentationSummary
       magnaStatus
       magnaTransportation
+      aristoStatus
+      aristoTransportation
+      bio
       createdAt
       updatedAt
       aPSCompanyApsRegistrantsId
-      aPSRegistrant2025CompanyNameId
+      aPSCompanyRegistrantsId
     }
   }
 `;
@@ -2120,6 +2372,7 @@ export const onCreateAPSCode2025 = /* GraphQL */ `
       limit
       used
       discount
+      type
       id
       createdAt
       updatedAt
@@ -2133,6 +2386,7 @@ export const onUpdateAPSCode2025 = /* GraphQL */ `
       limit
       used
       discount
+      type
       id
       createdAt
       updatedAt
@@ -2146,6 +2400,7 @@ export const onDeleteAPSCode2025 = /* GraphQL */ `
       limit
       used
       discount
+      type
       id
       createdAt
       updatedAt
@@ -2347,6 +2602,7 @@ export const onCreateCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -2414,6 +2670,7 @@ export const onUpdateCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -2481,6 +2738,7 @@ export const onDeleteCompany = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3002,6 +3260,7 @@ export const onCreateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3070,6 +3329,7 @@ export const onCreateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3129,6 +3389,7 @@ export const onCreateUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      dailyStreak
       cohorts {
         items {
           id
@@ -3147,6 +3408,16 @@ export const onCreateUser = /* GraphQL */ `
           id
           lessonId
           userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      learningPaths {
+        items {
+          id
+          userId
+          learningPathId
           createdAt
           updatedAt
         }
@@ -3218,6 +3489,7 @@ export const onUpdateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3286,6 +3558,7 @@ export const onUpdateUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3345,6 +3618,7 @@ export const onUpdateUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      dailyStreak
       cohorts {
         items {
           id
@@ -3363,6 +3637,16 @@ export const onUpdateUser = /* GraphQL */ `
           id
           lessonId
           userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      learningPaths {
+        items {
+          id
+          userId
+          learningPathId
           createdAt
           updatedAt
         }
@@ -3434,6 +3718,7 @@ export const onDeleteUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3502,6 +3787,7 @@ export const onDeleteUser = /* GraphQL */ `
           level
           xpToNextLevel
           lastLogin
+          dailyStreak
           allAccess
           allAccessStartDate
           allAccessEndDate
@@ -3561,6 +3847,7 @@ export const onDeleteUser = /* GraphQL */ `
       level
       xpToNextLevel
       lastLogin
+      dailyStreak
       cohorts {
         items {
           id
@@ -3579,6 +3866,16 @@ export const onDeleteUser = /* GraphQL */ `
           id
           lessonId
           userId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      learningPaths {
+        items {
+          id
+          userId
+          learningPathId
           createdAt
           updatedAt
         }
@@ -3724,6 +4021,351 @@ export const onDeleteCohort = /* GraphQL */ `
       updatedAt
       instructorCohortsId
       cohortInstructorId
+    }
+  }
+`;
+export const onCreateLearningPath = /* GraphQL */ `
+  subscription OnCreateLearningPath {
+    onCreateLearningPath {
+      id
+      title
+      description
+      courses {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          learningPathId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      displayOrder
+      hours
+      slug
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLearningPath = /* GraphQL */ `
+  subscription OnUpdateLearningPath {
+    onUpdateLearningPath {
+      id
+      title
+      description
+      courses {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          learningPathId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      displayOrder
+      hours
+      slug
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLearningPath = /* GraphQL */ `
+  subscription OnDeleteLearningPath {
+    onDeleteLearningPath {
+      id
+      title
+      description
+      courses {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
+      users {
+        items {
+          id
+          userId
+          learningPathId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      displayOrder
+      hours
+      slug
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLearningPathCourse = /* GraphQL */ `
+  subscription OnCreateLearningPathCourse {
+    onCreateLearningPathCourse {
+      id
+      courseId
+      course {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      order
+      thinkificId
+      createdAt
+      updatedAt
+      learningPathCoursesId
+      lMSCourseLearningPathsId
+    }
+  }
+`;
+export const onUpdateLearningPathCourse = /* GraphQL */ `
+  subscription OnUpdateLearningPathCourse {
+    onUpdateLearningPathCourse {
+      id
+      courseId
+      course {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      order
+      thinkificId
+      createdAt
+      updatedAt
+      learningPathCoursesId
+      lMSCourseLearningPathsId
+    }
+  }
+`;
+export const onDeleteLearningPathCourse = /* GraphQL */ `
+  subscription OnDeleteLearningPathCourse {
+    onDeleteLearningPathCourse {
+      id
+      courseId
+      course {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      order
+      thinkificId
+      createdAt
+      updatedAt
+      learningPathCoursesId
+      lMSCourseLearningPathsId
     }
   }
 `;
@@ -3873,6 +4515,7 @@ export const onCreateCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -3880,6 +4523,9 @@ export const onCreateCMPMForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4020,6 +4666,7 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -4027,6 +4674,9 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4167,6 +4817,7 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -4174,6 +4825,9 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4314,6 +4968,7 @@ export const onCreateCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -4321,6 +4976,9 @@ export const onCreateCPSForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4463,6 +5121,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -4470,6 +5129,9 @@ export const onUpdateCPSForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4612,6 +5274,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -4619,6 +5282,9 @@ export const onDeleteCPSForm = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -4944,6 +5610,19 @@ export const onCreateLMSCourse = /* GraphQL */ `
     onCreateLMSCourse {
       id
       thinkificId
+      learningPaths {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
       courseId
       category
       categoryArray
@@ -5012,6 +5691,19 @@ export const onUpdateLMSCourse = /* GraphQL */ `
     onUpdateLMSCourse {
       id
       thinkificId
+      learningPaths {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
       courseId
       category
       categoryArray
@@ -5080,6 +5772,19 @@ export const onDeleteLMSCourse = /* GraphQL */ `
     onDeleteLMSCourse {
       id
       thinkificId
+      learningPaths {
+        items {
+          id
+          courseId
+          order
+          thinkificId
+          createdAt
+          updatedAt
+          learningPathCoursesId
+          lMSCourseLearningPathsId
+        }
+        nextToken
+      }
       courseId
       category
       categoryArray
@@ -8581,6 +9286,48 @@ export const onDeleteIndexClick = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEmailSubscription = /* GraphQL */ `
+  subscription OnCreateEmailSubscription {
+    onCreateEmailSubscription {
+      id
+      email
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEmailSubscription = /* GraphQL */ `
+  subscription OnUpdateEmailSubscription {
+    onUpdateEmailSubscription {
+      id
+      email
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEmailSubscription = /* GraphQL */ `
+  subscription OnDeleteEmailSubscription {
+    onDeleteEmailSubscription {
+      id
+      email
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateImageObject = /* GraphQL */ `
   subscription OnCreateImageObject {
     onCreateImageObject {
@@ -9685,6 +10432,7 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -9692,6 +10440,9 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -9861,6 +10612,7 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -9868,6 +10620,9 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -10037,6 +10792,7 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -10044,6 +10800,9 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -10292,6 +11051,7 @@ export const onCreateAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -10299,6 +11059,9 @@ export const onCreateAPSUser = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -10433,6 +11196,7 @@ export const onUpdateAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -10440,6 +11204,9 @@ export const onUpdateAPSUser = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -10574,6 +11341,7 @@ export const onDeleteAPSUser = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -10581,6 +11349,9 @@ export const onDeleteAPSUser = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -10757,6 +11528,7 @@ export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
           nextToken
         }
         type
+        limit
         id
         createdAt
         updatedAt
@@ -10767,9 +11539,10 @@ export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
         lastName
         email
         phone
-        companyName {
+        company {
           name
           email
+          type
           id
           createdAt
           updatedAt
@@ -10818,10 +11591,13 @@ export const onCreateApsRegistrantAddOns25 = /* GraphQL */ `
         presentationSummary
         magnaStatus
         magnaTransportation
+        aristoStatus
+        aristoTransportation
+        bio
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
+        aPSCompanyRegistrantsId
       }
       createdAt
       updatedAt
@@ -10847,6 +11623,7 @@ export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
           nextToken
         }
         type
+        limit
         id
         createdAt
         updatedAt
@@ -10857,9 +11634,10 @@ export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
         lastName
         email
         phone
-        companyName {
+        company {
           name
           email
+          type
           id
           createdAt
           updatedAt
@@ -10908,10 +11686,13 @@ export const onUpdateApsRegistrantAddOns25 = /* GraphQL */ `
         presentationSummary
         magnaStatus
         magnaTransportation
+        aristoStatus
+        aristoTransportation
+        bio
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
+        aPSCompanyRegistrantsId
       }
       createdAt
       updatedAt
@@ -10937,6 +11718,7 @@ export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
           nextToken
         }
         type
+        limit
         id
         createdAt
         updatedAt
@@ -10947,9 +11729,10 @@ export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
         lastName
         email
         phone
-        companyName {
+        company {
           name
           email
+          type
           id
           createdAt
           updatedAt
@@ -10998,10 +11781,13 @@ export const onDeleteApsRegistrantAddOns25 = /* GraphQL */ `
         presentationSummary
         magnaStatus
         magnaTransportation
+        aristoStatus
+        aristoTransportation
+        bio
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
-        aPSRegistrant2025CompanyNameId
+        aPSCompanyRegistrantsId
       }
       createdAt
       updatedAt
@@ -11114,6 +11900,7 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11121,6 +11908,9 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11250,6 +12040,7 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11257,6 +12048,9 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11386,6 +12180,7 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11393,6 +12188,9 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11522,6 +12320,7 @@ export const onCreateCohortUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11529,6 +12328,9 @@ export const onCreateCohortUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11674,6 +12476,7 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11681,6 +12484,9 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11826,6 +12632,7 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         level
         xpToNextLevel
         lastLogin
+        dailyStreak
         cohorts {
           nextToken
         }
@@ -11833,6 +12640,9 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         allAccessStartDate
         allAccessEndDate
         lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -11872,6 +12682,438 @@ export const onDeleteCohortUsers = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLearningPathUsers = /* GraphQL */ `
+  subscription OnCreateLearningPathUsers {
+    onCreateLearningPathUsers {
+      id
+      userId
+      learningPathId
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLearningPathUsers = /* GraphQL */ `
+  subscription OnUpdateLearningPathUsers {
+    onUpdateLearningPathUsers {
+      id
+      userId
+      learningPathId
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLearningPathUsers = /* GraphQL */ `
+  subscription OnDeleteLearningPathUsers {
+    onDeleteLearningPathUsers {
+      id
+      userId
+      learningPathId
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        users {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateCirriculumCourses = /* GraphQL */ `
   subscription OnCreateCirriculumCourses {
     onCreateCirriculumCourses {
@@ -11893,6 +13135,9 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -11959,6 +13204,9 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12025,6 +13273,9 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12079,6 +13330,9 @@ export const onCreateCourseLessons = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12151,6 +13405,9 @@ export const onUpdateCourseLessons = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12223,6 +13480,9 @@ export const onDeleteCourseLessons = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12295,6 +13555,9 @@ export const onCreateCourseInstructors = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12367,6 +13630,9 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray
@@ -12439,6 +13705,9 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
       lMSCourse {
         id
         thinkificId
+        learningPaths {
+          nextToken
+        }
         courseId
         category
         categoryArray

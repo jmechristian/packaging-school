@@ -14,6 +14,7 @@ import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
 import { useDispatch } from 'react-redux';
 
 import { showToast } from '../../features/navigation/navigationSlice';
+import { useRouter } from 'next/router';
 
 const ProfileDashboard = ({
   awsUser,
@@ -24,6 +25,7 @@ const ProfileDashboard = ({
   isLoading,
 }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const EditProfileForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
       company: '',
@@ -674,7 +676,6 @@ const ProfileDashboard = ({
         <div className={`col-span-10 w-full h-full flex flex-col `}>
           <div className='relative'>
             <div className='flex flex-col w-full'>
-              {/* Tab Content */}
               <div className='min-h-[600px] w-full bg-gray-100 p-7 rounded-b-lg'>
                 <div className='max-w-7xl w-full grid grid-cols-12 gap-8'>
                   <div className='col-span-8 flex flex-col gap-8 h-full'>
@@ -684,32 +685,37 @@ const ProfileDashboard = ({
                       refreshUser={refreshUser}
                     />
                   </div>
-                  <div className='col-span-4 flex flex-col gap-8 h-full'>
-                    {/* <SavedLessons /> */}
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-4'>
+                  <div className='col-span-4 flex flex-col gap-16 h-full'>
+                    <div className='flex flex-col gap-4'>
                       <div className='font-bold text-gray-900 w-full'>
                         Learning Paths
                       </div>
-                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
-                        <div>No Paths Selected</div>
-                        <button
-                          className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
-                          onClick={() =>
-                            dispatch(
-                              showToast({
-                                message: 'Coming Soon',
-                                description: 'This feature is coming soon.',
-                                type: 'test',
-                              })
-                            )
-                          }
-                        >
-                          Select a Path
-                        </button>
-                      </div>
+                      {awsUser?.learningPaths?.items?.length > 0 ? (
+                        <div className='flex flex-col gap-3'>
+                          {awsUser?.learningPaths?.items?.map((path) => (
+                            <div
+                              key={path.learningPath.id}
+                              className='flex items-center gap-2'
+                            >
+                              <div className='w-9 h-9 rounded-full bg-clemson'></div>
+                              <div>{path.learningPath.title}</div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
+                          <div>No Paths Selected</div>
+                          <button
+                            className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
+                            onClick={() => router.push('/paths')}
+                          >
+                            Select a Path
+                          </button>
+                        </div>
+                      )}
                     </div>
 
-                    <div className='flex flex-col gap-6 bg-white rounded-lg p-4'>
+                    <div className='flex flex-col gap-6 border-t border-gray-400 pt-6'>
                       <div className='font-bold text-gray-900 w-full'>
                         Achievements
                       </div>
@@ -727,28 +733,6 @@ const ProfileDashboard = ({
                         <div className='w-9 h-9 rounded-full bg-clemson'></div>
                         <div className='w-9 h-9 rounded-full bg-clemson'></div>
                         <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                      </div>
-                    </div>
-                    <div className='flex flex-col gap-4 bg-white rounded-lg p-5'>
-                      <div className='font-bold text-gray-900 w-full'>
-                        Wish List
-                      </div>
-                      <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
-                        <div>No courses or certificates selected</div>
-                        <button
-                          className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
-                          onClick={() =>
-                            dispatch(
-                              showToast({
-                                message: 'Coming Soon',
-                                description: 'This feature is coming soon.',
-                                type: 'test',
-                              })
-                            )
-                          }
-                        >
-                          Add to Wish List
-                        </button>
                       </div>
                     </div>
                   </div>

@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   awsUser: null,
   thinkificUser: null,
+  enrollments: [],
   loginOpen: true,
   location: {
     ip: null,
@@ -71,6 +72,9 @@ export const authSlice = createSlice({
     setThinkificUser: (state, action) => {
       state.thinkificUser = action.payload;
     },
+    setEnrollments: (state, action) => {
+      state.enrollments = action.payload;
+    },
   },
 });
 
@@ -87,6 +91,7 @@ export const {
   setAWSUser,
   updateUser,
   setThinkificUser,
+  setEnrollments,
 } = authSlice.actions;
 
 export default authSlice.reducer;
