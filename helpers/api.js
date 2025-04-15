@@ -1160,7 +1160,7 @@ export const getSavedLesson = async (lessonId) => {
 export const getPaths = async () => {
   const getPathsQuery = /* GraphQL */ `
     query MyQuery {
-      listLearningPaths {
+      listLearningPaths(filter: { status: { eq: "ACTIVE" } }) {
         items {
           courses {
             items {
