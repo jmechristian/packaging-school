@@ -4,16 +4,19 @@ import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import ProfileWrapper from '../../components/profile/ProfileWrapper';
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
-import { getAWSUser } from '../../helpers/api';
+import { getAWSUser, getUserLevel } from '../../helpers/api';
+
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
-
+  const [userLevel, setUserLevel] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (awsUser && thinkificUser) {
       setIsLoading(false);
+      const userLevel = getUserLevel(thinkificUser.xp, awsUser);
+      setUserLevel(userLevel);
     }
   }, [awsUser, thinkificUser]);
 
@@ -55,6 +58,7 @@ export default withPageAuthRequired(function Page() {
         thinkificUser={thinkificUser}
         user={user}
         refreshUser={refreshUser}
+        userLevel={userLevel}
       />
     </ProfileWrapper>
   );
