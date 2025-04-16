@@ -1026,6 +1026,19 @@ export const getAWSUser = async (email) => {
           updatedAt
           xpToNextLevel
           cell
+          userXp {
+            dailyStreak
+            id
+            lastLogin
+            level
+            psXp
+            thinkificXp
+            totalXp
+            updatedAt
+            userXpUserId
+            xpToNextLevel
+          }
+          userUserXpId
         }
       }
     }
