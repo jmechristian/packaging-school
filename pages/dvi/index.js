@@ -235,7 +235,7 @@ const Page = () => {
               className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
               onClick={() => {
                 window.open(
-                  'https://packschool.s3.us-east-1.amazonaws.com/DVI-Instructions-for-Library.pdf',
+                  'https://packschool.s3.us-east-1.amazonaws.com/4_9_25-DVI-Instructions-for-Library.pdf',
                   '_blank'
                 );
               }}
