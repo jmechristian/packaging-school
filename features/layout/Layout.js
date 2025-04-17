@@ -32,7 +32,7 @@ const Layout = ({ children }) => {
     const checkUser = async () => {
       if (!user?.email) return;
 
-      const dbUser = await getAWSUser(user.email);
+      const dbUser = await getAWSUser('drew@packagingschool.com');
       if (!dbUser) {
         const newUser = await createAWSUser({
           email: user.email,
@@ -81,14 +81,14 @@ const Layout = ({ children }) => {
   useEffect(() => {
     const checkThinkificUser = async () => {
       const thinkificUser = await fetch(
-        `/api/thinkific/get-user?email=${user.email}`
+        `/api/thinkific/get-user?email=drew@packagingschool.com`
       );
 
       const data = await thinkificUser.json();
       if (data?.data?.data?.userByEmail) {
         dispatch(setThinkificUser(data.data.data.userByEmail));
         const enrollments = await fetch(
-          `/api/thinkific/get-enrollments?email=${user.email}`
+          `/api/thinkific/get-enrollments?email=drew@packagingschool.com`
         );
         const enrollmentsData = await enrollments.json();
         dispatch(setEnrollments(enrollmentsData.items));

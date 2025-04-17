@@ -335,7 +335,7 @@ const ProfileDashboard = ({
 
     try {
       // First update AWS user
-      const awsResponse = await updateAWSUser({
+      await updateAWSUser({
         id: awsUser.id,
         ...formData,
         onboardingComplete: true,
