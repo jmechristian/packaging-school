@@ -6,7 +6,17 @@ const initialState = {
   awsUser: null,
   thinkificUser: null,
   enrollments: [],
-  loginOpen: true,
+  userXp: {
+    id: '',
+    xpToNextLevel: 10,
+    userXpUserId: '',
+    totalXp: 10,
+    thinkificXp: 10,
+    psXp: 10,
+    level: 10,
+    lastLogin: '',
+    dailyStreak: 10,
+  },
   location: {
     ip: null,
     country: null,

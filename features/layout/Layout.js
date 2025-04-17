@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -9,7 +9,12 @@ import {
   updateUser,
   setEnrollments,
 } from '../auth/authslice';
-import { getAWSUser, createAWSUser, updateAWSUser } from '../../helpers/api';
+import {
+  getAWSUser,
+  createAWSUser,
+  updateAWSUser,
+  createNewUserXp,
+} from '../../helpers/api';
 import Toast from '../../components/shared/Toast';
 import CartToggle from './CartToggle';
 import ScrollTop from './ScrollTop';
@@ -27,23 +32,25 @@ const Layout = ({ children }) => {
   const { showToast } = useSelector((state) => state.nav);
   const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
+  const userProcessedRef = useRef(false);
 
   useEffect(() => {
     const checkUser = async () => {
       if (!user?.email) return;
 
-      const dbUser = await getAWSUser('drew@packagingschool.com');
+      const dbUser = await getAWSUser(user.email);
       if (!dbUser) {
         const newUser = await createAWSUser({
           email: user.email,
           name: user.name,
           lastLogin: new Date().toISOString(),
-          totalXp: 0,
-          level: 1,
-          xpToNextLevel: 100,
-          psXp: 0,
-          thinkificXp: 0,
         });
+        const newUserXp = await createNewUserXp(newUser.id, newUser.lastLogin);
+        await updateAWSUser({
+          id: newUser.id,
+          userUserXpId: newUserXp.id,
+        });
+
         dispatch(setAWSUser(newUser));
       } else {
         dispatch(setAWSUser(dbUser));
@@ -54,7 +61,7 @@ const Layout = ({ children }) => {
       }
     };
 
-    if (!userIsLoading && user) {
+    if (!userIsLoading && user && !userProcessedRef.current) {
       // console.log('🔍 Current user state:', user);
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
 
@@ -66,6 +73,7 @@ const Layout = ({ children }) => {
         return;
       }
 
+      userProcessedRef.current = true;
       user && dispatch(setUser(user));
       user && checkUser();
     }
@@ -81,14 +89,14 @@ const Layout = ({ children }) => {
   useEffect(() => {
     const checkThinkificUser = async () => {
       const thinkificUser = await fetch(
-        `/api/thinkific/get-user?email=drew@packagingschool.com`
+        `/api/thinkific/get-user?email=${user.email}`
       );
 
       const data = await thinkificUser.json();
       if (data?.data?.data?.userByEmail) {
         dispatch(setThinkificUser(data.data.data.userByEmail));
         const enrollments = await fetch(
-          `/api/thinkific/get-enrollments?email=drew@packagingschool.com`
+          `/api/thinkific/get-enrollments?email=${user.email}`
         );
         const enrollmentsData = await enrollments.json();
         dispatch(setEnrollments(enrollmentsData.items));
@@ -159,16 +167,6 @@ const Layout = ({ children }) => {
       <CookieConsent />
       <div className={`${darkMode ? 'dark' : ''} relative`}>
         <div className='flex flex-col justify-between'>
-          {/* {searchOpen && <SearchContainer />} */}
-          {/* {signInModal && (
-            <SignInModal
-              open={signInModal}
-              setOpen={() => dispatch(toggleSignInModal())}
-            />
-          )} */}
-          {/* {preview && (
-            <CoursePreview close={() => dispatch(setPreviewClosed())} />
-          )} */}
           {/* {location && location.country === 'India' && <IndiaBanner />} */}
           <Loading />
           <HeaderNew user={user} />

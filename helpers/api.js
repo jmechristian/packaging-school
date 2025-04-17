@@ -35,6 +35,7 @@ import {
   updateUser,
   createUserCompletedLessons,
   deleteLearningPathUsers,
+  createUserXp,
 } from '../src/graphql/mutations';
 
 export const LEVELS_CONFIG = [
@@ -1276,4 +1277,31 @@ export const removeStudentFromPath = async (id) => {
     variables: { input: { id } },
   });
   return res.data.deleteLearningPathUsers;
+};
+
+// export const updateStudentXp = async (userId, xp) => {
+//   const res = await API.graphql({
+//     query: updateUserXp,
+//     variables: { input: { id: userId, xp } },
+//   });
+//   return res.data.updateUserXp;
+// };
+
+export const createNewUserXp = async (userId, lastLogin) => {
+  const res = await API.graphql({
+    query: createUserXp,
+    variables: {
+      input: {
+        userXpUserId: userId,
+        xpToNextLevel: 0,
+        totalXp: 0,
+        thinkificXp: 0,
+        psXp: 0,
+        level: 1,
+        lastLogin: lastLogin,
+        dailyStreak: 1,
+      },
+    },
+  });
+  return res.data.createUserXp;
 };

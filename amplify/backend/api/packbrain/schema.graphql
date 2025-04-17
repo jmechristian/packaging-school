@@ -552,6 +552,19 @@ type User @model @auth(rules: [{ allow: public }]) {
   allAccessEndDate: String
   lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
   learningPaths: [LearningPath] @manyToMany(relationName: "LearningPathUsers")
+  userXp: UserXp @hasOne
+}
+
+type UserXp @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  totalXp: Int
+  thinkificXp: Int
+  psXp: Int
+  level: Int
+  xpToNextLevel: Int
+  lastLogin: String
+  dailyStreak: Int
 }
 
 type Cohort @model @auth(rules: [{ allow: public }]) {
