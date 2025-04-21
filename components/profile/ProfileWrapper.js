@@ -158,6 +158,8 @@ const LEVELS_CONFIG = [
 
 const ProfileWrapper = ({ children }) => {
   const { awsUser, thinkificUser, user } = useSelector((state) => state.auth);
+  const { userXp } = useSelector((state) => state.auth);
+
   const calculateLevelProgress = (xp) => {
     let currentLevel = 1;
     let nextLevelXP = 100;
@@ -178,7 +180,7 @@ const ProfileWrapper = ({ children }) => {
     const xpForNextLevel = nextLevelXP - previousLevelXP;
     const currentLevelXP = xp - previousLevelXP;
     const progress = (currentLevelXP / xpForNextLevel) * 100;
-
+    console.log('xpNeeded', nextLevelXP - xp);
     return {
       level: currentLevel,
       progress,

@@ -2983,6 +2983,7 @@ export const getUser = /* GraphQL */ `
         xpToNextLevel
         lastLogin
         dailyStreak
+        progress
         createdAt
         updatedAt
         userXpUserId
@@ -3122,6 +3123,7 @@ export const listUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -3271,6 +3273,7 @@ export const usersByName = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -3420,6 +3423,7 @@ export const usersByEmail = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -3569,6 +3573,7 @@ export const usersByCompanyID = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -3707,6 +3712,7 @@ export const getUserXp = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -3722,6 +3728,7 @@ export const getUserXp = /* GraphQL */ `
       xpToNextLevel
       lastLogin
       dailyStreak
+      progress
       createdAt
       updatedAt
       userXpUserId
@@ -3782,6 +3789,7 @@ export const listUserXps = /* GraphQL */ `
         xpToNextLevel
         lastLogin
         dailyStreak
+        progress
         createdAt
         updatedAt
         userXpUserId
@@ -4344,6 +4352,7 @@ export const getCMPMForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -4589,6 +4598,7 @@ export const getCPSForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -9547,6 +9557,7 @@ export const getUserCompletedLessons = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -10146,6 +10157,7 @@ export const getAPSUser = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11047,6 +11059,7 @@ export const getAchievementUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11419,6 +11432,7 @@ export const getCohortUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11815,6 +11829,7 @@ export const getLearningPathUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId

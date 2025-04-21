@@ -565,6 +565,7 @@ type UserXp @model @auth(rules: [{ allow: public }]) {
   xpToNextLevel: Int
   lastLogin: String
   dailyStreak: Int
+  progress: Float
 }
 
 type Cohort @model @auth(rules: [{ allow: public }]) {

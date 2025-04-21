@@ -8,12 +8,15 @@ import {
   setThinkificUser,
   updateUser,
   setEnrollments,
+  setUserXp,
 } from '../auth/authslice';
 import {
   getAWSUser,
   createAWSUser,
   updateAWSUser,
   createNewUserXp,
+  updateLastLogin,
+  getUserLevel,
 } from '../../helpers/api';
 import Toast from '../../components/shared/Toast';
 import CartToggle from './CartToggle';
@@ -52,12 +55,20 @@ const Layout = ({ children }) => {
         });
 
         dispatch(setAWSUser(newUser));
+        const level = getUserLevel(newUserXp.totalXp, newUser);
+        console.log('🔍 Level:', level);
+        dispatch(setUserXp(newUserXp));
       } else {
         dispatch(setAWSUser(dbUser));
-        await updateAWSUser({
-          id: dbUser.id,
-          lastLogin: new Date().toISOString(),
-        });
+        const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
+        console.log('🔍 Level:', level);
+        const updatedUserXp = await updateLastLogin(
+          dbUser.userUserXpId,
+          parseInt(level.level, 10),
+          parseInt(level.xpNeeded, 10),
+          parseFloat(level.progress.toFixed(1))
+        );
+        dispatch(setUserXp(updatedUserXp));
       }
     };
 

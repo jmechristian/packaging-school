@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import ProfileWrapper from '../../components/profile/ProfileWrapper';
+
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
 import { getAWSUser } from '../../helpers/api';
 export default withPageAuthRequired(function Page() {
@@ -48,14 +48,5 @@ export default withPageAuthRequired(function Page() {
     );
   }
 
-  return (
-    <ProfileWrapper>
-      <ProfileDashboard
-        awsUser={awsUser}
-        thinkificUser={thinkificUser}
-        user={user}
-        refreshUser={refreshUser}
-      />
-    </ProfileWrapper>
-  );
+  return <ProfileDashboard refreshUser={refreshUser} />;
 });

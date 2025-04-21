@@ -295,15 +295,15 @@ h4 {
 }
 
 .tiptap h1 {
-  @apply text-neutral-900 dark:text-orange-500 text-4xl font-semibold leading-tight tracking-tight mb-6 mt-6;
+  @apply text-neutral-900 dark:text-white text-4xl font-semibold leading-tight tracking-tight mb-6 mt-6;
 }
 
 .tiptap h2 {
-  @apply text-base-dark dark:text-orange-500 text-3xl font-semibold leading-tight tracking-tight mb-6 mt-12;
+  @apply text-neutral-900 dark:text-white text-3xl font-semibold leading-tight tracking-tight mb-6 mt-12;
 }
 
 .tiptap h3 {
-  @apply text-neutral-900 dark:text-brand-yellow-light text-2xl font-semibold leading-tight tracking-tight mb-2;
+  @apply text-neutral-900 dark:text-white text-2xl font-semibold leading-tight tracking-tight mb-2;
 }
 
 .tiptap ul {

@@ -36,6 +36,7 @@ import {
   createUserCompletedLessons,
   deleteLearningPathUsers,
   createUserXp,
+  updateUserXp,
 } from '../src/graphql/mutations';
 
 export const LEVELS_CONFIG = [
@@ -1119,6 +1120,7 @@ export const reEnroll = async (id) => {
 export const completeLesson = async ({
   lessonId,
   userId,
+  xpId,
   xpAwarded,
   pxp,
   thinkificXp,
@@ -1136,19 +1138,22 @@ export const completeLesson = async ({
   });
 
   const res = await API.graphql({
-    query: updateUser,
+    query: updateUserXp,
     variables: {
       input: {
-        id: userId,
-        psXp: pxp + xpAwarded,
-        totalXp: thinkificXp + pxp + xpAwarded,
+        id: xpId,
         level: levelProgress.level,
+        progress: levelProgress.progress,
+        psXp: pxp + xpAwarded,
+        thinkificXp: thinkificXp,
+        totalXp: thinkificXp + pxp + xpAwarded,
+        userXpUserId: userId,
         xpToNextLevel: levelProgress.xpNeeded,
       },
     },
   });
 
-  return res.data.updateUser;
+  return res.data.updateUserXp;
 };
 
 export const handleBookmarkAdd = async (lessons, userId) => {
@@ -1304,4 +1309,20 @@ export const createNewUserXp = async (userId, lastLogin) => {
     },
   });
   return res.data.createUserXp;
+};
+
+export const updateLastLogin = async (id, level, xpToNextLevel, progress) => {
+  const res = await API.graphql({
+    query: updateUserXp,
+    variables: {
+      input: {
+        id: id,
+        lastLogin: new Date().toISOString(),
+        level: level,
+        xpToNextLevel: xpToNextLevel,
+        progress: progress,
+      },
+    },
+  });
+  return res.data.updateUserXp;
 };

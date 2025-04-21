@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { LEVELS_CONFIG } from '../../helpers/api';
 
 const MiniProfile = () => {
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, userXp } = useSelector((state) => state.auth);
   const router = useRouter();
   const calculateLevelProgress = (xp) => {
     let currentLevel = 1;
@@ -34,10 +34,10 @@ const MiniProfile = () => {
     };
   };
 
-  const userLevel = useMemo(() => {
-    if (!awsUser) return { level: 1, progress: 0, xpNeeded: 100 };
-    return calculateLevelProgress(awsUser.totalXp);
-  }, [awsUser]);
+  // const userLevel = useMemo(() => {
+  //   if (!awsUser) return { level: 1, progress: 0, xpNeeded: 100 };
+  //   return calculateLevelProgress(userXp.totalXp);
+  // }, [awsUser]);
 
   const handleSignIn = () => {
     // Add returnTo parameter to return to the current page
@@ -71,7 +71,7 @@ const MiniProfile = () => {
                   fill='transparent'
                   strokeDasharray={`${2 * Math.PI * 64}`}
                   strokeDashoffset={`${
-                    2 * Math.PI * 64 * (1 - userLevel.progress / 100)
+                    2 * Math.PI * 64 * (1 - userXp.progress / 100)
                   }`}
                   className='transition-all duration-700'
                 />
@@ -79,7 +79,7 @@ const MiniProfile = () => {
               {/* Level Number */}
               <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
                 <span className='text-4xl font-bold text-white'>
-                  {userLevel.level}
+                  {userXp.level}
                 </span>
                 <span className='text-sm text-gray-100'>Level</span>
               </div>
@@ -87,10 +87,10 @@ const MiniProfile = () => {
             {/* XP Info */}
             <div className='flex flex-col gap-0 text-center'>
               <div className='text-sm font-medium text-gray-100'>
-                {userLevel.xpNeeded.toLocaleString()} XP to next level
+                {userXp.xpToNextLevel.toLocaleString()} XP to next level
               </div>
               <div className='text-sm text-gray-300'>
-                Total XP: {awsUser.totalXp.toLocaleString()}
+                Total XP: {userXp.totalXp.toLocaleString()}
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ const MiniProfile = () => {
                   fill='transparent'
                   strokeDasharray={`${2 * Math.PI * 64}`}
                   strokeDashoffset={`${
-                    2 * Math.PI * 64 * (1 - userLevel.progress / 100)
+                    2 * Math.PI * 64 * (1 - userXp.progress / 100)
                   }`}
                   className='transition-all duration-700'
                 />

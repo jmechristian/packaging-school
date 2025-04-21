@@ -85,6 +85,9 @@ export const authSlice = createSlice({
     setEnrollments: (state, action) => {
       state.enrollments = action.payload;
     },
+    setUserXp: (state, action) => {
+      state.userXp = action.payload;
+    },
   },
 });
 
@@ -102,6 +105,7 @@ export const {
   updateUser,
   setThinkificUser,
   setEnrollments,
+  setUserXp,
 } = authSlice.actions;
 
 export default authSlice.reducer;

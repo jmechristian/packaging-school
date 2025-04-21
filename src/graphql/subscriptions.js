@@ -3475,6 +3475,7 @@ export const onCreateUser = /* GraphQL */ `
         xpToNextLevel
         lastLogin
         dailyStreak
+        progress
         createdAt
         updatedAt
         userXpUserId
@@ -3758,6 +3759,7 @@ export const onUpdateUser = /* GraphQL */ `
         xpToNextLevel
         lastLogin
         dailyStreak
+        progress
         createdAt
         updatedAt
         userXpUserId
@@ -4041,6 +4043,7 @@ export const onDeleteUser = /* GraphQL */ `
         xpToNextLevel
         lastLogin
         dailyStreak
+        progress
         createdAt
         updatedAt
         userXpUserId
@@ -4177,6 +4180,7 @@ export const onCreateUserXp = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -4192,6 +4196,7 @@ export const onCreateUserXp = /* GraphQL */ `
       xpToNextLevel
       lastLogin
       dailyStreak
+      progress
       createdAt
       updatedAt
       userXpUserId
@@ -4324,6 +4329,7 @@ export const onUpdateUserXp = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -4339,6 +4345,7 @@ export const onUpdateUserXp = /* GraphQL */ `
       xpToNextLevel
       lastLogin
       dailyStreak
+      progress
       createdAt
       updatedAt
       userXpUserId
@@ -4471,6 +4478,7 @@ export const onDeleteUserXp = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -4486,6 +4494,7 @@ export const onDeleteUserXp = /* GraphQL */ `
       xpToNextLevel
       lastLogin
       dailyStreak
+      progress
       createdAt
       updatedAt
       userXpUserId
@@ -5143,6 +5152,7 @@ export const onCreateCMPMForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -5308,6 +5318,7 @@ export const onUpdateCMPMForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -5473,6 +5484,7 @@ export const onDeleteCMPMForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -5638,6 +5650,7 @@ export const onCreateCPSForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -5805,6 +5818,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -5972,6 +5986,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11144,6 +11159,7 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11338,6 +11354,7 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11532,6 +11549,7 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11805,6 +11823,7 @@ export const onCreateAPSUser = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -11964,6 +11983,7 @@ export const onUpdateAPSUser = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -12123,6 +12143,7 @@ export const onDeleteAPSUser = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -12696,6 +12717,7 @@ export const onCreateAchievementUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -12850,6 +12872,7 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13004,6 +13027,7 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13158,6 +13182,7 @@ export const onCreateCohortUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13328,6 +13353,7 @@ export const onUpdateCohortUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13498,6 +13524,7 @@ export const onDeleteCohortUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13668,6 +13695,7 @@ export const onCreateLearningPathUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13826,6 +13854,7 @@ export const onUpdateLearningPathUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
@@ -13984,6 +14013,7 @@ export const onDeleteLearningPathUsers = /* GraphQL */ `
           xpToNextLevel
           lastLogin
           dailyStreak
+          progress
           createdAt
           updatedAt
           userXpUserId
