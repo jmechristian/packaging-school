@@ -19,6 +19,7 @@ import CMPMPricing from './CMPMPricing';
 const CMPMForm = ({ methods, email, free }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [cookieData, setCookieData] = useState(undefined);
   const [isEmail, setIsEmail] = useState('');
   const router = useRouter();
@@ -294,8 +295,10 @@ const CMPMForm = ({ methods, email, free }) => {
   };
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     await submitFormToAWS(data);
     sendSubmitNotification(data);
+    setIsSubmitting(false);
   };
 
   const onError = (errors, data) => console.log('errors', errors, 'data', data);
@@ -362,7 +365,7 @@ const CMPMForm = ({ methods, email, free }) => {
             className='flex cursor-pointer bg-clemson hover:bg-clemson/80 text-white justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 font-greycliff font-semibold '
             onClick={methods.handleSubmit(onSubmit, onError)}
           >
-            Submit Form
+            {isSubmitting ? 'Submitting...' : 'Submit Form'}
           </div>
         </div>
       </div>
