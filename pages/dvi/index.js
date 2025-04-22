@@ -225,7 +225,7 @@ const Page = () => {
               width={'100%'}
               height={'100%'}
               slidesLink={
-                'https://docs.google.com/presentation/d/1rjivCaylWO7XMraFO6fpL13g4-DlnSO50Zi92aDNoFk/edit#slide=id.p'
+                'https://docs.google.com/presentation/d/1dBW36ISkbHXxrFKQKt6QGflL1kF72B80WqvfMy8bcUk/edit?usp=drivesdk'
               }
               position={1}
               showControls
