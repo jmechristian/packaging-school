@@ -13,6 +13,7 @@ import {
   getPurchase,
   listCMPMSessions,
   listLessons,
+  listTestimonials,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -746,4 +747,11 @@ export const createNewEmailSubscription = async (
     },
   });
   return res.data.createEmailSubscription;
+};
+
+export const getAllTestimonials = async () => {
+  const res = await API.graphql({
+    query: listTestimonials,
+  });
+  return res.data.listTestimonials.items;
 };
