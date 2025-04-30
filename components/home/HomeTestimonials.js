@@ -63,7 +63,7 @@ const HomeTestimonials = ({ testimonials }) => {
   }, [testimonials, tags, searchTerm]);
 
   return (
-    <div className='w-full flex flex-col gap-6 max-w-[1600px] mx-auto'>
+    <div className='w-full flex flex-col gap-6 max-w-[1600px] mx-auto overflow-x-hidden px-5 xl:px-0'>
       {/* <div className='flex items-center bg-white pl-6 rounded-xl border'>
         <div>
           <MagnifyingGlassIcon className='w-6 h-6 text-neutral-700' />
@@ -107,8 +107,8 @@ const HomeTestimonials = ({ testimonials }) => {
           ))}
         </div> */}
       </div>
-      <div className='w-full mt-16'>
-        <div className='flex flex-wrap gap-5'>
+      <div className='w-full mt-10'>
+        <div className='flex flex-wrap gap-5 justify-center'>
           {testimonialsToShow.map((t) => (
             <div
               key={t.id}
