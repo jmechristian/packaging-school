@@ -87,10 +87,10 @@ const MiniProfile = () => {
             {/* XP Info */}
             <div className='flex flex-col gap-0 text-center'>
               <div className='text-sm font-medium text-gray-100'>
-                {userXp.xpToNextLevel.toLocaleString()} XP to next level
+                {userXp.xpToNextLevel.toLocaleString()} PXP to next level
               </div>
               <div className='text-sm text-gray-300'>
-                Total XP: {userXp.totalXp.toLocaleString()}
+                Total PXP: {userXp.totalXp.toLocaleString()}
               </div>
             </div>
           </div>
@@ -138,9 +138,9 @@ const MiniProfile = () => {
             {/* XP Info */}
             <div className='flex flex-col gap-0 text-center'>
               <div className='text-sm font-medium text-gray-100'>
-                100 XP to next level
+                100 PXP to next level
               </div>
-              <div className='text-sm text-gray-300'>Total XP: 0</div>
+              <div className='text-sm text-gray-300'>Total PXP: 0</div>
             </div>
           </div>
         </>

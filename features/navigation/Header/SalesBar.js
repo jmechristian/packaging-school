@@ -56,7 +56,7 @@ const SalesBar = () => {
   }, [isActive]);
 
   return (
-    <div className='bg-black dark:bg-slate-800 flex items-center'>
+    <div className='bg-slate-900 dark:bg-slate-800 flex items-center'>
       <div className='w-full h-12 max-w-7xl px-3 xl:px-0 mx-auto lg:grid lg:grid-cols-5'>
         <div className='w-full flex gap-2 cursor-pointer h-full items-center lg:col-span-4'>
           <div className='w-fit flex h-full items-center'>

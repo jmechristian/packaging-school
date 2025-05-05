@@ -1326,3 +1326,17 @@ export const updateLastLogin = async (id, level, xpToNextLevel, progress) => {
   });
   return res.data.updateUserXp;
 };
+
+export const getCoursesForHomePageFilter = async (category) => {
+  const res = await API.graphql({
+    query: listLMSCourses,
+    variables: {
+      filter: {
+        categoryArray: { contains: category },
+        type: { ne: 'CUSTOMER' },
+      },
+      limit: 100,
+    },
+  });
+  return res.data.listLMSCourses.items;
+};
