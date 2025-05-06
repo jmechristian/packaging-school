@@ -168,11 +168,12 @@ const App = () => {
                 rotation={[0, 0, 0]}
                 angle={0.5}
                 penumbra={0.5}
-                intensity={1}
+                intensity={1.2}
                 castShadow
                 distance={-15}
                 shadow-mapSize={1024}
               />
+
               {/* <pointLight
                 distance={10}
                 intensity={0}
