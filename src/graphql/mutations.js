@@ -412,6 +412,8 @@ export const createCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      status
+      displayOrder
       createdAt
       updatedAt
     }
@@ -465,6 +467,8 @@ export const updateCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      status
+      displayOrder
       createdAt
       updatedAt
     }
@@ -518,6 +522,8 @@ export const deleteCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      status
+      displayOrder
       createdAt
       updatedAt
     }
@@ -1782,6 +1788,7 @@ export const createAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1841,6 +1848,7 @@ export const createAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1913,6 +1921,7 @@ export const updateAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1972,6 +1981,7 @@ export const updateAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -2044,6 +2054,7 @@ export const deleteAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -2103,6 +2114,7 @@ export const deleteAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -2332,6 +2344,7 @@ export const createAPSRegistrant2025 = /* GraphQL */ `
       }
       jobTitle
       attendeeType
+      tableNumber
       termsAccepted
       interests
       otherInterest
@@ -2418,6 +2431,7 @@ export const updateAPSRegistrant2025 = /* GraphQL */ `
       }
       jobTitle
       attendeeType
+      tableNumber
       termsAccepted
       interests
       otherInterest
@@ -2504,6 +2518,7 @@ export const deleteAPSRegistrant2025 = /* GraphQL */ `
       }
       jobTitle
       attendeeType
+      tableNumber
       termsAccepted
       interests
       otherInterest
@@ -5164,6 +5179,9 @@ export const createLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5244,6 +5262,9 @@ export const updateLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5324,6 +5345,9 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6830,6 +6854,16 @@ export const createLMSCourse = /* GraphQL */ `
       subscriptionPrice
       stripeLink
       callout
+      achievements {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6914,6 +6948,16 @@ export const updateLMSCourse = /* GraphQL */ `
       subscriptionPrice
       stripeLink
       callout
+      achievements {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6998,6 +7042,16 @@ export const deleteLMSCourse = /* GraphQL */ `
       subscriptionPrice
       stripeLink
       callout
+      achievements {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -11060,7 +11114,16 @@ export const createAchievement = /* GraphQL */ `
       title
       description
       image
-      courses
+      courses {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       coursesRequired
       users {
         items {
@@ -11087,7 +11150,16 @@ export const updateAchievement = /* GraphQL */ `
       title
       description
       image
-      courses
+      courses {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       coursesRequired
       users {
         items {
@@ -11114,7 +11186,16 @@ export const deleteAchievement = /* GraphQL */ `
       title
       description
       image
-      courses
+      courses {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       coursesRequired
       users {
         items {
@@ -11404,6 +11485,8 @@ export const createCertificateByCategory = /* GraphQL */ `
         sessions {
           nextToken
         }
+        status
+        displayOrder
         createdAt
         updatedAt
       }
@@ -11457,6 +11540,8 @@ export const updateCertificateByCategory = /* GraphQL */ `
         sessions {
           nextToken
         }
+        status
+        displayOrder
         createdAt
         updatedAt
       }
@@ -11510,6 +11595,8 @@ export const deleteCertificateByCategory = /* GraphQL */ `
         sessions {
           nextToken
         }
+        status
+        displayOrder
         createdAt
         updatedAt
       }
@@ -13265,6 +13352,7 @@ export const createApsRegistrantAddOns25 = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -13363,6 +13451,7 @@ export const updateApsRegistrantAddOns25 = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -13461,6 +13550,7 @@ export const deleteApsRegistrantAddOns25 = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -13661,7 +13751,9 @@ export const createAchievementUsers = /* GraphQL */ `
         title
         description
         image
-        courses
+        courses {
+          nextToken
+        }
         coursesRequired
         users {
           nextToken
@@ -13819,7 +13911,9 @@ export const updateAchievementUsers = /* GraphQL */ `
         title
         description
         image
-        courses
+        courses {
+          nextToken
+        }
         coursesRequired
         users {
           nextToken
@@ -13977,7 +14071,9 @@ export const deleteAchievementUsers = /* GraphQL */ `
         title
         description
         image
-        courses
+        courses {
+          nextToken
+        }
         coursesRequired
         users {
           nextToken
@@ -15062,6 +15158,9 @@ export const createCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15134,6 +15233,9 @@ export const updateCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15206,6 +15308,9 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15266,6 +15371,9 @@ export const createCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15344,6 +15452,9 @@ export const updateCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15422,6 +15533,9 @@ export const deleteCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15500,6 +15614,9 @@ export const createCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15578,6 +15695,9 @@ export const updateCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15656,6 +15776,9 @@ export const deleteCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15672,6 +15795,240 @@ export const deleteCourseInstructors = /* GraphQL */ `
           nextToken
         }
         cohorts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAchievementCourses = /* GraphQL */ `
+  mutation CreateAchievementCourses(
+    $input: CreateAchievementCoursesInput!
+    $condition: ModelAchievementCoursesConditionInput
+  ) {
+    createAchievementCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      achievementId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses {
+          nextToken
+        }
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAchievementCourses = /* GraphQL */ `
+  mutation UpdateAchievementCourses(
+    $input: UpdateAchievementCoursesInput!
+    $condition: ModelAchievementCoursesConditionInput
+  ) {
+    updateAchievementCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      achievementId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses {
+          nextToken
+        }
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAchievementCourses = /* GraphQL */ `
+  mutation DeleteAchievementCourses(
+    $input: DeleteAchievementCoursesInput!
+    $condition: ModelAchievementCoursesConditionInput
+  ) {
+    deleteAchievementCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      achievementId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses {
+          nextToken
+        }
+        coursesRequired
+        users {
           nextToken
         }
         createdAt

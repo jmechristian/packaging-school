@@ -59,12 +59,12 @@ export default function HeaderNew() {
       { name: 'Learning Paths', href: '/paths' },
       { name: 'Lessons', href: '/lessons' },
       { name: 'About', href: '/about' },
-      // { name: 'Campus Store', href: '#' },
+      { name: 'Campus Store', href: '#' },
     ],
   };
 
   return (
-    <div className='bg-white'>
+    <div className='bg-white relative'>
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -251,7 +251,7 @@ export default function HeaderNew() {
 
                   <div className='flex flex-1 items-center justify-end'>
                     <div className='flex items-center lg:ml-8'>
-                      <div className='flex space-x-5'>
+                      <div className='flex space-x-2.5'>
                         <div className='hidden lg:flex'>
                           <input
                             type='text'
@@ -262,7 +262,7 @@ export default function HeaderNew() {
                           />
                         </div>
 
-                        <div className='flex items-center gap-1'>
+                        <div className='flex items-center gap-0'>
                           {isUser ? (
                             <Popover className='relative'>
                               <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>

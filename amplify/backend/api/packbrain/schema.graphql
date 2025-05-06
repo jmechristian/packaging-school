@@ -103,6 +103,8 @@ type CertificateObject @model @auth(rules: [{ allow: public }]) {
   howText: String
   deadline: String
   sessions: [CMPMSession] @hasMany
+  status: String @default(value: "DRAFT")
+  displayOrder: Int
 }
 
 type Course @model @auth(rules: [{ allow: public }]) {
@@ -327,6 +329,7 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   company: APSCompany @belongsTo
   jobTitle: String
   attendeeType: String
+  tableNumber: Int
   termsAccepted: Boolean
   interests: [String]
   otherInterest: String
@@ -373,7 +376,7 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
 }
 
 type APSCode2025 @model @auth(rules: [{ allow: public }]) {
-  code: String!
+  code: String! @index(name: "apsCode2025ByCode")
   limit: Int!
   used: Int!
   discount: Int!
@@ -777,6 +780,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   subscriptionPrice: String
   stripeLink: String
   callout: String
+  achievements: [Achievement] @manyToMany(relationName: "AchievementCourses")
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -1278,7 +1282,7 @@ type Achievement @model @auth(rules: [{ allow: public }]) {
   title: String
   description: String
   image: String
-  courses: [String]
+  courses: [LMSCourse] @manyToMany(relationName: "AchievementCourses")
   coursesRequired: Int
   users: [User] @manyToMany(relationName: "AchievementUsers")
 }

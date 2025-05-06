@@ -377,6 +377,8 @@ export const getCertificateObject = /* GraphQL */ `
         }
         nextToken
       }
+      status
+      displayOrder
       createdAt
       updatedAt
     }
@@ -419,6 +421,8 @@ export const listCertificateObjects = /* GraphQL */ `
         sessions {
           nextToken
         }
+        status
+        displayOrder
         createdAt
         updatedAt
       }
@@ -1471,6 +1475,7 @@ export const getAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1530,6 +1535,7 @@ export const getAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1793,6 +1799,7 @@ export const getAPSRegistrant2025 = /* GraphQL */ `
       }
       jobTitle
       attendeeType
+      tableNumber
       termsAccepted
       interests
       otherInterest
@@ -1879,6 +1886,7 @@ export const listAPSRegistrant2025s = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -1964,6 +1972,7 @@ export const aPSRegistrant2025sByEmail = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -2039,6 +2048,35 @@ export const listAPSCode2025s = /* GraphQL */ `
     $nextToken: String
   ) {
     listAPSCode2025s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        code
+        limit
+        used
+        discount
+        type
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const aPSCode2025sByCode = /* GraphQL */ `
+  query APSCode2025sByCode(
+    $code: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAPSCode2025FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    aPSCode2025sByCode(
+      code: $code
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         code
         limit
@@ -4034,6 +4072,9 @@ export const getLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5190,6 +5231,16 @@ export const getLMSCourse = /* GraphQL */ `
       subscriptionPrice
       stripeLink
       callout
+      achievements {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -5245,6 +5296,9 @@ export const listLMSCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5310,6 +5364,9 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5375,6 +5432,9 @@ export const lMSCoursesBySlug = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8410,7 +8470,16 @@ export const getAchievement = /* GraphQL */ `
       title
       description
       image
-      courses
+      courses {
+        items {
+          id
+          lMSCourseId
+          achievementId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       coursesRequired
       users {
         items {
@@ -8439,7 +8508,9 @@ export const listAchievements = /* GraphQL */ `
         title
         description
         image
-        courses
+        courses {
+          nextToken
+        }
         coursesRequired
         users {
           nextToken
@@ -8744,6 +8815,8 @@ export const getCertificateByCategory = /* GraphQL */ `
         sessions {
           nextToken
         }
+        status
+        displayOrder
         createdAt
         updatedAt
       }
@@ -8794,6 +8867,8 @@ export const listCertificateByCategories = /* GraphQL */ `
           whatText
           howText
           deadline
+          status
+          displayOrder
           createdAt
           updatedAt
         }
@@ -8850,6 +8925,8 @@ export const certificateByCategoriesByCategoryId = /* GraphQL */ `
           whatText
           howText
           deadline
+          status
+          displayOrder
           createdAt
           updatedAt
         }
@@ -8906,6 +8983,8 @@ export const certificateByCategoriesByCertificateObjectId = /* GraphQL */ `
           whatText
           howText
           deadline
+          status
+          displayOrder
           createdAt
           updatedAt
         }
@@ -10592,6 +10671,7 @@ export const getApsRegistrantAddOns25 = /* GraphQL */ `
         }
         jobTitle
         attendeeType
+        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -10685,6 +10765,7 @@ export const listApsRegistrantAddOns25s = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -10781,6 +10862,7 @@ export const apsRegistrantAddOns25sByAPSAddOn2025Id = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -10877,6 +10959,7 @@ export const apsRegistrantAddOns25sByAPSRegistrant2025Id = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
+          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -11073,7 +11156,9 @@ export const getAchievementUsers = /* GraphQL */ `
         title
         description
         image
-        courses
+        courses {
+          nextToken
+        }
         coursesRequired
         users {
           nextToken
@@ -11144,7 +11229,6 @@ export const listAchievementUsers = /* GraphQL */ `
           title
           description
           image
-          courses
           coursesRequired
           createdAt
           updatedAt
@@ -11218,7 +11302,6 @@ export const achievementUsersByUserId = /* GraphQL */ `
           title
           description
           image
-          courses
           coursesRequired
           createdAt
           updatedAt
@@ -11292,7 +11375,6 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           title
           description
           image
-          courses
           coursesRequired
           createdAt
           updatedAt
@@ -12142,6 +12224,9 @@ export const getCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -12402,6 +12487,9 @@ export const getCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -12685,6 +12773,9 @@ export const getCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        achievements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -12913,6 +13004,284 @@ export const courseInstructorsByInstructorId = /* GraphQL */ `
           linkedIn
           company
           title
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAchievementCourses = /* GraphQL */ `
+  query GetAchievementCourses($id: ID!) {
+    getAchievementCourses(id: $id) {
+      id
+      lMSCourseId
+      achievementId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      achievement {
+        id
+        title
+        description
+        image
+        courses {
+          nextToken
+        }
+        coursesRequired
+        users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAchievementCourses = /* GraphQL */ `
+  query ListAchievementCourses(
+    $filter: ModelAchievementCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAchievementCourses(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        achievementId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        achievement {
+          id
+          title
+          description
+          image
+          coursesRequired
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const achievementCoursesByLMSCourseId = /* GraphQL */ `
+  query AchievementCoursesByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAchievementCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    achievementCoursesByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        achievementId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        achievement {
+          id
+          title
+          description
+          image
+          coursesRequired
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const achievementCoursesByAchievementId = /* GraphQL */ `
+  query AchievementCoursesByAchievementId(
+    $achievementId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAchievementCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    achievementCoursesByAchievementId(
+      achievementId: $achievementId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        achievementId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        achievement {
+          id
+          title
+          description
+          image
+          coursesRequired
           createdAt
           updatedAt
         }
