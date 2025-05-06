@@ -41,12 +41,6 @@ const timeline = [
     date: '2017',
   },
   {
-    name: 'Beverage Academy',
-    description:
-      'Partnered with Beverage Institute by ISBT® to help them adapt to the educational needs of modern professionals—to take beverage training online.',
-    date: '2017',
-  },
-  {
     name: 'Automotive Packaging Summit',
     link: '/events/aps-2024',
     description:
@@ -170,6 +164,40 @@ const timeline = [
     description:
       'Packaging School Library debut with PDA, Packaging Distributors of America.',
     date: '2024',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for Unilever.',
+    date: '2025',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for Hood Container.',
+    date: '2025',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for International Corrugated Packaging Foundation (ICPF).',
+    date: '2025',
+  },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with Hood Container.',
+    date: '2025',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Expanded published course offerings as an education partner for Beverage Institute by ISBT®.',
+    date: '2025',
+  },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with Cummins Inc.',
+    date: '2025',
   },
 ];
 
