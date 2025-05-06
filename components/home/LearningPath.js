@@ -120,7 +120,7 @@ const LearningPath = () => {
               </div>
               <div
                 className='text-white underline font-semibold cursor-pointer hover:text-white/80 transition-all duration-300'
-                onClick={() => router.push('/paths')}
+                onClick={() => router.push('/pxp')}
               >
                 View Your Pack HQ &rarr;
               </div>
