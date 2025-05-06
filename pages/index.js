@@ -156,12 +156,12 @@ const App = () => {
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
                 makeDefault
-                position={[-0.5, -2, 1.5]}
-                rotation={[0.25, 0, 0]}
-                fov={45}
+                position={[-0.5, 2.5, 1.5]}
+                rotation={[0, 0, 0]}
+                fov={35}
               />
               <color attach='background' args={['black']} />
-              <ambientLight intensity={0.1} color='#1f97bf' />
+              <ambientLight intensity={0.05} color='#1f97bf' />
               <spotLight
                 decay={0}
                 position={[-1, 0, 1]}
@@ -173,12 +173,12 @@ const App = () => {
                 distance={-15}
                 shadow-mapSize={1024}
               />
-              <pointLight
+              {/* <pointLight
                 distance={10}
-                intensity={4}
+                intensity={0}
                 position={[2, 1, 0]}
                 color='white'
-              />
+              /> */}
               <OrbitControls
                 maxPolarAngle={Math.PI / 2}
                 minPolarAngle={Math.PI / 2}
