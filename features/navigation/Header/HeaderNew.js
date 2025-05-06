@@ -360,7 +360,7 @@ export default function HeaderNew() {
           </div>
           {/* Top navigation */}
           <Suspense>
-            <SalesBar />
+            <SalesBar user={user} />
           </Suspense>
         </nav>
       </header>

@@ -72,7 +72,7 @@ const LearningPath = () => {
               className='text-clemson underline font-semibold cursor-pointer hover:text-clemson/80 transition-all duration-300'
               onClick={() => router.push('/paths')}
             >
-              Login to Earn PXP &rarr;
+              Learn More About PXP &rarr;
             </div>
           </div>
         </div>
