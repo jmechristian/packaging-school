@@ -190,7 +190,106 @@ export const LEVELS_CONFIG = [
     xpNeeded: 55381,
     totalXPRequired: 354697,
   },
-  // ... add more levels as needed
+  {
+    level: 31,
+    xpNeeded: 66457,
+    totalXPRequired: 421154,
+  },
+  {
+    level: 32,
+    xpNeeded: 79748,
+    totalXPRequired: 500902,
+  },
+  {
+    level: 33,
+    xpNeeded: 95698,
+    totalXPRequired: 596600,
+  },
+  {
+    level: 34,
+    xpNeeded: 114838,
+    totalXPRequired: 711438,
+  },
+  {
+    level: 35,
+    xpNeeded: 137806,
+    totalXPRequired: 849244,
+  },
+  {
+    level: 36,
+    xpNeeded: 165367,
+    totalXPRequired: 1014611,
+  },
+  {
+    level: 37,
+    xpNeeded: 198440,
+    totalXPRequired: 1213051,
+  },
+  {
+    level: 38,
+    xpNeeded: 238128,
+    totalXPRequired: 1451179,
+  },
+  {
+    level: 39,
+    xpNeeded: 285754,
+    totalXPRequired: 1736933,
+  },
+  {
+    level: 40,
+    xpNeeded: 342905,
+    totalXPRequired: 2079838,
+  },
+  {
+    level: 41,
+    xpNeeded: 411486,
+    totalXPRequired: 2491324,
+  },
+  {
+    level: 42,
+    xpNeeded: 493783,
+    totalXPRequired: 2985107,
+  },
+  {
+    level: 43,
+    xpNeeded: 592540,
+    totalXPRequired: 3577647,
+  },
+  {
+    level: 44,
+    xpNeeded: 711048,
+    totalXPRequired: 4288695,
+  },
+  {
+    level: 45,
+    xpNeeded: 853258,
+    totalXPRequired: 5141953,
+  },
+  {
+    level: 46,
+    xpNeeded: 1023910,
+    totalXPRequired: 6165863,
+  },
+  {
+    level: 47,
+    xpNeeded: 1228692,
+    totalXPRequired: 7394555,
+  },
+  {
+    level: 48,
+    xpNeeded: 1474430,
+    totalXPRequired: 8868985,
+  },
+  {
+    level: 49,
+    xpNeeded: 1769316,
+    totalXPRequired: 10638301,
+  },
+  {
+    level: 50,
+    xpNeeded: 2123179,
+    totalXPRequired: 12761480,
+  },
 ];
 
 export const calculateLevelProgress = (xp) => {
