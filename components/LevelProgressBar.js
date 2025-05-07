@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LEVELS_CONFIG } from '../helpers/api';
+import {
+  Gi3DGlasses,
+  GiDiploma,
+  GiSecretBook,
+  GiMailShirt,
+  GiCutDiamond,
+  GiLaurelsTrophy,
+  GiMightyForce,
+} from 'react-icons/gi';
 
 const LevelProgressBar = ({ userXp }) => {
-  const [hoveredLevel, setHoveredLevel] = useState(null);
-
   // Default values if userXp is not provided
   const defaultUserXp = {
     level: 0,
@@ -14,101 +21,124 @@ const LevelProgressBar = ({ userXp }) => {
   // Use provided userXp or default values
   const currentUserXp = userXp || defaultUserXp;
 
-  // Calculate total XP needed for level 40
-  const maxXp = LEVELS_CONFIG[39].totalXPRequired;
+  // Calculate total XP needed for level 30
+  const maxXp = LEVELS_CONFIG[29].totalXPRequired;
 
   // Calculate current progress percentage based on level
-  const progressPercentage = (currentUserXp.level / 39) * 100;
+  const progressPercentage = (currentUserXp.level / 29) * 100;
 
-  // Get milestone levels (every 5 levels, excluding level 0, up to level 40)
+  // Get milestone levels (every 5 levels, excluding level 0, up to level 30)
   const milestoneLevels = LEVELS_CONFIG.filter(
-    (level) => level.level > 0 && level.level <= 40 && level.level % 5 === 0
+    (level) => level.level > 0 && level.level <= 30 && level.level % 5 === 0
   );
 
-  // Milestone rewards (you can customize these)
+  // Milestone rewards
   const milestoneRewards = {
-    5: 'Unlock Basic Badges',
-    10: 'Access to Premium Content',
-    15: 'Exclusive Community Access',
+    5: 'Certification App Waived',
+    10: '15% off course purchase',
+    15: '20% off campus swag',
     20: 'Advanced Learning Paths',
-    25: 'Mentorship Program Access',
-    30: 'Industry Expert Status',
-    35: 'Master Class Access',
-    40: 'Elite Member Status',
+    25: 'Exclusive campus swag',
+    30: '20% off certification purchase',
   };
 
+  const levelIcons = {
+    5: <GiDiploma size={40} className='text-white' />,
+    10: <GiSecretBook size={40} className='text-white' />,
+    15: <GiMailShirt size={40} className='text-white' />,
+    20: <GiMightyForce size={40} className='text-white' />,
+    25: <GiCutDiamond size={40} className='text-white' />,
+    30: <GiLaurelsTrophy size={40} className='text-white' />,
+  };
   return (
     <div className='w-full max-w-7xl mx-auto p-4'>
       <div className='relative'>
-        {/* Tooltips row */}
-        <div className='flex justify-between mb-4'>
-          {milestoneLevels.map((level) => (
-            <div key={level.level} className='text-center'>
-              <div className='bg-white px-4 py-3 rounded-lg shadow-xl border border-gray-100 w-32 h-32 flex flex-col items-center'>
-                <div className='text-sm font-bold text-gray-800 text-center'>
-                  Level {level.level}
-                </div>
-                <div className='text-sm text-gray-600 text-center'>
-                  {milestoneRewards[level.level]}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Progress bar container */}
-        <div className='relative h-8 bg-gray-200'>
-          {/* Main progress bar */}
-          <div
-            className='absolute h-full bg-blue-500 transition-all duration-500'
-            style={{ width: `${progressPercentage}%` }}
-          />
-
-          {/* Milestone Level markers (every 5 levels) */}
+        {/* Top row - Milestone icons */}
+        <div className='relative mb-4 h-16'>
           {milestoneLevels.map((level) => {
-            // Calculate position based on level number (0-39)
-            // For level 40, position it at 99.5% to keep it within bounds but closer to the edge
             const position =
-              level.level === 40 ? 99.5 : (level.level / 39) * 100;
-
+              level.level === 30 ? 99.5 : (level.level / 29) * 100;
+            const isCompleted = currentUserXp.level >= level.level;
             return (
               <div
                 key={level.level}
-                className='absolute top-0 w-2 h-full cursor-pointer transition-all duration-200 bg-yellow-400'
+                className='absolute transform -translate-x-1/2'
                 style={{ left: `${position}%` }}
-                onMouseEnter={() => setHoveredLevel(level.level)}
-                onMouseLeave={() => setHoveredLevel(null)}
+              >
+                <div
+                  className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-colors duration-300 ${
+                    isCompleted ? 'bg-brand-green' : 'bg-clemson'
+                  }`}
+                >
+                  {levelIcons[level.level]}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Middle row - Progress bar */}
+        <div className='relative h-8 bg-gray-200'>
+          {/* Main progress bar */}
+          <div
+            className='absolute h-full bg-base-brand transition-all duration-500'
+            style={{ width: `${progressPercentage}%` }}
+          />
+
+          {/* Milestone Level markers */}
+          {milestoneLevels.map((level) => {
+            const position =
+              level.level === 30 ? 99.5 : (level.level / 29) * 100;
+            const isCompleted = currentUserXp.level >= level.level;
+            return (
+              <div
+                key={level.level}
+                className={`absolute top-0 w-2 h-full cursor-pointer transition-all duration-200 ${
+                  isCompleted ? 'bg-green-500' : 'bg-gray-300'
+                }`}
+                style={{ left: `${position}%` }}
               />
             );
           })}
 
-          {/* Current level indicator - only show tooltip if level > 0 */}
+          {/* Current level indicator */}
           <div
-            className='absolute top-0 w-2 h-8 bg-red-500 rounded-full transform -translate-x-1/2'
+            className='absolute top-0 w-2 h-8 bg-brand-green transform -translate-x-1/2'
             style={{ left: `${progressPercentage}%` }}
-          >
-            {currentUserXp.level > 0 && (
-              <div className='absolute -top-24 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-white px-4 py-3 rounded-lg shadow-xl z-20 border border-gray-100'>
-                <div className='text-sm font-bold text-gray-800'>
-                  Level {currentUserXp.level}
-                </div>
-                <div className='text-sm text-gray-600'>
-                  {currentUserXp.totalXp.toLocaleString()} /{' '}
-                  {maxXp.toLocaleString()} XP
-                </div>
-                <div className='text-xs text-gray-500 mt-1'>
-                  {currentUserXp.xpToNextLevel.toLocaleString()} XP to next
-                  level
-                </div>
-              </div>
-            )}
-          </div>
+          />
         </div>
 
-        {/* Level range labels */}
-        <div className='flex justify-between mt-2 text-xs text-gray-600'>
-          <span>Level 0</span>
-          <span>Level 40</span>
+        {/* Bottom row - Level labels and rewards */}
+        <div className='relative mt-4 h-16'>
+          {milestoneLevels.map((level) => {
+            const position =
+              level.level === 30 ? 99.5 : (level.level / 29) * 100;
+            const isCompleted = currentUserXp.level >= level.level;
+            return (
+              <div
+                key={level.level}
+                className='absolute transform -translate-x-1/2'
+                style={{ left: `${position}%` }}
+              >
+                <div className='text-center'>
+                  <div
+                    className={`text-sm font-bold ${
+                      isCompleted ? 'text-green-600' : 'text-gray-800'
+                    }`}
+                  >
+                    Level {level.level}
+                  </div>
+                  <div
+                    className={`text-xs max-w-[100px] ${
+                      isCompleted ? 'text-green-600' : 'text-gray-600'
+                    } mt-1`}
+                  >
+                    {milestoneRewards[level.level]}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

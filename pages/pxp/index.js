@@ -59,7 +59,7 @@ const faqs = [
     id: 3,
     question: 'How do I level up and what do I earn?',
     answer:
-      'You level up by earning PXP through various activities. Every time you earn enough points to reach a new level, you’ll progress from Level 1 up to Level 40. With each new level, you’ll unlock exciting rewards like exclusive swag, course discounts, and waived application fees!',
+      'You level up by earning PXP through various activities. Every time you earn enough points to reach a new level, you’ll progress from Level 1 up to Level 30. With each new level, you’ll unlock exciting rewards like exclusive swag, course discounts, and waived application fees!',
   },
   {
     id: 4,
@@ -86,10 +86,10 @@ const Page = () => {
   return (
     <div className='w-full h-full flex flex-col gap-16 lg:gap-20 py-20'>
       <div className='w-full grid lg:grid-cols-12 max-w-7xl mx-auto gap-16'>
-        <div className='w-full lg:col-span-6'>
+        <div className='w-full lg:col-span-8'>
           <div className='w-full flex flex-col gap-5'>
             <div className='h1-base'>Welcome to the Pack XP Experience!</div>
-            <div className='w-full text-xl max-w-2xl leading-relaxed'>
+            <div className='w-full text-xl max-w-4xl leading-relaxed'>
               We&apos;re excited to introduce an optional new way to enhance
               your learning experience! With our gamified system, you can earn
               Pack Experience Points (PXP) by completing courses, lessons, and
@@ -99,8 +99,14 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className='w-full lg:col-span-6'>
-          <div className='w-full h-full bg-slate-300 rounded-lg'></div>
+        <div className='w-full lg:col-span-4'>
+          <div
+            className='w-full h-full bg-center bg-contain bg-no-repeat'
+            style={{
+              backgroundImage:
+                "url('https://packschool.s3.us-east-1.amazonaws.com/xp-hero.png')",
+            }}
+          ></div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto bg-slate-800 rounded-lg px-10 pt-12 pb-16'>
