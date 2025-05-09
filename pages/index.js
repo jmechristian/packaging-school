@@ -204,7 +204,7 @@ const App = () => {
                 the same in-depth content, available anytime.
               </div>
               <div className='flex flex-col items-start gap-10 mt-7'>
-                <p className='text-2xl font-light text-slate-400 font-oswald uppercase'>
+                <p className='text-2xl text-slate-400 font-oswald uppercase tracking-wide'>
                   Advance your career. Boost your resume. Keep learning.
                 </p>
                 {/* <div className='flex gap-3'>
