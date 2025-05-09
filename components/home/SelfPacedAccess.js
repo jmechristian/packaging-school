@@ -104,7 +104,7 @@ const SelfPacedAccess = () => {
           Choose Your Path To Full Catalog Access
         </div> */}
         <div
-          className='grid lg:grid-cols-2 gap-5 w-full items-center max-w-5xl mx-auto'
+          className='grid lg:grid-cols-2 gap-5 w-full items-center max-w-5xl mx-auto scroll-mt-20'
           id='full-catalog-access'
         >
           {/* COHORT */}
