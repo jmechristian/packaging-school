@@ -17,6 +17,7 @@ import CardFilter from '../components/home/CardFilter';
 import WhyPschool from '../components/shared/WhyPschool';
 import NewHomeTestimonials from '../components/home/NewHomeTestimonials';
 import HomeCorporate from '../components/home/HomeCorporate';
+import SelfPacedAccess from '../components/home/SelfPacedAccess';
 const App = () => {
   const [courses, setCourses] = useState([]);
   const router = useRouter();
@@ -150,10 +151,10 @@ const App = () => {
         }
         image={'https://packschool.s3.amazonaws.com/firework-box-3.webp'}
       />
-      <div className='w-full flex flex-col gap-16 lg:gap-24 relative pb-16'>
+      <div className='w-full flex flex-col gap-16 lg:gap-20 relative pb-16'>
         {/* INTRO */}
         <div className='w-full bg-slate-800 flex items-center justify-center relative'>
-          <div className='w-full h-[700px]'>
+          <div className='w-full h-[660px]'>
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
                 makeDefault
@@ -259,7 +260,8 @@ const App = () => {
           </div>
         </div>
         {/* HOW IT WORKS */}
-        <SubscriptionWhat />
+        {/* <SubscriptionWhat /> */}
+        <SelfPacedAccess />
         {/* COURSES */}
         <CardFilter />
         <WhyPschool />
