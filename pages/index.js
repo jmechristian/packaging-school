@@ -184,7 +184,7 @@ const App = () => {
                   luminanceThreshold={0.0}
                   mipmapBlur
                   luminanceSmoothing={0.0}
-                  intensity={1}
+                  intensity={10}
                 />
               </EffectComposer>
               <Scene />
