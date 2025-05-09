@@ -242,14 +242,17 @@ const App = () => {
                   <button className='w-full p-3 bg-base-brand text-white rounded flex items-center gap-2 hover:bg-base-brand/90 transition-colors justify-center font-bold text-lg'>
                     <div
                       className='flex items-center gap-2.5'
-                      onClick={() => router.push('/cohort')}
+                      onClick={() => router.push('#full-catalog-access')}
                     >
                       <GiThreeFriends size={32} />
                       <div>Professor-Led Cohort</div>
                     </div>
                   </button>
                   <button className='w-full p-3 bg-clemson text-white rounded flex items-center gap-2 hover:opacity-90 transition-colors justify-center font-bold text-lg'>
-                    <div className='flex items-center gap-2.5'>
+                    <div
+                      className='flex items-center gap-2.5'
+                      onClick={() => router.push('#full-catalog-access')}
+                    >
                       <GiJourney size={32} />
                       <div>Self-Paced Access</div>
                     </div>

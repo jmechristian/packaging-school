@@ -89,9 +89,9 @@ const SelfPacedAccess = () => {
           )}
         />
       )}
-      <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-5xl border-b border-gray-300 pb-5'>
+      <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-5xl'>
         <div className='h2-base text-center max-w-3xl mx-auto'>
-          Stop Scrolling, Start Learning— Unlock Full Access Today.
+          Stop Scrolling, Start Learning—Choose Your Path To Full Access Now.
         </div>
         <p className='text-xl max-w-4xl mx-auto text-center text-slate-600'>
           With hundreds of lessons and courses, choosing can feel overwhelming.
@@ -100,10 +100,13 @@ const SelfPacedAccess = () => {
         </p>
       </div>
       <div className='w-full flex flex-col gap-10'>
-        <div className='w-full text-center text-2xl uppercase font-oswald text-slate-900 tracking-wide'>
+        {/* <div className='w-full text-center text-2xl uppercase font-oswald text-slate-900 tracking-wide'>
           Choose Your Path To Full Catalog Access
-        </div>
-        <div className='grid lg:grid-cols-2 gap-5 w-full items-center max-w-5xl mx-auto'>
+        </div> */}
+        <div
+          className='grid lg:grid-cols-2 gap-5 w-full items-center max-w-5xl mx-auto'
+          id='full-catalog-access'
+        >
           {/* COHORT */}
           <div className='w-full h-full flex flex-col gap-3 px-5 py-5 border rounded-lg shadow-lg hover:ring-4 hover:ring-base-brand hover:shadow-xl transition-shadow duration-300'>
             <div className='w-full flex items-center gap-2 font-bold text-lg'>
