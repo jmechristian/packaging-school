@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import {
@@ -7,7 +8,7 @@ import {
   RoundedBox,
 } from '@react-three/drei';
 import { TextureLoader } from 'three';
-
+import { GiJourney, GiThreeFriends } from 'react-icons/gi';
 import Meta from '../components/shared/Meta';
 import { getCPSCourses } from '../helpers/api';
 import SubscriptionWhat from '../components/home/SubscriptionWhat';
@@ -18,7 +19,7 @@ import NewHomeTestimonials from '../components/home/NewHomeTestimonials';
 import HomeCorporate from '../components/home/HomeCorporate';
 const App = () => {
   const [courses, setCourses] = useState([]);
-
+  const router = useRouter();
   const Scene = () => {
     const cardsGroup = useRef();
     const cardsRefs = useRef([]);
@@ -129,11 +130,11 @@ const App = () => {
         </mesh>
         {/* Dramatic Lighting */}
         <spotLight
-          position={[-5, 2.5, 5]}
+          position={[-5, 3.5, 5]}
           rotation={[-Math.PI / 2, 0, 0]}
-          angle={0.3}
+          angle={0.6}
           penumbra={1}
-          intensity={10}
+          intensity={7}
           castShadow
         />
       </>
@@ -151,7 +152,7 @@ const App = () => {
       />
       <div className='w-full flex flex-col gap-16 lg:gap-24 relative pb-16'>
         {/* INTRO */}
-        <div className='w-full bg-gray-900 flex items-center justify-center relative'>
+        <div className='w-full bg-slate-800 flex items-center justify-center relative'>
           <div className='w-full h-[700px]'>
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
@@ -162,23 +163,16 @@ const App = () => {
               />
               <color attach='background' args={['black']} />
               <ambientLight intensity={0.05} color='#1f97bf' />
-              <spotLight
+              {/* <spotLight
                 decay={0}
-                position={[-1, 0, 1]}
+                position={[-2, 0, 1]}
                 rotation={[0, 0, 0]}
                 angle={0.5}
                 penumbra={0.5}
-                intensity={1.2}
+                intensity={0.2}
                 castShadow
                 distance={-15}
                 shadow-mapSize={1024}
-              />
-
-              {/* <pointLight
-                distance={10}
-                intensity={0}
-                position={[2, 1, 0]}
-                color='white'
               /> */}
               <OrbitControls
                 maxPolarAngle={Math.PI / 2}
@@ -196,23 +190,24 @@ const App = () => {
               <Scene />
             </Canvas>
           </div>
-          <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-center gap-10 mx-auto max-w-7xl items-start px-5'>
-            <div className='w-full flex flex-col gap-4 max-w-2xl items-start'>
-              <div className='w-full h-full text-white h1-base'>
-                One subscription,{' '}
-                <span className='text-clemson'>unlimited learning.</span>
+          <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-center gap-10 mx-auto max-w-7xl items-center px-5'>
+            <div className='w-full flex flex-col gap-8 max-w-5xl items-center text-center'>
+              <div className='w-full h-full text-white h1-base '>
+                One Powerful Catalog.{' '}
+                <span className='text-clemson block'>Two Flexible Paths.</span>
               </div>
-              <div className='w-full h-full text-white  lg:leading-normal text-xl lg:text-2xl'>
-                Discover 3 paths to complete access to Packaging School&apos;s
-                expert-led courses and a dynamic lesson library, with monthly
-                updates keeping you ahead of the curve.
+              <div className='w-full h-full text-white text-2xl max-w-5xl mx-auto'>
+                Get full access to Packaging School’s expert-led course
+                library—whichever path you choose. Learn with a group, guided by
+                experts, while completing a project tailored to your current
+                role or a position you’re targeting or go at your own pace with
+                the same in-depth content, available anytime.
               </div>
-              <div className='flex flex-col items-start gap-4 mt-7'>
-                <p className='text-white text-2xl font-semibold'>
-                  <span className='text-clemson'>Join for free&mdash;</span> get
-                  started today.
+              <div className='flex flex-col items-start gap-10 mt-7'>
+                <p className='text-2xl font-light text-slate-400 font-oswald uppercase'>
+                  Advance your career. Boost your resume. Keep learning.
                 </p>
-                <div className='flex gap-3'>
+                {/* <div className='flex gap-3'>
                   <button className='px-4 py-2 bg-white text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors'>
                     <img
                       src='/logos/google.svg'
@@ -241,13 +236,28 @@ const App = () => {
                       className='w-6 h-6'
                     />
                   </button>
+                </div> */}
+                <div className='grid lg:grid-cols-2 gap-4 w-full max-w-2xl mx-auto pb-5'>
+                  <button className='w-full p-3 bg-base-brand text-white rounded flex items-center gap-2 hover:bg-base-brand/90 transition-colors justify-center font-bold text-lg'>
+                    <div
+                      className='flex items-center gap-2.5'
+                      onClick={() => router.push('/cohort')}
+                    >
+                      <GiThreeFriends size={32} />
+                      <div>Professor-Led Cohort</div>
+                    </div>
+                  </button>
+                  <button className='w-full p-3 bg-clemson text-white rounded flex items-center gap-2 hover:opacity-90 transition-colors justify-center font-bold text-lg'>
+                    <div className='flex items-center gap-2.5'>
+                      <GiJourney size={32} />
+                      <div>Self-Paced Access</div>
+                    </div>
+                  </button>
                 </div>
               </div>
-              <div></div>
             </div>
           </div>
         </div>
-
         {/* HOW IT WORKS */}
         <SubscriptionWhat />
         {/* COURSES */}
