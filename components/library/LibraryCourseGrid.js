@@ -4,7 +4,7 @@ import { MdArrowOutward, MdSearch } from 'react-icons/md';
 import Pagination from '../shared/Pagination';
 import LMSCourseCard from '../shared/LMSCourseCard';
 
-const LibraryCourseGrid = ({ courses, coupon, discount }) => {
+const LibraryCourseGrid = ({ courses, coupon, discount, isPDA }) => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const { allCourses } = useSelector((state) => state.course_filter);
 
@@ -57,11 +57,25 @@ const LibraryCourseGrid = ({ courses, coupon, discount }) => {
       </div>
       <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10'>
         {initCourses ? (
-          coursesToShow.map((cou) => (
-            <div key={cou.id}>
-              <LMSCourseCard id={cou.id} coupon={coupon} discount={discount} />
-            </div>
-          ))
+          coursesToShow
+            .sort((a, b) => a.courseId.localeCompare(b.courseId))
+            .map((cou) => (
+              <div key={cou.id}>
+                <LMSCourseCard
+                  id={cou.id}
+                  coupon={
+                    isPDA && cou.id === 'fef1f2a6-b9b9-4619-9900-c677f91681c7'
+                      ? 'coupon=bootcampda101'
+                      : coupon
+                  }
+                  discount={
+                    isPDA && cou.id === 'fef1f2a6-b9b9-4619-9900-c677f91681c7'
+                      ? 58.1
+                      : discount
+                  }
+                />
+              </div>
+            ))
         ) : (
           <></>
         )}

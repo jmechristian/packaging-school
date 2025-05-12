@@ -231,6 +231,7 @@ const Page = ({ customer }) => {
                 courses={customer && customer.courses.items}
                 coupon={'coupon=pscpspda2024'}
                 discount={81.2}
+                isPDA={true}
               />
             }
             highlight={'bg-clemson'}

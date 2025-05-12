@@ -291,7 +291,7 @@ h4 {
 /* TEXT EDITOR */
 
 .tiptap p {
-  @apply lg:text-lg dark:text-white mb-6 lg:leading-snug !important;
+  @apply lg:text-lg  mb-6 lg:leading-snug !important;
 }
 
 .tiptap h1 {
@@ -299,19 +299,15 @@ h4 {
 }
 
 .tiptap h2 {
-  @apply text-neutral-900 dark:text-white text-3xl font-semibold leading-tight tracking-tight mb-6 mt-12;
+  @apply text-neutral-900  text-3xl font-semibold leading-tight tracking-tight mb-6 mt-12;
 }
 
 .tiptap h3 {
-  @apply text-neutral-900 dark:text-white text-2xl font-semibold leading-tight tracking-tight mb-2;
+  @apply text-neutral-900  text-2xl font-semibold leading-tight tracking-tight mb-2;
 }
 
 .tiptap ul {
   @apply ml-12 list-disc mb-6;
-}
-
-.tiptap li {
-  @apply dark:text-white;
 }
 
 .tiptap ol {
@@ -323,7 +319,7 @@ h4 {
 }
 
 .tiptap blockquote p {
-  @apply dark:text-white text-2xl font-bold mx-6 mb-0 font-etna;
+  @apply text-2xl font-bold mx-6 mb-0 font-etna;
 }
 
 .tiptap img {

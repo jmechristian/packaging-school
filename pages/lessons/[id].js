@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Link from 'next/link';
 import React, { useMemo, useEffect, useState } from 'react';
 import {
   FacebookIcon,
@@ -332,6 +333,7 @@ const Page = ({ lesson }) => {
                               key={tag.tags.tag}
                               className='bg-gray-900 text-white px-1.5 py-0.5 rounded'
                             >
+                              {tag.tags.tag}
                               {tag.tags.tag}
                             </div>
                           ))}

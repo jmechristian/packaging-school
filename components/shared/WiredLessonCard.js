@@ -63,8 +63,10 @@ const WiredLessonCard = ({
               className='w-full aspect-[16/9] bg-cover bg-center'
               style={{ backgroundImage: `url(${isLesson.seoImage})` }}
             ></div>
-            <div className='font-bold mt-3 leading-snug '>{isLesson.title}</div>
-            <div className=' text-gray-600 text-xs leading-tight line-clamp-5 mt-1.5'>
+            <div className='font-semibold mt-3   text-gray-900 leading-tight'>
+              {isLesson.title}
+            </div>
+            <div className=' text-gray-500 text-sm leading-tight line-clamp-4 mt-1.5'>
               {isLesson.subhead}
             </div>
           </div>

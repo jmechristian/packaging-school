@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import {
   getCoursesByCategory,
   getCertificateByCategory,
-  registerCertificateClick,
   registgerCourseClick,
+  registerCertificateClick,
+  getDeviceType,
 } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import { H2, H4 } from '@jmechristian/ps-component-library';
@@ -20,7 +21,7 @@ const Page = () => {
   const router = useRouter();
   const { cat } = router.query;
   const { location } = useSelector((state) => state.auth);
-
+  const deviceType = getDeviceType();
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isCourses, setIsCourses] = useState([]);
   const [isSort, setIsSort] = useState({ value: 'title', direction: 'ASC' });

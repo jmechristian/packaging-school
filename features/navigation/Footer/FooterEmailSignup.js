@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
-
+import {
+  createNewEmailSubscription,
+  getDeviceType,
+} from '../../../helpers/api';
+import { useSelector } from 'react-redux';
 const FooterEmailSignup = ({ header, sm }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const { location } = useSelector((state) => state.auth);
 
   const subscribeFormHandler = async (e) => {
     e.preventDefault();
+
+    // Add email validation
+    if (!email || !email.trim() || !email.includes('@')) {
+      setEmail('Please enter a valid email');
+      return;
+    }
 
     const formData = new FormData(e.target);
 
@@ -24,21 +35,22 @@ const FooterEmailSignup = ({ header, sm }) => {
     setIsLoading(true);
 
     try {
-      const sendEmail = await fetch(
-        'https://packagingschool42200.activehosted.com/proc.php',
-        {
-          method: 'POST',
-          body: formData,
-          mode: 'no-cors',
-        }
+      await fetch('https://packagingschool42200.activehosted.com/proc.php', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors',
+      });
+      await createNewEmailSubscription(
+        email,
+        location,
+        getDeviceType(),
+        window.location.pathname
       );
-      console.log(sendEmail);
       setIsLoading(false);
       setEmail('You are subscribed!');
     } catch (err) {
       setIsLoading(false);
       setEmail('Request failed!');
-      console.log('Request failed', err);
     }
   };
 

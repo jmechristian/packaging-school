@@ -202,6 +202,7 @@ const Page = () => {
         (cour) =>
           cour.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           cour.subheadline.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+          cour.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           (cour.what_learned &&
             cour.what_learned
               .toLowerCase()
@@ -214,7 +215,8 @@ const Page = () => {
     return isCertificates.filter(
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-        cert.description.toLowerCase().includes(isSearchTerm.toLowerCase())
+        cert.description.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase())
     );
   }, [isCertificates, isSearchTerm]);
 
