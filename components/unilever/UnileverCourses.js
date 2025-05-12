@@ -112,7 +112,7 @@ const UnileverCourses = ({ featured, reference }) => {
           </div>
         </div>
       </div>
-    </div>)
+    </div>
   );
 };
 
