@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Link from 'next/link';
 import React, { useMemo, useEffect, useState } from 'react';
 import {
   FacebookIcon,
