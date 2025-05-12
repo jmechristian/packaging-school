@@ -59,8 +59,8 @@ const LearningPath = () => {
           }}
         >
           <div className='flex flex-col gap-2.5 px-7 pt-7'>
-            <div className='text-white text-lg tracking-wide font-oswald uppercase font-medium bg-clemson py-1 px-2 rounded w-fit'>
-              NEW!
+            <div className='text-white text-lg tracking-wide font-oswald uppercase font-medium bg-brand-yellow py-1 px-2 rounded w-fit'>
+              COMING SOON!
             </div>
             <div className='text-white h3-base'>Earn Experience Points</div>
             <div className='text-gray-300 text-lg leading-tight max-w-[270px]'>
