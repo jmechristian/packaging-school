@@ -3,12 +3,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import NoPassEnrollments from './NoPassEnrollments';
 import PassEnrollments from './PassEnrollments';
 import PackPassToggle from './PackPassToggle';
-import { useSelector } from 'react-redux';
-import { updateAWSUser } from '../../helpers/api';
+
 const ProfileEnrollments = ({ email, courses, refreshUser }) => {
-  const { awsUser } = useSelector((state) => state.auth);
-  const [packPass, setPackPass] = useState(awsUser.allAccess);
+  const [packPass, setPackPass] = useState(false);
   const [enrollments, setEnrollments] = useState([]);
+  const [filter, setFilter] = useState('active');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const enrollmentsPerPage = 6;
@@ -40,17 +39,17 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
   //   setEnrollments(data);
   // };
 
-  useEffect(() => {
-    setPackPass(awsUser.allAccess);
-  }, [awsUser]);
+  // useEffect(() => {
+  //   setPackPass(awsUser.allAccess);
+  // }, [awsUser]);
 
-  const updateAccessPass = async () => {
-    const res = await updateAWSUser({
-      id: awsUser.id,
-      allAccess: !packPass,
-    });
-    refreshUser();
-  };
+  // const updateAccessPass = async () => {
+  //   const res = await updateAWSUser({
+  //     id: awsUser.id,
+  //     allAccess: !packPass,
+  //   });
+  //   refreshUser();
+  // };
 
   const filteredEnrollments = useMemo(() => {
     if (!enrollments.items) return [];
@@ -81,6 +80,16 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
     setSearch(e.target.value);
   };
 
+  const enrollmentsToShow = useMemo(() => {
+    if (filter === 'active') {
+      return activeEnrollments;
+    } else if (filter === 'expired') {
+      return expiredEnrollments;
+    } else if (filter === 'completed') {
+      return completedEnrollments;
+    }
+  }, [filter, activeEnrollments, expiredEnrollments, completedEnrollments]);
+
   if (loading) {
     return (
       <div className='flex flex-col gap-4 bg-white rounded-lg p-6 w-full animate-pulse'>
@@ -99,14 +108,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
   }
 
   return (
-    <div className='flex flex-col gap-4  bg-white rounded-lg p-6 w-full'>
-      <div className='flex items-center justify-between w-full border-b border-gray-300 pb-6'>
-        <div className='h4-base text-gray-900'>Your Courses</div>
-        <PackPassToggle
-          enabled={packPass}
-          onChange={() => updateAccessPass(!packPass)}
-        />
-      </div>
+    <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='flex items-center gap-2'>
           <div className='relative'>
@@ -134,13 +136,28 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
         </div>
         <div className='flex items-center gap-2'>
           <div className='flex items-center gap-2 font-bold'>
-            <div className='text-xs text-gray-500'>
+            <div
+              className={`text-xs text-gray-500 cursor-pointer ${
+                filter === 'active' ? 'text-clemson underline' : ''
+              }`}
+              onClick={() => setFilter('active')}
+            >
               Active: {activeEnrollments.length}
             </div>
-            <div className='text-xs text-gray-500'>
+            <div
+              className={`text-xs text-gray-500 cursor-pointer ${
+                filter === 'expired' ? 'text-clemson underline' : ''
+              }`}
+              onClick={() => setFilter('expired')}
+            >
               Expired: {expiredEnrollments.length}
             </div>
-            <div className='text-xs text-gray-500'>
+            <div
+              className={`text-xs text-gray-500 cursor-pointer ${
+                filter === 'completed' ? 'text-clemson underline' : ''
+              }`}
+              onClick={() => setFilter('completed')}
+            >
               Completed: {completedEnrollments.length}
             </div>
           </div>
@@ -148,7 +165,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
       </div>
       {packPass ? (
         <PassEnrollments
-          activeEnrollments={activeEnrollments}
+          activeEnrollments={enrollmentsToShow}
           expiredEnrollments={expiredEnrollments}
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
@@ -157,7 +174,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
         />
       ) : (
         <NoPassEnrollments
-          activeEnrollments={activeEnrollments}
+          activeEnrollments={enrollmentsToShow}
           expiredEnrollments={expiredEnrollments}
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}

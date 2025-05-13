@@ -2,8 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { getLessonById } from '../../helpers/api';
 import ProfileLessonItems from './ProfileLessonItems';
 
-const SavedLesson = ({ lessons }) => {
-  console.log(lessons);
+const CompletedLesson = ({ lessons }) => {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [completedLessons, setCompletedLessons] = useState([]);
@@ -11,12 +10,14 @@ const SavedLesson = ({ lessons }) => {
   useEffect(() => {
     const fetchLessons = async () => {
       setIsLoading(true);
-      const lessonDataPromises = lessons.map((lesson) => getLessonById(lesson));
+      const lessonDataPromises = lessons.map((lesson) =>
+        getLessonById(lesson.lessonId)
+      );
       const fetchedLessons = await Promise.all(lessonDataPromises);
       setCompletedLessons(fetchedLessons);
       setIsLoading(false);
     };
-    lessons && fetchLessons();
+    fetchLessons();
   }, [lessons]);
 
   const filteredLessons = useMemo(() => {
@@ -110,4 +111,4 @@ const SavedLesson = ({ lessons }) => {
   );
 };
 
-export default SavedLesson;
+export default CompletedLesson;

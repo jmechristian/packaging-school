@@ -53,7 +53,9 @@ const Page = ({ lesson }) => {
     ).toLocaleDateString('en-US');
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
+  const [isSaved, setIsSaved] = useState(
+    awsUser?.savedLessons?.includes(lesson.id)
+  );
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
 
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
@@ -258,34 +260,33 @@ const Page = ({ lesson }) => {
                 <div className='w-full border-b border-b-gray-400 py-2'></div>
                 <div className='flex flex-col gap-5 py-5 px-4'>
                   <div className='grid grid-cols-3 gap-2 w-fit'>
-                    {awsUser &&
-                    awsUser.savedLessons &&
-                    awsUser.savedLessons.length > 0 &&
-                    awsUser.savedLessons.includes(lesson.id) ? (
+                    {isSaved ? (
                       <div
                         className='flex gap-2 items-center cursor-pointer'
-                        onClick={() =>
+                        onClick={() => {
+                          setIsSaved(false);
                           handleBookmarkAdd(
                             awsUser.savedLessons.filter(
                               (id) => id !== lesson.id
                             ),
                             awsUser.id
-                          )
-                        }
+                          );
+                        }}
                       >
                         <MdBookmarkRemove size={32} color='gray' />
                       </div>
                     ) : (
                       <div
                         className='flex gap-2 items-center cursor-pointer'
-                        onClick={() =>
+                        onClick={() => {
+                          setIsSaved(true);
                           handleBookmarkAdd(
                             awsUser.savedLessons
                               ? [...awsUser.savedLessons, lesson.id]
                               : [lesson.id],
                             awsUser.id
-                          )
-                        }
+                          );
+                        }}
                       >
                         <MdBookmarkAdd size={32} color='green' />
                       </div>

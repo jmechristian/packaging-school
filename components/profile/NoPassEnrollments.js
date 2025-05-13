@@ -70,7 +70,7 @@ const NoPassEnrollments = ({
   return (
     <div className='flex flex-col gap-4'>
       {activeEnrollments.length > 0 ? (
-        <>
+        <div className='grid grid-cols-3 gap-4 overflow-hidden'>
           {paginatedActiveEnrollments.map((enrollment, index) => {
             const matchedCourse = courses?.find(
               (course) => course.id === enrollment.course_id.toString()
@@ -85,14 +85,16 @@ const NoPassEnrollments = ({
               />
             );
           })}
-          {totalActivePages > 1 && (
-            <PaginationControls
-              currentPage={currentActivePage}
-              totalPages={totalActivePages}
-              onPageChange={setCurrentActivePage}
-            />
-          )}
-        </>
+          <div className='col-span-3'>
+            {totalActivePages > 1 && (
+              <PaginationControls
+                currentPage={currentActivePage}
+                totalPages={totalActivePages}
+                onPageChange={setCurrentActivePage}
+              />
+            )}
+          </div>
+        </div>
       ) : (
         <div className='w-full flex flex-col gap-6 items-center justify-center min-h-[400px]'>
           <div className='text-gray-500 text-center max-w-xl'>
@@ -107,37 +109,6 @@ const NoPassEnrollments = ({
           >
             Browse Courses
           </div>
-        </div>
-      )}
-
-      {expiredEnrollments.length > 0 && (
-        <div className='flex flex-col gap-4 w-full mt-10'>
-          <div className='font-bold text-gray-700 w-full border-b border-gray-300 pb-2'>
-            Expired Enrollments
-          </div>
-          {paginatedExpiredEnrollments.map((enrollment, index) => {
-            const matchedCourse = courses?.find(
-              (course) => course.id === enrollment.course_id.toString()
-            );
-            return (
-              <div className='w-full opacity-75' key={enrollment.id}>
-                <CourseItem
-                  active={index === 0}
-                  key={enrollment.id}
-                  enrollment={enrollment}
-                  course={matchedCourse}
-                  refreshUser={refreshUser}
-                />
-              </div>
-            );
-          })}
-          {totalExpiredPages > 1 && (
-            <PaginationControls
-              currentPage={currentExpiredPage}
-              totalPages={totalExpiredPages}
-              onPageChange={setCurrentExpiredPage}
-            />
-          )}
         </div>
       )}
     </div>

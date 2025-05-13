@@ -17,7 +17,7 @@ const AuthorName = ({ id }) => {
     id && getName();
   }, [id]);
 
-  return <div className='text-sm'>{isName}</div>;
+  return <div className='text-xs  text-gray-500'>{isName}</div>;
 };
 
 export default AuthorName;

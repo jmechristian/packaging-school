@@ -1500,3 +1500,11 @@ export const createNewEmailSubscription = async (
   });
   return res.data.createEmailSubscription;
 };
+
+export const getLessonById = async (id) => {
+  const res = await API.graphql({
+    query: getLesson,
+    variables: { id: id },
+  });
+  return res.data.getLesson;
+};

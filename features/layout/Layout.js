@@ -56,12 +56,10 @@ const Layout = ({ children }) => {
 
         dispatch(setAWSUser(newUser));
         const level = getUserLevel(newUserXp.totalXp, newUser);
-        console.log('🔍 Level:', level);
         dispatch(setUserXp(newUserXp));
       } else {
         dispatch(setAWSUser(dbUser));
         const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
-        console.log('🔍 Level:', level);
         const updatedUserXp = await updateLastLogin(
           dbUser.userUserXpId,
           parseInt(level.level, 10),

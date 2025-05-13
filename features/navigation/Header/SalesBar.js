@@ -95,7 +95,7 @@ const SalesBar = ({ user }) => {
             )}
           </div>
         </div>
-        {user && userXp && (
+        {/* {user && userXp && (
           <div className='hidden lg:flex lg:justify-end lg:items-center'>
             <div className='flex items-center w-fit gap-1.5'>
               <div className='w-6 h-6 flex items-center justify-center bg-clemson rounded-full'>
@@ -114,7 +114,7 @@ const SalesBar = ({ user }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -12,251 +12,20 @@ import {
 import ProfileEnrollments from './ProfileEnrollments';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
 import { useDispatch, useSelector } from 'react-redux';
-
+import CompletedLesson from '../../components/profile/CompletedLesson';
 import { showToast } from '../../features/navigation/navigationSlice';
 import { useRouter } from 'next/router';
-
+import EditProfileForm from './EditProfileForm';
+import SavedLessons from './SavedLessons';
 const ProfileDashboard = ({ refreshUser, isLoading }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
   const router = useRouter();
-  const EditProfileForm = ({ onClose }) => {
-    const [formData, setFormData] = useState({
-      company: '',
-      title: '',
-      location: '',
-      bio: '',
-      interests: '',
-      goals: '',
-      linkedin: '',
-    });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    useEffect(() => {
-      if (awsUser) {
-        setFormData({
-          company: awsUser.company || '',
-          title: awsUser.title || '',
-          location: awsUser.location || '',
-          bio: awsUser.bio || '',
-          interests: awsUser.interests || '',
-          goals: awsUser.goals || '',
-          linkedin: awsUser.linkedin || '',
-        });
-      }
-    }, [awsUser]);
-
-    const handleEditSubmit = async (e) => {
-      e.preventDefault();
-      setIsSubmitting(true);
-      try {
-        const response = await updateAWSUser({
-          id: awsUser.id,
-          ...formData,
-        });
-
-        const thinkificResponse = await updateThinkificUser({
-          id: thinkificUser.id,
-          linkedin: `https://www.linkedin.com/in/${formData.linkedin}`,
-          company: formData.company,
-          title: formData.title,
-        });
-
-        if (!thinkificResponse.ok) {
-          throw new Error('Failed to update Thinkific profile');
-        }
-      } catch (error) {
-        console.error('Error updating profile:', error);
-      } finally {
-        refreshUser();
-        setIsSubmitting(false);
-        onClose();
-      }
-    };
-
-    return (
-      <div className='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center'>
-        <div className='bg-white dark:bg-dark-dark rounded-lg p-8 max-w-2xl w-full'>
-          <div className='flex justify-between items-center mb-6'>
-            <h2 className='text-2xl font-bold text-gray-900'>Edit Profile</h2>
-            <button
-              onClick={onClose}
-              className='text-gray-500 hover:text-gray-700'
-            >
-              <svg
-                className='w-6 h-6'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
-            </button>
-          </div>
-
-          <form onSubmit={handleEditSubmit} className='space-y-4'>
-            <div className='grid grid-cols-2 gap-4'>
-              <div>
-                <label className='block mb-2 text-sm font-medium text-slate-600'>
-                  Company
-                </label>
-                <input
-                  type='text'
-                  className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
-                  value={formData.company}
-                  onChange={(e) =>
-                    setFormData({ ...formData, company: e.target.value })
-                  }
-                  placeholder='Your company name'
-                />
-              </div>
-              <div>
-                <label className='block mb-2 text-sm font-medium text-slate-600'>
-                  Title
-                </label>
-                <input
-                  type='text'
-                  className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  placeholder='Your job title'
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className='block mb-2 text-sm font-medium text-slate-600'>
-                Location
-              </label>
-              <input
-                type='text'
-                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-                placeholder='City, State, Country'
-              />
-            </div>
-
-            <div>
-              <label className='block mb-2 text-sm font-medium text-slate-600'>
-                LinkedIn Profile
-              </label>
-              <div className='flex items-center'>
-                <span className='bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg px-3 py-2.5 text-gray-500'>
-                  linkedin.com/in/
-                </span>
-                <input
-                  type='text'
-                  className='flex-1 p-2.5 rounded-r-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
-                  value={formData.linkedin}
-                  onChange={(e) =>
-                    setFormData({ ...formData, linkedin: e.target.value })
-                  }
-                  placeholder='username'
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className='block mb-2 text-sm font-medium text-slate-600'>
-                Bio
-              </label>
-              <textarea
-                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
-                value={formData.bio}
-                onChange={(e) =>
-                  setFormData({ ...formData, bio: e.target.value })
-                }
-                placeholder='Tell us about your professional background and experience...'
-              />
-            </div>
-
-            <div>
-              <label className='block mb-2 text-sm font-medium text-slate-600'>
-                Interests
-              </label>
-              <textarea
-                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
-                value={formData.interests}
-                onChange={(e) =>
-                  setFormData({ ...formData, interests: e.target.value })
-                }
-                placeholder='What areas of packaging are you most interested in?'
-              />
-            </div>
-
-            <div>
-              <label className='block mb-2 text-sm font-medium text-slate-600'>
-                Professional Goals
-              </label>
-              <textarea
-                className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson h-24'
-                value={formData.goals}
-                onChange={(e) =>
-                  setFormData({ ...formData, goals: e.target.value })
-                }
-                placeholder='What are your professional development goals?'
-              />
-            </div>
-
-            <div className='flex justify-end gap-3 pt-4 border-t'>
-              <button
-                type='button'
-                onClick={onClose}
-                disabled={isSubmitting}
-                className='px-4 py-2 text-gray-600 hover:text-gray-800 font-medium disabled:opacity-50'
-              >
-                Cancel
-              </button>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                className='px-6 py-2 bg-clemson text-white rounded-lg font-bold hover:bg-clemson/90 transition-colors disabled:opacity-50 flex items-center gap-2'
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg className='animate-spin h-5 w-5' viewBox='0 0 24 24'>
-                      <circle
-                        className='opacity-25'
-                        cx='12'
-                        cy='12'
-                        r='10'
-                        stroke='currentColor'
-                        strokeWidth='4'
-                        fill='none'
-                      />
-                      <path
-                        className='opacity-75'
-                        fill='currentColor'
-                        d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-                      />
-                    </svg>
-                    Saving...
-                  </>
-                ) : (
-                  'Save Changes'
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  // const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
     company: '',
     title: '',
@@ -269,7 +38,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
     {
       title: 'Daily Streak',
       icon: TbBolt,
-      value: userXp?.dailyStreak || 1,
+      value: awsUser?.dailyStreak || 1,
     },
 
     {
@@ -317,6 +86,71 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
     }
   }, [awsUser]);
 
+  const [activeTab, setActiveTab] = useState('courses');
+
+  const tabs = [
+    {
+      label: 'Your Courses',
+      value: 'courses',
+    },
+    {
+      label: 'Certificates',
+      value: 'certificates',
+    },
+    {
+      label: 'Paths',
+      value: 'paths',
+    },
+    {
+      label: 'Wishlist',
+      value: 'wishlist',
+    },
+    {
+      label: 'Lessons Completed',
+      value: 'lessonsCompleted',
+    },
+    {
+      label: 'Lessons Saved',
+      value: 'lessonsSaved',
+    },
+    {
+      label: 'Profile',
+      value: 'profile',
+    },
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'courses':
+        return (
+          <ProfileEnrollments
+            courses={thinkificUser && thinkificUser.courses.nodes}
+            email={user?.email}
+            refreshUser={refreshUser}
+          />
+        );
+      case 'certificates':
+        return 'Certificates';
+      case 'paths':
+        return 'Paths';
+      case 'wishlist':
+        return 'Wishlist';
+      case 'lessonsCompleted':
+        return <CompletedLesson lessons={awsUser?.lessonsCompleted?.items} />;
+      case 'lessonsSaved':
+        return <SavedLessons lessons={awsUser?.savedLessons} />;
+      case 'profile':
+        return (
+          <EditProfileForm
+            awsUser={awsUser}
+            thinkificUser={thinkificUser}
+            refreshUser={refreshUser}
+          />
+        );
+      default:
+        return null;
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -567,180 +401,90 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           </div>
         </div>
       )}
-      <div className='grid grid-cols-12 w-full'>
-        <div className='col-span-2 w-full h-full flex justify-end'>
-          <div className='flex flex-col gap-4 h-full w-full bg-base-dark px-9 py-8'>
+      <div className='grid grid-cols-12 w-full max-w-7xl mx-auto overflow-hidden gap-6 mb-8'>
+        <div className='col-span-2 w-full flex justify-end'>
+          <div className='flex flex-col gap-2.5 py-8'>
             <div
-              className='aspect-[1/1] w-24 bg-cover bg-center bg-gray-600'
+              className='aspect-[1/1] w-20 bg-cover bg-center rounded-full border-2 border-clemson  bg-gray-600'
               style={{
                 backgroundImage: `url(${user?.picture})`,
               }}
             ></div>
             <div className='flex flex-col gap-0 leading-tight'>
-              <div className='text-2xl font-bold text-gray-100'>
+              <div className='text-lg font-bold text-slate-700'>
                 {user?.name}
               </div>
-              <div className='text-sm font-medium text-gray-300'>
+              <div className='text-sm font-medium text-slate-500'>
                 {user?.email}
               </div>
             </div>
 
             <div className='flex flex-col gap-2'>
-              <div className='text-lg text-gray-100 leading-tight'>
+              <div className='text-sm text-slate-700 leading-tight'>
                 {awsUser?.title || 'Your Title'} at{' '}
                 <span className='font-bold'>
                   {awsUser?.company || 'Your Company'}
                 </span>
               </div>
-              <div className='flex items-center gap-1'>
-                <TbWorld className='text-gray-300' />
-                <div className='text-gray-300'>
+              <div className='flex items-center gap-1 text-sm'>
+                <TbWorld className='text-slate-700' />
+                <div className='text-slate-700'>
                   {awsUser?.location || 'Your Location'}
                 </div>
               </div>
             </div>
-            <button
-              className='flex border bg-gray-100 border-gray-300 rounded-md px-2 py-1 w-fit items-center gap-2 text-xs text-gray-600 hover:text-clemson transition-colors'
+            {/* <button
+              className='flex underlinerounded-md text-white items-center gap-2 text-xs hover:text-clemson transition-colors'
               onClick={() => setShowEditModal(true)}
             >
               <TbEdit size={16} />
               <span>Edit Profile</span>
-            </button>
-            <hr className='w-full border-gray-400 mt-2.5' />
-            <div className='flex flex-col gap-2 items-center'>
-              <div className='relative w-40 h-40'>
-                {/* XP Progress Ring */}
-                <svg className='w-full h-full transform -rotate-90'>
-                  <circle
-                    cx='80'
-                    cy='80'
-                    r='64'
-                    stroke='rgba(255, 255, 255, 0.2)'
-                    strokeWidth='12'
-                    fill='transparent'
-                  />
-                  <circle
-                    cx='80'
-                    cy='80'
-                    r='64'
-                    stroke='#F66733'
-                    strokeWidth='12'
-                    fill='transparent'
-                    strokeDasharray={`${2 * Math.PI * 64}`}
-                    strokeDashoffset={`${
-                      2 * Math.PI * 64 * (1 - userXp.progress / 100)
+            </button> */}
+            <hr className='w-full border-gray-400 my-2.5' />
+            <div className='flex flex-col gap-2.5'>
+              {tabs.map((tab) => (
+                <div
+                  className='flex w-full justify-between items-center text-gray-700'
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                >
+                  <div
+                    className={`font-medium text-sm w-full transition-all duration-300 cursor-pointer ${
+                      activeTab === tab.value
+                        ? 'text-white bg-slate-500 p-2 rounded'
+                        : ''
                     }`}
-                    className='transition-all duration-700'
-                  />
-                </svg>
-                {/* Level Number */}
-                <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
-                  <span className='text-4xl font-bold text-white'>
-                    {userXp.level}
-                  </span>
-                  <span className='text-sm text-gray-100'>Level</span>
+                  >
+                    {tab.label}
+                  </div>
                 </div>
-              </div>
-              {/* XP Info */}
-              <div className='flex flex-col gap-0 text-center'>
-                <div className='text-sm font-medium text-gray-100'>
-                  {userXp?.xpToNextLevel || '0'} XP to next level
-                </div>
-                <div className='text-sm text-gray-300'>
-                  Total XP: {(userXp && userXp.totalXp.toLocaleString()) || '0'}
-                </div>
-              </div>
+              ))}
             </div>
-            <hr className='w-full border-gray-400 mt-2.5 mb-2.5' />
+            <hr className='w-full border-gray-400 my-2.5' />
+
             <div className='flex flex-col gap-2.5'>
               {profileItems.map((item) => (
                 <div
-                  className='flex w-full justify-between items-center text-gray-100'
+                  className='flex w-full justify-between items-center text-gray-700'
                   key={item.title}
                 >
                   <div className='flex items-center gap-2'>
                     <item.icon size={16} />
-                    <div className='font-medium'>{item.title}</div>
+                    <div className='font-medium text-sm'>{item.title}</div>
                   </div>
-                  <div className='font-medium'>{item.value}</div>
+                  <div className='font-medium text-sm'>{item.value}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
         {/* MAIN CONTENT */}
-        <div className={`col-span-10 w-full h-full flex flex-col `}>
-          <div className='relative'>
-            <div className='flex flex-col w-full'>
-              <div className='min-h-[600px] w-full bg-gray-100 p-7 rounded-b-lg'>
-                <div className='max-w-7xl w-full grid grid-cols-12 gap-8'>
-                  <div className='col-span-8 flex flex-col gap-8 h-full'>
-                    <ProfileEnrollments
-                      courses={thinkificUser && thinkificUser.courses.nodes}
-                      email={user?.email}
-                      refreshUser={refreshUser}
-                    />
-                  </div>
-                  <div className='col-span-4 flex flex-col gap-16 h-full'>
-                    <div className='flex flex-col gap-4'>
-                      <div className='font-bold text-gray-900 w-full'>
-                        Learning Paths
-                      </div>
-                      {awsUser?.learningPaths?.items?.length > 0 ? (
-                        <div className='flex flex-col gap-3'>
-                          {awsUser?.learningPaths?.items?.map((path) => (
-                            <div
-                              key={path.learningPath.id}
-                              className='flex items-center gap-2'
-                            >
-                              <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                              <div>{path.learningPath.title}</div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className='flex flex-col items-center justify-center gap-3 border border-gray-200 rounded-lg p-6'>
-                          <div>No Paths Selected</div>
-                          <button
-                            className='text-sm  bg-gray-900 px-4 py-2 rounded-lg text-white'
-                            onClick={() => router.push('/paths')}
-                          >
-                            Select a Path
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className='flex flex-col gap-6 border-t border-gray-400 pt-6'>
-                      <div className='font-bold text-gray-900 w-full'>
-                        Achievements
-                      </div>
-                      <div className='flex flex-wrap gap-4'>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson'></div>
-                        <div className='w-9 h-9 rounded-full bg-clemson/30'></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          className={`col-span-10 w-full flex flex-col bg-white p-6 rounded-lg mt-8`}
+        >
+          <div className='w-full'>{renderContent()}</div>
         </div>
       </div>
-      {showEditModal && (
-        <EditProfileForm onClose={() => setShowEditModal(false)} />
-      )}
     </div>
   );
 };

@@ -194,7 +194,7 @@ export default function HeaderNew() {
                   {/* Logo (lg+) */}
                   <div className='hidden lg:flex lg:items-center'>
                     <Link href='/' legacyBehavior>
-                      <div className='h-full w-44'>
+                      <div className='h-full w-40'>
                         <Logo />
                       </div>
                     </Link>
@@ -202,14 +202,14 @@ export default function HeaderNew() {
 
                   <div className='hidden h-full lg:flex'>
                     {/* Mega menus */}
-                    <Popover.Group className='ml-6'>
-                      <div className='flex h-full justify-center space-x-6'>
+                    <Popover.Group className='ml-4'>
+                      <div className='flex h-full justify-center space-x-4'>
                         {navigation.pages.map((page) => (
                           <Link
                             passHref
                             href={page.href}
                             key={page.name}
-                            className='flex items-center font-semibold font-greycliff text-slate-700 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'
+                            className='flex items-center font-bold text-sm text-slate-900 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'
                           >
                             {page.name}
                           </Link>
@@ -251,7 +251,7 @@ export default function HeaderNew() {
 
                   <div className='flex flex-1 items-center justify-end'>
                     <div className='flex items-center lg:ml-8'>
-                      <div className='flex space-x-2.5'>
+                      <div className='flex space-x-2'>
                         <div className='hidden lg:flex'>
                           <input
                             type='text'
@@ -262,7 +262,7 @@ export default function HeaderNew() {
                           />
                         </div>
 
-                        <div className='flex items-center gap-0'>
+                        <div className='flex items-center gap-0 w-full'>
                           {isUser ? (
                             <Popover className='relative'>
                               <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
@@ -319,10 +319,10 @@ export default function HeaderNew() {
                               </Link>
                             </div>
                           )}
-                          <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                          {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineNotifications color='#6B7A8F' size={24} />
-                          </div>
-                          <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                          </div> */}
+                          <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineShoppingCart color='#6B7A8F' size={24} />
                           </div>
                         </div>
