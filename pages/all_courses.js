@@ -918,7 +918,7 @@ const Page = () => {
                   ))}
                 </div>
               ) : sortedAndSearchedCourses && !isTable ? (
-                <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-8 gap-x-7 mt-5'>
+                <div className='grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-y-6 gap-x-0 mt-5'>
                   {sortedCertificates &&
                     sortedCertificates.length > 0 &&
                     [...sortedCertificates].map((cert) => (

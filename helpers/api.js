@@ -805,7 +805,7 @@ export const getCourseByID = async (id) => {
 export const getCertificates = async () => {
   const getAllCertificates = /* GraphQL */ `
     query MyQuery {
-      listCertificateObjects {
+      listCertificateObjects(filter: { status: { ne: "DRAFT" } }) {
         items {
           abbreviation
           applicationLink

@@ -123,7 +123,17 @@ const CardFilter = () => {
     }
 
     try {
-      return <CertPreview cert={cert} initialVideoState={false} />;
+      return (
+        <CertPreview
+          cert={cert}
+          initialVideoState={false}
+          purchaseText={
+            cert.abbreviation === 'CMPM' || cert.abbreviation === 'CPS'
+              ? 'Apply Now'
+              : 'Enroll Now'
+          }
+        />
+      );
     } catch (err) {
       console.error('Error rendering CertPreview:', err);
       return (
@@ -224,7 +234,7 @@ const CardFilter = () => {
                 variants={container}
                 initial='hidden'
                 animate='show'
-                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'
+                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 w-full h-full'
               >
                 {activeTab === 'Certificates' && isCertificatesLoaded
                   ? courses.slice(0, 4).map((course) => (
