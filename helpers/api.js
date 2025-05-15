@@ -841,6 +841,45 @@ export const getCertificates = async () => {
   return res.data.listCertificateObjects.items;
 };
 
+export const getAllCertificates = async () => {
+  const getAllCertificates = /* GraphQL */ `
+    query MyQuery {
+      listCertificateObjects {
+        items {
+          abbreviation
+          applicationLink
+          callout
+          category {
+            items {
+              category {
+                name
+                value
+              }
+            }
+          }
+          courseId
+          courses
+          createdAt
+          description
+          hours
+          id
+          link
+          price
+          purchaseLink
+          seoImage
+          title
+          video
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getAllCertificates,
+  });
+  return res.data.listCertificateObjects.items;
+};
+
 export const registerCertificateClick = async (data) => {
   const res = await API.graphql({
     query: createCertificateClick,

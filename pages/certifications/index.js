@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRive } from '@rive-app/react-canvas';
 import {
-  getCertificates,
+  getAllCertificates,
   registerCertificateClick,
   getDeviceType,
 } from '../../helpers/api';
@@ -395,7 +395,7 @@ const Index = ({ certificates }) => {
 export default Index;
 
 export async function getStaticProps() {
-  const certificates = await getCertificates();
+  const certificates = await getAllCertificates();
   return {
     props: { certificates },
     revalidate: 10,
