@@ -19,10 +19,10 @@ const UnileverCourses = ({ featured, reference }) => {
       <div className='flex flex-col items-center w-full lg:justify-between gap-6 md:gap-10'>
         <div className='flex flex-col gap-4'>
           <div className='grid lg:grid-cols-2 gap-3'>
-            <div className='aspect-[16/9] bg-black w-full h-full'>
+            <div className='aspect-[16/9] bg-black w-full h-full content-center'>
               <VideoPlayer
                 videoEmbedLink={
-                  'https://player.vimeo.com/video/928045072?h=5a0899e942&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
+                  'https://packschool.s3.us-east-1.amazonaws.com/ul_2025_update.mp4'
                 }
                 light={false}
                 playing={false}
