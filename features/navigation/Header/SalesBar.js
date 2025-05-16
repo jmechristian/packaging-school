@@ -19,9 +19,27 @@ import { useSelector } from 'react-redux';
 
 const delay = 7000;
 
+const styles = `
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const styleSheet = document.createElement('style');
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
 const SalesBar = ({ user }) => {
   const router = useRouter();
   const { userXp } = useSelector((state) => state.auth);
+  const { salesbarText } = useSelector((state) => state.layout);
   const timeoutRef = React.useRef(null);
 
   const [items, setItems] = useState([]);
@@ -128,8 +146,16 @@ const SalesBar = ({ user }) => {
           <div>
             <PhoneIcon className='w-4 h-4 fill-clemson' />
           </div>
-          <div className='text-sm text-white/70 font-medium whitespace-nowrap hover:text-white transition-all duration-300'>
-            Questions? Book a free 15-minute call with our team.
+          <div className='text-sm text-white/70 font-medium whitespace-nowrap hover:text-white transition-all duration-300 relative overflow-hidden'>
+            <div
+              key={salesbarText}
+              className='animate-slide-up opacity-0 transform translate-y-4'
+              style={{
+                animation: 'slideUp 0.5s ease-out forwards',
+              }}
+            >
+              {salesbarText}
+            </div>
           </div>
         </div>
       </div>

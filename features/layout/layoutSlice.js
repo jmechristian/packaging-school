@@ -5,6 +5,8 @@ const initialState = {
   isFixed: false,
   signInModal: false,
   indiaBanner: true,
+  advisorModal: false,
+  salesbarText: 'Questions? Book a free 15-minute call with an advisor.',
 };
 
 export const layoutSlice = createSlice({
@@ -29,6 +31,12 @@ export const layoutSlice = createSlice({
     toggleIndiaBanner: (state) => {
       state.indiaBanner = !state.indiaBanner;
     },
+    toggleAdvisorModal: (state) => {
+      state.advisorModal = !state.advisorModal;
+    },
+    setSalesbarText: (state, action) => {
+      state.salesbarText = action.payload;
+    },
   },
 });
 
@@ -39,6 +47,8 @@ export const {
   setUnfixed,
   toggleSignInModal,
   toggleIndiaBanner,
+  toggleAdvisorModal,
+  setSalesbarText,
 } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

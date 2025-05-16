@@ -10,8 +10,6 @@ import {
 import { TextureLoader } from 'three';
 import { GiJourney, GiThreeFriends } from 'react-icons/gi';
 import Meta from '../components/shared/Meta';
-import { getCPSCourses } from '../helpers/api';
-import SubscriptionWhat from '../components/home/SubscriptionWhat';
 import LearningPath from '../components/home/LearningPath';
 import CardFilter from '../components/home/CardFilter';
 import WhyPschool from '../components/shared/WhyPschool';

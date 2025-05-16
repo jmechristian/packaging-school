@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { useInView } from 'framer-motion';
 import { getCohorts, getCertificates } from '../../helpers/api';
 import CohortModal from '../shared/CohortModal';
 import CertificateModal from '../shared/CertificateModal';
 import { MdAccessAlarm } from 'react-icons/md';
 import { GiThreeFriends, GiJourney, GiDiploma } from 'react-icons/gi';
+import { useDispatch } from 'react-redux';
+import { setSalesbarText } from '../../features/layout/layoutSlice';
+
 const SelfPacedAccess = () => {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -45,6 +49,26 @@ const SelfPacedAccess = () => {
     },
   ];
 
+  const dispatch = useDispatch();
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+
+  useEffect(() => {
+    if (isInView) {
+      dispatch(
+        setSalesbarText(
+          'Not sure which Path is right for you? Book a free 15-minute call with an advisor.'
+        )
+      );
+    } else {
+      dispatch(
+        setSalesbarText(
+          'Questions? Book a free 15-minute call with an advisor.'
+        )
+      );
+    }
+  }, [dispatch, isInView]);
+
   useEffect(() => {
     const fetchCohorts = async () => {
       const cohorts = await getCohorts();
@@ -69,7 +93,10 @@ const SelfPacedAccess = () => {
   };
 
   return (
-    <div className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative'>
+    <div
+      className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative'
+      ref={ref}
+    >
       {isCohortModalOpen && (
         <CohortModal
           isOpen={isCohortModalOpen}
