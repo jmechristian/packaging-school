@@ -32,15 +32,21 @@ const styles = `
   }
 `;
 
-const styleSheet = document.createElement('style');
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
-
 const SalesBar = ({ user }) => {
   const router = useRouter();
   const { userXp } = useSelector((state) => state.auth);
   const { salesbarText } = useSelector((state) => state.layout);
   const timeoutRef = React.useRef(null);
+
+  useEffect(() => {
+    const styleSheet = document.createElement('style');
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
 
   const [items, setItems] = useState([]);
   const [isActive, setIsActive] = useState(0);
