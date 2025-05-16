@@ -178,7 +178,9 @@ const Layout = ({ children }) => {
         <div className='flex flex-col justify-between'>
           {/* {location && location.country === 'India' && <IndiaBanner />} */}
           <Loading />
-          <HeaderNew user={user} />
+          <div className='sticky top-0 z-50'>
+            <HeaderNew user={user} />
+          </div>
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />
           <main className='relative h-full w-full'>{children}</main>
