@@ -185,12 +185,12 @@ export default function HeaderNew() {
         </Dialog>
       </Transition.Root>
       <header className='relative'>
-        <nav aria-label='Top' className='sticky top-0 z-50'>
+        <nav aria-label='Top'>
           {/* Secondary navigation */}
           <div className='bg-white dark:bg-dark-dark'>
             <div className=''>
               <div className='border-b border-t lg:border-t-0 border-slate-400 dark:border-gray-700'>
-                <div className='flex h-20 items-center justify-between px-4 md:px-8 xl:px-0 mx-auto max-w-7xl'>
+                <div className='flex h-[72px] items-center justify-between px-4 md:px-8 xl:px-0 mx-auto max-w-7xl'>
                   {/* Logo (lg+) */}
                   <div className='hidden lg:flex lg:items-center'>
                     <Link href='/' legacyBehavior>
