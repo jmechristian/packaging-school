@@ -4,7 +4,7 @@ import { getCohorts, getCertificates } from '../../helpers/api';
 import CohortModal from '../shared/CohortModal';
 import CertificateModal from '../shared/CertificateModal';
 import { MdAccessAlarm } from 'react-icons/md';
-import { GiThreeFriends, GiJourney } from 'react-icons/gi';
+import { GiThreeFriends, GiJourney, GiDiploma } from 'react-icons/gi';
 const SelfPacedAccess = () => {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -319,10 +319,23 @@ const SelfPacedAccess = () => {
           </div> */}
         </div>
       </div>
-      <div className='w-full text-center text-lg font-bold bg-slate-100 p-4'>
-        <sup>**</sup>Packaging School Certificate alumni can purchase a 12-month
-        access to the entire course catalog for $399.{' '}
-        <span className='underline text-slate-600'>Learn more</span>
+      <div className='w-full bg-slate-100 p-6 max-w-5xl mx-auto flex items-center justify-between'>
+        <div className='flex gap-3 items-center'>
+          <div className='aspect-[1/1] w-24 grid content-center'>
+            <GiDiploma size={84} />
+          </div>
+          <div className='w-full flex flex-col gap-1'>
+            <div className='h4-base'>
+              Already a Packaging School Certificate Alumni?
+            </div>
+            <div className='text-lg'>
+              Enjoy full, 12-month access to the entire course catalog for $399.
+            </div>
+          </div>
+        </div>
+        <div className='w-fit text-center font-bold bg-black mr-1 text-white rounded-lg px-5 py-3 cursor-pointer hover:bg-black/80 transition-colors duration-300'>
+          Speak to an Advisor
+        </div>
       </div>
       <div className='w-full border-t border-clemson pt-10 flex flex-col gap-10'>
         <div className='text-center text-xl font-bold'>

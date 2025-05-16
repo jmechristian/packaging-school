@@ -52,7 +52,7 @@ const SalesBarItem = ({ link, icon, text, zIdx }) => {
   return (
     <div className='flex items-center gap-2 lg:gap-1' onClick={clickHandler}>
       <div>{setIcon(icon)}</div>
-      <div className='text-white/70 text-xs md:!text-sm leading-none'>
+      <div className='text-white/70 text-xs md:!text-sm leading-none hover:text-white transition-all duration-300'>
         {text}
       </div>
     </div>
