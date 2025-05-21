@@ -17,6 +17,7 @@ import { showToast } from '../../features/navigation/navigationSlice';
 import { useRouter } from 'next/router';
 import EditProfileForm from './EditProfileForm';
 import SavedLessons from './SavedLessons';
+import ProfileWishlist from './ProfileWishlist';
 const ProfileDashboard = ({ refreshUser, isLoading }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
@@ -41,16 +42,16 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
       value: awsUser?.dailyStreak || 1,
     },
 
-    {
-      title: 'Achievements',
-      icon: TbTrophy,
-      value: 0,
-    },
-    {
-      title: 'Certificates',
-      icon: TbFileCertificate,
-      value: 0,
-    },
+    // {
+    //   title: 'Achievements',
+    //   icon: TbTrophy,
+    //   value: 0,
+    // },
+    // {
+    //   title: 'Certificates',
+    //   icon: TbFileCertificate,
+    //   value: 0,
+    // },
     {
       title: 'Courses Completed',
       icon: TbBrain,
@@ -94,7 +95,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
       value: 'courses',
     },
     {
-      label: 'Certificates',
+      label: 'Applications',
       value: 'certificates',
     },
     {
@@ -134,7 +135,13 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
       case 'paths':
         return 'Paths';
       case 'wishlist':
-        return 'Wishlist';
+        return (
+          <ProfileWishlist
+            courses={awsUser?.wishlist?.items}
+            refreshUser={refreshUser}
+            awsUser={awsUser}
+          />
+        );
       case 'lessonsCompleted':
         return <CompletedLesson lessons={awsUser?.lessonsCompleted?.items} />;
       case 'lessonsSaved':

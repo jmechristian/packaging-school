@@ -6,6 +6,8 @@ import {
   registgerCourseClick,
   registerCertificateClick,
   getDeviceType,
+  addCourseToWishlist,
+  removeCourseFromWishlist,
 } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
 import { H2, H4 } from '@jmechristian/ps-component-library';
@@ -20,7 +22,7 @@ import '@jmechristian/ps-component-library/dist/style.css';
 const Page = () => {
   const router = useRouter();
   const { cat } = router.query;
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isCourses, setIsCourses] = useState([]);
@@ -264,7 +266,7 @@ const Page = () => {
       const res = await getCoursesByCategory(cat.toUpperCase());
       setIsCourses(res);
     };
-    fetchCourses();
+    cat && fetchCourses();
   }, [cat]);
 
   useEffect(() => {
@@ -273,102 +275,8 @@ const Page = () => {
       console.log(res);
       setIsCertificates(res);
     };
-    fetchCertificates();
+    cat && fetchCertificates();
   }, [cat]);
-
-  // const sortedCertificates = useMemo(() => {
-  //   if (isCertificates.length > 0) {
-  //     if (isSort.value === 'title' && isSort.direction === 'ASC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) => a.title.localeCompare(b.title))
-  //       );
-  //     }
-
-  //     if (isSort.value === 'title' && isSort.direction === 'DSC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) => b.title.localeCompare(a.title))
-  //       );
-  //     }
-
-  //     if (isSort.value === 'category' && isSort.direction === 'ASC') {
-  //       return isCertificates;
-  //     }
-
-  //     if (isSort.value === 'category' && isSort.direction === 'DSC') {
-  //       return isCertificates;
-  //     }
-
-  //     if (isSort.value === 'course id' && isSort.direction === 'ASC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) =>
-  //           a.courseId.localeCompare(b.courseId)
-  //         )
-  //       );
-  //     }
-
-  //     if (isSort.value === 'course id' && isSort.direction === 'DSC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) =>
-  //           b.courseId.localeCompare(a.courseId)
-  //         )
-  //       );
-  //     }
-
-  //     if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) => b.lessons - a.lessons)
-  //       );
-  //     }
-
-  //     if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort((a, b) => a.lessons - b.lessons)
-  //       );
-  //     }
-
-  //     if (isSort.value === 'hours' && isSort.direction === 'ASC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort(
-  //           (a, b) => parseFloat(a.hours) - parseFloat(b.hours)
-  //         )
-  //       );
-  //     }
-
-  //     if (isSort.value === 'hours' && isSort.direction === 'DSC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort(
-  //           (a, b) => parseFloat(b.hours) - parseFloat(a.hours)
-  //         )
-  //       );
-  //     }
-
-  //     if (isSort.value === 'price' && isSort.direction === 'ASC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort(
-  //           (a, b) => parseInt(a.price) - parseInt(b.price)
-  //         )
-  //       );
-  //     }
-
-  //     if (isSort.value === 'price' && isSort.direction === 'DSC') {
-  //       return (
-  //         isCertificates &&
-  //         [...isCertificates].sort(
-  //           (a, b) => parseInt(b.price) - parseInt(a.price)
-  //         )
-  //       );
-  //     }
-  //   }
-  // }, [isCertificates, isSort]);
 
   const categoryNameHandler = (cat) => {
     const category = updateCategoryMenu.find((c) => c.value === cat);
@@ -419,6 +327,16 @@ const Page = () => {
     } else {
       router.push(link);
     }
+  };
+
+  const handleAddToWishlist = async (courseId) => {
+    await addCourseToWishlist(courseId, awsUser.id);
+    // await refreshUser();
+  };
+
+  const handleRemoveFromWishlist = async (itemId) => {
+    await removeCourseFromWishlist(itemId);
+    // await refreshUser();
   };
 
   return (
@@ -605,6 +523,20 @@ const Page = () => {
                   }
                   cardPurchaseHandler={() =>
                     cardPurchaseHandler(course.id, course.link)
+                  }
+                  isFavorite={awsUser?.wishlist?.items.some(
+                    (item) => item.lMSCourse.id === course.id
+                  )}
+                  cardFavoriteHandler={() =>
+                    awsUser?.wishlist?.items.some(
+                      (item) => item.lMSCourse.id === course.id
+                    )
+                      ? handleRemoveFromWishlist(
+                          awsUser.wishlist.items.filter(
+                            (item) => item.lMSCourse.id === course.id
+                          )[0].id
+                        )
+                      : handleAddToWishlist(course.id)
                   }
                 />
               ))}

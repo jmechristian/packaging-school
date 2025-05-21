@@ -24,6 +24,8 @@ import {
   getCertificates,
   registgerCourseClick,
   registerCertificateClick,
+  addCourseToWishlist,
+  removeCourseFromWishlist,
 } from '../helpers/api';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import CertificateTableItem from '../components/shared/CertificateTableItem';
@@ -31,12 +33,14 @@ import SortToggleItem from '../components/shared/SortToggleItem';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { listLMSCourses } from '../src/graphql/queries';
+import { setAWSUser } from '../features/auth/authslice';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const Page = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const deviceType = getDeviceType();
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSearchTerm, setIsSearchTerm] = useState('');
@@ -381,6 +385,28 @@ const Page = () => {
       router.push(applicationLink);
     } else {
       router.push(link);
+    }
+  };
+
+  const handleAddToWishlist = async (courseId) => {
+    if (awsUser) {
+      if (
+        awsUser.wishlist.items.some((item) => item.lMSCourse.id === courseId)
+      ) {
+        const res = await removeCourseFromWishlist(
+          awsUser.wishlist.items.find((item) => item.lMSCourse.id === courseId)
+            .id,
+          awsUser.email
+        );
+        dispatch(setAWSUser(res));
+      } else {
+        const res = await addCourseToWishlist(
+          courseId,
+          awsUser.id,
+          awsUser.email
+        );
+        dispatch(setAWSUser(res));
+      }
     }
   };
 
@@ -963,6 +989,12 @@ const Page = () => {
                         cardPurchaseHandler={() =>
                           cardPurchaseHandler(course.id, course.link)
                         }
+                        cardFavoriteHandler={() =>
+                          handleAddToWishlist(course.id)
+                        }
+                        isFavorite={awsUser?.wishlist?.items.some(
+                          (item) => item.lMSCourse.id === course.id
+                        )}
                       />
                     ))}
                 </div>

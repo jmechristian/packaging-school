@@ -39,6 +39,8 @@ import {
   createUserXp,
   updateUserXp,
   createEmailSubscription,
+  createUserWishlist,
+  deleteUserWishlist,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -1190,6 +1192,33 @@ export const getAWSUser = async (email) => {
           updatedAt
           xpToNextLevel
           cell
+          wishlist {
+            items {
+              id
+              lMSCourse {
+                altLink
+                callout
+                categoryArray
+                courseId
+                hours
+                id
+                lessons
+                link
+                preview
+                price
+                seoImage
+                slug
+                stripeLink
+                subheadline
+                subscriptionPrice
+                subscriptionLink
+                thinkificId
+                title
+                type
+                videos
+              }
+            }
+          }
           userXp {
             dailyStreak
             id
@@ -1546,4 +1575,25 @@ export const getLessonById = async (id) => {
     variables: { id: id },
   });
   return res.data.getLesson;
+};
+
+export const addCourseToWishlist = async (courseId, userId, email) => {
+  await API.graphql({
+    query: createUserWishlist,
+    variables: { input: { userId: userId, lMSCourseId: courseId } },
+  });
+
+  const res = await getAWSUser(email);
+
+  return res;
+};
+
+export const removeCourseFromWishlist = async (id, email) => {
+  await API.graphql({
+    query: deleteUserWishlist,
+    variables: { input: { id: id } },
+  });
+
+  const res = await getAWSUser(email);
+  return res;
 };

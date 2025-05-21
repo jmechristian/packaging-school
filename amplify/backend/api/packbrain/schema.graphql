@@ -556,6 +556,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
   learningPaths: [LearningPath] @manyToMany(relationName: "LearningPathUsers")
   userXp: UserXp @hasOne
+  wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -781,6 +782,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   stripeLink: String
   callout: String
   achievements: [Achievement] @manyToMany(relationName: "AchievementCourses")
+  wishlist: [User] @manyToMany(relationName: "UserWishlist")
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {

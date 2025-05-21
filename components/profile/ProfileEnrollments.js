@@ -10,7 +10,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
   const [filter, setFilter] = useState('active');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const enrollmentsPerPage = 6;
+  const enrollmentsPerPage = 9;
 
   useEffect(() => {
     const fetchEnrollments = async () => {

@@ -3026,6 +3026,16 @@ export const getUser = /* GraphQL */ `
         updatedAt
         userXpUserId
       }
+      wishlist {
+        items {
+          id
+          userId
+          lMSCourseId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       userUserXpId
@@ -3165,6 +3175,9 @@ export const listUsers = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -3316,6 +3329,9 @@ export const usersByName = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3465,6 +3481,9 @@ export const usersByEmail = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -3616,6 +3635,9 @@ export const usersByCompanyID = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3754,6 +3776,9 @@ export const getUserXp = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -4073,6 +4098,9 @@ export const getLearningPathCourse = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -4398,6 +4426,9 @@ export const getCMPMForm = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -4643,6 +4674,9 @@ export const getCPSForm = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -5241,6 +5275,16 @@ export const getLMSCourse = /* GraphQL */ `
         }
         nextToken
       }
+      wishlist {
+        items {
+          id
+          userId
+          lMSCourseId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -5297,6 +5341,9 @@ export const listLMSCourses = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -5367,6 +5414,9 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         achievements {
           nextToken
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5433,6 +5483,9 @@ export const lMSCoursesBySlug = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -9641,6 +9694,9 @@ export const getUserCompletedLessons = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -10240,6 +10296,9 @@ export const getAPSUser = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -11147,6 +11206,9 @@ export const getAchievementUsers = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -11518,6 +11580,9 @@ export const getCohortUsers = /* GraphQL */ `
           createdAt
           updatedAt
           userXpUserId
+        }
+        wishlist {
+          nextToken
         }
         createdAt
         updatedAt
@@ -11916,6 +11981,9 @@ export const getLearningPathUsers = /* GraphQL */ `
           updatedAt
           userXpUserId
         }
+        wishlist {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12163,6 +12231,489 @@ export const learningPathUsersByLearningPathId = /* GraphQL */ `
     }
   }
 `;
+export const getUserWishlist = /* GraphQL */ `
+  query GetUserWishlist($id: ID!) {
+    getUserWishlist(id: $id) {
+      id
+      userId
+      lMSCourseId
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPaths {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserWishlists = /* GraphQL */ `
+  query ListUserWishlists(
+    $filter: ModelUserWishlistFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserWishlists(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        lMSCourseId
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userWishlistsByUserId = /* GraphQL */ `
+  query UserWishlistsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserWishlistFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userWishlistsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        lMSCourseId
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userWishlistsByLMSCourseId = /* GraphQL */ `
+  query UserWishlistsByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserWishlistFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userWishlistsByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        lMSCourseId
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getCirriculumCourses = /* GraphQL */ `
   query GetCirriculumCourses($id: ID!) {
     getCirriculumCourses(id: $id) {
@@ -12225,6 +12776,9 @@ export const getCirriculumCourses = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -12488,6 +13042,9 @@ export const getCourseLessons = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -12774,6 +13331,9 @@ export const getCourseInstructors = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
@@ -13064,6 +13624,9 @@ export const getAchievementCourses = /* GraphQL */ `
         stripeLink
         callout
         achievements {
+          nextToken
+        }
+        wishlist {
           nextToken
         }
         createdAt
