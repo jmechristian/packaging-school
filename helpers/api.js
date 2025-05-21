@@ -1169,6 +1169,10 @@ export const getAWSUser = async (email) => {
               learningPath {
                 id
                 title
+                description
+                hours
+                icon
+                slug
               }
             }
           }

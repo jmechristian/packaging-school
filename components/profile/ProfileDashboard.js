@@ -16,6 +16,7 @@ import CompletedLesson from '../../components/profile/CompletedLesson';
 import { showToast } from '../../features/navigation/navigationSlice';
 import { useRouter } from 'next/router';
 import EditProfileForm from './EditProfileForm';
+import ProfilePaths from './ProfilePaths';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
 const ProfileDashboard = ({ refreshUser, isLoading }) => {
@@ -133,7 +134,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
       case 'certificates':
         return 'Certificates';
       case 'paths':
-        return 'Paths';
+        return <ProfilePaths paths={awsUser?.learningPaths?.items} />;
       case 'wishlist':
         return (
           <ProfileWishlist

@@ -5080,6 +5080,7 @@ export const createLearningPath = /* GraphQL */ `
       hours
       slug
       status
+      icon
       createdAt
       updatedAt
     }
@@ -5121,6 +5122,7 @@ export const updateLearningPath = /* GraphQL */ `
       hours
       slug
       status
+      icon
       createdAt
       updatedAt
     }
@@ -5162,6 +5164,7 @@ export const deleteLearningPath = /* GraphQL */ `
       hours
       slug
       status
+      icon
       createdAt
       updatedAt
     }
@@ -5241,6 +5244,7 @@ export const createLearningPathCourse = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }
@@ -5327,6 +5331,7 @@ export const updateLearningPathCourse = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }
@@ -5413,6 +5418,7 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }
@@ -14897,6 +14903,7 @@ export const createLearningPathUsers = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }
@@ -15062,6 +15069,7 @@ export const updateLearningPathUsers = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }
@@ -15227,6 +15235,7 @@ export const deleteLearningPathUsers = /* GraphQL */ `
         hours
         slug
         status
+        icon
         createdAt
         updatedAt
       }

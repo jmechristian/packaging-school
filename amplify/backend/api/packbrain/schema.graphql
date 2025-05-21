@@ -595,6 +595,7 @@ type LearningPath @model @auth(rules: [{ allow: public }]) {
   hours: Int
   slug: String! @index(name: "learningPathBySlug")
   status: String @default(value: "DRAFT")
+  icon: String
 }
 
 type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
