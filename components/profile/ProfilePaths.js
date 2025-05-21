@@ -80,7 +80,7 @@ const ProfilePaths = ({ paths }) => {
                 key={path.learningPath.id}
                 className='col-span-1 bg-gray-100 py-4 rounded-lg w-full flex flex-col gap-2.5'
               >
-                <div className='flex justify-between w-full px-4'>
+                <div className='flex justify-between w-full px-3'>
                   <div className='flex gap-3'>
                     <div>
                       <div className='w-12 h-16 bg-clemson text-white flex items-center justify-center rounded-lg'>
@@ -88,7 +88,7 @@ const ProfilePaths = ({ paths }) => {
                       </div>
                     </div>
                     <div className='flex flex-col gap-0.5 w-full'>
-                      <div className='text-lg font-medium font-oswald'>
+                      <div className='text-lg font-oswald'>
                         {path.learningPath.title}
                       </div>
                       <div className='w-full'>
@@ -143,7 +143,7 @@ const ProfilePaths = ({ paths }) => {
           {popularPaths.map((item) => (
             <div
               key={item.label}
-              className='col-span-1 bg-gray-100 p-4 rounded-lg w-full flex flex-col gap-1'
+              className='col-span-1 bg-gray-100 py-4 px-3 rounded-lg w-full flex flex-col gap-1'
             >
               <div className='flex justify-between w-full border-b border-gray-200 pb-3'>
                 <div className='flex gap-3'>
@@ -153,9 +153,7 @@ const ProfilePaths = ({ paths }) => {
                     </div>
                   </div>
                   <div className='flex flex-col gap-0.5 w-full'>
-                    <div className='text-lg font-medium font-oswald'>
-                      {item.name}
-                    </div>
+                    <div className='text-lg font-oswald'>{item.name}</div>
                     <div className='w-full'>
                       <div className='text-sm font-medium text-slate-500 line-clamp-2'>
                         {item.description}
