@@ -1448,6 +1448,7 @@ export const getPathBySlug = async (slug) => {
           }
           description
           displayOrder
+          icon
           hours
           id
           slug

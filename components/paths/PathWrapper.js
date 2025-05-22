@@ -2,17 +2,62 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  GiFizzingFlask,
+  GiForest,
+  GiPalette,
+  GiCarWheel,
+  GiHoneycomb,
+  GiBoxUnpacking,
+} from 'react-icons/gi';
+import {
   removeStudentFromPath,
   getAWSUser,
   addStudentToPath,
 } from '../../helpers/api';
 import ProgressDonut from '../shared/ProgressDonut';
-import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
+import { MdOutlineTimer, MdOutlineBook, MdOutlineSchool } from 'react-icons/md';
 import PathCourseCard from '../shared/PathCourseCard';
 import { useRouter } from 'next/navigation';
+
+const PathWrapperSkeleton = () => {
+  return (
+    <div className='w-full flex flex-col animate-pulse'>
+      <div className='w-full py-12 bg-gray-800 relative overflow-hidden'>
+        <div className='flex items-center gap-6 max-w-6xl mx-auto'>
+          <div className='aspect-[1/1] w-1/4 rounded-lg bg-gray-700'></div>
+          <div className='flex flex-col gap-2 flex-1'>
+            <div className='h-8 w-3/4 bg-gray-700 rounded'></div>
+            <div className='h-4 w-full bg-gray-700 rounded'></div>
+            <div className='h-4 w-2/3 bg-gray-700 rounded'></div>
+            <div className='flex items-center gap-4 mt-3'>
+              <div className='h-10 w-32 bg-gray-700 rounded-lg'></div>
+              <div className='flex gap-3'>
+                <div className='h-6 w-24 bg-gray-700 rounded'></div>
+                <div className='h-6 w-24 bg-gray-700 rounded'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='w-full py-20'>
+        <div className='max-w-5xl mx-auto w-full flex flex-col gap-10'>
+          <div className='h-8 w-48 bg-gray-700 rounded'></div>
+          <div className='flex flex-col w-full border-l border-gray-600'>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className='h-32 bg-gray-700 rounded-lg mb-4'></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PathWrapper = ({ path }) => {
+  console.log(path);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   const { awsUser, enrollments } = useSelector((state) => state.auth);
   const pathProgress = useMemo(() => {
@@ -61,6 +106,12 @@ const PathWrapper = ({ path }) => {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    if (path) {
+      setIsLoading(false);
+    }
+  }, [path]);
+
   const handleLeavePath = async () => {
     if (currentUser) {
       await removeStudentFromPath(currentUser.id);
@@ -82,10 +133,42 @@ const PathWrapper = ({ path }) => {
     }
   };
 
+  const renderIcon = (icon) => {
+    switch (icon) {
+      case 'GiFizzingFlask':
+        return <GiFizzingFlask size={50} className='text-white' />;
+      case 'GiForest':
+        return <GiForest size={50} className='text-white' />;
+      case 'GiPalette':
+        return <GiPalette size={50} className='text-white' />;
+      case 'GiCarWheel':
+        return <GiCarWheel size={50} className='text-white' />;
+      case 'GiHoneycomb':
+        return <GiHoneycomb size={50} className='text-white' />;
+      case 'GiBoxUnpacking':
+        return <GiBoxUnpacking size={50} className='text-white' />;
+      default:
+        return <GiBoxUnpacking size={50} className='text-white' />;
+    }
+  };
+
+  if (isLoading) {
+    return <PathWrapperSkeleton />;
+  }
+
   return (
     <div className='w-full flex flex-col'>
-      <div className='w-full py-12 bg-gray-800'>
-        <div className='flex items-center gap-6 max-w-6xl mx-auto'>
+      <div className='w-full py-12 bg-gray-800 relative overflow-hidden'>
+        <div className='absolute inset-0 opacity-10'>
+          <div className='grid grid-cols-12 gap-4 w-full h-full'>
+            {Array.from({ length: 48 }).map((_, i) => (
+              <div key={i} className='flex items-center justify-center'>
+                {renderIcon(path.icon)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className='flex items-center gap-6 max-w-6xl mx-auto relative z-10'>
           <div className='aspect-[1/1] w-1/4 rounded-lg flex justify-center items-center'>
             <ProgressDonut
               progress={pathProgress}

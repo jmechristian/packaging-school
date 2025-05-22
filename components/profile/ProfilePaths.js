@@ -44,7 +44,14 @@ const ProfilePaths = ({ paths }) => {
 
   const router = useRouter();
   const renderIcon = (icon) => {
-    switch (icon) {
+    // If icon is already a React component, return it
+    if (React.isValidElement(icon)) {
+      return icon;
+    }
+
+    // If icon is a string, handle it as before
+    const iconName = icon?.startsWith('Gi') ? icon : `Gi${icon}`;
+    switch (iconName) {
       case 'GiFizzingFlask':
         return <GiFizzingFlask size={36} />;
       case 'GiForest':
