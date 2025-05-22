@@ -490,7 +490,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
         <div
           className={`col-span-10 w-full flex flex-col bg-white p-6 rounded-lg mt-8`}
         >
-          <div className='w-full'>{renderContent()}</div>
+          <div className='w-full h-full'>{renderContent()}</div>
         </div>
       </div>
     </div>

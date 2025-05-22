@@ -15,7 +15,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className='flex flex-col gap-8 mx-auto max-w-6xl py-20'>
+    <div className='flex flex-col gap-8 mx-auto max-w-6xl py-16'>
       <div className='flex flex-col gap-3'>
         <h2 className='h2-base text-center'>Learning Paths</h2>
         <p className='text-center max-w-3xl mx-auto text-xl text-gray-600'>
@@ -23,7 +23,7 @@ const Page = () => {
           excel, and transform your career.
         </p>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-5'>
         {paths
           .sort((a, b) => a.displayOrder - b.displayOrder)
           .map((path) => (

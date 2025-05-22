@@ -1,20 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  GiDiploma,
-  GiArchiveRegister,
-  GiVelocipede,
-  GiHelp,
-  GiChatBubble,
-  GiLetterBomb,
-  GiHearts,
-  GiMountainRoad,
-  GiBookCover,
   GiFizzingFlask,
   GiForest,
   GiPalette,
   GiCarWheel,
   GiHoneycomb,
+  GiBoxUnpacking,
 } from 'react-icons/gi';
 
 const ProfilePaths = ({ paths }) => {
@@ -63,12 +55,14 @@ const ProfilePaths = ({ paths }) => {
         return <GiCarWheel size={36} />;
       case 'GiHoneycomb':
         return <GiHoneycomb size={36} />;
+      case 'GiBoxUnpacking':
+        return <GiBoxUnpacking size={36} />;
       default:
         return null;
     }
   };
   return (
-    <div className='flex flex-col w-full gap-10'>
+    <div className='flex flex-col w-full gap-10 h-full justify-between'>
       {paths.length > 0 ? (
         <div className='flex flex-col gap-5'>
           <div className='font-semibold text-lg w-full border-b border-gray-200 pb-2.5'>
@@ -100,8 +94,15 @@ const ProfilePaths = ({ paths }) => {
                   </div>
                 </div>
                 <div className='flex w-full items-center justify-between gap-2 border-y border-slate-300 py-2.5 bg-slate-400 px-4'>
-                  <div className='w-[84%] h-1 bg-white rounded-lg'></div>
-                  <div className='text-sm font-medium text-white'>0%</div>
+                  <div className='w-[84%] h-1 bg-white rounded-lg'>
+                    <div
+                      className='h-1 bg-yellow-600 rounded-lg'
+                      style={{ width: `${path.progress}%` }}
+                    ></div>
+                  </div>
+                  <div className='text-sm font-medium text-white'>
+                    {path.progress}%
+                  </div>
                 </div>
                 <div
                   className='w-full flex justify-between items-center cursor-pointer px-4'
@@ -110,7 +111,10 @@ const ProfilePaths = ({ paths }) => {
                   }}
                 >
                   <div className={`font-medium text-sm text-slate-500`}>
-                    0/{path.learningPath.hours}h
+                    {((path.progress / 100) * path.learningPath.hours)
+                      .toFixed(2)
+                      .replace(/\.?0+$/, '')}
+                    h / {path.learningPath.hours}h
                   </div>
                   <div className='text-sm font-medium text-slate-900'>
                     Continue Path &rarr;

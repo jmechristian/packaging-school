@@ -5,17 +5,19 @@ import {
   GiPalette,
   GiCarWheel,
   GiHoneycomb,
+  GiBoxUnpacking,
 } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 import ProgressDonut from './ProgressDonut';
 import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
-import { getAllPathCourses } from '../../helpers/api';
+import {
+  getAllPathCourses,
+  updateStudentPathProgress,
+} from '../../helpers/api';
 import { useSelector } from 'react-redux';
 import ComponentLoginButton from './ComponentLoginButton';
 const PathItem = ({ path }) => {
-  console.log('path', path);
   const { enrollments, awsUser } = useSelector((state) => state.auth);
-  const router = useRouter();
 
   const pathProgress = useMemo(() => {
     if (!path.courses.items?.length || !enrollments?.length) {
@@ -33,11 +35,7 @@ const PathItem = ({ path }) => {
 
       // Convert decimal to percentage (0.1139... becomes 11.39...)
       const percentage = parseFloat(enrollment.percentage_completed) * 100;
-      console.log('Course progress:', {
-        courseId: course.thinkificId,
-        rawValue: enrollment.percentage_completed,
-        calculatedPercentage: percentage,
-      });
+
       return isNaN(percentage) ? 0 : percentage;
     });
 
@@ -45,12 +43,11 @@ const PathItem = ({ path }) => {
       (sum, progress) => sum + progress,
       0
     );
-    console.log('totalProgress', totalProgress);
 
     // Calculate average percentage across all courses
     const finalProgress =
       Math.round((totalProgress / courseProgresses.length) * 10) / 10;
-    console.log('finalProgress', finalProgress);
+
     return finalProgress;
   }, [path.courses.items, enrollments]);
 
@@ -62,6 +59,20 @@ const PathItem = ({ path }) => {
       )
     );
   }, [awsUser, path.id]);
+
+  useEffect(() => {
+    const updatePathProgress = async () => {
+      await updateStudentPathProgress(
+        awsUser.learningPathProgress.items.find(
+          (item) => item.learningPath.id === path.id
+        ).id,
+        {
+          progress: pathProgress,
+        }
+      );
+    };
+    isUserInPath && updatePathProgress();
+  }, [isUserInPath, pathProgress]);
 
   const renderIcon = (icon) => {
     switch (icon) {
@@ -75,6 +86,8 @@ const PathItem = ({ path }) => {
         return <GiCarWheel size={44} />;
       case 'GiHoneycomb':
         return <GiHoneycomb size={44} />;
+      case 'GiBoxUnpacking':
+        return <GiBoxUnpacking size={44} />;
       default:
         return null;
     }
@@ -99,14 +112,18 @@ const PathItem = ({ path }) => {
             </div>
           </div>
         </div>
-        <div className='flex flex-col gap-2 py-6 bg-slate-300 rounded-lg w-full items-center justify-center'>
+        <div
+          className={`flex flex-col gap-5 py-6 ${
+            isUserInPath ? 'bg-slate-300' : 'bg-white'
+          } rounded-lg w-full items-center justify-center`}
+        >
           <ProgressDonut
             progress={pathProgress}
-            size={52}
+            size={48}
             textSize={7}
             color={isUserInPath ? path.color || '#fff' : '#eee'}
-            textColor={isUserInPath ? path.textColor || '#ff9321' : '#eee'}
-            strokeColor={isUserInPath ? path.strokeColor || '#ff9321' : '#eee'}
+            textColor={isUserInPath ? path.textColor || '#ff9321' : ' #eee'}
+            strokeColor={isUserInPath ? path.strokeColor || '#ff9321' : '#fff'}
           />
           <div className='flex items-center justify-center w-full gap-3 mt-2'>
             <div className='text-slate-600 text-sm flex items-center gap-1'>
@@ -130,10 +147,14 @@ const PathItem = ({ path }) => {
               Courses
             </div>
           </div>
+          <div className='flex flex-col gap-8 items-center'>
+            <ComponentLoginButton
+              path={path}
+              progress={pathProgress}
+              studentId={awsUser?.id || ''}
+            />
+          </div>
         </div>
-      </div>
-      <div className='flex flex-col gap-8 items-center'>
-        <ComponentLoginButton path={path} />
       </div>
     </div>
   );

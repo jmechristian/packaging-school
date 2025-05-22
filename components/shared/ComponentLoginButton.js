@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addStudentToPath, getAWSUser } from '../../helpers/api';
 import { setAWSUser } from '../../features/auth/authslice';
 import Link from 'next/link';
-const ComponentLoginButton = ({ path }) => {
+const ComponentLoginButton = ({ path, progress, studentId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -24,9 +24,16 @@ const ComponentLoginButton = ({ path }) => {
       router.push(`/paths/${path.slug}`);
     } else if (awsUser && !isUserInPath) {
       setIsLoading(true);
-      await addStudentToPath(path.id, awsUser.id);
-      const res = await getAWSUser(awsUser.email);
-      dispatch(setAWSUser(res));
+      await addStudentToPath({
+        lastAccessedDate: new Date().toISOString(),
+        learningPathUserProgressId: path.id,
+        progress: progress,
+        startDate: new Date().toISOString(),
+        status: 'IN_PROGRESS',
+        userLearningPathProgressId: studentId,
+      });
+      const user = await getAWSUser(awsUser.email);
+      dispatch(setAWSUser(user));
       router.push(`/paths/${path.slug}`);
       setIsLoading(false);
     } else {
@@ -40,9 +47,9 @@ const ComponentLoginButton = ({ path }) => {
         onClick={handleUserLogin}
         className={`w-48 ${
           isUserInPath
-            ? 'bg-clemson text-white hover:bg-clemson-dark'
+            ? 'bg-black text-white hover:bg-gray-500'
             : 'bg-base-brand text-white hover:bg-gray-300'
-        } px-4 py-2 font-semibold text-lg rounded-md transition-colors ${
+        } px-4 py-2 font-semibold rounded-md transition-colors ${
           isLoading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
@@ -51,8 +58,8 @@ const ComponentLoginButton = ({ path }) => {
           : isUserInPath
           ? 'Continue Path'
           : awsUser && !isUserInPath
-          ? 'Start Path'
-          : 'Login to Start'}
+          ? 'Track Path'
+          : 'Sign Up For Free'}
       </button>
       {!awsUser && (
         <p className='text-xs text-gray-500 mt-2.5 text-center'>

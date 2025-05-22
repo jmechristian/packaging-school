@@ -1,7 +1,9 @@
 'use client';
 import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeStudentFromPath } from '../../helpers/api';
+import { removeStudentFromPath, getAWSUser } from '../../helpers/api';
+import { setAWSUser } from '../../features/auth/authslice';
+import { useRouter } from 'next/router';
 import ProgressDonut from '../shared/ProgressDonut';
 import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
 import PathCourseCard from '../shared/PathCourseCard';
@@ -10,7 +12,7 @@ const PathWrapper = ({ path }) => {
   console.log('path', path);
   const { awsUser, enrollments } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const pathProgress = useMemo(() => {
     if (!path.courses.items?.length || !enrollments?.length) {
       return 0;
@@ -27,11 +29,6 @@ const PathWrapper = ({ path }) => {
 
       // Convert decimal to percentage (0.1139... becomes 11.39...)
       const percentage = parseFloat(enrollment.percentage_completed) * 100;
-      console.log('Course progress:', {
-        courseId: course.thinkificId,
-        rawValue: enrollment.percentage_completed,
-        calculatedPercentage: percentage,
-      });
       return isNaN(percentage) ? 0 : percentage;
     });
 
@@ -39,25 +36,27 @@ const PathWrapper = ({ path }) => {
       (sum, progress) => sum + progress,
       0
     );
-    console.log('totalProgress', totalProgress);
 
     // Calculate average percentage across all courses
     const finalProgress =
       Math.round((totalProgress / courseProgresses.length) * 10) / 10;
-    console.log('finalProgress', finalProgress);
+
     return finalProgress;
   }, [path.courses.items, enrollments]);
 
   const currentUser = useMemo(() => {
     return (
-      awsUser && path.users.items.find((user) => user.user.id === awsUser.id)
+      awsUser &&
+      path.userProgress.items.find((user) => user.user.id === awsUser.id)
     );
-  }, [path.users.items, awsUser]);
+  }, [path.userProgress.items, awsUser]);
 
   const handleLeavePath = async () => {
     if (currentUser) {
       await removeStudentFromPath(currentUser.id);
-      //   dispatch(setAWSUser(null));
+      const user = await getAWSUser(awsUser.email);
+      dispatch(setAWSUser(user));
+      router.push('/paths');
     }
   };
 

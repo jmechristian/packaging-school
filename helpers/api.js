@@ -42,6 +42,7 @@ import {
   createEmailSubscription,
   createUserWishlist,
   deleteUserWishlist,
+  updateLearningPathProgress,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -1451,15 +1452,22 @@ export const getPathBySlug = async (slug) => {
           id
           slug
           title
-          users {
+          userProgress {
             items {
+              completedCourses
+              completionDate
+              createdAt
               id
+              lastAccessedDate
+              learningPathUserProgressId
+              progress
+              startDate
+              status
+              updatedAt
+              userLearningPathProgressId
               user {
-                email
-                name
-                linkedin
                 id
-                company
+                email
               }
             }
           }
@@ -1489,6 +1497,14 @@ export const removeStudentFromPath = async (id) => {
     variables: { input: { id } },
   });
   return res.data.deleteLearningPathProgress;
+};
+
+export const updateStudentPathProgress = async (id, data) => {
+  const res = await API.graphql({
+    query: updateLearningPathProgress,
+    variables: { input: { id, ...data } },
+  });
+  return res.data.updateLearningPathProgress;
 };
 
 // export const updateStudentXp = async (userId, xp) => {
