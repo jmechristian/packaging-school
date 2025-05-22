@@ -216,9 +216,29 @@ const PathWrapper = ({ path }) => {
           </div>
         </div>
       </div>
-      <div className='w-full py-20'>
-        <div className='max-w-5xl mx-auto w-full flex flex-col gap-10'>
-          <h3 className='h3-base'>Courses: 0 / {path.courses.items.length}</h3>
+      <div className='w-full py-12'>
+        <div className='max-w-5xl mx-auto w-full flex flex-col gap-5'>
+          <div className='flex items-center justify-end w-full'>
+            <div className='flex items-center gap-5'>
+              <div className='flex items-center gap-2'>
+                <div className='text-slate-400'>
+                  <MdOutlineTimer size={20} />
+                </div>
+                <div>
+                  {((pathProgress / 100) * path.hours)
+                    .toFixed(1)
+                    .replace(/\.?0+$/, '')}
+                  h / {path.hours}h
+                </div>
+              </div>
+              <div className='flex items-center gap-2'>
+                <div className='text-slate-400'>
+                  <MdOutlineBook size={20} />
+                </div>
+                <div>0 / {path.courses.items.length}</div>
+              </div>
+            </div>
+          </div>
           <div className='flex flex-col w-full border-l border-gray-600'>
             {path.courses.items
               .sort((a, b) => a.order - b.order)
