@@ -1,18 +1,20 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeStudentFromPath, getAWSUser } from '../../helpers/api';
-import { setAWSUser } from '../../features/auth/authslice';
-import { useRouter } from 'next/router';
+import {
+  removeStudentFromPath,
+  getAWSUser,
+  addStudentToPath,
+} from '../../helpers/api';
 import ProgressDonut from '../shared/ProgressDonut';
 import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
 import PathCourseCard from '../shared/PathCourseCard';
-
+import { useRouter } from 'next/navigation';
 const PathWrapper = ({ path }) => {
-  console.log('path', path);
-  const { awsUser, enrollments } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { awsUser, enrollments } = useSelector((state) => state.auth);
   const pathProgress = useMemo(() => {
     if (!path.courses.items?.length || !enrollments?.length) {
       return 0;
@@ -51,12 +53,32 @@ const PathWrapper = ({ path }) => {
     );
   }, [path.userProgress.items, awsUser]);
 
+  const [isTracked, setIsTracked] = useState(currentUser);
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsTracked(true);
+    }
+  }, [currentUser]);
+
   const handleLeavePath = async () => {
     if (currentUser) {
       await removeStudentFromPath(currentUser.id);
       const user = await getAWSUser(awsUser.email);
-      dispatch(setAWSUser(user));
+      dispatch({ type: 'auth/setAWSUser', payload: user });
       router.push('/paths');
+    } else {
+      await addStudentToPath({
+        lastAccessedDate: new Date().toISOString(),
+        learningPathUserProgressId: path.id,
+        progress: pathProgress,
+        startDate: new Date().toISOString(),
+        status: 'IN_PROGRESS',
+        userLearningPathProgressId: awsUser.id,
+      });
+      setIsTracked(true);
+      const user = await getAWSUser(awsUser.email);
+      dispatch({ type: 'auth/setAWSUser', payload: user });
     }
   };
 
@@ -83,7 +105,7 @@ const PathWrapper = ({ path }) => {
                 onClick={handleLeavePath}
                 className='bg-red-500 hover:bg-red-600 font-semibold transition-colors duration-200 rounded-lg px-4 py-2 text-white text-lg w-fit'
               >
-                Leave Path
+                {isTracked ? 'Leave Path' : 'Track Path'}
               </button>
               <div className='flex gap-3'>
                 <div className='text-gray-400 flex items-center gap-1'>
