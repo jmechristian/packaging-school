@@ -6,7 +6,10 @@ const PathCourseCard = ({ course, enrollment }) => {
   const [courseData, setCourseData] = useState(null);
 
   useEffect(() => {
-    getCourse(course.courseId).then((data) => setCourseData(data));
+    getCourse(course.courseId).then((data) => {
+      setCourseData(data);
+      console.log(data);
+    });
   }, [course.courseId]);
   return (
     <div className='w-full grid grid-cols-12 mb-3'>
@@ -25,11 +28,21 @@ const PathCourseCard = ({ course, enrollment }) => {
       </div>
       <div className='grid grid-cols-12 cols-span-12 lg:col-span-11 border border-gray-600'>
         <div className='col-span-12 md:col-span-5 w-full'>
-          <div className='w-full aspect-[16/9] bg-gray-600'></div>
+          <div
+            className='w-full aspect-[16/9] bg-gray-600 bg-cover bg-center relative'
+            style={{
+              backgroundImage: `url(${courseData?.seoImage})`,
+              backgroundSize: 'cover',
+            }}
+          >
+            <div className='absolute inset-0 bg-black/50'></div>
+          </div>
         </div>
-        <div className='col-span-12 md:col-span-7 w-full p-6 flex flex-col gap-2 justify-center'>
-          <h4 className='text-xl font-semibold'>{courseData?.title}</h4>
-          <p className=' text-gray-500 line-clamp-3 w-full leading-snug'>
+        <div className='col-span-12 md:col-span-7 w-full p-6 flex flex-col gap-3 justify-center'>
+          <div className='text-xl font-oswald font-medium'>
+            {courseData?.title}
+          </div>
+          <p className=' text-gray-500 line-clamp-3 w-full leading-snug text-sm'>
             {courseData?.subheadline}
           </p>
           <div className='flex items-center gap-2'>

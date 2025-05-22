@@ -168,18 +168,21 @@ const PathWrapper = ({ path }) => {
             ))}
           </div>
         </div>
-        <div className='flex items-center gap-6 max-w-6xl mx-auto relative z-10'>
+        <div className='flex items-center gap-6 max-w-5xl mx-auto relative z-10'>
           <div className='aspect-[1/1] w-1/4 rounded-lg flex justify-center items-center'>
             <ProgressDonut
               progress={pathProgress}
-              size={60}
+              size={56}
               color={path.color || '#eee'}
               textColor={path.textColor || '#ff9321'}
               strokeColor={path.strokeColor || '#ff9321'}
+              textSize={8}
             />
           </div>
           <div className='flex flex-col gap-2'>
-            <h2 className='text-white h2-base'>{path.title}</h2>
+            <div className='text-white text-4xl lg:text-5xl font-oswald font-medium'>
+              {path.title}
+            </div>
             <p className='text-gray-300 text-lg max-w-4xl'>
               {path.description}
             </p>
