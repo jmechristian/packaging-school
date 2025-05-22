@@ -554,7 +554,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   allAccessStartDate: String
   allAccessEndDate: String
   lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
-  learningPaths: [LearningPath] @manyToMany(relationName: "LearningPathUsers")
+  learningPathProgress: [LearningPathProgress] @hasMany
   userXp: UserXp @hasOne
   wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
 }
@@ -590,12 +590,24 @@ type LearningPath @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String
   courses: [LearningPathCourse] @hasMany
-  users: [User] @manyToMany(relationName: "LearningPathUsers")
+  userProgress: [LearningPathProgress] @hasMany
   displayOrder: Int
   hours: Int
   slug: String! @index(name: "learningPathBySlug")
   status: String @default(value: "DRAFT")
   icon: String
+}
+
+type LearningPathProgress @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  learningPath: LearningPath @belongsTo
+  progress: Float @default(value: "0")
+  completedCourses: [String]
+  lastAccessedDate: String
+  startDate: String
+  completionDate: String
+  status: String @default(value: "IN_PROGRESS")
 }
 
 type LearningPathCourse @model @auth(rules: [{ allow: public }]) {

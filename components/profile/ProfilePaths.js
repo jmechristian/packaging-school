@@ -23,7 +23,7 @@ const ProfilePaths = ({ paths }) => {
     {
       id: 1,
       name: 'Packaging Scientist',
-      description: 'Fluent in the language of packaging',
+      description: 'Become fluent in the language of packaging',
       icon: <GiFizzingFlask size={36} />,
       link: '/paths/packaging-science',
       hours: 11,

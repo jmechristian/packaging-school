@@ -200,11 +200,13 @@ const Page = ({ lesson }) => {
           description={lesson.subhead}
           image={lesson.seoImage}
         />
-        <div className='w-full max-w-7xl mx-auto py-16 flex flex-col'>
+        <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col'>
           <div className='w-full grid grid-cols-12 gap-10'>
-            <div className='col-span-12 lg:!col-span-9 flex flex-col gap-10'>
-              <div className='w-full flex flex-col gap-6 lg:!gap-9  max-w-4xl'>
-                <div className='h2-base'>{lesson.title}</div>
+            <div className='col-span-12 lg:!col-span-9 flex flex-col gap-6 lg:gap-10'>
+              <div className='w-full flex flex-col gap-5 lg:!gap-9  max-w-4xl px-4 lg:px-0'>
+                <div className='text-4xl lg:text-5xl font-medium font-oswald'>
+                  {lesson.title}
+                </div>
                 <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
               </div>
               {lesson.mediaType === 'VIDEO' && (
@@ -235,7 +237,7 @@ const Page = ({ lesson }) => {
               )}
               <div
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
-                className='tiptap lg:text-lg'
+                className='tiptap lg:text-lg px-4 lg:px-0'
               ></div>
               {lesson.analysis && (
                 <div className='w-full'>

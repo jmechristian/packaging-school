@@ -13,7 +13,7 @@ const ComponentLoginButton = ({ path }) => {
   const isUserInPath = useMemo(() => {
     return (
       awsUser &&
-      awsUser.learningPaths.items.some(
+      awsUser.learningPathProgress.items.some(
         (item) => item.learningPath.id === path.id
       )
     );

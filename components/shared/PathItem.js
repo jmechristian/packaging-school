@@ -1,4 +1,11 @@
 import { useEffect, useState, useMemo } from 'react';
+import {
+  GiFizzingFlask,
+  GiForest,
+  GiPalette,
+  GiCarWheel,
+  GiHoneycomb,
+} from 'react-icons/gi';
 import { useRouter } from 'next/router';
 import ProgressDonut from './ProgressDonut';
 import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
@@ -50,57 +57,83 @@ const PathItem = ({ path }) => {
   const isUserInPath = useMemo(() => {
     return (
       awsUser &&
-      awsUser.learningPaths.items.some(
+      awsUser.learningPathProgress.items.some(
         (item) => item.learningPath.id === path.id
       )
     );
   }, [awsUser, path.id]);
 
+  const renderIcon = (icon) => {
+    switch (icon) {
+      case 'GiFizzingFlask':
+        return <GiFizzingFlask size={44} />;
+      case 'GiForest':
+        return <GiForest size={44} />;
+      case 'GiPalette':
+        return <GiPalette size={44} />;
+      case 'GiCarWheel':
+        return <GiCarWheel size={44} />;
+      case 'GiHoneycomb':
+        return <GiHoneycomb size={44} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div
       key={path.id}
-      className='bg-gray-100 rounded-lg p-8 border flex flex-col gap-5 justify-between items-center'
+      className='bg-slate-100 rounded-lg p-4 border flex flex-col gap-8'
     >
-      <div className='flex flex-col gap-2 items-center justify-between h-full'>
-        <h3 className='h4-base text-center'>{path.title}</h3>
-        <p className='text-gray-500 text-sm text-center leading-tight tracking-normal'>
-          {path.description}
-        </p>
-        <div className='flex flex-col gap-2 py-2'>
+      <div className='flex flex-col gap-5 items-center justify-between h-full'>
+        <div className='flex w-full justify-between'>
+          <div>
+            <div className='w-16 h-full bg-clemson text-white flex items-center justify-center rounded-l-lg'>
+              {renderIcon(path.icon)}
+            </div>
+          </div>
+          <div className='flex flex-col gap-2 max-w-[76%]'>
+            <div className='text-2xl font-oswald'>{path.title}</div>
+            <div className='text-sm text-gray-500 leading-tight'>
+              {path.description}
+            </div>
+          </div>
+        </div>
+        <div className='flex flex-col gap-2 py-6 bg-slate-300 rounded-lg w-full items-center justify-center'>
           <ProgressDonut
             progress={pathProgress}
-            size={40}
+            size={52}
             textSize={7}
-            color={isUserInPath ? path.color || '#fff' : '#ebe6e7'}
-            textColor={isUserInPath ? path.textColor || '#ff9321' : '#ebe6e7'}
-            strokeColor={isUserInPath ? path.strokeColor || '#ff9321' : '#fff'}
+            color={isUserInPath ? path.color || '#fff' : '#eee'}
+            textColor={isUserInPath ? path.textColor || '#ff9321' : '#eee'}
+            strokeColor={isUserInPath ? path.strokeColor || '#ff9321' : '#eee'}
           />
+          <div className='flex items-center justify-center w-full gap-3 mt-2'>
+            <div className='text-slate-600 text-sm flex items-center gap-1'>
+              <div className='text-slate-600 text-sm'>
+                <MdOutlineTimer size={20} />
+              </div>
+              {path.courses.items.reduce(
+                (acc, course) => acc + (Number(course.course.hours) || 0),
+                0
+              )}{' '}
+              Hours
+            </div>
+            <div className='text-slate-600 text-sm'>|</div>
+            <div className='text-slate-600 text-sm flex items-center gap-1'>
+              <div className='text-slate-600 text-sm'>
+                <MdOutlineBook size={20} />
+              </div>
+              {path.courses.items && path.courses.items.length > 0
+                ? path.courses.items.length
+                : 0}{' '}
+              Courses
+            </div>
+          </div>
         </div>
       </div>
       <div className='flex flex-col gap-8 items-center'>
         <ComponentLoginButton path={path} />
-        <div className='flex items-center justify-center w-full gap-3 mt-2'>
-          <div className='text-gray-600 text-sm flex items-center gap-1'>
-            <div className='text-gray-600 text-sm'>
-              <MdOutlineTimer size={20} />
-            </div>
-            {path.courses.items.reduce(
-              (acc, course) => acc + (Number(course.course.hours) || 0),
-              0
-            )}{' '}
-            Hours
-          </div>
-          <div className='text-gray-600 text-sm'>|</div>
-          <div className='text-gray-600 text-sm flex items-center gap-1'>
-            <div className='text-gray-600 text-sm'>
-              <MdOutlineBook size={20} />
-            </div>
-            {path.courses.items && path.courses.items.length > 0
-              ? path.courses.items.length
-              : 0}{' '}
-            Courses
-          </div>
-        </div>
       </div>
     </div>
   );

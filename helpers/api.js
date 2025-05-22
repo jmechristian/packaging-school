@@ -18,10 +18,11 @@ import {
   listLearningPaths,
   learningPathsBySlug,
   listLessons,
+  listLearningPathProgress,
 } from '../src/graphql/queries';
 import {
   createClick,
-  createLearningPathUsers,
+  createLearningPathProgress,
   createCourseClick,
   createIndiaClick,
   createLessonClick,
@@ -35,7 +36,7 @@ import {
   createUser,
   updateUser,
   createUserCompletedLessons,
-  deleteLearningPathUsers,
+  deleteLearningPathProgress,
   createUserXp,
   updateUserXp,
   createEmailSubscription,
@@ -1164,16 +1165,24 @@ export const getAWSUser = async (email) => {
               lessonId
             }
           }
-          learningPaths {
+          learningPathProgress {
             items {
+              completedCourses
+              completionDate
+              createdAt
+              id
+              lastAccessedDate
               learningPath {
                 id
-                title
-                description
-                hours
                 icon
+                hours
+                description
                 slug
+                title
               }
+              progress
+              startDate
+              status
             }
           }
           level
@@ -1371,6 +1380,8 @@ export const getSavedLesson = async (lessonId) => {
   return res.data.getLesson;
 };
 
+// LEARNING PATHS
+
 export const getPaths = async () => {
   const getPathsQuery = /* GraphQL */ `
     query MyQuery {
@@ -1392,6 +1403,7 @@ export const getPaths = async () => {
           displayOrder
           id
           slug
+          icon
         }
       }
     }
@@ -1463,20 +1475,20 @@ export const getPathBySlug = async (slug) => {
   return res.data.learningPathsBySlug;
 };
 
-export const addStudentToPath = async (pathId, userId) => {
+export const addStudentToPath = async (data) => {
   const res = await API.graphql({
-    query: createLearningPathUsers,
-    variables: { input: { learningPathId: pathId, userId } },
+    query: createLearningPathProgress,
+    variables: { input: data },
   });
-  return res.data.createLearningPathUsers;
+  return res.data.createLearningPathProgress;
 };
 
 export const removeStudentFromPath = async (id) => {
   const res = await API.graphql({
-    query: deleteLearningPathUsers,
+    query: deleteLearningPathProgress,
     variables: { input: { id } },
   });
-  return res.data.deleteLearningPathUsers;
+  return res.data.deleteLearningPathProgress;
 };
 
 // export const updateStudentXp = async (userId, xp) => {
