@@ -1,16 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getCourse } from '../../helpers/api';
-import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
+import {
+  MdOutlineTimer,
+  MdOutlineBook,
+  MdOutlineBolt,
+  MdCheck,
+} from 'react-icons/md';
 import ProgressDonut from './ProgressDonut';
-const PathCourseCard = ({ course, enrollment }) => {
+const PathCourseCard = ({ course, enrollment, enrollments }) => {
   const [courseData, setCourseData] = useState(null);
 
   useEffect(() => {
     getCourse(course.courseId).then((data) => {
       setCourseData(data);
-      console.log(data);
     });
   }, [course.courseId]);
+
+  const isEnrolled = useMemo(() => {
+    return enrollments.find(
+      (e) => Number(e.course_id) === Number(course.thinkificId)
+    );
+  }, [enrollments, course.thinkificId]);
+
   return (
     <div className='w-full grid grid-cols-12 mb-3'>
       <div className='hidden lg:flex lg:items-center lg:w-full lg:col-span-1 relative '>
@@ -36,6 +47,26 @@ const PathCourseCard = ({ course, enrollment }) => {
             }}
           >
             <div className='absolute inset-0 bg-black/50'></div>
+            <div className='absolute top-3 left-3 z-10 flex items-center gap-1'>
+              <div className=' flex items-center gap-1 justify-center bg-base-brand text-white px-2 py-1.5 rounded-md text-sm font-semibold '>
+                <div className='text-white'>
+                  <MdOutlineBook size={16} />
+                </div>
+                <div className='text-white uppercase font-medium font-oswald text-xs'>
+                  Full Course
+                </div>
+              </div>
+              {isEnrolled && (
+                <div className=' flex items-center gap-1 justify-center bg-green-600 text-white px-2 py-1.5 rounded-md text-sm font-semibold '>
+                  <div className='text-white'>
+                    <MdCheck size={16} />
+                  </div>
+                  <div className='text-white uppercase font-medium font-oswald text-xs'>
+                    Enrolled
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className='col-span-12 md:col-span-7 w-full p-6 flex flex-col gap-3 justify-center'>
@@ -43,12 +74,9 @@ const PathCourseCard = ({ course, enrollment }) => {
           <p className=' text-gray-500 line-clamp-3 w-full leading-snug text-sm'>
             {courseData?.subheadline}
           </p>
-          <div className='flex items-center gap-2'>
-            <button className='bg-clemson hover:bg-clemson-dark text-white px-4 py-2 rounded-md text-sm font-semibold'>
-              Get Full Access
-            </button>
-            <button className='bg-base-brand hover:bg-base-dark text-white px-4 py-2 rounded-md text-sm font-semibold'>
-              View Course
+          <div className='flex items-center gap-4'>
+            <button className='bg-base-brand hover:bg-base-dark text-white px-4 py-2 rounded-md text-sm font-semibold w-48'>
+              {isEnrolled ? 'Continue Course' : 'Get Full Access'} &rarr;
             </button>
             <div className='flex items-center gap-1 text-sm text-gray-500'>
               <MdOutlineTimer />

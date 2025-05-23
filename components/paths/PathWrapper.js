@@ -295,6 +295,7 @@ const PathWrapper = ({ path }) => {
                   // This is a course
                   return (
                     <PathCourseCard
+                      enrollments={enrollments}
                       key={item.id}
                       course={item}
                       enrollment={enrollments.find(

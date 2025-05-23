@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { MdCheck } from 'react-icons/md';
+import { MdCheck, MdOutlineBolt } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 
 const PathLessonCard = ({ lesson }) => {
@@ -36,6 +36,14 @@ const PathLessonCard = ({ lesson }) => {
             }}
           >
             <div className='absolute inset-0 bg-black/50'></div>
+            <div className='absolute top-3 left-3 flex items-center gap-0 justify-center bg-black text-white px-2 py-1.5 rounded-md text-sm font-semibold z-10'>
+              <div className='text-white'>
+                <MdOutlineBolt size={16} />
+              </div>
+              <div className='text-white uppercase font-medium font-oswald text-xs'>
+                Free Lesson
+              </div>
+            </div>
           </div>
         </div>
         <div className='col-span-12 md:col-span-7 w-full p-6 flex flex-col gap-3 justify-center'>
@@ -45,12 +53,12 @@ const PathLessonCard = ({ lesson }) => {
           </p>
           <div className='flex items-center gap-2'>
             <button
-              className='bg-base-brand hover:bg-base-dark text-white px-4 py-2 rounded-md text-sm font-semibold'
+              className='bg-black hover:bg-black/80 text-white px-4 py-2 rounded-md text-sm font-semibold w-48'
               onClick={() => {
                 router.push(`/lessons/${lesson?.lesson?.slug}`);
               }}
             >
-              {isCompleted ? 'Complete Lesson' : 'View Lesson'}
+              {isCompleted ? 'View Lesson' : 'Complete Lesson'} &rarr;
             </button>
             {/* <div className='flex items-center gap-1 text-sm text-gray-500'>
               <MdOutlineTimer />
