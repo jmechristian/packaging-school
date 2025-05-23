@@ -98,7 +98,7 @@ const CourseInfo = ({
             <HoverCard
               title={'Your Journey Starts Here'}
               href={'/certifications/get-to-know-apc'}
-              subtitle={`This course as part of the  Autmotive Packaging Certificate. Exploring distinctive aspects of automotive packaging, with exclusive content unmatched by any other.`}
+              subtitle={`This course is part of the  Autmotive Packaging Certificate. Exploring distinctive aspects of automotive packaging, with exclusive content unmatched by any other.`}
               Icon={LuRocket}
             />
           )}
@@ -106,7 +106,7 @@ const CourseInfo = ({
             <HoverCard
               title={'Your Journey Starts Here'}
               href={'/certifications/get-to-know-cps'}
-              subtitle={`This course as part of the  Certificate of Packaging Science, a comprehensive program covering all major aspects of packaging materials, processes, and design.`}
+              subtitle={`This course is part of the  Certificate of Packaging Science, a comprehensive program covering all major aspects of packaging materials, processes, and design.`}
               Icon={LuRocket}
             />
           )}
