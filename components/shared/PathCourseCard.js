@@ -39,9 +39,7 @@ const PathCourseCard = ({ course, enrollment }) => {
           </div>
         </div>
         <div className='col-span-12 md:col-span-7 w-full p-6 flex flex-col gap-3 justify-center'>
-          <div className='text-xl font-oswald font-medium'>
-            {courseData?.title}
-          </div>
+          <div className='text-lg font-semibold'>{courseData?.title}</div>
           <p className=' text-gray-500 line-clamp-3 w-full leading-snug text-sm'>
             {courseData?.subheadline}
           </p>

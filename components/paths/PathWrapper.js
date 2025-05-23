@@ -15,9 +15,14 @@ import {
   addStudentToPath,
 } from '../../helpers/api';
 import ProgressDonut from '../shared/ProgressDonut';
-import { MdOutlineTimer, MdOutlineBook, MdOutlineSchool } from 'react-icons/md';
+import {
+  MdOutlineTimer,
+  MdOutlineBook,
+  MdOutlineElectricBolt,
+} from 'react-icons/md';
 import PathCourseCard from '../shared/PathCourseCard';
 import { useRouter } from 'next/navigation';
+import PathLessonCard from './PathLessonCard';
 
 const PathWrapperSkeleton = () => {
   return (
@@ -61,35 +66,47 @@ const PathWrapper = ({ path }) => {
 
   const { awsUser, enrollments } = useSelector((state) => state.auth);
   const pathProgress = useMemo(() => {
-    if (!path.courses.items?.length || !enrollments?.length) {
+    if (!path.courses.items?.length && !path.lessons.items?.length) {
       return 0;
     }
 
-    const courseProgresses = path.courses.items.map((course) => {
-      const enrollment = enrollments.find(
-        (e) => Number(e.course_id) === Number(course.thinkificId)
-      );
+    const itemProgresses = [
+      ...(path.courses.items || []),
+      ...(path.lessons.items || []),
+    ].map((item) => {
+      if ('thinkificId' in item) {
+        // This is a course
+        const enrollment = enrollments.find(
+          (e) => Number(e.course_id) === Number(item.thinkificId)
+        );
 
-      if (!enrollment?.percentage_completed) {
-        return 0;
+        if (!enrollment?.percentage_completed) {
+          return 0;
+        }
+
+        // Convert decimal to percentage (0.1139... becomes 11.39...)
+        const percentage = parseFloat(enrollment.percentage_completed) * 100;
+        return isNaN(percentage) ? 0 : percentage;
+      } else {
+        // This is a lesson
+        const isCompleted = item.lesson?.usersCompleted?.items?.some(
+          (user) => user.userId === awsUser?.id
+        );
+        return isCompleted ? 100 : 0;
       }
-
-      // Convert decimal to percentage (0.1139... becomes 11.39...)
-      const percentage = parseFloat(enrollment.percentage_completed) * 100;
-      return isNaN(percentage) ? 0 : percentage;
     });
 
-    const totalProgress = courseProgresses.reduce(
+    const totalProgress = itemProgresses.reduce(
       (sum, progress) => sum + progress,
       0
     );
 
-    // Calculate average percentage across all courses
+    // Calculate average percentage across all items
     const finalProgress =
-      Math.round((totalProgress / courseProgresses.length) * 10) / 10;
+      Math.round((totalProgress / itemProgresses.length) * 10) / 10;
 
     return finalProgress;
-  }, [path.courses.items, enrollments]);
+  }, [path.courses.items, path.lessons.items, enrollments, awsUser]);
 
   const currentUser = useMemo(() => {
     return (
@@ -152,6 +169,16 @@ const PathWrapper = ({ path }) => {
     }
   };
 
+  const lessonsCompleted = useMemo(() => {
+    if (!path.lessons?.items || !awsUser?.id) return [];
+
+    return path.lessons.items.filter((lesson) =>
+      lesson?.lesson?.usersCompleted?.items?.some(
+        (user) => user?.userId === awsUser.id
+      )
+    );
+  }, [path.lessons?.items, awsUser]);
+
   if (isLoading) {
     return <PathWrapperSkeleton />;
   }
@@ -204,7 +231,6 @@ const PathWrapper = ({ path }) => {
                   )}{' '}
                   Hours
                 </div>
-                <div className='text-gray-400'>|</div>
                 <div className='text-gray-400 flex items-center gap-1'>
                   <div className='text-gray-400'>
                     <MdOutlineBook size={20} />
@@ -214,6 +240,17 @@ const PathWrapper = ({ path }) => {
                     : 0}{' '}
                   Courses
                 </div>
+                {path.lessons.items && path.lessons.items.length > 0 && (
+                  <div className='text-gray-400 flex items-center gap-1'>
+                    <div className='text-gray-400'>
+                      <MdOutlineElectricBolt size={20} />
+                    </div>
+                    {path.lessons.items && path.lessons.items.length > 0
+                      ? path.lessons.items.length
+                      : 0}{' '}
+                    Lessons
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -240,20 +277,36 @@ const PathWrapper = ({ path }) => {
                 </div>
                 <div>0 / {path.courses.items.length}</div>
               </div>
+              <div className='flex items-center gap-2'>
+                <div className='text-slate-400'>
+                  <MdOutlineElectricBolt size={20} />
+                </div>
+                <div>
+                  {lessonsCompleted.length} / {path.lessons.items.length}
+                </div>
+              </div>
             </div>
           </div>
           <div className='flex flex-col w-full border-l border-gray-600'>
-            {path.courses.items
+            {[...(path.courses.items || []), ...(path.lessons.items || [])]
               .sort((a, b) => a.order - b.order)
-              .map((course) => (
-                <PathCourseCard
-                  key={course.id}
-                  course={course}
-                  enrollment={enrollments.find(
-                    (e) => Number(e.course_id) === Number(course.thinkificId)
-                  )}
-                />
-              ))}
+              .map((item) => {
+                if ('thinkificId' in item) {
+                  // This is a course
+                  return (
+                    <PathCourseCard
+                      key={item.id}
+                      course={item}
+                      enrollment={enrollments.find(
+                        (e) => Number(e.course_id) === Number(item.thinkificId)
+                      )}
+                    />
+                  );
+                } else {
+                  // This is a lesson
+                  return <PathLessonCard key={item.id} lesson={item} />;
+                }
+              })}
           </div>
         </div>
       </div>

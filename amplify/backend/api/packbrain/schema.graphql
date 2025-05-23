@@ -154,6 +154,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   screengrab: String
   analysis: Analysis @hasOne
   usersCompleted: [User] @manyToMany(relationName: "userCompletedLessons")
+  learningPaths: [LearningPathLesson] @hasMany
 }
 
 type Author @model @auth(rules: [{ allow: public }]) {
@@ -590,6 +591,7 @@ type LearningPath @model @auth(rules: [{ allow: public }]) {
   title: String!
   description: String
   courses: [LearningPathCourse] @hasMany
+  lessons: [LearningPathLesson] @hasMany
   userProgress: [LearningPathProgress] @hasMany
   displayOrder: Int
   hours: Int
@@ -604,6 +606,7 @@ type LearningPathProgress @model @auth(rules: [{ allow: public }]) {
   learningPath: LearningPath @belongsTo
   progress: Float @default(value: "0")
   completedCourses: [String]
+  completedLessons: [String]
   lastAccessedDate: String
   startDate: String
   completionDate: String
@@ -617,6 +620,14 @@ type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
   learningPath: LearningPath @belongsTo
   order: Int
   thinkificId: String
+}
+
+type LearningPathLesson @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  lessonId: String
+  lesson: Lesson @belongsTo
+  learningPath: LearningPath @belongsTo
+  order: Int
 }
 
 type CMPMSession @model @auth(rules: [{ allow: public }]) {

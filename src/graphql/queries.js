@@ -623,6 +623,18 @@ export const getLesson = /* GraphQL */ `
         }
         nextToken
       }
+      learningPaths {
+        items {
+          id
+          lessonId
+          order
+          createdAt
+          updatedAt
+          lessonLearningPathsId
+          learningPathLessonsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -683,6 +695,9 @@ export const listLessons = /* GraphQL */ `
           updatedAt
         }
         usersCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -755,6 +770,9 @@ export const lessonsBySlug = /* GraphQL */ `
           updatedAt
         }
         usersCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt
@@ -2969,6 +2987,7 @@ export const getUser = /* GraphQL */ `
           id
           progress
           completedCourses
+          completedLessons
           lastAccessedDate
           startDate
           completionDate
@@ -3972,11 +3991,24 @@ export const getLearningPath = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          lessonId
+          order
+          createdAt
+          updatedAt
+          lessonLearningPathsId
+          learningPathLessonsId
+        }
+        nextToken
+      }
       userProgress {
         items {
           id
           progress
           completedCourses
+          completedLessons
           lastAccessedDate
           startDate
           completionDate
@@ -4010,6 +4042,9 @@ export const listLearningPaths = /* GraphQL */ `
         title
         description
         courses {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         userProgress {
@@ -4047,6 +4082,9 @@ export const learningPathsBySlug = /* GraphQL */ `
         title
         description
         courses {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         userProgress {
@@ -4209,6 +4247,9 @@ export const getLearningPathProgress = /* GraphQL */ `
         courses {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         userProgress {
           nextToken
         }
@@ -4222,6 +4263,7 @@ export const getLearningPathProgress = /* GraphQL */ `
       }
       progress
       completedCourses
+      completedLessons
       lastAccessedDate
       startDate
       completionDate
@@ -4298,6 +4340,7 @@ export const listLearningPathProgresses = /* GraphQL */ `
         }
         progress
         completedCourses
+        completedLessons
         lastAccessedDate
         startDate
         completionDate
@@ -4373,6 +4416,9 @@ export const getLearningPathCourse = /* GraphQL */ `
         title
         description
         courses {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         userProgress {
@@ -4461,6 +4507,162 @@ export const listLearningPathCourses = /* GraphQL */ `
         updatedAt
         learningPathCoursesId
         lMSCourseLearningPathsId
+      }
+      nextToken
+    }
+  }
+`;
+export const getLearningPathLesson = /* GraphQL */ `
+  query GetLearningPathLesson($id: ID!) {
+    getLearningPathLesson(id: $id) {
+      id
+      lessonId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        sources {
+          nextToken
+        }
+        links {
+          nextToken
+        }
+        tags {
+          nextToken
+        }
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        analysis {
+          id
+          wordCount
+          readingTime
+          quizQuestion
+          quizOptions
+          quizCorrectAnswer
+          lessonId
+          createdAt
+          updatedAt
+        }
+        usersCompleted {
+          nextToken
+        }
+        learningPaths {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        lessonAnalysisId
+      }
+      learningPath {
+        id
+        title
+        description
+        courses {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        userProgress {
+          nextToken
+        }
+        displayOrder
+        hours
+        slug
+        status
+        icon
+        createdAt
+        updatedAt
+      }
+      order
+      createdAt
+      updatedAt
+      lessonLearningPathsId
+      learningPathLessonsId
+    }
+  }
+`;
+export const listLearningPathLessons = /* GraphQL */ `
+  query ListLearningPathLessons(
+    $filter: ModelLearningPathLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLearningPathLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        lesson {
+          id
+          slug
+          title
+          subhead
+          type
+          media
+          mediaType
+          slides
+          seoImage
+          content
+          objectives
+          actionCTA
+          actionSubhead
+          actionLink
+          actionLinkTitle
+          actionExample
+          author
+          status
+          related
+          featured
+          backdate
+          createdBy
+          lastEditedBy
+          videoLink
+          screengrab
+          createdAt
+          updatedAt
+          lessonAnalysisId
+        }
+        learningPath {
+          id
+          title
+          description
+          displayOrder
+          hours
+          slug
+          status
+          icon
+          createdAt
+          updatedAt
+        }
+        order
+        createdAt
+        updatedAt
+        lessonLearningPathsId
+        learningPathLessonsId
       }
       nextToken
     }
@@ -8903,6 +9105,9 @@ export const getLessonTags = /* GraphQL */ `
         usersCompleted {
           nextToken
         }
+        learningPaths {
+          nextToken
+        }
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9825,6 +10030,9 @@ export const getUserCompletedLessons = /* GraphQL */ `
           updatedAt
         }
         usersCompleted {
+          nextToken
+        }
+        learningPaths {
           nextToken
         }
         createdAt

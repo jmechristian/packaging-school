@@ -9,7 +9,11 @@ import {
 } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 import ProgressDonut from './ProgressDonut';
-import { MdOutlineTimer, MdOutlineBook } from 'react-icons/md';
+import {
+  MdOutlineTimer,
+  MdOutlineBook,
+  MdOutlineElectricBolt,
+} from 'react-icons/md';
 import {
   getAllPathCourses,
   updateStudentPathProgress,
@@ -20,36 +24,47 @@ const PathItem = ({ path }) => {
   const { enrollments, awsUser } = useSelector((state) => state.auth);
 
   const pathProgress = useMemo(() => {
-    if (!path.courses.items?.length || !enrollments?.length) {
+    if (!path.courses.items?.length && !path.lessons.items?.length) {
       return 0;
     }
 
-    const courseProgresses = path.courses.items.map((course) => {
-      const enrollment = enrollments.find(
-        (e) => Number(e.course_id) === Number(course.thinkificId)
-      );
+    const itemProgresses = [
+      ...(path.courses.items || []),
+      ...(path.lessons.items || []),
+    ].map((item) => {
+      if ('thinkificId' in item) {
+        // This is a course
+        const enrollment = enrollments.find(
+          (e) => Number(e.course_id) === Number(item.thinkificId)
+        );
 
-      if (!enrollment?.percentage_completed) {
-        return 0;
+        if (!enrollment?.percentage_completed) {
+          return 0;
+        }
+
+        // Convert decimal to percentage (0.1139... becomes 11.39...)
+        const percentage = parseFloat(enrollment.percentage_completed) * 100;
+        return isNaN(percentage) ? 0 : percentage;
+      } else {
+        // This is a lesson
+        const isCompleted = item.lesson?.usersCompleted?.items?.some(
+          (user) => user.userId === awsUser?.id
+        );
+        return isCompleted ? 100 : 0;
       }
-
-      // Convert decimal to percentage (0.1139... becomes 11.39...)
-      const percentage = parseFloat(enrollment.percentage_completed) * 100;
-
-      return isNaN(percentage) ? 0 : percentage;
     });
 
-    const totalProgress = courseProgresses.reduce(
+    const totalProgress = itemProgresses.reduce(
       (sum, progress) => sum + progress,
       0
     );
 
-    // Calculate average percentage across all courses
+    // Calculate average percentage across all items
     const finalProgress =
-      Math.round((totalProgress / courseProgresses.length) * 10) / 10;
+      Math.round((totalProgress / itemProgresses.length) * 10) / 10;
 
     return finalProgress;
-  }, [path.courses.items, enrollments]);
+  }, [path.courses.items, path.lessons.items, enrollments, awsUser]);
 
   const isUserInPath = useMemo(() => {
     return (
@@ -125,8 +140,15 @@ const PathItem = ({ path }) => {
             textColor={isUserInPath ? path.textColor || '#ff9321' : ' #eee'}
             strokeColor={isUserInPath ? path.strokeColor || '#ff9321' : '#fff'}
           />
-          <div className='flex items-center justify-center w-full gap-3 mt-2'>
-            <div className='text-slate-600 text-sm flex items-center gap-1'>
+          <div className='flex flex-col gap-8 items-center'>
+            <ComponentLoginButton
+              path={path}
+              progress={pathProgress}
+              studentId={awsUser?.id || ''}
+            />
+          </div>
+          <div className='flex items-center justify-center w-full gap-1.5'>
+            <div className='text-slate-600 text-sm flex items-center gap-0.5'>
               <div className='text-slate-600 text-sm'>
                 <MdOutlineTimer size={20} />
               </div>
@@ -136,8 +158,7 @@ const PathItem = ({ path }) => {
               )}{' '}
               Hours
             </div>
-            <div className='text-slate-600 text-sm'>|</div>
-            <div className='text-slate-600 text-sm flex items-center gap-1'>
+            <div className='text-slate-600 text-sm flex items-center gap-0.5'>
               <div className='text-slate-600 text-sm'>
                 <MdOutlineBook size={20} />
               </div>
@@ -146,13 +167,19 @@ const PathItem = ({ path }) => {
                 : 0}{' '}
               Courses
             </div>
-          </div>
-          <div className='flex flex-col gap-8 items-center'>
-            <ComponentLoginButton
-              path={path}
-              progress={pathProgress}
-              studentId={awsUser?.id || ''}
-            />
+            {path.lessons.items && path.lessons.items.length > 0 && (
+              <>
+                <div className='text-slate-600 text-sm flex items-center gap-0.5'>
+                  <div className='text-slate-600 text-sm'>
+                    <MdOutlineElectricBolt size={20} />
+                  </div>
+                  {path.lessons.items && path.lessons.items.length > 0
+                    ? path.lessons.items.length
+                    : 0}{' '}
+                  Lessons
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

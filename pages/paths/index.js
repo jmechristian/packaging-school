@@ -9,7 +9,6 @@ const Page = () => {
   useEffect(() => {
     getPaths().then((data) => {
       setPaths(data);
-      console.log(data);
       setLoading(false);
     });
   }, []);

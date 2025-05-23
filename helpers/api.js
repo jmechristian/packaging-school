@@ -1399,6 +1399,27 @@ export const getPaths = async () => {
               thinkificId
             }
           }
+          lessons {
+            items {
+              id
+              lesson {
+                author
+                backdate
+                createdAt
+                id
+                seoImage
+                slug
+                subhead
+                title
+                usersCompleted {
+                  items {
+                    userId
+                  }
+                }
+              }
+              order
+            }
+          }
           title
           description
           displayOrder
@@ -1444,6 +1465,27 @@ export const getPathBySlug = async (slug) => {
               id
               order
               thinkificId
+            }
+          }
+          lessons {
+            items {
+              id
+              lesson {
+                author
+                backdate
+                createdAt
+                id
+                seoImage
+                slug
+                subhead
+                title
+                usersCompleted {
+                  items {
+                    userId
+                  }
+                }
+              }
+              order
             }
           }
           description
