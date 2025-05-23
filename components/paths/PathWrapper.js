@@ -186,7 +186,7 @@ const PathWrapper = ({ path }) => {
   return (
     <div className='w-full flex flex-col'>
       <div className='w-full py-12 bg-gray-800 relative overflow-hidden'>
-        <div className='absolute inset-0 opacity-10'>
+        <div className='absolute inset-0 opacity-5'>
           <div className='grid grid-cols-12 gap-4 w-full h-full'>
             {Array.from({ length: 48 }).map((_, i) => (
               <div key={i} className='flex items-center justify-center'>
