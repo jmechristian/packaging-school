@@ -606,6 +606,7 @@ const Page = () => {
                   cardPurchaseHandler={() =>
                     cardPurchaseHandler(course.id, course.link)
                   }
+                  hideCallout={true}
                 />
               ))}
             </div>

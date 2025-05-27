@@ -19,10 +19,10 @@ const Page = ({ course }) => {
         description={course && course.subheadline}
         image={course && course.seoImage}
       />
-      <div className='relative'>
+      <div className='relative py-16'>
         <CourseMain data={course} />
         <CourseBottom
-          category={course && course.category}
+          category={course && course.categoryArray}
           id={course && course.id}
         />
         {preview && (

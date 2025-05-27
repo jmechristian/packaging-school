@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 const CourseMain = ({ data }) => {
   return (
     data && (
-      <section className='w-full h-full bg-white dark:bg-dark-dark bg-cover py-16'>
+      <section className='w-full h-full bg-white dark:bg-dark-dark bg-cover'>
         <motion.div
           className='container__inner lg:px-6 xl:px-0'
           initial={{ opacity: 0 }}
@@ -22,7 +22,7 @@ const CourseMain = ({ data }) => {
           key={data.courseId}
         >
           <div className='grid grid-cols-1 lg:!grid-cols-5 '>
-            <div className='flex flex-col gap-16 lg:!col-span-3'>
+            <div className='flex flex-col gap-10 lg:!col-span-3'>
               <CourseIntro
                 id={data.courseId}
                 category={data.category}

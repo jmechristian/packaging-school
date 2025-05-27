@@ -755,3 +755,49 @@ export const getAllTestimonials = async () => {
   });
   return res.data.listTestimonials.items;
 };
+
+export const getRelatedCourses = async (categories, currentId) => {
+  const getRelatedCoursesQuery = /* GraphQL */ `
+    query MyQuery($categories: String!, $currentId: ID!) {
+      listLMSCourses(
+        filter: {
+          categoryArray: { contains: $categories }
+          and: { id: { ne: $currentId }, and: { type: { ne: "CUSTOMER" } } }
+        }
+      ) {
+        items {
+          id
+          title
+          hours
+          courseId
+          categoryArray
+          callout
+          altLink
+          lessons
+          link
+          preview
+          price
+          seoImage
+          slug
+          stripeLink
+          subheadline
+          subscriptionLink
+          subscriptionPrice
+          thinkificId
+          type
+          videos
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getRelatedCoursesQuery,
+    variables: {
+      categories: categories,
+      currentId: currentId,
+    },
+  });
+  console.log(res.data.listLMSCourses.items);
+  return res.data.listLMSCourses.items;
+};
