@@ -51,6 +51,7 @@ const CourseMain = ({ data }) => {
                   subscriptionPrice={
                     data.subscriptionPrice ? data.subscriptionPrice : null
                   }
+                  type={data.type}
                 />
               </div>
               <CourseObjectives
@@ -74,6 +75,7 @@ const CourseMain = ({ data }) => {
                 }
                 partOf={data.partOf ? data.partOf : undefined}
                 seoImage={data.seoImage}
+                type={data.type}
               />
             </div>
           </div>
