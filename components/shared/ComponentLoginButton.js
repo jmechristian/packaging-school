@@ -59,16 +59,16 @@ const ComponentLoginButton = ({ path, progress, studentId }) => {
           ? 'Continue Path'
           : awsUser && !isUserInPath
           ? 'Track Path'
-          : 'Sign Up For Free'}
+          : 'Start For Free'}
       </button>
-      {!awsUser && (
+      {/* {!awsUser && (
         <p className='text-xs text-gray-500 mt-2.5 text-center'>
           No account?{' '}
           <Link href={`/api/auth/login?returnTo=${currentPath}`}>
             Create one here
           </Link>
         </p>
-      )}
+      )} */}
     </div>
   );
 };
