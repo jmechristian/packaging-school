@@ -74,7 +74,7 @@ const CourseObjectives = ({ what, items }) => {
                 </motion.div>
               </motion.div>
               {!showObjectives && (
-                <motion.div className='absolute -left-5 -right-5 bottom-0 top-0 bg-gradient-to-t from-white dark:from-dark-dark via-white/70 dark:via-dark-dark/95 z-10'></motion.div>
+                <motion.div className='absolute -left-5 -right-5 bottom-0 top-0 !bg-gradient-to-t !from-white dark:!from-dark-dark !via-white/70 dark:!via-dark-dark/95 z-10'></motion.div>
               )}
             </motion.div>
           </AnimatePresence>
