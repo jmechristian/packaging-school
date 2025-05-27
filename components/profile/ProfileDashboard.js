@@ -17,6 +17,7 @@ import { showToast } from '../../features/navigation/navigationSlice';
 import { useRouter } from 'next/router';
 import EditProfileForm from './EditProfileForm';
 import ProfilePaths from './ProfilePaths';
+import ProfileApplications from './ProfileApplications';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
 const ProfileDashboard = ({ refreshUser, isLoading }) => {
@@ -132,7 +133,12 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           />
         );
       case 'certificates':
-        return 'Certificates';
+        return (
+          <ProfileApplications
+            CMPM={awsUser?.cmpmFormID}
+            CPS={awsUser?.cpsFormID}
+          />
+        );
       case 'paths':
         return <ProfilePaths paths={awsUser?.learningPathProgress?.items} />;
       case 'wishlist':

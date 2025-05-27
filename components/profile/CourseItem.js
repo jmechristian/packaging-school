@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { MdPlayCircle, MdStarBorder } from 'react-icons/md';
 import { reEnroll } from '../../helpers/api';
 const CourseItem = ({ course, enrollment, active }) => {
-  console.log(course);
   const router = useRouter();
   return (
     course && (
