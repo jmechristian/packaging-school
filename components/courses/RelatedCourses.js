@@ -1,63 +1,138 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useMotionValue, animate, useScroll } from 'framer-motion';
-import { getCPSCourses } from '../../helpers/api';
-import { useSelector } from 'react-redux';
-import LMSCourseCard from '../shared/LMSCourseCard';
+import {
+  getRelatedCourses,
+  cardClickHandler,
+  cardPurchaseHandler,
+} from '../../helpers/api';
+
 import { CourseCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const RelatedCourses = ({ category, id }) => {
   const desktopRef = useRef();
-  const scrollRef = useRef();
   const [width, setWidth] = useState(0);
   const [isRelated, setIsRelated] = useState(null);
-
-  const { user } = useSelector((state) => state.auth);
-
-  const dragX = useMotionValue(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [cardsPerPage, setCardsPerPage] = useState(1);
+  const [showArrowsUnderneath, setShowArrowsUnderneath] = useState(false);
 
   useEffect(() => {
-    const getRelatedCourses = async () => {
-      const courses = await getCPSCourses();
-      setIsRelated(
-        courses.filter((c) => c.category === category && c.id != id)
-      );
-    };
-    getRelatedCourses();
-
-    setWidth(desktopRef.current.offsetWidth - desktopRef.current.scrollWidth);
+    if (category && id) {
+      getRelatedCourses(category[0], id).then((res) => {
+        setIsRelated(res);
+      });
+    }
   }, [category, id]);
 
-  const resetDrag = () => {
-    animate(dragX, 0);
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setShowArrowsUnderneath(width < 1280); // Show underneath for all screens except xl
+      if (width >= 1280) {
+        // xl
+        setCardsPerPage(4);
+      } else if (width >= 1024) {
+        // lg
+        setCardsPerPage(3);
+      } else if (width >= 768) {
+        // md
+        setCardsPerPage(2);
+      } else {
+        // mobile
+        setCardsPerPage(1);
+      }
+    };
+
+    handleResize(); // Initial call
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const totalPages = isRelated ? Math.ceil(isRelated.length / cardsPerPage) : 0;
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(0, prev - 1));
   };
 
-  const resetScroll = () => {
-    scrollRef.current.scrollTo(0, 0);
-    console.log(scrollRef.current);
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
   };
 
-  const cardClickHandler = (id, slug, altLink, type) => {
-    console.log(id, slug, altLink, type);
+  const getCurrentPageCourses = () => {
+    if (!isRelated) return [];
+    const start = currentPage * cardsPerPage;
+    return isRelated.slice(start, start + cardsPerPage);
   };
 
-  const cardPurchaseHandler = (id, link) => {
-    console.log(id, link);
+  const NavigationButton = ({ direction, onClick, show }) => {
+    if (!show) return null;
+
+    const isLeft = direction === 'left';
+    const mobileClasses = showArrowsUnderneath
+      ? 'relative mx-2 mt-4'
+      : `absolute ${
+          isLeft ? '-left-12' : '-right-12'
+        } top-1/2 -translate-y-1/2`;
+
+    return (
+      <button
+        onClick={onClick}
+        className={`${mobileClasses} z-50 hover:bg-white p-2 rounded-full`}
+        aria-label={`${direction === 'left' ? 'Previous' : 'Next'} page`}
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-6 w-6'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d={isLeft ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'}
+          />
+        </svg>
+      </button>
+    );
   };
 
   return (
-    <div ref={desktopRef}>
-      <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container-7xl gap-5 lg:gap-10'>
-        {isRelated &&
-          isRelated.slice(0, 8).map((course, i) => (
-            <div key={course.id}>
-              <CourseCard
-                course={course}
-                cardClickHandler={cardClickHandler}
-                cardPurchaseHandler={cardPurchaseHandler}
-              />
-            </div>
-          ))}
+    <div className='relative max-w-7xl mx-auto' ref={desktopRef}>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container-7xl gap-4 pt-1 pb-2'>
+        {getCurrentPageCourses().map((course) => (
+          <div key={course.id} className='inline-block'>
+            <CourseCard
+              course={course}
+              cardClickHandler={() =>
+                cardClickHandler(
+                  course.id,
+                  course.slug,
+                  course.altLink,
+                  course.type
+                )
+              }
+              cardPurchaseHandler={() =>
+                cardPurchaseHandler(course.id, course.link)
+              }
+              hideCallout={true}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className={`flex ${showArrowsUnderneath ? 'justify-center' : ''}`}>
+        <NavigationButton
+          direction='left'
+          onClick={handlePreviousPage}
+          show={currentPage > 0}
+        />
+        <NavigationButton
+          direction='right'
+          onClick={handleNextPage}
+          show={currentPage < totalPages - 1}
+        />
       </div>
     </div>
   );

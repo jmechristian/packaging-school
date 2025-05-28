@@ -6,16 +6,16 @@ import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 const CPSPricing = ({ email, free }) => {
-  const { user } = useSelector((state) => state.auth);
+  const { awsUser } = useSelector((state) => state.auth);
   const [stripePromise, setStripePromise] = useState(() =>
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
   );
 
   useEffect(() => {
-    if (user && user.cpsForm && user.cpsForm.paymentConfirmation) {
-      setPaymentConfirmation(user.cpsForm.paymentConfirmation);
+    if (awsUser && awsUser.cpsForm && awsUser.cpsForm.paymentConfirmation) {
+      setPaymentConfirmation(awsUser.cpsForm.paymentConfirmation);
     }
-  }, [user]);
+  }, [awsUser]);
 
   const [paymentConfirmation, setPaymentConfirmation] = useState('');
 

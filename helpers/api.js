@@ -1672,3 +1672,48 @@ export const removeCourseFromWishlist = async (id, email) => {
   const res = await getAWSUser(email);
   return res;
 };
+
+export const getRelatedCourses = async (categories, currentId) => {
+  const getRelatedCoursesQuery = /* GraphQL */ `
+    query MyQuery($categories: String!, $currentId: ID!) {
+      listLMSCourses(
+        filter: {
+          categoryArray: { contains: $categories }
+          and: { id: { ne: $currentId }, and: { type: { ne: "CUSTOMER" } } }
+        }
+      ) {
+        items {
+          id
+          title
+          hours
+          courseId
+          categoryArray
+          callout
+          altLink
+          lessons
+          link
+          preview
+          price
+          seoImage
+          slug
+          stripeLink
+          subheadline
+          subscriptionLink
+          subscriptionPrice
+          thinkificId
+          type
+          videos
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getRelatedCoursesQuery,
+    variables: {
+      categories: categories,
+      currentId: currentId,
+    },
+  });
+  return res.data.listLMSCourses.items;
+};

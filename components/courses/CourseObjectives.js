@@ -12,17 +12,13 @@ const CourseObjectives = ({ what, items }) => {
   return (
     <div className='flex flex-col gap-12 lg:max-w-prose pb-16'>
       <div className='flex flex-col gap-4'>
-        <div className='font-semibold font-greycliff text-2xl black__white '>
-          What You Will Learn
-        </div>
+        <div className='h4-base'>What You Will Learn</div>
         <div className='text-slate-700 dark:text-white text-lg'>{what}</div>
       </div>
       {items && items.length > 1 && (
         <div className='flex flex-col gap-6'>
           <div className='pb-3 flex gap-y-1 justify-between items-end flex-wrap cursor-pointer'>
-            <div className='font-semibold font-greycliff text-2xl black__white '>
-              Course Objectives
-            </div>
+            <div className='h4-base'>Course Objectives</div>
             <div
               className='flex gap-1 items-center'
               onClick={() => setShowObjectives(!showObjectives)}
@@ -77,7 +73,7 @@ const CourseObjectives = ({ what, items }) => {
                 </motion.div>
               </motion.div>
               {!showObjectives && (
-                <motion.div className='absolute -left-5 -right-5 bottom-0 top-0 bg-gradient-to-t from-white dark:from-dark-dark via-white/70 dark:via-dark-dark/95 z-10'></motion.div>
+                <motion.div className='absolute -left-5 -right-5 bottom-0 top-0 !bg-gradient-to-t !from-white dark:!from-dark-dark !via-white/70 dark:!via-dark-dark/95 z-50'></motion.div>
               )}
             </motion.div>
           </AnimatePresence>

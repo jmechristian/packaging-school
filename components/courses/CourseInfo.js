@@ -16,6 +16,7 @@ const CourseInfo = ({
   subscriptionPrice,
   embedid,
   partOf,
+  type,
 }) => {
   return (
     <section>
@@ -38,59 +39,61 @@ const CourseInfo = ({
                 }}
               ></div>
             )}
-            <div className='flex flex-col gap-6'>
-              <div className='flex flex-col gap-4'>
-                <div className='h4-base'>Future Proof Your Skills</div>
-                {subscriptionLink && subscriptionPrice ? (
-                  <div className='grid grid-cols-2 border border-black'>
-                    <div
-                      className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
-                      onClick={() => window.open(`${link}`, '_blank')}
-                    >
-                      <div className='h3-base'>Buy Now</div>
-                      <div className='h3-base'>${price}</div>
-                      <div className='text-sm font-semibold text-neutral-500'>
-                        12-Month Access
+            {type != 'PREVIEW' && (
+              <div className='flex flex-col gap-6'>
+                <div className='flex flex-col gap-4'>
+                  <div className='h3-base'>Future Proof Your Skills</div>
+                  {subscriptionLink && subscriptionPrice ? (
+                    <div className='grid grid-cols-2 border border-black'>
+                      <div
+                        className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
+                        onClick={() => window.open(`${link}`, '_blank')}
+                      >
+                        <div className='h4-base'>Buy Now</div>
+                        <div className='h2-base'>${price}</div>
+                        <div className='text-sm font-semibold text-neutral-500'>
+                          12-Month Access
+                        </div>
+                        <div className='w-24 flex items-center justify-center bg-clemson border border-black mt-2'>
+                          <div className='font-semibold py-1 cursor-pointer'>
+                            Buy
+                          </div>
+                        </div>
                       </div>
-                      <div className='w-24 flex items-center justify-center bg-clemson border border-black mt-2'>
-                        <div className='font-semibold py-1 cursor-pointer'>
-                          Buy
+                      <div
+                        className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-base-mid hover:bg-neutral-800 transition-all ease-in cursor-pointer'
+                        onClick={() =>
+                          window.open(`${subscriptionLink}`, '_blank')
+                        }
+                      >
+                        <div className='h4-base text-white'>Subscribe</div>
+                        <div className='h2-base text-white'>
+                          ${subscriptionPrice}
+                        </div>
+                        <div className='text-sm font-semibold text-white'>
+                          for 12 months
+                        </div>
+                        <div className='w-24 flex items-center justify-center bg-white border border-white mt-2'>
+                          <div className='font-semibold py-1 cursor-pointer'>
+                            Subscribe
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-base-mid hover:bg-neutral-800 transition-all ease-in cursor-pointer'
-                      onClick={() =>
-                        window.open(`${subscriptionLink}`, '_blank')
-                      }
-                    >
-                      <div className='h4-base text-white'>Subscribe</div>
-                      <div className='h2-base text-white'>
-                        ${subscriptionPrice}
-                      </div>
-                      <div className='text-sm font-semibold text-white'>
-                        for 12 months
-                      </div>
-                      <div className='w-24 flex items-center justify-center bg-white border border-white mt-2'>
-                        <div className='font-semibold py-1 cursor-pointer'>
-                          Subscribe
+                  ) : (
+                    <>
+                      <div className='flex flex-col gap-4'>
+                        <div className='font-semibold black__white text-5xl lg:text-6xl font-greycliff'>
+                          {price === 'FREE' ? 'Free!' : `$${price}`}
                         </div>
+                        <CTAButtonLarge link={link} />
+                        <CTAButtonTrial link={trialLink} />
                       </div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className='flex flex-col gap-4'>
-                      <div className='font-semibold black__white text-5xl lg:text-6xl font-greycliff'>
-                        {price === 'FREE' ? 'Free!' : `$${price}`}
-                      </div>
-                      <CTAButtonLarge link={link} />
-                      <CTAButtonTrial link={trialLink} />
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div className='flex flex-col gap-4 p-4 xl:p-8'>

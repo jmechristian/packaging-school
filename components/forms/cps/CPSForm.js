@@ -12,8 +12,6 @@ import CPSProfessionalInfo from './CPSProfessionalInfo';
 import { useRouter } from 'next/router';
 import CPSGoals from './CPSGoals';
 import CPSApply from './CPSApply';
-import { usersByEmail } from '../../../src/graphql/queries';
-import { setUser } from '../../../features/auth/authslice';
 
 const CPSForm = ({ methods, email, free }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,19 +25,19 @@ const CPSForm = ({ methods, email, free }) => {
     }
   }, [email]);
 
-  const { user } = useSelector((state) => state.auth);
+  const { awsUser } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
   const sendFormToAWS = async (data) => {
-    if (user && user.cpsFormID) {
+    if (awsUser && awsUser.cpsFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: updateCPSForm,
         variables: {
           input: {
-            id: user.id,
+            id: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -71,15 +69,15 @@ const CPSForm = ({ methods, email, free }) => {
       });
       setIsLoading(false);
       setIsUpdated(true);
-    } else if (user && !user.CPSFormID) {
+    } else if (awsUser && !awsUser.CPSFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: createCPSForm,
         variables: {
           input: {
-            id: user.id,
-            cPSFormUserId: user.id,
+            id: awsUser.id,
+            cPSFormUserId: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -114,8 +112,8 @@ const CPSForm = ({ methods, email, free }) => {
         query: updateUser,
         variables: {
           input: {
-            id: user.id,
-            cpsFormID: user.id,
+            id: awsUser.id,
+            cpsFormID: awsUser.id,
           },
         },
       });
@@ -125,7 +123,7 @@ const CPSForm = ({ methods, email, free }) => {
   };
 
   const submitFormToAWS = async () => {
-    if (!user) {
+    if (!awsUser) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
@@ -166,14 +164,14 @@ const CPSForm = ({ methods, email, free }) => {
       setIsUpdated(true);
       router.push('/cps-application-confirmation');
     }
-    if (user && user.cpsFormID) {
+    if (awsUser && awsUser.cpsFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: updateCPSForm,
         variables: {
           input: {
-            id: user.id,
+            id: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -207,15 +205,15 @@ const CPSForm = ({ methods, email, free }) => {
       setIsLoading(false);
       setIsUpdated(true);
       router.push('/cps-application-confirmation');
-    } else if (user && !user.CPSFormID) {
+    } else if (awsUser && !awsUser.CPSFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: createCPSForm,
         variables: {
           input: {
-            id: user.id,
-            cPSFormUserId: user.id,
+            id: awsUser.id,
+            cPSFormUserId: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -251,8 +249,8 @@ const CPSForm = ({ methods, email, free }) => {
         query: updateUser,
         variables: {
           input: {
-            id: user.id,
-            cpsFormID: user.id,
+            id: awsUser.id,
+            cpsFormID: awsUser.id,
           },
         },
       });
@@ -262,23 +260,11 @@ const CPSForm = ({ methods, email, free }) => {
     }
   };
 
-  const getAndSetUser = async () => {
-    const currentUser = await API.graphql({
-      query: usersByEmail,
-      variables: { email: user.email },
-    });
-
-    if (currentUser.data.usersByEmail.items[0]) {
-      dispatch(setUser(currentUser.data.usersByEmail.items[0]));
-    }
-  };
-
   const saveHandler = async () => {
     const data = methods.getValues();
-    if (user) {
+    if (awsUser) {
       await sendFormToAWS(data);
-      getAndSetUser();
-    } else if (!user) {
+    } else if (!awsUser) {
       dispatch(toggleSignInModal());
     }
   };
