@@ -21,7 +21,9 @@ const Page = () => {
         description={
           'A 12-week, PhD-led certificate program ideal for ambitious professionals seeking to advance their career in the packaging industry and for companies actively seeking future leaders and rising stars to lead their teams.'
         }
-        image={'https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp'}
+        image={
+          'https://packschool.s3.us-east-1.amazonaws.com/cmpm-seoImage.png'
+        }
         keywords={
           'Global Competitive Landscape, Project Management Essentials, Regulations, Sustainability, Materials, Package Design, Packaging Development Workflow, Capital Equipment, Manufacturing, Logistics, Supply Chain Management, certification'
         }
