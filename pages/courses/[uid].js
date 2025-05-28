@@ -19,7 +19,7 @@ const Page = ({ course }) => {
         description={course && course.subheadline}
         image={course && course.seoImage}
       />
-      <div className='relative py-16'>
+      <div className='relative py-16 dark:bg-dark-dark'>
         <CourseMain data={course} />
         <CourseBottom
           category={course && course.categoryArray}

@@ -44,6 +44,19 @@ export const cpsCourses = [
   'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
 ];
 
+export const cumminsLevel1 = [
+  'fef1f2a6-b9b9-4619-9900-c677f91681c7',
+  '86d25aa4-620b-4632-ac11-60f7bab6f3a8',
+  'a0353804-b928-4513-bde6-3ba429804ace',
+  '5c1db625-5367-45b5-8c29-a78beaeb9371',
+  '35844454-d9a7-4e50-ab62-2298e53764c9',
+  'e277266c-e0b5-403e-ae0e-a06312da7a19',
+  '401f89b2-6967-40a1-9131-dff8293cbaa3',
+  '8c90539f-5dc5-48ba-a9ab-7e3fa186336f',
+  '7ee53b3f-3f91-4b45-9281-5623ddbded33',
+  'd61653c9-80b1-492a-9fde-88f6059ca37a',
+];
+
 export const getSalesBarItems = async () => {
   const items = await API.graphql({
     query: listSalesBars,

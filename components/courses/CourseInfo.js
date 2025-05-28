@@ -42,7 +42,9 @@ const CourseInfo = ({
             {type != 'PREVIEW' && (
               <div className='flex flex-col gap-6'>
                 <div className='flex flex-col gap-4'>
-                  <div className='h3-base'>Future Proof Your Skills</div>
+                  <div className='h4-base dark:text-white'>
+                    Future Proof Your Skills
+                  </div>
                   {subscriptionLink && subscriptionPrice ? (
                     <div className='grid grid-cols-2 border border-black'>
                       <div
