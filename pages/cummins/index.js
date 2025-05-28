@@ -21,15 +21,26 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { cumminsLevel1 } from '../../helpers/api';
+import { cumminsLevel1, cumminsLevel2, cumminsLevel3 } from '../../helpers/api';
 
 const cpsExam = {
+  courseId: 'APC-A10',
+  title: 'APC Final Exam',
+  price: 399,
+  hours: 10,
+  lessons: 10,
+  subheadline:
+    'Once you have completed all courses marked with the code APC, you are eligible to take the final exam. You can access the exam here to earn your official certificate of completion.',
+};
+
+const cpsExam2 = {
   courseId: 'CPS-C13',
   title: 'CPS Final Exam',
   price: 399,
   hours: 10,
   lessons: 10,
-  subheadline: 'Test your knowledge with our comprehensive exam.',
+  subheadline:
+    'Once you have completed all courses marked with the code APC, you are eligible to take the final exam. You can access the exam here to earn your official certificate of completion.',
 };
 
 const LOTMCard = ({ lesson }) => {
@@ -121,13 +132,16 @@ const CourseCard = ({ course }) => {
               <MdOutlineBook />
             </div>
           </div>
-          <div className='text-xs text-gray-700 h-20 mb-2'>
+          <div className='text-xs text-gray-700 h-20 mb-2 line-clamp-5'>
             {courseData && courseData.subheadline}
           </div>
           <div
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
             onClick={() => {
-              window.open(courseData && courseData.link, '_blank');
+              window.open(
+                courseData && courseData.link + '?coupon=cummins2025',
+                '_blank'
+              );
             }}
           >
             Begin Course
@@ -160,6 +174,8 @@ const Page = () => {
     },
   ];
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery2, setSearchQuery2] = useState('');
+  const [searchQuery3, setSearchQuery3] = useState('');
   const [learningOfTheMonthQuery, setLearningOfTheMonthQuery] = useState('');
   const [learningOfTheMonths, setLearningOfTheMonths] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -291,12 +307,25 @@ const Page = () => {
           <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
             <div className='flex flex-col'>
               <div
-                className='w-full aspect-[16/9] bg-black bg-cover bg-center'
+                className='w-full aspect-[16/9] bg-cummins-red bg-cover bg-center relative flex flex-col items-center justify-center'
                 style={{
-                  backgroundImage:
-                    'url(https://packschool.s3.us-east-1.amazonaws.com/final-exam-dvi.png)',
+                  backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_bw.png')`,
+                  backgroundSize: '200px',
+                  backgroundRepeat: 'repeat',
                 }}
-              ></div>
+              >
+                <div className='absolute inset-0 bg-cummins-red opacity-90'></div>
+                <div className='w-[100px]'>
+                  <Image
+                    src={
+                      'https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_white.png'
+                    }
+                    alt='cummins-logo'
+                    width={360}
+                    height={332}
+                  />
+                </div>
+              </div>
               <div className='w-full flex flex-col gap-2 px-3 py-2'>
                 <div className='font-semibold leading-tight text-cummins-red w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
                   {cpsExam.courseId}{' '}
@@ -321,7 +350,167 @@ const Page = () => {
                   className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
                   onClick={() => {
                     window.open(
-                      'https://learn.packagingschool.com/enroll/235882?price_id=242074',
+                      'https://learn.packagingschool.com/enroll/623239?price_id=659644&coupon=cummins2025',
+                      '_blank'
+                    );
+                  }}
+                >
+                  Begin Course
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+        <div className='w-full flex items-center justify-between'>
+          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+            Packaging Know-How Level 2
+          </div>
+          <div className='relative flex items-center'>
+            <input
+              type='text'
+              value={searchQuery2}
+              onChange={(e) => setSearchQuery2(e.target.value)}
+              placeholder='Search courses...'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cummins-red focus:border-transparent'
+            />
+            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+          {cumminsLevel2.map((course) => (
+            <CourseCard key={course} course={course} />
+          ))}
+          {/* <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
+            <div className='flex flex-col'>
+              <div
+                className='w-full aspect-[16/9] bg-cummins-red bg-cover bg-center relative flex flex-col items-center justify-center'
+                style={{
+                  backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_bw.png')`,
+                  backgroundSize: '200px',
+                  backgroundRepeat: 'repeat',
+                }}
+              >
+                <div className='absolute inset-0 bg-cummins-red opacity-90'></div>
+                <div className='w-[100px]'>
+                  <Image
+                    src={
+                      'https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_white.png'
+                    }
+                    alt='cummins-logo'
+                    width={360}
+                    height={332}
+                  />
+                </div>
+              </div>
+              <div className='w-full flex flex-col gap-2 px-3 py-2'>
+                <div className='font-semibold leading-tight text-cummins-red w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+                  {cpsExam2.courseId}{' '}
+                  <span className='text-gray-700'>{cpsExam2.title}</span>
+                </div>
+                <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
+                  <div className='flex items-center gap-1'>
+                    <div className='font-semibold line-through text-gray-400'>
+                      ${cpsExam2.price}
+                    </div>
+                    <div className='font-semibold'>$0</div>
+                  </div>
+                  <div className='font-semibold flex items-center gap-1'>
+                    {cpsExam2.hours}
+                    <MdOutlineTimer /> / {cpsExam2.lessons} <MdOutlineBook />
+                  </div>
+                </div>
+                <div className='text-xs text-gray-700 h-20 mb-2'>
+                  {cpsExam2.subheadline}
+                </div>
+                <div
+                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
+                  onClick={() => {
+                    window.open(
+                      'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=cummins2025',
+                      '_blank'
+                    );
+                  }}
+                >
+                  Begin Course
+                </div>
+              </div>
+            </div>
+          </div> */}
+        </div>
+      </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+        <div className='w-full flex items-center justify-between'>
+          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+            Packaging Know-How Level 3
+          </div>
+          <div className='relative flex items-center'>
+            <input
+              type='text'
+              value={searchQuery3}
+              onChange={(e) => setSearchQuery3(e.target.value)}
+              placeholder='Search courses...'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cummins-red focus:border-transparent'
+            />
+            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+          {cumminsLevel3.map((course) => (
+            <CourseCard key={course} course={course} />
+          ))}
+          <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
+            <div className='flex flex-col'>
+              <div
+                className='w-full aspect-[16/9] bg-cummins-red bg-cover bg-center relative flex flex-col items-center justify-center'
+                style={{
+                  backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_bw.png')`,
+                  backgroundSize: '200px',
+                  backgroundRepeat: 'repeat',
+                }}
+              >
+                <div className='absolute inset-0 bg-cummins-red opacity-90'></div>
+                <div className='w-[100px]'>
+                  <Image
+                    src={
+                      'https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_white.png'
+                    }
+                    alt='cummins-logo'
+                    width={360}
+                    height={332}
+                  />
+                </div>
+              </div>
+              <div className='w-full flex flex-col gap-2 px-3 py-2'>
+                <div className='font-semibold leading-tight text-cummins-red w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+                  {cpsExam2.courseId}{' '}
+                  <span className='text-gray-700'>{cpsExam2.title}</span>
+                </div>
+                <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
+                  <div className='flex items-center gap-1'>
+                    <div className='font-semibold line-through text-gray-400'>
+                      ${cpsExam2.price}
+                    </div>
+                    <div className='font-semibold'>$0</div>
+                  </div>
+                  <div className='font-semibold flex items-center gap-1'>
+                    {cpsExam2.hours}
+                    <MdOutlineTimer /> / {cpsExam2.lessons} <MdOutlineBook />
+                  </div>
+                </div>
+                <div className='text-xs text-gray-700 h-20 mb-2'>
+                  {cpsExam2.subheadline}
+                </div>
+                <div
+                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
+                  onClick={() => {
+                    window.open(
+                      'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=cummins2025',
                       '_blank'
                     );
                   }}
