@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useFormContext } from 'react-hook-form';
 import { MdInfo } from 'react-icons/md';
@@ -13,8 +13,16 @@ export default function CheckoutForm({
   const elements = useElements();
   const {
     setValue,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useFormContext();
+
+  useEffect(() => {
+    console.log('Stripe initialized:', !!stripe);
+    console.log('Form validation state:', { isValid });
+    if (Object.keys(errors).length > 0) {
+      console.log('Validation errors:', JSON.stringify(errors, null, 2));
+    }
+  }, [stripe, isValid, errors]);
 
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -23,9 +31,11 @@ export default function CheckoutForm({
 
   const handleSubmitFromCheckout = () => {
     setButtonText('Submitting...');
-    setTimeout(() => {
-      onSubmit();
-    }, 2000);
+    if (typeof onSubmit === 'function') {
+      setTimeout(() => {
+        onSubmit();
+      }, 2000);
+    }
   };
 
   const handleSubmit = async (event) => {

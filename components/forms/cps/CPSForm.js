@@ -340,7 +340,11 @@ const CPSForm = ({ methods, email, free }) => {
         <div className='text-xl lg:text-2xl lg:mb-4 font-greycliff font-semibold'>
           Session Info
         </div>
-        <CPSApply email={isEmail} free={free} />
+        <CPSApply
+          email={isEmail}
+          free={free}
+          onSubmit={methods.handleSubmit(onSubmit, onError)}
+        />
       </div>
       <div className='flex justify-between items-center bg-slate-300 dark:bg-dark-dark px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'>
         <div className='w-fit font-greycliff font-semibold h-full text-green-600 text-lg'>

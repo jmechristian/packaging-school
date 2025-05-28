@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
-const CPSPricing = ({ email, free }) => {
+const CPSPricing = ({ email, free, onSubmit }) => {
   const { user } = useSelector((state) => state.auth);
   const [stripePromise, setStripePromise] = useState(() =>
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -49,6 +49,7 @@ const CPSPricing = ({ email, free }) => {
                       }
                       type={'CPS'}
                       email={email}
+                      onSubmit={onSubmit}
                     />
                   </Elements>
                 ) : (
@@ -59,14 +60,11 @@ const CPSPricing = ({ email, free }) => {
                     type='hidden'
                     value={free ? 'WAIVED' : paymentConfirmation}
                     name='paymentConfirmation'
-                    {...register('paymentConfirmation', {
-                      required: true,
-                    })}
+                    {...register('paymentConfirmation')}
                   />
                   {formState.errors.hasOwnProperty('paymentConfirmation') && (
                     <div className='text-sm text-red-600 mt-3 mb-2'>
-                      Please fill out field and hit &quot;Pay Application&quot;
-                      to proceed.
+                      Please complete the payment to proceed.
                     </div>
                   )}
                 </div>
