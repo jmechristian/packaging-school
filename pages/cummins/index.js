@@ -285,7 +285,7 @@ const Page = () => {
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Packaging Know-How Level 1
+            CumminsPackaging Know-How Level 1: Automotive Packaging
           </div>
           <div className='relative flex items-center'>
             <input
@@ -365,7 +365,7 @@ const Page = () => {
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Packaging Know-How Level 2
+            Cummins Packaging Know-How Level 2: Packaging Science
           </div>
           <div className='relative flex items-center'>
             <input
@@ -445,7 +445,7 @@ const Page = () => {
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Packaging Know-How Level 3
+            Cummins Packaging Know-How Level 3: Packaging Science and Electives
           </div>
           <div className='relative flex items-center'>
             <input
