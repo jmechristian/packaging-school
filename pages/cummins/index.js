@@ -133,7 +133,9 @@ const CourseCard = ({ course }) => {
             </div>
           </div>
           <div className='text-xs text-gray-700 h-20 mb-2 line-clamp-5'>
-            {courseData && courseData.subheadline}
+            {courseData && courseData.shortDescription
+              ? courseData.shortDescription
+              : courseData && courseData.subheadline}
           </div>
           <div
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
@@ -156,9 +158,9 @@ const Page = () => {
   const faqs = [
     {
       id: 1,
-      question: 'Who is my DVI contact?',
+      question: 'Who is my Cummins contact?',
       answer:
-        'If you have any questions regarding curriculum, reach out to schmelzer@verpackung.org.',
+        'If you have any questions regarding curriculum, reach out to todd.farwell@cummins.com.',
     },
     {
       id: 2,
@@ -207,13 +209,13 @@ const Page = () => {
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   return (
-    <div className='w-full flex flex-col pt-10 pb-40'>
+    <div className='w-full flex flex-col lg:pt-10 pb-40'>
       <Head>
         <title>Cummins | The Packaging School</title>
       </Head>
-      <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
+      <div className='w-full max-w-7xl mx-auto lg:grid lg:grid-cols-12 lg:items-center relative'>
         <div
-          className='rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center flex items-center relative'
+          className='rounded-lg h-[180px] lg:h-[240px] row-span-full col-start-1 col-span-9 lg:self-center flex items-center relative'
           style={{
             backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_bw.png')`,
             backgroundSize: '200px',
@@ -221,8 +223,8 @@ const Page = () => {
           }}
         >
           <div className='absolute inset-0 bg-cummins-red opacity-90'></div>
-          <div className='w-1/2 flex items-center gap-5 px-10 relative z-10'>
-            <div className='w-[180px]'>
+          <div className='w-full lg:w-1/2 flex justify-center items-center gap-5 px-10 relative z-10'>
+            <div className='w-[100px] lg:w-[180px]'>
               <Image
                 src={
                   'https://packschool.s3.us-east-1.amazonaws.com/corporate_ppt_white.png'
@@ -232,12 +234,10 @@ const Page = () => {
                 height={332}
               />
             </div>
-            <div className='text-4xl font-bold text-white h2-base'>
-              Welcome!
-            </div>
+            <div className='text-white h2-base'>Welcome!</div>
           </div>
         </div>
-        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-[30%]'>
+        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 lg:self-end lg:absolute lg:top-[30%]'>
           <div className='w-full aspect-[16/9]'>
             <ReactGoogleSlides
               width={'100%'}
@@ -264,8 +264,8 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-5 pt-8 pb-16 border-b border-gray-300'>
-        <div className='w-full flex flex-col gap-5 mt-12 lg:mt-0'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-16 border-b border-gray-300'>
+        <div className='w-full flex flex-col gap-5 mt-10 lg:mt-0'>
           <div className='max-w-xl w-full text-gray-700'>
             Cummins is deeply committed to investing in the growth and
             development of its employees, recognizing that continuous learning
@@ -283,7 +283,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-between'>
+        <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
             Packaging Know-How Level 1
           </div>
@@ -363,7 +363,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-between'>
+        <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
             Packaging Know-How Level 2
           </div>
@@ -443,7 +443,7 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-between'>
+        <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
             Packaging Know-How Level 3
           </div>
