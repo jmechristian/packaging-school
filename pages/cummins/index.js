@@ -91,16 +91,28 @@ const LOTMCard = ({ lesson }) => {
   );
 };
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, searchQuery }) => {
   const [courseData, setCourseData] = useState(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const fetchCourseData = async () => {
       const data = await getCourseByID(course);
       setCourseData(data);
+      // Check if course matches search query
+      if (searchQuery && data) {
+        const matches = data.title
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+        setIsVisible(matches);
+      } else {
+        setIsVisible(true);
+      }
     };
     fetchCourseData();
-  }, [course]);
+  }, [course, searchQuery]);
+
+  if (!isVisible) return null;
 
   return (
     <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
@@ -205,6 +217,10 @@ const Page = () => {
         .includes(learningOfTheMonthQuery.toLowerCase())
   );
 
+  const filteredCumminsLevel1 = cumminsLevel1;
+  const filteredCumminsLevel2 = cumminsLevel2;
+  const filteredCumminsLevel3 = cumminsLevel3;
+
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
@@ -302,8 +318,12 @@ const Page = () => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {cumminsLevel1.map((course) => (
-            <CourseCard key={course} course={course} />
+          {filteredCumminsLevel1.map((course) => (
+            <CourseCard
+              key={course}
+              course={course}
+              searchQuery={searchQuery}
+            />
           ))}
           <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
             <div className='flex flex-col'>
@@ -383,8 +403,12 @@ const Page = () => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {cumminsLevel2.map((course) => (
-            <CourseCard key={course} course={course} />
+          {filteredCumminsLevel2.map((course) => (
+            <CourseCard
+              key={course}
+              course={course}
+              searchQuery={searchQuery2}
+            />
           ))}
           {/* <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
             <div className='flex flex-col'>
@@ -464,8 +488,12 @@ const Page = () => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {cumminsLevel3.map((course) => (
-            <CourseCard key={course} course={course} />
+          {filteredCumminsLevel3.map((course) => (
+            <CourseCard
+              key={course}
+              course={course}
+              searchQuery={searchQuery3}
+            />
           ))}
           <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
             <div className='flex flex-col'>
