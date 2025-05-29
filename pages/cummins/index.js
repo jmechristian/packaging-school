@@ -40,7 +40,7 @@ const cpsExam2 = {
   hours: 10,
   lessons: 10,
   subheadline:
-    'Once you have completed all courses marked with the code APC, you are eligible to take the final exam. You can access the exam here to earn your official certificate of completion.',
+    'Once you have completed all courses marked with the code CPS, you are eligible to take the final exam. You can access the exam here to earn your official certificate of completion.',
 };
 
 const LOTMCard = ({ lesson }) => {
