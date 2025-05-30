@@ -36,6 +36,52 @@ const HomeCorporate = () => {
           backgroundImage: `url(https://packschool.s3.us-east-1.amazonaws.com/lib-div-replace.png)`,
         }}
       ></div>
+      <div className='w-full lg:col-span-2'>
+        <div className='mx-auto max-w-7xl flex flex-col bg-base-brand/60 lg:!rounded-lg px-6 py-8 gap-5'>
+          <h2 className='text-center text-white font-semibold text-xl'>
+            Corporate Education Partners to the World&apos;s Most Innovative
+            Teams
+          </h2>
+          <div className='mx-auto max-w-4xl grid grid-cols-6 items-center gap-x-16 lg:mx-0 overflow-hidden w-full'>
+            <img
+              className='col-span-2 max-h-28 w-full object-contain lg:col-span-1 p-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/ul-black.png'
+              alt='Unilever'
+              width={400}
+              height={400}
+            />
+            <img
+              className='col-span-2 max-h-28 w-full object-contain lg:col-span-1 p-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/cummins.png'
+              alt='Cummins'
+              width={400}
+              height={400}
+            />
+            <img
+              className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/pda-new.png'
+              alt='PDA'
+              width={400}
+              height={400}
+            />
+            <img
+              className='col-span-2 max-h-28 w-full object-contain lg:col-span-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/dvi-new.png'
+              alt='DVI'
+              width={400}
+              height={400}
+            />
+
+            <img
+              className='col-span-2 max-h-28 w-full object-contain sm:col-start-2 lg:col-span-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/clemsonn.png'
+              alt='Smurfit Westrock'
+              width={400}
+              height={400}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

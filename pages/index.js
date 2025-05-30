@@ -152,7 +152,7 @@ const App = () => {
       <div className='w-full flex flex-col gap-16 lg:gap-20 relative pb-16'>
         {/* INTRO */}
         <div className='w-full bg-slate-800 flex items-center justify-center relative'>
-          <div className='w-full h-[calc(100vh-110px)]'>
+          <div className='w-full h-screen lg:!h-[calc(100vh-110px)]'>
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
                 makeDefault
@@ -191,7 +191,7 @@ const App = () => {
           </div>
           <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-between mx-auto max-w-7xl items-center px-5 xl:px-0'>
             <div className='w-full flex flex-col gap-5 max-w-5xl items-center justify-center text-center h-full'>
-              <div className='flex flex-col gap-5 justify-center items-center'>
+              <div className='flex flex-col gap-3 lg:gap-5 justify-center items-center'>
                 <div className='w-full h-full text-white h1-base '>
                   One Powerful Catalog.{' '}
                   <span className='text-clemson block'>
@@ -206,7 +206,7 @@ const App = () => {
                   pace with the same in-depth content, available anytime.
                 </div>
                 <div className='flex flex-col items-start gap-10'>
-                  <p className='text-2xl text-slate-400 font-oswald uppercase tracking-wide'>
+                  <p className='lg:text-2xl text-xl text-slate-400 font-oswald uppercase tracking-wide'>
                     Advance your career. Boost your resume. Keep learning.
                   </p>
                   {/* <div className='flex gap-3'>
@@ -266,7 +266,7 @@ const App = () => {
               <h2 className='text-center text-slate-400 font-semibold'>
                 Trusted by the world’s most innovative teams
               </h2>
-              <div className='mx-auto grid grid-cols-6 items-center gap-x-10 gap-y-10  sm:grid-cols-3 lg:mx-0 '>
+              <div className='mx-auto grid grid-cols-6 items-center gap-x-12 lg:gap-x-10 sm:grid-cols-3 lg:mx-0 overflow-hidden'>
                 <img
                   className='col-span-2 max-h-28 w-full object-contain lg:col-span-1 p-3'
                   src='https://packschool.s3.amazonaws.com/bmw.png'
@@ -303,7 +303,7 @@ const App = () => {
                   height={400}
                 />
                 <img
-                  className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1 p-6'
+                  className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1 lg:p-6'
                   src='https://packschool.s3.us-east-1.amazonaws.com/colgate-new.png'
                   alt='Colgate'
                   width={400}
