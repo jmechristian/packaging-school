@@ -296,7 +296,7 @@ const App = () => {
                   height={400}
                 />
                 <img
-                  className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1 invert'
+                  className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1 invert p-1'
                   src='https://packschool.s3.amazonaws.com/3m.png'
                   alt='3M'
                   width={400}
