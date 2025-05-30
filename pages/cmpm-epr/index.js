@@ -17,7 +17,7 @@ const Page = () => {
   const [isUS, setIsUS] = useState(true);
   return (
     <div className='w-full flex flex-col gap-10 py-10 max-w-7xl mx-auto'>
-      <div className='w-full grid lg:grid-cols-12 gap-10 px-4 lg:px-0'>
+      <div className='w-full grid lg:grid-cols-12 gap-10 px-4 xl:px-0'>
         <div className='flex flex-col gap-10 col-span-8'>
           <div className='w-full h2-base max-w-4xl'>
             Resolve Your Extended Producer Responsibility (EPR) Challenges in 12
