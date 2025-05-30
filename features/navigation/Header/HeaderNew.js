@@ -327,31 +327,6 @@ export default function HeaderNew() {
                           </div>
                         </div>
                       </div>
-
-                      {/* <div className='flow-root'>
-                        {darkMode ? (
-                          <div
-                            onClick={() => {
-                              dispatch(setLight());
-                              document.body.classList.remove('dark');
-                            }}
-                          >
-                            <MoonIcon className='w-6 h-6 text-gray-400 group-hover:text-gray-500 dark:text-white/40 cursor-pointer' />
-                          </div>
-                        ) : (
-                          <div
-                            onClick={() => {
-                              dispatch(setDark());
-                              document.body.classList.add('dark');
-                            }}
-                          >
-                            <LightBulbIcon
-                              className='h-6 w-6 flex-shrink-0 text-gray-400 dark:text-white/40 group-hover:text-gray-500 cursor-pointer'
-                              aria-hidden='true'
-                            />
-                          </div>
-                        )}
-                      </div> */}
                     </div>
                   </div>
                 </div>

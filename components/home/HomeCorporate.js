@@ -3,7 +3,7 @@ const HomeCorporate = () => {
     <div className='w-full grid lg:grid-cols-2 gap-10 max-w-7xl mx-auto'>
       <div className='w-full h-full '>
         <div className='flex flex-col gap-4'>
-          <div className='flex flex-col gap-5 px-7'>
+          <div className='flex flex-col gap-5 px-5'>
             <div className=' text-lg tracking-wide font-oswald uppercase text-white font-medium bg-clemson px-3 py-1 rounded w-fit'>
               Reach Goals Faster
             </div>
@@ -18,7 +18,7 @@ const HomeCorporate = () => {
             </div>
             <div
               className='text-clemson text-xl underline font-semibold cursor-pointer hover:text-clemson/80 transition-all duration-300'
-              onClick={() => router.push('/paths')}
+              onClick={() => window.open('ht', '_blank')}
             >
               Schedule a Demo &rarr;
             </div>

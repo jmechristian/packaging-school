@@ -94,7 +94,7 @@ const SelfPacedAccess = () => {
 
   return (
     <div
-      className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative'
+      className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative px-5 xl:px-0'
       ref={ref}
     >
       {isCohortModalOpen && (
@@ -231,7 +231,7 @@ const SelfPacedAccess = () => {
                     Choose Your Elective
                   </div> */}
                 </div>
-                <div className='flex w-full items-center justify-between border border-gray-300 rounded-lg py-4 pl-3 pr-4 h-[100px]'>
+                <div className='flex flex-col gap-2 lg:gap-0 lg:flex-row w-full items-center justify-between border border-gray-300 rounded-lg py-4 pl-3 pr-4 lg:!h-[100px]'>
                   <div className='w-fit flex items-end justify-center text-5xl font-bold tracking-tight'>
                     $4,000
                     <span className='text-gray-500 text-sm font-medium'>
@@ -346,7 +346,7 @@ const SelfPacedAccess = () => {
           </div> */}
         </div>
       </div>
-      <div className='w-full bg-slate-100 p-6 max-w-5xl mx-auto flex items-center justify-between'>
+      <div className='w-full bg-slate-100 p-4 lg:p-6 max-w-5xl mx-auto flex flex-col lg:flex-row gap-5 lg:gap-0 items-center justify-between'>
         <div className='flex gap-3 items-center'>
           <div className='aspect-[1/1] w-24 grid content-center'>
             <GiDiploma size={84} />
@@ -360,7 +360,7 @@ const SelfPacedAccess = () => {
             </div>
           </div>
         </div>
-        <div className='w-fit text-center font-bold bg-black mr-1 text-white rounded-lg px-5 py-3 cursor-pointer hover:bg-black/80 transition-colors duration-300'>
+        <div className='w-full lg:!w-fit text-center font-bold bg-black mr-1 text-white rounded-lg px-5 py-3 cursor-pointer hover:bg-black/80 transition-colors duration-300'>
           Speak to an Advisor
         </div>
       </div>
@@ -368,7 +368,7 @@ const SelfPacedAccess = () => {
         <div className='text-center text-xl font-bold'>
           All Subscriptions Include:
         </div>
-        <div className='w-full grid grid-cols-3 gap-10'>
+        <div className='w-full grid grid-cols-1 lg:grid-cols-3 gap-10'>
           {features.map((feature, index) => (
             <div key={index} className='w-full  flex flex-col gap-2'>
               <div className='w-full text-2xl font-semibold'>

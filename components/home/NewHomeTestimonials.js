@@ -21,8 +21,10 @@ const NewHomeTestimonials = () => {
 
   return (
     <div className='relative flex flex-col gap-10'>
-      <div className='w-full flex flex-col gap-4 justify-center items-center'>
-        <div className='h2-base'>Trusted by Thousands of Your Peers.</div>
+      <div className='w-full flex flex-col gap-4 justify-center items-center px-5 lg:!px-0 text-center lg:!text-left'>
+        <div className='h2-base'>
+          Trusted by Thousands of Your Industry Peers.
+        </div>
       </div>
       <div className='px-4 pt-4 overflow-x-hidden relative'>
         <div className='flex items-center mb-4'>

@@ -152,7 +152,7 @@ const App = () => {
       <div className='w-full flex flex-col gap-16 lg:gap-20 relative pb-16'>
         {/* INTRO */}
         <div className='w-full bg-slate-800 flex items-center justify-center relative'>
-          <div className='w-full h-[660px]'>
+          <div className='w-full h-[calc(100vh-110px)] lg:!h-[660px]'>
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
                 makeDefault
@@ -189,13 +189,13 @@ const App = () => {
               <Scene />
             </Canvas>
           </div>
-          <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-center gap-10 mx-auto max-w-7xl items-center px-5'>
-            <div className='w-full flex flex-col gap-8 max-w-5xl items-center text-center'>
+          <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-center gap-10 mx-auto max-w-7xl items-center px-5 xl:px-0'>
+            <div className='w-full flex flex-col gap-8 max-w-5xl items-center text-center '>
               <div className='w-full h-full text-white h1-base '>
                 One Powerful Catalog.{' '}
                 <span className='text-clemson block'>Two Flexible Paths.</span>
               </div>
-              <div className='w-full h-full text-white text-2xl max-w-5xl mx-auto'>
+              <div className='w-full h-full text-white text-xl lg:!text-2xl !max-w-5xl mx-auto'>
                 Get full access to Packaging School’s expert-led course
                 library—whichever path you choose. Learn with a group, guided by
                 experts, while completing a project tailored to your current

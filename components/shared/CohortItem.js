@@ -11,40 +11,21 @@ const CohortItem = ({ cohort, onSelectCohort }) => {
   return (
     <div
       key={cohort.id}
-      className='border rounded-lg p-4 space-y-4 hover:shadow-md transition-shadow'
+      className='border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow'
     >
-      <div className='flex justify-between items-start border-b pb-1 border-gray-200'>
+      <div className='flex flex-col gap-2 lg:flex-row lg:!justify-between lg:!items-start border-b pb-1 border-gray-200'>
         <div>
-          <h3 className='text-lg font-semibold text-gray-900'>
-            {renderCohortType(cohort.type)}
-          </h3>
-          <p className='text-gray-600'>{cohort.name}</p>
+          <div className='text-xl font-semibold text-gray-900 tracking-tight'>
+            {renderCohortType(cohort.type)} - {cohort.name}
+          </div>
         </div>
-        <button
-          onClick={() => onSelectCohort(cohort)}
-          className='bg-clemson font-medium text-sm text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors'
-        >
-          Apply Now
-        </button>
       </div>
-      <div>
-        <p className='text-gray-600 text-sm border-b pb-2 border-gray-200 w-full'>
+      <div className='flex flex-col gap-3'>
+        <div className='text-gray-600 text-sm border-b pb-2 border-gray-200 w-full'>
           {cohort.description}
-        </p>
-      </div>
-      <div className='grid grid-cols-1 md:!grid-cols-3 gap-5 bg-gray-100 p-4 rounded-lg'>
-        <p className='text-gray-600 text-sm'>
-          {new Date(cohort.startDate).toLocaleDateString()} -{' '}
-          {new Date(cohort.endDate).toLocaleDateString()}
-        </p>
-
-        <p className='text-gray-600 text-sm'>
-          <span className='font-bold'>Application Deadline:</span>{' '}
-          {new Date(cohort.deadline).toLocaleDateString()}
-        </p>
-
+        </div>
         {cohort.instructor && (
-          <div className='flex justify-end gap-3'>
+          <div className='flex gap-3'>
             <img
               src={cohort.instructor.image}
               alt={cohort.instructor.name}
@@ -60,6 +41,23 @@ const CohortItem = ({ cohort, onSelectCohort }) => {
             </div>
           </div>
         )}
+      </div>
+      <div className='grid grid-cols-1 md:!grid-cols-3 gap-1 lg:!gap-5 bg-gray-100 p-4 rounded-lg'>
+        <p className='text-gray-600 text-sm content-center'>
+          {new Date(cohort.startDate).toLocaleDateString()} -{' '}
+          {new Date(cohort.endDate).toLocaleDateString()}
+        </p>
+
+        <p className='text-gray-600 text-sm content-center'>
+          <span className='font-bold'>Application Deadline:</span>{' '}
+          {new Date(cohort.deadline).toLocaleDateString()}
+        </p>
+        <button
+          onClick={() => onSelectCohort(cohort)}
+          className='bg-clemson font-medium text-sm text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors'
+        >
+          Apply Now
+        </button>
       </div>
     </div>
   );

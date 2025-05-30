@@ -19,6 +19,8 @@ import {
   learningPathsBySlug,
   listLessons,
   listLearningPathProgress,
+  getCMPMForm,
+  getCPSForm,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -57,6 +59,38 @@ export const cpsCourses = [
   'f2bd57ba-adbf-45ab-88f0-d68ac20c5b7e',
   '73139212-0b15-4d96-9942-1757fa058fdf',
   'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
+];
+
+export const cumminsLevel1 = [
+  'fef1f2a6-b9b9-4619-9900-c677f91681c7',
+  '86d25aa4-620b-4632-ac11-60f7bab6f3a8',
+  'a0353804-b928-4513-bde6-3ba429804ace',
+  '5c1db625-5367-45b5-8c29-a78beaeb9371',
+  '35844454-d9a7-4e50-ab62-2298e53764c9',
+  'e277266c-e0b5-403e-ae0e-a06312da7a19',
+  '401f89b2-6967-40a1-9131-dff8293cbaa3',
+  '8c90539f-5dc5-48ba-a9ab-7e3fa186336f',
+  '7ee53b3f-3f91-4b45-9281-5623ddbded33',
+  'd61653c9-80b1-492a-9fde-88f6059ca37a',
+];
+
+export const cumminsLevel2 = [
+  'ff174f01-5f76-486c-8d7a-849d6d3ff914',
+  '672c1d2b-ba6c-4e02-8c34-83e8c3e4f7b3',
+  '2418801f-a352-4eae-a394-87a5c0c55f79',
+  '4e6c079e-b396-4762-8b7f-4fa4dea64969',
+  'f2fad11c-4548-41ea-b39d-be5a4913a4f5',
+  '452ec0d8-7464-4bd6-bfc2-eab051a9b40b',
+  '431ce262-cf48-4a7c-8ff1-2909f548149b',
+  '5d84ef6e-3fa3-423d-8e33-67d32605cb93',
+  '73139212-0b15-4d96-9942-1757fa058fdf',
+];
+
+export const cumminsLevel3 = [
+  'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
+  'f2bd57ba-adbf-45ab-88f0-d68ac20c5b7e',
+  '4e32d164-d4d9-4ba2-bcc5-ce882df75b71',
+  '255394df-4fa0-477d-b19a-a8e04837cdb4',
 ];
 
 export const LEVELS_CONFIG = [
@@ -1716,4 +1750,20 @@ export const getRelatedCourses = async (categories, currentId) => {
     },
   });
   return res.data.listLMSCourses.items;
+};
+
+export const getUserCMPMForm = async (id) => {
+  const res = await API.graphql({
+    query: getCMPMForm,
+    variables: { id: id },
+  });
+  return res.data.getCMPMForm;
+};
+
+export const getUserCPSForm = async (id) => {
+  const res = await API.graphql({
+    query: getCPSForm,
+    variables: { id: id },
+  });
+  return res.data.getCPSForm;
 };

@@ -20,21 +20,21 @@ const CertificateModal = ({
 
       <div className='fixed inset-0 flex items-center justify-center'>
         <Dialog.Panel
-          className='mx-auto max-w-4xl w-full rounded-lg bg-white max-h-[90vh] overflow-y-auto relative'
+          className='mx-auto max-w-4xl w-full rounded-lg bg-white max-h-[94vh] overflow-y-auto relative'
           id='scrollers'
         >
-          <div className='flex justify-between items-center pt-5 px-5'>
-            <div className='flex items-end gap-2'>
+          <div className='flex justify-between pt-5 px-5'>
+            <div className='flex gap-2'>
               <div>
-                <AcademicCapIcon className='h-9 w-9 text-gray-500' />
+                <AcademicCapIcon className='h-8 w-8 text-gray-500' />
               </div>
-              <Dialog.Title className='text-2xl font-bold text-gray-900 leading-none'>
+              <Dialog.Title className='text-xl lg:!text-2xl font-semibold text-gray-900 leading-none'>
                 Comprehensive Certificate Programs
               </Dialog.Title>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className='text-gray-500 hover:text-gray-700'
+              className='text-gray-500 hover:text-gray-700 transition-colors'
             >
               <XMarkIcon className='h-6 w-6' />
             </button>

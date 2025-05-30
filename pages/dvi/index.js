@@ -121,8 +121,10 @@ const CourseCard = ({ course }) => {
               <MdOutlineBook />
             </div>
           </div>
-          <div className='text-xs text-gray-700 h-20 mb-2'>
-            {courseData && courseData.subheadline}
+          <div className='text-xs text-gray-700 h-20 mb-2 line-clamp-5'>
+            {courseData && courseData.shortDescription
+              ? courseData.shortDescription
+              : courseData && courseData.subheadline}
           </div>
           <div
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'

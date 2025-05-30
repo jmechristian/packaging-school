@@ -73,6 +73,7 @@ module.exports = {
         'ap-darkblue': '#005892',
         'ap-blue': '#0873B8',
         'ap-red': '#E43A00',
+        'cummins-red': '#D02323',
       },
       backgroundImage: {
         'dark-mobile':

@@ -148,7 +148,7 @@ const SalesBar = ({ user }) => {
             )}
           </div>
         </div>
-        <div className='flex items-center gap-1.5 cursor-pointer'>
+        <div className='hidden lg:flex items-center gap-1.5 cursor-pointer'>
           <div>
             <PhoneIcon className='w-4 h-4 fill-clemson' />
           </div>

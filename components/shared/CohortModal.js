@@ -15,10 +15,16 @@ const CohortModal = ({ isOpen, setIsOpen, cohorts, onSelectCohort }) => {
 
       <div className='fixed inset-0 flex items-center justify-center'>
         <Dialog.Panel
-          className='mx-auto max-w-4xl w-full rounded-lg bg-white max-h-[90vh] overflow-y-auto relative'
+          className='mx-auto max-w-4xl w-full rounded-lg bg-white max-h-[94vh] overflow-y-auto relative'
           id='scrollers'
         >
-          <div className='flex justify-between items-center pt-5 px-5'>
+          <button
+            onClick={() => setIsOpen(false)}
+            className='absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors'
+          >
+            <XMarkIcon className='h-6 w-6 text-gray-500' />
+          </button>
+          <div className='flex flex-col gap-1.5 pt-5 px-3 lg:!px-5'>
             <div className='flex items-end gap-2'>
               <div>
                 <CalendarDaysIcon className='h-9 w-9 text-gray-500' />
@@ -26,22 +32,16 @@ const CohortModal = ({ isOpen, setIsOpen, cohorts, onSelectCohort }) => {
               <Dialog.Title className='text-2xl font-bold text-gray-900 leading-none'>
                 Upcoming Cohorts
               </Dialog.Title>
-              <p
-                className='text-brand-indigo underline font-medium cursor-pointer ml-1'
-                onClick={() => router.push('/cohorts')}
-              >
-                Why cohort learning?
-              </p>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className='text-gray-500 hover:text-gray-700'
+            <div
+              className='text-brand-indigo underline font-medium cursor-pointer ml-1'
+              onClick={() => router.push('/cohorts')}
             >
-              <XMarkIcon className='h-6 w-6' />
-            </button>
+              Why cohort learning?
+            </div>
           </div>
 
-          <div className='space-y-3 p-5 mt-1'>
+          <div className='space-y-3 p-3 lg:!p-5 mt-1'>
             {cohorts.map((cohort) => (
               <CohortItem
                 key={cohort.id}

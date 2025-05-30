@@ -168,7 +168,7 @@ const CardFilter = () => {
 
   return (
     <div className='w-full bg-slate-900 flex items-center justify-center'>
-      <div className='w-full flex flex-col gap-10 items-center justify-center max-w-7xl mx-auto py-20'>
+      <div className='w-full flex flex-col gap-10 items-center justify-center max-w-7xl mx-auto py-20 px-5 lg:!px-0'>
         <div className='w-full flex flex-col gap-4'>
           <div className='w-full text-center text-xl uppercase font-bold text-gray-400 tracking-[0.5em]'>
             Start Learning
@@ -234,7 +234,7 @@ const CardFilter = () => {
                 variants={container}
                 initial='hidden'
                 animate='show'
-                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 w-full h-full'
+                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:!gap-0 w-full h-full'
               >
                 {activeTab === 'Certificates' && isCertificatesLoaded
                   ? courses.slice(0, 4).map((course) => (

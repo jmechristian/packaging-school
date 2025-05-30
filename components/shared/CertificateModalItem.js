@@ -27,7 +27,7 @@ const CertificateModalItem = ({ certificate, onSelectCertificate }) => {
           {certificate.description}
         </p>
       </div>
-      <div className='flex items-center justify-between bg-gray-100 p-3 rounded-lg'>
+      <div className='flex flex-col gap-2 lg:flex-row lg:!items-center lg:!justify-between bg-gray-100 p-3 rounded-lg'>
         <div className='flex w-full gap-2'>
           <p className='text-gray-600 text-sm font-bold'>
             {certificate.callout}
@@ -39,10 +39,10 @@ const CertificateModalItem = ({ certificate, onSelectCertificate }) => {
             More Info
           </p>
         </div>
-        <div className='flex w-full justify-center gap-2 text-sm font-bold text-gray-600'>
+        <div className='flex w-full lg:!justify-center gap-2 text-sm font-bold text-gray-600'>
           {certificate.courses} Courses | {certificate.hours} Hours
         </div>
-        <div className='w-full flex items-center gap-1 justify-end'>
+        <div className='w-full flex items-center gap-1 lg:!justify-end'>
           <div>
             <PlayCircleIcon className='w-5 h-5 text-brand-indigo' />
           </div>

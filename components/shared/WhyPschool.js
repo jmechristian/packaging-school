@@ -241,7 +241,7 @@ const WhyPschool = () => {
 
   return (
     <div className='w-full flex flex-col gap-6 relative'>
-      <div className='w-full flex flex-col gap-5 mx-auto max-w-7xl'>
+      <div className='w-full flex flex-col gap-5 mx-auto max-w-7xl px-5 lg:!px-0'>
         <h2 className='h2-base text-center max-w-2xl mx-auto'>
           See How Packaging School Empowers Individuals and Teams.
         </h2>
@@ -251,7 +251,7 @@ const WhyPschool = () => {
           supply‑chain efficiency and quality assurance.
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 border-t border-clemson pt-12'>
+      <div className='w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:!border-t lg:!border-clemson pt-6 lg:!pt-12'>
         <div className='w-full flex flex-col gap-4'>
           {items.map((item, index) => (
             <div
@@ -277,7 +277,7 @@ const WhyPschool = () => {
             </div>
           ))}
         </div>
-        <div className='w-full'>
+        <div className='w-full hidden lg:block'>
           <AnimatePresence mode='wait'>
             {renderContent(items[active])}
           </AnimatePresence>

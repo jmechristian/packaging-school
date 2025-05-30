@@ -7,8 +7,8 @@ import MiniProfile from '../profile/MiniProfile';
 const LearningPath = () => {
   const router = useRouter();
   return (
-    <div className='w-full flex flex-col gap-10'>
-      <div className='w-full flex flex-col gap-5 justify-center items-center'>
+    <div className='w-full flex flex-col gap-10 px-5 lg:!px-0'>
+      <div className='w-full flex flex-col gap-5 justify-center items-center text-center'>
         <div className='h2-base'>Maximize Your Packaging School Experience</div>
         <div className='text-xl text-center max-w-5xl mx-auto text-slate-600'>
           Unlock the full spectrum of Packaging School: explore personalized
@@ -41,7 +41,7 @@ const LearningPath = () => {
               </div>
             </div>
             <div
-              className='w-fit h-full aspect-[1/1] bg-cover bg-center mt-16'
+              className='w-fit h-full aspect-[1/1] bg-cover bg-center mt-16 hidden lg:block'
               style={{
                 backgroundImage: `url(
                   https://packschool.s3.us-east-1.amazonaws.com/learning-paths.png
@@ -60,7 +60,7 @@ const LearningPath = () => {
         >
           <div className='flex flex-col gap-2.5 px-7 pt-7'>
             <div className='text-white text-lg tracking-wide font-oswald uppercase font-medium bg-clemson py-1 px-2 rounded w-fit'>
-              NEW!
+              COMING SOON!
             </div>
             <div className='text-white h3-base'>Earn Experience Points</div>
             <div className='text-gray-300 text-lg leading-tight max-w-[270px]'>
@@ -69,14 +69,14 @@ const LearningPath = () => {
               learners, and unlock cool perks as you progress.
             </div>
             <div
-              className='text-clemson underline font-semibold cursor-pointer hover:text-clemson/80 transition-all duration-300'
-              onClick={() => router.push('/pxp')}
+              className='text-clemson font-semibold'
+              // onClick={() => router.push('/pxp')}
             >
-              Learn More About PXP &rarr;
+              Stay Tuned For Details
             </div>
           </div>
         </div>
-        <div className='w-full lg:col-span-4 bg-indigo-100 rounded-md p-6 flex items-center justify-center'>
+        <div className='w-full lg:col-span-4 bg-indigo-100 rounded-md p-4 lg:p-6 flex items-center justify-center'>
           <div className='flex flex-col gap-4'>
             <div className='flex items-start  gap-3 relative'>
               <div>
@@ -105,7 +105,7 @@ const LearningPath = () => {
         </div>
         <div className='w-full lg:col-span-8 bg-base-brand h-[350px] rounded-lg overflow-hidden'>
           <div className='w-full h-full flex items-center justify-between'>
-            <div className='flex flex-col gap-2.5 px-7 w-2/3'>
+            <div className='flex flex-col gap-2.5 px-7 w-full lg:w-2/3'>
               <div className='text-white text-lg tracking-wide font-oswald uppercase font-medium bg-base-dark py-1 px-2 rounded w-fit'>
                 UPGRADED!
               </div>
@@ -125,7 +125,7 @@ const LearningPath = () => {
                 View Your Pack HQ &rarr;
               </div>
             </div>
-            <div className='w-1/3 pr-6'>
+            <div className='w-1/3 pr-6 hidden lg:block'>
               <MiniProfile />
             </div>
           </div>
