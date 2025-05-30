@@ -262,7 +262,7 @@ const App = () => {
                 </div>
               </div>
             </div>
-            <div className='mx-auto max-w-5xl px-6 lg:px-0 flex flex-col justify-end h-fit mb-8'>
+            <div className='mx-auto max-w-5xl px-6 lg:px-0 flex flex-col justify-end h-fit mb-8 opacity-80'>
               <h2 className='text-center text-slate-400 font-semibold'>
                 Trusted by the world’s most innovative teams
               </h2>
