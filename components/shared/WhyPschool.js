@@ -284,8 +284,16 @@ const WhyPschool = () => {
         </div>
       </div>
       <div className='w-full flex justify-center mt-5'>
-        <div className='w-fit px-6 py-2 bg-clemson text-white text-xl  hover:bg-clemson-dark cursor-pointer font-bold rounded'>
-          Schedule a Call with a Counselor
+        <div
+          className='w-fit px-6 py-2 bg-clemson text-white text-xl  hover:bg-clemson-dark cursor-pointer font-bold rounded'
+          onClick={() =>
+            window.open(
+              'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+              '_blank'
+            )
+          }
+        >
+          Schedule a Free 15-Minute Call with an Advisor &rarr;
         </div>
       </div>
     </div>

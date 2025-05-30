@@ -360,7 +360,15 @@ const SelfPacedAccess = () => {
             </div>
           </div>
         </div>
-        <div className='w-full lg:!w-fit text-center font-bold bg-black mr-1 text-white rounded-lg px-5 py-3 cursor-pointer hover:bg-black/80 transition-colors duration-300'>
+        <div
+          className='w-full lg:!w-fit text-center font-bold bg-black mr-1 text-white rounded-lg px-5 py-3 cursor-pointer hover:bg-black/80 transition-colors duration-300'
+          onClick={() =>
+            window.open(
+              'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+              '_blank'
+            )
+          }
+        >
           Speak to an Advisor
         </div>
       </div>
@@ -379,8 +387,16 @@ const SelfPacedAccess = () => {
           ))}
         </div>
         <div className='w-full flex items-center justify-center'>
-          <div className='w-fit text-center text-xl font-bold bg-clemson text-white rounded-lg px-6 py-2 cursor-pointer hover:bg-clemson-dark transition-colors duration-300'>
-            Get Started Now
+          <div
+            className='w-fit text-center text-xl font-bold bg-clemson text-white rounded-lg px-6 py-2 cursor-pointer hover:bg-clemson-dark transition-colors duration-300'
+            onClick={() =>
+              window.open(
+                'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+                '_blank'
+              )
+            }
+          >
+            Questions? Book a Free 15-Minute Call with an Advisor &rarr;
           </div>
         </div>
       </div>

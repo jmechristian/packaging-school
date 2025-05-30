@@ -10,8 +10,10 @@ import {
 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/router';
 
 const CardFilter = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('Certificates');
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -261,7 +263,10 @@ const CardFilter = () => {
             )}
           </AnimatePresence>
           <div className='w-full flex justify-center mt-20'>
-            <div className='w-fit px-6 py-2 bg-clemson text-white text-xl  hover:bg-clemson-dark cursor-pointer font-bold rounded'>
+            <div
+              className='w-fit px-6 py-2 bg-clemson text-white text-xl  hover:bg-clemson-dark cursor-pointer font-bold rounded'
+              onClick={() => router.push('/all_courses')}
+            >
               View Full Catalog
             </div>
           </div>

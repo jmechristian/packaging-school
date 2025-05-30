@@ -18,9 +18,14 @@ const HomeCorporate = () => {
             </div>
             <div
               className='text-clemson text-xl underline font-semibold cursor-pointer hover:text-clemson/80 transition-all duration-300'
-              onClick={() => window.open('ht', '_blank')}
+              onClick={() =>
+                window.open(
+                  'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+                  '_blank'
+                )
+              }
             >
-              Schedule a Demo &rarr;
+              Schedule a Free Demo &rarr;
             </div>
           </div>
         </div>
