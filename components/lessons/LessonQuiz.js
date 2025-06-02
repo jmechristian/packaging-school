@@ -73,7 +73,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
       dispatch(
         showToast({
           message: 'Lesson Completed!',
-          description: 'You have earned 5 PXP',
+          description: 'Keep going!',
         })
       );
       refreshAWSUser();
@@ -125,7 +125,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
                 disabled={!selectedAnswer}
                 className='mt-6 px-4 py-2 bg-clemson font-bold text-white rounded-md hover:bg-clemson-dark disabled:bg-gray-400'
               >
-                Submit Answer (+5 PXP)
+                Submit Answer
               </button>
             )}
 
@@ -153,7 +153,9 @@ const LessonQuiz = ({ analysis, lessonId }) => {
             )}
           </div>
           <div className='col-span-4'>
-            <MiniProfile />
+            <div className='w-full h-full bg-white/10 rounded-lg'>
+              <MiniProfile />
+            </div>
           </div>
         </div>
       ) : (

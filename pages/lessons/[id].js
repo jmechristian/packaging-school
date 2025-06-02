@@ -7,12 +7,9 @@ import {
   LinkedinIcon,
   LinkedinShareButton,
 } from 'react-share';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import LessonQuiz from '../../components/lessons/LessonQuiz';
 import VideoPlayer from '../../components/VideoPlayer';
-import LessonSlides from '../../components/lessons/LessonSlides';
-import ImageHero from '../../components/lessons/ImageHero';
-import VideoHero from '../../components/lessons/VideoHero';
 import '@jmechristian/ps-component-library/dist/style.css';
 import {
   registerCertificateClick,
@@ -22,6 +19,7 @@ import {
   handleBookmarkRemove,
   getCertificate,
   getCourse,
+  getAWSUser,
 } from '../../helpers/api';
 import {
   listLessons,
@@ -29,6 +27,7 @@ import {
   getLMSCourse,
 } from '../../src/graphql/queries';
 import { useDispatch, useSelector } from 'react-redux';
+import { setAWSUser } from '../../features/auth/authslice';
 import { toggleSignInModal } from '../../features/layout/layoutSlice';
 import AuthorBlock from '../../components/shared/AuthorBlock';
 import Meta from '../../components/shared/Meta';
@@ -176,6 +175,13 @@ const Page = ({ lesson }) => {
     router.push(link);
   };
 
+  const refreshUser = async () => {
+    const dbUser = await getAWSUser(user.email);
+    if (dbUser) {
+      dispatch(setAWSUser(dbUser));
+    }
+  };
+
   const getFeaturedCard = async ({ featured }) => {
     if (featured && featured.type === 'COURSE') {
       const course = await getCourse(featured.id);
@@ -273,6 +279,7 @@ const Page = ({ lesson }) => {
                             ),
                             awsUser.id
                           );
+                          refreshUser();
                         }}
                       >
                         <MdBookmarkRemove size={32} color='gray' />
@@ -288,6 +295,7 @@ const Page = ({ lesson }) => {
                               : [lesson.id],
                             awsUser.id
                           );
+                          refreshUser();
                         }}
                       >
                         <MdBookmarkAdd size={32} color='green' />

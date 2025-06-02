@@ -198,12 +198,12 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           console.error('Thinkific update failed, but AWS update succeeded');
         }
 
-        dispatch(
-          showToast({
-            message: 'Profile updated successfully!',
-            description: 'You have earned 50 PXP',
-          })
-        );
+        // dispatch(
+        //   showToast({
+        //     message: 'Profile updated successfully!',
+        //     description: 'You have earned 50 PXP',
+        //   })
+        // );
       } catch (thinkificError) {
         // Log Thinkific error but don't prevent completion
         console.error('Error updating Thinkific profile:', thinkificError);
@@ -399,15 +399,15 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
                       type='submit'
                       className={`px-6 py-2 rounded font-bold ${'bg-clemson text-white hover:bg-clemson/80'}`}
                     >
-                      Let&apos;s go! (+50 PXP)
+                      Let&apos;s go!
                     </button>
-                    <div className='absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48'>
+                    {/* <div className='absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48'>
                       <div className='bg-gray-900 text-white text-xs rounded py-1.5 px-2 text-center'>
                         PXP (PackSchool Experience Points) help track your
                         learning progress, level up, and unlock bonuses.
                         <div className='absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900'></div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
