@@ -145,7 +145,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full flex flex-col gap-5'>
+      {/* <div className='w-full flex flex-col gap-5'>
         <div className='h2-base text-center'>
           Track Your Progress. Claim Rewards.
         </div>
@@ -155,7 +155,7 @@ const Page = () => {
           earn along the way. Here’s what you’ll unlock:
         </div>
         <LevelProgressBar userXp={userXp} />
-      </div>
+      </div> */}
       <div className='w-full h-px bg-clemson mx-auto max-w-7xl'></div>
       <div className='w-full max-w-7xl mx-auto divide-y divide-gray-900/10'>
         <div className='h2-base text-center text-gray-900'>
