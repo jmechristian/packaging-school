@@ -61,7 +61,7 @@ const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
       </div>
 
       <form onSubmit={handleEditSubmit} className='space-y-4'>
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
           <div>
             <label className='block mb-2 text-sm font-medium text-slate-600'>
               Company

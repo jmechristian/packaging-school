@@ -38,8 +38,8 @@ const ProfileApplications = ({ CMPM, CPS }) => {
     }
   }, [CMPM, CPS]);
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='w-fit grid grid-cols-2 gap-8'>
+    <div className='flex flex-col gap-4 items-center w-full'>
+      <div className='w-fit grid grid-cols-1 lg:grid-cols-2 gap-8'>
         {certificates.length > 0 && (
           <>
             <div className='w-full bg-base-brand/20 rounded-lg p-4 flex flex-col gap-6'>

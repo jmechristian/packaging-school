@@ -70,7 +70,7 @@ const NoPassEnrollments = ({
   return (
     <div className='flex flex-col gap-4'>
       {activeEnrollments.length > 0 ? (
-        <div className='grid grid-cols-3 gap-4 overflow-hidden'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden'>
           {paginatedActiveEnrollments.map((enrollment, index) => {
             const matchedCourse = courses?.find(
               (course) => course.id === enrollment.course_id.toString()
@@ -85,7 +85,7 @@ const NoPassEnrollments = ({
               />
             );
           })}
-          <div className='col-span-3'>
+          <div className='col-span-1 lg:col-span-3'>
             {totalActivePages > 1 && (
               <PaginationControls
                 currentPage={currentActivePage}

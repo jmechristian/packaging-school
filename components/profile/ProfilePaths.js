@@ -10,7 +10,6 @@ import {
 } from 'react-icons/gi';
 
 const ProfilePaths = ({ paths }) => {
-  console.log(paths);
   const popularPaths = [
     {
       id: 1,
@@ -75,7 +74,7 @@ const ProfilePaths = ({ paths }) => {
           <div className='font-semibold text-lg w-full border-b border-gray-200 pb-2.5'>
             Your Active Learning Paths
           </div>
-          <div className='grid grid-cols-3 gap-4 w-full'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 w-full'>
             {paths.map((path) => (
               <div
                 key={path.learningPath.id}
@@ -150,7 +149,7 @@ const ProfilePaths = ({ paths }) => {
         <div className='font-semibold text-lg border-b border-gray-200 pb-2.5 w-full'>
           Popular Learning Paths
         </div>
-        <div className='grid grid-cols-3 gap-5'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-5'>
           {popularPaths.map((item) => (
             <div
               key={item.label}

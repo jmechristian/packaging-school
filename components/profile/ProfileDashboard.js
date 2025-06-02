@@ -415,9 +415,9 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           </div>
         </div>
       )}
-      <div className='grid grid-cols-12 w-full max-w-7xl mx-auto overflow-hidden gap-6 mb-8'>
-        <div className='col-span-2 w-full flex justify-end'>
-          <div className='flex flex-col gap-2.5 py-8'>
+      <div className='grid grid-cols-1 lg:grid-cols-12 w-full max-w-7xl mx-auto overflow-hidden gap-6 mb-8'>
+        <div className='col-span-1 lg:col-span-2 w-full flex justify-center lg:justify-end'>
+          <div className='flex flex-col gap-2.5 py-5 lg:py-8'>
             <div
               className='aspect-[1/1] w-20 bg-cover bg-center rounded-full border-2 border-clemson  bg-gray-600'
               style={{
@@ -494,7 +494,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
         </div>
         {/* MAIN CONTENT */}
         <div
-          className={`col-span-10 w-full flex flex-col bg-white p-6 rounded-lg mt-8`}
+          className={`col-span-1 lg:col-span-10 w-full flex flex-col bg-white p-6 rounded-lg lg:mt-8`}
         >
           <div className='w-full h-full'>{renderContent()}</div>
         </div>
