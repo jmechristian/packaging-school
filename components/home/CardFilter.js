@@ -7,6 +7,8 @@ import {
   addCourseToWishlist,
   removeCourseFromWishlist,
   registgerCourseClick,
+  registerCertificateClick,
+  getDeviceType,
 } from '../../helpers/api';
 import {
   CertCard,
@@ -20,6 +22,7 @@ import { useRouter } from 'next/router';
 const CardFilter = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const deviceType = getDeviceType();
   const { awsUser, location } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('Certificates');
   const [courses, setCourses] = useState([]);
@@ -129,6 +132,30 @@ const CardFilter = () => {
     await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
     router.push(link);
+  };
+
+  const handleCertCardClick = async (
+    abbreviation,
+    type,
+    link,
+    applicationLink
+  ) => {
+    await registerCertificateClick({
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: '/all_courses',
+      type: type,
+    });
+
+    if (type === 'CERTIFICATE-VIEW') {
+      router.push(link);
+    } else if (type === 'CERTIFICATE-APPLY') {
+      router.push(applicationLink);
+    } else {
+      router.push(link);
+    }
   };
 
   const LoadingSkeleton = () => (
