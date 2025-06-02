@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAWSUser } from '../../features/auth/authslice';
 import {
   getCoursesForHomePageFilter,
   getCertificates,
+  addCourseToWishlist,
+  removeCourseFromWishlist,
+  registgerCourseClick,
 } from '../../helpers/api';
 import {
   CertCard,
@@ -14,6 +19,8 @@ import { useRouter } from 'next/router';
 
 const CardFilter = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { awsUser, location } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('Certificates');
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,6 +90,46 @@ const CardFilter = () => {
         .finally(() => setIsLoading(false));
     }
   }, [activeTab]); // Only depend on activeTab
+
+  const handleAddToWishlist = async (courseId) => {
+    if (awsUser) {
+      if (
+        awsUser.wishlist.items.some((item) => item.lMSCourse.id === courseId)
+      ) {
+        const res = await removeCourseFromWishlist(
+          awsUser.wishlist.items.find((item) => item.lMSCourse.id === courseId)
+            .id,
+          awsUser.email
+        );
+        dispatch(setAWSUser(res));
+      } else {
+        const res = await addCourseToWishlist(
+          courseId,
+          awsUser.id,
+          awsUser.email
+        );
+        dispatch(setAWSUser(res));
+      }
+    }
+  };
+
+  const cardClickHandler = async (id, slug, altlink, type) => {
+    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
+
+    altlink
+      ? router.push(altlink)
+      : router.push(
+          `/${
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
+        );
+  };
+
+  const cardPurchaseHandler = async (id, link) => {
+    await registgerCourseClick(id, router.asPath, location, link, 'GRID');
+
+    router.push(link);
+  };
 
   const LoadingSkeleton = () => (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
@@ -157,7 +204,27 @@ const CardFilter = () => {
     }
 
     try {
-      return <CourseCard course={course} initialVideoState={false} />;
+      return (
+        <CourseCard
+          course={course}
+          initialVideoState={false}
+          cardClickHandler={() =>
+            cardClickHandler(
+              course.id,
+              course.slug,
+              course.altLink,
+              course.type
+            )
+          }
+          cardPurchaseHandler={() =>
+            cardPurchaseHandler(course.id, course.link)
+          }
+          cardFavoriteHandler={() => handleAddToWishlist(course.id)}
+          isFavorite={awsUser?.wishlist?.items.some(
+            (item) => item.lMSCourse.id === course.id
+          )}
+        />
+      );
     } catch (err) {
       console.error('Error rendering CourseCard:', err);
       return (
