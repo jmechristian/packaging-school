@@ -117,7 +117,7 @@ const CardFilter = () => {
   };
 
   const cardClickHandler = async (id, slug, altlink, type) => {
-    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
+    await registgerCourseClick(id, router.asPath, location, slug, 'HOME');
 
     altlink
       ? router.push(altlink)
@@ -129,7 +129,7 @@ const CardFilter = () => {
   };
 
   const cardPurchaseHandler = async (id, link) => {
-    await registgerCourseClick(id, router.asPath, location, link, 'GRID');
+    await registgerCourseClick(id, router.asPath, location, link, 'HOME');
 
     router.push(link);
   };
@@ -207,6 +207,14 @@ const CardFilter = () => {
             cert.abbreviation === 'CMPM' || cert.abbreviation === 'CPS'
               ? 'Apply Now'
               : 'Enroll Now'
+          }
+          cardClickHandler={() =>
+            handleCertCardClick(
+              cert.abbreviation,
+              cert.type,
+              cert.link,
+              cert.applicationLink
+            )
           }
         />
       );

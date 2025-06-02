@@ -1,14 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-  getRelatedCourses,
-  cardClickHandler,
-  cardPurchaseHandler,
-} from '../../helpers/api';
+import { useRouter } from 'next/router';
+import { getRelatedCourses, registgerCourseClick } from '../../helpers/api';
+import { useSelector } from 'react-redux';
 
 import { CourseCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const RelatedCourses = ({ category, id }) => {
+  const router = useRouter();
+  const { location } = useSelector((state) => state.auth);
   const desktopRef = useRef();
   const [width, setWidth] = useState(0);
   const [isRelated, setIsRelated] = useState(null);
@@ -96,6 +96,24 @@ const RelatedCourses = ({ category, id }) => {
         </svg>
       </button>
     );
+  };
+
+  const cardClickHandler = async (id, slug, altlink, type) => {
+    await registgerCourseClick(id, router.asPath, location, slug, 'RELATED');
+
+    altlink
+      ? router.push(altlink)
+      : router.push(
+          `/${
+            type && type === 'COLLECTION' ? 'collections' : 'courses'
+          }/${slug}`
+        );
+  };
+
+  const cardPurchaseHandler = async (id, link) => {
+    await registgerCourseClick(id, router.asPath, location, link, 'RELATED');
+
+    router.push(link);
   };
 
   return (
