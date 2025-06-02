@@ -69,7 +69,7 @@ export default function HeaderNew() {
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as='div'
-          className='relative z-40 lg:hidden'
+          className='relative z-[1000] lg:hidden'
           onClose={() => setOpen(false)}
         >
           <Transition.Child
