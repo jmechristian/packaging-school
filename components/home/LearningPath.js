@@ -120,14 +120,19 @@ const LearningPath = () => {
               </div>
               <div
                 className='text-white underline font-semibold cursor-pointer hover:text-white/80 transition-all duration-300'
-                onClick={() => router.push('/pxp')}
+                onClick={() => router.push('/profile')}
               >
                 View Your Pack HQ &rarr;
               </div>
             </div>
-            <div className='w-1/3 pr-6 hidden lg:block'>
-              <MiniProfile />
-            </div>
+            <div
+              className='w-fit h-full aspect-[1/1] bg-cover bg-center mt-16 hidden lg:block'
+              style={{
+                backgroundImage: `url(
+                  https://packschool.s3.us-east-1.amazonaws.com/profile-mock.png
+                )`,
+              }}
+            ></div>
           </div>
         </div>
       </div>
