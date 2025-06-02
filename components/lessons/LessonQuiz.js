@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { showToast } from '../../features/navigation/navigationSlice';
 import { setAWSUser, setUserXp } from '../../features/auth/authslice';
 import { useUser } from '@auth0/nextjs-auth0/client';
-const LessonQuiz = ({ analysis, lessonId }) => {
+const LessonQuiz = ({ analysis, lessonId, refreshUser }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -76,7 +76,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
           description: 'Keep going!',
         })
       );
-      refreshAWSUser();
+      refreshUser();
     }
   };
 

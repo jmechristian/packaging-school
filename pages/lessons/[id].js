@@ -247,7 +247,11 @@ const Page = ({ lesson }) => {
               ></div>
               {lesson.analysis && (
                 <div className='w-full'>
-                  <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
+                  <LessonQuiz
+                    analysis={lesson.analysis}
+                    lessonId={lesson.id}
+                    refreshUser={refreshUser}
+                  />
                 </div>
               )}
             </div>
