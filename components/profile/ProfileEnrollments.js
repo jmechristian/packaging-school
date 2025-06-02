@@ -109,13 +109,13 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex flex-col lg:flex-row gap-2 lg:gap-0 items-center justify-between w-full border-b border-gray-300 pb-4'>
+      <div className='flex flex-col lg:!flex-row gap-2 lg:!gap-0 items-center justify-between w-full border-b border-gray-300 pb-4'>
         <div className='flex items-center gap-2 w-full'>
           <div className='relative w-full'>
             <input
               type='text'
               placeholder='Search my courses'
-              className='pl-8 pr-4 py-1 border border-gray-300 rounded-lg focus:border-clemson focus:ring-1 focus:ring-clemson w-full lg:w-64 text-sm placeholder:text-gray-400'
+              className='pl-8 pr-4 py-1 border border-gray-300 rounded-lg focus:border-clemson focus:ring-1 focus:ring-clemson w-full lg:!w-64 text-sm placeholder:text-gray-400'
               onChange={handleSearch}
             />
             <svg
@@ -134,7 +134,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
             </svg>
           </div>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2 w-full justify-end'>
           <div className='flex items-center gap-2 font-bold'>
             <div
               className={`text-xs text-gray-500 cursor-pointer ${
