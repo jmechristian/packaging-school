@@ -58,7 +58,7 @@ const ComponentLoginButton = ({ path, progress, studentId }) => {
           : isUserInPath
           ? 'Continue Path'
           : awsUser && !isUserInPath
-          ? 'Track Path'
+          ? 'Start Path'
           : 'Start For Free'}
       </button>
       {/* {!awsUser && (
