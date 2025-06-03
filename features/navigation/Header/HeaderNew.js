@@ -313,8 +313,11 @@ export default function HeaderNew() {
                               <Link
                                 href={`/api/auth/login?returnTo=${currentPath}`}
                               >
-                                <div>
+                                <div className='flex items-center gap-1 px-1'>
                                   <MdLogin color='#6B7A8F' size={24} />
+                                  <span className='text-sm font-semibold text-slate-700'>
+                                    Sign In
+                                  </span>
                                 </div>
                               </Link>
                             </div>
@@ -322,9 +325,9 @@ export default function HeaderNew() {
                           {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineNotifications color='#6B7A8F' size={24} />
                           </div> */}
-                          <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
+                          {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineShoppingCart color='#6B7A8F' size={24} />
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
