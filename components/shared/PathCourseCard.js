@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getCourse } from '../../helpers/api';
+import { getCourse, getCourseSlug } from '../../helpers/api';
 import { useRouter } from 'next/router';
 import {
   MdOutlineTimer,
@@ -9,20 +9,24 @@ import {
   MdClose,
 } from 'react-icons/md';
 import ProgressDonut from './ProgressDonut';
-const PathCourseCard = ({ course, enrollment, enrollments }) => {
-  console.log(course);
+const PathCourseCard = ({ course, enrollment }) => {
   const [courseData, setCourseData] = useState(null);
+  const [courseSlug, setCourseSlug] = useState(null);
   const router = useRouter();
   useEffect(() => {
     getCourse(course.courseId).then((data) => {
       setCourseData(data);
-      console.log(data);
+      getCourseSlug(`${course.thinkificId}`).then((data) => {
+        setCourseSlug(data.data.data.course.slug);
+      });
     });
-  }, [course.courseId]);
+  }, [course]);
 
   const handleEnroll = () => {
     if (enrollment && !enrollment.expired) {
-      router.push(`/courses/${course.thinkificId}`);
+      router.push(
+        `https://learn.packagingschool.com/courses/take/${courseSlug}`
+      );
     } else {
       router.push(courseData.link);
     }

@@ -1767,3 +1767,8 @@ export const getUserCPSForm = async (id) => {
   });
   return res.data.getCPSForm;
 };
+
+export const getCourseSlug = async (id) => {
+  const res = await fetch(`/api/thinkific/get-course-slug?courseId=${id}`);
+  return res.json();
+};

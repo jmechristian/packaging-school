@@ -28,62 +28,62 @@ export default handleAuth({
             const data = await thinkificUser.json();
 
             if (data?.data?.data?.userByEmail) {
-              const firstName =
-                session.user.given_name ||
-                session.user.name?.split(' ')[0] ||
-                '';
-              const lastName =
-                session.user.family_name ||
-                session.user.name?.split(' ').slice(1).join(' ') ||
-                '';
-              const redirectUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo:
-                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
-              });
-              console.log('SSO redirect URL generated:', redirectUrl);
-              // Store the redirect URL in the user object
-              session.user.ssoRedirectUrl = redirectUrl;
+              // const firstName =
+              //   session.user.given_name ||
+              //   session.user.name?.split(' ')[0] ||
+              //   '';
+              // const lastName =
+              //   session.user.family_name ||
+              //   session.user.name?.split(' ').slice(1).join(' ') ||
+              //   '';
+              // const redirectUrl = await handleSSO({
+              //   email: session.user.email,
+              //   first_name: firstName,
+              //   last_name: lastName,
+              //   returnTo:
+              //     'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              // });
+              // console.log('SSO redirect URL generated:', redirectUrl);
+              // // Store the redirect URL in the user object
+              // session.user.ssoRedirectUrl = redirectUrl;
             } else {
               console.log('No user found in Thinkific');
 
-              const firstName =
-                session.user.given_name ||
-                session.user.name?.split(' ')[0] ||
-                '';
-              const lastName =
-                session.user.family_name ||
-                session.user.name?.split(' ').slice(1).join(' ') ||
-                '';
+              // const firstName =
+              //   session.user.given_name ||
+              //   session.user.name?.split(' ')[0] ||
+              //   '';
+              // const lastName =
+              //   session.user.family_name ||
+              //   session.user.name?.split(' ').slice(1).join(' ') ||
+              //   '';
 
               // create user in thinkific
-              const createUser = await fetch(
-                `${baseUrl}/api/thinkific/create-user`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: session.user.email,
-                    first_name: firstName,
-                    last_name: lastName,
-                  }),
-                }
-              );
-              await createUser.json();
+              // const createUser = await fetch(
+              //   `${baseUrl}/api/thinkific/create-user`,
+              //   {
+              //     method: 'POST',
+              //     headers: {
+              //       'Content-Type': 'application/json',
+              //     },
+              //     body: JSON.stringify({
+              //       email: session.user.email,
+              //       first_name: firstName,
+              //       last_name: lastName,
+              //     }),
+              //   }
+              // );
+              // await createUser.json();
 
               // // redirect to thinkific
-              const redirectUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo:
-                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
-              });
-              session.user.ssoRedirectUrl = redirectUrl;
+              // const redirectUrl = await handleSSO({
+              //   email: session.user.email,
+              //   first_name: firstName,
+              //   last_name: lastName,
+              //   returnTo:
+              //     'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              // });
+              // session.user.ssoRedirectUrl = redirectUrl;
             }
 
             return session;
