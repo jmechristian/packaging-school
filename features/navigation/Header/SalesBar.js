@@ -148,7 +148,15 @@ const SalesBar = ({ user }) => {
             )}
           </div>
         </div>
-        <div className='hidden lg:flex items-center gap-1.5 cursor-pointer'>
+        <div
+          className='hidden lg:flex items-center gap-1.5 cursor-pointer'
+          onClick={() => {
+            window.open(
+              'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+              '_blank'
+            );
+          }}
+        >
           <div>
             <PhoneIcon className='w-4 h-4 fill-clemson' />
           </div>
