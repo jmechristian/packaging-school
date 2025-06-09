@@ -105,9 +105,9 @@ const Page = () => {
           id: index.id,
           title: JSON.parse(index.content).title,
           description: JSON.parse(index.content).description,
-          hero: index.seoImage, // Replace with your placeholder URL
+          hero: index.seoImage,
           link: `/${index.slug}`,
-          video: index.video || '', // Assuming video is a field in the index
+          video: index.video || '',
           authors: [
             {
               name: 'Mitch',
@@ -117,7 +117,11 @@ const Page = () => {
           ],
           createdAt: index.updatedAt ? index.updatedAt : index.createdAt,
         }));
-      setIsIndexes(publishedIndexes);
+      setIsIndexes(
+        publishedIndexes.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
+      );
     };
 
     getLessons();
