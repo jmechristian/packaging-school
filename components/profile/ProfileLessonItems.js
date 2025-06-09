@@ -2,8 +2,9 @@ import React from 'react';
 import { MdPlayCircle } from 'react-icons/md';
 import AuthorName from '../../components/shared/AuthorName';
 import { MdOutlineTimer } from 'react-icons/md';
+import { useRouter } from 'next/router';
 const ProfileLessonItems = ({ lesson }) => {
-  console.log(lesson);
+  const router = useRouter();
   return (
     <div>
       <div className='border flex flex-col rounded-lg space-y-2 hover:shadow-md transition-shadow bg-gray-100 p-2.5'>
@@ -16,7 +17,7 @@ const ProfileLessonItems = ({ lesson }) => {
           <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
           <button
             onClick={() => {
-              window.open(`/lessons/${lesson.slug}`, '_blank');
+              router.push(`/lessons/${lesson.slug}`);
             }}
             className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'
           >

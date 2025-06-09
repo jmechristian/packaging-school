@@ -52,12 +52,16 @@ const Page = ({ lesson }) => {
     ).toLocaleDateString('en-US');
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [isSaved, setIsSaved] = useState(
-    awsUser?.savedLessons?.includes(lesson.id)
-  );
+  const [isSaved, setIsSaved] = useState(false);
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
 
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
+
+  useEffect(() => {
+    if (awsUser?.savedLessons && lesson?.id) {
+      setIsSaved(awsUser.savedLessons.includes(lesson.id));
+    }
+  }, [awsUser, lesson]);
 
   useEffect(() => {
     const getFeaturedCard = async (type, id) => {
@@ -198,6 +202,27 @@ const Page = ({ lesson }) => {
     }
   }, [lesson]);
 
+  const handleBookmarkToggle = async () => {
+    if (!awsUser || !lesson?.id) {
+      dispatch(toggleSignInModal());
+      return;
+    }
+
+    try {
+      const newSavedLessons = isSaved
+        ? awsUser.savedLessons.filter((id) => id !== lesson.id)
+        : [...(awsUser.savedLessons || []), lesson.id];
+
+      await handleBookmarkAdd(newSavedLessons, awsUser.id);
+      setIsSaved(!isSaved);
+      await refreshUser();
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+      // Revert the UI state if the API call fails
+      setIsSaved(isSaved);
+    }
+  };
+
   return (
     lesson && (
       <>
@@ -275,32 +300,14 @@ const Page = ({ lesson }) => {
                     {isSaved ? (
                       <div
                         className='flex gap-2 items-center cursor-pointer'
-                        onClick={() => {
-                          setIsSaved(false);
-                          handleBookmarkAdd(
-                            awsUser.savedLessons.filter(
-                              (id) => id !== lesson.id
-                            ),
-                            awsUser.id
-                          );
-                          refreshUser();
-                        }}
+                        onClick={handleBookmarkToggle}
                       >
                         <MdBookmarkRemove size={32} color='gray' />
                       </div>
                     ) : (
                       <div
                         className='flex gap-2 items-center cursor-pointer'
-                        onClick={() => {
-                          setIsSaved(true);
-                          handleBookmarkAdd(
-                            awsUser.savedLessons
-                              ? [...awsUser.savedLessons, lesson.id]
-                              : [lesson.id],
-                            awsUser.id
-                          );
-                          refreshUser();
-                        }}
+                        onClick={handleBookmarkToggle}
                       >
                         <MdBookmarkAdd size={32} color='green' />
                       </div>
