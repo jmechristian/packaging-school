@@ -228,6 +228,7 @@ const Page = () => {
     <div className='w-full flex flex-col lg:pt-10 pb-40'>
       <Head>
         <title>Cummins | The Packaging School</title>
+        <meta name='robots' content='noindex,nofollow' />
       </Head>
       <div className='w-full max-w-7xl mx-auto lg:grid lg:grid-cols-12 lg:items-center relative'>
         <div
