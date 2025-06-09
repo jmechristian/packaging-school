@@ -280,7 +280,8 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-16 border-b border-gray-300'>
+
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-8 border-b border-gray-300'>
         <div className='w-full flex flex-col gap-5 mt-10 lg:mt-0'>
           <div className='max-w-xl w-full text-gray-700'>
             Cummins is deeply committed to investing in the growth and
@@ -297,7 +298,14 @@ const Page = () => {
             packaging skills and advancing their careers.
           </div>
         </div>
+        <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-red-100 px-3'>
+          <div className='text-gray-700 text-sm py-1.5 rounded'>
+            Company funds have enabled this course access —you may not enroll
+            anonymously or with private email addresses
+          </div>
+        </div>
       </div>
+
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-5'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
