@@ -6,6 +6,7 @@ import {
   MdOutlineBook,
   MdOutlineBolt,
   MdCheck,
+  MdClose,
 } from 'react-icons/md';
 import ProgressDonut from './ProgressDonut';
 const PathCourseCard = ({ course, enrollment, enrollments }) => {
@@ -74,6 +75,16 @@ const PathCourseCard = ({ course, enrollment, enrollments }) => {
                   </div>
                   <div className='text-white uppercase font-medium font-oswald text-xs'>
                     Enrolled
+                  </div>
+                </div>
+              )}
+              {enrollment && enrollment.expired && (
+                <div className=' flex items-center gap-1 justify-center bg-red-600 text-white px-2 py-1.5 rounded-md text-sm font-semibold '>
+                  <div className='text-white'>
+                    <MdClose size={16} />
+                  </div>
+                  <div className='text-white uppercase font-medium font-oswald text-xs'>
+                    Expired
                   </div>
                 </div>
               )}
