@@ -204,6 +204,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
         //     description: 'You have earned 50 PXP',
         //   })
         // );
+        refreshUser();
       } catch (thinkificError) {
         // Log Thinkific error but don't prevent completion
         console.error('Error updating Thinkific profile:', thinkificError);
@@ -415,7 +416,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           </div>
         </div>
       )}
-      <div className='grid grid-cols-1 lg:!grid-cols-12 w-full max-w-7xl mx-auto overflow-hidden gap-6 mb-8'>
+      <div className='grid grid-cols-1 lg:!grid-cols-12 w-full max-w-7xl mx-auto overflow-hidden gap-4 mb-8'>
         <div className='col-span-1 lg:!col-span-2 w-full flex justify-center lg:justify-end'>
           <div className='flex flex-col gap-2.5 py-5 lg:!py-8'>
             <div

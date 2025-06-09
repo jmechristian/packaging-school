@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getCourse } from '../../helpers/api';
+import { useRouter } from 'next/router';
 import {
   MdOutlineTimer,
   MdOutlineBook,
@@ -8,19 +9,29 @@ import {
 } from 'react-icons/md';
 import ProgressDonut from './ProgressDonut';
 const PathCourseCard = ({ course, enrollment, enrollments }) => {
+  console.log(course);
   const [courseData, setCourseData] = useState(null);
-
+  const router = useRouter();
   useEffect(() => {
     getCourse(course.courseId).then((data) => {
       setCourseData(data);
+      console.log(data);
     });
   }, [course.courseId]);
 
-  const isEnrolled = useMemo(() => {
-    return enrollments.find(
-      (e) => Number(e.course_id) === Number(course.thinkificId)
-    );
-  }, [enrollments, course.thinkificId]);
+  const handleEnroll = () => {
+    if (enrollment && !enrollment.expired) {
+      router.push(`/courses/${course.thinkificId}`);
+    } else {
+      router.push(courseData.link);
+    }
+  };
+
+  // const isEnrolled = useMemo(() => {
+  //   return enrollments.find(
+  //     (e) => Number(e.course_id) === Number(course.thinkificId)
+  //   );
+  // }, [enrollments, course.thinkificId]);
 
   return (
     <div className='w-full grid grid-cols-12 mb-3'>
@@ -56,7 +67,7 @@ const PathCourseCard = ({ course, enrollment, enrollments }) => {
                   Full Course
                 </div>
               </div>
-              {isEnrolled && (
+              {enrollment && !enrollment.expired && (
                 <div className=' flex items-center gap-1 justify-center bg-green-600 text-white px-2 py-1.5 rounded-md text-sm font-semibold '>
                   <div className='text-white'>
                     <MdCheck size={16} />
@@ -75,8 +86,14 @@ const PathCourseCard = ({ course, enrollment, enrollments }) => {
             {courseData?.subheadline}
           </p>
           <div className='flex items-center gap-4'>
-            <button className='bg-base-brand hover:bg-base-dark text-white px-4 py-2 rounded-md text-sm font-semibold w-48'>
-              {isEnrolled ? 'Continue Course' : 'Get Full Access'} &rarr;
+            <button
+              className='bg-base-brand hover:bg-base-dark text-white px-4 py-2 rounded-md text-sm font-semibold w-48'
+              onClick={handleEnroll}
+            >
+              {enrollment && !enrollment.expired
+                ? 'Continue Course'
+                : 'Get Full Access'}
+              &rarr;
             </button>
             <div className='flex items-center gap-1 text-sm text-gray-500'>
               <MdOutlineTimer />
