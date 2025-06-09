@@ -196,6 +196,7 @@ const Page = () => {
     <div className='w-full flex flex-col pt-10 pb-40'>
       <Head>
         <title>DVI | The Packaging School</title>
+        <meta name='robots' content='noindex,nofollow' />
       </Head>
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
         <div
