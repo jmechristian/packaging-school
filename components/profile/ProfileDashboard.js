@@ -91,6 +91,27 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
 
   const [activeTab, setActiveTab] = useState('courses');
 
+  // Add effect to sync with URL on mount and URL changes
+  useEffect(() => {
+    const tabFromUrl = router.query.tab;
+    if (tabFromUrl && tabs.some((tab) => tab.value === tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [router.query.tab]);
+
+  const handleTabChange = (tabValue) => {
+    setActiveTab(tabValue);
+    // Update URL without full page reload
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, tab: tabValue },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   const tabs = [
     {
       label: 'Your Courses',
@@ -461,7 +482,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
                 <div
                   className='flex w-full justify-between items-center text-gray-700'
                   key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
+                  onClick={() => handleTabChange(tab.value)}
                 >
                   <div
                     className={`font-medium text-sm w-full transition-all duration-300 cursor-pointer ${
