@@ -20,7 +20,7 @@ const Pagination = ({
               number === currentPage
                 ? 'bg-clemson'
                 : 'transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
-            } w-9 h-9 flex items-center justify-center border-2 border-black font-semibold`}
+            } w-9 h-9 flex items-center justify-center border border-black font-semibold`}
           >
             {number}
           </button>

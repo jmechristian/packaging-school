@@ -29,13 +29,13 @@ const Page = () => {
   const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
   const [openSort, setOpenSort] = useState(false);
-  const [isTable, setIsTable] = useState(true);
+  const [isTable, setIsTable] = useState(false);
   const [isLessons, setIsLessons] = useState([]);
   const [isTags, setIsTags] = useState([]);
   const [isIndexes, setIsIndexes] = useState([]);
   const [isCurrentPage, setIsCurrentPage] = useState(1);
 
-  const pageSize = 15;
+  const pageSize = 24;
 
   const lessonTop = useRef();
 
@@ -172,20 +172,6 @@ const Page = () => {
     }
   }, [isSearchTerm, filteredLessons]);
 
-  const isLOTM = useMemo(() => {
-    return (
-      sortedLessons.length > 0 &&
-      sortedLessons.filter((less) => less.type === 'LOTM')
-    );
-  }, [sortedLessons]);
-
-  const isReg = useMemo(() => {
-    return (
-      sortedLessons.length > 0 &&
-      sortedLessons.filter((less) => less.type === 'REGULATORY')
-    );
-  }, [sortedLessons]);
-
   const getItemLength = (tag) => {
     const items = sortedLessons.filter((less) =>
       less.tags.items.some((t) => t.tags.tag === tag)
@@ -231,22 +217,8 @@ const Page = () => {
   }, [lessonsToShow, isCurrentPage]);
 
   return (
-    <div className='container-base px-3 xl:px-0 flex flex-col gap-24'>
-      <div className='flex flex-col gap-10 lg:gap-16'>
-        {/* <div className='block lg:hidden'>
-          <MobileSwipeableContent
-            headline='Learning of the Month'
-            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
-            content={isIndexes}
-          />
-        </div>
-        <div className='hidden lg:block'>
-          <ContentScroller
-            headline='Content Indices'
-            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
-            content={isIndexes}
-          />
-        </div> */}
+    <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>
+      <div className='flex flex-col gap-10 lg:!gap-16'>
         <div className='block lg:hidden'>
           <MobileSwipeableContent
             headline='Content Indices'
@@ -267,11 +239,11 @@ const Page = () => {
       <div className='w-full flex flex-col gap-5'>
         {/* HEADING */}
         <div
-          className='w-full pb-5 border-b-2 border-b-gray-300 flex justify-between items-center scroll-mt-6'
+          className='w-full pb-5 border-b border-b-gray-300 flex justify-between items-center scroll-mt-6'
           ref={lessonTop}
         >
           <div className='h3-base'>Browse Lesson Library</div>
-          <div className='grid grid-cols-2 w-fit'>
+          {/* <div className='grid grid-cols-2 w-fit'>
             <div
               className={`w-10 h-10 ${
                 isTable ? 'bg-black' : 'bg-neutral-300'
@@ -288,12 +260,12 @@ const Page = () => {
             >
               <MdApps color={isTable ? 'gray' : 'white'} size={24} />
             </div>
-          </div>
+          </div> */}
         </div>
         {/* SEARCH - FILTER */}
-        <div className='!grid !grid-cols-3 lg:mb-5 gap-2.5'>
+        <div className='!grid !grid-cols-3 lg:mb-3 gap-2.5'>
           {/* SEARCH */}
-          <div className='w-full !col-span-3 lg:!col-span-2 border-2 border-black p-1'>
+          <div className='w-full !col-span-3 lg:!col-span-2 border border-black p-1'>
             <div className='flex gap-2 items-center'>
               <input
                 type='text'
@@ -314,7 +286,7 @@ const Page = () => {
                 <motion.div className='w-[400px] absolute top-full right-0 mt-2.5 bg-black px-5 py-4 z-40'>
                   <div className='flex flex-col gap-5'>
                     <div className='flex flex-col gap-0.5'>
-                      <div className='flex justify-between items-center w-full  border-b-2 border-b-white pb-3'>
+                      <div className='flex justify-between items-center w-full  border-b border-b-white pb-3'>
                         <div className='text-white  font-semibold'>
                           Filter by Tag
                         </div>
@@ -367,7 +339,7 @@ const Page = () => {
             )}
             {/* FILTER BUTTON */}
             <div
-              className={`border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-full md:w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
+              className={`border-black border cursor-pointer h-full flex gap-1 px-5 py-2 w-full md:w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
                 !isFilter && isFilters.length > 0
                   ? 'bg-brand-indigo text-white'
                   : 'bg-white'
@@ -390,7 +362,7 @@ const Page = () => {
             ))}
           </div>
         ) : paginatedItems && paginatedItems.length > 0 && !isTable ? (
-          <div className='!grid lg:!grid-cols-3 md:!grid-cols-2 gap-2 lg:gap-10'>
+          <div className='!grid md:!grid-cols-2 lg:!grid-cols-3 gap-2 lg:!gap-5'>
             {paginatedItems.map((less) => (
               <LessonCardItem less={less} key={less.id} />
             ))}
