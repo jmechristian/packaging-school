@@ -24,6 +24,6 @@ export const getStaticProps = async ({ params }) => {
   const path = await getPathBySlug(slug);
   return {
     props: { path: path.items[0] },
-    revalidate: 0,
+    revalidate: 60,
   };
 };
