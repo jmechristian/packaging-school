@@ -177,7 +177,7 @@ const PathWrapper = ({ path }) => {
         (user) => user?.userId === awsUser.id
       )
     );
-  }, [path.lessons?.items, awsUser]);
+  }, [path.lessons?.items, awsUser?.id]);
 
   if (isLoading) {
     return <PathWrapperSkeleton />;
