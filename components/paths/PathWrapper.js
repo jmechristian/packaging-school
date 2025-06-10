@@ -59,20 +59,29 @@ const PathWrapperSkeleton = () => {
 };
 
 const PathWrapper = ({ path }) => {
-  console.log(path);
+  console.log('path', path);
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPath, setCurrentPath] = useState(path);
+
+  useEffect(() => {
+    setCurrentPath(path);
+    setIsLoading(false);
+  }, [path]);
 
   const { awsUser, enrollments } = useSelector((state) => state.auth);
   const pathProgress = useMemo(() => {
-    if (!path.courses.items?.length && !path.lessons.items?.length) {
+    if (
+      !currentPath?.courses?.items?.length &&
+      !currentPath?.lessons?.items?.length
+    ) {
       return 0;
     }
 
     const itemProgresses = [
-      ...(path.courses.items || []),
-      ...(path.lessons.items || []),
+      ...(currentPath.courses.items || []),
+      ...(currentPath.lessons.items || []),
     ].map((item) => {
       if ('thinkificId' in item) {
         // This is a course
@@ -106,14 +115,21 @@ const PathWrapper = ({ path }) => {
       Math.round((totalProgress / itemProgresses.length) * 10) / 10;
 
     return finalProgress;
-  }, [path.courses.items, path.lessons.items, enrollments, awsUser]);
+  }, [
+    currentPath?.courses?.items,
+    currentPath?.lessons?.items,
+    enrollments,
+    awsUser,
+  ]);
 
   const currentUser = useMemo(() => {
     return (
       awsUser &&
-      path.userProgress.items.find((user) => user.user.id === awsUser.id)
+      currentPath?.userProgress?.items?.find(
+        (user) => user.user.id === awsUser.id
+      )
     );
-  }, [path.userProgress.items, awsUser]);
+  }, [currentPath?.userProgress?.items, awsUser]);
 
   const [isTracked, setIsTracked] = useState(currentUser);
 
@@ -122,12 +138,6 @@ const PathWrapper = ({ path }) => {
       setIsTracked(true);
     }
   }, [currentUser]);
-
-  useEffect(() => {
-    if (path) {
-      setIsLoading(false);
-    }
-  }, [path]);
 
   const handleLeavePath = async () => {
     if (currentUser) {
@@ -138,7 +148,7 @@ const PathWrapper = ({ path }) => {
     } else {
       await addStudentToPath({
         lastAccessedDate: new Date().toISOString(),
-        learningPathUserProgressId: path.id,
+        learningPathUserProgressId: currentPath.id,
         progress: pathProgress,
         startDate: new Date().toISOString(),
         status: 'IN_PROGRESS',
