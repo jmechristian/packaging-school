@@ -191,55 +191,20 @@ const App = () => {
           </div>
           <div className='absolute right-1/2 translate-x-1/2 top-0 w-full h-full flex flex-col justify-between mx-auto max-w-7xl items-center px-5 xl:px-0'>
             <div className='w-full flex flex-col gap-5 max-w-5xl items-center justify-center text-center h-full'>
-              <div className='flex flex-col gap-3 lg:gap-5 justify-center items-center'>
+              <div className='flex flex-col gap-3 lg:!gap-6 justify-center items-center'>
                 <div className='w-full h-full text-white h1-base '>
                   One Powerful Catalog.{' '}
                   <span className='text-clemson block'>
                     Two Flexible Paths.
                   </span>
                 </div>
-                <div className='w-full h-full text-white text-xl lg:!text-2xl !max-w-5xl mx-auto'>
-                  Get full access to Packaging School’s expert-led course
-                  library—whichever path you choose. Learn with a group, guided
-                  by experts, while completing a project tailored to your
-                  current role or a position you’re targeting or go at your own
-                  pace with the same in-depth content, available anytime.
+                <div className='w-full h-full text-white text-xl lg:!text-3xl !max-w-5xl mx-auto'>
+                  Get full access to all our expert-led courses. Learn with a
+                  team and a tailored project, or go solo at your own pace—same
+                  rich content, your way.
                 </div>
                 <div className='flex flex-col items-start gap-10'>
-                  <p className='lg:text-2xl text-xl text-slate-400 font-oswald uppercase tracking-wide'>
-                    Advance your career. Boost your resume. Keep learning.
-                  </p>
-                  {/* <div className='flex gap-3'>
-                  <button className='px-4 py-2 bg-white text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors'>
-                    <img
-                      src='/logos/google.svg'
-                      alt='Google'
-                      className='w-6 h-6'
-                    />
-                  </button>
-                  <button className='px-4 py-2 bg-[#0A66C2] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-colors'>
-                    <img
-                      src='/logos/linkedin.svg'
-                      alt='LinkedIn'
-                      className='w-6 h-6'
-                    />
-                  </button>
-                  <button className='px-4 py-2 bg-[#1877F2] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-colors'>
-                    <img
-                      src='/logos/facebook.svg'
-                      alt='Facebook'
-                      className='w-6 h-6'
-                    />
-                  </button>
-                  <button className='px-4 py-2 bg-black text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-colors border border-white'>
-                    <img
-                      src='/logos/apple.svg'
-                      alt='Apple'
-                      className='w-6 h-6'
-                    />
-                  </button>
-                </div> */}
-                  <div className='grid lg:grid-cols-2 gap-4 w-full max-w-2xl mx-auto pb-5'>
+                  <div className='grid lg:grid-cols-2 gap-4 w-full max-w-2xl mx-auto mt-5'>
                     <button className='w-full p-3 bg-base-brand text-white rounded flex items-center gap-2 hover:bg-base-brand/90 transition-colors justify-center font-bold text-lg'>
                       <div
                         className='flex items-center gap-2.5'
@@ -258,6 +223,12 @@ const App = () => {
                         <div>Self-Paced Access</div>
                       </div>
                     </button>
+                  </div>
+                  <div className='w-full text-sm text-center text-slate-400 max-w-2xl mx-auto'>
+                    Built on Excellence. Our curriculum was licensed by Clemson
+                    University, a leader in packaging education. Licensed by the
+                    South Carolina Commission on Higher Education — License
+                    #5400.
                   </div>
                 </div>
               </div>
