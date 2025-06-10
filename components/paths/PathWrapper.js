@@ -170,14 +170,15 @@ const PathWrapper = ({ path }) => {
   };
 
   const lessonsCompleted = useMemo(() => {
-    if (!path.lessons?.items || !awsUser?.id) return [];
+    if (!path?.lessons?.items || !awsUser?.id) return [];
 
-    return path.lessons.items.filter((lesson) =>
-      lesson?.lesson?.usersCompleted?.items?.some(
-        (user) => user?.userId === awsUser.id
-      )
-    );
-  }, [path.lessons?.items, awsUser?.id]);
+    const completedLessons = path.lessons.items.filter((lesson) => {
+      const usersCompleted = lesson?.lesson?.usersCompleted?.items || [];
+      return usersCompleted.some((user) => user?.userId === awsUser.id);
+    });
+
+    return completedLessons;
+  }, [path?.lessons?.items, awsUser?.id, path?.id]);
 
   if (isLoading) {
     return <PathWrapperSkeleton />;
