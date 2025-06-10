@@ -11,19 +11,18 @@ const Page = ({ path }) => {
 
 export default Page;
 
-export const getStaticPaths = async () => {
-  const paths = await getPaths();
-  return {
-    paths: paths.map((path) => ({ params: { slug: path.slug } })),
-    fallback: false,
-  };
-};
+// export const getStaticPaths = async () => {
+//   const paths = await getPaths();
+//   return {
+//     paths: paths.map((path) => ({ params: { slug: path.slug } })),
+//     fallback: false,
+//   };
+// };
 
-export const getStaticProps = async ({ params }) => {
+export const getServerSideProps = async ({ params }) => {
   const { slug } = params;
   const path = await getPathBySlug(slug);
   return {
     props: { path: path.items[0] },
-    revalidate: 60,
   };
 };
