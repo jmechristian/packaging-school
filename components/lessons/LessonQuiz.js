@@ -86,7 +86,7 @@ const LessonQuiz = ({ analysis, lessonId, refreshUser }) => {
           description: 'Keep going!',
         })
       );
-      refreshUser();
+      await refreshAWSUser();
     }
   };
 
