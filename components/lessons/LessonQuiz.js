@@ -6,6 +6,7 @@ import { showToast } from '../../features/navigation/navigationSlice';
 import { setAWSUser, setUserXp } from '../../features/auth/authslice';
 import { useUser } from '@auth0/nextjs-auth0/client';
 const LessonQuiz = ({ analysis, lessonId, refreshUser }) => {
+  console.log('analysis', analysis);
   const { awsUser } = useSelector((state) => state.auth);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -45,9 +46,18 @@ const LessonQuiz = ({ analysis, lessonId, refreshUser }) => {
         .replace(/{|}/g, '') // Remove curly braces
         .split(',')
         .map((option) => {
-          const [key, value] = option.split('=');
-          return { key, value: value.trim() };
-        });
+          const parts = option.split('=');
+          if (parts.length !== 2) {
+            console.warn('Invalid option format:', option);
+            return null;
+          }
+          const [key, value] = parts;
+          return {
+            key: key?.trim() || '',
+            value: value?.trim() || '',
+          };
+        })
+        .filter((option) => option !== null); // Remove any invalid options
     } catch (error) {
       console.error('Error parsing quiz options:', error);
       return [];
