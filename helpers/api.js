@@ -1203,6 +1203,7 @@ export const getAWSUser = async (email) => {
           learningPathProgress {
             items {
               completedCourses
+              completedLessons
               completionDate
               createdAt
               id
@@ -1214,6 +1215,26 @@ export const getAWSUser = async (email) => {
                 description
                 slug
                 title
+                courses {
+                  items {
+                    id
+                    thinkificId
+                  }
+                }
+                lessons {
+                  items {
+                    lesson {
+                      id
+                      usersCompleted {
+                        items {
+                          user {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
               progress
               startDate

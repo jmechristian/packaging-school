@@ -42,6 +42,7 @@ import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
 const Page = ({ lesson }) => {
+  console.log('lesson', lesson);
   const router = useRouter();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
@@ -524,6 +525,11 @@ export async function getStaticProps({ params }) {
               name
               link
               lessonLinksId
+            }
+          }
+          learningPaths {
+            items {
+              learningPathLessonsId
             }
           }
           analysis {

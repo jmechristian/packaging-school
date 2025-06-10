@@ -8,6 +8,7 @@ import {
   GiHoneycomb,
   GiBoxUnpacking,
 } from 'react-icons/gi';
+import ProfilePathItem from './ProfilePathItem';
 
 const ProfilePaths = ({ paths }) => {
   const popularPaths = [
@@ -42,31 +43,7 @@ const ProfilePaths = ({ paths }) => {
   ];
 
   const router = useRouter();
-  const renderIcon = (icon) => {
-    // If icon is already a React component, return it
-    if (React.isValidElement(icon)) {
-      return icon;
-    }
 
-    // If icon is a string, handle it as before
-    const iconName = icon?.startsWith('Gi') ? icon : `Gi${icon}`;
-    switch (iconName) {
-      case 'GiFizzingFlask':
-        return <GiFizzingFlask size={36} />;
-      case 'GiForest':
-        return <GiForest size={36} />;
-      case 'GiPalette':
-        return <GiPalette size={36} />;
-      case 'GiCarWheel':
-        return <GiCarWheel size={36} />;
-      case 'GiHoneycomb':
-        return <GiHoneycomb size={36} />;
-      case 'GiBoxUnpacking':
-        return <GiBoxUnpacking size={36} />;
-      default:
-        return null;
-    }
-  };
   return (
     <div className='flex flex-col w-full gap-10 h-full justify-between'>
       {paths.length > 0 ? (
@@ -76,57 +53,7 @@ const ProfilePaths = ({ paths }) => {
           </div>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 w-full'>
             {paths.map((path) => (
-              <div
-                key={path.learningPath.id}
-                className='col-span-1 bg-gray-100 py-4 rounded-lg w-full flex flex-col gap-2.5'
-              >
-                <div className='flex justify-between w-full px-3'>
-                  <div className='flex gap-3'>
-                    <div>
-                      <div className='w-12 h-16 bg-clemson text-white flex items-center justify-center rounded-lg'>
-                        {renderIcon(path.learningPath.icon)}
-                      </div>
-                    </div>
-                    <div className='flex flex-col gap-0.5 w-full'>
-                      <div className='text-lg font-oswald'>
-                        {path.learningPath.title}
-                      </div>
-                      <div className='w-full'>
-                        <div className='text-sm font-medium text-slate-500 line-clamp-2'>
-                          {path.learningPath.description}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='flex w-full items-center justify-between gap-2 border-y border-slate-300 py-2.5 bg-slate-400 px-4'>
-                  <div className='w-[84%] h-1 bg-white rounded-lg'>
-                    <div
-                      className='h-1 bg-yellow-600 rounded-lg'
-                      style={{ width: `${path.progress}%` }}
-                    ></div>
-                  </div>
-                  <div className='text-sm font-medium text-white'>
-                    {path.progress}%
-                  </div>
-                </div>
-                <div
-                  className='w-full flex justify-between items-center cursor-pointer px-4'
-                  onClick={() => {
-                    router.push(`/paths/${path.learningPath.slug}`);
-                  }}
-                >
-                  <div className={`font-medium text-sm text-slate-500`}>
-                    {((path.progress / 100) * path.learningPath.hours)
-                      .toFixed(2)
-                      .replace(/\.?0+$/, '')}
-                    h / {path.learningPath.hours}h
-                  </div>
-                  <div className='text-sm font-medium text-slate-900'>
-                    Continue Path &rarr;
-                  </div>
-                </div>
-              </div>
+              <ProfilePathItem key={path.id} path={path} />
             ))}
           </div>
         </div>

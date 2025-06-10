@@ -161,7 +161,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
           />
         );
       case 'paths':
-        return <ProfilePaths paths={awsUser?.learningPathProgress?.items} />;
+        return <ProfilePaths paths={awsUser.learningPathProgress.items} />;
       case 'wishlist':
         return (
           <ProfileWishlist
