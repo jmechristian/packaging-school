@@ -55,7 +55,7 @@ const Page = ({ lesson }) => {
   const { user } = useSelector((state) => state.auth);
   const [isSaved, setIsSaved] = useState(false);
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
-
+  const [isHovering, setIsHovering] = useState(false);
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
 
   useEffect(() => {
@@ -233,7 +233,60 @@ const Page = ({ lesson }) => {
           image={lesson.seoImage}
         />
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col'>
-          <div className='w-full grid grid-cols-12 gap-10'>
+          <div className='w-full grid grid-cols-12 gap-10 relative'>
+            <div className='absolute top-0 -left-16 hidden lg:flex h-full w-full'>
+              <div className='flex flex-col gap-2 w-fit sticky top-32 h-screen'>
+                {isSaved ? (
+                  <div
+                    className='flex gap-2 items-center cursor-pointer relative w-full'
+                    onClick={handleBookmarkToggle}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    {isHovering && (
+                      <div className='absolute top-0 -left-16 w-fit text-xs text-white bg-black/90 flex items-center justify-center p-1 rounded'>
+                        Bookmark
+                      </div>
+                    )}
+                    <MdBookmarkRemove size={40} color='gray' />
+                  </div>
+                ) : (
+                  <div
+                    className='flex gap-2 items-center cursor-pointer relative w-full'
+                    onClick={handleBookmarkToggle}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    {isHovering && (
+                      <div className='absolute top-0 -left-16 w-fit text-xs text-white bg-black/90 flex items-center justify-center p-1 rounded'>
+                        Bookmark
+                      </div>
+                    )}
+                    <MdBookmarkAdd size={40} color='green' />
+                  </div>
+                )}
+                <FacebookShareButton
+                  url={router.asPath}
+                  quote={lesson.subhead}
+                  // onClick={() => socialShareClickHandler('facebook')}
+                  data-click-target='social_share'
+                  data-click-name='Facebook'
+                >
+                  <FacebookIcon round size={40} />
+                </FacebookShareButton>
+                <LinkedinShareButton
+                  url={router.asPath}
+                  title={lesson.title}
+                  source='PackagingSchool.com'
+                  summary={lesson.subhead}
+                  // onClick={() => socialShareClickHandler('linkedin')}
+                  data-click-target='social_share'
+                  data-click-name='LinkedIn'
+                >
+                  <LinkedinIcon round size={40} />
+                </LinkedinShareButton>
+              </div>
+            </div>
             <div className='col-span-12 lg:!col-span-9 flex flex-col gap-6 lg:gap-10'>
               <div className='w-full flex flex-col gap-5 lg:!gap-9  max-w-4xl px-4 lg:px-0'>
                 <div className='text-4xl lg:text-5xl font-medium font-oswald'>
@@ -295,9 +348,8 @@ const Page = ({ lesson }) => {
                     </div>
                   )}
                 </div>
-                <div className='w-full border-b border-b-gray-400 py-2'></div>
                 <div className='flex flex-col gap-5 py-5 px-4'>
-                  <div className='grid grid-cols-3 gap-2 w-fit'>
+                  <div className='grid grid-cols-3 gap-2 w-fit lg:hidden'>
                     {isSaved ? (
                       <div
                         className='flex gap-2 items-center cursor-pointer'
