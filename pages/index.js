@@ -224,11 +224,9 @@ const App = () => {
                       </div>
                     </button>
                   </div>
-                  <div className='w-full text-sm text-center text-slate-400 max-w-2xl mx-auto'>
-                    Built on Excellence. Our curriculum was licensed by Clemson
-                    University, a leader in packaging education. Licensed by the
-                    South Carolina Commission on Higher Education — License
-                    #5400.
+                  <div className='w-full text-center text-slate-400 max-w-2xl mx-auto'>
+                    Curriculum Developed at Clemson University School Licensed
+                    (#5400) by South Carolina Commission on Higher Education.
                   </div>
                 </div>
               </div>
