@@ -3061,6 +3061,20 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      reviews {
+        items {
+          id
+          review
+          rating
+          createdAt
+          userID
+          thinkificId
+          updatedAt
+          userReviewsId
+          lMSCourseReviewsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       userUserXpId
@@ -3202,6 +3216,9 @@ export const listUsers = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -3357,6 +3374,9 @@ export const usersByName = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3508,6 +3528,9 @@ export const usersByEmail = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -3663,6 +3686,9 @@ export const usersByCompanyID = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3803,6 +3829,9 @@ export const getUserXp = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -4236,6 +4265,9 @@ export const getLearningPathProgress = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -4406,6 +4438,9 @@ export const getLearningPathCourse = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -4895,6 +4930,9 @@ export const getCMPMForm = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5142,6 +5180,9 @@ export const getCPSForm = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -5751,6 +5792,20 @@ export const getLMSCourse = /* GraphQL */ `
         }
         nextToken
       }
+      reviews {
+        items {
+          id
+          review
+          rating
+          createdAt
+          userID
+          thinkificId
+          updatedAt
+          userReviewsId
+          lMSCourseReviewsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -5810,6 +5865,9 @@ export const listLMSCourses = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -5883,6 +5941,9 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5952,6 +6013,9 @@ export const lMSCoursesBySlug = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -9041,6 +9105,639 @@ export const listAchievements = /* GraphQL */ `
     }
   }
 `;
+export const getTest = /* GraphQL */ `
+  query GetTest($id: ID!) {
+    getTest(id: $id) {
+      id
+      name
+      email
+      totalTasks
+      tasks {
+        items {
+          id
+          task
+          completed
+          completedDate
+          createdAt
+          updatedAt
+          testTasksId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTests = /* GraphQL */ `
+  query ListTests(
+    $filter: ModelTestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        totalTasks
+        tasks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const testsByEmail = /* GraphQL */ `
+  query TestsByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    testsByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        email
+        totalTasks
+        tasks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTestTask = /* GraphQL */ `
+  query GetTestTask($id: ID!) {
+    getTestTask(id: $id) {
+      id
+      test {
+        id
+        name
+        email
+        totalTasks
+        tasks {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      task
+      completed
+      completedDate
+      createdAt
+      updatedAt
+      testTasksId
+    }
+  }
+`;
+export const listTestTasks = /* GraphQL */ `
+  query ListTestTasks(
+    $filter: ModelTestTaskFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTestTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        test {
+          id
+          name
+          email
+          totalTasks
+          createdAt
+          updatedAt
+        }
+        task
+        completed
+        completedDate
+        createdAt
+        updatedAt
+        testTasksId
+      }
+      nextToken
+    }
+  }
+`;
+export const getCourseReview = /* GraphQL */ `
+  query GetCourseReview($id: ID!) {
+    getCourseReview(id: $id) {
+      id
+      course {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      review
+      rating
+      createdAt
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      userID
+      thinkificId
+      updatedAt
+      userReviewsId
+      lMSCourseReviewsId
+    }
+  }
+`;
+export const listCourseReviews = /* GraphQL */ `
+  query ListCourseReviews(
+    $filter: ModelCourseReviewFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCourseReviews(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        course {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        review
+        rating
+        createdAt
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        userID
+        thinkificId
+        updatedAt
+        userReviewsId
+        lMSCourseReviewsId
+      }
+      nextToken
+    }
+  }
+`;
+export const courseReviewsByUserID = /* GraphQL */ `
+  query CourseReviewsByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCourseReviewFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    courseReviewsByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        course {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        review
+        rating
+        createdAt
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        userID
+        thinkificId
+        updatedAt
+        userReviewsId
+        lMSCourseReviewsId
+      }
+      nextToken
+    }
+  }
+`;
+export const courseReviewsByThinkificId = /* GraphQL */ `
+  query CourseReviewsByThinkificId(
+    $thinkificId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCourseReviewFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    courseReviewsByThinkificId(
+      thinkificId: $thinkificId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        course {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        review
+        rating
+        createdAt
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        userID
+        thinkificId
+        updatedAt
+        userReviewsId
+        lMSCourseReviewsId
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {
@@ -10169,6 +10866,9 @@ export const getUserCompletedLessons = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -10770,6 +11470,9 @@ export const getAPSUser = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -11681,6 +12384,9 @@ export const getAchievementUsers = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12054,6 +12760,9 @@ export const getCohortUsers = /* GraphQL */ `
           userXpUserId
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -12456,6 +13165,9 @@ export const getUserWishlist = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12507,6 +13219,9 @@ export const getUserWishlist = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -12870,6 +13585,9 @@ export const getCirriculumCourses = /* GraphQL */ `
         wishlist {
           nextToken
         }
+        reviews {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -13134,6 +13852,9 @@ export const getCourseLessons = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -13423,6 +14144,9 @@ export const getCourseInstructors = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt
@@ -13716,6 +14440,9 @@ export const getAchievementCourses = /* GraphQL */ `
           nextToken
         }
         wishlist {
+          nextToken
+        }
+        reviews {
           nextToken
         }
         createdAt

@@ -20,7 +20,6 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
           `/api/thinkific/get-enrollments?email=${email}`
         );
         const data = await enrollments.json();
-        console.log(data);
         setEnrollments(data);
       } catch (error) {
         console.error('Error fetching enrollments:', error);

@@ -21,9 +21,11 @@ import {
   listLearningPathProgress,
   getCMPMForm,
   getCPSForm,
+  courseReviewsByUserID,
 } from '../src/graphql/queries';
 import {
   createClick,
+  createCourseReview,
   createLearningPathProgress,
   createCourseClick,
   createIndiaClick,
@@ -45,6 +47,7 @@ import {
   createUserWishlist,
   deleteUserWishlist,
   updateLearningPathProgress,
+  updateCourseReview,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -1792,4 +1795,67 @@ export const getUserCPSForm = async (id) => {
 export const getCourseSlug = async (id) => {
   const res = await fetch(`/api/thinkific/get-course-slug?courseId=${id}`);
   return res.json();
+};
+
+export const getCourseByThinkificId = async (id) => {
+  const getCourseByThinkificIdQuery = /* GraphQL */ `
+    query MyQuery($id: String!) {
+      lMSCoursesByThinkificId(thinkificId: $id) {
+        items {
+          id
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getCourseByThinkificIdQuery,
+    variables: { id: id },
+  });
+  return res.data.lMSCoursesByThinkificId.items[0].id;
+};
+
+export const createUserReview = async (data) => {
+  const res = await API.graphql({
+    query: createCourseReview,
+    variables: { input: data },
+  });
+  return res.data.createCourseReview;
+};
+
+export const getReviewByUserAndCourse = async (userId, courseId) => {
+  const getReviewByUserAndCourseQuery = /* GraphQL */ `
+    query MyQuery($userId: ID!, $courseId: ID!) {
+      courseReviewsByUserID(
+        userID: $userId
+        filter: { lMSCourseReviewsId: { eq: $courseId } }
+      ) {
+        items {
+          id
+          lMSCourseReviewsId
+          rating
+          review
+          thinkificId
+          userID
+        }
+      }
+    }
+  `;
+
+  const res = await API.graphql({
+    query: getReviewByUserAndCourseQuery,
+    variables: {
+      userId: userId,
+      courseId: courseId,
+    },
+  });
+  return res.data.courseReviewsByUserID.items[0];
+};
+
+export const updateUserReview = async (id, data) => {
+  const res = await API.graphql({
+    query: updateCourseReview,
+    variables: { input: { id, ...data } },
+  });
+  return res.data.updateCourseReview;
 };

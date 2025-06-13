@@ -558,6 +558,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   learningPathProgress: [LearningPathProgress] @hasMany
   userXp: UserXp @hasOne
   wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
+  reviews: [CourseReview] @hasMany
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -807,6 +808,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   callout: String
   achievements: [Achievement] @manyToMany(relationName: "AchievementCourses")
   wishlist: [User] @manyToMany(relationName: "UserWishlist")
+  reviews: [CourseReview] @hasMany
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -1264,8 +1266,6 @@ type ImageObject @model @auth(rules: [{ allow: public }]) {
   alt: String
 }
 
-######### IMAGES #########
-
 type Purchase @model @auth(rules: [{ allow: public }]) {
   id: ID!
   email: String! @index(name: "purchaseByEmail")
@@ -1311,4 +1311,35 @@ type Achievement @model @auth(rules: [{ allow: public }]) {
   courses: [LMSCourse] @manyToMany(relationName: "AchievementCourses")
   coursesRequired: Int
   users: [User] @manyToMany(relationName: "AchievementUsers")
+}
+
+######### TESTING #########
+
+type Test @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  email: String! @index(name: "testByEmail")
+  totalTasks: Int
+  tasks: [TestTask] @hasMany
+}
+
+type TestTask @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  test: Test @belongsTo
+  task: String
+  completed: Boolean @default(value: "false")
+  completedDate: String
+}
+
+######### COURSE REVIEWS #########
+
+type CourseReview @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  course: LMSCourse @belongsTo
+  review: String
+  rating: Int
+  createdAt: String
+  user: User @belongsTo(fields: ["userID"])
+  userID: ID @index(name: "courseReviewByUserId")
+  thinkificId: String @index(name: "courseReviewByThinkificId")
 }

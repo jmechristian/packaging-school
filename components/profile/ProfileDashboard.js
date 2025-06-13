@@ -450,7 +450,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
               <div className='text-lg font-bold text-slate-700'>
                 {user?.name}
               </div>
-              <div className='text-sm font-medium text-slate-500'>
+              <div className='text-sm font-medium text-slate-500 !break-words'>
                 {user?.email}
               </div>
             </div>
