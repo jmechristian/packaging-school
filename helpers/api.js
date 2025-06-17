@@ -1099,17 +1099,14 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
     return_to: returnTo,
   };
 
-  const response = await fetch(
-    'https://packaging-school-git-dev-packaging-school.vercel.app/api/generateJWT',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }
-  );
+  const response = await fetch('/api/generateJWT', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
   const data = await response.json();
 

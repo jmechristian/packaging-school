@@ -5,17 +5,65 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
 import { getAWSUser } from '../../helpers/api';
+import { OnboardingModal } from '../../components/profile/OnboardingModal';
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
-
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (awsUser && thinkificUser) {
       setIsLoading(false);
     }
+
+    if ((awsUser && !awsUser.onboardingComplete) || !thinkificUser) {
+      setShowOnboardingModal(true);
+    }
   }, [awsUser, thinkificUser]);
+
+  const updateLoginStreak = async () => {
+    if (!awsUser) return;
+
+    const now = new Date();
+    const lastLogin = new Date(awsUser.lastLogin);
+
+    // Reset time to midnight for accurate day comparison
+    now.setHours(0, 0, 0, 0);
+    lastLogin.setHours(0, 0, 0, 0);
+
+    const timeDiff = now.getTime() - lastLogin.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+    let newStreak = awsUser.dailyStreak || 1;
+
+    // If last login was yesterday, increment streak
+    if (daysDiff === 1) {
+      newStreak += 1;
+    }
+    // If last login was more than 1 day ago, reset streak
+    else if (daysDiff > 1) {
+      newStreak = 1;
+    }
+    // If last login was today, keep current streak
+    else if (daysDiff === 0) {
+      return; // No need to update
+    }
+
+    try {
+      await updateAWSUser({
+        id: awsUser.id,
+        lastLogin: new Date().toISOString(),
+        dailyStreak: newStreak,
+      });
+    } catch (error) {
+      console.error('Error updating login streak:', error);
+    }
+  };
+
+  useEffect(() => {
+    updateLoginStreak();
+  }, [awsUser]); // Run once when component mounts
 
   const refreshUser = async () => {
     setIsLoading(true);
@@ -44,6 +92,12 @@ export default withPageAuthRequired(function Page() {
             Loading your profile...
           </div>
         </div>
+        {awsUser && showOnboardingModal && (
+          <OnboardingModal
+            show={showOnboardingModal}
+            onClose={() => setShowOnboardingModal(false)}
+          />
+        )}
       </div>
     );
   }

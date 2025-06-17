@@ -1,5 +1,5 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
-import { handleSSO, getAWSUser, createAWSUser } from '../../../helpers/api';
+import { handleSSO } from '../../../helpers/api';
 
 console.log('Auth0 API route initialized'); // Log when the API route is loaded
 
@@ -58,24 +58,28 @@ export default handleAuth({
                 session.user.name?.split(' ').slice(1).join(' ') ||
                 '';
 
-              // create user in thinkific
-              const createUser = await fetch(
-                `${baseUrl}/api/thinkific/create-user`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: session.user.email,
-                    first_name: firstName,
-                    last_name: lastName,
-                  }),
-                }
-              );
-              await createUser.json();
+              if (firstName && lastName) {
+                // create user in thinkific
+                const createUser = await fetch(
+                  `${baseUrl}/api/thinkific/create-user`,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      email: session.user.email,
+                      first_name: firstName,
+                      last_name: lastName,
+                    }),
+                  }
+                );
+                await createUser.json();
+              } else {
+                console.log('No first name or last name');
+              }
 
-              // // redirect to thinkific
+              // redirect to thinkific
               const redirectUrl = await handleSSO({
                 email: session.user.email,
                 first_name: firstName,
