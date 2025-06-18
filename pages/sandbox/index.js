@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPaths } from '../../helpers/api';
+import { getPaths, createCredential } from '../../helpers/api';
 import {
   GiFizzingFlask,
   GiForest,
@@ -13,7 +13,7 @@ import {
 const Sandbox = () => {
   const [loading, setLoading] = useState(true);
   const [paths, setPaths] = useState([]);
-
+  const [credential, setCredential] = useState(null);
   useEffect(() => {
     getPaths().then((data) => {
       setPaths(data);
@@ -42,7 +42,14 @@ const Sandbox = () => {
     }
   };
 
-  console.log(paths);
+  const handleCreateCredential = async () => {
+    const credential = await createCredential(
+      'Jamie Christian',
+      'jmechristian@gmail.com',
+      '717916'
+    );
+    setCredential(credential);
+  };
 
   return (
     <div className='flex flex-col items-center justify-center h-screen'>
@@ -59,6 +66,12 @@ const Sandbox = () => {
               className='w-96 h-96 bg-clemson flex justify-center items-center'
             >
               {renderIcon(path.icon)}
+              <button
+                className='absolute bottom-0 right-0'
+                onClick={() => handleCreateCredential()}
+              >
+                Create Credential
+              </button>
             </div>
           ))}
         </div>

@@ -234,7 +234,7 @@ const Page = ({ lesson }) => {
         />
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col'>
           <div className='w-full grid grid-cols-12 gap-10 relative'>
-            <div className='absolute top-0 -left-16 hidden lg:flex h-full w-full'>
+            <div className='absolute top-0 -left-16 !hidden lg:!flex h-full w-fit'>
               <div className='flex flex-col gap-2 w-fit sticky top-32 h-screen'>
                 {isSaved ? (
                   <div

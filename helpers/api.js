@@ -1856,3 +1856,11 @@ export const updateUserReview = async (id, data) => {
   });
   return res.data.updateCourseReview;
 };
+
+export const createCredential = async (name, email, groupId) => {
+  const res = await fetch('/api/create-credential', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, groupId }),
+  });
+  return res.json();
+};
