@@ -202,10 +202,10 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
               }}
             ></div>
             <div className='flex flex-col gap-0 leading-tight'>
-              <div className='text-lg font-bold text-slate-700'>
+              <div className='text-lg font-bold text-slate-700 break-all'>
                 {user?.name}
               </div>
-              <div className='text-sm font-medium text-slate-500 !break-words'>
+              <div className='text-sm font-medium text-slate-500 break-all'>
                 {user?.email}
               </div>
             </div>
