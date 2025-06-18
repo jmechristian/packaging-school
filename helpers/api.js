@@ -1205,6 +1205,8 @@ export const getAWSUser = async (email) => {
               completedCourses
               completedLessons
               completionDate
+              credential
+              credentialDate
               createdAt
               id
               lastAccessedDate
@@ -1554,6 +1556,8 @@ export const getPathBySlug = async (slug) => {
             items {
               completedCourses
               completionDate
+              credential
+              credentialDate
               createdAt
               id
               lastAccessedDate

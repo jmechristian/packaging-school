@@ -62,7 +62,7 @@ const PathWrapperSkeleton = () => {
 };
 
 const PathWrapper = ({ path }) => {
-  console.log('path', path);
+  // console.log('path', path);
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -135,6 +135,9 @@ const PathWrapper = ({ path }) => {
     );
   }, [currentPath?.userProgress?.items, awsUser]);
 
+  console.log('currentUser', currentUser);
+  // console.log('currentPath', currentPath);
+
   const [isTracked, setIsTracked] = useState(currentUser);
 
   useEffect(() => {
@@ -142,7 +145,7 @@ const PathWrapper = ({ path }) => {
       setIsTracked(true);
     }
 
-    if (currentUser?.status === 'IN_PROGRESS' && pathProgress === 100) {
+    if (pathProgress === 100) {
       setShowCompleted(true);
     }
   }, [currentUser, pathProgress]);

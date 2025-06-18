@@ -2992,6 +2992,8 @@ export const getUser = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -4042,6 +4044,8 @@ export const getLearningPath = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -4300,6 +4304,8 @@ export const getLearningPathProgress = /* GraphQL */ `
       startDate
       completionDate
       status
+      credential
+      credentialDate
       createdAt
       updatedAt
       userLearningPathProgressId
@@ -4377,6 +4383,8 @@ export const listLearningPathProgresses = /* GraphQL */ `
         startDate
         completionDate
         status
+        credential
+        credentialDate
         createdAt
         updatedAt
         userLearningPathProgressId

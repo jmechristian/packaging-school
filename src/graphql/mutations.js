@@ -3806,6 +3806,8 @@ export const createUser = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -4124,6 +4126,8 @@ export const updateUser = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -4442,6 +4446,8 @@ export const deleteUser = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -5196,6 +5202,8 @@ export const createLearningPath = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -5257,6 +5265,8 @@ export const updateLearningPath = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -5318,6 +5328,8 @@ export const deleteLearningPath = /* GraphQL */ `
           startDate
           completionDate
           status
+          credential
+          credentialDate
           createdAt
           updatedAt
           userLearningPathProgressId
@@ -5507,6 +5519,8 @@ export const createLearningPathProgress = /* GraphQL */ `
       startDate
       completionDate
       status
+      credential
+      credentialDate
       createdAt
       updatedAt
       userLearningPathProgressId
@@ -5686,6 +5700,8 @@ export const updateLearningPathProgress = /* GraphQL */ `
       startDate
       completionDate
       status
+      credential
+      credentialDate
       createdAt
       updatedAt
       userLearningPathProgressId
@@ -5865,6 +5881,8 @@ export const deleteLearningPathProgress = /* GraphQL */ `
       startDate
       completionDate
       status
+      credential
+      credentialDate
       createdAt
       updatedAt
       userLearningPathProgressId

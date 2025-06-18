@@ -612,6 +612,8 @@ type LearningPathProgress @model @auth(rules: [{ allow: public }]) {
   startDate: String
   completionDate: String
   status: String @default(value: "IN_PROGRESS")
+  credential: String
+  credentialDate: String
 }
 
 type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
