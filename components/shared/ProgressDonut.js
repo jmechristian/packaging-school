@@ -26,7 +26,7 @@ const ProgressDonut = ({
           stroke={strokeColor}
           strokeWidth='3'
           strokeDasharray={`${progress} 100`}
-          strokeDashoffset='25'
+          strokeDashoffset='0'
           transform='rotate(-90 18 18)'
         />
         <text

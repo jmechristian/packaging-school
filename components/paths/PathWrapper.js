@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -24,6 +25,7 @@ import {
 import PathCourseCard from '../shared/PathCourseCard';
 import { useRouter } from 'next/navigation';
 import PathLessonCard from './PathLessonCard';
+import PathCompleteModal from './PathCompleteModal';
 
 const PathWrapperSkeleton = () => {
   return (
@@ -64,6 +66,7 @@ const PathWrapper = ({ path }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [showCompleted, setShowCompleted] = useState(false);
   const [currentPath, setCurrentPath] = useState(path);
 
   useEffect(() => {
@@ -138,7 +141,11 @@ const PathWrapper = ({ path }) => {
     if (currentUser) {
       setIsTracked(true);
     }
-  }, [currentUser]);
+
+    if (currentUser?.status === 'IN_PROGRESS' && pathProgress === 100) {
+      setShowCompleted(true);
+    }
+  }, [currentUser, pathProgress]);
 
   const handleLeavePath = async () => {
     if (currentUser) {
@@ -201,12 +208,19 @@ const PathWrapper = ({ path }) => {
       ) + (path.lessons.items?.length || 0)
     );
   }, [path?.courses?.items, path?.lessons?.items]);
+
   if (isLoading) {
     return <PathWrapperSkeleton />;
   }
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='w-full flex flex-col relative'>
+      {showCompleted && (
+        <PathCompleteModal
+          path={path}
+          onClose={() => setShowCompleted(false)}
+        />
+      )}
       <div className='w-full py-12 bg-gray-800 relative overflow-hidden'>
         <div className='absolute inset-0 opacity-5'>
           <div className='grid grid-cols-12 gap-4 w-full h-full'>
