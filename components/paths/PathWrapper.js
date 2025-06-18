@@ -8,6 +8,7 @@ import {
   GiCarWheel,
   GiHoneycomb,
   GiBoxUnpacking,
+  GiAstronautHelmet,
 } from 'react-icons/gi';
 import {
   removeStudentFromPath,
@@ -174,6 +175,8 @@ const PathWrapper = ({ path }) => {
         return <GiHoneycomb size={50} className='text-white' />;
       case 'GiBoxUnpacking':
         return <GiBoxUnpacking size={50} className='text-white' />;
+      case 'GiAstronautHelmet':
+        return <GiAstronautHelmet size={50} className='text-white' />;
       default:
         return <GiBoxUnpacking size={50} className='text-white' />;
     }
@@ -190,6 +193,14 @@ const PathWrapper = ({ path }) => {
     return completedLessons;
   }, [path?.lessons?.items, awsUser?.id, path?.id]);
 
+  const totalHours = useMemo(() => {
+    return (
+      path.courses.items.reduce(
+        (acc, course) => acc + (Number(course.course.hours) || 0),
+        0
+      ) + (path.lessons.items?.length || 0)
+    );
+  }, [path?.courses?.items, path?.lessons?.items]);
   if (isLoading) {
     return <PathWrapperSkeleton />;
   }
@@ -236,11 +247,7 @@ const PathWrapper = ({ path }) => {
                   <div className='text-gray-400'>
                     <MdOutlineTimer size={20} />
                   </div>
-                  {path.courses.items.reduce(
-                    (acc, course) => acc + (Number(course.course.hours) || 0),
-                    0
-                  )}{' '}
-                  Hours
+                  {totalHours} Hours
                 </div>
                 <div className='text-gray-400 flex items-center gap-1'>
                   <div className='text-gray-400'>
@@ -276,10 +283,10 @@ const PathWrapper = ({ path }) => {
                   <MdOutlineTimer size={20} />
                 </div>
                 <div>
-                  {((pathProgress / 100) * path.hours)
+                  {((pathProgress / 100) * totalHours)
                     .toFixed(1)
                     .replace(/\.?0+$/, '')}
-                  h / {path.hours}h
+                  h / {totalHours}h
                 </div>
               </div>
               <div className='flex items-center gap-2'>

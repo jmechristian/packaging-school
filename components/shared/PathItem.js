@@ -6,6 +6,7 @@ import {
   GiCarWheel,
   GiHoneycomb,
   GiBoxUnpacking,
+  GiAstronautHelmet,
 } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 import ProgressDonut from './ProgressDonut';
@@ -13,6 +14,7 @@ import {
   MdOutlineTimer,
   MdOutlineBook,
   MdOutlineElectricBolt,
+  MdManageSearch,
 } from 'react-icons/md';
 import {
   getAllPathCourses,
@@ -22,6 +24,8 @@ import { useSelector } from 'react-redux';
 import ComponentLoginButton from './ComponentLoginButton';
 const PathItem = ({ path }) => {
   const { enrollments, awsUser } = useSelector((state) => state.auth);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('courses');
 
   const pathProgress = useMemo(() => {
     if (!path.courses.items?.length && !path.lessons.items?.length) {
@@ -103,10 +107,21 @@ const PathItem = ({ path }) => {
         return <GiHoneycomb size={44} />;
       case 'GiBoxUnpacking':
         return <GiBoxUnpacking size={44} />;
+      case 'GiAstronautHelmet':
+        return <GiAstronautHelmet size={44} />;
       default:
         return null;
     }
   };
+
+  const totalHours = useMemo(() => {
+    return (
+      path.courses.items.reduce(
+        (acc, course) => acc + (Number(course.course.hours) || 0),
+        0
+      ) + (path.lessons.items?.length || 0)
+    );
+  }, [path?.courses?.items, path?.lessons?.items]);
 
   return (
     <div
@@ -130,8 +145,92 @@ const PathItem = ({ path }) => {
         <div
           className={`flex flex-col gap-5 py-6 ${
             isUserInPath ? 'bg-slate-300' : 'bg-white'
-          } rounded-lg w-full items-center justify-center`}
+          } rounded-lg w-full items-center justify-center relative`}
         >
+          <div className='absolute top-2 right-2'>
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors duration-200 ${
+                isOpen ? 'bg-slate-200' : ''
+              }`}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <MdManageSearch size={30} />
+            </div>
+            {isOpen && (
+              <div className='absolute top-10 right-0 p-4 bg-black w-[400px] z-50 mt-2 rounded'>
+                <div className='flex flex-col gap-2'>
+                  <div className='flex justify-between items-center border-b border-white pb-2'>
+                    <div className='flex gap-4'>
+                      <button
+                        className={`text-sm font-semibold ${
+                          activeTab === 'courses'
+                            ? 'text-white'
+                            : 'text-gray-400'
+                        } flex items-center gap-2`}
+                        onClick={() => setActiveTab('courses')}
+                      >
+                        Courses Required
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full ${
+                            activeTab === 'courses'
+                              ? 'bg-white text-black'
+                              : 'bg-gray-600 text-white'
+                          }`}
+                        >
+                          {path.courses.items.length}
+                        </span>
+                      </button>
+                      <button
+                        className={`text-sm font-semibold ${
+                          activeTab === 'lessons'
+                            ? 'text-white'
+                            : 'text-gray-400'
+                        } flex items-center gap-2`}
+                        onClick={() => setActiveTab('lessons')}
+                      >
+                        Lessons Required
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full ${
+                            activeTab === 'lessons'
+                              ? 'bg-white text-black'
+                              : 'bg-gray-600 text-white'
+                          }`}
+                        >
+                          {path.lessons.items?.length || 0}
+                        </span>
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      className='text-white hover:text-gray-300 transition-colors'
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className='flex flex-col gap-2'>
+                    {activeTab === 'courses' &&
+                      path.courses.items.map((course) => (
+                        <div
+                          key={course.course.id}
+                          className='text-sm text-white'
+                        >
+                          {course.course.title}
+                        </div>
+                      ))}
+                    {activeTab === 'lessons' &&
+                      path.lessons.items?.map((lesson) => (
+                        <div
+                          key={lesson.lesson.id}
+                          className='text-sm text-white'
+                        >
+                          {lesson.lesson.title}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <ProgressDonut
             progress={pathProgress}
             size={48}
@@ -152,11 +251,7 @@ const PathItem = ({ path }) => {
               <div className='text-slate-600 text-sm'>
                 <MdOutlineTimer size={20} />
               </div>
-              {path.courses.items.reduce(
-                (acc, course) => acc + (Number(course.course.hours) || 0),
-                0
-              )}{' '}
-              Hours
+              {totalHours} Hours
             </div>
             <div className='text-slate-600 text-sm flex items-center gap-0.5'>
               <div className='text-slate-600 text-sm'>

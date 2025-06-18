@@ -6,6 +6,7 @@ import {
   GiCarWheel,
   GiHoneycomb,
   GiBoxUnpacking,
+  GiAstronautHelmet,
 } from 'react-icons/gi';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
@@ -87,6 +88,8 @@ const ProfilePathItem = ({ path }) => {
         return <GiHoneycomb size={36} />;
       case 'GiBoxUnpacking':
         return <GiBoxUnpacking size={36} />;
+      case 'GiAstronautHelmet':
+        return <GiAstronautHelmet size={36} />;
       default:
         return null;
     }
