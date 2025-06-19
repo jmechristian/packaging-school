@@ -26,6 +26,11 @@ import PathCourseCard from '../shared/PathCourseCard';
 import { useRouter } from 'next/navigation';
 import PathLessonCard from './PathLessonCard';
 import PathCompleteModal from './PathCompleteModal';
+import {
+  createCredential,
+  updateUserPathProgress,
+  getCredential,
+} from '../../helpers/api';
 
 const PathWrapperSkeleton = () => {
   return (
@@ -68,6 +73,7 @@ const PathWrapper = ({ path }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [showCompleted, setShowCompleted] = useState(false);
   const [currentPath, setCurrentPath] = useState(path);
+  const [isCredential, setIsCredential] = useState(false);
 
   useEffect(() => {
     setCurrentPath(path);
@@ -139,6 +145,40 @@ const PathWrapper = ({ path }) => {
   // console.log('currentPath', currentPath);
 
   const [isTracked, setIsTracked] = useState(currentUser);
+
+  useEffect(() => {
+    const createNewCredential = async () => {
+      const credential = await createCredential(
+        currentUser.user.name,
+        currentUser.user.email,
+        '717916'
+      );
+      await updateUserPathProgress(currentUser.id, {
+        credential: credential.credential.id,
+        credentialDate: new Date().toISOString(),
+      });
+      setIsCredential(credential.credential);
+    };
+
+    const getUserCredential = async () => {
+      const credential = await getCredential(currentUser.credential);
+      setIsCredential(credential.credential);
+    };
+
+    if (currentUser && currentUser.credential) {
+      // get the credential
+      getUserCredential();
+    } else if (
+      currentUser &&
+      currentUser.credential === null &&
+      pathProgress === 100
+    ) {
+      // create a credential
+      createNewCredential();
+    } else {
+      return;
+    }
+  }, [currentUser, pathProgress]);
 
   useEffect(() => {
     if (currentUser) {
@@ -222,6 +262,7 @@ const PathWrapper = ({ path }) => {
         <PathCompleteModal
           path={path}
           onClose={() => setShowCompleted(false)}
+          credential={isCredential}
         />
       )}
       <div className='w-full py-12 bg-gray-800 relative overflow-hidden'>

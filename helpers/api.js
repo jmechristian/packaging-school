@@ -1570,6 +1570,7 @@ export const getPathBySlug = async (slug) => {
               user {
                 id
                 email
+                name
               }
             }
           }
@@ -1865,6 +1866,21 @@ export const createCredential = async (name, email, groupId) => {
   const res = await fetch('/api/create-credential', {
     method: 'POST',
     body: JSON.stringify({ name, email, groupId }),
+  });
+  return res.json();
+};
+
+export const updateUserPathProgress = async (id, data) => {
+  const res = await API.graphql({
+    query: updateLearningPathProgress,
+    variables: { input: { id, ...data } },
+  });
+  return res.data.updateLearningPathProgress;
+};
+
+export const getCredential = async (id) => {
+  const res = await fetch(`/api/get-credential?id=${id}`, {
+    method: 'GET',
   });
   return res.json();
 };
