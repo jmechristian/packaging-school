@@ -170,7 +170,7 @@ const PathWrapper = ({ path }) => {
       getUserCredential();
     } else if (
       currentUser &&
-      currentUser.credential === null &&
+      (currentUser.credential === null || currentUser.credential === '') &&
       pathProgress === 100
     ) {
       // create a credential
