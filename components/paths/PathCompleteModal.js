@@ -67,7 +67,7 @@ const PathCompleteModal = ({ path, onClose, credential }) => {
         linkedin: linkedin,
       });
       window.open(
-        `https://www.linkedin.com/in/${linkedin}/edit/forms/certification/new/?certId=${credential.id}&certUrl=${credential.url}&isFromA2p=true&issueMonth=${issueMonth}&issueYear=${issueYear}&name=${awsUser.name}&organizationId=6672102`,
+        `https://www.linkedin.com/in/${linkedin}/edit/forms/certification/new/?certId=${credential.id}&certUrl=${credential.url}&isFromA2p=true&issueMonth=${issueMonth}&issueYear=${issueYear}&name=${credential.name}&organizationId=6672102`,
         '_blank'
       );
     } else {
