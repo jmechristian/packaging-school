@@ -1884,9 +1884,8 @@ export const updateUserPathProgress = async (id, data) => {
 };
 
 export const getCredential = async (id) => {
-  const res = await fetch(`/api/get-credential`, {
+  const res = await fetch(`/api/get-credential?id=${id}`, {
     method: 'GET',
-    body: JSON.stringify({ id }),
   });
   return res.json();
 };
