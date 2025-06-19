@@ -42,6 +42,7 @@ export default handleAuth({
                 last_name: lastName,
                 returnTo:
                   'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+                baseUrl,
               });
               console.log('SSO redirect URL generated:', redirectUrl);
               // Store the redirect URL in the user object
@@ -86,6 +87,7 @@ export default handleAuth({
                 last_name: lastName,
                 returnTo:
                   'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+                baseUrl,
               });
               session.user.ssoRedirectUrl = redirectUrl;
             }

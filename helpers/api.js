@@ -1088,6 +1088,11 @@ export const getCPSCourses = async () => {
 };
 
 export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3001'
+      : 'https://packaging-school-git-dev-packaging-school.vercel.app';
+
   if (!email || !first_name || !last_name) {
     throw new Error('Missing required fields for SSO');
   }
@@ -1099,7 +1104,7 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
     return_to: returnTo,
   };
 
-  const response = await fetch('/api/generateJWT', {
+  const response = await fetch(`${baseUrl}/api/generateJWT`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1879,8 +1884,9 @@ export const updateUserPathProgress = async (id, data) => {
 };
 
 export const getCredential = async (id) => {
-  const res = await fetch(`/api/get-credential?id=${id}`, {
+  const res = await fetch(`/api/get-credential`, {
     method: 'GET',
+    body: JSON.stringify({ id }),
   });
   return res.json();
 };
