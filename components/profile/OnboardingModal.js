@@ -9,19 +9,19 @@ import { useRouter } from 'next/router';
 import { MdError } from 'react-icons/md';
 
 export const OnboardingModal = ({ onClose, refreshUser }) => {
+  const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const router = useRouter();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    company: '',
-    title: '',
-    bio: '',
-    interests: '',
-    goals: '',
+    firstName: awsUser.name.split(' ')[0],
+    lastName: awsUser.name.split(' ')[1],
+    company: awsUser.company,
+    title: awsUser.title,
+    bio: awsUser.bio,
+    interests: awsUser.interests,
+    goals: awsUser.goals,
   });
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { awsUser, thinkificUser } = useSelector((state) => state.auth);
 
   const baseUrl =
     process.env.NODE_ENV === 'development'
@@ -252,7 +252,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
                   onClick={() => router.push('/api/auth/logout')}
                   className='px-4 py-2 text-sm  hover:text-gray-500 cursor-pointer'
                 >
-                  Cancel
+                  Sign Out
                 </button>
                 <div className='relative group'>
                   <button

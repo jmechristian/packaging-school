@@ -4,12 +4,15 @@ import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
-import { getAWSUser } from '../../helpers/api';
+import { getAWSUser, updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
+import { TourModal } from '../../components/profile/TourModal';
+
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [showTourModal, setShowTourModal] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,9 +20,10 @@ export default withPageAuthRequired(function Page() {
       setIsLoading(false);
     }
 
-    if ((awsUser && !awsUser.onboardingComplete) || !thinkificUser) {
-      setShowOnboardingModal(true);
-    }
+    // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
+    const shouldShowOnboarding =
+      (awsUser && awsUser.onboardingComplete === false) || !thinkificUser;
+    setShowOnboardingModal(shouldShowOnboarding);
   }, [awsUser, thinkificUser]);
 
   const updateLoginStreak = async () => {
@@ -92,15 +96,20 @@ export default withPageAuthRequired(function Page() {
             Loading your profile...
           </div>
         </div>
-        {awsUser && showOnboardingModal && (
-          <OnboardingModal
-            show={showOnboardingModal}
-            onClose={() => setShowOnboardingModal(false)}
-          />
-        )}
       </div>
     );
   }
 
-  return <ProfileDashboard refreshUser={refreshUser} />;
+  return (
+    <>
+      <ProfileDashboard refreshUser={refreshUser} />
+      {showOnboardingModal && (
+        <OnboardingModal
+          show={showOnboardingModal}
+          onClose={() => setShowOnboardingModal(false)}
+        />
+      )}
+      {showTourModal && <TourModal onClose={() => setShowTourModal(false)} />}
+    </>
+  );
 });
