@@ -15,7 +15,7 @@ export default handleAuth({
           }
 
           try {
-            console.log('Processing user:');
+            console.log('Processing user:', session.user.email);
 
             const baseUrl =
               process.env.NODE_ENV === 'development'
@@ -28,6 +28,7 @@ export default handleAuth({
             const data = await thinkificUser.json();
 
             if (data?.data?.data?.userByEmail) {
+              // User exists in Thinkific, handle SSO
               const firstName =
                 session.user.given_name ||
                 session.user.name?.split(' ')[0] ||
@@ -36,6 +37,7 @@ export default handleAuth({
                 session.user.family_name ||
                 session.user.name?.split(' ').slice(1).join(' ') ||
                 '';
+
               const redirectUrl = await handleSSO({
                 email: session.user.email,
                 first_name: firstName,
@@ -45,7 +47,6 @@ export default handleAuth({
                 baseUrl,
               });
               console.log('SSO redirect URL generated:', redirectUrl);
-              // Store the redirect URL in the user object
               session.user.ssoRedirectUrl = redirectUrl;
             } else {
               console.log('No user found in Thinkific');
@@ -60,7 +61,7 @@ export default handleAuth({
                 '';
 
               if (firstName && lastName) {
-                // create user in thinkific
+                // Create user in Thinkific
                 const createUser = await fetch(
                   `${baseUrl}/api/thinkific/create-user`,
                   {
@@ -75,21 +76,29 @@ export default handleAuth({
                     }),
                   }
                 );
-                await createUser.json();
-              } else {
-                console.log('No first name or last name');
-              }
+                const createUserResult = await createUser.json();
+                console.log('User created in Thinkific:', createUserResult);
 
-              // redirect to thinkific
-              const redirectUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo:
-                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
-                baseUrl,
-              });
-              session.user.ssoRedirectUrl = redirectUrl;
+                // Handle SSO after user creation
+                const redirectUrl = await handleSSO({
+                  email: session.user.email,
+                  first_name: firstName,
+                  last_name: lastName,
+                  returnTo:
+                    'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+                  baseUrl,
+                });
+                console.log(
+                  'SSO redirect URL generated after user creation:',
+                  redirectUrl
+                );
+                session.user.ssoRedirectUrl = redirectUrl;
+              } else {
+                console.log(
+                  'No first name or last name available, user will be redirected to onboarding'
+                );
+                // Don't set ssoRedirectUrl, user will go to onboarding
+              }
             }
 
             return session;
