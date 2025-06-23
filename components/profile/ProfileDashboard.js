@@ -89,36 +89,42 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
     }
   }, [router.query.tab]);
 
-  const handleTabChange = (tabValue) => {
+  const handleTabChange = (tabValue, tabType) => {
     setActiveTab(tabValue);
     // Update URL without full page reload
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, tab: tabValue },
-      },
-      undefined,
-      { shallow: true }
-    );
+    if (tabType === 'external') {
+      window.open(tabValue, '_blank');
+    } else {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, tab: tabValue },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
   };
 
   const tabs = [
     {
-      label: 'Your Courses',
+      label: 'Enrollments',
       value: 'courses',
+    },
+    {
+      label: 'Certificates',
+      value: 'https://learn.packagingschool.com/account/certificates',
+      type: 'external',
     },
     {
       label: 'Applications',
       value: 'certificates',
     },
     {
-      label: 'Paths',
+      label: ' Learning Paths',
       value: 'paths',
     },
-    {
-      label: 'Wishlist',
-      value: 'wishlist',
-    },
+
     {
       label: 'Lessons Completed',
       value: 'lessonsCompleted',
@@ -128,8 +134,17 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
       value: 'lessonsSaved',
     },
     {
+      label: 'Wishlist',
+      value: 'wishlist',
+    },
+    {
       label: 'Profile',
       value: 'profile',
+    },
+    {
+      label: 'Billing Information',
+      value: 'https://learn.packagingschool.com/account/billing',
+      type: 'external',
     },
   ];
 
@@ -237,7 +252,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
                 <div
                   className='flex w-full justify-between items-center text-gray-700'
                   key={tab.value}
-                  onClick={() => handleTabChange(tab.value)}
+                  onClick={() => handleTabChange(tab.value, tab.type)}
                 >
                   <div
                     className={`font-medium text-sm w-full transition-all duration-300 cursor-pointer ${
