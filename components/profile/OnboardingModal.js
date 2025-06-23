@@ -67,8 +67,6 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
           if (!thinkificResponse.ok) {
             console.error('Thinkific update failed, but AWS update succeeded');
           }
-
-          refreshUser();
         } catch (thinkificError) {
           // Log Thinkific error but don't prevent completion
           console.error('Error updating Thinkific profile:', thinkificError);
@@ -99,6 +97,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
           console.error('Error creating Thinkific user:', error);
         }
       }
+      await refreshUser();
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);

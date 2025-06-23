@@ -12,7 +12,7 @@ export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
-  const [showTourModal, setShowTourModal] = useState(true);
+  const [showTourModal, setShowTourModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +25,34 @@ export default withPageAuthRequired(function Page() {
       (awsUser && awsUser.onboardingComplete === false) || !thinkificUser;
     setShowOnboardingModal(shouldShowOnboarding);
   }, [awsUser, thinkificUser]);
+
+  const refreshUser = async () => {
+    setIsLoading(true);
+    const thinkificUser = await fetch(
+      `/api/thinkific/get-user?email=${user.email}`
+    );
+
+    const data = await thinkificUser.json();
+    if (data?.data?.data?.userByEmail) {
+      dispatch(setThinkificUser(data.data.data.userByEmail));
+    }
+
+    const dbUser = await getAWSUser(user.email);
+    if (dbUser) {
+      dispatch(setAWSUser(dbUser));
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (awsUser && !awsUser.tourCompleted && !showOnboardingModal) {
+      setShowTourModal(true);
+    }
+
+    if (awsUser && awsUser.tourCompleted === true) {
+      setShowTourModal(false);
+    }
+  }, [awsUser, showOnboardingModal]);
 
   const updateLoginStreak = async () => {
     if (!awsUser) return;
@@ -69,22 +97,15 @@ export default withPageAuthRequired(function Page() {
     updateLoginStreak();
   }, [awsUser]); // Run once when component mounts
 
-  const refreshUser = async () => {
-    setIsLoading(true);
-    const thinkificUser = await fetch(
-      `/api/thinkific/get-user?email=${user.email}`
-    );
-
-    const data = await thinkificUser.json();
-    if (data?.data?.data?.userByEmail) {
-      dispatch(setThinkificUser(data.data.data.userByEmail));
+  const closeTourModal = () => {
+    setShowTourModal(false);
+    if (awsUser) {
+      updateAWSUser({
+        id: awsUser.id,
+        tourCompleted: true,
+      });
+      refreshUser();
     }
-
-    const dbUser = await getAWSUser(user.email);
-    if (dbUser) {
-      dispatch(setAWSUser(dbUser));
-    }
-    setIsLoading(false);
   };
 
   if (isLoading) {
@@ -107,9 +128,12 @@ export default withPageAuthRequired(function Page() {
         <OnboardingModal
           show={showOnboardingModal}
           onClose={() => setShowOnboardingModal(false)}
+          refreshUser={refreshUser}
         />
       )}
-      {showTourModal && <TourModal onClose={() => setShowTourModal(false)} />}
+      {showTourModal && !showOnboardingModal && (
+        <TourModal onClose={() => closeTourModal()} />
+      )}
     </>
   );
 });

@@ -559,6 +559,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   userXp: UserXp @hasOne
   wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
   reviews: [CourseReview] @hasMany
+  tourCompleted: Boolean @default(value: "false")
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {

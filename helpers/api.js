@@ -1255,6 +1255,7 @@ export const getAWSUser = async (email) => {
           office
           onboardingComplete
           onboardingCompleteDate
+          tourCompleted
           picture
           psXp
           savedArticles
