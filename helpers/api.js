@@ -1341,7 +1341,13 @@ export const getCohorts = async () => {
   const res = await API.graphql({
     query: listCohorts,
   });
-  return res.data.listCohorts.items.sort(
+
+  const now = new Date();
+  const currentAndFutureCohorts = res.data.listCohorts.items.filter(
+    (cohort) => new Date(cohort.deadline) >= now
+  );
+
+  return currentAndFutureCohorts.sort(
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 };
