@@ -7,8 +7,10 @@ import {
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { MdError } from 'react-icons/md';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const OnboardingModal = ({ onClose, refreshUser }) => {
+  const { user } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -56,6 +58,18 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
         psXp: awsUser.psXp + 50,
       });
 
+      await fetch(`${baseUrl}/api/update-auth0-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.sub,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        }),
+      });
+
       if (thinkificUser) {
         // Then update Thinkific user
         try {
@@ -82,6 +96,17 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
               email: awsUser.email,
               first_name: formData.firstName,
               last_name: formData.lastName,
+            }),
+          });
+          await fetch(`${baseUrl}/api/update-auth0-user`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: user.sub,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
             }),
           });
           const ssoUrl = await handleSSO({
