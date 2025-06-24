@@ -67,7 +67,7 @@ const PathWrapperSkeleton = () => {
 };
 
 const PathWrapper = ({ path }) => {
-  // console.log('path', path);
+  console.log('path', path);
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -141,7 +141,7 @@ const PathWrapper = ({ path }) => {
     );
   }, [currentPath?.userProgress?.items, awsUser]);
 
-  console.log('currentUser', currentUser);
+  // console.log('currentUser', currentUser);
   // console.log('currentPath', currentPath);
 
   const [isTracked, setIsTracked] = useState(currentUser);
@@ -151,7 +151,7 @@ const PathWrapper = ({ path }) => {
       const credential = await createCredential(
         currentUser.user.name,
         currentUser.user.email,
-        '717916'
+        path.accredibleId
       );
       await updateUserPathProgress(currentUser.id, {
         credential: credential.credential.id,

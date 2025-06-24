@@ -600,6 +600,7 @@ type LearningPath @model @auth(rules: [{ allow: public }]) {
   slug: String! @index(name: "learningPathBySlug")
   status: String @default(value: "DRAFT")
   icon: String
+  accredibleId: String
 }
 
 type LearningPathProgress @model @auth(rules: [{ allow: public }]) {

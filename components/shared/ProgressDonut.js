@@ -6,7 +6,7 @@ const ProgressDonut = ({
   textColor,
   textSize,
 }) => {
-  console.log('progress', progress);
+  // console.log('progress', progress);
   return (
     <div className={`relative w-${size} h-${size}`}>
       <svg className='w-full h-full' viewBox='0 0 36 36'>

@@ -1523,6 +1523,7 @@ export const getPathBySlug = async (slug) => {
     query MyQuery($slug: String!) {
       learningPathsBySlug(slug: $slug) {
         items {
+          accredibleId
           courses {
             items {
               course {
