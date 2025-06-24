@@ -114,7 +114,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
             first_name: formData.firstName,
             last_name: formData.lastName,
             returnTo:
-              'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+              'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
           });
           window.location.href = ssoUrl;
           console.log('ssoUrl', ssoUrl);
