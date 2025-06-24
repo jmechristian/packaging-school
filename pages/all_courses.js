@@ -361,7 +361,8 @@ const Page = () => {
   const cardPurchaseHandler = async (id, link) => {
     await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
-    router.push(link);
+    router.push(`${link}`);
+    console.log('link', link);
   };
 
   const handleCertCardClick = async (

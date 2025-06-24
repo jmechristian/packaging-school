@@ -43,7 +43,7 @@ export default handleAuth({
                 first_name: firstName,
                 last_name: lastName,
                 returnTo:
-                  'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+                  'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
                 baseUrl,
               });
               console.log('SSO redirect URL generated:', redirectUrl);
@@ -85,7 +85,7 @@ export default handleAuth({
                   first_name: firstName,
                   last_name: lastName,
                   returnTo:
-                    'https://packaging-school-git-dev-packaging-school.vercel.app/profile',
+                    'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
                   baseUrl,
                 });
                 console.log(
