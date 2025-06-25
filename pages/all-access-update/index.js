@@ -10,7 +10,7 @@ import {
 const Page = () => {
   return (
     <div className='w-full max-w-[2000px] mx-auto flex flex-col pb-24'>
-      <div className='w-full h-[75vh] lg:h-[44vh] bg-dark flex justify-center relative'>
+      <div className='w-full h-[80vh] lg:h-[44vh] bg-dark flex justify-center relative'>
         {/* Textural Background */}
         <div className='absolute inset-0 pointer-events-none opacity-[0.03]'>
           <div
@@ -32,7 +32,7 @@ const Page = () => {
           ></div>
         </div>
 
-        <div className='w-full max-w-7xl mx-auto flex flex-col gap-12 lg:gap-16 mt-24 px-6 lg:px-0'>
+        <div className='w-full max-w-7xl mx-auto flex flex-col gap-12 lg:gap-16 mt-12 lg:mt-24 px-6 lg:px-0'>
           <div className='w-full grid grid-cols-6 gap-8 lg:!gap-0'>
             <div className='h1-base text-clemson col-span-6 lg:!col-span-4 flex flex-col gap-0'>
               <span className='text-base-brand leading-[1]'>
