@@ -10,7 +10,28 @@ import {
 const Page = () => {
   return (
     <div className='w-full max-w-[2000px] mx-auto flex flex-col'>
-      <div className='w-full h-[46vh] bg-dark flex justify-center'>
+      <div className='w-full h-[44vh] bg-dark flex justify-center relative'>
+        {/* Textural Background */}
+        <div className='absolute inset-0 pointer-events-none opacity-[0.03]'>
+          <div
+            className='absolute inset-0'
+            style={{
+              backgroundImage: `
+              radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
+              radial-gradient(circle at 80% 70%, #fff 1px, transparent 1px),
+              radial-gradient(circle at 40% 80%, #fff 1px, transparent 1px),
+              radial-gradient(circle at 90% 20%, #fff 1px, transparent 1px),
+              linear-gradient(45deg, transparent 48%, #fff 49%, #fff 51%, transparent 52%),
+              linear-gradient(-45deg, transparent 48%, #fff 49%, #fff 51%, transparent 52%)
+            `,
+              backgroundSize:
+                '200px 200px, 300px 300px, 250px 250px, 350px 350px, 100px 100px, 100px 100px',
+              backgroundPosition:
+                '0 0, 50px 50px, 100px 100px, 150px 150px, 0 0, 0 0',
+            }}
+          ></div>
+        </div>
+
         <div className='w-full max-w-7xl mx-auto flex flex-col gap-16 mt-24'>
           <div className='w-full grid grid-cols-6'>
             <div className='h1-base text-clemson col-span-4 flex flex-col gap-0'>
@@ -20,10 +41,11 @@ const Page = () => {
               <span className='text-white leading-[1]'>Boost your resume.</span>
               <span className='text-clemson leading-[1]'>Keep learning.</span>
             </div>
-            <div className='col-span-2 flex flex-col gap-8'>
+            <div className='col-span-2 flex flex-col gap-5'>
               <div className='text-slate-300 text-2xl leading-[1.2]'>
-                We are excited to introduce a fresh, more powerful learning
-                experience designed to help you get more out of your education.
+                We’re excited to announce a fresh, more powerful learning
+                experience — coming soon — designed to help you get even more
+                out of your education.
               </div>
               <div className='w-full grid grid-cols-4 gap-6 pr-6'>
                 <div className='aspect-[5/4] w-full bg-clemson flex items-center justify-center rounded-lg'>
@@ -61,7 +83,7 @@ const Page = () => {
               </defs>
               <text className='text-dark font-bold text-xs'>
                 <textPath href='#circlePath' startOffset='0%'>
-                  LEARN MORE • LEARN MORE • LEARN MORE • LEARN MORE
+                  COMING SOON • COMING SOON • COMING SOON • COMING SOON
                 </textPath>
               </text>
             </svg>
@@ -82,11 +104,11 @@ const Page = () => {
             </div>
             <div className='text-slate-700 text-lg leading-snug'>
               With hundreds of lessons and courses to explore, getting started
-              can feel overwhelming. That’s why we’ve made it simple to get full
+              can feel overwhelming. That's why we've made it simple to get full
               12-month access: you can join one of our expert-led, immersive
               certificate cohorts for a collaborative learning experience,
               purchase a single certificate program for flexible, self-paced
-              learning, or, if you’re an alumni, maintain discounted access to
+              learning, or, if you're an alumni, maintain discounted access to
               the entire course library.
             </div>
             <div
@@ -144,7 +166,7 @@ const Page = () => {
               Your Path to New Skills Starts Here.
             </div>
             <div className='text-slate-700 text-lg leading-snug'>
-              We’re excited to introduce Learning Paths — a brand new way to
+              We're excited to introduce Learning Paths — a brand new way to
               master an entire skillset through an expertly crafted series of
               courses and lessons. Progress through each path, earn badges along
               the way, and showcase your achievements on LinkedIn and other
@@ -178,10 +200,10 @@ const Page = () => {
               You can now test your knowledge with quizzes at the end of many
               lessons in the Lesson Library! Quizzes help you check your
               understanding, complete Learning Path objectives, and prepare for
-              upcoming Learning Achievements. And there’s more on the way —
-              starting Winter 2025, you’ll be able to earn Pack Experience
+              upcoming Learning Achievements. And there's more on the way —
+              starting Winter 2025, you'll be able to earn Pack Experience
               Points (PXP) by completing quizzes, with the beta already
-              underway. It’s a great time to start building your progress!
+              underway. It's a great time to start building your progress!
             </div>
           </div>
         </div>
