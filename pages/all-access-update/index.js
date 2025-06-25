@@ -104,8 +104,8 @@ const Page = () => {
             </div>
             <div className='text-slate-700 text-lg leading-snug'>
               With hundreds of lessons and courses to explore, getting started
-              can feel overwhelming. That&apos;s why we&apos;ve made it simple
-              to get full 12-month access: you can join one of our expert-led,
+              can feel overwhelming. That&apos;s why we&apos;ve created 3 simple
+              paths to full 12-month access: you can join one of our expert-led,
               immersive certificate cohorts for a collaborative learning
               experience, purchase a single certificate program for flexible,
               self-paced learning, or, if you&apos;re an alumni, maintain
@@ -120,7 +120,7 @@ const Page = () => {
                 );
               }}
             >
-              Speak to An Advisor About Early Access!
+              Speak to an Advisor About Early Access!
             </div>
           </div>
           <div
