@@ -10,7 +10,7 @@ import {
 const Page = () => {
   return (
     <div className='w-full max-w-[2000px] mx-auto flex flex-col pb-24'>
-      <div className='w-full h-[44vh] bg-dark flex justify-center relative'>
+      <div className='w-full h-[75vh] lg:h-[44vh] bg-dark flex justify-center relative'>
         {/* Textural Background */}
         <div className='absolute inset-0 pointer-events-none opacity-[0.03]'>
           <div
@@ -32,17 +32,17 @@ const Page = () => {
           ></div>
         </div>
 
-        <div className='w-full max-w-7xl mx-auto flex flex-col gap-16 mt-24'>
-          <div className='w-full grid grid-cols-6'>
-            <div className='h1-base text-clemson col-span-4 flex flex-col gap-0'>
+        <div className='w-full max-w-7xl mx-auto flex flex-col gap-12 lg:gap-16 mt-24 px-6 lg:px-0'>
+          <div className='w-full grid grid-cols-6 gap-8 lg:!gap-0'>
+            <div className='h1-base text-clemson col-span-6 lg:!col-span-4 flex flex-col gap-0'>
               <span className='text-base-brand leading-[1]'>
                 Advance your career.
               </span>
               <span className='text-white leading-[1]'>Boost your resume.</span>
               <span className='text-clemson leading-[1]'>Keep learning.</span>
             </div>
-            <div className='col-span-2 flex flex-col gap-5'>
-              <div className='text-slate-300 text-2xl leading-[1.2]'>
+            <div className='col-span-6 lg:!col-span-2 flex flex-col gap-6'>
+              <div className='text-slate-300 text-xl lg:text-2xl leading-[1.2]'>
                 We’re excited to announce a fresh, more powerful learning
                 experience — coming soon — designed to help you get even more
                 out of your education.
@@ -93,8 +93,8 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-24 mt-40'>
-        <div className='grid grid-cols-2 gap-24'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-16 lg:gap-24 mt-40 px-6 lg:px-0'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24'>
           <div className='flex flex-col gap-5'>
             <div className='text-xl font-medium font-oswald text-clemson uppercase tracking-wider'>
               All-Access Pass
@@ -124,14 +124,14 @@ const Page = () => {
             </div>
           </div>
           <div
-            className='w-full rounded-lg overflow-hidden bg-black border border-slate-800 mt-6 bg-cover bg-top'
+            className='w-full rounded-lg overflow-hidden bg-black border border-slate-800 mt-6 bg-cover bg-top aspect-[5/3]'
             style={{
               backgroundImage:
                 'url(https://packschool.s3.us-east-1.amazonaws.com/all-access.gif)',
             }}
           ></div>
         </div>
-        <div className='grid grid-cols-2 gap-24 items-center'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center'>
           <div
             className='w-full rounded-lg aspect-[5/3] overflow-hidden bg-black border border-slate-800 mt-6 bg-cover bg-left-top'
             style={{
@@ -157,7 +157,7 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className='grid grid-cols-2 gap-24 items-center'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center'>
           <div className='flex flex-col gap-5'>
             <div className='text-xl font-medium font-oswald text-clemson uppercase tracking-wider'>
               Learning Paths
@@ -181,7 +181,7 @@ const Page = () => {
             }}
           ></div>
         </div>
-        <div className='grid grid-cols-2 gap-24 items-center'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center'>
           <div
             className='w-full rounded-lg aspect-[5/3] overflow-hidden bg-black border border-slate-800 mt-6 bg-cover bg-center'
             style={{
@@ -207,8 +207,8 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className='grid grid-cols-4 gap-20 bg-slate-100 rounded-lg p-10'>
-          <div className='h4-base col-span-1'>
+        <div className='grid grid-cols-1 lg:!grid-cols-4 gap-10 lg:!gap-20 bg-slate-100 rounded-lg p-10'>
+          <div className='h3-base lg:h4-base col-span-1'>
             What Do You Need
             <br /> To Do?
           </div>
