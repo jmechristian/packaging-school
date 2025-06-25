@@ -10,7 +10,7 @@ import {
 const Page = () => {
   return (
     <div className='w-full max-w-[2000px] mx-auto flex flex-col pb-24'>
-      <div className='w-full h-[80vh] lg:h-[44vh] bg-dark flex justify-center relative'>
+      <div className='w-full h-[70vh] lg:h-[44vh] bg-dark flex justify-center relative'>
         {/* Textural Background */}
         <div className='absolute inset-0 pointer-events-none opacity-[0.03]'>
           <div
