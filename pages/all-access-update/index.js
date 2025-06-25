@@ -9,7 +9,7 @@ import {
 
 const Page = () => {
   return (
-    <div className='w-full max-w-[2000px] mx-auto flex flex-col'>
+    <div className='w-full max-w-[2000px] mx-auto flex flex-col pb-24'>
       <div className='w-full h-[44vh] bg-dark flex justify-center relative'>
         {/* Textural Background */}
         <div className='absolute inset-0 pointer-events-none opacity-[0.03]'>
@@ -200,15 +200,28 @@ const Page = () => {
               You can now test your knowledge with quizzes at the end of many
               lessons in the Lesson Library! Quizzes help you check your
               understanding, complete Learning Path objectives, and prepare for
-              upcoming Learning Achievements. And there's more on the way —
-              starting Winter 2025, you'll be able to earn Pack Experience
+              upcoming Learning Achievements. And there&apos;s more on the way —
+              starting Winter 2025, you&apos;ll be able to earn Pack Experience
               Points (PXP) by completing quizzes, with the beta already
-              underway. It's a great time to start building your progress!
+              underway. It&apos;s a great time to start building your progress!
             </div>
           </div>
         </div>
-        <div>Disclaimer</div>
-        <div>FAQ</div>
+        <div className='grid grid-cols-4 gap-20 bg-slate-100 rounded-lg p-10'>
+          <div className='h4-base col-span-1'>
+            What Do You Need
+            <br /> To Do?
+          </div>
+          <div className='text-slate-700 text-lg leading-snug col-span-3'>
+            If you created your account with an email and password, you’ll be
+            prompted to reset your password the first time you access the new
+            dashboard. You can also login with your social provider of choice if
+            that email matches your learner email. If you signed up with Google
+            or LinkedIn, or another social provider, no action is needed. And
+            don’t worry — we’ll also send a reminder email to help you get
+            started!
+          </div>
+        </div>
       </div>
     </div>
   );
