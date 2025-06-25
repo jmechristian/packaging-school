@@ -104,12 +104,12 @@ const Page = () => {
             </div>
             <div className='text-slate-700 text-lg leading-snug'>
               With hundreds of lessons and courses to explore, getting started
-              can feel overwhelming. That's why we've made it simple to get full
-              12-month access: you can join one of our expert-led, immersive
-              certificate cohorts for a collaborative learning experience,
-              purchase a single certificate program for flexible, self-paced
-              learning, or, if you're an alumni, maintain discounted access to
-              the entire course library.
+              can feel overwhelming. That&apos;s why we&apos;ve made it simple
+              to get full 12-month access: you can join one of our expert-led,
+              immersive certificate cohorts for a collaborative learning
+              experience, purchase a single certificate program for flexible,
+              self-paced learning, or, if you&apos;re an alumni, maintain
+              discounted access to the entire course library.
             </div>
             <div
               className='w-fit bg-black text-white rounded px-6 py-3 text-center font-semibold mt-2 cursor-pointer hover:bg-slate-800 transition-colors'
@@ -166,8 +166,8 @@ const Page = () => {
               Your Path to New Skills Starts Here.
             </div>
             <div className='text-slate-700 text-lg leading-snug'>
-              We're excited to introduce Learning Paths — a brand new way to
-              master an entire skillset through an expertly crafted series of
+              We&apos;re excited to introduce Learning Paths — a brand new way
+              to master an entire skillset through an expertly crafted series of
               courses and lessons. Progress through each path, earn badges along
               the way, and showcase your achievements on LinkedIn and other
               social profiles. Best of all, you can get started for free.
@@ -213,13 +213,13 @@ const Page = () => {
             <br /> To Do?
           </div>
           <div className='text-slate-700 text-lg leading-snug col-span-3'>
-            If you created your account with an email and password, you’ll be
-            prompted to reset your password the first time you access the new
+            If you created your account with an email and password, you&apos;ll
+            be prompted to reset your password the first time you access the new
             dashboard. You can also login with your social provider of choice if
             that email matches your learner email. If you signed up with Google
             or LinkedIn, or another social provider, no action is needed. And
-            don’t worry — we’ll also send a reminder email to help you get
-            started!
+            don&apos;t worry — we&apos;ll also send a reminder email to help you
+            get started!
           </div>
         </div>
       </div>
