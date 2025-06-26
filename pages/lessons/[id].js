@@ -283,13 +283,22 @@ const Page = ({ lesson }) => {
                   </div>
                   {isFeaturedCard && isFeaturedCard.type === 'COURSE' ? (
                     <div className='w-full flex flex-col gap-2'>
-                      <div className='w-full aspect-[16/9] bg-black'>
-                        <VideoPlayer
-                          videoEmbedLink={isFeaturedCard.obj.preview}
-                          light={false}
-                          playing={false}
-                        />
-                      </div>
+                      {isFeaturedCard.obj.preview ? (
+                        <div className='w-full aspect-[16/9] bg-black'>
+                          <VideoPlayer
+                            videoEmbedLink={isFeaturedCard.obj.preview}
+                            light={false}
+                            playing={false}
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className='w-full aspect-[16/9] bg-black bg-center bg-cover'
+                          style={{
+                            backgroundImage: `url(${isFeaturedCard.obj.seoImage})`,
+                          }}
+                        ></div>
+                      )}
                       <div className='font-bold text-sm'>
                         {isFeaturedCard.obj.title}
                       </div>
