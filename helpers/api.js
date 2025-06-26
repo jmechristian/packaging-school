@@ -671,6 +671,60 @@ export const getAllPublishedLessons = async () => {
   return allItems;
 };
 
+export const getAllLearningOfTheMonths = async () => {
+  const getLOTMQuery = /* GraphQL */ `
+    query MyQuery($nextToken: String) {
+      listLessons(
+        limit: 1000
+        filter: { status: { eq: "PUBLISHED" }, type: { eq: LOTM } }
+        nextToken: $nextToken
+      ) {
+        items {
+          author
+          backdate
+          content
+          createdAt
+          id
+          objectives
+          screengrab
+          seoImage
+          slug
+          tags {
+            items {
+              tags {
+                id
+                tag
+              }
+            }
+          }
+          title
+          type
+          subhead
+        }
+        nextToken
+      }
+    }
+  `;
+
+  let allItems = [];
+  let nextToken = null;
+
+  do {
+    const result = await API.graphql({
+      query: getLOTMQuery,
+      variables: { nextToken },
+    });
+
+    // Append the items from this batch to the overall array
+    allItems = allItems.concat(result.data.listLessons.items);
+
+    // Update nextToken for the next iteration
+    nextToken = result.data.listLessons.nextToken;
+  } while (nextToken); // Keep fetching until there's no nextToken
+
+  return allItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+};
+
 export async function fetchAllIndexes() {
   let allItems = [];
   let nextToken = null;
@@ -742,22 +796,6 @@ export const getCourseByID = async (id) => {
     variables: { id: id },
   });
   return res.data.getLMSCourse;
-};
-
-export const getAllLearningOfTheMonths = async () => {
-  const res = await API.graphql({
-    query: listLessons,
-    variables: {
-      limit: 200,
-      filter: {
-        status: { eq: 'PUBLISHED' },
-        type: { eq: 'LOTM' },
-      },
-    },
-  });
-  return res.data.listLessons.items.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
 };
 
 export const createNewEmailSubscription = async (

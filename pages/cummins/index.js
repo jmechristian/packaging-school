@@ -198,6 +198,7 @@ const Page = () => {
   useEffect(() => {
     const fetchLearningOfTheMonths = async () => {
       const data = await getAllLearningOfTheMonths();
+      console.log(data);
       setLearningOfTheMonths(data);
     };
     fetchLearningOfTheMonths();
