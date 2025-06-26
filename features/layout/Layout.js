@@ -75,35 +75,6 @@ const Layout = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    const getLessons = /* GraphQL */ `
-      query MyQuery {
-        listLessons(limit: 250, filter: { status: { eq: "PUBLISHED" } }) {
-          items {
-            author
-            backdate
-            content
-            createdAt
-            id
-            objectives
-            screengrab
-            seoImage
-            slug
-            tags {
-              items {
-                tags {
-                  id
-                  tag
-                }
-              }
-            }
-            title
-            type
-            subhead
-          }
-        }
-      }
-    `;
-
     const getArticles = /* GraphQL */ `
       query MyQuery {
         listBlogs {
@@ -128,8 +99,57 @@ const Layout = ({ children }) => {
     };
 
     const setLessons = async () => {
-      const lessons = await API.graphql(graphqlOperation(getLessons));
-      dispatch(setAllLessons(lessons.data.listLessons.items));
+      const getLessonsQuery = /* GraphQL */ `
+        query MyQuery($nextToken: String) {
+          listLessons(
+            limit: 1000
+            filter: { status: { eq: "PUBLISHED" } }
+            nextToken: $nextToken
+          ) {
+            items {
+              author
+              backdate
+              content
+              createdAt
+              id
+              objectives
+              screengrab
+              seoImage
+              slug
+              tags {
+                items {
+                  tags {
+                    id
+                    tag
+                  }
+                }
+              }
+              title
+              type
+              subhead
+            }
+            nextToken
+          }
+        }
+      `;
+
+      let allItems = [];
+      let nextToken = null;
+
+      do {
+        const result = await API.graphql({
+          query: getLessonsQuery,
+          variables: { nextToken },
+        });
+
+        // Append the items from this batch to the overall array
+        allItems = allItems.concat(result.data.listLessons.items);
+
+        // Update nextToken for the next iteration
+        nextToken = result.data.listLessons.nextToken;
+      } while (nextToken); // Keep fetching until there's no nextToken
+
+      dispatch(setAllLessons(allItems));
     };
 
     const setArticles = async () => {
