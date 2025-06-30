@@ -42,7 +42,6 @@ import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
 const Page = ({ lesson }) => {
-  console.log('lesson', lesson);
   const router = useRouter();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
@@ -326,11 +325,7 @@ const Page = ({ lesson }) => {
               ></div>
               {lesson.analysis && (
                 <div className='w-full'>
-                  <LessonQuiz
-                    analysis={lesson.analysis}
-                    lessonId={lesson.id}
-                    refreshUser={refreshUser}
-                  />
+                  <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
                 </div>
               )}
             </div>

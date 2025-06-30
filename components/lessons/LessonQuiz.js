@@ -1,12 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import MiniProfile from '../profile/MiniProfile';
-import { completeLesson, getAWSUser } from '../../helpers/api';
+import {
+  completeLesson,
+  getAWSUser,
+  getUserLevel,
+  updateLastLogin,
+} from '../../helpers/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { showToast } from '../../features/navigation/navigationSlice';
 import { setAWSUser, setUserXp } from '../../features/auth/authslice';
 import { useUser } from '@auth0/nextjs-auth0/client';
 const LessonQuiz = ({ analysis, lessonId }) => {
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, userXp } = useSelector((state) => state.auth);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,11 +79,16 @@ const LessonQuiz = ({ analysis, lessonId }) => {
       await completeLesson({
         lessonId: lessonId,
         userId: awsUser.id,
-        xpAwarded: 5,
-        pxp: awsUser.userXp.psXp,
-        thinkificXp: awsUser.userXp.thinkificXp,
-        xpId: awsUser.userXp.id,
       });
+      const level = getUserLevel(awsUser.userXp.totalXp + 5, awsUser);
+      const updatedUserXp = await updateLastLogin(
+        awsUser.userXp.id,
+        parseInt(level.level, 10),
+        parseInt(level.xpNeeded, 10),
+        parseFloat(level.progress.toFixed(1)),
+        awsUser.userXp.totalXp + 5
+      );
+      dispatch(setUserXp(updatedUserXp));
       dispatch(
         showToast({
           message: 'Lesson Completed!',
@@ -163,7 +173,7 @@ const LessonQuiz = ({ analysis, lessonId }) => {
           </div>
           <div className='col-span-4'>
             <div className='w-full h-full bg-white/10 rounded-lg'>
-              <MiniProfile />
+              {awsUser && <MiniProfile awsUser={awsUser} userXp={userXp} />}
             </div>
           </div>
         </div>

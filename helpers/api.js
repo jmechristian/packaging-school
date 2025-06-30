@@ -1307,6 +1307,7 @@ export const getAWSUser = async (email) => {
             updatedAt
             userXpUserId
             xpToNextLevel
+            progress
           }
           userUserXpId
         }
@@ -1391,17 +1392,8 @@ export const reEnroll = async (id) => {
   return res.json();
 };
 
-export const completeLesson = async ({
-  lessonId,
-  userId,
-  xpId,
-  xpAwarded,
-  pxp,
-  thinkificXp,
-}) => {
-  const levelProgress = calculateLevelProgress(thinkificXp + pxp + xpAwarded);
-
-  await API.graphql({
+export const completeLesson = async ({ lessonId, userId }) => {
+  const res = await API.graphql({
     query: createUserCompletedLessons,
     variables: {
       input: {
@@ -1410,24 +1402,7 @@ export const completeLesson = async ({
       },
     },
   });
-
-  const res = await API.graphql({
-    query: updateUserXp,
-    variables: {
-      input: {
-        id: xpId,
-        level: levelProgress.level,
-        progress: levelProgress.progress,
-        psXp: pxp + xpAwarded,
-        thinkificXp: thinkificXp,
-        totalXp: thinkificXp + pxp + xpAwarded,
-        userXpUserId: userId,
-        xpToNextLevel: levelProgress.xpNeeded,
-      },
-    },
-  });
-
-  return res.data.updateUserXp;
+  return res.data.createUserCompletedLessons;
 };
 
 export const handleBookmarkAdd = async (lessons, userId) => {
@@ -1650,7 +1625,13 @@ export const createNewUserXp = async (userId, lastLogin) => {
   return res.data.createUserXp;
 };
 
-export const updateLastLogin = async (id, level, xpToNextLevel, progress) => {
+export const updateLastLogin = async (
+  id,
+  level,
+  xpToNextLevel,
+  progress,
+  totalXp
+) => {
   const res = await API.graphql({
     query: updateUserXp,
     variables: {
@@ -1660,6 +1641,7 @@ export const updateLastLogin = async (id, level, xpToNextLevel, progress) => {
         level: level,
         xpToNextLevel: xpToNextLevel,
         progress: progress,
+        totalXp: totalXp,
       },
     },
   });

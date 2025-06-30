@@ -38,16 +38,16 @@ export default handleAuth({
                 session.user.name?.split(' ').slice(1).join(' ') ||
                 '';
 
-              const redirectUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo:
-                  'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
-                baseUrl,
-              });
-              console.log('SSO redirect URL generated:', redirectUrl);
-              session.user.ssoRedirectUrl = redirectUrl;
+              // const redirectUrl = await handleSSO({
+              //   email: session.user.email,
+              //   first_name: firstName,
+              //   last_name: lastName,
+              //   returnTo:
+              //     'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
+              //   baseUrl,
+              // });
+              // console.log('SSO redirect URL generated:', redirectUrl);
+              // session.user.ssoRedirectUrl = redirectUrl;
             } else {
               console.log('No user found in Thinkific');
 
@@ -80,19 +80,19 @@ export default handleAuth({
                 console.log('User created in Thinkific:', createUserResult);
 
                 // Handle SSO after user creation
-                const redirectUrl = await handleSSO({
-                  email: session.user.email,
-                  first_name: firstName,
-                  last_name: lastName,
-                  returnTo:
-                    'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
-                  baseUrl,
-                });
-                console.log(
-                  'SSO redirect URL generated after user creation:',
-                  redirectUrl
-                );
-                session.user.ssoRedirectUrl = redirectUrl;
+                // const redirectUrl = await handleSSO({
+                //   email: session.user.email,
+                //   first_name: firstName,
+                //   last_name: lastName,
+                //   returnTo:
+                //     'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
+                //   baseUrl,
+                // });
+                // console.log(
+                //   'SSO redirect URL generated after user creation:',
+                //   redirectUrl
+                // );
+                // session.user.ssoRedirectUrl = redirectUrl;
               } else {
                 console.log(
                   'No first name or last name available, user will be redirected to onboarding'
