@@ -183,7 +183,7 @@ const Layout = ({ children }) => {
           </div>
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />
-          <main className='relative h-full w-full'>{children}</main>
+          <main className='relative'>{children}</main>
           <Footer />
           <Toast show={showToast} />
         </div>

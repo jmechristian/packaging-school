@@ -52,7 +52,7 @@ export default function Document() {
           rel='stylesheet'
         ></link>
       </Head>
-      <body className='flex flex-col min-h-screen' id='home'>
+      <body className='flex flex-col' id='home'>
         <Main />
         <NextScript />
         <noscript

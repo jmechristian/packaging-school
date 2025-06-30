@@ -89,10 +89,10 @@ export function Autocomplete(props) {
 
     const search = autocomplete({
       container: containerRef.current,
-      placeholder: 'What do you want to learn today?',
+      placeholder: 'Search...',
       openOnFocus: true,
       classNames: {
-        input: 'md:px-4 md:mx-4 text-gray-700 dark:text-gray-700',
+        input: 'md:px-4 md:mx-4 text-gray-700 dark:text-gray-700 w-40',
       },
       insights: true,
       renderer: { createElement, Fragment, render: () => {} },
@@ -105,7 +105,7 @@ export function Autocomplete(props) {
         }
 
         panelRootRef.current.render(
-          <div className='flex flex-col lg:!grid lg:!grid-cols-2 bg-white text-slate-700'>
+          <div className='flex flex-col lg:!grid lg:!grid-cols-2 bg-white text-slate-700 relative z-[1000]'>
             <div className='py-3'>
               {!state.query ? (
                 elements.querySuggestionsPlugin
@@ -142,43 +142,6 @@ export function Autocomplete(props) {
                 </div>
               )}
             </div>
-            <div className='flex flex-col gap-3 bg-slate-100 pb-9'>
-              <div className='px-6 py-3 row-span-2 flex flex-col gap-3'>
-                <div className='font-greycliff font-semibold text-gray-600 text-lg'>
-                  Popular Content
-                </div>
-                <hr />
-                <div className='flex flex-col gap-6 w-full'>
-                  {cirriculum.map((item) => (
-                    <div
-                      className='flex gap-3 items-start cursor-pointer'
-                      key={item.link}
-                    >
-                      <div>
-                        {/* <div className='w-10 h-10 auto bg-gray-400' /> */}
-                        {item.icon}
-                      </div>
-                      <div className='flex flex-col gap-1'>
-                        <div
-                          className='font-semibold font-greycliff leading-tight text-gray-700'
-                          onClick={() => {
-                            router.push(item.link);
-                            document
-                              .getElementById('home')
-                              .classList.remove('aa-Detached');
-                          }}
-                        >
-                          {item.title}
-                        </div>
-                        <div className='text-sm line-clamp-2 text-gray-600'>
-                          {item.subtitle}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         );
       },
@@ -190,5 +153,5 @@ export function Autocomplete(props) {
     };
   }, [props]);
 
-  return <div ref={containerRef} />;
+  return <div ref={containerRef} className='w-full flex items-center' />;
 }

@@ -1,4 +1,4 @@
-import { Fragment, Suspense, useState, useMemo } from 'react';
+import { Fragment, Suspense, useState, useMemo, useEffect } from 'react';
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
@@ -6,16 +6,8 @@ import {
   UserIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {
-  MdLogin,
-  MdVerifiedUser,
-  MdAccountCircle,
-  MdShoppingCart,
-  MdOutlineShoppingCart,
-  MdNotificationsNone,
-  MdOutlineNotifications,
-} from 'react-icons/md';
-
+import { MdLogin, MdAccountCircle } from 'react-icons/md';
+import { initializeAutocomplete } from '../../../components/search/NewAutoComplete';
 import Logo from '../../../components/layout/Logo';
 import Link from 'next/link';
 import CertMegaMenu from '../../../components/nav/CertMegaMenu';
@@ -26,10 +18,170 @@ import LogoSquare from '../../../components/layout/LogoSquare';
 import { useRouter } from 'next/router';
 import SalesBar from './SalesBar';
 import LogoWhite from '../../../components/layout/LogoWhite';
+// import { Autocomplete } from '../../../components/search/Autocomplete';
+import { getAlgoliaResults } from '@algolia/autocomplete-js';
+import algoliasearch from 'algoliasearch';
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+import GlobalMaterialsIcon from '../../../components/icons/GlobalMaterialsIcon';
+import LotmIcon from '../../../components/icons/LotmIcon';
+import CertIcon from '../../../components/icons/CertIcon';
+import CMPMIcon from '../../../components/icons/CMPMIcon';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
+
+// const searchClient = algoliasearch(
+//   process.env.NEXT_PUBLIC_ALGOLIA_ID,
+//   process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
+// );
+
+// export function CertItem({ hit, components }) {
+//   const setBackground = () => {
+//     switch (hit.title) {
+//       case 'Certificate of Mastery in Packaging Management':
+//         return 'bg-gradient-to-br from-base-brand to-gray-700';
+//       case 'Certificate of Packaging Science':
+//         return 'bg-gradient-to-br from-base-dark to-gray-900';
+//       case 'Automotive Packaging Certificate':
+//         return 'bg-gradient-to-br from-clemson to-orange-800';
+//       default:
+//         return 'bg-gradient-to-br from-base-brand to-gray-900';
+//     }
+//   };
+
+//   return (
+//     <a href={hit.slug} className='aa-ItemLink hover:bg-gray-100 cursor-pointer'>
+//       <div className='grid grid-cols-5 w-full'>
+//         <div className='lg:px-3 py-1.5 col-span-5'>
+//           <div className='flex gap-3 w-full'>
+//             <div>
+//               <CMPMIcon scale={12} background={setBackground()} />
+//             </div>
+//             <div className='flex flex-col '>
+//               <div className='font-greycliff font-semibold leading-snug dark:text-gray-700'>
+//                 <components.Highlight hit={hit} attribute='title' />
+//               </div>
+//               <div className='aa-ItemTitle text-sm line-clamp-2  text-gray-600 dark:text-gray-700'>
+//                 <components.Highlight hit={hit} attribute='subheadline' />
+//               </div>
+//               <div className='aa-ItemTitle line-clamp-2   text-gray-600 dark:text-gray-700'>
+//                 <components.Highlight hit={hit} attribute='subhead' />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </a>
+//   );
+// }
+
+// export function ProductItem({ hit, components }) {
+//   return (
+//     <div className='flex justify-between items-center w-full pl-6'>
+//       <a
+//         href={`https://www.packagingschool.com/articles/${hit.slug}`}
+//         className='aa-ItemLink hover:bg-gray-100 cursor-pointer w-full'
+//         target='_blank'
+//         rel='noReferrer'
+//       >
+//         <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-gray-700 w-full'>
+//           <components.Highlight hit={hit} attribute='title' />
+//         </div>
+//       </a>
+//     </div>
+//   );
+// }
+
+// export function CourseItem({ hit, components }) {
+//   const setBackground = () => {
+//     switch (hit.title) {
+//       case 'Certificate of Mastery in Packaging Management':
+//         return 'bg-gradient-to-br from-base-brand to-gray-700';
+//       case 'Certificate of Packaging Science':
+//         return 'bg-gradient-to-br from-base-dark to-slate-900';
+//       case 'Automotive Packaging Certificate':
+//         return 'bg-gradient-to-br from-clemson to-orange-800';
+//       default:
+//         return 'bg-gradient-to-br from-green-600 to-green-900';
+//     }
+//   };
+
+//   return (
+//     <a
+//       href={`/courses/${hit.slug}`}
+//       className='aa-ItemLink hover:bg-slate-100 cursor-pointer'
+//     >
+//       <div className='grid grid-cols-5 w-full'>
+//         <div className='px-3 py-1.5 col-span-5'>
+//           <div className='flex gap-3 w-full'>
+//             <div>
+//               <GlobalMaterialsIcon scale={12} background={setBackground()} />
+//             </div>
+//             <div className='flex flex-col '>
+//               <div className='font-greycliff font-semibold leading-snug'>
+//                 <components.Highlight hit={hit} attribute='title' />
+//               </div>
+//               <div className='aa-ItemTitle line-clamp-2 text-sm text-slate-600 dark:text-slate-700'>
+//                 <components.Highlight hit={hit} attribute='subheadline' />
+//               </div>
+//               <div className='aa-ItemTitle line-clamp-2  text-sm md:text-base text-slate-600 dark:text-slate-700'>
+//                 <components.Highlight hit={hit} attribute='subhead' />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </a>
+//   );
+// }
+
+// export function LOTMItem({ hit, components }) {
+//   const setBackground = () => {
+//     switch (hit.title) {
+//       case 'Certificate of Mastery in Packaging Management':
+//         return 'bg-gradient-to-br from-base-brand to-slate-700';
+//       case 'Certificate of Packaging Science':
+//         return 'bg-gradient-to-br from-base-dark to-slate-900';
+//       case 'Automotive Packaging Certificate':
+//         return 'bg-gradient-to-br from-clemson to-orange-800';
+//       default:
+//         return 'bg-gradient-to-br from-red-500 to-red-900';
+//     }
+//   };
+
+//   return (
+//     <a
+//       href={hit.type === 'INDEX' ? `/${hit.slug}` : `/lessons/${hit.slug}`}
+//       className='aa-ItemLink hover:bg-slate-100 cursor-pointer'
+//     >
+//       <div className='grid grid-cols-5 w-full'>
+//         <div className='px-3 py-1.5 col-span-5'>
+//           <div className='flex gap-3 w-full'>
+//             {hit.type === 'LOTM' && (
+//               <div>
+//                 <LotmIcon style='w-12 h-12 fill-slate-900' />
+//               </div>
+//             )}
+
+//             <div className='flex flex-col '>
+//               <div className='font-greycliff font-semibold leading-snug '>
+//                 <components.Highlight hit={hit} attribute='title' />
+//               </div>
+//               <div className='aa-ItemTitle line-clamp-2 text-sm text-gray-600 '>
+//                 <components.Highlight hit={hit} attribute='subheadline' />
+//               </div>
+//               <div className='aa-ItemTitle line-clamp-2 text-sm text-gray-600 '>
+//                 <components.Highlight hit={hit} attribute='subhead' />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </a>
+//   );
+// }
 
 export default function HeaderNew() {
   const [open, setOpen] = useState(false);
@@ -44,6 +196,21 @@ export default function HeaderNew() {
   const isUser = useMemo(() => {
     return user;
   }, [user]);
+
+  // Initialize autocomplete when component mounts
+  useEffect(() => {
+    const container = document.querySelector('#header-search');
+    if (container) {
+      const autocompleteInstance = initializeAutocomplete('#header-search');
+
+      // Clean up when component unmounts
+      return () => {
+        if (autocompleteInstance && autocompleteInstance.destroy) {
+          autocompleteInstance.destroy();
+        }
+      };
+    }
+  }, []);
 
   const navigation = {
     categories: [
@@ -62,6 +229,29 @@ export default function HeaderNew() {
       { name: 'Campus Store', href: '#' },
     ],
   };
+
+  // const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
+  //   key: 'RECENT_SEARCH',
+  //   limit: 5,
+  // });
+
+  // const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+  //   searchClient,
+  //   indexName: 'COURSES_query_suggestions',
+  //   getSearchParams() {
+  //     return {
+  //       hitsPerPage: 12,
+  //     };
+  //   },
+  //   transformSource({ source }) {
+  //     return {
+  //       ...source,
+  //       onSelect({ setIsOpen }) {
+  //         setIsOpen(true);
+  //       },
+  //     };
+  //   },
+  // });
 
   return (
     <div className='bg-white relative'>
@@ -191,143 +381,132 @@ export default function HeaderNew() {
             <div className=''>
               <div className='border-b border-t lg:border-t-0 border-slate-400 dark:border-gray-700'>
                 <div className='flex h-[72px] items-center justify-between px-4 md:px-8 xl:px-0 mx-auto max-w-7xl'>
-                  {/* Logo (lg+) */}
-                  <div className='hidden lg:flex lg:items-center'>
-                    <Link href='/' legacyBehavior>
-                      <div className='h-full w-40'>
-                        <Logo />
-                      </div>
+                  <div className='flex items-center gap-2'>
+                    {/* Logo (lg+) */}
+                    <div className='hidden lg:flex lg:items-center'>
+                      <Link href='/' legacyBehavior>
+                        <div className='h-full w-40'>
+                          <Logo />
+                        </div>
+                      </Link>
+                    </div>
+
+                    <div className='hidden h-full lg:flex'>
+                      {/* Mega menus */}
+                      <Popover.Group className='ml-4'>
+                        <div className='flex h-full justify-center space-x-4'>
+                          {navigation.pages.map((page) => (
+                            <Link
+                              passHref
+                              href={page.href}
+                              key={page.name}
+                              className='flex items-center font-bold text-sm text-slate-900 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80 whitespace-nowrap'
+                            >
+                              {page.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </Popover.Group>
+                    </div>
+
+                    {/* Mobile menu and search (lg-) */}
+                    <div className='flex flex-1 items-center lg:hidden'>
+                      <button
+                        type='button'
+                        className='rounded-md bg-white dark:bg-dark-mid p-2 text-slate-400 dark:text-white/40'
+                        onClick={() => setOpen(true)}
+                      >
+                        <span className='sr-only'>Open menu</span>
+                        <Bars3Icon className='h-6 w-6' aria-hidden='true' />
+                      </button>
+
+                      {/* Search */}
+                      <a
+                        href='#'
+                        className='ml-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40'
+                        onClick={() => dispatch(showSearch())}
+                      >
+                        <span className='sr-only'>Search</span>
+                        <MagnifyingGlassIcon
+                          className='h-6 w-6'
+                          aria-hidden='true'
+                        />
+                      </a>
+                    </div>
+
+                    {/* Logo (lg-) */}
+                    <Link href='/' className='lg:hidden'>
+                      <span className='sr-only'>Packaging School</span>
+                      <LogoSquare className='w-6 h-6' />
                     </Link>
                   </div>
 
-                  <div className='hidden h-full lg:flex'>
-                    {/* Mega menus */}
-                    <Popover.Group className='ml-4'>
-                      <div className='flex h-full justify-center space-x-4'>
-                        {navigation.pages.map((page) => (
-                          <Link
-                            passHref
-                            href={page.href}
-                            key={page.name}
-                            className='flex items-center font-bold text-sm text-slate-900 dark:hover:text-gray-500 hover:text-slate-800 dark:text-white/80'
-                          >
-                            {page.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </Popover.Group>
-                  </div>
+                  <div className='flex space-x-2 w-full justify-end  lg:relative'>
+                    <div className='hidden lg:!flex lg:!w-full lg:!max-w-xs'>
+                      <div id='header-search' className='w-full'></div>
+                    </div>
 
-                  {/* Mobile menu and search (lg-) */}
-                  <div className='flex flex-1 items-center lg:hidden'>
-                    <button
-                      type='button'
-                      className='rounded-md bg-white dark:bg-dark-mid p-2 text-slate-400 dark:text-white/40'
-                      onClick={() => setOpen(true)}
-                    >
-                      <span className='sr-only'>Open menu</span>
-                      <Bars3Icon className='h-6 w-6' aria-hidden='true' />
-                    </button>
-
-                    {/* Search */}
-                    <a
-                      href='#'
-                      className='ml-2 p-2 text-slate-400 hover:text-slate-500 dark:text-white/40'
-                      onClick={() => dispatch(showSearch())}
-                    >
-                      <span className='sr-only'>Search</span>
-                      <MagnifyingGlassIcon
-                        className='h-6 w-6'
-                        aria-hidden='true'
-                      />
-                    </a>
-                  </div>
-
-                  {/* Logo (lg-) */}
-                  <Link href='/' className='lg:hidden'>
-                    <span className='sr-only'>Packaging School</span>
-                    <LogoSquare className='w-6 h-6' />
-                  </Link>
-
-                  <div className='flex flex-1 items-center justify-end'>
-                    <div className='flex items-center lg:ml-8'>
-                      <div className='flex space-x-2'>
-                        <div className='hidden lg:flex'>
-                          <input
-                            type='text'
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder='Search...'
-                            className='px-2 py-1.5 w-72 rounded-md border border-slate-300 dark:border-gray-700 bg-white dark:bg-dark-mid text-slate-700 dark:text-white/80 focus:ring-0 text-sm placeholder:text-sm'
-                          />
-                        </div>
-
-                        <div className='flex items-center gap-0 w-full'>
-                          {isUser ? (
-                            <Popover className='relative'>
-                              <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
-                                <div className='rounded-full ring-2 ring-clemson'>
-                                  {user.picture ? (
-                                    <img
-                                      src={user.picture}
-                                      alt='User'
-                                      className='w-6 h-6 rounded-full'
-                                    />
-                                  ) : (
-                                    <MdAccountCircle
-                                      color='#6B7A8F'
-                                      size={24}
-                                    />
-                                  )}
-                                </div>
-                              </Popover.Button>
-                              <Transition
-                                as={Fragment}
-                                enter='transition ease-out duration-200'
-                                enterFrom='opacity-0 translate-y-1'
-                                enterTo='opacity-100 translate-y-0'
-                                leave='transition ease-in duration-150'
-                                leaveFrom='opacity-100 translate-y-0'
-                                leaveTo='opacity-0 translate-y-1'
-                              >
-                                <Popover.Panel className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-dark-mid shadow-lg ring-1 ring-black ring-opacity-5'>
-                                  <div className='py-1'>
-                                    <Link
-                                      href='/profile'
-                                      className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
-                                    >
-                                      Profile
-                                    </Link>
-                                    <Link
-                                      href='/api/auth/logout'
-                                      className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
-                                    >
-                                      Sign Out
-                                    </Link>
-                                  </div>
-                                </Popover.Panel>
-                              </Transition>
-                            </Popover>
-                          ) : (
-                            <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
-                              <Link href={`/api/auth/login?returnTo=/profile`}>
-                                <div className='flex items-center gap-1 px-1'>
-                                  <MdLogin color='#6B7A8F' size={24} />
-                                  <span className='text-sm font-semibold text-slate-700'>
-                                    Sign In
-                                  </span>
-                                </div>
-                              </Link>
+                    <div className='flex items-center gap-0 w-fit whitespace-nowrap'>
+                      {isUser ? (
+                        <Popover className='relative'>
+                          <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                            <div className='rounded-full ring-2 ring-clemson'>
+                              {user.picture ? (
+                                <img
+                                  src={user.picture}
+                                  alt='User'
+                                  className='w-6 h-6 rounded-full'
+                                />
+                              ) : (
+                                <MdAccountCircle color='#6B7A8F' size={24} />
+                              )}
                             </div>
-                          )}
-                          {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
+                          </Popover.Button>
+                          <Transition
+                            as={Fragment}
+                            enter='transition ease-out duration-200'
+                            enterFrom='opacity-0 translate-y-1'
+                            enterTo='opacity-100 translate-y-0'
+                            leave='transition ease-in duration-150'
+                            leaveFrom='opacity-100 translate-y-0'
+                            leaveTo='opacity-0 translate-y-1'
+                          >
+                            <Popover.Panel className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-dark-mid shadow-lg ring-1 ring-black ring-opacity-5'>
+                              <div className='py-1'>
+                                <Link
+                                  href='/profile'
+                                  className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
+                                >
+                                  Profile
+                                </Link>
+                                <Link
+                                  href='/api/auth/logout'
+                                  className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
+                                >
+                                  Sign Out
+                                </Link>
+                              </div>
+                            </Popover.Panel>
+                          </Transition>
+                        </Popover>
+                      ) : (
+                        <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                          <Link href={`/api/auth/login?returnTo=/profile`}>
+                            <div className='flex items-center gap-1 px-1'>
+                              <MdLogin color='#6B7A8F' size={24} />
+                              <span className='text-sm font-semibold text-slate-700'>
+                                Sign In
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+                      )}
+                      {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineNotifications color='#6B7A8F' size={24} />
                           </div> */}
-                          {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
+                      {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
                             <MdOutlineShoppingCart color='#6B7A8F' size={24} />
                           </div> */}
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>

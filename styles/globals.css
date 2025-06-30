@@ -103,10 +103,6 @@
     @apply text-xl h-16;
   }
 
-  .aa-Autocomplete {
-    @apply dark:bg-white dark:text-white !important;
-  }
-
   .variable-base {
     font-variation-settings: 'slnt' 0, 'wdth' 60;
   }
@@ -217,10 +213,15 @@ body {
 
 .aa-DetachedSearchButton {
   background-color: white !important;
+  @apply flex items-center px-2 text-sm gap-2 placeholder:text-sm text-slate-700 !important;
 }
 
 .aa-DetachedSearchButtonPlaceholder {
   color: #333 !important;
+}
+
+.aa-DetachedContainer {
+  @apply fixed max-w-2xl mx-auto w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white;
 }
 
 .aa-DetachedContainer .aa-Panel {
@@ -230,6 +231,7 @@ body {
 
 .aa-DetachedFormContainer {
   background-color: white;
+  @apply flex items-center justify-between w-full px-6 mt-6;
 }
 
 .aa-SubmitIcon {
@@ -251,6 +253,15 @@ body {
 .aa-Form {
   background-color: white !important;
   border-color: #333;
+  @apply flex items-center w-full;
+}
+
+.aa-InputWrapper {
+  @apply w-3/4;
+}
+
+.aa-Input {
+  @apply w-full;
 }
 
 .aa-Input::placeholder {
