@@ -373,7 +373,7 @@ const CPSApply = ({ email, free }) => {
                 htmlFor='pay-installment'
                 className='block font-medium font-greycliff leading-6 text-slate-900'
               >
-                Monthly Subscription
+                Subscription (5 payments of $800)
               </label>
             </div>
           </div>

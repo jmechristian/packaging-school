@@ -10,6 +10,7 @@ import {
   GiHoneycomb,
   GiBoxUnpacking,
   GiAstronautHelmet,
+  GiDeadlyStrike,
 } from 'react-icons/gi';
 import {
   removeStudentFromPath,
@@ -227,6 +228,8 @@ const PathWrapper = ({ path }) => {
         return <GiBoxUnpacking size={50} className='text-white' />;
       case 'GiAstronautHelmet':
         return <GiAstronautHelmet size={50} className='text-white' />;
+      case 'GiDeadlyStrike':
+        return <GiDeadlyStrike size={50} className='text-white' />;
       default:
         return <GiBoxUnpacking size={50} className='text-white' />;
     }

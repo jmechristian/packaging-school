@@ -7,6 +7,7 @@ import {
   GiHoneycomb,
   GiBoxUnpacking,
   GiAstronautHelmet,
+  GiDeadlyStrike,
 } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 import ProgressDonut from './ProgressDonut';
@@ -109,6 +110,8 @@ const PathItem = ({ path }) => {
         return <GiBoxUnpacking size={44} />;
       case 'GiAstronautHelmet':
         return <GiAstronautHelmet size={44} />;
+      case 'GiDeadlyStrike':
+        return <GiDeadlyStrike size={44} />;
       default:
         return null;
     }

@@ -6,7 +6,7 @@ const Page = () => {
   return (
     <>
       <Meta
-        title={'Certificate of Mastery in Packaging Management Confirmation'}
+        title={'Certificate of Packaging Science Confirmation'}
         description={
           'One of our Education Specialists will be in touch shortly.  We are very excited you have chosen to take this step in your professional career.'
         }
