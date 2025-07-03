@@ -425,9 +425,9 @@ const Page = () => {
         image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
       />
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-12'>
-        <div className='grid lg:!grid-cols-12 w-full gap-5 overflow-hidden'>
-          <div className='lg:!col-span-3 relative'>
-            <div className='flex flex-col gap-4 lg:!sticky lg:!top-20 h-fit w-full'>
+        <div className='grid lg:!grid-cols-12 w-full gap-5'>
+          <div className='lg:!col-span-3 lg:!relative'>
+            <div className='flex flex-col gap-4 w-full lg:!sticky lg:!top-40 lg:!h-fit'>
               <div className='h4-base'>Browse Full Catalog</div>
               <div className='w-full h-px bg-slate-400'></div>
               <div className='w-full border border-slate-400 p-1 rounded-md'>
