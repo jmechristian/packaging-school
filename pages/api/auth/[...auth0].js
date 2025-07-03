@@ -20,7 +20,7 @@ export default handleAuth({
             const baseUrl =
               process.env.NODE_ENV === 'development'
                 ? 'http://localhost:3001'
-                : 'https://packaging-school-git-dev-packaging-school.vercel.app';
+                : 'https://packagingschool.com';
 
             const thinkificUser = await fetch(
               `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
@@ -42,8 +42,7 @@ export default handleAuth({
                 email: session.user.email,
                 first_name: firstName,
                 last_name: lastName,
-                returnTo:
-                  'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
+                returnTo: 'https://packagingschool.com/profile?tab=courses',
                 baseUrl,
               });
               console.log('SSO redirect URL generated:', redirectUrl);
@@ -84,16 +83,18 @@ export default handleAuth({
                   email: session.user.email,
                   first_name: firstName,
                   last_name: lastName,
-                  returnTo:
-                    'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
+                  returnTo: 'https://packagingschool.com/profile?tab=courses',
                   baseUrl,
                 });
-
+                console.log(
+                  'SSO redirect URL generated after user creation:',
+                  redirectUrl
+                );
                 session.user.ssoRedirectUrl = redirectUrl;
               } else {
-                // console.log(
-                //   'No first name or last name available, user will be redirected to onboarding'
-                // );
+                console.log(
+                  'No first name or last name available, user will be redirected to onboarding'
+                );
                 // Don't set ssoRedirectUrl, user will go to onboarding
               }
             }

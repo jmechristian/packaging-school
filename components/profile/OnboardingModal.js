@@ -28,7 +28,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
   const baseUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3001'
-      : 'https://packaging-school-git-dev-packaging-school.vercel.app';
+      : 'https://packagingschool.com';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -113,11 +113,9 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
             email: awsUser.email,
             first_name: formData.firstName,
             last_name: formData.lastName,
-            returnTo:
-              'https://learn.packagingschool.com/enrollments?variant=test-upgrade',
+            returnTo: 'https://packagingschool.com/profile?tab=courses',
           });
           window.location.href = ssoUrl;
-          console.log('ssoUrl', ssoUrl);
         } catch (error) {
           console.error('Error creating Thinkific user:', error);
         }

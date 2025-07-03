@@ -138,7 +138,7 @@ const CourseItem = ({ course, enrollment }) => {
           <button
             onClick={() => {
               window.open(
-                `https://learn.packagingschool.com/courses/take/${course.slug}?variant=test-upgrade`,
+                `https://learn.packagingschool.com/courses/take/${course.slug}`,
                 '_blank'
               );
             }}

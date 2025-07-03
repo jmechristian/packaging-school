@@ -424,10 +424,10 @@ const Page = () => {
         }
         image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
       />
-      <div className='w-full max-w-7xl mx-auto px-3 xl:px-0 py-12'>
-        <div className='grid lg:!grid-cols-12 w-full gap-5'>
+      <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-12'>
+        <div className='grid lg:!grid-cols-12 w-full gap-5 overflow-hidden'>
           <div className='lg:!col-span-3 relative'>
-            <div className='flex flex-col gap-4 sticky top-20 h-fit'>
+            <div className='flex flex-col gap-4 lg:!sticky lg:!top-20 h-fit w-full'>
               <div className='h4-base'>Browse Full Catalog</div>
               <div className='w-full h-px bg-slate-400'></div>
               <div className='w-full border border-slate-400 p-1 rounded-md'>
@@ -445,8 +445,8 @@ const Page = () => {
                 </div>
               </div>
               <div className='w-full h-px bg-slate-400'></div>
-              <div className='flex justify-end lg:justify-start gap-5 relative w-full'>
-                <div className='hidden lg:flex w-full lg:flex-col gap-2 col-span-3'>
+              <div className='flex justify-center lg:justify-start gap-5 relative w-full'>
+                <div className='hidden lg:flex w-full lg:!flex-col gap-2 lg:!col-span-3'>
                   {categoryMenu.slice(0, 8).map((cat) => (
                     <div
                       key={cat.value}
@@ -661,7 +661,7 @@ const Page = () => {
 
                 {/* FILTER BUTTON */}
                 <div
-                  className={`lg:!hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
+                  className={`lg:!hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-fit justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
                     !isFilter && isFilters.length > 0
                       ? 'bg-base-brand text-white'
                       : 'bg-white'
@@ -677,7 +677,7 @@ const Page = () => {
 
                 {/* SORT BUTTON */}
                 <div
-                  className='lg:hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
+                  className='lg:!hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-fit justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
                   onClick={() => {
                     setIsFilter(false);
                     setOpenSort(!openSort);
@@ -688,7 +688,7 @@ const Page = () => {
                 </div>
               </div>
               <div className='w-full h-px bg-slate-400'></div>
-              <div className='flex flex-col gap-2.5 w-full '>
+              <div className='flex flex-col  gap-2.5 w-full '>
                 <div
                   className={`flex w-full items-center justify-between  ${
                     isInFilterArray('COLLECTION') ? 'bg-brand-indigo' : ''
