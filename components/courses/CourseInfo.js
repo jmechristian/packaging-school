@@ -71,7 +71,7 @@ const CourseInfo = ({
                           ${subscriptionPrice}
                         </div>
                         <div className='text-sm font-semibold text-white'>
-                          for 12 months
+                          for 6 months
                         </div>
                         <div className='w-24 flex items-center justify-center bg-white border border-white mt-2'>
                           <div className='font-semibold py-1 cursor-pointer'>
