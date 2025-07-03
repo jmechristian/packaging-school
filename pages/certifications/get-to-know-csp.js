@@ -22,10 +22,10 @@ const Page = () => {
         }
         image={'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png'}
       />
-      <div className='w-full h-full flex flex-col gap-12 lg:gap-36 pt-6 md:pt-20 pb-20 dark:bg-dark-dark'>
+      <div className='w-full h-full flex flex-col gap-12 lg:!gap-36 pt-6 md:!pt-20 pb-20 dark:bg-dark-dark'>
         <CSPHero />
         <CSPNav />
-        <div className='flex flex-col gap-12 md:gap-48'>
+        <div className='flex flex-col gap-12 md:!gap-48'>
           <CSPWhat />
           {/* <CSPMissionStatement /> */}
           <CSPHow />

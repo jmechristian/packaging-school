@@ -24,7 +24,7 @@
   }
 
   .h4-base {
-    @apply text-lg font-semibold md:!text-xl lg:!text-2xl leading-tight lg:!leading-[1.1em] tracking-[-0.02em];
+    @apply text-lg font-semibold md:!text-xl lg:!text-2xl leading-tight lg:!leading-[1.1em] tracking-[-0.03em];
   }
 
   .container-7xl {

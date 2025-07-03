@@ -30,7 +30,7 @@ const data = {
   },
   CPS: {
     'Hosted By': 'The Packaging School',
-    Timeline: 'Up to 12 months asynchronous',
+    Timeline: 'Up to 6 months asynchronous',
     Organization: 'Self-paced',
     Credits: '60 hours (6 credits)',
     'Instructor Access':

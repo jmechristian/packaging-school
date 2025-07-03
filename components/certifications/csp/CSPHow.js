@@ -10,11 +10,11 @@ const CSPHow = () => {
       id='how'
       className='max-w-7xl mx-auto w-full flex flex-col gap-16 scroll-mt-36'
     >
-      <div className='flex flex-col gap-9 col-span-3 max-w-4xl mx-auto  p-6 lg:px-0'>
+      <div className='flex flex-col gap-9 col-span-3 max-w-4xl mx-auto  p-6 lg:!px-0'>
         <FadeIn>
           <SectionHeading number='2'>How Does it Work?</SectionHeading>
         </FadeIn>
-        <h2 className='text-3xl lg:text-4xl  dark:text-white'>
+        <h2 className='text-3xl lg:!text-4xl  dark:text-white'>
           <FadeIn>A Dynamic Online Learning Experience</FadeIn>
         </h2>
         <div className='flex flex-col gap-9'>

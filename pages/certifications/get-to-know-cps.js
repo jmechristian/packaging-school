@@ -74,7 +74,7 @@ const primaryFeatures = [
 ];
 
 const features = [
-  '12-Months Access',
+  '6-Months Access',
   'Choose Your Own Electives',
   '12 Expert-led Courses',
   'Instructor Email Access',
@@ -101,7 +101,7 @@ export const Page = () => {
       <Meta
         title={'Certificate of Packaging Science (CPS)'}
         description={
-          'Ideal for professionals in the packaging or related industries seeking a comprehensive understanding of the packaging industry. With the flexibility of one-year access, this is an excellent choice for salespeople, packaging engineers, marketing leads, operations personnel, and procurement professionals looking to gain valuable insights.'
+          'Ideal for professionals in the packaging or related industries seeking a comprehensive understanding of the packaging industry. With the flexibility of 6-month access, this is an excellent choice for salespeople, packaging engineers, marketing leads, operations personnel, and procurement professionals looking to gain valuable insights.'
         }
         image={'https://packschool.s3.amazonaws.com/cps-1-seoImage.webp'}
         keywords={

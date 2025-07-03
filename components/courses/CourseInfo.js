@@ -52,7 +52,7 @@ const CourseInfo = ({
                         <div className='h4-base'>Buy Now</div>
                         <div className='h2-base'>${price}</div>
                         <div className='text-sm font-semibold text-neutral-500'>
-                          12-Month Access
+                          3-Month Access
                         </div>
                         <div className='w-24 flex items-center justify-center bg-clemson border border-black mt-2'>
                           <div className='font-semibold py-1 cursor-pointer'>

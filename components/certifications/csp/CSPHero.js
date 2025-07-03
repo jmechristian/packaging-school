@@ -9,20 +9,20 @@ const CSPHero = () => {
   const router = useRouter();
 
   return (
-    <div className='w-full max-w-7xl mx-auto lg:pr-6 xl:pr-0'>
+    <div className='w-full max-w-7xl mx-auto lg:!pr-6 xl:!pr-0'>
       <div className='grid gap-9 lg:gap-6 lg:grid-cols-2 overflow-hidden w-full h-full'>
-        <div className='w-full h-full p-6 xl:p-0 flex flex-col justify-center max-w-xl mx-auto'>
+        <div className='w-full h-full p-6 xl:!p-0 flex flex-col justify-center max-w-xl mx-auto'>
           <div className='flex flex-col gap-10'>
             <div>
               <FadeIn>
-                <h1 className='text-4xl xl:text-5xl  dark:text-white'>
+                <h1 className='text-4xl xl:!text-5xl  dark:text-white'>
                   Certificate of Sustainable Packaging (CSP)
                 </h1>
               </FadeIn>
             </div>
             <div>
               <FadeIn>
-                <p className='lg:text-lg lg:leading-normal font-greycliff text-slate-700 dark:text-gray-500 tracking-wide'>
+                <p className='lg:!text-lg lg:!leading-normal font-greycliff text-slate-700 dark:text-gray-500 tracking-wide'>
                   Navigating the trade offs of sustainable packaging design is
                   no easy feat, that is why the Packaging School has developed a
                   program to empower industry professionals to navigate the
@@ -38,7 +38,7 @@ const CSPHero = () => {
               <FadeIn>
                 <div className='flex flex-col md:flex-row items-center gap-6'>
                   <button
-                    className='w-full md:w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff xl:text-xl'
+                    className='w-full md:!w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff xl:!text-xl'
                     onClick={() =>
                       router.push(
                         'https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
@@ -56,7 +56,7 @@ const CSPHero = () => {
                       )
                     }
                   >
-                    <div className='font-semibold xl:text-xl font-greycliff dark:text-base-brand'>
+                    <div className='font-semibold xl:!text-xl font-greycliff dark:text-base-brand'>
                       Schedule a FREE Live Demo
                     </div>
                     <div>
@@ -74,7 +74,7 @@ const CSPHero = () => {
             backgroundImage: `url('https://packschool.s3.amazonaws.com/csp-hero.png')`,
           }}
         >
-          <div className='w-full max-w-[78%] mx-auto absolute -translate-x-1/2 left-1/2'>
+          <div className='w-full max-w-[78%] mx-auto absolute -translate-x-1/2 left-1/2 xl:!left-1/2'>
             <VideoPlayer
               hideSupport={true}
               videoEmbedLink={

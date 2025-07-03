@@ -32,7 +32,7 @@ const Page = ({ testimonials }) => {
       <div className='flex flex-col dark:bg-dark-dark gap-12'>
         <APCHero />
         <APCNavigation />
-        <div className='flex flex-col gap-28 lg:gap-48'>
+        <div className='flex flex-col gap-28 lg:!gap-48'>
           <APCAbout />
           {/* <Testimonial
           id='tommy-stroman'

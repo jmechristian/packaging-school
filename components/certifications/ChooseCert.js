@@ -15,7 +15,7 @@ const tiers = [
     description:
       'The Certificate of Packaging Science is a one year online program that teaches the materials, processes, and influences shaping the advancement of the industry.',
     features: [
-      '12-months access',
+      '6-months access',
       'Choose your own electives',
       '12 expert-led courses',
       'Instructor email access',

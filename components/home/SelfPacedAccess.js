@@ -218,14 +218,14 @@ const SelfPacedAccess = () => {
             </div>
             <div className='w-full text-lg leading-snug'>
               Select a focused pathway tailored to your career goals. Purchase a
-              single certificate for 12 months of in-depth, self-paced learning
+              single certificate for 6 months of in-depth, self-paced learning
               and exclusive content.
             </div>
             <div className='grid w-full gap-5 mt-2'>
               <div className='w-full p-4 border-t-4 border-l border-l-gray-300 border-r border-r-gray-300 border-b border-b-gray-300 border-t-clemson flex flex-col gap-4'>
                 <div className='w-full flex items-center justify-between'>
                   <div className='font-semibold text-gray-500 mb-3'>
-                    12-Month Access
+                    6-Month Access
                   </div>
                   {/* <div className='bg-gray-200 rounded-lg px-4 py-2 font-semibold text-sm'>
                     Choose Your Elective
@@ -233,7 +233,7 @@ const SelfPacedAccess = () => {
                 </div>
                 <div className='flex flex-col gap-2 lg:gap-0 lg:flex-row w-full items-center justify-between border border-gray-300 rounded-lg py-4 pl-3 pr-4 lg:!h-[100px]'>
                   <div className='w-fit flex items-end justify-center text-5xl font-bold tracking-tight'>
-                    $4,000
+                    $2,400
                     <span className='text-gray-500 text-sm font-medium'>
                       /USD
                     </span>
@@ -241,10 +241,10 @@ const SelfPacedAccess = () => {
                   <div className='w-px h-full bg-gray-400'></div>
                   <div className='flex flex-col items-center justify-center text-center'>
                     <div className='text-sm font-medium text-gray-500'>
-                      5 Payments of
+                      6 Monthly Payments of
                     </div>
                     <div className='text-4xl tracking-tight font-bold'>
-                      $800
+                      $415
                     </div>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ const SelfPacedAccess = () => {
                     Featured Certification: Certificate of Packaging Science
                   </div>
 
-                  <div className='flex flex-col gap-1 divide-y divide-gray-500 divide-dashed'>
+                  <div className='flex flex-col gap-1 divide-y divide-gray-500 divide-dashed border-t border-gray-300 pt-9'>
                     <div className='w-full h-full py-1 text-sm'>
                       Learn at your own pace, 100% online. Earn a certificate
                       upon completion.
@@ -275,7 +275,7 @@ const SelfPacedAccess = () => {
                     </div>
 
                     <div className='w-full h-full py-1 text-sm'>
-                      12-month access to all courses and a dynamic lesson
+                      6-month access to all courses and a dynamic lesson
                       library.
                     </div>
                   </div>

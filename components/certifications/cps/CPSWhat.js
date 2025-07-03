@@ -25,7 +25,7 @@ const CPSWhat = () => {
               The Certificate of Packaging Science offers a comprehensive
               program consisting of 12 courses that cover all major aspects of
               packaging materials, processes, and design. With 24/7 access for
-              one year, you can learn at your preferred pace. Our committed
+              6-months, you can learn at your preferred pace. Our committed
               student services team is readily available to support you with any
               inquiries or issues throughout the duration of the certificate.
             </p>
@@ -53,7 +53,7 @@ const CPSWhat = () => {
                 stat={
                   <CalendarDaysIcon className='w-12 h-12 stroke-white dark:stroke-clemson' />
                 }
-                title='12 Months to Complete'
+                title='6 Months to Complete'
               />
             </div>
           </FadeIn>

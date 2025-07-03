@@ -40,7 +40,7 @@ const CPSHow = () => {
                 <div className='text-xl text-gray-700 dark:text-gray-500 max-w-prose'>
                   Enroll at your convenience and enjoy{' '}
                   <span className='dark:text-white font-bold'>
-                    uninterrupted 24/7 access for a full 12 months
+                    uninterrupted 24/7 access for a full 6-months
                   </span>
                   , allowing you to learn at your own pace and convenience. If
                   you have any contact with the packaging process, our program

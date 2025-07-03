@@ -47,7 +47,7 @@ const APCHow = () => {
                   <span className='dark:text-white font-bold'>
                     uninterrupted 24/7 access
                   </span>
-                  , allowing you to learn at your own pace.
+                  , allowing you to learn at your own pace for up to 6-months.
                 </div>
                 <div className='text-xl text-gray-700 dark:text-gray-500 max-w-prose'>
                   There is no school or program that enables professionals to

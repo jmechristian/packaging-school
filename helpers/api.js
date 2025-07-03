@@ -1879,3 +1879,19 @@ export const getCredential = async (id) => {
   });
   return res.json();
 };
+
+export const createUsers = async (users) => {
+  for (const user of users) {
+    try {
+      await fetch('/api/create-auth-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    } catch (error) {
+      console.error(`Failed to create user ${user.email}:`, error);
+    }
+  }
+};

@@ -30,7 +30,7 @@ const CPSHero = () => {
             <p className='text-xl lg:text-2xl font-greycliff text-slate-700 dark:text-gray-500 tracking-wide'>
               Ideal for professionals in the packaging or related industries
               seeking a comprehensive understanding of the packaging industry.
-              With the flexibility of one-year access, this is an excellent
+              With the flexibility of 6-month access, this is an excellent
               choice for salespeople, packaging engineers, marketing leads,
               operations personnel, and procurement professionals looking to
               gain valuable insights.
