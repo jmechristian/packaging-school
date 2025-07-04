@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
 import { getAWSUser, updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
@@ -22,9 +21,11 @@ export default withPageAuthRequired(function Page() {
 
     // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
     const shouldShowOnboarding =
-      (awsUser && awsUser.onboardingComplete === false) || !thinkificUser;
+      (awsUser && awsUser.onboardingComplete === false) ||
+      !user.given_name ||
+      !user.family_name;
     setShowOnboardingModal(shouldShowOnboarding);
-  }, [awsUser, thinkificUser]);
+  }, [awsUser, user]);
 
   const refreshUser = async () => {
     setIsLoading(true);
@@ -126,7 +127,6 @@ export default withPageAuthRequired(function Page() {
       <ProfileDashboard refreshUser={refreshUser} />
       {showOnboardingModal && (
         <OnboardingModal
-          show={showOnboardingModal}
           onClose={() => setShowOnboardingModal(false)}
           refreshUser={refreshUser}
         />

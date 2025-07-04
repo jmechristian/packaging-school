@@ -18,15 +18,6 @@ const users = [
     verify_email: false,
   },
   {
-    email: 's.defares@eu.denso.com',
-    user_metadata: {},
-    given_name: 'Steven',
-    family_name: 'Defares',
-    name: '',
-    password: '=B-B.Y<1Py9e',
-    verify_email: false,
-  },
-  {
     email: 'anthony.mansini@mckee.com',
     user_metadata: {},
     given_name: 'Anthony ',
