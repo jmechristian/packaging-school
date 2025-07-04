@@ -131,6 +131,23 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
     }
   };
 
+  const handleOldUser = async () => {
+    await updateAWSUser({
+      id: awsUser.id,
+      name: `${formData.firstName} ${formData.lastName}`,
+      company: formData.company,
+      title: formData.title,
+      bio: formData.bio,
+      interests: formData.interests,
+      goals: formData.goals,
+      onboardingComplete: true,
+      onboardingCompleteDate: new Date().toISOString(),
+      psXp: awsUser.psXp + 50,
+    });
+    await refreshUser();
+    onClose();
+  };
+
   return (
     <div className='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center'>
       <div className='bg-white dark:bg-dark-dark rounded-lg p-5 max-w-5xl w-full'>
@@ -276,14 +293,25 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
                 >
                   Sign Out
                 </button>
-                <div className='relative group'>
-                  <button
-                    type='submit'
-                    className={`px-6 py-2 rounded font-bold ${'bg-clemson text-white hover:bg-clemson/80'}`}
-                  >
-                    Let&apos;s go!
-                  </button>
-                </div>
+                {awsUser.name ? (
+                  <div className='relative group'>
+                    <button
+                      onClick={() => handleOldUser()}
+                      className={`px-6 py-2 rounded font-bold ${'bg-clemson text-white hover:bg-clemson/80'}`}
+                    >
+                      Let&apos;s go!
+                    </button>
+                  </div>
+                ) : (
+                  <div className='relative group'>
+                    <button
+                      type='submit'
+                      className={`px-6 py-2 rounded font-bold ${'bg-clemson text-white hover:bg-clemson/80'}`}
+                    >
+                      Let&apos;s go!
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
