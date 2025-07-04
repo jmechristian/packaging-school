@@ -15,7 +15,7 @@ export default withPageAuthRequired(function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (awsUser && thinkificUser) {
+    if (awsUser) {
       setIsLoading(false);
     }
 
