@@ -226,7 +226,7 @@ export default function HeaderNew() {
       { name: 'Learning Paths', href: '/paths' },
       { name: 'Lessons', href: '/lessons' },
       { name: 'About', href: '/about' },
-      { name: 'Campus Store', href: '#' },
+      { name: 'Campus Store', href: 'https://packagingschool.printful.me/' },
     ],
   };
 
