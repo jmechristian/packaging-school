@@ -144,7 +144,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
       onboardingCompleteDate: new Date().toISOString(),
       psXp: awsUser.psXp + 50,
     });
-    await refreshUser();
+    // await refreshUser();
     onClose();
   };
 
