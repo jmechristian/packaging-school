@@ -5,8 +5,16 @@ import {
   updateUser,
   createCPSForm,
 } from '../../src/graphql/mutations';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 export default function ProfileHead({ user }) {
+  const { navigateToThinkific } = useThinkificLink();
+
+  const handleThinkificClick = async (e) => {
+    e.preventDefault();
+    await navigateToThinkific('https://learn.packagingschool.com');
+  };
+
   return (
     <div className='overflow-hidden rounded-t-lg bg-white dark:bg-dark-mid box-shadow-lg'>
       <h2 className='sr-only' id='profile-overview-title'>
@@ -47,15 +55,13 @@ export default function ProfileHead({ user }) {
             </div>
           </div>
           <div className='bg-green-600  mt-6 lg:mt-0  px-4 py-2.5 rounded-lg text-center shadow-sm flex items-center justify-center'>
-            <a
-              href='https://learn.packagingschool.com'
-              target='_blank'
-              rel='noreferrer'
+            <button
+              onClick={handleThinkificClick}
               className='text-sm text-white font-semibold text-center flex flex-col'
             >
               <div className='text-lg'>Already a Student?</div>
               <div className='leading-none'>Go to your LMS Dashboard</div>
-            </a>
+            </button>
           </div>
         </div>
       </div>

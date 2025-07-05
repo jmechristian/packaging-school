@@ -20,7 +20,7 @@ import ProfilePaths from './ProfilePaths';
 import ProfileApplications from './ProfileApplications';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
-const ProfileDashboard = ({ refreshUser, isLoading }) => {
+const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
   );
@@ -93,7 +93,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
     setActiveTab(tabValue);
     // Update URL without full page reload
     if (tabType === 'external') {
-      window.open(tabValue, '_blank');
+      navigateToThinkific(tabValue, tabValue);
     } else {
       router.push(
         {
@@ -156,6 +156,7 @@ const ProfileDashboard = ({ refreshUser, isLoading }) => {
             courses={thinkificUser && thinkificUser.courses.nodes}
             email={user?.email}
             refreshUser={refreshUser}
+            navigateToThinkific={navigateToThinkific}
           />
         );
       case 'certificates':

@@ -37,6 +37,7 @@ const PaginationControls = ({ currentPage, totalPages, onPageChange }) => (
 );
 
 const NoPassEnrollments = ({
+  navigateToThinkific,
   activeEnrollments,
   expiredEnrollments,
   courses,
@@ -82,6 +83,7 @@ const NoPassEnrollments = ({
                 enrollment={enrollment}
                 course={matchedCourse}
                 refreshUser={refreshUser}
+                navigateToThinkific={navigateToThinkific}
               />
             );
           })}

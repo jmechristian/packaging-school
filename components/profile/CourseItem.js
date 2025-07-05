@@ -10,7 +10,7 @@ import {
   updateUserReview,
 } from '../../helpers/api';
 
-const CourseItem = ({ course, enrollment }) => {
+const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
   const router = useRouter();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -137,9 +137,9 @@ const CourseItem = ({ course, enrollment }) => {
           <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
           <button
             onClick={() => {
-              window.open(
+              navigateToThinkific(
                 `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                '_blank'
+                `https://learn.packagingschool.com/courses/take/${course.slug}`
               );
             }}
             className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'

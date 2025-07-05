@@ -6,6 +6,7 @@ import ProfileDashboard from '../../components/profile/ProfileDashboard';
 import { getAWSUser, updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
 import { TourModal } from '../../components/profile/TourModal';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export default withPageAuthRequired(function Page() {
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const { navigateToThinkific } = useThinkificLink();
   useEffect(() => {
     if (awsUser) {
       setIsLoading(false);
@@ -122,7 +123,10 @@ export default withPageAuthRequired(function Page() {
 
   return (
     <>
-      <ProfileDashboard refreshUser={refreshUser} />
+      <ProfileDashboard
+        refreshUser={refreshUser}
+        navigateToThinkific={navigateToThinkific}
+      />
       {showOnboardingModal && (
         <OnboardingModal
           onClose={() => setShowOnboardingModal(false)}

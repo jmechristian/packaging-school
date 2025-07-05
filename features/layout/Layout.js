@@ -35,7 +35,6 @@ const Layout = ({ children }) => {
   const { showToast } = useSelector((state) => state.nav);
   const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
-  const userProcessedRef = useRef(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -70,30 +69,19 @@ const Layout = ({ children }) => {
       }
     };
 
-    if (!userIsLoading && user && !userProcessedRef.current) {
-      // console.log('🔍 Current user state:', user);
-      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+    user && dispatch(setUser(user));
+    user && checkUser();
+  }, [user]);
 
-      if (user.ssoRedirectUrl && !hasCompletedSSO) {
-        sessionStorage.setItem('ssoComplete', 'true');
-        setTimeout(() => {
-          window.location.href = user.ssoRedirectUrl;
-        }, 100);
-        return;
-      }
-
-      userProcessedRef.current = true;
-      user && dispatch(setUser(user));
-      user && checkUser();
-    }
-  }, [user, userIsLoading]);
+  // SSO is now handled in specific components when needed
+  // (e.g., after onboarding completion, course enrollment, etc.)
 
   // Clear SSO state when component unmounts
-  useEffect(() => {
-    return () => {
-      sessionStorage.removeItem('ssoComplete');
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     sessionStorage.removeItem('ssoComplete');
+  //   };
+  // }, []);
 
   useEffect(() => {
     const checkThinkificUser = async () => {

@@ -4,7 +4,12 @@ import NoPassEnrollments from './NoPassEnrollments';
 import PassEnrollments from './PassEnrollments';
 import PackPassToggle from './PackPassToggle';
 
-const ProfileEnrollments = ({ email, courses, refreshUser }) => {
+const ProfileEnrollments = ({
+  email,
+  courses,
+  refreshUser,
+  navigateToThinkific,
+}) => {
   const [packPass, setPackPass] = useState(false);
   const [enrollments, setEnrollments] = useState([]);
   const [filter, setFilter] = useState('active');
@@ -178,6 +183,7 @@ const ProfileEnrollments = ({ email, courses, refreshUser }) => {
           courses={courses}
           enrollmentsPerPage={enrollmentsPerPage}
           refreshUser={refreshUser}
+          navigateToThinkific={navigateToThinkific}
         />
       )}
     </div>
