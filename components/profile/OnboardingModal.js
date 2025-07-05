@@ -135,7 +135,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
           console.error('Error creating Thinkific user:', error);
         }
       }
-      // await refreshUser();
+      await refreshUser();
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -159,7 +159,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
       onboardingCompleteDate: new Date().toISOString(),
       psXp: awsUser.psXp + 50,
     });
-    // await refreshUser();
+    await refreshUser();
     onClose();
   };
 
