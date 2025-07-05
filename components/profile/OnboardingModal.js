@@ -8,11 +8,15 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { MdError } from 'react-icons/md';
 import { useUser } from '@auth0/nextjs-auth0/client';
-
+import { useThinkificSSO } from '../../hooks/useThinkificSSO';
 export const OnboardingModal = ({ onClose, refreshUser }) => {
   const { user } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const router = useRouter();
+  const [triggerSSO, setTriggerSSO] = useState(false);
+
+  // Call the hook at component level
+
   const [formData, setFormData] = useState({
     firstName: awsUser.name.split(' ')[0],
     lastName: awsUser.name.split(' ')[1],
@@ -24,7 +28,17 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
   });
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  useThinkificSSO(
+    triggerSSO
+      ? {
+          user: {
+            email: awsUser.email,
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          },
+        }
+      : null
+  );
   const baseUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3001'
@@ -109,18 +123,19 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
               lastName: formData.lastName,
             }),
           });
-          const ssoUrl = await handleSSO({
-            email: awsUser.email,
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            returnTo: 'https://packagingschool.com/profile?tab=courses',
-          });
-          window.location.href = ssoUrl;
+          // const ssoUrl = await handleSSO({
+          //   email: awsUser.email,
+          //   first_name: formData.firstName,
+          //   last_name: formData.lastName,
+          //   returnTo: 'https://packagingschool.com/profile?tab=courses',
+          // });
+          // window.location.href = ssoUrl;
+          setTriggerSSO(true);
         } catch (error) {
           console.error('Error creating Thinkific user:', error);
         }
       }
-      await refreshUser();
+      // await refreshUser();
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
