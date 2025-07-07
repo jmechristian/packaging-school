@@ -29,7 +29,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
   const baseUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3001'
-      : 'https://packagingschool.com';
+      : window.location.origin;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
