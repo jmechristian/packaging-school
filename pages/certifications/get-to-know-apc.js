@@ -14,9 +14,14 @@ import APCStart from '../../components/certifications/aps/APCStart';
 import APCAPS from '../../components/certifications/aps/APCAPS';
 import Head from 'next/head';
 import TestimonialSlider from '../../components/shared/TestimonialSlider';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
 import Meta from '../../components/shared/Meta';
 
 const Page = ({ testimonials }) => {
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+
   return (
     <>
       <Meta
@@ -65,9 +70,11 @@ const Page = ({ testimonials }) => {
             headline={'Not sure if this is for you or your team?'}
             subheadline={'There is no cost to begin.  Try a free demo today.'}
             buttonLink={
-              'https://learn.packagingschool.com/enroll/38965?et=free'
+              'https://learn.packagingschool.com/enroll/735516?et=free'
             }
             buttonText={'Take me to my demo.'}
+            awsUser={awsUser}
+            navigateToThinkific={navigateToThinkific}
           />
         </div>
       </div>

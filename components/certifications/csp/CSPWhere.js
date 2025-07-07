@@ -1,10 +1,15 @@
 import React from 'react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { useThinkificLink } from '../../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
 
 import { SectionHeading } from '../../shared/SectionHeading';
 
 const CSPWhere = () => {
+  const { navigateToThinkific } = useThinkificLink();
+  const { awsUser } = useSelector((state) => state.auth);
+
   return (
     <div className='container-7xl flex flex-col gap-9 scroll-mt-36' id='where'>
       <SectionHeading number='3'>Where do I start?</SectionHeading>
@@ -56,24 +61,52 @@ const CSPWhere = () => {
                   USD
                 </span>
               </p>
-              <Link
-                href='https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
-                className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-              >
-                Enroll Now
-              </Link>
+              {awsUser && awsUser.name.includes(' ') ? (
+                <button
+                  onClick={() =>
+                    navigateToThinkific(
+                      'https://learn.packagingschool.com/enroll/2772370?price_id=3600658',
+                      'https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
+                    )
+                  }
+                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+                >
+                  Enroll Now
+                </button>
+              ) : (
+                <Link
+                  href='https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
+                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+                >
+                  Enroll Now
+                </Link>
+              )}
               <p className='mt-6 text-xs leading-4 text-gray-600'>or</p>
               <p className='flex items-baseline justify-center gap-x-2'>
                 <span className='text-5xl font-bold tracking-tight text-gray-900 lg:!text-3xl'>
                   6 Monthly Payments of $415
                 </span>
               </p>
-              <Link
-                href='https://learn.packagingschool.com/enroll/2772370?price_id=4360274'
-                className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-              >
-                Enroll Now
-              </Link>
+              {awsUser && awsUser.name.includes(' ') ? (
+                <button
+                  onClick={() =>
+                    navigateToThinkific(
+                      'https://learn.packagingschool.com/enroll/2772370?price_id=4360274',
+                      'https://learn.packagingschool.com/enroll/2772370?price_id=4360274'
+                    )
+                  }
+                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+                >
+                  Enroll Now
+                </button>
+              ) : (
+                <Link
+                  href='https://learn.packagingschool.com/enroll/2772370?price_id=4360274'
+                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+                >
+                  Enroll Now
+                </Link>
+              )}
 
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
