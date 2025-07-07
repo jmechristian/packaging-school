@@ -454,8 +454,8 @@ const Page = () => {
                   {categoryMenu.slice(0, 8).map((cat) => (
                     <div
                       key={cat.value}
-                      className={` transition-all ease-in flex w-fit items-center justify-between cursor-pointer ${
-                        isInFilterArray(cat.value) ? 'bg-white' : ''
+                      className={` transition-all ease-in flex w-full items-center justify-between cursor-pointer ${
+                        isInFilterArray(cat.value) ? 'bg-slate-200' : ''
                       }`}
                       onClick={() => filterClickHandler(cat.value)}
                     >
