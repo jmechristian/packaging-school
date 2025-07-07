@@ -293,7 +293,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
                 >
                   Sign Out
                 </button>
-                {awsUser.name ? (
+                {awsUser.name.includes(' ') ? (
                   <div className='relative group'>
                     <button
                       onClick={() => handleOldUser()}
