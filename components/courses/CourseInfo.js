@@ -5,7 +5,9 @@ import VideoPlayer from '../VideoPlayer';
 import HoverCard from '../shared/HoverCard';
 import { LuRocket } from 'react-icons/lu';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
-
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 const CourseInfo = ({
   seoImage,
   price,
@@ -18,6 +20,9 @@ const CourseInfo = ({
   partOf,
   type,
 }) => {
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const router = useRouter();
   return (
     <section>
       <div className='dark:bg-dark-mid bg-slate-200 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,0.20)]'>
@@ -47,7 +52,11 @@ const CourseInfo = ({
                     <div className='grid grid-cols-2 border border-black'>
                       <div
                         className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
-                        onClick={() => window.open(`${link}`, '_blank')}
+                        onClick={() =>
+                          awsUser && awsUser.name.includes(' ')
+                            ? navigateToThinkific(link, link)
+                            : router.push(`${link}`)
+                        }
                       >
                         <div className='h4-base'>Buy Now</div>
                         <div className='h2-base'>${price}</div>
@@ -63,7 +72,12 @@ const CourseInfo = ({
                       <div
                         className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-base-mid hover:bg-neutral-800 transition-all ease-in cursor-pointer'
                         onClick={() =>
-                          window.open(`${subscriptionLink}`, '_blank')
+                          awsUser && awsUser.name.includes(' ')
+                            ? navigateToThinkific(
+                                subscriptionLink,
+                                subscriptionLink
+                              )
+                            : router.push(`${subscriptionLink}`)
                         }
                       >
                         <div className='h4-base text-white'>Subscribe</div>

@@ -38,6 +38,7 @@ import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconToolti
 import { createCourseSearch } from '../src/graphql/mutations';
 import { listLMSCourses } from '../src/graphql/queries';
 import { setAWSUser } from '../features/auth/authslice';
+import { useThinkificLink } from '../hooks/useThinkificLink';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const Page = () => {
@@ -45,7 +46,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
-
+  const { navigateToThinkific } = useThinkificLink();
   const [isLoading, setIsLoading] = useState(true);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilter, setIsFilter] = useState(false);
@@ -365,8 +366,11 @@ const Page = () => {
   const cardPurchaseHandler = async (id, link) => {
     await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
-    router.push(`${link}`);
-    console.log('link', link);
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(link, link);
+    } else {
+      router.push(`${link}`);
+    }
   };
 
   const handleCertCardClick = async (

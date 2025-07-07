@@ -1,11 +1,19 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { useThinkificLink } from '../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
 
 const CTAButtonTrial = ({ link }) => {
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
 
   const clickHandler = () => {
-    router.push(link);
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(link, link);
+    } else {
+      router.push(link);
+    }
   };
 
   return (

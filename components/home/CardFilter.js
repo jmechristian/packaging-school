@@ -18,12 +18,14 @@ import {
 import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/router';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 const CardFilter = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
   const { awsUser, location } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
   const [activeTab, setActiveTab] = useState('Certificates');
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,7 +133,11 @@ const CardFilter = () => {
   const cardPurchaseHandler = async (id, link) => {
     await registgerCourseClick(id, router.asPath, location, link, 'HOME');
 
-    router.push(link);
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(link, link);
+    } else {
+      router.push(link);
+    }
   };
 
   const handleCertCardClick = async (
@@ -145,7 +151,7 @@ const CardFilter = () => {
       ipAddress: location.ipAddress,
       device: deviceType,
       object: abbreviation,
-      page: '/all_courses',
+      page: '/',
       type: type,
     });
 

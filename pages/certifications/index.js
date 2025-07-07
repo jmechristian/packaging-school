@@ -14,7 +14,7 @@ import BrutalButton from '../../components/shared/BrutalButton';
 import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
 import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
-
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { CertCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 
@@ -35,7 +35,7 @@ export const RiveDemo = () => {
 const Index = ({ certificates }) => {
   const { location } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
-
+  const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
 
   const handleCardClick = async (abbreviation, type, link, applicationLink) => {

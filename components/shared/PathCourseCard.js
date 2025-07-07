@@ -9,10 +9,14 @@ import {
   MdClose,
 } from 'react-icons/md';
 import ProgressDonut from './ProgressDonut';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
 const PathCourseCard = ({ course, enrollment }) => {
   const [courseData, setCourseData] = useState(null);
   const [courseSlug, setCourseSlug] = useState(null);
   const router = useRouter();
+  const { navigateToThinkific } = useThinkificLink();
+  const { awsUser } = useSelector((state) => state.auth);
   useEffect(() => {
     getCourse(course.courseId).then((data) => {
       setCourseData(data);
@@ -24,11 +28,18 @@ const PathCourseCard = ({ course, enrollment }) => {
 
   const handleEnroll = () => {
     if (enrollment && !enrollment.expired) {
-      router.push(
-        `https://learn.packagingschool.com/courses/take/${courseSlug}`
-      );
+      if (awsUser && awsUser.name.includes(' ')) {
+        navigateToThinkific(
+          `https://learn.packagingschool.com/courses/take/${courseSlug}`,
+          `https://learn.packagingschool.com/courses/take/${courseSlug}`
+        );
+      }
     } else {
-      router.push(courseData.link);
+      if (awsUser && awsUser.name.includes(' ')) {
+        navigateToThinkific(courseData.link, courseData.link);
+      } else {
+        router.push(courseData.link);
+      }
     }
   };
 
