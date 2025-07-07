@@ -54,7 +54,7 @@ const Layout = ({ children }) => {
         });
 
         dispatch(setAWSUser(newUser));
-        const level = getUserLevel(newUserXp.totalXp, newUser);
+
         dispatch(setUserXp(newUserXp));
       } else {
         dispatch(setAWSUser(dbUser));
