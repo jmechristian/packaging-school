@@ -7,11 +7,11 @@ import { getAWSUser, updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
 import { TourModal } from '../../components/profile/TourModal';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { useUser } from '@auth0/auth0-react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
-  const { user } = useUser();
+  const { user, isLoading: userIsLoading } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
