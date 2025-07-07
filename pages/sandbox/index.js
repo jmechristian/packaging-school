@@ -10,7 +10,6 @@ import {
   GiAstronautHelmet,
   GiDeadlyStrike,
 } from 'react-icons/gi';
-import users from '../../scripts/users';
 
 const Sandbox = () => {
   return (
