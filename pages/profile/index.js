@@ -7,10 +7,12 @@ import { getAWSUser, updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
 import { TourModal } from '../../components/profile/TourModal';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useUser } from '@auth0/auth0-react';
 
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
-  const { user, awsUser, thinkificUser } = useSelector((state) => state.auth);
+  const { user } = useUser();
+  const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +20,7 @@ export default withPageAuthRequired(function Page() {
   useEffect(() => {
     if (awsUser) {
       setIsLoading(false);
-      setShowOnboardingModal(!awsUser.name);
+      setShowOnboardingModal(!user.given_name || !user.family_name);
     }
 
     // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
