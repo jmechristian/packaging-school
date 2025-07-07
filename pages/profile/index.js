@@ -20,7 +20,7 @@ export default withPageAuthRequired(function Page() {
   useEffect(() => {
     if (awsUser) {
       setIsLoading(false);
-      setShowOnboardingModal(!user.name || !user.name.includes(' '));
+      setShowOnboardingModal(!awsUser.name || !awsUser.name.includes(' '));
     }
 
     // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
