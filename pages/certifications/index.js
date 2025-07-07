@@ -33,7 +33,7 @@ export const RiveDemo = () => {
 };
 
 const Index = ({ certificates }) => {
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
@@ -49,11 +49,35 @@ const Index = ({ certificates }) => {
     });
 
     if (type === 'CERTIFICATE-VIEW') {
-      router.push(link);
+      if (
+        awsUser &&
+        awsUser.name.includes(' ') &&
+        link.includes('learn.packagingschool.com')
+      ) {
+        navigateToThinkific(link, link);
+      } else {
+        router.push(link);
+      }
     } else if (type === 'CERTIFICATE-APPLY') {
-      router.push(applicationLink);
+      if (
+        awsUser &&
+        awsUser.name.includes(' ') &&
+        applicationLink.includes('learn.packagingschool.com')
+      ) {
+        navigateToThinkific(applicationLink, applicationLink);
+      } else {
+        router.push(applicationLink);
+      }
     } else {
-      router.push(link);
+      if (
+        awsUser &&
+        awsUser.name.includes(' ') &&
+        link.includes('learn.packagingschool.com')
+      ) {
+        navigateToThinkific(link, link);
+      } else {
+        router.push(link);
+      }
     }
   };
 
@@ -198,7 +222,7 @@ const Index = ({ certificates }) => {
                     ) =>
                       handleCardClick(abbreviation, type, link, applicationLink)
                     }
-                    purchaseText='Enroll Now'
+                    purchaseText='Apply Now'
                   />
                 </div>
               </div>
