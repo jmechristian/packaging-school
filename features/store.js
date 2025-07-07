@@ -11,5 +11,5 @@ export const store = configureStore({
     course_filter: courseFilterReducer,
     auth: authslice,
   },
-  // devTools: process.env.NODE_ENV !== 'production',
+  devTools: process.env.NODE_ENV !== 'production',
 });
