@@ -491,7 +491,9 @@ export default function HeaderNew() {
                         </Popover>
                       ) : (
                         <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
-                          <Link href={`/api/auth/login?returnTo=/profile`}>
+                          <Link
+                            href={`/api/auth/login?returnTo=${currentPath}`}
+                          >
                             <div className='flex items-center gap-1 px-1'>
                               <MdLogin color='#6B7A8F' size={24} />
                               <span className='text-sm font-semibold text-slate-700'>
