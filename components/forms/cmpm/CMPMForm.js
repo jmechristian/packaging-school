@@ -32,7 +32,7 @@ const CMPMForm = ({ methods, email, free }) => {
     }
   }, [email]);
 
-  const { user } = useSelector((state) => state.auth);
+  const { awsUser } = useSelector((state) => state.auth);
 
   const captureEmail = (val) => setIsEmail(val);
 
@@ -41,7 +41,7 @@ const CMPMForm = ({ methods, email, free }) => {
   const getAndSetUser = async () => {
     const currentUser = await API.graphql({
       query: usersByEmail,
-      variables: { email: user.email },
+      variables: { email: awsUser.email },
     });
 
     if (currentUser.data.usersByEmail.items[0]) {
@@ -50,14 +50,14 @@ const CMPMForm = ({ methods, email, free }) => {
   };
 
   const sendFormToAWS = async () => {
-    if (user && user.cmpmFormID) {
+    if (awsUser && awsUser.cmpmFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: updateCMPMForm,
         variables: {
           input: {
-            id: user.id,
+            id: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -86,15 +86,15 @@ const CMPMForm = ({ methods, email, free }) => {
       });
       setIsLoading(false);
       setIsUpdated(true);
-    } else if (user && !user.CMPMFormID) {
+    } else if (awsUser && !awsUser.cmpmFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: createCMPMForm,
         variables: {
           input: {
-            id: user.id,
-            cMPMFormUserId: user.id,
+            id: awsUser.id,
+            cMPMFormUserId: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -126,8 +126,8 @@ const CMPMForm = ({ methods, email, free }) => {
         query: updateUser,
         variables: {
           input: {
-            id: user.id,
-            cmpmFormID: user.id,
+            id: awsUser.id,
+            cmpmFormID: awsUser.id,
           },
         },
       });
@@ -137,7 +137,7 @@ const CMPMForm = ({ methods, email, free }) => {
   };
 
   const submitFormToAWS = async () => {
-    if (!user) {
+    if (!awsUser) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
@@ -174,14 +174,14 @@ const CMPMForm = ({ methods, email, free }) => {
       setIsLoading(false);
       setIsUpdated(true);
       router.push('/cmpm-application-confirmation');
-    } else if (user && user.cmpmFormID) {
+    } else if (awsUser && awsUser.cmpmFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: updateCMPMForm,
         variables: {
           input: {
-            id: user.id,
+            id: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -204,8 +204,8 @@ const CMPMForm = ({ methods, email, free }) => {
             yearGoals: methods.getValues('yearGoals'),
             cmpmGoals: methods.getValues('cmpmGoals'),
             moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: user.cmpmForm.paymentConfirmation
-              ? user.cmpmForm.paymentConfirmation
+            paymentConfirmation: awsUser.cmpmForm.paymentConfirmation
+              ? awsUser.cmpmForm.paymentConfirmation
               : methods.getValues('paymentConfirmation'),
             status: 'SUBMITTED',
           },
@@ -214,15 +214,15 @@ const CMPMForm = ({ methods, email, free }) => {
       setIsLoading(false);
       setIsUpdated(true);
       router.push('/cmpm-application-confirmation');
-    } else if (user && !user.cmpmFormID) {
+    } else if (awsUser && !awsUser.cmpmFormID) {
       setIsUpdated(false);
       setIsLoading(true);
       await API.graphql({
         query: createCMPMForm,
         variables: {
           input: {
-            id: user.id,
-            cMPMFormUserId: user.id,
+            id: awsUser.id,
+            cMPMFormUserId: awsUser.id,
             firstName: methods.getValues('firstName'),
             lastName: methods.getValues('lastName'),
             email: methods.getValues('email'),
@@ -255,8 +255,8 @@ const CMPMForm = ({ methods, email, free }) => {
         query: updateUser,
         variables: {
           input: {
-            id: user.id,
-            cmpmFormID: user.id,
+            id: awsUser.id,
+            cmpmFormID: awsUser.id,
           },
         },
       });
@@ -271,10 +271,10 @@ const CMPMForm = ({ methods, email, free }) => {
     const data = methods.getValues();
     console.log(data);
     const rawData = JSON.stringify(data);
-    if (user) {
+    if (awsUser) {
       await sendFormToAWS(data);
       getAndSetUser();
-    } else if (!user) {
+    } else if (!awsUser) {
       Cookies.set('cmpmFormSave', rawData, { expires: 7 });
       dispatch(toggleSignInModal());
     }
