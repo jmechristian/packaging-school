@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
-const CPSPricing = ({ email, free }) => {
+const CPSPricing = ({ email, free, onSubmit }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const [stripePromise, setStripePromise] = useState(() =>
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -49,6 +49,7 @@ const CPSPricing = ({ email, free }) => {
                       }
                       type={'CPS'}
                       email={email}
+                      onSubmit={onSubmit}
                     />
                   </Elements>
                 ) : (
