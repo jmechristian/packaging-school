@@ -6,6 +6,7 @@ import LMSCourseCard from '../shared/LMSCourseCard';
 import { getAllCourses } from '../../helpers/api';
 
 const LibraryCourseGrid = ({ courses, coupon, discount, isPDA }) => {
+  console.log('courses', courses);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [allCourses, setAllCourses] = useState([]);
 
@@ -82,6 +83,7 @@ const LibraryCourseGrid = ({ courses, coupon, discount, isPDA }) => {
                       ? 58.1
                       : discount
                   }
+                  courses={courses}
                 />
               </div>
             ))

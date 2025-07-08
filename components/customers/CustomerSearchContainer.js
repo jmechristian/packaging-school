@@ -12,6 +12,7 @@ import WiredCourseCard from '../shared/WiredCourseCard';
 import { getAllCourses } from '../../helpers/api';
 
 const CustomerSearchContainer = ({ reference, link_text, courses }) => {
+  console.log('courses', courses);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActiveSearch, setIsActiveSearch] = useState(false);
   const [isSearchTerm, setIsSearchTerm] = useState('');

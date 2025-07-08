@@ -1953,8 +1953,22 @@ export const saveCmpmForm = async (id, data) => {
 };
 
 export const getAllCourses = async () => {
-  const res = await API.graphql({
-    query: listLMSCourses,
-  });
-  return res.data.listLMSCourses.items;
+  let allCourses = [];
+  let nextToken = null;
+
+  do {
+    const res = await API.graphql({
+      query: listLMSCourses,
+      variables: {
+        limit: 1000, // Set a high limit to reduce number of requests
+        nextToken: nextToken,
+      },
+    });
+
+    const courses = res.data.listLMSCourses.items;
+    allCourses = [...allCourses, ...courses];
+    nextToken = res.data.listLMSCourses.nextToken;
+  } while (nextToken);
+
+  return allCourses;
 };

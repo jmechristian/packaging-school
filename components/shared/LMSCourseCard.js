@@ -42,6 +42,7 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
           id: id,
         },
       });
+      console.log('course', course);
       if (course.data.getLMSCourse) {
         setIsCourse(course.data.getLMSCourse);
         setIsBackgroudColor(
