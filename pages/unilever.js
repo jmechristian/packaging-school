@@ -211,6 +211,7 @@ const faqs = [
 ];
 
 const Page = ({ customer }) => {
+  console.log(customer);
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [isForm, setIsForm] = useState('');

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -9,16 +9,22 @@ import {
 } from '@heroicons/react/24/solid';
 
 import WiredCourseCard from '../shared/WiredCourseCard';
+import { getAllCourses } from '../../helpers/api';
 
-const CustomerSearchContainer = ({ courses, reference, link_text }) => {
-  console.log(courses);
+const CustomerSearchContainer = ({ reference, link_text, courses }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActiveSearch, setIsActiveSearch] = useState(false);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isSearchCourses, setIsSearchCourses] = useState('');
+  const [allCourses, setAllCourses] = useState([]);
 
-  const { allCourses } = useSelector((state) => state.course_filter);
-  /////////Forget all this, just pass the courses array, sort by clicks, populate the NewCourseCard inside each one
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const courses = await getAllCourses();
+      setAllCourses(courses);
+    };
+    fetchCourses();
+  }, []);
 
   const initCourses = useMemo(() => {
     const filtered =
@@ -38,14 +44,7 @@ const CustomerSearchContainer = ({ courses, reference, link_text }) => {
   const coursesToShow = useMemo(() => {
     // Switch Suport Links to Filtered after we have that set
     return (
-      initCourses &&
-      initCourses
-        .sort((a, b) => b.clicks - a.clicks)
-        .filter(
-          (o) =>
-            o.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-            o.subheadline.toLowerCase().includes(isSearchTerm.toLowerCase())
-        )
+      initCourses && initCourses.sort((a, b) => b.clicks - a.clicks).slice(0, 3)
     );
   }, [initCourses, isSearchTerm]);
 

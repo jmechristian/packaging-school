@@ -48,6 +48,8 @@ import {
   deleteUserWishlist,
   updateLearningPathProgress,
   updateCourseReview,
+  createCMPMForm,
+  updateCMPMForm,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -1894,4 +1896,27 @@ export const createUsers = async (users) => {
       console.error(`Failed to create user ${user.email}:`, error);
     }
   }
+};
+
+export const createCmpmFromAppStart = async (data) => {
+  const res = await API.graphql({
+    query: createCMPMForm,
+    variables: { input: data },
+  });
+  return res.data.createCMPMForm;
+};
+
+export const saveCmpmForm = async (id, data) => {
+  const res = await API.graphql({
+    query: updateCMPMForm,
+    variables: { input: { id, ...data } },
+  });
+  return res.data.updateCMPMForm;
+};
+
+export const getAllCourses = async () => {
+  const res = await API.graphql({
+    query: listLMSCourses,
+  });
+  return res.data.listLMSCourses.items;
 };

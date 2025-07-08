@@ -3,10 +3,19 @@ import { useSelector } from 'react-redux';
 import { MdArrowOutward, MdSearch } from 'react-icons/md';
 import Pagination from '../shared/Pagination';
 import LMSCourseCard from '../shared/LMSCourseCard';
+import { getAllCourses } from '../../helpers/api';
 
 const LibraryCourseGrid = ({ courses, coupon, discount, isPDA }) => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
-  const { allCourses } = useSelector((state) => state.course_filter);
+  const [allCourses, setAllCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const courses = await getAllCourses();
+      setAllCourses(courses);
+    };
+    fetchCourses();
+  }, []);
 
   const initCourses = useMemo(() => {
     const filtered =
