@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { MdArrowOutward, MdSearch } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { getAuthors } from '../../helpers/api';
+import { getAllLearningOfTheMonths, getAuthors } from '../../helpers/api';
 import Pagination from '../shared/Pagination';
 
 const createDate = (date) => {
@@ -146,7 +146,15 @@ const SocialGridItem = ({ lesson }) => {
 const LibraryLessonGrid = () => {
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isCurrentPage, setIsCurrentPage] = useState(1);
-  const { allLessons } = useSelector((state) => state.course_filter);
+  const [allLessons, setAllLessons] = useState([]);
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      const lessons = await getAllLearningOfTheMonths();
+      setAllLessons(lessons);
+    };
+    fetchLessons();
+  }, []);
 
   const libraryRef = useRef();
 
