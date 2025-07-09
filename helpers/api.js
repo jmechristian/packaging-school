@@ -1944,10 +1944,10 @@ export const createCmpmFromAppStart = async (data) => {
   return res.data.createCMPMForm;
 };
 
-export const saveCmpmForm = async (id, data) => {
+export const saveCmpmForm = async (data) => {
   const res = await API.graphql({
     query: updateCMPMForm,
-    variables: { input: { id, ...data } },
+    variables: { input: { ...data } },
   });
   return res.data.updateCMPMForm;
 };

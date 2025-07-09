@@ -12,6 +12,7 @@ import { API } from 'aws-amplify';
 import { createCertAppStart } from '../src/graphql/mutations';
 import Loader from '../components/shared/Loader';
 import Meta from '../components/shared/Meta';
+import { createCmpmFromAppStart } from '../helpers/api';
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -116,6 +117,28 @@ const Page = () => {
       },
     });
 
+    const formId = await createCmpmFromAppStart({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      streetAddress: '',
+      addressExtra: '',
+      city: '',
+      state: '',
+      birthYear: '',
+      companyName: '',
+      companyTitle: '',
+      linkedin: '',
+      background: '',
+      whyPackaging: '',
+      areaOfInterest: '',
+      yearGoals: '',
+      cmpmGoals: '',
+      moreAboutYou: '',
+      status: 'DRAFT',
+    });
+
     await automateDealHandler(
       data.email,
       'CMPM',
@@ -136,9 +159,7 @@ const Page = () => {
       }),
     });
     setIsLoading(false);
-    router.push(
-      `/continue-certificate-of-mastery-in-packaging-management?firstName=${data.firstName}&lastName=${data.lastName}&email=${data.email}&phone=${data.phone}`
-    );
+    router.push(`/forms/cmpm/${formId.id}`);
   };
   return (
     <>

@@ -5,25 +5,23 @@ import {
   createCMPMForm,
   updateUser,
 } from '../../../src/graphql/mutations';
-import { usersByEmail } from '../../../src/graphql/queries';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSignInModal } from '../../../features/layout/layoutSlice';
-import { setUser } from '../../../features/auth/authslice';
 import CMPMPersonalInfo from './CMPMPersonalInfo';
 import CMPMProfessionalInfo from './CMPMProfessionalInfo';
 import { useRouter } from 'next/router';
 import CMPMGoals from './CMPMGoals';
 import CMPMSessionInfo from './CMPMSessionInfo';
 import CMPMPricing from './CMPMPricing';
-const CMPMForm = ({ methods, email, free }) => {
+import { MdCopyAll } from 'react-icons/md';
+import { saveCmpmForm, getAWSUser } from '../../../helpers/api';
+import { setAWSUser } from '../../../features/auth/authslice';
+const CMPMForm = ({ methods, email, free, id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [cookieData, setCookieData] = useState(undefined);
   const [isEmail, setIsEmail] = useState('');
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const paymentConfirmed = methods.watch('paymentConfirmation');
 
   useEffect(() => {
@@ -36,248 +34,211 @@ const CMPMForm = ({ methods, email, free }) => {
 
   const captureEmail = (val) => setIsEmail(val);
 
-  const dispatch = useDispatch();
+  // const getAndSetUser = async () => {
+  //   const currentUser = await API.graphql({
+  //     query: usersByEmail,
+  //     variables: { email: awsUser.email },
+  //   });
 
-  const getAndSetUser = async () => {
-    const currentUser = await API.graphql({
-      query: usersByEmail,
-      variables: { email: awsUser.email },
-    });
+  //   if (currentUser.data.usersByEmail.items[0]) {
+  //     dispatch(setUser(currentUser.data.usersByEmail.items[0]));
+  //   }
+  // };
 
-    if (currentUser.data.usersByEmail.items[0]) {
-      dispatch(setUser(currentUser.data.usersByEmail.items[0]));
-    }
-  };
+  // const sendFormToAWS = async () => {
+  //   if (awsUser && awsUser.cmpmFormID) {
+  //     setIsUpdated(false);
+  //     setIsLoading(true);
+  //     await API.graphql({
+  //       query: updateCMPMForm,
+  //       variables: {
+  //         input: {
+  //           id: id,
+  //           firstName: methods.getValues('firstName'),
+  //           lastName: methods.getValues('lastName'),
+  //           email: methods.getValues('email'),
+  //           phone: methods.getValues('phone'),
+  //           streetAddress: methods.getValues('streetAddress'),
+  //           addressExtra: methods.getValues('addressExtra'),
+  //           city: methods.getValues('city'),
+  //           state: methods.getValues('state'),
+  //           country: methods.getValues('country'),
+  //           birthYear: methods.getValues('birthYear'),
+  //           companyName: methods.getValues('companyName'),
+  //           sessionApplying: methods.getValues('sessionApplying'),
+  //           companyTitle: methods.getValues('companyTitle'),
+  //           linkedin: methods.getValues('linkedin'),
+  //           background: methods.getValues('background'),
+  //           whyPackaging: methods.getValues('whyPackaging'),
+  //           areaOfInterest: methods.getValues('areaOfInterest'),
+  //           referral: methods.getValues('referral'),
+  //           payment: methods.getValues('payment'),
+  //           yearGoals: methods.getValues('yearGoals'),
+  //           cmpmGoals: methods.getValues('cmpmGoals'),
+  //           moreAboutYou: methods.getValues('moreAboutYou'),
+  //           paymentConfirmation: methods.getValues('paymentConfirmation'),
+  //         },
+  //       },
+  //     });
+  //     setIsLoading(false);
+  //     setIsUpdated(true);
+  //   } else if (awsUser && !awsUser.cmpmFormID) {
+  //     setIsUpdated(false);
+  //     setIsLoading(true);
+  //     await API.graphql({
+  //       query: createCMPMForm,
+  //       variables: {
+  //         input: {
+  //           cMPMFormUserId: awsUser.id,
+  //           firstName: methods.getValues('firstName'),
+  //           lastName: methods.getValues('lastName'),
+  //           email: methods.getValues('email'),
+  //           phone: methods.getValues('phone'),
+  //           streetAddress: methods.getValues('streetAddress'),
+  //           addressExtra: methods.getValues('addressExtra'),
+  //           city: methods.getValues('city'),
+  //           state: methods.getValues('state'),
+  //           country: methods.getValues('country'),
+  //           birthYear: methods.getValues('birthYear'),
+  //           companyName: methods.getValues('companyName'),
+  //           companyTitle: methods.getValues('companyTitle'),
+  //           linkedin: methods.getValues('linkedin'),
+  //           background: methods.getValues('background'),
+  //           whyPackaging: methods.getValues('whyPackaging'),
+  //           areaOfInterest: methods.getValues('areaOfInterest'),
+  //           sessionApplying: methods.getValues('sessionApplying'),
+  //           referral: methods.getValues('referral'),
+  //           payment: methods.getValues('payment'),
+  //           yearGoals: methods.getValues('yearGoals'),
+  //           cmpmGoals: methods.getValues('cmpmGoals'),
+  //           moreAboutYou: methods.getValues('moreAboutYou'),
+  //           paymentConfirmation: methods.getValues('paymentConfirmation'),
+  //         },
+  //       },
+  //     });
 
-  const sendFormToAWS = async () => {
-    if (awsUser && awsUser.cmpmFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: updateCMPMForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            sessionApplying: methods.getValues('sessionApplying'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedin'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cmpmGoals: methods.getValues('cmpmGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: methods.getValues('paymentConfirmation'),
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-    } else if (awsUser && !awsUser.cmpmFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCMPMForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cMPMFormUserId: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedin'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            sessionApplying: methods.getValues('sessionApplying'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cmpmGoals: methods.getValues('cmpmGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: methods.getValues('paymentConfirmation'),
-          },
-        },
-      });
-
-      await API.graphql({
-        query: updateUser,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cmpmFormID: awsUser.id,
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-    }
-  };
+  //     await API.graphql({
+  //       query: updateUser,
+  //       variables: {
+  //         input: {
+  //           id: awsUser.id,
+  //           cmpmFormID: awsUser.id,
+  //         },
+  //       },
+  //     });
+  //     setIsLoading(false);
+  //     setIsUpdated(true);
+  //   }
+  // };
 
   const submitFormToAWS = async () => {
-    if (!awsUser) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCMPMForm,
-        variables: {
-          input: {
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedin'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            sessionApplying: methods.getValues('sessionApplying'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cmpmGoals: methods.getValues('cmpmGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
+    setIsUpdated(false);
+    setIsLoading(true);
+    await API.graphql({
+      query: updateCMPMForm,
+      variables: {
+        input: {
+          id: id,
+          cMPMFormUserId: awsUser && awsUser.id ? awsUser.id : null,
+          firstName: methods.getValues('firstName'),
+          lastName: methods.getValues('lastName'),
+          email: methods.getValues('email'),
+          phone: methods.getValues('phone'),
+          streetAddress: methods.getValues('streetAddress'),
+          addressExtra: methods.getValues('addressExtra'),
+          city: methods.getValues('city'),
+          state: methods.getValues('state'),
+          country: methods.getValues('country'),
+          birthYear: methods.getValues('birthYear'),
+          companyName: methods.getValues('companyName'),
+          companyTitle: methods.getValues('companyTitle'),
+          linkedin: methods.getValues('linkedin'),
+          background: methods.getValues('background'),
+          whyPackaging: methods.getValues('whyPackaging'),
+          areaOfInterest: methods.getValues('areaOfInterest'),
+          sessionApplying: methods.getValues('sessionApplying'),
+          referral: methods.getValues('referral'),
+          payment: methods.getValues('payment'),
+          yearGoals: methods.getValues('yearGoals'),
+          cmpmGoals: methods.getValues('cmpmGoals'),
+          moreAboutYou: methods.getValues('moreAboutYou'),
+          paymentConfirmation: methods.getValues('paymentConfirmation'),
+          status: 'SUBMITTED',
         },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cmpm-application-confirmation');
-    } else if (awsUser && awsUser.cmpmFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: updateCMPMForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedin'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            sessionApplying: methods.getValues('sessionApplying'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cmpmGoals: methods.getValues('cmpmGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: awsUser.cmpmForm.paymentConfirmation
-              ? awsUser.cmpmForm.paymentConfirmation
-              : methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cmpm-application-confirmation');
-    } else if (awsUser && !awsUser.cmpmFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCMPMForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cMPMFormUserId: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedin'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            sessionApplying: methods.getValues('sessionApplying'),
-            yearGoals: methods.getValues('yearGoals'),
-            cmpmGoals: methods.getValues('cmpmGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            paymentConfirmation: methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
-        },
-      });
+      },
+    });
 
+    if (awsUser) {
       await API.graphql({
         query: updateUser,
         variables: {
-          input: {
-            id: awsUser.id,
-            cmpmFormID: awsUser.id,
-          },
+          input: { id: awsUser.id, cmpmFormID: id },
         },
       });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cmpm-application-confirmation');
+
+      const dbUser = await getAWSUser(awsUser.email);
+      if (dbUser) {
+        dispatch(setAWSUser(dbUser));
+      }
     }
+
+    setIsLoading(false);
+    setIsUpdated(true);
+    router.push('/cmpm-application-confirmation');
   };
 
   const saveHandler = async (e) => {
     e.preventDefault();
     const data = methods.getValues();
-    console.log(data);
-    const rawData = JSON.stringify(data);
+
+    setIsLoading(true);
+    await saveCmpmForm({
+      id: id,
+      cMPMFormUserId: awsUser && awsUser.id ? awsUser.id : null,
+      firstName: methods.getValues('firstName'),
+      lastName: methods.getValues('lastName'),
+      email: methods.getValues('email'),
+      phone: methods.getValues('phone'),
+      streetAddress: methods.getValues('streetAddress'),
+      addressExtra: methods.getValues('addressExtra'),
+      city: methods.getValues('city'),
+      state: methods.getValues('state'),
+      country: methods.getValues('country'),
+      birthYear: methods.getValues('birthYear'),
+      companyName: methods.getValues('companyName'),
+      companyTitle: methods.getValues('companyTitle'),
+      linkedin: methods.getValues('linkedin'),
+      background: methods.getValues('background'),
+      whyPackaging: methods.getValues('whyPackaging'),
+      areaOfInterest: methods.getValues('areaOfInterest'),
+      referral: methods.getValues('referral'),
+      payment: methods.getValues('payment'),
+      sessionApplying: methods.getValues('sessionApplying'),
+      yearGoals: methods.getValues('yearGoals'),
+      cmpmGoals: methods.getValues('cmpmGoals'),
+      moreAboutYou: methods.getValues('moreAboutYou'),
+      paymentConfirmation: methods.getValues('paymentConfirmation'),
+      status: 'DRAFT',
+    });
+
     if (awsUser) {
-      await sendFormToAWS(data);
-      getAndSetUser();
-    } else if (!awsUser) {
-      Cookies.set('cmpmFormSave', rawData, { expires: 7 });
-      dispatch(toggleSignInModal());
+      await API.graphql({
+        query: updateUser,
+        variables: {
+          input: { id: awsUser.id, cmpmFormID: id },
+        },
+      });
+      const dbUser = await getAWSUser(awsUser.email);
+      if (dbUser) {
+        dispatch(setAWSUser(dbUser));
+      }
     }
+
+    setIsLoading(false);
+    setIsUpdated(true);
+    setTimeout(() => {
+      setIsUpdated(false);
+    }, 3000);
   };
 
   const sendSubmitNotification = async (data) => {
@@ -349,12 +310,32 @@ const CMPMForm = ({ methods, email, free }) => {
       </div>
       <div
         id='submit-button'
-        className='flex justify-between items-center dark:bg-dark-dark bg-gray-300 px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'
+        className='flex justify-between items-center dark:bg-dark-dark bg-gray-300 -mx-6 px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'
       >
-        <div className='w-fit font-greycliff font-semibold h-full text-green-500 text-lg'>
-          {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+        <div
+          className='flex items-center gap-0.5 cursor-pointer'
+          onClick={() => {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url);
+          }}
+        >
+          <div>
+            <div className='rounded-full p-1 hover:bg-slate-100 transition-all duration-300 flex items-center justify-center'>
+              <MdCopyAll size={24} className='text-slate-700' />
+            </div>
+          </div>
+          <div className='font-semibold text-slate-700'>
+            Get your personal form link
+          </div>
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-4 items-center'>
+          <div
+            className={`w-fit font-greycliff font-semibold h-full text-slate-600 animate-pulse ${
+              isLoading ? 'animate-pulse' : ''
+            }`}
+          >
+            {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+          </div>
           <div
             className='flex cursor-pointer bg-white/80 justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-700 font-greycliff font-semibold '
             onClick={(e) => saveHandler(e)}

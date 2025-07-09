@@ -47,7 +47,7 @@ const CMPMWrapper = ({ params, free }) => {
     <div className='w-full max-w-4xl mx-auto sm:px-0 pb-24'>
       <FormProvider {...methods}>
         <CMPMNav />
-        <CMPMForm methods={methods} email={paramsEmail} />
+        <CMPMForm methods={methods} email={paramsEmail} id={params.id} />
       </FormProvider>
     </div>
   );

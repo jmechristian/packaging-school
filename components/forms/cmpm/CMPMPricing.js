@@ -6,16 +6,16 @@ import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 const CMPMPricing = ({ email, free, onSubmit, payment }) => {
-  const { user } = useSelector((state) => state.auth);
+  const { awsUser } = useSelector((state) => state.auth);
   const [stripePromise, setStripePromise] = useState(() =>
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
   );
 
   useEffect(() => {
-    if (user && user.cmpmForm && user.cmpmForm.paymentConfirmation) {
-      setPaymentConfirmation(user.cmpmForm.paymentConfirmation);
+    if (awsUser && awsUser.cmpmForm && awsUser.cmpmForm.paymentConfirmation) {
+      setPaymentConfirmation(awsUser.cmpmForm.paymentConfirmation);
     }
-  }, [, user]);
+  }, [awsUser]);
 
   const [paymentConfirmation, setPaymentConfirmation] = useState('');
 

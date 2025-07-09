@@ -83,14 +83,15 @@ export default function CheckoutForm({
 
   return (
     <div className='flex flex-col gap-2 w-full max-w-2xl mx-auto'>
-      <div onClick={handleSubmit} className='flex flex-col gap-6'>
+      <div className='flex flex-col gap-6'>
         <CardElement className='border border-slate-300 py-2 px-3' />
         <div className='flex flex-col gap-3'>
           <div className='w-full flex-end'>
             <button
               disabled={!stripe || !isValid}
+              onClick={handleSubmit}
               className={`text-white font-greycliff rounded-lg font-semibold px-6 py-4
-              5 shadow text-lg ${
+              5 shadow text-lg cursor-pointer ${
                 isValid ? 'bg-clemson' : 'bg-slate-500'
               }  border-black border-2`}
             >

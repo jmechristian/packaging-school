@@ -62,7 +62,7 @@ const CMPMPersonalInfo = ({ getEmail }) => {
         required
       />
       <TextInput
-        name={'streetAddressExtra'}
+        name={'addressExtra'}
         placeholder={''}
         label={'Address Line 2'}
       />
