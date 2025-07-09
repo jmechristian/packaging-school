@@ -18,6 +18,7 @@ import Meta from '../../../components/shared/Meta';
 
 import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
+import { useThinkificLink } from '../../../hooks/useThinkificLink';
 
 const Page = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const Page = () => {
   const [isCourses, setIsCourses] = useState([]);
   const [isSort, setIsSort] = useState({ value: 'title', direction: 'ASC' });
   const [isCertificates, setIsCertificates] = useState([]);
-
+  const { navigateToThinkific } = useThinkificLink();
   const sortedCourses = useMemo(() => {
     if (isSort.value === 'title' && isSort.direction === 'ASC') {
       return (
@@ -302,7 +303,11 @@ const Page = () => {
   const cardPurchaseHandler = async (id, link) => {
     await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
-    router.push(link);
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(link, link);
+    } else {
+      router.push(`${link}`);
+    }
   };
 
   const handleCertCardClick = async (
