@@ -36,7 +36,7 @@ const sections = [
         name: 'Timeline',
         tiers: {
           CMPM: '3 months asynchronous with PhD instructor coaching and review',
-          CPS: 'Up to 12 months asynchronous',
+          CPS: 'Up to 6 months asynchronous',
         },
       },
       {
