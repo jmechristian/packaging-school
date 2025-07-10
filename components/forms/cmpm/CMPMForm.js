@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { API } from 'aws-amplify';
 import {
   updateCMPMForm,
@@ -20,9 +20,11 @@ const CMPMForm = ({ methods, email, free, id }) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmail, setIsEmail] = useState('');
+  const [lastAutoSave, setLastAutoSave] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
   const paymentConfirmed = methods.watch('paymentConfirmation');
+  const autoSaveIntervalRef = useRef(null);
 
   useEffect(() => {
     if (email) {
@@ -189,7 +191,6 @@ const CMPMForm = ({ methods, email, free, id }) => {
 
   const saveHandler = async (e) => {
     e.preventDefault();
-    const data = methods.getValues();
 
     setIsLoading(true);
     await saveCmpmForm({
@@ -264,6 +265,69 @@ const CMPMForm = ({ methods, email, free, id }) => {
 
   const onError = (errors, data) => console.log('errors', errors, 'data', data);
 
+  const autoSave = async () => {
+    try {
+      await saveCmpmForm({
+        id: id,
+        cMPMFormUserId: awsUser && awsUser.id ? awsUser.id : null,
+        firstName: methods.getValues('firstName'),
+        lastName: methods.getValues('lastName'),
+        email: methods.getValues('email'),
+        phone: methods.getValues('phone'),
+        streetAddress: methods.getValues('streetAddress'),
+        addressExtra: methods.getValues('addressExtra'),
+        city: methods.getValues('city'),
+        state: methods.getValues('state'),
+        country: methods.getValues('country'),
+        birthYear: methods.getValues('birthYear'),
+        companyName: methods.getValues('companyName'),
+        companyTitle: methods.getValues('companyTitle'),
+        linkedin: methods.getValues('linkedin'),
+        background: methods.getValues('background'),
+        whyPackaging: methods.getValues('whyPackaging'),
+        areaOfInterest: methods.getValues('areaOfInterest'),
+        referral: methods.getValues('referral'),
+        payment: methods.getValues('payment'),
+        sessionApplying: methods.getValues('sessionApplying'),
+        yearGoals: methods.getValues('yearGoals'),
+        cmpmGoals: methods.getValues('cmpmGoals'),
+        moreAboutYou: methods.getValues('moreAboutYou'),
+        paymentConfirmation: methods.getValues('paymentConfirmation'),
+        status: 'DRAFT',
+      });
+
+      if (awsUser) {
+        await API.graphql({
+          query: updateUser,
+          variables: {
+            input: { id: awsUser.id, cmpmFormID: id },
+          },
+        });
+        const dbUser = await getAWSUser(awsUser.email);
+        if (dbUser) {
+          dispatch(setAWSUser(dbUser));
+        }
+      }
+
+      setLastAutoSave(new Date());
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+    }
+  };
+
+  // Set up autosave interval
+  useEffect(() => {
+    // Start autosave every 5 minutes (300,000 milliseconds)
+    autoSaveIntervalRef.current = setInterval(autoSave, 5 * 60 * 1000);
+
+    // Cleanup function to clear interval when component unmounts
+    return () => {
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+      }
+    };
+  }, [id, awsUser]); // Dependencies for the effect
+
   return (
     <form
       className='w-full bg-slate-200 p-6 divide-y space-y-6 divide-slate-300'
@@ -329,12 +393,19 @@ const CMPMForm = ({ methods, email, free, id }) => {
           </div>
         </div>
         <div className='flex gap-4 items-center'>
-          <div
-            className={`w-fit font-greycliff font-semibold h-full text-slate-600 animate-pulse ${
-              isLoading ? 'animate-pulse' : ''
-            }`}
-          >
-            {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+          <div className='flex flex-col items-start'>
+            <div
+              className={`w-fit font-greycliff font-semibold h-full text-slate-600 animate-pulse ${
+                isLoading ? 'animate-pulse' : ''
+              }`}
+            >
+              {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+            </div>
+            {lastAutoSave && (
+              <div className='text-xs text-slate-500 font-greycliff'>
+                Auto-saved: {lastAutoSave.toLocaleTimeString()}
+              </div>
+            )}
           </div>
           <div
             className='flex cursor-pointer bg-white/80 justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-700 font-greycliff font-semibold '
