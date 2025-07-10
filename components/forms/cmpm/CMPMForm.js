@@ -318,7 +318,7 @@ const CMPMForm = ({ methods, email, free, id }) => {
   // Set up autosave interval
   useEffect(() => {
     // Start autosave every 5 minutes (300,000 milliseconds)
-    autoSaveIntervalRef.current = setInterval(autoSave, 5 * 60 * 1000);
+    autoSaveIntervalRef.current = setInterval(autoSave, 3 * 60 * 1000);
 
     // Cleanup function to clear interval when component unmounts
     return () => {

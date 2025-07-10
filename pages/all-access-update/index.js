@@ -83,7 +83,7 @@ const Page = () => {
               </defs>
               <text className='text-dark font-bold text-xs'>
                 <textPath href='#circlePath' startOffset='0%'>
-                  COMING SOON • COMING SOON • COMING SOON • COMING SOON
+                  NOW LIVE • NOW LIVE • NOW LIVE • NOW LIVE
                 </textPath>
               </text>
             </svg>
