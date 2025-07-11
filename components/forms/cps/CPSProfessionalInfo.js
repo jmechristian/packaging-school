@@ -21,7 +21,7 @@ const CPSProfessionalInfo = () => {
         />
       </div>
       <TextInput
-        name={'linkedIn'}
+        name={'linkedin'}
         placeholder={'https://'}
         label={'LinkedIn Profile'}
       />

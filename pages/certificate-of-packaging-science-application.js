@@ -11,6 +11,7 @@ import { createCertAppStart } from '../src/graphql/mutations';
 import { CalendarDaysIcon } from '@heroicons/react/24/solid';
 import Loader from '../components/shared/Loader';
 import Meta from '../components/shared/Meta';
+import { createCpsFromAppStart } from '../helpers/api';
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -114,6 +115,36 @@ const Page = () => {
       },
     });
 
+    const formId = await createCpsFromAppStart({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      streetAddress: '',
+      addressExtra: '',
+      city: '',
+      state: '',
+      country: '',
+      birthYear: '',
+      companyName: '',
+      companyTitle: '',
+      linkedin: '',
+      background: '',
+      whyPackaging: '',
+      areaOfInterest: '',
+      sessionApplying: '',
+      referral: '',
+      payment: '',
+      yearGoals: '',
+      cpsGoals: '',
+      paymentType: '',
+      moreAboutYou: '',
+      elective: '',
+      optOut: false,
+      paymentConfirmation: '',
+      status: 'DRAFT',
+    });
+
     await automateDealHandler(
       data.email,
       'CPS',
@@ -134,9 +165,7 @@ const Page = () => {
       }),
     });
     setIsLoading(false);
-    router.push(
-      `/continue-certificate-of-packaging-science?firstName=${data.firstName}&lastName=${data.lastName}&email=${data.email}&phone=${data.phone}`
-    );
+    router.push(`/forms/cps/${formId.id}`);
   };
   return (
     <>

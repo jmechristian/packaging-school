@@ -28,7 +28,12 @@ const CPSWrapper = ({ params, free }) => {
     <div className='w-full max-w-4xl mx-auto sm:px-0 pb-24'>
       <FormProvider {...methods}>
         <CPSNav />
-        <CPSForm methods={methods} email={paramsEmail} free={free} />
+        <CPSForm
+          methods={methods}
+          email={paramsEmail}
+          free={free}
+          id={params.id}
+        />
       </FormProvider>
     </div>
   );

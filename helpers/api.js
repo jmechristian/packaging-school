@@ -50,6 +50,8 @@ import {
   updateCourseReview,
   createCMPMForm,
   updateCMPMForm,
+  createCPSForm,
+  updateCPSForm,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -1950,6 +1952,22 @@ export const saveCmpmForm = async (data) => {
     variables: { input: { ...data } },
   });
   return res.data.updateCMPMForm;
+};
+
+export const createCpsFromAppStart = async (data) => {
+  const res = await API.graphql({
+    query: createCPSForm,
+    variables: { input: data },
+  });
+  return res.data.createCPSForm;
+};
+
+export const saveCpsForm = async (data) => {
+  const res = await API.graphql({
+    query: updateCPSForm,
+    variables: { input: { ...data } },
+  });
+  return res.data.updateCPSForm;
 };
 
 export const getAllCourses = async () => {

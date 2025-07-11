@@ -431,8 +431,8 @@ const CPSApply = ({ email, free, onSubmit }) => {
             Please fill out field.
           </div>
         )}
-        <div className='text-slate-700 text-sm mt-1'>
-          <sup>*</sup>Course descriptions can be found{' '}
+        <div className='text-slate-700 text-sm mt-1 w-full flex items-center gap-0.5'>
+          <sup className='mt-1'>*</sup>Course descriptions can be found{' '}
           <Link
             href='/all_courses'
             className='flex gap-1 items-center'

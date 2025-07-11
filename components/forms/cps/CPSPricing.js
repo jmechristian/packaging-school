@@ -60,9 +60,7 @@ const CPSPricing = ({ email, free, onSubmit }) => {
                     type='hidden'
                     value={free ? 'WAIVED' : paymentConfirmation}
                     name='paymentConfirmation'
-                    {...register('paymentConfirmation', {
-                      required: true,
-                    })}
+                    {...register('paymentConfirmation')}
                   />
                   {formState.errors.hasOwnProperty('paymentConfirmation') && (
                     <div className='text-sm text-red-600 mt-3 mb-2'>

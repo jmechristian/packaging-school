@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { API } from 'aws-amplify';
 import {
   updateCPSForm,
@@ -6,17 +6,21 @@ import {
   updateUser,
 } from '../../../src/graphql/mutations';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSignInModal } from '../../../features/layout/layoutSlice';
 import CPSPersonalInfo from './CPSPersonalInfo';
 import CPSProfessionalInfo from './CPSProfessionalInfo';
 import { useRouter } from 'next/router';
 import CPSGoals from './CPSGoals';
 import CPSApply from './CPSApply';
+import { saveCpsForm, getAWSUser } from '../../../helpers/api';
+import { setAWSUser } from '../../../features/auth/authslice';
+import { MdCopyAll } from 'react-icons/md';
 
-const CPSForm = ({ methods, email, free }) => {
+const CPSForm = ({ methods, email, free, id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [isEmail, setIsEmail] = useState('');
+  const [lastAutoSave, setLastAutoSave] = useState(null);
+  const autoSaveIntervalRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,244 +33,58 @@ const CPSForm = ({ methods, email, free }) => {
 
   const dispatch = useDispatch();
 
-  const sendFormToAWS = async (data) => {
-    if (awsUser && awsUser.cpsFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: updateCPSForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedIn'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cpsGoals: methods.getValues('cpsGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            elective: methods.getValues('elective'),
-            paymentType: methods.getValues('paymentType'),
-            paymentConfirmation: free
-              ? 'WAIVED'
-              : methods.getValues('paymentConfirmation'),
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-    } else if (awsUser && !awsUser.CPSFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCPSForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cPSFormUserId: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedIn'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cpsGoals: methods.getValues('cpsGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            elective: methods.getValues('elective'),
-            paymentType: methods.getValues('paymentType'),
-            paymentConfirmation: free
-              ? 'WAIVED'
-              : methods.getValues('paymentConfirmation'),
-          },
-        },
-      });
-
-      await API.graphql({
-        query: updateUser,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cpsFormID: awsUser.id,
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-    }
-  };
-
-  const submitFormToAWS = async () => {
-    if (!awsUser) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCPSForm,
-        variables: {
-          input: {
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedIn'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cpsGoals: methods.getValues('cpsGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            elective: methods.getValues('elective'),
-            paymentType: methods.getValues('paymentType'),
-            paymentConfirmation: free
-              ? 'WAIVED'
-              : methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cps-application-confirmation');
-    }
-    if (awsUser && awsUser.cpsFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: updateCPSForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedIn'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cpsGoals: methods.getValues('cpsGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            elective: methods.getValues('elective'),
-            paymentType: methods.getValues('paymentType'),
-            paymentConfirmation: free
-              ? 'WAIVED'
-              : methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cps-application-confirmation');
-    } else if (awsUser && !awsUser.CPSFormID) {
-      setIsUpdated(false);
-      setIsLoading(true);
-      await API.graphql({
-        query: createCPSForm,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cPSFormUserId: awsUser.id,
-            firstName: methods.getValues('firstName'),
-            lastName: methods.getValues('lastName'),
-            email: methods.getValues('email'),
-            phone: methods.getValues('phone'),
-            streetAddress: methods.getValues('streetAddress'),
-            addressExtra: methods.getValues('addressExtra'),
-            city: methods.getValues('city'),
-            state: methods.getValues('state'),
-            country: methods.getValues('country'),
-            birthYear: methods.getValues('birthYear'),
-            companyName: methods.getValues('companyName'),
-            companyTitle: methods.getValues('companyTitle'),
-            linkedin: methods.getValues('linkedIn'),
-            background: methods.getValues('background'),
-            whyPackaging: methods.getValues('whyPackaging'),
-            areaOfInterest: methods.getValues('areaOfInterest'),
-            referral: methods.getValues('referral'),
-            payment: methods.getValues('payment'),
-            yearGoals: methods.getValues('yearGoals'),
-            cpsGoals: methods.getValues('cpsGoals'),
-            moreAboutYou: methods.getValues('moreAboutYou'),
-            elective: methods.getValues('elective'),
-            paymentType: methods.getValues('paymentType'),
-            paymentConfirmation: free
-              ? 'WAIVED'
-              : methods.getValues('paymentConfirmation'),
-            status: 'SUBMITTED',
-          },
-        },
-      });
-
-      await API.graphql({
-        query: updateUser,
-        variables: {
-          input: {
-            id: awsUser.id,
-            cpsFormID: awsUser.id,
-          },
-        },
-      });
-      setIsLoading(false);
-      setIsUpdated(true);
-      router.push('/cps-application-confirmation');
-    }
-  };
-
-  const saveHandler = async () => {
-    const data = methods.getValues();
+  const saveHandler = async ({ isStatus }) => {
+    setIsLoading(true);
+    await saveCpsForm({
+      id: id,
+      cPSFormUserId: awsUser && awsUser.id ? awsUser.id : null,
+      firstName: methods.getValues('firstName'),
+      lastName: methods.getValues('lastName'),
+      email: methods.getValues('email'),
+      phone: methods.getValues('phone'),
+      streetAddress: methods.getValues('streetAddress'),
+      addressExtra: methods.getValues('addressExtra'),
+      city: methods.getValues('city'),
+      state: methods.getValues('state'),
+      country: methods.getValues('country'),
+      birthYear: methods.getValues('birthYear'),
+      companyName: methods.getValues('companyName'),
+      companyTitle: methods.getValues('companyTitle'),
+      linkedin: methods.getValues('linkedin'),
+      background: methods.getValues('background'),
+      whyPackaging: methods.getValues('whyPackaging'),
+      areaOfInterest: methods.getValues('areaOfInterest'),
+      sessionApplying: methods.getValues('sessionApplying'),
+      referral: methods.getValues('referral'),
+      payment: methods.getValues('payment'),
+      yearGoals: methods.getValues('yearGoals'),
+      cpsGoals: methods.getValues('cpsGoals'),
+      paymentType: methods.getValues('paymentType'),
+      moreAboutYou: methods.getValues('moreAboutYou'),
+      elective: methods.getValues('elective'),
+      optOut: methods.getValues('optOut'),
+      paymentConfirmation: free
+        ? 'WAIVED'
+        : methods.getValues('paymentConfirmation'),
+      status: isStatus || 'DRAFT',
+    });
     if (awsUser) {
-      await sendFormToAWS(data);
-    } else if (!awsUser) {
-      dispatch(toggleSignInModal());
+      await API.graphql({
+        query: updateUser,
+        variables: {
+          input: { id: awsUser.id, cpsFormID: id },
+        },
+      });
+      const dbUser = await getAWSUser(awsUser.email);
+      if (dbUser) {
+        dispatch(setAWSUser(dbUser));
+      }
     }
+    setIsLoading(false);
+    setIsUpdated(true);
+    setTimeout(() => {
+      setIsUpdated(false);
+    }, 3000);
   };
 
   const sendSubmitNotification = async (data) => {
@@ -284,11 +102,82 @@ const CPSForm = ({ methods, email, free }) => {
   };
 
   const onSubmit = async (data) => {
-    await submitFormToAWS(data);
+    setIsLoading(true);
+    await saveHandler('SUBMITTED');
     sendSubmitNotification(data);
+    setIsLoading(false);
+    router.push('/cps-application-confirmation');
   };
 
   const onError = (errors, e) => console.log(errors, e);
+
+  const autoSave = async () => {
+    try {
+      await saveCpsForm({
+        id: id,
+        cPSFormUserId: awsUser && awsUser.id ? awsUser.id : null,
+        firstName: methods.getValues('firstName'),
+        lastName: methods.getValues('lastName'),
+        email: methods.getValues('email'),
+        phone: methods.getValues('phone'),
+        streetAddress: methods.getValues('streetAddress'),
+        addressExtra: methods.getValues('addressExtra'),
+        city: methods.getValues('city'),
+        state: methods.getValues('state'),
+        country: methods.getValues('country'),
+        birthYear: methods.getValues('birthYear'),
+        companyName: methods.getValues('companyName'),
+        companyTitle: methods.getValues('companyTitle'),
+        linkedin: methods.getValues('linkedin'),
+        background: methods.getValues('background'),
+        whyPackaging: methods.getValues('whyPackaging'),
+        areaOfInterest: methods.getValues('areaOfInterest'),
+        sessionApplying: methods.getValues('sessionApplying'),
+        referral: methods.getValues('referral'),
+        payment: methods.getValues('payment'),
+        yearGoals: methods.getValues('yearGoals'),
+        cpsGoals: methods.getValues('cpsGoals'),
+        paymentType: methods.getValues('paymentType'),
+        moreAboutYou: methods.getValues('moreAboutYou'),
+        elective: methods.getValues('elective'),
+        optOut: methods.getValues('optOut'),
+        paymentConfirmation: free
+          ? 'WAIVED'
+          : methods.getValues('paymentConfirmation'),
+        status: 'DRAFT',
+      });
+
+      if (awsUser) {
+        await API.graphql({
+          query: updateUser,
+          variables: {
+            input: { id: awsUser.id, cpsFormID: id },
+          },
+        });
+        const dbUser = await getAWSUser(awsUser.email);
+        if (dbUser) {
+          dispatch(setAWSUser(dbUser));
+        }
+      }
+
+      setLastAutoSave(new Date());
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+    }
+  };
+
+  // Set up autosave interval
+  useEffect(() => {
+    // Start autosave every 5 minutes (300,000 milliseconds)
+    autoSaveIntervalRef.current = setInterval(autoSave, 3 * 60 * 1000);
+
+    // Cleanup function to clear interval when component unmounts
+    return () => {
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+      }
+    };
+  }, [id, awsUser]); // Dependencies for the effect
 
   return (
     <form
@@ -328,23 +217,55 @@ const CPSForm = ({ methods, email, free }) => {
         </div>
         <CPSApply email={isEmail} free={free} onSubmit={onSubmit} />
       </div>
-      <div className='flex justify-between items-center bg-slate-300 dark:bg-dark-dark px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'>
-        <div className='w-fit font-greycliff font-semibold h-full text-green-600 text-lg'>
-          {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+      <div
+        id='submit-button'
+        className='flex justify-between items-center dark:bg-dark-dark bg-gray-300 -mx-6 px-6 py-4 rounded-t sticky z-50 bottom-0 gap-3 lg:gap-6 border-t border-t-slate-300 text-sm md:text-base'
+      >
+        <div
+          className='flex items-center gap-0.5 cursor-pointer'
+          onClick={() => {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url);
+          }}
+        >
+          <div>
+            <div className='rounded-full p-1 hover:bg-slate-100 transition-all duration-300 flex items-center justify-center'>
+              <MdCopyAll size={24} className='text-slate-700' />
+            </div>
+          </div>
+          <div className='font-semibold text-slate-700'>
+            Get your personal form link
+          </div>
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-4 items-center'>
+          <div className='flex flex-col items-start'>
+            <div
+              className={`w-fit font-greycliff font-semibold h-full text-slate-600 animate-pulse ${
+                isLoading ? 'animate-pulse' : ''
+              }`}
+            >
+              {isLoading ? 'Sending...' : isUpdated ? 'Updated!' : ''}
+            </div>
+            {lastAutoSave && (
+              <div className='text-xs text-slate-500 font-greycliff'>
+                Auto-saved: {lastAutoSave.toLocaleTimeString()}
+              </div>
+            )}
+          </div>
           <div
-            className='flex cursor-pointer justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-500 font-greycliff font-semibold '
-            onClick={saveHandler}
+            className='flex cursor-pointer bg-white/80 justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 text-slate-700 font-greycliff font-semibold '
+            onClick={(e) => saveHandler(e)}
           >
             Save Form
           </div>
-          <button
-            type='submit'
-            className='flex cursor-pointer justify-center items-center w-fit px-6 py-3 rounded-lg bg-clemson font-greycliff font-semibold text-white text-sm md:text-base'
-          >
-            Submit Form
-          </button>
+          {free && (
+            <div
+              className='flex cursor-pointer bg-clemson hover:bg-clemson/80 text-white justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 font-greycliff font-semibold '
+              onClick={methods.handleSubmit(onSubmit, onError)}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Form'}
+            </div>
+          )}
         </div>
       </div>
     </form>
