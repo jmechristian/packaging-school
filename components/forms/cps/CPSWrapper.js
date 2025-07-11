@@ -9,6 +9,7 @@ function classNames(...classes) {
 }
 
 const CPSWrapper = ({ params, free }) => {
+  console.log(params);
   const methods = useForm();
   const [paramsEmail, setIsParamsEmail] = useState(undefined);
 

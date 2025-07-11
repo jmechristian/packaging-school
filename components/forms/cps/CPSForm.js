@@ -16,12 +16,14 @@ import { setAWSUser } from '../../../features/auth/authslice';
 import { MdCopyAll } from 'react-icons/md';
 
 const CPSForm = ({ methods, email, free, id }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [isEmail, setIsEmail] = useState('');
   const [lastAutoSave, setLastAutoSave] = useState(null);
   const autoSaveIntervalRef = useRef(null);
   const router = useRouter();
+  const paymentConfirmed = methods.watch('paymentConfirmation');
 
   useEffect(() => {
     if (email) {
@@ -102,10 +104,10 @@ const CPSForm = ({ methods, email, free, id }) => {
   };
 
   const onSubmit = async (data) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     await saveHandler('SUBMITTED');
     sendSubmitNotification(data);
-    setIsLoading(false);
+    setIsSubmitting(false);
     router.push('/cps-application-confirmation');
   };
 
@@ -215,7 +217,11 @@ const CPSForm = ({ methods, email, free, id }) => {
         <div className='text-xl lg:text-2xl lg:mb-4 font-greycliff font-semibold'>
           Session Info
         </div>
-        <CPSApply email={isEmail} free={free} onSubmit={onSubmit} />
+        <CPSApply
+          email={isEmail}
+          free={paymentConfirmed === 'WAIVED'}
+          onSubmit={onSubmit}
+        />
       </div>
       <div
         id='submit-button'
@@ -258,7 +264,7 @@ const CPSForm = ({ methods, email, free, id }) => {
           >
             Save Form
           </div>
-          {free && (
+          {paymentConfirmed === 'WAIVED' && (
             <div
               className='flex cursor-pointer bg-clemson hover:bg-clemson/80 text-white justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 font-greycliff font-semibold '
               onClick={methods.handleSubmit(onSubmit, onError)}

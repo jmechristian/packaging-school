@@ -1946,6 +1946,37 @@ export const createCmpmFromAppStart = async (data) => {
   return res.data.createCMPMForm;
 };
 
+export const createFreeCmpmForm = async () => {
+  const res = await API.graphql({
+    query: createCMPMForm,
+    variables: {
+      input: {
+        paymentConfirmation: 'WAIVED',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        streetAddress: '',
+        addressExtra: '',
+        city: '',
+        state: '',
+        birthYear: '',
+        companyName: '',
+        companyTitle: '',
+        linkedin: '',
+        background: '',
+        whyPackaging: '',
+        areaOfInterest: '',
+        yearGoals: '',
+        cmpmGoals: '',
+        moreAboutYou: '',
+        status: 'DRAFT',
+      },
+    },
+  });
+  return res.data.createCMPMForm;
+};
+
 export const saveCmpmForm = async (data) => {
   const res = await API.graphql({
     query: updateCMPMForm,
@@ -1968,6 +1999,44 @@ export const saveCpsForm = async (data) => {
     variables: { input: { ...data } },
   });
   return res.data.updateCPSForm;
+};
+
+export const createFreeCpsForm = async () => {
+  const res = await API.graphql({
+    query: createCPSForm,
+    variables: {
+      input: {
+        paymentConfirmation: 'WAIVED',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        streetAddress: '',
+        addressExtra: '',
+        city: '',
+        state: '',
+        country: '',
+        birthYear: '',
+        companyName: '',
+        companyTitle: '',
+        linkedin: '',
+        background: '',
+        whyPackaging: '',
+        areaOfInterest: '',
+        sessionApplying: '',
+        referral: '',
+        payment: '',
+        yearGoals: '',
+        cpsGoals: '',
+        paymentType: '',
+        moreAboutYou: '',
+        elective: '',
+        optOut: false,
+        status: 'DRAFT',
+      },
+    },
+  });
+  return res.data.createCPSForm;
 };
 
 export const getAllCourses = async () => {

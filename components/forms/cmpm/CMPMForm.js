@@ -367,7 +367,7 @@ const CMPMForm = ({ methods, email, free, id }) => {
         <CMPMSessionInfo email={isEmail} free={free} />
         <CMPMPricing
           email={isEmail}
-          free={free}
+          free={paymentConfirmed === 'WAIVED'}
           onSubmit={methods.handleSubmit(onSubmit, onError)}
           payment={paymentConfirmed}
         />
@@ -413,7 +413,7 @@ const CMPMForm = ({ methods, email, free, id }) => {
           >
             Save Form
           </div>
-          {free && (
+          {paymentConfirmed === 'WAIVED' && (
             <div
               className='flex cursor-pointer bg-clemson hover:bg-clemson/80 text-white justify-center items-center w-fit px-6 py-3 rounded-lg ring-2 ring-slate-400 font-greycliff font-semibold '
               onClick={methods.handleSubmit(onSubmit, onError)}
