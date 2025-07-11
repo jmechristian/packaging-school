@@ -193,15 +193,12 @@ const App = () => {
             <div className='w-full flex flex-col gap-5 max-w-5xl items-center justify-center text-center h-full'>
               <div className='flex flex-col gap-3 lg:!gap-6 justify-center items-center'>
                 <div className='w-full h-full text-white h1-base '>
-                  One Powerful Catalog.{' '}
-                  <span className='text-clemson block'>
-                    Two Flexible Paths.
-                  </span>
+                  Become a Packaging Professional{' '}
+                  <span className='text-clemson block'>In 12-weeks.</span>
                 </div>
                 <div className='w-full h-full text-white text-xl lg:!text-3xl !max-w-5xl mx-auto'>
-                  Get full access to all our expert-led courses. Learn with a
-                  team and a tailored project, or go solo at your own pace—same
-                  rich content, your way.
+                  Get full access to all our expert-led courses. <br />
+                  Learn with a professor or go solo at your own pace.
                 </div>
                 <div className='flex flex-col items-start gap-10'>
                   <div className='grid lg:grid-cols-2 gap-4 w-full max-w-2xl mx-auto mt-5'>
@@ -233,7 +230,7 @@ const App = () => {
             </div>
             <div className='mx-auto max-w-5xl px-6 lg:px-0 flex flex-col justify-end h-fit mb-8 opacity-80'>
               <h2 className='text-center text-slate-400 font-semibold'>
-                Trusted by the world’s most innovative teams
+                Our students are employed by the world’s most innovative teams
               </h2>
               <div className='mx-auto grid grid-cols-6 items-center gap-x-12 lg:gap-x-10 sm:grid-cols-3 lg:mx-0 overflow-hidden'>
                 <img
