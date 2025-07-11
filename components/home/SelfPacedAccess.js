@@ -374,7 +374,7 @@ const SelfPacedAccess = () => {
       </div>
       <div className='w-full border-t border-clemson pt-10 flex flex-col gap-10'>
         <div className='text-center text-xl font-bold'>
-          All Subscriptions Include:
+          All Certificates Include:
         </div>
         <div className='w-full grid grid-cols-1 lg:grid-cols-3 gap-10'>
           {features.map((feature, index) => (

@@ -28,8 +28,14 @@ const CertificateModal = ({
               <div>
                 <AcademicCapIcon className='h-8 w-8 text-gray-500' />
               </div>
-              <Dialog.Title className='text-xl lg:!text-2xl font-semibold text-gray-900 leading-none'>
-                Comprehensive Certificate Programs
+              <Dialog.Title className='flex flex-col gap-1'>
+                <div className='text-xl lg:!text-2xl font-semibold text-gray-900 leading-none'>
+                  Select Your First Certificate
+                </div>
+                <div className='font-medium tracking-tight text-slate-500'>
+                  The full catalog is available upon completion so there is not
+                  an incorrect choice.
+                </div>
               </Dialog.Title>
             </div>
             <button
@@ -41,13 +47,21 @@ const CertificateModal = ({
           </div>
 
           <div className='space-y-3 p-5 mt-1'>
-            {certificates.map((certificate) => (
-              <CertificateModalItem
-                key={certificate.id}
-                certificate={certificate}
-                onSelectCertificate={() => router.push(`${certificate.link}`)}
-              />
-            ))}
+            {certificates
+              .sort((a, b) => {
+                // Put CPS first
+                if (a.abbreviation === 'CPS') return -1;
+                if (b.abbreviation === 'CPS') return 1;
+                // Sort others alphabetically
+                return a.abbreviation.localeCompare(b.abbreviation);
+              })
+              .map((certificate) => (
+                <CertificateModalItem
+                  key={certificate.id}
+                  certificate={certificate}
+                  onSelectCertificate={() => router.push(`${certificate.link}`)}
+                />
+              ))}
           </div>
 
           <div className='!sticky left-0 right-0 bottom-0 h-40 !bg-gradient-to-t !from-white via-white !to-transparent z-[60]'></div>
