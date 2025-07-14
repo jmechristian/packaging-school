@@ -8,6 +8,7 @@ export default function handler(req, res) {
   const query = `
     query UserByEmail($email: EmailAddress!, $first: Int) {
       userByEmail(email: $email) {
+      hasAdminRole  
         courses(first: $first) {
           nodes {
             id

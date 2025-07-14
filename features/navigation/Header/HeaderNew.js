@@ -18,176 +18,16 @@ import LogoSquare from '../../../components/layout/LogoSquare';
 import { useRouter } from 'next/router';
 import SalesBar from './SalesBar';
 import LogoWhite from '../../../components/layout/LogoWhite';
-// import { Autocomplete } from '../../../components/search/Autocomplete';
-import { getAlgoliaResults } from '@algolia/autocomplete-js';
-import algoliasearch from 'algoliasearch';
-import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
-import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
-import GlobalMaterialsIcon from '../../../components/icons/GlobalMaterialsIcon';
-import LotmIcon from '../../../components/icons/LotmIcon';
-import CertIcon from '../../../components/icons/CertIcon';
-import CMPMIcon from '../../../components/icons/CMPMIcon';
+import { useThinkificLink } from '../../../hooks/useThinkificLink';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-// const searchClient = algoliasearch(
-//   process.env.NEXT_PUBLIC_ALGOLIA_ID,
-//   process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
-// );
-
-// export function CertItem({ hit, components }) {
-//   const setBackground = () => {
-//     switch (hit.title) {
-//       case 'Certificate of Mastery in Packaging Management':
-//         return 'bg-gradient-to-br from-base-brand to-gray-700';
-//       case 'Certificate of Packaging Science':
-//         return 'bg-gradient-to-br from-base-dark to-gray-900';
-//       case 'Automotive Packaging Certificate':
-//         return 'bg-gradient-to-br from-clemson to-orange-800';
-//       default:
-//         return 'bg-gradient-to-br from-base-brand to-gray-900';
-//     }
-//   };
-
-//   return (
-//     <a href={hit.slug} className='aa-ItemLink hover:bg-gray-100 cursor-pointer'>
-//       <div className='grid grid-cols-5 w-full'>
-//         <div className='lg:px-3 py-1.5 col-span-5'>
-//           <div className='flex gap-3 w-full'>
-//             <div>
-//               <CMPMIcon scale={12} background={setBackground()} />
-//             </div>
-//             <div className='flex flex-col '>
-//               <div className='font-greycliff font-semibold leading-snug dark:text-gray-700'>
-//                 <components.Highlight hit={hit} attribute='title' />
-//               </div>
-//               <div className='aa-ItemTitle text-sm line-clamp-2  text-gray-600 dark:text-gray-700'>
-//                 <components.Highlight hit={hit} attribute='subheadline' />
-//               </div>
-//               <div className='aa-ItemTitle line-clamp-2   text-gray-600 dark:text-gray-700'>
-//                 <components.Highlight hit={hit} attribute='subhead' />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </a>
-//   );
-// }
-
-// export function ProductItem({ hit, components }) {
-//   return (
-//     <div className='flex justify-between items-center w-full pl-6'>
-//       <a
-//         href={`https://www.packagingschool.com/articles/${hit.slug}`}
-//         className='aa-ItemLink hover:bg-gray-100 cursor-pointer w-full'
-//         target='_blank'
-//         rel='noReferrer'
-//       >
-//         <div className='font-greycliff font-semibold leading-snug lg:text-lg dark:text-gray-700 w-full'>
-//           <components.Highlight hit={hit} attribute='title' />
-//         </div>
-//       </a>
-//     </div>
-//   );
-// }
-
-// export function CourseItem({ hit, components }) {
-//   const setBackground = () => {
-//     switch (hit.title) {
-//       case 'Certificate of Mastery in Packaging Management':
-//         return 'bg-gradient-to-br from-base-brand to-gray-700';
-//       case 'Certificate of Packaging Science':
-//         return 'bg-gradient-to-br from-base-dark to-slate-900';
-//       case 'Automotive Packaging Certificate':
-//         return 'bg-gradient-to-br from-clemson to-orange-800';
-//       default:
-//         return 'bg-gradient-to-br from-green-600 to-green-900';
-//     }
-//   };
-
-//   return (
-//     <a
-//       href={`/courses/${hit.slug}`}
-//       className='aa-ItemLink hover:bg-slate-100 cursor-pointer'
-//     >
-//       <div className='grid grid-cols-5 w-full'>
-//         <div className='px-3 py-1.5 col-span-5'>
-//           <div className='flex gap-3 w-full'>
-//             <div>
-//               <GlobalMaterialsIcon scale={12} background={setBackground()} />
-//             </div>
-//             <div className='flex flex-col '>
-//               <div className='font-greycliff font-semibold leading-snug'>
-//                 <components.Highlight hit={hit} attribute='title' />
-//               </div>
-//               <div className='aa-ItemTitle line-clamp-2 text-sm text-slate-600 dark:text-slate-700'>
-//                 <components.Highlight hit={hit} attribute='subheadline' />
-//               </div>
-//               <div className='aa-ItemTitle line-clamp-2  text-sm md:text-base text-slate-600 dark:text-slate-700'>
-//                 <components.Highlight hit={hit} attribute='subhead' />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </a>
-//   );
-// }
-
-// export function LOTMItem({ hit, components }) {
-//   const setBackground = () => {
-//     switch (hit.title) {
-//       case 'Certificate of Mastery in Packaging Management':
-//         return 'bg-gradient-to-br from-base-brand to-slate-700';
-//       case 'Certificate of Packaging Science':
-//         return 'bg-gradient-to-br from-base-dark to-slate-900';
-//       case 'Automotive Packaging Certificate':
-//         return 'bg-gradient-to-br from-clemson to-orange-800';
-//       default:
-//         return 'bg-gradient-to-br from-red-500 to-red-900';
-//     }
-//   };
-
-//   return (
-//     <a
-//       href={hit.type === 'INDEX' ? `/${hit.slug}` : `/lessons/${hit.slug}`}
-//       className='aa-ItemLink hover:bg-slate-100 cursor-pointer'
-//     >
-//       <div className='grid grid-cols-5 w-full'>
-//         <div className='px-3 py-1.5 col-span-5'>
-//           <div className='flex gap-3 w-full'>
-//             {hit.type === 'LOTM' && (
-//               <div>
-//                 <LotmIcon style='w-12 h-12 fill-slate-900' />
-//               </div>
-//             )}
-
-//             <div className='flex flex-col '>
-//               <div className='font-greycliff font-semibold leading-snug '>
-//                 <components.Highlight hit={hit} attribute='title' />
-//               </div>
-//               <div className='aa-ItemTitle line-clamp-2 text-sm text-gray-600 '>
-//                 <components.Highlight hit={hit} attribute='subheadline' />
-//               </div>
-//               <div className='aa-ItemTitle line-clamp-2 text-sm text-gray-600 '>
-//                 <components.Highlight hit={hit} attribute='subhead' />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </a>
-//   );
-// }
-
 export default function HeaderNew() {
   const [open, setOpen] = useState(false);
-
-  const [searchQuery, setSearchQuery] = useState('');
-  const { user } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const { user, thinkificUser } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -447,7 +287,32 @@ export default function HeaderNew() {
                     </div>
 
                     <div className='flex items-center gap-0 w-fit whitespace-nowrap'>
-                      {isUser ? (
+                      {isUser && thinkificUser?.hasAdminRole ? (
+                        <div className='flex items-center gap-1.5'>
+                          <div className='rounded-full ring-2 ring-clemson'>
+                            {user.picture ? (
+                              <img
+                                src={user.picture}
+                                alt='User'
+                                className='w-6 h-6 rounded-full'
+                              />
+                            ) : (
+                              <MdAccountCircle color='#6B7A8F' size={24} />
+                            )}
+                          </div>
+                          <div
+                            className='text-sm font-semibold text-slate-700 cursor-pointer hover:text-slate-900 transition-all duration-300'
+                            onClick={() =>
+                              navigateToThinkific(
+                                'https://learn.packagingschool.com/enrollments?role=admin',
+                                'https://learn.packagingschool.com/enrollments?role=admin'
+                              )
+                            }
+                          >
+                            My Dashboard
+                          </div>
+                        </div>
+                      ) : isUser && !thinkificUser?.hasAdminRole ? (
                         <div className='flex items-center gap-1.5'>
                           <Popover className='relative'>
                             <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
@@ -499,9 +364,7 @@ export default function HeaderNew() {
                         </div>
                       ) : (
                         <div className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
-                          <Link
-                            href={`/api/auth/login?returnTo=${currentPath}`}
-                          >
+                          <Link href={`/login?returnTo=${currentPath}`}>
                             <div className='flex items-center gap-1 px-1'>
                               <MdLogin color='#6B7A8F' size={24} />
                               <span className='text-sm font-semibold text-slate-700'>
@@ -511,12 +374,6 @@ export default function HeaderNew() {
                           </Link>
                         </div>
                       )}
-                      {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
-                            <MdOutlineNotifications color='#6B7A8F' size={24} />
-                          </div> */}
-                      {/* <div className='cursor-pointer hover:bg-slate-200 transition-all duration-300'>
-                            <MdOutlineShoppingCart color='#6B7A8F' size={24} />
-                          </div> */}
                     </div>
                   </div>
                 </div>

@@ -4,6 +4,10 @@ import { handleSSO } from '../../../helpers/api';
 console.log('Auth0 API route initialized'); // Log when the API route is loaded
 
 export default handleAuth({
+  authorizationParams: {
+    // This will be overridden by query parameters when provided
+  },
+
   async callback(req, res) {
     console.log('Callback endpoint hit'); // Log when callback is triggered
     try {
