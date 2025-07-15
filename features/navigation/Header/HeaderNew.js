@@ -289,17 +289,52 @@ export default function HeaderNew() {
                     <div className='flex items-center gap-0 w-fit whitespace-nowrap'>
                       {isUser && thinkificUser?.hasAdminRole ? (
                         <div className='flex items-center gap-1.5'>
-                          <div className='rounded-full ring-2 ring-clemson'>
-                            {user.picture ? (
-                              <img
-                                src={user.picture}
-                                alt='User'
-                                className='w-6 h-6 rounded-full'
-                              />
-                            ) : (
-                              <MdAccountCircle color='#6B7A8F' size={24} />
-                            )}
-                          </div>
+                          <Popover className='relative'>
+                            <Popover.Button className='cursor-pointer hover:bg-slate-200 rounded-lg p-1 transition-all duration-300'>
+                              <div className='rounded-full ring-2 ring-clemson'>
+                                {user.picture ? (
+                                  <img
+                                    src={user.picture}
+                                    alt='User'
+                                    className='w-6 h-6 rounded-full'
+                                  />
+                                ) : (
+                                  <MdAccountCircle color='#6B7A8F' size={24} />
+                                )}
+                              </div>
+                            </Popover.Button>
+                            <Transition
+                              as={Fragment}
+                              enter='transition ease-out duration-200'
+                              enterFrom='opacity-0 translate-y-1'
+                              enterTo='opacity-100 translate-y-0'
+                              leave='transition ease-in duration-150'
+                              leaveFrom='opacity-100 translate-y-0'
+                              leaveTo='opacity-0 translate-y-1'
+                            >
+                              <Popover.Panel className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-dark-mid shadow-lg ring-1 ring-black ring-opacity-5'>
+                                <div className='py-1'>
+                                  <div
+                                    className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light cursor-pointer'
+                                    onClick={() =>
+                                      navigateToThinkific(
+                                        'https://learn.packagingschool.com/enrollments?role=admin',
+                                        'https://learn.packagingschool.com/enrollments?role=admin'
+                                      )
+                                    }
+                                  >
+                                    My Dashboard
+                                  </div>
+                                  <Link
+                                    href='/api/auth/logout'
+                                    className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
+                                  >
+                                    Sign Out
+                                  </Link>
+                                </div>
+                              </Popover.Panel>
+                            </Transition>
+                          </Popover>
                           <div
                             className='text-sm font-semibold text-slate-700 cursor-pointer hover:text-slate-900 transition-all duration-300'
                             onClick={() =>
@@ -343,7 +378,7 @@ export default function HeaderNew() {
                                     href='/profile'
                                     className='block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-dark-light'
                                   >
-                                    Profile
+                                    My Dashboard
                                   </Link>
                                   <Link
                                     href='/api/auth/logout'
