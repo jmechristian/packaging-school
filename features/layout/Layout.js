@@ -26,16 +26,16 @@ import HeaderNew from '../navigation/Header/HeaderNew';
 import Loading from '../../components/shared/Loading';
 import CookieConsent from '../../components/shared/CookieConsent';
 import IndiaBanner from '../../components/shared/IndiaBanner';
+import { useRouter } from 'next/router';
 
 const Layout = ({ children }) => {
-  // const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { showToast } = useSelector((state) => state.nav);
   const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
-
+  const router = useRouter();
   useEffect(() => {
     const checkUser = async () => {
       if (!user?.email) return;
@@ -99,6 +99,7 @@ const Layout = ({ children }) => {
         dispatch(setEnrollments(enrollmentsData.items));
       } else {
         dispatch(setThinkificUser(null));
+        router.push('/profile');
       }
     };
 

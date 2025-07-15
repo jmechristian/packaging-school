@@ -149,7 +149,15 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
         </div>
         <div className='flex items-start justify-between'>
           <div className='flex items-center gap-2'>
-            <div className='font-semibold text-gray-900 tracking-tight leading-tight'>
+            <div
+              className='font-semibold text-gray-900 tracking-tight leading-tight cursor-pointer'
+              onClick={() => {
+                navigateToThinkific(
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`
+                );
+              }}
+            >
               {course.title}
             </div>
           </div>
