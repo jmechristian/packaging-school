@@ -1051,6 +1051,11 @@ const nextConfig = {
         destination: '/all_courses?cat=automotive',
         permanent: true,
       },
+      {
+        source: '/express-signin',
+        destination: '/api/auth/password-reset',
+        permanent: true,
+      },
     ];
   },
 };
