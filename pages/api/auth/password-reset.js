@@ -4,7 +4,8 @@ export default async function passwordReset(req, res) {
   const { email, returnTo } = req.query;
 
   if (!email) {
-    return res.redirect('/error?message=Email is required for password reset');
+    res.redirect('/error?message=Email is required for password reset');
+    return;
   }
 
   const AUTH0_ISSUER_BASE_URL = process.env.AUTH0_ISSUER_BASE_URL;
@@ -12,7 +13,8 @@ export default async function passwordReset(req, res) {
   const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET_2;
 
   if (!AUTH0_ISSUER_BASE_URL || !AUTH0_CLIENT_ID || !AUTH0_CLIENT_SECRET) {
-    return res.redirect('/error?message=Authentication configuration error');
+    res.redirect('/error?message=Authentication configuration error');
+    return;
   }
 
   try {
@@ -33,14 +35,7 @@ export default async function passwordReset(req, res) {
     const AUTH0_DOMAIN = AUTH0_ISSUER_BASE_URL.replace('https://', '');
     const url = `https://${AUTH0_DOMAIN}/api/v2/tickets/password-change`;
 
-    // Construct full URL for result_url
-    const baseUrl = process.env.AUTH0_BASE_URL || 'http://localhost:3001';
-    const fullResultUrl = returnTo
-      ? `${baseUrl}${returnTo.startsWith('/') ? returnTo : `/${returnTo}`}`
-      : `${baseUrl}/profile`;
-
     console.log('Creating password reset ticket for:', email);
-    console.log('Result URL:', fullResultUrl);
 
     const ticketResponse = await axios.post(
       url,
@@ -50,7 +45,9 @@ export default async function passwordReset(req, res) {
         ttl_sec: 3600, // Reduced to 1 hour for testing
         mark_email_as_verified: true,
         includeEmailInRedirect: true,
-        result_url: fullResultUrl,
+        result_url: `${
+          process.env.NEXT_PUBLIC_BASE_URL || 'https://packagingschool.com'
+        }/login${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`,
       },
       {
         headers: {
@@ -65,7 +62,7 @@ export default async function passwordReset(req, res) {
     console.log('Generated reset URL:', resetUrl);
 
     // 4. Redirect user directly to the password reset page
-    return res.redirect(resetUrl);
+    res.redirect(resetUrl);
   } catch (error) {
     console.error(
       'Password reset error:',
@@ -76,6 +73,6 @@ export default async function passwordReset(req, res) {
     const errorMessage = encodeURIComponent(
       'Failed to generate password reset link. Please try again.'
     );
-    return res.redirect(`/error?message=${errorMessage}`);
+    res.redirect(`/error?message=${errorMessage}`);
   }
 }
