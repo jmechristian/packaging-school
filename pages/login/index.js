@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className='text-center text-slate-600 text-lg font-semibold'>
             We&apos;ve Updated Our Login Process
           </div>
-          <div className='text-center text-gray-500 md:!text-lg leading-snug'>
+          <div className='text-center text-gray-500 md:!text-lg md:!leading-snug'>
             For security, some users may need to reset their password the first
             time. Or, skip the reset and sign in with a one-time email code —
             whichever you prefer.
@@ -186,13 +186,18 @@ export default function LoginPage() {
           )}
         </div>
 
-        <div className='text-center pt-2 text-sm text-gray-500'>
+        <div className='text-center text-sm text-gray-500'>
           New here?{' '}
           <Link
             href={getAuthUrl('/api/auth/signup')}
             className='text-blue-600 hover:underline'
           >
             Create an account.
+          </Link>
+        </div>
+        <div className='text-center text-sm text-gray-500'>
+          <Link href={getAuthUrl('/')} className='text-red-600 hover:underline'>
+            Cancel
           </Link>
         </div>
       </div>
