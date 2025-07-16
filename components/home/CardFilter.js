@@ -286,7 +286,7 @@ const CardFilter = () => {
           <div className='w-full text-center text-white'>
             <h2 className='h2-base'>Popular Curriculum</h2>
           </div>
-          <div className='w-full text-center text-xl text-white/70 max-w-4xl mx-auto'>
+          <div className='w-full text-center text-base md:!text-lg lg:!text-xl text-white/70 max-w-4xl mx-auto'>
             Instantly access expert‑led, self‑paced courses—or choose one of our
             comprehensive certificate programs below and jump straight into
             hands‑on learning designed for busy professionals.

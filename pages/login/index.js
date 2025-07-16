@@ -10,49 +10,70 @@ export default function LoginPage() {
   const router = useRouter();
   const { returnTo } = router.query;
 
+  // Get the referring URL if no returnTo is specified
+  const getReturnTo = () => {
+    if (returnTo) return returnTo;
+
+    // Check if we're in the browser and have a referrer
+    if (typeof window !== 'undefined' && document.referrer) {
+      const referrer = new URL(document.referrer);
+      // Only use referrer if it's from the same domain
+      if (referrer.origin === window.location.origin) {
+        return document.referrer;
+      }
+    }
+
+    return null;
+  };
+
   const handleMagicLink = () => {
     if (!email) return;
 
+    const returnToUrl = getReturnTo();
     // Redirect directly to the magic link endpoint
     const magicLinkUrl = `/api/magic-link?email=${encodeURIComponent(email)}${
-      returnTo ? `&returnTo=${encodeURIComponent(returnTo)}` : ''
+      returnToUrl ? `&returnTo=${encodeURIComponent(returnToUrl)}` : ''
     }`;
     window.location.href = magicLinkUrl;
   };
 
   const getAuthUrl = (baseUrl) => {
+    const returnToUrl = getReturnTo();
     return `${baseUrl}${
-      returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''
+      returnToUrl ? `?returnTo=${encodeURIComponent(returnToUrl)}` : ''
     }`;
   };
 
   return (
     <div className='fixed inset-0 flex flex-col items-center justify-center px-4 py-8 z-50'>
       <div className='absolute top-0 left-0 w-full h-full bg-black opacity-80 z-10'></div>
-      <div className='max-w-md w-full space-y-7 bg-white py-9 px-8 rounded-xl shadow relative z-20'>
+      <div className='max-w-md w-full space-y-6 bg-white py-6 md:!py-9 px-4 md:!px-8 rounded-xl shadow relative z-20'>
         <div className='flex justify-center'>
           <Image
             src='https://packschool.s3.us-east-1.amazonaws.com/ps-logo-square.svg'
             alt='Packaging School Logo'
-            width={80}
-            height={80}
+            width={90}
+            height={90}
           />
         </div>
-        <div className='flex flex-col items-center gap-2 mb-4'>
+        <div className='flex flex-col items-center gap-1 mb-4'>
           <div className='font-oswald uppercase text-center text-clemson text-xl tracking-[.4em]'>
             Welcome To
           </div>
           <div className='h3-base text-center'>The Packaging School</div>
         </div>
-        <div className='text-center text-gray-500 text-lg leading-snug'>
-          Choose how you would like to login. New to Packaging School?{' '}
-          <Link
-            href={getAuthUrl('/api/auth/signup')}
-            className='text-blue-600 hover:underline'
-          >
-            Create an account
-          </Link>
+        <div className='w-full h-[1px] bg-gray-200'></div>
+        <div className='flex flex-col items-center gap-2 mb-4'>
+          <div className='text-center text-slate-600 text-lg font-semibold'>
+            We&apos;ve Updated Our Login Process
+          </div>
+          <div className='text-center text-gray-500 md:!text-lg leading-snug'>
+            For security, some users may need to reset their password the first
+            time. Or, skip the reset and sign in with a one-time email code —
+            whichever you prefer.
+          </div>
         </div>
+
         <div className='w-full h-[1px] bg-gray-200'></div>
         {/* Social logins */}
         <div className='grid grid-cols-4 gap-3'>
@@ -132,8 +153,8 @@ export default function LoginPage() {
                   ? `/api/auth/password-login?email=${encodeURIComponent(
                       email
                     )}${
-                      returnTo
-                        ? `&returnTo=${encodeURIComponent(returnTo)}`
+                      getReturnTo()
+                        ? `&returnTo=${encodeURIComponent(getReturnTo())}`
                         : ''
                     }`
                   : getAuthUrl('/api/auth/password-login')
@@ -146,7 +167,7 @@ export default function LoginPage() {
             <button
               onClick={handleMagicLink}
               disabled={!email}
-              className='block w-full bg-base-brand text-white py-3 px-4 rounded-md hover:bg-base-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium'
+              className='block w-full bg-base-brand text-white py-3 px-4 rounded-md hover:bg-base-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed font-medium'
             >
               Send One-Time Code
             </button>

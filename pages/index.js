@@ -196,9 +196,9 @@ const App = () => {
                   Become a Packaging Professional{' '}
                   <span className='text-clemson block'>In 12-weeks.</span>
                 </div>
-                <div className='w-full h-full text-white text-xl lg:!text-3xl !max-w-5xl mx-auto'>
-                  Get full access to all our expert-led courses. <br />
-                  Learn with a professor or go solo at your own pace.
+                <div className='w-full h-full text-white text-lg md:text-xl lg:!text-3xl !max-w-3xl mx-auto leading-snug'>
+                  Get full access to all our expert-led courses. Learn with a
+                  professor or go solo at your own pace.
                 </div>
                 <div className='flex flex-col items-start gap-10'>
                   <div className='grid lg:grid-cols-2 gap-4 w-full max-w-2xl mx-auto mt-5'>
@@ -221,7 +221,7 @@ const App = () => {
                       </div>
                     </button>
                   </div>
-                  <div className='w-full text-center text-slate-400 max-w-2xl mx-auto'>
+                  <div className='w-full text-center text-slate-400 max-w-2xl mx-auto text-xs md:!text-base'>
                     Curriculum Developed at Clemson University School Licensed
                     (#5400) by South Carolina Commission on Higher Education.
                   </div>
