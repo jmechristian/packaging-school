@@ -9,14 +9,43 @@ export default handleAuth({
   },
 
   async callback(req, res) {
-    console.log('Callback endpoint hit'); // Log when callback is triggered
+    console.log('Callback endpoint hit');
+
+    // Decode the state parameter to get returnTo
+    let returnTo = null;
+    if (req.query.state) {
+      try {
+        const decodedState = JSON.parse(
+          Buffer.from(req.query.state, 'base64').toString()
+        );
+        returnTo = decodedState.returnTo;
+        console.log('Decoded state:', decodedState);
+        console.log('returnTo from state:', returnTo);
+      } catch (error) {
+        console.error('Error decoding state:', error);
+      }
+    }
+
+    // Also check for returnTo in query params (for external URLs)
+    if (!returnTo && req.query.returnTo) {
+      returnTo = req.query.returnTo;
+      console.log('returnTo from query params:', returnTo);
+    }
+
+    // Log when callback is triggered
     try {
       await handleCallback(req, res, {
+        returnTo: returnTo, // Pass returnTo directly to handleCallback
         afterCallback: async (req, res, session) => {
           if (!session?.user) {
             console.log('No user in session');
             return session;
           }
+
+          // Use returnTo if available, otherwise use default
+          const redirectUrl =
+            returnTo || 'https://packagingschool.com/profile?tab=courses';
+          console.log('Will redirect to:', redirectUrl);
 
           try {
             console.log('Processing user:', session.user.email);
@@ -32,25 +61,8 @@ export default handleAuth({
             const data = await thinkificUser.json();
 
             if (data?.data?.data?.userByEmail) {
-              // User exists in Thinkific, handle SSO
-              const firstName =
-                session.user.given_name ||
-                session.user.name?.split(' ')[0] ||
-                '';
-              const lastName =
-                session.user.family_name ||
-                session.user.name?.split(' ').slice(1).join(' ') ||
-                '';
-
-              // const redirectUrl = await handleSSO({
-              //   email: session.user.email,
-              //   first_name: firstName,
-              //   last_name: lastName,
-              //   returnTo: 'https://packagingschool.com/profile?tab=courses',
-              //   baseUrl,
-              // });
-              // console.log('SSO redirect URL generated:', redirectUrl);
-              // session.user.ssoRedirectUrl = redirectUrl;
+              // User exists in Thinkific
+              console.log('User found in Thinkific');
             } else {
               console.log('No user found in Thinkific');
 
@@ -80,21 +92,9 @@ export default handleAuth({
                   }
                 );
                 const createUserResult = await createUser.json();
-                console.log('User created in Thinkific:', createUserResult);
 
-                // Handle SSO after user creation
-                // const redirectUrl = await handleSSO({
-                //   email: session.user.email,
-                //   first_name: firstName,
-                //   last_name: lastName,
-                //   returnTo: 'https://packagingschool.com/profile?tab=courses',
-                //   baseUrl,
-                // });
-                // console.log(
-                //   'SSO redirect URL generated after user creation:',
-                //   redirectUrl
-                // );
-                // session.user.ssoRedirectUrl = redirectUrl;
+                // User created in Thinkific
+                console.log('User created in Thinkific');
               } else {
                 console.log(
                   'No first name or last name available, user will be redirected to onboarding'

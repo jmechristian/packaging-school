@@ -10,17 +10,22 @@ export default function LoginPage() {
   const router = useRouter();
   const { returnTo } = router.query;
 
+  console.log('returnTo from query:', returnTo);
+
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
-    if (returnTo) return returnTo;
-
-    // Check if we're in the browser and have a referrer
-    if (typeof window !== 'undefined' && document.referrer) {
-      const referrer = new URL(document.referrer);
-      // Only use referrer if it's from the same domain
-      if (referrer.origin === window.location.origin) {
-        return document.referrer;
+    if (returnTo) {
+      // If returnTo is an external URL (learn subdomain), store it for later use
+      if (returnTo.includes('learn.packagingschool.com')) {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('externalReturnTo', returnTo);
+        }
+        // Return a local URL that will trigger the external redirect logic
+        return `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+          returnTo
+        )}`;
       }
+      return returnTo;
     }
 
     return null;
