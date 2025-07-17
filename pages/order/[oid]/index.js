@@ -125,7 +125,7 @@ const Order = (props) => {
   return (
     <div className='fixed inset-0 bg-white z-50'>
       <div className='flex flex-col h-full'>
-        <div className='flex-1 overflow-y-auto'>
+        <div className='flex-1 overflow-y-auto' id='scrollers'>
           <div className='w-full pl-[53px] py-[13px] bg-black'>
             <div className='max-w-[15rem] h-auto max-h-[5rem] mb-[0.375rem]'>
               <Image
@@ -136,10 +136,10 @@ const Order = (props) => {
               />
             </div>
           </div>
-          <div className='w-full grid grid-cols-2 '>
-            <div className='w-full pr-[5.4%] flex justify-end pt-[80px]'>
+          <div className='w-full grid lg:!grid-cols-2 '>
+            <div className='w-full lg:!pr-[5.4%] flex justify-end pt-10 lg:!pt-[80px]'>
               <div className='px-[53px] w-full flex justify-end'>
-                <div className='w-full bg-white/50 h-full max-w-[454px]'>
+                <div className='w-full bg-white/50 h-full max-w-[454px] mx-auto lg:!mx-0'>
                   <div
                     className='aspect-[16/9] w-full bg-black bg-cover bg-center bg-no-repeat'
                     style={{
@@ -154,12 +154,26 @@ const Order = (props) => {
                       <div className='line-clamp-2 font-raleway text-base text-[#36394d] leading-[22px]'>
                         {order.courseDescription}
                       </div>
-                      <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
-                        <div>One-time payment</div>
-                        <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
-                          ${parseInt(order.total).toFixed(2)}
+                      {order.type === 'SUBSCRIPTION' ? (
+                        <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
+                          <div>Payment plan</div>
+                          <div className='flex flex-col gap-0 items-end'>
+                            <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
+                              ${parseInt(order.total).toFixed(2)} /month
+                            </div>
+                            <div className='font-raleway text-[#36394d] leading-[1.5]'>
+                              For 6 months
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
+                          <div>One-time payment</div>
+                          <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
+                            ${parseInt(order.total).toFixed(2)}
+                          </div>
+                        </div>
+                      )}
                       {order.courseDiscount > 0 && (
                         <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
                           <div>Coupon</div>
@@ -172,7 +186,10 @@ const Order = (props) => {
                         </div>
                       )}
                       <div className='py-5 border-y border-y-gray-300 font-raleway text-base text-[#36394d] leading-[1.5] flex items-center justify-between'>
-                        <div>Total</div>
+                        <div>
+                          Total{' '}
+                          {order.type === 'SUBSCRIPTION' ? 'due today' : ''}
+                        </div>
                         <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.5]'>
                           <span className='text-base font-[400] mr-2.5'>
                             USD
@@ -196,7 +213,7 @@ const Order = (props) => {
               </div>
             </div>
             <div className='w-full border-l border-l-gray-200'>
-              <div className='w-full pl-[53px] bg-white h-full flex flex-col gap-6 pt-[80px] max-w-[454px]'>
+              <div className='w-full pl-10 pr-10 pb-10 lg:!pr-0 lg:!pl-[53px] bg-white h-full flex flex-col gap-6 pt-[80px] max-w-[454px] mx-auto lg:!mx-0'>
                 <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.3]'>
                   Sign in or sign up to complete your purchase
                 </div>

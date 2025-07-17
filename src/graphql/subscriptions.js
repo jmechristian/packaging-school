@@ -3584,6 +3584,8 @@ export const onCreateUser = /* GraphQL */ `
           courseImage
           courseDiscount
           courseDescription
+          type
+          paymentPlan
           createdAt
           updatedAt
           userOrdersId
@@ -3924,6 +3926,8 @@ export const onUpdateUser = /* GraphQL */ `
           courseImage
           courseDiscount
           courseDescription
+          type
+          paymentPlan
           createdAt
           updatedAt
           userOrdersId
@@ -4264,6 +4268,8 @@ export const onDeleteUser = /* GraphQL */ `
           courseImage
           courseDiscount
           courseDescription
+          type
+          paymentPlan
           createdAt
           updatedAt
           userOrdersId
@@ -12591,6 +12597,8 @@ export const onCreateOrder = /* GraphQL */ `
       courseImage
       courseDiscount
       courseDescription
+      type
+      paymentPlan
       createdAt
       updatedAt
       userOrdersId
@@ -12752,6 +12760,8 @@ export const onUpdateOrder = /* GraphQL */ `
       courseImage
       courseDiscount
       courseDescription
+      type
+      paymentPlan
       createdAt
       updatedAt
       userOrdersId
@@ -12913,6 +12923,8 @@ export const onDeleteOrder = /* GraphQL */ `
       courseImage
       courseDiscount
       courseDescription
+      type
+      paymentPlan
       createdAt
       updatedAt
       userOrdersId

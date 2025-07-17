@@ -3095,6 +3095,8 @@ export const getUser = /* GraphQL */ `
           courseImage
           courseDiscount
           courseDescription
+          type
+          paymentPlan
           createdAt
           updatedAt
           userOrdersId
@@ -9977,6 +9979,8 @@ export const getOrder = /* GraphQL */ `
       courseImage
       courseDiscount
       courseDescription
+      type
+      paymentPlan
       createdAt
       updatedAt
       userOrdersId
@@ -10041,6 +10045,8 @@ export const listOrders = /* GraphQL */ `
         courseImage
         courseDiscount
         courseDescription
+        type
+        paymentPlan
         createdAt
         updatedAt
         userOrdersId
@@ -10115,6 +10121,8 @@ export const ordersByEmail = /* GraphQL */ `
         courseImage
         courseDiscount
         courseDescription
+        type
+        paymentPlan
         createdAt
         updatedAt
         userOrdersId
@@ -10189,6 +10197,8 @@ export const ordersByUserID = /* GraphQL */ `
         courseImage
         courseDiscount
         courseDescription
+        type
+        paymentPlan
         createdAt
         updatedAt
         userOrdersId

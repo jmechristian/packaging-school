@@ -6,9 +6,12 @@ import HoverCard from '../shared/HoverCard';
 import { LuRocket } from 'react-icons/lu';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { createNewOrder } from '../../helpers/api';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 const CourseInfo = ({
+  title,
+  description,
   seoImage,
   price,
   link,
@@ -23,9 +26,34 @@ const CourseInfo = ({
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
+
+  const orderHandler = async (type) => {
+    const orderId = await createNewOrder({
+      courseDescription: description,
+      courseDiscount: 0,
+      courseImage: seoImage,
+      courseName: title,
+      courseLink: type === 'SUBSCRIPTION' ? subscriptionLink : link,
+      total: type === 'SUBSCRIPTION' ? subscriptionPrice : price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+      type: type,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        type === 'SUBSCRIPTION' ? subscriptionLink : link,
+        type === 'SUBSCRIPTION' ? subscriptionLink : link
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   return (
     <section>
-      <div className='dark:bg-dark-mid bg-slate-200 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,0.20)]'>
+      <div className='dark:bg-dark-mid bg-slate-200 border border-black'>
         <div className='flex flex-col gap-4 border-b border-b-slate-200 dark:border-b-slate-700 p-4 md:p-6 pt-8 lg:pt-8 lg:p-8'>
           <div className='flex flex-col gap-10'>
             {embedid ? (
@@ -51,12 +79,8 @@ const CourseInfo = ({
                   {subscriptionLink && subscriptionPrice ? (
                     <div className='grid grid-cols-2 border border-black'>
                       <div
-                        className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
-                        onClick={() =>
-                          awsUser && awsUser.name.includes(' ')
-                            ? navigateToThinkific(link, link)
-                            : router.push(`${link}`)
-                        }
+                        className='w-full flex flex-col justify-center items-center p-5 gap-1.5 bg-white hover:bg-neutral-200 transition-all ease-in cursor-pointer'
+                        onClick={() => orderHandler('BUY')}
                       >
                         <div className='h4-base'>Buy Now</div>
                         <div className='h2-base'>${price}</div>
@@ -71,14 +95,7 @@ const CourseInfo = ({
                       </div>
                       <div
                         className='w-full flex flex-col justify-center items-center border-l border-black p-5 gap-1.5 bg-base-mid hover:bg-neutral-800 transition-all ease-in cursor-pointer'
-                        onClick={() =>
-                          awsUser && awsUser.name.includes(' ')
-                            ? navigateToThinkific(
-                                subscriptionLink,
-                                subscriptionLink
-                              )
-                            : router.push(`${subscriptionLink}`)
-                        }
+                        onClick={() => orderHandler('SUBSCRIPTION')}
                       >
                         <div className='h4-base text-white'>Subscribe</div>
                         <div className='h2-base text-white'>

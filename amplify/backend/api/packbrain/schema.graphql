@@ -1364,4 +1364,6 @@ type Order @model @auth(rules: [{ allow: public }]) {
   courseImage: String
   courseDiscount: Float
   courseDescription: String
+  type: String
+  paymentPlan: String
 }
