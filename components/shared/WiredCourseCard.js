@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { API } from 'aws-amplify';
 import { getLMSCourse, getLesson } from '../../src/graphql/queries';
 import { PlayCircleIcon } from '@heroicons/react/24/solid';
-
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 import {
   BrowserView,
   MobileView,
@@ -14,7 +14,7 @@ import {
 } from 'react-device-detect';
 
 import VideoPlayer from '../VideoPlayer';
-import { registgerCourseClick } from '../../helpers/api';
+import { createNewOrder, registgerCourseClick } from '../../helpers/api';
 
 const WiredCourseCard = ({
   id,
@@ -30,8 +30,8 @@ const WiredCourseCard = ({
   const [isLesson, setIsLesson] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
-  const { location } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const { location, awsUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const getCurrentCourse = async () => {
@@ -47,6 +47,29 @@ const WiredCourseCard = ({
     id && getCurrentCourse();
   }, [id]);
 
+  const orderHandler = async (course) => {
+    const orderId = await createNewOrder({
+      courseDescription: course.subheadline,
+      courseDiscount: 100,
+      courseImage: course.seoImage,
+      courseName: course.title,
+      courseLink: reference ? `${course.link}?${reference}` : course.link,
+      total: course.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        reference ? `${course.link}?${reference}` : course.link,
+        reference ? `${course.link}?${reference}` : course.link
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   const cardClickHandler = async () => {
     await registgerCourseClick(
       isLesson.id,
@@ -59,8 +82,9 @@ const WiredCourseCard = ({
     !external && !reference
       ? router.push(`/courses/${isLesson.slug}`)
       : reference
-      ? window.open(isLesson.link + `?${reference}`, '_blank')
-      : window.open(isLesson.link, '_blank');
+      ? orderHandler(isLesson)
+      : // window.open(isLesson.link + `?${reference}`, '_blank')
+        window.open(isLesson.link, '_blank');
   };
 
   return isLesson ? (

@@ -274,62 +274,6 @@ const Page = ({ customer }) => {
     return lotm;
   }, [allLessons]);
 
-  const HighlightContent = ({ link }) => {
-    return (
-      <motion.div className='px-0 lg:px-6 w-fit mx-auto grid gap-12 md:gap-6 lg:gap-16 md:grid-cols-2 lg:grid-cols-3 md:pb-10 py-9 overflow-hidden'>
-        <WiredCourseCard
-          id={'a6769066-eda9-4f8f-aee9-579482d87ce0'}
-          external={true}
-          link_text={'Select Course'}
-          Icon={AcademicCapIcon}
-          callout={'Unilever Developed'}
-        />
-        <WiredCourseCard
-          id={'ff174f01-5f76-486c-8d7a-849d6d3ff914'}
-          external={true}
-          Icon={AcademicCapIcon}
-          callout={'Packaging School Course'}
-        />
-        <WiredLessonCardToo
-          id={latestLesson && latestLesson[0].id}
-          Icon={SignalIcon}
-          callout={'Latest Lesson'}
-          link_text={'View Lesson'}
-        />
-        {/* <NewCouseCard
-        title={latestLesson && latestLesson[0].title}
-        description={latestLesson && latestLesson[0].subhead}
-        background={latestLesson && latestLesson[0].seoImage}
-        link={`/lessons/${latestLesson && latestLesson[0].slug}`}
-        link_text={'View Lesson'}
-        Icon={SignalIcon}
-        callout={'Latest Lesson'}
-      /> */}
-      </motion.div>
-    );
-  };
-
-  const LessonContent = () => {
-    return (
-      <UnileverLessons
-        id={'84558b1f-359a-4551-8832-c6c570171163'}
-        supportLinks={
-          allLessons &&
-          allLessons
-            .filter((less) => less.type === 'LOTM')
-            .sort((a, b) => {
-              if (a.createdAt < b.createdAt) {
-                return 1;
-              }
-              if (a.createdAt > b.createdAt) {
-                return -1;
-              }
-            })
-        }
-      />
-    );
-  };
-
   return (
     <>
       <Head>

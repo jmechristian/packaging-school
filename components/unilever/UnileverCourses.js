@@ -2,10 +2,41 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import BrutalTag from '../../components/shared/BrutalTag';
 import VideoPlayer from '../VideoPlayer';
-
+import { createNewOrder } from '../../helpers/api';
+import { useSelector } from 'react-redux';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useRouter } from 'next/router';
 import WiredCourseCard from '../shared/WiredCourseCard';
 
 const UnileverCourses = ({ featured, reference }) => {
+  const router = useRouter();
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const orderHandler = async () => {
+    const orderId = await createNewOrder({
+      courseDescription:
+        'The Packaging School, recognized for its commitment to advancing packaging education with a strong emphasis on sustainability, provides a comprehensive learning platform for Unilever employees. Through specialized modules, employees can deepen their expertise in key areas',
+      courseDiscount: 0,
+      courseImage:
+        'https://packschool.s3.us-east-1.amazonaws.com/ul-course-hero.jpg',
+      courseName: 'Framework for Understanding Renewable Feedstocks Course',
+      courseLink: `https://learn.packagingschool.com/enroll/3246250?price_id=4139249`,
+      total: 0,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        `https://learn.packagingschool.com/enroll/3246250?price_id=4139249`,
+        `https://learn.packagingschool.com/enroll/3246250?price_id=4139249`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   return (
     // <motion.div className='px-0 lg:px-6 w-fit mx-auto grid gap-12 md:gap-6 lg:gap-16 md:grid-cols-2 lg:grid-cols-3 md:pb-10 py-9 overflow-hidden'>
     //   <WiredCourseCard
@@ -99,12 +130,7 @@ const UnileverCourses = ({ featured, reference }) => {
               </div>
               <div
                 className='flex items-center justify-center w-full bg-unilever-blue text-white font-semibold text-lg py-2 rounded-lg cursor-pointer hover:bg-unilever-blue/80 transition-colors duration-300'
-                onClick={() => {
-                  window.open(
-                    'https://learn.packagingschool.com/enroll/3246250?price_id=4139249',
-                    '_blank'
-                  );
-                }}
+                onClick={orderHandler}
               >
                 Select Course
               </div>
