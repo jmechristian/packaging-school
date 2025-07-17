@@ -30,6 +30,7 @@ import {
   registerCertificateClick,
   addCourseToWishlist,
   removeCourseFromWishlist,
+  createNewOrder,
 } from '../helpers/api';
 import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
 import CertificateTableItem from '../components/shared/CertificateTableItem';
@@ -351,6 +352,26 @@ const Page = () => {
     router.push(`/courses/categories/${category}`);
   };
 
+  const orderHandler = async (courseData) => {
+    const orderId = await createNewOrder({
+      courseDescription: courseData.subheadline,
+      courseDiscount: 0,
+      courseImage: courseData.seoImage,
+      courseName: courseData.title,
+      courseLink: `${courseData.link}`,
+      total: courseData.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   const cardClickHandler = async (id, slug, altlink, type) => {
     await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
 
@@ -363,17 +384,18 @@ const Page = () => {
         );
   };
 
-  const cardPurchaseHandler = async (id, link) => {
-    await registgerCourseClick(id, router.asPath, location, link, 'GRID');
+  // const cardPurchaseHandler = async (id, link) => {
+  //   await registgerCourseClick(id, router.asPath, location, link, 'GRID');
 
-    if (awsUser && awsUser.name.includes(' ')) {
-      navigateToThinkific(link, link);
-    } else {
-      router.push(`${link}`);
-    }
-  };
+  //   if (awsUser && awsUser.name.includes(' ')) {
+  //     navigateToThinkific(link, link);
+  //   } else {
+  //     router.push(`${link}`);
+  //   }
+  // };
 
   const handleCertCardClick = async (
+    cert,
     abbreviation,
     type,
     link,
@@ -391,7 +413,18 @@ const Page = () => {
     if (type === 'CERTIFICATE-VIEW') {
       router.push(link);
     } else if (type === 'CERTIFICATE-APPLY') {
-      router.push(applicationLink);
+      if (abbreviation === 'CPS' || abbreviation === 'CMPM') {
+        router.push(applicationLink);
+      } else {
+        orderHandler({
+          subheadline: cert.description,
+          seoImage: cert.seoImage,
+          title: cert.title,
+          link: `${cert.applicationLink}`,
+          price: cert.price,
+          total: cert.price,
+        });
+      }
     } else {
       router.push(link);
     }
@@ -777,6 +810,7 @@ const Page = () => {
                         applicationLink
                       ) =>
                         handleCertCardClick(
+                          cert,
                           abbreviation,
                           type,
                           link,
@@ -799,9 +833,7 @@ const Page = () => {
                           course.type
                         )
                       }
-                      cardPurchaseHandler={() =>
-                        cardPurchaseHandler(course.id, course.link)
-                      }
+                      cardPurchaseHandler={() => orderHandler(course)}
                       cardFavoriteHandler={() => handleAddToWishlist(course.id)}
                       isFavorite={awsUser?.wishlist?.items.some(
                         (item) => item.lMSCourse.id === course.id

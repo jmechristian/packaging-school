@@ -160,12 +160,14 @@ const Order = (props) => {
                           ${order.total}
                         </div>
                       </div>
-                      <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
-                        <div>Coupon</div>
-                        <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
-                          -${(order.total * order.courseDiscount) / 100}
+                      {order.courseDiscount > 0 && (
+                        <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
+                          <div>Coupon</div>
+                          <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
+                            -${(order.total * order.courseDiscount) / 100}
+                          </div>
                         </div>
-                      </div>
+                      )}
                       <div className='py-5 border-y border-y-gray-300 font-raleway text-base text-[#36394d] leading-[1.5] flex items-center justify-between'>
                         <div>Total</div>
                         <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.5]'>
