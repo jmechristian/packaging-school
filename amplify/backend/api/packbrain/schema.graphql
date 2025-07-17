@@ -560,6 +560,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
   reviews: [CourseReview] @hasMany
   tourCompleted: Boolean @default(value: "false")
+  orders: [Order] @hasMany(indexName: "orderByUserId")
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -1346,4 +1347,21 @@ type CourseReview @model @auth(rules: [{ allow: public }]) {
   user: User @belongsTo(fields: ["userID"])
   userID: ID @index(name: "courseReviewByUserId")
   thinkificId: String @index(name: "courseReviewByThinkificId")
+}
+
+######### ORDERS #########
+
+type Order @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String @index(name: "orderByEmail")
+  name: String
+  user: User @belongsTo(fields: ["userID"])
+  userID: ID @index(name: "orderByUserId")
+  total: Int
+  status: String @default(value: "PENDING")
+  courseName: String
+  courseLink: String
+  courseImage: String
+  courseDiscount: Int
+  courseDescription: String
 }

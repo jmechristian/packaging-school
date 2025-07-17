@@ -2,13 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { useSelector } from 'react-redux';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useRouter } from 'next/router';
 import {
   MdSearch,
   MdOutlineTimer,
   MdOutlineBook,
   MdDownloadForOffline,
 } from 'react-icons/md';
-import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
+import {
+  getCourseByID,
+  getAllLearningOfTheMonths,
+  cumminsLevel1,
+  cumminsLevel2,
+  cumminsLevel3,
+  createNewOrder,
+} from '../../helpers/api';
 import {
   BoltIcon,
   MinusIcon,
@@ -21,7 +31,6 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { cumminsLevel1, cumminsLevel2, cumminsLevel3 } from '../../helpers/api';
 
 const cpsExam = {
   courseId: 'APC-A10',
@@ -92,6 +101,9 @@ const LOTMCard = ({ lesson }) => {
 };
 
 const CourseCard = ({ course, searchQuery }) => {
+  const router = useRouter();
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
   const [courseData, setCourseData] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -113,6 +125,29 @@ const CourseCard = ({ course, searchQuery }) => {
   }, [course, searchQuery]);
 
   if (!isVisible) return null;
+
+  const orderHandler = async () => {
+    const orderId = await createNewOrder({
+      courseDescription: courseData.subheadline,
+      courseDiscount: 100,
+      courseImage: courseData.seoImage,
+      courseName: courseData.title,
+      courseLink: `${courseData.link}?coupon=cummins2025`,
+      total: courseData.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        `${courseData.link}?coupon=cummins2025`,
+        `${courseData.link}?coupon=cummins2025`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   return (
     <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
@@ -151,11 +186,14 @@ const CourseCard = ({ course, searchQuery }) => {
           </div>
           <div
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'
+            // onClick={() => {
+            //   window.open(
+            //     courseData && courseData.link + '?coupon=cummins2025',
+            //     '_blank'
+            //   );
+            // }}
             onClick={() => {
-              window.open(
-                courseData && courseData.link + '?coupon=cummins2025',
-                '_blank'
-              );
+              orderHandler();
             }}
           >
             Begin Course

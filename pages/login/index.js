@@ -10,8 +10,6 @@ export default function LoginPage() {
   const router = useRouter();
   const { returnTo } = router.query;
 
-  console.log('returnTo from query:', returnTo);
-
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
     if (returnTo) {

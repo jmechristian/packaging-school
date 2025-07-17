@@ -22,6 +22,7 @@ import {
   getCMPMForm,
   getCPSForm,
   courseReviewsByUserID,
+  getOrder,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -52,6 +53,7 @@ import {
   updateCMPMForm,
   createCPSForm,
   updateCPSForm,
+  createOrder,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -2058,4 +2060,20 @@ export const getAllCourses = async () => {
   } while (nextToken);
 
   return allCourses;
+};
+
+export const getOrderByID = async (oid) => {
+  const res = await API.graphql({
+    query: getOrder,
+    variables: { id: oid },
+  });
+  return res.data.getOrder;
+};
+
+export const createNewOrder = async (data) => {
+  const res = await API.graphql({
+    query: createOrder,
+    variables: { input: data },
+  });
+  return res.data.createOrder;
 };

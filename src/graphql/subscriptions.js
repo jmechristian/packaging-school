@@ -2657,6 +2657,7 @@ export const onCreateCompany = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -2726,6 +2727,7 @@ export const onUpdateCompany = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -2795,6 +2797,7 @@ export const onDeleteCompany = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3318,6 +3321,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3388,6 +3392,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3524,6 +3529,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3561,6 +3567,26 @@ export const onCreateUser = /* GraphQL */ `
           updatedAt
           userReviewsId
           lMSCourseReviewsId
+        }
+        nextToken
+      }
+      tourCompleted
+      orders {
+        items {
+          id
+          email
+          name
+          userID
+          total
+          status
+          courseName
+          courseLink
+          courseImage
+          courseDiscount
+          courseDescription
+          createdAt
+          updatedAt
+          userOrdersId
         }
         nextToken
       }
@@ -3635,6 +3661,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3705,6 +3732,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3841,6 +3869,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -3878,6 +3907,26 @@ export const onUpdateUser = /* GraphQL */ `
           updatedAt
           userReviewsId
           lMSCourseReviewsId
+        }
+        nextToken
+      }
+      tourCompleted
+      orders {
+        items {
+          id
+          email
+          name
+          userID
+          total
+          status
+          courseName
+          courseLink
+          courseImage
+          courseDiscount
+          courseDescription
+          createdAt
+          updatedAt
+          userOrdersId
         }
         nextToken
       }
@@ -3952,6 +4001,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -4022,6 +4072,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -4158,6 +4209,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccess
           allAccessStartDate
           allAccessEndDate
+          tourCompleted
           createdAt
           updatedAt
           userUserXpId
@@ -4195,6 +4247,26 @@ export const onDeleteUser = /* GraphQL */ `
           updatedAt
           userReviewsId
           lMSCourseReviewsId
+        }
+        nextToken
+      }
+      tourCompleted
+      orders {
+        items {
+          id
+          email
+          name
+          userID
+          total
+          status
+          courseName
+          courseLink
+          courseImage
+          courseDiscount
+          courseDescription
+          createdAt
+          updatedAt
+          userOrdersId
         }
         nextToken
       }
@@ -4339,6 +4411,10 @@ export const onCreateUserXp = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -4496,6 +4572,10 @@ export const onUpdateUserXp = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -4649,6 +4729,10 @@ export const onDeleteUserXp = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -4862,6 +4946,7 @@ export const onCreateLearningPath = /* GraphQL */ `
       slug
       status
       icon
+      accredibleId
       createdAt
       updatedAt
     }
@@ -4922,6 +5007,7 @@ export const onUpdateLearningPath = /* GraphQL */ `
       slug
       status
       icon
+      accredibleId
       createdAt
       updatedAt
     }
@@ -4982,6 +5068,7 @@ export const onDeleteLearningPath = /* GraphQL */ `
       slug
       status
       icon
+      accredibleId
       createdAt
       updatedAt
     }
@@ -5124,6 +5211,10 @@ export const onCreateLearningPathProgress = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5146,6 +5237,7 @@ export const onCreateLearningPathProgress = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5302,6 +5394,10 @@ export const onUpdateLearningPathProgress = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5324,6 +5420,7 @@ export const onUpdateLearningPathProgress = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5480,6 +5577,10 @@ export const onDeleteLearningPathProgress = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5502,6 +5603,7 @@ export const onDeleteLearningPathProgress = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5599,6 +5701,7 @@ export const onCreateLearningPathCourse = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5689,6 +5792,7 @@ export const onUpdateLearningPathCourse = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5779,6 +5883,7 @@ export const onDeleteLearningPathCourse = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5870,6 +5975,7 @@ export const onCreateLearningPathLesson = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -5960,6 +6066,7 @@ export const onUpdateLearningPathLesson = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -6050,6 +6157,7 @@ export const onDeleteLearningPathLesson = /* GraphQL */ `
         slug
         status
         icon
+        accredibleId
         createdAt
         updatedAt
       }
@@ -6240,6 +6348,10 @@ export const onCreateCMPMForm = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -6410,6 +6522,10 @@ export const onUpdateCMPMForm = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -6584,6 +6700,10 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -6754,6 +6874,10 @@ export const onCreateCPSForm = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -6930,6 +7054,10 @@ export const onUpdateCPSForm = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -7102,6 +7230,10 @@ export const onDeleteCPSForm = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -11866,6 +11998,10 @@ export const onCreateCourseReview = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12071,6 +12207,10 @@ export const onUpdateCourseReview = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -12280,6 +12420,10 @@ export const onDeleteCourseReview = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12289,6 +12433,489 @@ export const onDeleteCourseReview = /* GraphQL */ `
       updatedAt
       userReviewsId
       lMSCourseReviewsId
+    }
+  }
+`;
+export const onCreateOrder = /* GraphQL */ `
+  subscription OnCreateOrder {
+    onCreateOrder {
+      id
+      email
+      name
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      userID
+      total
+      status
+      courseName
+      courseLink
+      courseImage
+      courseDiscount
+      courseDescription
+      createdAt
+      updatedAt
+      userOrdersId
+    }
+  }
+`;
+export const onUpdateOrder = /* GraphQL */ `
+  subscription OnUpdateOrder {
+    onUpdateOrder {
+      id
+      email
+      name
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      userID
+      total
+      status
+      courseName
+      courseLink
+      courseImage
+      courseDiscount
+      courseDescription
+      createdAt
+      updatedAt
+      userOrdersId
+    }
+  }
+`;
+export const onDeleteOrder = /* GraphQL */ `
+  subscription OnDeleteOrder {
+    onDeleteOrder {
+      id
+      email
+      name
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      userID
+      total
+      status
+      courseName
+      courseLink
+      courseImage
+      courseDiscount
+      courseDescription
+      createdAt
+      updatedAt
+      userOrdersId
     }
   }
 `;
@@ -13195,6 +13822,10 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -13399,6 +14030,10 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -13601,6 +14236,10 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -13883,6 +14522,10 @@ export const onCreateAPSUser = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14049,6 +14692,10 @@ export const onUpdateAPSUser = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14213,6 +14860,10 @@ export const onDeleteAPSUser = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -14798,6 +15449,10 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14959,6 +15614,10 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -15124,6 +15783,10 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -15285,6 +15948,10 @@ export const onCreateCohortUsers = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -15464,6 +16131,10 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -15641,6 +16312,10 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -15816,6 +16491,10 @@ export const onCreateUserWishlist = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
@@ -16021,6 +16700,10 @@ export const onUpdateUserWishlist = /* GraphQL */ `
         reviews {
           nextToken
         }
+        tourCompleted
+        orders {
+          nextToken
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -16222,6 +16905,10 @@ export const onDeleteUserWishlist = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
           nextToken
         }
         createdAt
