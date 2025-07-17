@@ -37,7 +37,7 @@ const ComponentLoginButton = ({ path, progress, studentId }) => {
       router.push(`/paths/${path.slug}`);
       setIsLoading(false);
     } else {
-      router.push(`/api/auth/login?returnTo=${currentPath}`);
+      router.push(`/login?returnTo=${currentPath}`);
     }
   };
 
