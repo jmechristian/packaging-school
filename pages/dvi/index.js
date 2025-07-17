@@ -21,7 +21,10 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { cpsCourses } from '../../helpers/api';
+import { cpsCourses, createNewOrder } from '../../helpers/api';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const cpsExam = {
   courseId: 'CPS-C13',
@@ -82,7 +85,9 @@ const LOTMCard = ({ lesson }) => {
 
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
-
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const router = useRouter();
   useEffect(() => {
     const fetchCourseData = async () => {
       const data = await getCourseByID(course);
@@ -90,6 +95,26 @@ const CourseCard = ({ course }) => {
     };
     fetchCourseData();
   }, [course]);
+
+  const orderHandler = async () => {
+    const orderId = await createNewOrder({
+      courseDescription: courseData.subheadline,
+      courseDiscount: 100,
+      courseImage: courseData.seoImage,
+      courseName: courseData.title,
+      courseLink: `${courseData.link}`,
+      total: courseData.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   return (
     <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
@@ -128,9 +153,7 @@ const CourseCard = ({ course }) => {
           </div>
           <div
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
-            onClick={() => {
-              window.open(courseData && courseData.link, '_blank');
-            }}
+            onClick={orderHandler}
           >
             Begin Course
           </div>
