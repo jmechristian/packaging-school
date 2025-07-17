@@ -12,13 +12,18 @@ import {
 } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { registerClick, registgerCourseClick } from '../../helpers/api';
+import {
+  createNewOrder,
+  registerClick,
+  registgerCourseClick,
+} from '../../helpers/api';
 import dynamic from 'next/dynamic';
 const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 import VideoPlayer from '../VideoPlayer';
 import BrutalCircleIconTooltip from './BrutalCircleIconTooltip';
 import { API } from 'aws-amplify';
 import { getLMSCourse } from '../../src/graphql/queries';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -27,12 +32,12 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
   const { allCourses } = useSelector((state) => state.course_filter);
   const [isEntered, setIsEntered] = useState(false);
 
   const router = useRouter();
-
+  const { navigateToThinkific } = useThinkificLink();
   useEffect(() => {
     const getCourse = async () => {
       setIsLoading(true);
@@ -56,6 +61,29 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
 
     id && getCourse();
   }, [id, courses]);
+
+  const orderHandler = async () => {
+    const orderId = await createNewOrder({
+      courseDescription: isCourse.subheadline,
+      courseDiscount: discount.toFixed(2),
+      courseImage: isCourse.seoImage,
+      courseName: isCourse.title,
+      courseLink: coupon ? `${isCourse.link}?${coupon}` : isCourse.link,
+      total: isCourse.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        coupon ? `${isCourse.link}?${coupon}` : isCourse.link,
+        coupon ? `${isCourse.link}?${coupon}` : isCourse.link
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   const cardClickHandler = async () => {
     await registgerCourseClick(
@@ -85,9 +113,7 @@ const LMSCourseCard = ({ id, icons, coupon, courses, discount }) => {
       isCourse.link,
       'GRID'
     );
-    coupon
-      ? router.push(isCourse.link + `?${coupon}`)
-      : router.push(isCourse.link);
+    await orderHandler();
   };
 
   function applyDiscount(originalPrice, discountPercentage) {

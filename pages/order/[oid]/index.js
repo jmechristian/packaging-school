@@ -157,14 +157,17 @@ const Order = (props) => {
                       <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
                         <div>One-time payment</div>
                         <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
-                          ${order.total}
+                          ${parseInt(order.total).toFixed(2)}
                         </div>
                       </div>
                       {order.courseDiscount > 0 && (
                         <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
                           <div>Coupon</div>
                           <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
-                            -${(order.total * order.courseDiscount) / 100}
+                            -$
+                            {parseInt(
+                              (order.total * order.courseDiscount) / 100
+                            ).toFixed(2)}
                           </div>
                         </div>
                       )}
@@ -175,8 +178,10 @@ const Order = (props) => {
                             USD
                           </span>
                           $
-                          {order.total -
-                            (order.total * order.courseDiscount) / 100}
+                          {parseInt(
+                            order.total -
+                              (order.total * order.courseDiscount) / 100
+                          ).toFixed(2)}
                         </div>
                       </div>
                       <div className='w-full text-center font-raleway text-base text-[#36394d] leading-[1.5]'>
