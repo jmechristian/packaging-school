@@ -50,7 +50,10 @@ export default function LoginPage() {
   return (
     <div className='fixed inset-0 flex flex-col items-center justify-center px-4 py-8 z-50'>
       <div className='absolute top-0 left-0 w-full h-full bg-black opacity-80 z-10'></div>
-      <div className='max-w-md w-full space-y-6 bg-white py-6 md:!py-9 px-4 md:!px-8 rounded-xl shadow relative z-20'>
+      <div
+        className='max-w-md w-full space-y-5 bg-white py-6 md:!py-9 px-4 md:!px-8 rounded-xl shadow relative z-20 overflow-y-scroll max-h-[90vh]'
+        id='scrollers'
+      >
         <div className='flex justify-center'>
           <Image
             src='https://packschool.s3.us-east-1.amazonaws.com/ps-logo-square.svg'
