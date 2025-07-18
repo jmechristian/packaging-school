@@ -117,8 +117,14 @@ const CourseInfo = ({
                         <div className='font-semibold black__white text-5xl lg:text-6xl font-greycliff'>
                           {price === 'FREE' ? 'Free!' : `$${price}`}
                         </div>
-                        <CTAButtonLarge link={link} />
-                        <CTAButtonTrial link={trialLink} />
+                        <CTAButtonLarge
+                          link={link}
+                          onClick={() => orderHandler('BUY')}
+                        />
+                        <CTAButtonTrial
+                          link={trialLink}
+                          onClick={() => orderHandler('TRIAL')}
+                        />
                       </div>
                     </>
                   )}

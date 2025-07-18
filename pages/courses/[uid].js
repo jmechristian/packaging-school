@@ -28,12 +28,12 @@ const Page = ({ course }) => {
         {preview && (
           <CoursePreview close={() => dispatch(setPreviewClosed())} />
         )}
-        {course && course.type != 'PREVIEW' && (
+        {/* {course && course.type != 'PREVIEW' && (
           <CourseContentMenu
             link={course && course.link}
             trialLink={`${course && course.link}?et=free_trial`}
           />
-        )}
+        )} */}
       </div>
     </>
   );

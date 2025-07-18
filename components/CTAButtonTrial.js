@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useThinkificLink } from '../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 
-const CTAButtonTrial = ({ link }) => {
+const CTAButtonTrial = ({ link, onClick }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
@@ -19,7 +19,7 @@ const CTAButtonTrial = ({ link }) => {
   return (
     <button
       className='w-full border border-clemson hover:border-clemson-dark text-center rounded-md'
-      onClick={clickHandler}
+      onClick={onClick}
     >
       <div className='w-full py-4 uppercase font-bold text-xl text-clemson hover:text-clemson-dark'>
         Free Trial
