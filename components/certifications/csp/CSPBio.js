@@ -42,7 +42,7 @@ const CSPBio = () => {
               'https://packschool.s3.us-east-1.amazonaws.com/bio-back.png'
             }
             link={
-              'https://packagingschool.com/courses/bioplastics-for-packaging-with-dr-sandeep-kulkarni'
+              'https://packagingschool.com/courses/intro-to-bioplastics-for-packaging'
             }
             link_text={'Select Course'}
             Icon={RocketLaunchIcon}
