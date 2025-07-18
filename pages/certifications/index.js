@@ -8,6 +8,7 @@ import {
   getAllCertificates,
   registerCertificateClick,
   getDeviceType,
+  createNewOrder,
 } from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
@@ -38,7 +39,33 @@ const Index = ({ certificates }) => {
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
 
-  const handleCardClick = async (abbreviation, type, link, applicationLink) => {
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription: cert.description,
+      courseDiscount: 0,
+      courseImage: cert.seoImage,
+      courseName: cert.title,
+      courseLink: `${cert.purchaseLink}`,
+      total: cert.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${cert.purchaseLink}`, `${cert.purchaseLink}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
+  const handleCardClick = async (
+    cert,
+    abbreviation,
+    type,
+    link,
+    applicationLink
+  ) => {
     await registerCertificateClick({
       country: location.country,
       ipAddress: location.ipAddress,
@@ -49,35 +76,22 @@ const Index = ({ certificates }) => {
     });
 
     if (type === 'CERTIFICATE-VIEW') {
-      if (
-        awsUser &&
-        awsUser.name.includes(' ') &&
-        link.includes('learn.packagingschool.com')
-      ) {
-        navigateToThinkific(link, link);
-      } else {
-        router.push(link);
-      }
+      router.push(link);
     } else if (type === 'CERTIFICATE-APPLY') {
-      if (
-        awsUser &&
-        awsUser.name.includes(' ') &&
-        applicationLink.includes('learn.packagingschool.com')
-      ) {
-        navigateToThinkific(applicationLink, applicationLink);
-      } else {
+      if (abbreviation === 'CPS' || abbreviation === 'CMPM') {
         router.push(applicationLink);
+      } else {
+        orderHandler({
+          subheadline: cert.description,
+          seoImage: cert.seoImage,
+          title: cert.title,
+          link: `${cert.applicationLink}`,
+          price: cert.price,
+          total: cert.price,
+        });
       }
     } else {
-      if (
-        awsUser &&
-        awsUser.name.includes(' ') &&
-        link.includes('learn.packagingschool.com')
-      ) {
-        navigateToThinkific(link, link);
-      } else {
-        router.push(link);
-      }
+      router.push(link);
     }
   };
 
@@ -204,7 +218,15 @@ const Index = ({ certificates }) => {
                       link,
                       applicationLink
                     ) =>
-                      handleCardClick(abbreviation, type, link, applicationLink)
+                      handleCardClick(
+                        certificates.find(
+                          (cert) => cert.abbreviation === 'CMPM'
+                        ),
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
                     }
                     purchaseText='Apply Now'
                   />
@@ -220,7 +242,15 @@ const Index = ({ certificates }) => {
                       link,
                       applicationLink
                     ) =>
-                      handleCardClick(abbreviation, type, link, applicationLink)
+                      handleCardClick(
+                        certificates.find(
+                          (cert) => cert.abbreviation === 'CPS'
+                        ),
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
                     }
                     purchaseText='Apply Now'
                   />
@@ -272,7 +302,15 @@ const Index = ({ certificates }) => {
                       link,
                       applicationLink
                     ) =>
-                      handleCardClick(abbreviation, type, link, applicationLink)
+                      handleCardClick(
+                        certificates.find(
+                          (cert) => cert.abbreviation === 'APC'
+                        ),
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
                     }
                     purchaseText='Enroll Now'
                   />
@@ -318,7 +356,15 @@ const Index = ({ certificates }) => {
                       link,
                       applicationLink
                     ) =>
-                      handleCardClick(abbreviation, type, link, applicationLink)
+                      handleCardClick(
+                        certificates.find(
+                          (cert) => cert.abbreviation === 'CSP'
+                        ),
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
                     }
                     purchaseText='Enroll Now'
                   />
@@ -379,7 +425,15 @@ const Index = ({ certificates }) => {
                       link,
                       applicationLink
                     ) =>
-                      handleCardClick(abbreviation, type, link, applicationLink)
+                      handleCardClick(
+                        certificates.find(
+                          (cert) => cert.abbreviation === 'FPC'
+                        ),
+                        abbreviation,
+                        type,
+                        link,
+                        applicationLink
+                      )
                     }
                     purchaseText='Get Involved'
                   />

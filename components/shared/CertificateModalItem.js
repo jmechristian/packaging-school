@@ -1,8 +1,33 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
+import { createNewOrder } from '../../helpers/api';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
+
 const CertificateModalItem = ({ certificate, onSelectCertificate }) => {
   const router = useRouter();
+  const { navigateToThinkific } = useThinkificLink();
+  const { awsUser } = useSelector((state) => state.auth);
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription: cert.description,
+      courseDiscount: 0,
+      courseImage: cert.seoImage,
+      courseName: cert.title,
+      courseLink: `${cert.purchaseLink}`,
+      total: cert.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${cert.purchaseLink}`, `${cert.purchaseLink}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
   return (
     <div
       key={certificate.id}
@@ -16,7 +41,7 @@ const CertificateModalItem = ({ certificate, onSelectCertificate }) => {
           </h3>
         </div>
         <button
-          onClick={() => router.push(certificate.purchaseLink)}
+          onClick={() => orderHandler(certificate)}
           className='bg-clemson font-medium text-sm text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors'
         >
           Enroll Now
