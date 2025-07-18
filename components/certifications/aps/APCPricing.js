@@ -12,10 +12,44 @@ import {
 import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
+import { createNewOrder } from '../../../helpers/api';
+import { useRouter } from 'next/router';
 
 const APCPricing = () => {
   const { navigateToThinkific } = useThinkificLink();
   const { awsUser } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const orderHandler = async (type) => {
+    const orderId = await createNewOrder({
+      courseDescription:
+        'Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.',
+      courseDiscount: 0,
+      courseImage: 'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp',
+      courseName: 'Automotive Packaging Certificate (APC)',
+      courseLink:
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/735516`
+          : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`,
+      total: type === 'BUY' ? 2400 : 415,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+      type: type,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/735516`
+          : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`,
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/735516`
+          : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   return (
     <div>
@@ -117,26 +151,13 @@ const APCPricing = () => {
                   USD
                 </span>
               </p>
-              {awsUser && awsUser.name.includes(' ') ? (
-                <button
-                  onClick={() =>
-                    navigateToThinkific(
-                      'https://learn.packagingschool.com/enroll/735516',
-                      'https://learn.packagingschool.com/enroll/735516'
-                    )
-                  }
-                  className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </button>
-              ) : (
-                <Link
-                  href='https://learn.packagingschool.com/enroll/735516'
-                  className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </Link>
-              )}
+
+              <button
+                onClick={() => orderHandler('BUY')}
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Enroll Now
+              </button>
 
               <p className='text-base font-semibold text-gray-600 mt-12'>
                 Payment Plans are Available
@@ -149,26 +170,14 @@ const APCPricing = () => {
                   /mo for 6-months
                 </span>
               </p>
-              {awsUser && awsUser.name.includes(' ') ? (
-                <button
-                  onClick={() =>
-                    navigateToThinkific(
-                      'https://learn.packagingschool.com/enroll/735516?price_id=2898851',
-                      'https://learn.packagingschool.com/enroll/735516?price_id=2898851'
-                    )
-                  }
-                  className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </button>
-              ) : (
-                <Link
-                  href='https://learn.packagingschool.com/enroll/735516?price_id=2898851'
-                  className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </Link>
-              )}
+
+              <button
+                onClick={() => orderHandler('SUBSCRIPTION')}
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Enroll Now
+              </button>
+
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
               </p>

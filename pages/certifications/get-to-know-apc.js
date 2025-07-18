@@ -16,11 +16,37 @@ import Head from 'next/head';
 import TestimonialSlider from '../../components/shared/TestimonialSlider';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import Meta from '../../components/shared/Meta';
+import { createNewOrder } from '../../helpers/api';
 
 const Page = ({ testimonials }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
+  const router = useRouter();
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription:
+        'Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.',
+      courseDiscount: 0,
+      courseImage: 'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp',
+      courseName: 'Automotive Packaging Certificate (APC)',
+      courseLink: `https://learn.packagingschool.com/enroll/735516`,
+      total: 2400,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        `https://learn.packagingschool.com/enroll/735516`,
+        `https://learn.packagingschool.com/enroll/735516`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   return (
     <>
@@ -35,7 +61,7 @@ const Page = ({ testimonials }) => {
         }
       />
       <div className='flex flex-col dark:bg-dark-dark gap-12'>
-        <APCHero />
+        <APCHero orderHandler={orderHandler} />
         <APCNavigation />
         <div className='flex flex-col gap-28 lg:!gap-48'>
           <APCAbout />
