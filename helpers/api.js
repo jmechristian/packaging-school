@@ -102,6 +102,24 @@ export const cumminsLevel3 = [
   '255394df-4fa0-477d-b19a-a8e04837cdb4',
 ];
 
+export const acmeCourses = [
+  '927ba7b7-005d-42a2-af43-26e27f936b55',
+  '3b48be53-a8bf-43f1-b060-21054e419376',
+  'b6ca56ad-510d-4ca1-abec-a38f7e77294b',
+  '01b543df-cd37-4736-99bc-100f04065c3a',
+];
+
+export const packagingSchoolCourses = [
+  '255394df-4fa0-477d-b19a-a8e04837cdb4',
+  'f2bd57ba-adbf-45ab-88f0-d68ac20c5b7e',
+  '4e32d164-d4d9-4ba2-bcc5-ce882df75b71',
+  '452ec0d8-7464-4bd6-bfc2-eab051a9b40b',
+  '431ce262-cf48-4a7c-8ff1-2909f548149b',
+  '5d84ef6e-3fa3-423d-8e33-67d32605cb93',
+  'f2fad11c-4548-41ea-b39d-be5a4913a4f5',
+  '672c1d2b-ba6c-4e02-8c34-83e8c3e4f7b3',
+];
+
 export const LEVELS_CONFIG = [
   {
     level: 1,
