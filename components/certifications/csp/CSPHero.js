@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import VideoPlayer from '../../VideoPlayer';
 import FadeIn from '../../../helpers/FadeIn';
 
-const CSPHero = () => {
+const CSPHero = ({ orderHandler }) => {
   const router = useRouter();
 
   return (
@@ -39,11 +39,7 @@ const CSPHero = () => {
                 <div className='flex flex-col md:!flex-row items-center gap-6'>
                   <button
                     className='w-full md:!w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff xl:!text-xl'
-                    onClick={() =>
-                      router.push(
-                        'https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
-                      )
-                    }
+                    onClick={() => orderHandler('BUY')}
                   >
                     Enroll Now
                   </button>

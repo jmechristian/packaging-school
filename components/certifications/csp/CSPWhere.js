@@ -3,12 +3,44 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
-
+import { useRouter } from 'next/router';
 import { SectionHeading } from '../../shared/SectionHeading';
+import { createNewOrder } from '../../../helpers/api';
 
 const CSPWhere = () => {
   const { navigateToThinkific } = useThinkificLink();
   const { awsUser } = useSelector((state) => state.auth);
+  const router = useRouter();
+  const orderHandler = async (type) => {
+    const orderId = await createNewOrder({
+      courseDescription:
+        "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
+      courseDiscount: 0,
+      courseImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+      courseName: 'Certificate of Sustainable Packaging (CSP)',
+      courseLink:
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`
+          : `https://learn.packagingschool.com/enroll/2772370?price_id=4360274`,
+      total: type === 'BUY' ? 2400 : 415,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+      type: type,
+    });
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`
+          : `https://learn.packagingschool.com/enroll/2772370?price_id=4360274`,
+        type === 'BUY'
+          ? `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`
+          : `https://learn.packagingschool.com/enroll/2772370?price_id=4360274`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
 
   return (
     <div className='container-7xl flex flex-col gap-9 scroll-mt-36' id='where'>
@@ -61,52 +93,25 @@ const CSPWhere = () => {
                   USD
                 </span>
               </p>
-              {awsUser && awsUser.name.includes(' ') ? (
-                <button
-                  onClick={() =>
-                    navigateToThinkific(
-                      'https://learn.packagingschool.com/enroll/2772370?price_id=3600658',
-                      'https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
-                    )
-                  }
-                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </button>
-              ) : (
-                <Link
-                  href='https://learn.packagingschool.com/enroll/2772370?price_id=3600658'
-                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </Link>
-              )}
+              <button
+                onClick={() => orderHandler('BUY')}
+                className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Enroll Now
+              </button>
+
               <p className='mt-6 text-xs leading-4 text-gray-600'>or</p>
               <p className='flex items-baseline justify-center gap-x-2'>
                 <span className='text-5xl font-bold tracking-tight text-gray-900 lg:!text-3xl'>
                   6 Monthly Payments of $415
                 </span>
               </p>
-              {awsUser && awsUser.name.includes(' ') ? (
-                <button
-                  onClick={() =>
-                    navigateToThinkific(
-                      'https://learn.packagingschool.com/enroll/2772370?price_id=4360274',
-                      'https://learn.packagingschool.com/enroll/2772370?price_id=4360274'
-                    )
-                  }
-                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </button>
-              ) : (
-                <Link
-                  href='https://learn.packagingschool.com/enroll/2772370?price_id=4360274'
-                  className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-                >
-                  Enroll Now
-                </Link>
-              )}
+              <button
+                onClick={() => orderHandler('SUBSCRIPTION')}
+                className='block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Enroll Now
+              </button>
 
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement

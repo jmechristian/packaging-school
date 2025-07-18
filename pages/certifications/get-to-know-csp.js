@@ -8,8 +8,39 @@ import CSPHow from '../../components/certifications/csp/CSPHow';
 import CSPWhere from '../../components/certifications/csp/CSPWhere';
 import CSPBio from '../../components/certifications/csp/CSPBio';
 import Meta from '../../components/shared/Meta';
+import { createNewOrder } from '../../helpers/api';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const Page = () => {
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const router = useRouter();
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription:
+        "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
+      courseDiscount: 0,
+      courseImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+      courseName: 'Certificate of Sustainable Packaging (CSP)',
+      courseLink: `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`,
+      total: 2400,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`,
+        `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   return (
     <>
       <Meta
@@ -23,7 +54,7 @@ const Page = () => {
         image={'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png'}
       />
       <div className='w-full h-full flex flex-col gap-12 lg:!gap-36 pt-6 md:!pt-20 pb-20 dark:bg-dark-dark'>
-        <CSPHero />
+        <CSPHero orderHandler={orderHandler} />
         <CSPNav />
         <div className='flex flex-col gap-12 md:!gap-48'>
           <CSPWhat />
