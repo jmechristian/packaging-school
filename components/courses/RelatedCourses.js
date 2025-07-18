@@ -1,14 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getRelatedCourses, registgerCourseClick } from '../../helpers/api';
+import {
+  createNewOrder,
+  getRelatedCourses,
+  registgerCourseClick,
+} from '../../helpers/api';
 import { useSelector } from 'react-redux';
-
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { CourseCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const RelatedCourses = ({ category, id }) => {
   const router = useRouter();
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
   const desktopRef = useRef();
   const [width, setWidth] = useState(0);
   const [isRelated, setIsRelated] = useState(null);
@@ -98,6 +103,26 @@ const RelatedCourses = ({ category, id }) => {
     );
   };
 
+  const orderHandler = async (courseData) => {
+    const orderId = await createNewOrder({
+      courseDescription: courseData.subheadline,
+      courseDiscount: 0,
+      courseImage: courseData.seoImage,
+      courseName: courseData.title,
+      courseLink: `${courseData.link}`,
+      total: courseData.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
   const cardClickHandler = async (id, slug, altlink, type) => {
     await registgerCourseClick(id, router.asPath, location, slug, 'RELATED');
 
@@ -110,10 +135,16 @@ const RelatedCourses = ({ category, id }) => {
         );
   };
 
-  const cardPurchaseHandler = async (id, link) => {
-    await registgerCourseClick(id, router.asPath, location, link, 'RELATED');
+  const cardPurchaseHandler = async (course) => {
+    await registgerCourseClick(
+      course.id,
+      router.asPath,
+      location,
+      course.link,
+      'RELATED'
+    );
 
-    router.push(link);
+    await orderHandler(course);
   };
 
   return (
@@ -131,10 +162,8 @@ const RelatedCourses = ({ category, id }) => {
                   course.type
                 )
               }
-              cardPurchaseHandler={() =>
-                cardPurchaseHandler(course.id, course.link)
-              }
-              hideCallout={true}
+              cardPurchaseHandler={() => cardPurchaseHandler(course)}
+              // hideCallout={true}
             />
           </div>
         ))}
