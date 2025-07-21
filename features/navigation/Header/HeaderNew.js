@@ -28,6 +28,8 @@ export default function HeaderNew() {
   const [open, setOpen] = useState(false);
   const { navigateToThinkific } = useThinkificLink();
   const { user, thinkificUser } = useSelector((state) => state.auth);
+  const { user: auth0User } = useUser();
+  console.log('auth0User', auth0User);
 
   const dispatch = useDispatch();
   const router = useRouter();
