@@ -1115,7 +1115,7 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
   const baseUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3001'
-      : 'https://packagingschool.com';
+      : 'https://packaging-school-git-dev-packaging-school.vercel.app';
 
   if (!email || !first_name || !last_name) {
     throw new Error('Missing required fields for SSO');
