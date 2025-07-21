@@ -49,7 +49,7 @@ export default handleAuth({
             process.env.NODE_ENV === 'development'
               ? 'http://localhost:3001'
               : 'https://packaging-school-git-dev-packaging-school.vercel.app';
-          const ssoPrepareUrl = `${baseUrl}/sso-prepare?returnTo=${encodeURIComponent(
+          const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
             finalReturnTo
           )}`;
 
@@ -82,19 +82,17 @@ export default handleAuth({
               console.log('User created in Thinkific');
             }
 
-            // Store SSO user info in session for /sso-prepare
-            session.ssoUser = {
+            // Always set SSO redirect URL on the user object
+            const ssoUrl = await handleSSO({
               email: session.user.email,
               first_name: firstName,
               last_name: lastName,
-              returnTo: finalReturnTo,
+              returnTo: afterSSOUrl,
               baseUrl,
-            };
-
-            // Redirect to /sso-prepare to ensure session cookie is set
-            res.writeHead(302, { Location: ssoPrepareUrl });
-            res.end();
-            return;
+            });
+            console.log('SSO redirect URL generated:', ssoUrl);
+            session.user.ssoRedirectUrl = ssoUrl;
+            return session;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
             // Still return session even if SSO fails

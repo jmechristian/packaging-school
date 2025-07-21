@@ -71,9 +71,20 @@ const Layout = ({ children }) => {
       }
     };
 
-    user && dispatch(setUser(user));
-    user && checkUser();
-  }, [user]);
+    if (!userIsLoading && user && !userProcessedRef.current) {
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+        return;
+      }
+      userProcessedRef.current = true;
+      user && dispatch(setUser(user));
+      user && checkUser();
+    }
+  }, [user, userIsLoading]);
 
   // SSO is now handled in specific components when needed
   // (e.g., after onboarding completion, course enrollment, etc.)
