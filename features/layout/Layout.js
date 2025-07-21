@@ -36,6 +36,8 @@ const Layout = ({ children }) => {
   const { location, cart, awsUser } = useSelector((state) => state.auth);
   const { user, isLoading: userIsLoading } = useUser();
   const router = useRouter();
+  const userProcessedRef = useRef(false);
+
   useEffect(() => {
     const checkUser = async () => {
       if (!user?.email) return;
@@ -69,9 +71,30 @@ const Layout = ({ children }) => {
       }
     };
 
-    user && dispatch(setUser(user));
-    user && checkUser();
-  }, [user]);
+    if (!userIsLoading && user && !userProcessedRef.current) {
+      // console.log('🔍 Current user state:', user);
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+        return;
+      }
+
+      userProcessedRef.current = true;
+      user && dispatch(setUser(user));
+      user && checkUser();
+    }
+  }, [user, userIsLoading]);
+
+  // Clear SSO state when component unmounts
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('ssoComplete');
+    };
+  }, []);
 
   // SSO is now handled in specific components when needed
   // (e.g., after onboarding completion, course enrollment, etc.)
@@ -154,7 +177,7 @@ const Layout = ({ children }) => {
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
           <div className='spinner' />
-          <p className='mt-2'>Loading...</p>
+          <p className='mt-2'>Loadings...</p>
         </div>
       </div>
     );

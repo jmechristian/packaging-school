@@ -64,16 +64,25 @@ export default handleAuth({
               // User exists in Thinkific
               console.log('User found in Thinkific');
 
-              // Set a flag in the session to trigger SSO after Auth0 session is set
-              session.needsSSO = true;
-              session.ssoUser = {
+              const firstName =
+                session.user.given_name ||
+                session.user.name?.split(' ')[0] ||
+                '';
+              const lastName =
+                session.user.family_name ||
+                session.user.name?.split(' ').slice(1).join(' ') ||
+                '';
+
+              //run sso
+              const redirectUrl = await handleSSO({
                 email: session.user.email,
-                first_name: session.user.given_name,
-                last_name: session.user.family_name,
-                returnTo: returnTo,
-              };
-              // Do NOT redirect here; let Auth0 finish setting the session
-              return session;
+                first_name: firstName,
+                last_name: lastName,
+                returnTo: 'https://packagingschool.com',
+                baseUrl,
+              });
+              console.log('SSO redirect URL generated:', redirectUrl);
+              session.user.ssoRedirectUrl = redirectUrl;
             } else {
               console.log('No user found in Thinkific');
 
@@ -103,8 +112,19 @@ export default handleAuth({
                   }
                 );
                 const createUserResult = await createUser.json();
-                // then run sso
-                // await handleSSO(session.user, returnTo);
+                // Handle SSO after user creation
+                const redirectUrl = await handleSSO({
+                  email: session.user.email,
+                  first_name: firstName,
+                  last_name: lastName,
+                  returnTo: 'https://packagingschool.com',
+                  baseUrl,
+                });
+                console.log(
+                  'SSO redirect URL generated after user creation:',
+                  redirectUrl
+                );
+                session.user.ssoRedirectUrl = redirectUrl;
 
                 // User created in Thinkific
                 console.log('User created in Thinkific');
