@@ -65,7 +65,8 @@ export default handleAuth({
               console.log('User found in Thinkific');
 
               //run sso
-              await runThinkificSSO(session.user);
+              await runThinkificSSO(session.user, returnTo);
+              console.log('SSO run', returnTo);
               return session;
             } else {
               console.log('No user found in Thinkific');
@@ -96,6 +97,8 @@ export default handleAuth({
                   }
                 );
                 const createUserResult = await createUser.json();
+                // then run sso
+                // await runThinkificSSO(session.user, returnTo);
 
                 // User created in Thinkific
                 console.log('User created in Thinkific');

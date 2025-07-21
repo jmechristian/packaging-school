@@ -295,7 +295,7 @@ const Page = ({ customer }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto lg:!grid lg:!grid-cols-12 lg:!items-center relative py-10'>
+      <div className='w-full max-w-7xl mx-auto lg:!grid lg:!grid-cols-12 lg:!items-center relative py-10 px-4 xl:!px-0'>
         <div
           className='rounded-lg h-[180px] lg:!h-[240px] row-span-full col-start-1 col-span-9 lg:!self-center flex items-center relative'
           style={{
@@ -347,8 +347,8 @@ const Page = ({ customer }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:!pr-0 lg:!pl-0 pb-12 border-b border-gray-300'>
-        <div className='w-full flex flex-col gap-5 mt-10 mb-5 lg:mt-0'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:!pr-0 lg:!pl-0 pb-12 border-b border-gray-300 px-4 xl:!px-0'>
+        <div className='w-full flex flex-col gap-5 mt-10 mb-5 lg:mt-0 px-6 xl:!px-0'>
           <div className='h3-base'>Welcome Your Members Here!</div>
           <div className='max-w-xl w-full text-gray-700 text-lg'>
             Customize your library with your own content and build the optimal
@@ -373,7 +373,7 @@ const Page = ({ customer }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl px-3 md:px-6 lg:!px-0 flex flex-col gap-16 py-5 mx-auto'>
+      <div className='w-full max-w-7xl px-4 md:px-6 xl:!px-0 flex flex-col gap-16 py-5 mx-auto'>
         <div className='flex flex-col gap-5'>
           <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 lg:!px-0 pb-5 border-b border-gray-300'>
             <div className='w-full flex flex-col lg:!flex-row items-center justify-between gap-5'>
