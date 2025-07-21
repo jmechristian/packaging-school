@@ -65,14 +65,16 @@ export default handleAuth({
               console.log('User found in Thinkific');
 
               //run sso
-              await handleSSO({
+              const ssoUrl = await handleSSO({
                 email: session.user.email,
                 first_name: session.user.given_name,
                 last_name: session.user.family_name,
-                returnTo: returnTo,
+                returnTo: returnTo, // or your dynamic returnTo
               });
-              console.log('SSO run', returnTo);
-              return session;
+              console.log('SSO run', ssoUrl);
+              res.writeHead(302, { Location: ssoUrl });
+              res.end();
+              return; // Do not return session here, as the redirect ends the response
             } else {
               console.log('No user found in Thinkific');
 
