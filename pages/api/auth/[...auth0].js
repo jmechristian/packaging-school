@@ -44,99 +44,56 @@ export default handleAuth({
           }
 
           // Use returnTo if available, otherwise use default
-          const redirectUrl = returnTo || 'https://packagingschool.com';
-          console.log('Will redirect to:', redirectUrl);
+          const finalReturnTo = returnTo || '/';
+          const baseUrl =
+            process.env.NODE_ENV === 'development'
+              ? 'http://localhost:3001'
+              : 'https://packagingschool.com';
+          const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
+            finalReturnTo
+          )}`;
 
           try {
             console.log('Processing user:', session.user.email);
 
-            const baseUrl =
-              process.env.NODE_ENV === 'development'
-                ? 'http://localhost:3001'
-                : 'https://packagingschool.com';
+            const firstName =
+              session.user.given_name || session.user.name?.split(' ')[0] || '';
+            const lastName =
+              session.user.family_name ||
+              session.user.name?.split(' ').slice(1).join(' ') ||
+              '';
 
+            // Ensure Thinkific user exists (create if needed)
             const thinkificUser = await fetch(
               `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
             );
             const data = await thinkificUser.json();
 
-            if (data?.data?.data?.userByEmail) {
-              // User exists in Thinkific
-              console.log('User found in Thinkific');
-
-              const firstName =
-                session.user.given_name ||
-                session.user.name?.split(' ')[0] ||
-                '';
-              const lastName =
-                session.user.family_name ||
-                session.user.name?.split(' ').slice(1).join(' ') ||
-                '';
-
-              //run sso
-              const redirectUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo: 'https://packagingschool.com',
-                baseUrl,
-              });
-              console.log('SSO redirect URL generated:', redirectUrl);
-              session.user.ssoRedirectUrl = redirectUrl;
-            } else {
-              console.log('No user found in Thinkific');
-
-              const firstName =
-                session.user.given_name ||
-                session.user.name?.split(' ')[0] ||
-                '';
-              const lastName =
-                session.user.family_name ||
-                session.user.name?.split(' ').slice(1).join(' ') ||
-                '';
-
-              if (firstName && lastName) {
-                // Create user in Thinkific
-                const createUser = await fetch(
-                  `${baseUrl}/api/thinkific/create-user`,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      email: session.user.email,
-                      first_name: firstName,
-                      last_name: lastName,
-                    }),
-                  }
-                );
-                const createUserResult = await createUser.json();
-                // Handle SSO after user creation
-                const redirectUrl = await handleSSO({
+            if (!data?.data?.data?.userByEmail && firstName && lastName) {
+              await fetch(`${baseUrl}/api/thinkific/create-user`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                   email: session.user.email,
                   first_name: firstName,
                   last_name: lastName,
-                  returnTo: 'https://packagingschool.com',
-                  baseUrl,
-                });
-                console.log(
-                  'SSO redirect URL generated after user creation:',
-                  redirectUrl
-                );
-                session.user.ssoRedirectUrl = redirectUrl;
-
-                // User created in Thinkific
-                console.log('User created in Thinkific');
-              } else {
-                console.log(
-                  'No first name or last name available, user will be redirected to onboarding'
-                );
-                // Don't set ssoRedirectUrl, user will go to onboarding
-              }
+                }),
+              });
+              console.log('User created in Thinkific');
             }
 
-            return session;
+            // Always SSO after login
+            const ssoUrl = await handleSSO({
+              email: session.user.email,
+              first_name: firstName,
+              last_name: lastName,
+              returnTo: afterSSOUrl,
+              baseUrl,
+            });
+            console.log('SSO redirect URL generated:', ssoUrl);
+            res.writeHead(302, { Location: ssoUrl });
+            res.end();
+            return;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
             // Still return session even if SSO fails
