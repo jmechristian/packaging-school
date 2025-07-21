@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import SalesBar from './SalesBar';
 import LogoWhite from '../../../components/layout/LogoWhite';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
