@@ -1,5 +1,6 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
+import { runThinkificSSO } from '../../../helpers/sso';
 
 console.log('Auth0 API route initialized'); // Log when the API route is loaded
 
@@ -43,8 +44,7 @@ export default handleAuth({
           }
 
           // Use returnTo if available, otherwise use default
-          const redirectUrl =
-            returnTo || 'https://packagingschool.com/profile?tab=courses';
+          const redirectUrl = returnTo || 'https://packagingschool.com';
           console.log('Will redirect to:', redirectUrl);
 
           try {
@@ -63,6 +63,10 @@ export default handleAuth({
             if (data?.data?.data?.userByEmail) {
               // User exists in Thinkific
               console.log('User found in Thinkific');
+
+              //run sso
+              await runThinkificSSO(session.user);
+              return session;
             } else {
               console.log('No user found in Thinkific');
 
