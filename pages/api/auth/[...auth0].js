@@ -65,7 +65,12 @@ export default handleAuth({
               console.log('User found in Thinkific');
 
               //run sso
-              await runThinkificSSO(session.user, returnTo);
+              await handleSSO({
+                email: session.user.email,
+                first_name: session.user.given_name,
+                last_name: session.user.family_name,
+                returnTo: returnTo,
+              });
               console.log('SSO run', returnTo);
               return session;
             } else {
@@ -98,7 +103,7 @@ export default handleAuth({
                 );
                 const createUserResult = await createUser.json();
                 // then run sso
-                // await runThinkificSSO(session.user, returnTo);
+                // await handleSSO(session.user, returnTo);
 
                 // User created in Thinkific
                 console.log('User created in Thinkific');
