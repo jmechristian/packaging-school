@@ -64,17 +64,16 @@ export default handleAuth({
               // User exists in Thinkific
               console.log('User found in Thinkific');
 
-              //run sso
-              const ssoUrl = await handleSSO({
+              // Set a flag in the session to trigger SSO after Auth0 session is set
+              session.needsSSO = true;
+              session.ssoUser = {
                 email: session.user.email,
                 first_name: session.user.given_name,
                 last_name: session.user.family_name,
-                returnTo: returnTo, // or your dynamic returnTo
-              });
-              console.log('SSO run', ssoUrl);
-              res.writeHead(302, { Location: ssoUrl });
-              res.end();
-              return; // Do not return session here, as the redirect ends the response
+                returnTo: returnTo,
+              };
+              // Do NOT redirect here; let Auth0 finish setting the session
+              return session;
             } else {
               console.log('No user found in Thinkific');
 
