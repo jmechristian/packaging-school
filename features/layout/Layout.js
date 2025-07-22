@@ -167,7 +167,7 @@ const Layout = ({ children }) => {
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
           <div className='spinner' />
-          <p className='mt-2'>Loadings...</p>
+          <p className='mt-2'>Loading...</p>
         </div>
       </div>
     );
@@ -179,7 +179,7 @@ const Layout = ({ children }) => {
       <div className={`${darkMode ? 'dark' : ''} relative`}>
         <div className='flex flex-col justify-between'>
           {/* {location && location.country === 'India' && <IndiaBanner />} */}
-          <Loading />
+          {/* <Loading /> */}
           <div className='sticky top-0 z-50'>
             <HeaderNew user={user} />
           </div>
