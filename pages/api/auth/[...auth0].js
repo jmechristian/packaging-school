@@ -82,6 +82,17 @@ export default handleAuth({
               session.user.name?.split(' ').slice(1).join(' ') ||
               '';
             console.log('lastName', lastName);
+
+            // Only run SSO if both first and last name are present
+            if (!firstName || !lastName) {
+              console.warn('Skipping SSO: missing first or last name', {
+                firstName,
+                lastName,
+                email: session.user.email,
+              });
+              return session;
+            }
+
             // Ensure Thinkific user exists (create if needed)
             const thinkificUser = await fetch(
               `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
