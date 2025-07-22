@@ -182,9 +182,8 @@ const Layout = ({ children }) => {
 
   const isAuthenticated = !!user;
 
-  // Show loader immediately while Auth0 is hydrating, or for authenticated users while their data is loading, or if post-SSO loader is active
+  // Only show loader for authenticated users while their data is loading, or if post-SSO loader is active
   if (
-    userIsLoading ||
     (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
     showPostSSOLoader
   ) {
