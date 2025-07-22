@@ -39,7 +39,14 @@ export default handleAuth({
       await handleCallback(req, res, {
         returnTo: returnTo, // Pass returnTo directly to handleCallback
         afterCallback: async (req, res, session) => {
-          console.log('afterCallback called, session:', session);
+          console.log(
+            'afterCallback called for',
+            session?.user?.email,
+            'connection:',
+            session?.user?.sub,
+            'full user:',
+            session?.user
+          );
           if (!session?.user) {
             console.log('No user in session');
             return session;
@@ -62,25 +69,31 @@ export default handleAuth({
             let awsUser = null;
             try {
               awsUser = await getAWSUser(session.user.email);
-              console.log('AWS user:', awsUser);
+              console.log(
+                'AWS user:',
+                awsUser,
+                'awsUser.name:',
+                awsUser && awsUser.name
+              );
             } catch (err) {
               console.warn('Could not fetch AWS user for SSO fallback:', err);
             }
 
-            // Use Auth0 user fields, or fallback to AWS user name
-            const firstName =
-              session.user.given_name ||
-              (awsUser && awsUser.name && awsUser.name.split(' ')[0]) ||
-              session.user.name?.split(' ')[0] ||
-              '';
+            // Helper to check if a string is an email
+            function isEmail(str) {
+              return str && str.includes('@');
+            }
+
+            // Use Auth0 user fields, or fallback to AWS user name, never use email as name
+            const nameParts =
+              (awsUser && awsUser.name && awsUser.name.trim().split(' ')) ||
+              (!isEmail(session.user.name) && session.user.name?.split(' ')) ||
+              [];
+
+            const firstName = session.user.given_name || nameParts[0] || '';
             console.log('firstName', firstName);
             const lastName =
-              session.user.family_name ||
-              (awsUser &&
-                awsUser.name &&
-                awsUser.name.split(' ').slice(1).join(' ')) ||
-              session.user.name?.split(' ').slice(1).join(' ') ||
-              '';
+              session.user.family_name || nameParts.slice(1).join(' ') || '';
             console.log('lastName', lastName);
 
             // Only run SSO if both first and last name are present
@@ -122,7 +135,7 @@ export default handleAuth({
               baseUrl,
             });
             console.log('SSO redirect URL generated:', ssoUrl);
-            session.user.ssoRedirectUrl = ssoUrl;
+            // session.user.ssoRedirectUrl = ssoUrl;
             return session;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
