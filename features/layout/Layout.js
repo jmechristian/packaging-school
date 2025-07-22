@@ -40,6 +40,14 @@ const Layout = ({ children }) => {
   const [showPostSSOLoader, setShowPostSSOLoader] = useState(false);
   console.log('user', user);
 
+  // Always set Redux user as soon as Auth0 user is available
+  useEffect(() => {
+    if (!userIsLoading && user) {
+      dispatch(setUser(user));
+    }
+  }, [user, userIsLoading, dispatch]);
+
+  // SSO logic: only run for authenticated users, gated by userProcessedRef
   useEffect(() => {
     const checkUser = async () => {
       if (!user?.email) return;
@@ -110,7 +118,6 @@ const Layout = ({ children }) => {
         return;
       }
       userProcessedRef.current = true;
-      user && dispatch(setUser(user));
       user && checkUser();
     }
   }, [user, userIsLoading]);
