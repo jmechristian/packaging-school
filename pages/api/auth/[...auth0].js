@@ -1,6 +1,7 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
 import { runThinkificSSO } from '../../../helpers/sso';
+import { getAWSUser } from '../../../helpers/api';
 
 console.log('Auth0 API route initialized'); // Log when the API route is loaded
 
@@ -60,11 +61,7 @@ export default handleAuth({
             // Fetch AWS user by email for fallback name
             let awsUser = null;
             try {
-              const awsUserRes = await fetch(
-                `${baseUrl}/api/aws/get-user?email=${session.user.email}`
-              );
-              const awsUserData = await awsUserRes.json();
-              awsUser = awsUserData?.user;
+              awsUser = await getAWSUser(session.user.email);
             } catch (err) {
               console.warn('Could not fetch AWS user for SSO fallback:', err);
             }
