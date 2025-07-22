@@ -52,6 +52,9 @@ const Layout = ({ children }) => {
   const [minLoaderDone, setMinLoaderDone] = useState(false);
   const [loaderActive, setLoaderActive] = useState(false);
 
+  // Define isAuthenticated before using it
+  const isAuthenticated = !!user;
+
   // Determine if the loader should be active
   const shouldShowLoader =
     (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
