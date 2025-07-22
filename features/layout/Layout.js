@@ -237,13 +237,14 @@ const Layout = ({ children }) => {
     !userIsLoading && user && userSetupComplete && awsUser && thinkificUser;
 
   // Only show loader for authenticated users while their data is loading, or if post-SSO loader is active
-  // Allow main UI to render if onboarding is expected (on /profile, awsUser present, no thinkificUser)
+  // If onboarding is expected (isOnboarding), always render the main UI and bypass the loader
   if (
-    (isAuthenticated &&
-      (!userSetupComplete || !awsUser || (!thinkificUser && !isOnboarding)) &&
+    !isOnboarding &&
+    ((isAuthenticated &&
+      (!userSetupComplete || !awsUser || !thinkificUser) &&
       !minLoaderDone) ||
-    showPostSSOLoader ||
-    loaderActive
+      showPostSSOLoader ||
+      loaderActive)
   ) {
     return (
       <div
