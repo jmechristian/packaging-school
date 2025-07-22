@@ -72,6 +72,33 @@ const Layout = ({ children }) => {
       }
     };
 
+    // Only show SSO loader if SSO is in progress for a logged-in user
+    if (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
+      return (
+        <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black'>
+          <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
+          <div className='spinner mb-4' />
+          <p className='text-lg font-semibold'>
+            Connecting you to our learning platform…
+          </p>
+        </div>
+      );
+    }
+
+    // Only show post-SSO loader if just returned from SSO
+    if (showPostSSOLoader) {
+      return (
+        <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
+          <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
+          <div className='spinner mb-4' />
+          <p className='text-lg font-semibold'>Finishing up your login…</p>
+        </div>
+      );
+    }
+
+    // Do NOT block UI for userIsLoading alone; allow anonymous users to use the site freely
+
+    // SSO logic: only run for authenticated users
     if (!userIsLoading && user && !userProcessedRef.current) {
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
       if (user.ssoRedirectUrl && !hasCompletedSSO) {
@@ -177,29 +204,6 @@ const Layout = ({ children }) => {
       setTimeout(() => setShowPostSSOLoader(false), 1500);
     }
   }, [router.query]);
-
-  // Show loading state while we process
-  if (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
-    return (
-      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black'>
-        <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
-        <div className='spinner mb-4' />
-        <p className='text-lg font-semibold'>
-          Connecting you to our learning platform…
-        </p>
-      </div>
-    );
-  }
-
-  if (showPostSSOLoader) {
-    return (
-      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
-        <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
-        <div className='spinner mb-4' />
-        <p className='text-lg font-semibold'>Finishing up your login…</p>
-      </div>
-    );
-  }
 
   return (
     <>

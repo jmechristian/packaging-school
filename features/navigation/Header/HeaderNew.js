@@ -28,14 +28,17 @@ function classNames(...classes) {
 export default function HeaderNew() {
   const [open, setOpen] = useState(false);
   const { navigateToThinkific } = useThinkificLink();
+  // Use Redux user for UI logic
   const { user, thinkificUser } = useSelector((state) => state.auth);
-  const { user: auth0User } = useUser();
-  console.log('auth0User', auth0User);
+  // Use Auth0 user only if you need to trigger SSO or for SSO-specific logic
+  // const { user: auth0User } = useUser();
+  // Removed: console.log('auth0User', auth0User);
 
   const dispatch = useDispatch();
   const router = useRouter();
   const currentPath = router.asPath;
 
+  // Memoize user presence for UI
   const isUser = useMemo(() => {
     return user;
   }, [user]);
@@ -45,7 +48,6 @@ export default function HeaderNew() {
     const container = document.querySelector('#header-search');
     if (container) {
       const autocompleteInstance = initializeAutocomplete('#header-search');
-
       // Clean up when component unmounts
       return () => {
         if (autocompleteInstance && autocompleteInstance.destroy) {
