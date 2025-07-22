@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   TbWorld,
   TbEdit,
@@ -24,61 +24,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
   );
-
   const router = useRouter();
-
-  const profileItems = [
-    {
-      title: 'Daily Streak',
-      icon: TbBolt,
-      value: awsUser?.dailyStreak || 1,
-    },
-
-    // {
-    //   title: 'Achievements',
-    //   icon: TbTrophy,
-    //   value: 0,
-    // },
-    // {
-    //   title: 'Certificates',
-    //   icon: TbFileCertificate,
-    //   value: 0,
-    // },
-    {
-      title: 'Courses Completed',
-      icon: TbBrain,
-      value: 0,
-    },
-    {
-      title: 'Lessons Completed',
-      icon: TbBook,
-      value: awsUser?.lessonsCompleted?.items?.length || 0,
-    },
-  ];
-  //Onboarding Modal
-  // useEffect(() => {
-  //   if (awsUser) {
-  //     if (
-  //       awsUser.onboardingComplete === null ||
-  //       awsUser.onboardingComplete === false
-  //     ) {
-  //       setShowOnboardingModal(true);
-  //       // Initialize form data when opening onboarding modal
-  //       setFormData({
-  //         company: awsUser.company || '',
-  //         title: awsUser.title || '',
-  //         location: awsUser.location || '',
-  //         bio: awsUser.bio || '',
-  //         interests: awsUser.interests || '',
-  //         goals: awsUser.goals || '',
-  //         linkedin: awsUser.linkedin || '',
-  //       });
-  //     } else {
-  //       setShowOnboardingModal(false);
-  //     }
-  //   }
-  // }, [awsUser]);
-
   const [activeTab, setActiveTab] = useState('courses');
 
   // Add effect to sync with URL on mount and URL changes
@@ -89,6 +35,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
     }
   }, [router.query.tab]);
 
+  // Only handle tab change, do NOT call refreshUser or set users to null
   const handleTabChange = (tabValue, tabType) => {
     setActiveTab(tabValue);
     // Update URL without full page reload
@@ -148,7 +95,8 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
     },
   ];
 
-  const renderContent = () => {
+  // Memoize tab content to avoid unnecessary re-renders
+  const tabContent = useMemo(() => {
     switch (activeTab) {
       case 'courses':
         return (
@@ -191,7 +139,14 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
       default:
         return null;
     }
-  };
+  }, [
+    activeTab,
+    thinkificUser,
+    awsUser,
+    user,
+    refreshUser,
+    navigateToThinkific,
+  ]);
 
   if (!awsUser || !thinkificUser) {
     return (
@@ -289,7 +244,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
         <div
           className={`col-span-1 lg:!col-span-10 w-full flex flex-col bg-white p-6 rounded-lg lg:mt-8`}
         >
-          <div className='w-full h-full'>{renderContent()}</div>
+          <div className='w-full h-full'>{tabContent}</div>
         </div>
       </div>
     </div>
