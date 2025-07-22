@@ -57,6 +57,11 @@ const Layout = ({ children }) => {
   // Define isAuthenticated before using it
   const isAuthenticated = !!user;
 
+  // Detect if on /profile page and onboarding is expected
+  const isOnProfilePage = router.pathname === '/profile';
+  const isOnboarding =
+    isAuthenticated && awsUser && isOnProfilePage && !thinkificUser;
+
   // Determine if the loader should be active
   const shouldShowLoader =
     (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
@@ -217,12 +222,13 @@ const Layout = ({ children }) => {
     !userIsLoading && user && userSetupComplete && awsUser && thinkificUser;
 
   // Only show loader for authenticated users while their data is loading, or if post-SSO loader is active
+  // Allow main UI to render if onboarding is expected (on /profile, awsUser present, no thinkificUser)
   if (
     (isAuthenticated &&
-      (!userSetupComplete || !awsUser || !thinkificUser) &&
+      (!userSetupComplete || !awsUser || (!thinkificUser && !isOnboarding)) &&
       !minLoaderDone) ||
     showPostSSOLoader ||
-    loaderActive // Keep loader mounted during fade-out
+    loaderActive
   ) {
     return (
       <div
