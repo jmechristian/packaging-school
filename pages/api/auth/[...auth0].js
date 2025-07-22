@@ -57,10 +57,29 @@ export default handleAuth({
           try {
             console.log('Processing user for SSO:', session.user.email);
 
+            // Fetch AWS user by email for fallback name
+            let awsUser = null;
+            try {
+              const awsUserRes = await fetch(
+                `${baseUrl}/api/aws/get-user?email=${session.user.email}`
+              );
+              const awsUserData = await awsUserRes.json();
+              awsUser = awsUserData?.user;
+            } catch (err) {
+              console.warn('Could not fetch AWS user for SSO fallback:', err);
+            }
+
+            // Use Auth0 user fields, or fallback to AWS user name
             const firstName =
-              session.user.given_name || session.user.name?.split(' ')[0] || '';
+              session.user.given_name ||
+              (awsUser && awsUser.name && awsUser.name.split(' ')[0]) ||
+              session.user.name?.split(' ')[0] ||
+              '';
             const lastName =
               session.user.family_name ||
+              (awsUser &&
+                awsUser.name &&
+                awsUser.name.split(' ').slice(1).join(' ')) ||
               session.user.name?.split(' ').slice(1).join(' ') ||
               '';
 
