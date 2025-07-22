@@ -44,62 +44,85 @@ const Layout = ({ children }) => {
   // console.log('awsUser', awsUser);
   // console.log('thinkificUser', thinkificUser);
 
-  // Unified user setup: runs after Auth0 user is available and not loading
+  // Local state to ensure user setup only runs once per login/SSO
+  const [userSetupComplete, setUserSetupComplete] = useState(false);
+
   useEffect(() => {
-    const setupUser = async () => {
-      if (!user) return;
-      // 1. Set Auth0 user in Redux
-      dispatch(setUser(user));
+    // Only run user setup if Auth0 user is available, not loading, and setup not complete
+    if (!userIsLoading && user && !userSetupComplete) {
+      const setupUser = async () => {
+        // 1. Set Auth0 user in Redux
+        dispatch(setUser(user));
 
-      // 2. Check/create AWS user
-      let dbUser = await getAWSUser(user.email);
-      if (!dbUser) {
-        const newUser = await createAWSUser({
-          email: user.email,
-          name: user.name,
-          lastLogin: new Date().toISOString(),
-        });
-        const newUserXp = await createNewUserXp(newUser.id, newUser.lastLogin);
-        await updateAWSUser({
-          id: newUser.id,
-          userUserXpId: newUserXp.id,
-        });
-        dbUser = newUser;
-        dispatch(setAWSUser(newUser));
-        dispatch(setUserXp(newUserXp));
-      } else {
-        dispatch(setAWSUser(dbUser));
-        const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
-        const updatedUserXp = await updateLastLogin(
-          dbUser.userUserXpId,
-          parseInt(level.level, 10),
-          parseInt(level.xpNeeded, 10),
-          parseFloat(level.progress.toFixed(1))
-        );
-        dispatch(setUserXp(updatedUserXp));
-      }
+        // 2. Check/create AWS user
+        let dbUser = null;
+        try {
+          dbUser = await getAWSUser(user.email);
+          if (!dbUser) {
+            const newUser = await createAWSUser({
+              email: user.email,
+              name: user.name,
+              lastLogin: new Date().toISOString(),
+            });
+            const newUserXp = await createNewUserXp(
+              newUser.id,
+              newUser.lastLogin
+            );
+            await updateAWSUser({
+              id: newUser.id,
+              userUserXpId: newUserXp.id,
+            });
+            dbUser = newUser;
+            dispatch(setAWSUser(newUser));
+            dispatch(setUserXp(newUserXp));
+          } else {
+            dispatch(setAWSUser(dbUser));
+            const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
+            const updatedUserXp = await updateLastLogin(
+              dbUser.userUserXpId,
+              parseInt(level.level, 10),
+              parseInt(level.xpNeeded, 10),
+              parseFloat(level.progress.toFixed(1))
+            );
+            dispatch(setUserXp(updatedUserXp));
+          }
+        } catch (err) {
+          // Only log error, do not set awsUser to null
+          console.error('AWS user setup error:', err);
+        }
 
-      // 3. Check/create Thinkific user
-      const thinkificUserRes = await fetch(
-        `/api/thinkific/get-user?email=${user.email}`
-      );
-      const thinkificData = await thinkificUserRes.json();
-      if (thinkificData?.data?.data?.userByEmail) {
-        dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
-        const enrollments = await fetch(
-          `/api/thinkific/get-enrollments?email=${user.email}`
-        );
-        const enrollmentsData = await enrollments.json();
-        dispatch(setEnrollments(enrollmentsData.items));
-      } else {
-        dispatch(setThinkificUser(null));
-        router.push('/profile');
-      }
-    };
-    if (!userIsLoading && user) {
+        // 3. Check/create Thinkific user
+        try {
+          const thinkificUserRes = await fetch(
+            `/api/thinkific/get-user?email=${user.email}`
+          );
+          const thinkificData = await thinkificUserRes.json();
+          if (thinkificData?.data?.data?.userByEmail) {
+            dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
+            const enrollments = await fetch(
+              `/api/thinkific/get-enrollments?email=${user.email}`
+            );
+            const enrollmentsData = await enrollments.json();
+            dispatch(setEnrollments(enrollmentsData.items));
+          } else {
+            // Do NOT set thinkificUser to null unless logging out
+            // Optionally, show a message or handle onboarding
+            console.warn('No Thinkific user found for', user.email);
+          }
+        } catch (err) {
+          // Only log error, do not set thinkificUser to null
+          console.error('Thinkific user setup error:', err);
+        }
+
+        setUserSetupComplete(true);
+      };
       setupUser();
     }
-  }, [user, userIsLoading, dispatch, router]);
+    // Reset userSetupComplete if user logs out
+    if (!user && userSetupComplete) {
+      setUserSetupComplete(false);
+    }
+  }, [user, userIsLoading, userSetupComplete, dispatch]);
 
   // SSO logic: only run for authenticated users, gated by userProcessedRef
   useEffect(() => {
