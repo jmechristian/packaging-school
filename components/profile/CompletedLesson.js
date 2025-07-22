@@ -10,6 +10,8 @@ const CompletedLesson = ({ lessons }) => {
   const [completedLessons, setCompletedLessons] = useState([]);
 
   useEffect(() => {
+    // Guard: Only fetch if lessons is a non-empty array
+    if (!Array.isArray(lessons) || lessons.length === 0) return;
     const fetchLessons = async () => {
       setIsLoading(true);
       const lessonDataPromises = lessons.map((lesson) =>
