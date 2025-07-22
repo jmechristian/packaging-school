@@ -176,6 +176,30 @@ const Layout = ({ children }) => {
     }
   }, [router.query]);
 
+  // Derived state: all user data is ready
+  const userDataReady =
+    !userIsLoading && user && userSetupComplete && awsUser && thinkificUser;
+
+  const isAuthenticated = !!user;
+
+  // Only show loader for authenticated users while their data is loading, or if post-SSO loader is active
+  if (
+    (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
+    showPostSSOLoader
+  ) {
+    return (
+      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
+        <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
+        <div className='spinner mb-4' />
+        <p className='text-lg font-semibold'>
+          {showPostSSOLoader
+            ? 'Finishing up your login…'
+            : 'Loading your account…'}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <CookieConsent />

@@ -83,15 +83,15 @@ export default handleAuth({
             }
 
             // Always set SSO redirect URL on the user object
-            const ssoUrl = await handleSSO({
-              email: session.user.email,
-              first_name: firstName,
-              last_name: lastName,
-              returnTo: afterSSOUrl,
-              baseUrl,
-            });
-            console.log('SSO redirect URL generated:', ssoUrl);
-            session.user.ssoRedirectUrl = ssoUrl;
+            // const ssoUrl = await handleSSO({
+            //   email: session.user.email,
+            //   first_name: firstName,
+            //   last_name: lastName,
+            //   returnTo: afterSSOUrl,
+            //   baseUrl,
+            // });
+            // console.log('SSO redirect URL generated:', ssoUrl);
+            // session.user.ssoRedirectUrl = ssoUrl;
             return session;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
