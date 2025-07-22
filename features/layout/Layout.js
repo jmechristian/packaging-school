@@ -46,14 +46,52 @@ const Layout = ({ children }) => {
 
   // Local state to ensure user setup only runs once per login/SSO
   const [userSetupComplete, setUserSetupComplete] = useState(false);
+  // Ref to ensure user setup only runs once per session
+  const userSetupStarted = useRef(false);
+  // State for minimum loader display time
+  const [minLoaderDone, setMinLoaderDone] = useState(false);
+
+  const isAuthenticated = !!user;
+
+  // Minimum loader display time logic
+  useEffect(() => {
+    if (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) {
+      setMinLoaderDone(false);
+      const timer = setTimeout(() => setMinLoaderDone(true), 400); // 400ms minimum
+      return () => clearTimeout(timer);
+    } else {
+      setMinLoaderDone(true);
+    }
+  }, [isAuthenticated, userSetupComplete, awsUser, thinkificUser]);
+
+  // SSO logic: only run for authenticated users, gated by userProcessedRef
+  useEffect(() => {
+    if (!userIsLoading && user && !userProcessedRef.current) {
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+        return;
+      }
+      userProcessedRef.current = true;
+      // No user setup here
+    }
+  }, [user, userIsLoading]);
 
   useEffect(() => {
-    // Only run user setup if Auth0 user is available, not loading, and setup not complete
-    if (!userIsLoading && user && !userSetupComplete) {
+    // Only run user setup if Auth0 user is available, not loading, setup not complete, and not already started
+    if (
+      !userIsLoading &&
+      user &&
+      !userSetupComplete &&
+      !userSetupStarted.current
+    ) {
+      userSetupStarted.current = true;
       const setupUser = async () => {
         // 1. Set Auth0 user in Redux
         dispatch(setUser(user));
-
         // 2. Check/create AWS user
         let dbUser = null;
         try {
@@ -87,10 +125,8 @@ const Layout = ({ children }) => {
             dispatch(setUserXp(updatedUserXp));
           }
         } catch (err) {
-          // Only log error, do not set awsUser to null
           console.error('AWS user setup error:', err);
         }
-
         // 3. Check/create Thinkific user
         try {
           const thinkificUserRes = await fetch(
@@ -105,40 +141,21 @@ const Layout = ({ children }) => {
             const enrollmentsData = await enrollments.json();
             dispatch(setEnrollments(enrollmentsData.items));
           } else {
-            // Do NOT set thinkificUser to null unless logging out
-            // Optionally, show a message or handle onboarding
             console.warn('No Thinkific user found for', user.email);
           }
         } catch (err) {
-          // Only log error, do not set thinkificUser to null
           console.error('Thinkific user setup error:', err);
         }
-
         setUserSetupComplete(true);
       };
       setupUser();
     }
-    // Reset userSetupComplete if user logs out
+    // Reset userSetupComplete and userSetupStarted if user logs out
     if (!user && userSetupComplete) {
       setUserSetupComplete(false);
+      userSetupStarted.current = false;
     }
   }, [user, userIsLoading, userSetupComplete, dispatch]);
-
-  // SSO logic: only run for authenticated users, gated by userProcessedRef
-  useEffect(() => {
-    if (!userIsLoading && user && !userProcessedRef.current) {
-      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
-      if (user.ssoRedirectUrl && !hasCompletedSSO) {
-        sessionStorage.setItem('ssoComplete', 'true');
-        setTimeout(() => {
-          window.location.href = user.ssoRedirectUrl;
-        }, 100);
-        return;
-      }
-      userProcessedRef.current = true;
-      // No user setup here
-    }
-  }, [user, userIsLoading]);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
@@ -180,11 +197,11 @@ const Layout = ({ children }) => {
   const userDataReady =
     !userIsLoading && user && userSetupComplete && awsUser && thinkificUser;
 
-  const isAuthenticated = !!user;
-
   // Only show loader for authenticated users while their data is loading, or if post-SSO loader is active
   if (
-    (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
+    (isAuthenticated &&
+      (!userSetupComplete || !awsUser || !thinkificUser) &&
+      !minLoaderDone) ||
     showPostSSOLoader
   ) {
     return (
