@@ -10,7 +10,7 @@ export default handleAuth({
   },
 
   async callback(req, res) {
-    console.log('Callback endpoint hit');
+    console.log('Auth0 callback endpoint hit');
 
     // Decode the state parameter to get returnTo
     let returnTo = null;
@@ -38,6 +38,7 @@ export default handleAuth({
       await handleCallback(req, res, {
         returnTo: returnTo, // Pass returnTo directly to handleCallback
         afterCallback: async (req, res, session) => {
+          console.log('afterCallback called, session:', session);
           if (!session?.user) {
             console.log('No user in session');
             return session;
@@ -54,7 +55,7 @@ export default handleAuth({
           )}`;
 
           try {
-            console.log('Processing user:', session.user.email);
+            console.log('Processing user for SSO:', session.user.email);
 
             const firstName =
               session.user.given_name || session.user.name?.split(' ')[0] || '';
@@ -83,6 +84,7 @@ export default handleAuth({
             }
 
             // Always set SSO redirect URL on the user object
+            console.log('Calling handleSSO for user:', session.user.email);
             const ssoUrl = await handleSSO({
               email: session.user.email,
               first_name: firstName,
