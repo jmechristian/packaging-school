@@ -38,6 +38,7 @@ const Layout = ({ children }) => {
   const router = useRouter();
   const userProcessedRef = useRef(false);
   const [showPostSSOLoader, setShowPostSSOLoader] = useState(false);
+  console.log('user', user);
 
   useEffect(() => {
     const checkUser = async () => {
