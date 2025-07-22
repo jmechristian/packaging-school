@@ -132,12 +132,13 @@ const Layout = ({ children }) => {
   //   };
   // }, []);
 
+  // Run Thinkific user/enrollments check after login and whenever user changes
   useEffect(() => {
+    if (!user) return; // Only run if user is present
     const checkThinkificUser = async () => {
       const thinkificUser = await fetch(
         `/api/thinkific/get-user?email=${user.email}`
       );
-
       const data = await thinkificUser.json();
       if (data?.data?.data?.userByEmail) {
         dispatch(setThinkificUser(data.data.data.userByEmail));
@@ -151,9 +152,8 @@ const Layout = ({ children }) => {
         router.push('/profile');
       }
     };
-
-    user && checkThinkificUser();
-  }, [user]);
+    checkThinkificUser();
+  }, [user, dispatch, router]);
 
   //   let subscription;
 
