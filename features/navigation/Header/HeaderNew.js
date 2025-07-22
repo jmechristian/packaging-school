@@ -30,18 +30,16 @@ export default function HeaderNew() {
   const { navigateToThinkific } = useThinkificLink();
   // Use Redux user for UI logic
   const { user, thinkificUser } = useSelector((state) => state.auth);
-  // Use Auth0 user only if you need to trigger SSO or for SSO-specific logic
-  // const { user: auth0User } = useUser();
-  // Removed: console.log('auth0User', auth0User);
+
+  // Debug log
+  console.log('Header user:', user, 'thinkificUser:', thinkificUser);
+
+  // Robust check for signed-in user
+  const isUser = Boolean(user && user.email);
 
   const dispatch = useDispatch();
   const router = useRouter();
   const currentPath = router.asPath;
-
-  // Memoize user presence for UI
-  const isUser = useMemo(() => {
-    return user;
-  }, [user]);
 
   // Initialize autocomplete when component mounts
   useEffect(() => {
