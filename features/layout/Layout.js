@@ -97,16 +97,6 @@ const Layout = ({ children }) => {
     }
   }, [user, userIsLoading]);
 
-  // SSO is now handled in specific components when needed
-  // (e.g., after onboarding completion, course enrollment, etc.)
-
-  // Clear SSO state when component unmounts
-  // useEffect(() => {
-  //   return () => {
-  //     sessionStorage.removeItem('ssoComplete');
-  //   };
-  // }, []);
-
   // Run Thinkific user/enrollments check after login and whenever user changes
   useEffect(() => {
     if (!user) return; // Only run if user is present
@@ -129,28 +119,6 @@ const Layout = ({ children }) => {
     };
     checkThinkificUser();
   }, [user, dispatch, router]);
-
-  //   let subscription;
-
-  //   if (awsUser?.id) {
-  //     // Subscribe to user updates
-  //     subscription = API.graphql(
-  //       graphqlOperation(onUpdateUser, { id: awsUser.id })
-  //     ).subscribe({
-  //       next: ({ value }) => {
-  //         const updatedUser = value.data.onUpdateUser;
-  //         // Update Redux store with new user data
-  //         dispatch(updateUser(updatedUser));
-  //       },
-  //       error: (error) => console.error('Subscription error:', error),
-  //     });
-  //   }
-
-  //   // Cleanup subscription on unmount
-  //   return () => {
-  //     if (subscription) subscription.unsubscribe();
-  //   };
-  // }, [awsUser?.id, dispatch]);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
@@ -196,7 +164,7 @@ const Layout = ({ children }) => {
           {/* {location && location.country === 'India' && <IndiaBanner />} */}
           {/* <Loading /> */}
           <div className='sticky top-0 z-50'>
-            <HeaderNew user={user} />
+            <HeaderNew />
           </div>
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />
