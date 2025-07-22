@@ -62,6 +62,7 @@ export default handleAuth({
             let awsUser = null;
             try {
               awsUser = await getAWSUser(session.user.email);
+              console.log('AWS user:', awsUser);
             } catch (err) {
               console.warn('Could not fetch AWS user for SSO fallback:', err);
             }
@@ -72,6 +73,7 @@ export default handleAuth({
               (awsUser && awsUser.name && awsUser.name.split(' ')[0]) ||
               session.user.name?.split(' ')[0] ||
               '';
+            console.log('firstName', firstName);
             const lastName =
               session.user.family_name ||
               (awsUser &&
@@ -79,7 +81,7 @@ export default handleAuth({
                 awsUser.name.split(' ').slice(1).join(' ')) ||
               session.user.name?.split(' ').slice(1).join(' ') ||
               '';
-
+            console.log('lastName', lastName);
             // Ensure Thinkific user exists (create if needed)
             const thinkificUser = await fetch(
               `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
