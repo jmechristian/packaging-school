@@ -61,6 +61,7 @@ const Page = () => {
     const filter = router.query.category;
 
     const getCourses = async () => {
+      setIsLoading(true);
       const filter = router.query.category;
       const courses = await API.graphql({
         query: listLMSCourses,

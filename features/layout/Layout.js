@@ -37,6 +37,7 @@ const Layout = ({ children }) => {
   const { user, isLoading: userIsLoading } = useUser();
   const router = useRouter();
   const userProcessedRef = useRef(false);
+  const [showPostSSOLoader, setShowPostSSOLoader] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -158,17 +159,44 @@ const Layout = ({ children }) => {
       .catch((error) => console.log(error));
   }, [dispatch]);
 
+  useEffect(() => {
+    // Check for fromSSO param
+    if (router.query.fromSSO === '1') {
+      setShowPostSSOLoader(true);
+      // Remove the param from the URL (optional, for cleanliness)
+      const { fromSSO, ...rest } = router.query;
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: rest,
+        },
+        undefined,
+        { shallow: true }
+      );
+      // Hide loader after 1.5 seconds
+      setTimeout(() => setShowPostSSOLoader(false), 1500);
+    }
+  }, [router.query]);
+
   // Show loading state while we process
-  if (
-    isLoading ||
-    (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete'))
-  ) {
+  if (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
     return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='spinner' />
-          <p className='mt-2'>Loading...</p>
-        </div>
+      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black'>
+        <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
+        <div className='spinner mb-4' />
+        <p className='text-lg font-semibold'>
+          Connecting you to our learning platform…
+        </p>
+      </div>
+    );
+  }
+
+  if (showPostSSOLoader) {
+    return (
+      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
+        <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
+        <div className='spinner mb-4' />
+        <p className='text-lg font-semibold'>Finishing up your login…</p>
       </div>
     );
   }
