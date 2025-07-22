@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { getLessonById } from '../../helpers/api';
 import ProfileLessonItems from './ProfileLessonItems';
 
+// Only fetch lesson details for display. Do NOT call refreshUser or mutate Redux user state.
+
 const CompletedLesson = ({ lessons }) => {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
