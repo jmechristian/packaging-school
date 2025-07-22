@@ -217,6 +217,18 @@ const Layout = ({ children }) => {
     }
   }, [router.query]);
 
+  // Redirect to /profile for onboarding if user is present but missing first/last name
+  useEffect(() => {
+    if (
+      isAuthenticated &&
+      awsUser &&
+      (!awsUser.name || awsUser.name.trim().split(' ').length < 2) &&
+      router.pathname !== '/profile'
+    ) {
+      router.push('/profile');
+    }
+  }, [isAuthenticated, awsUser, router]);
+
   // Derived state: all user data is ready
   const userDataReady =
     !userIsLoading && user && userSetupComplete && awsUser && thinkificUser;
