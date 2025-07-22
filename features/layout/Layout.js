@@ -44,74 +44,45 @@ const Layout = ({ children }) => {
   console.log('awsUser', awsUser);
   console.log('thinkificUser', thinkificUser);
 
-  // Always set Redux user as soon as Auth0 user is available
+  // Always check and set AWS user when Auth0 user is present and awsUser is not set
   useEffect(() => {
-    if (!userIsLoading && user) {
-      dispatch(setUser(user));
+    if (!userIsLoading && user && !awsUser) {
+      const checkUser = async () => {
+        const dbUser = await getAWSUser(user.email);
+        if (!dbUser) {
+          const newUser = await createAWSUser({
+            email: user.email,
+            name: user.name,
+            lastLogin: new Date().toISOString(),
+          });
+          const newUserXp = await createNewUserXp(
+            newUser.id,
+            newUser.lastLogin
+          );
+          await updateAWSUser({
+            id: newUser.id,
+            userUserXpId: newUserXp.id,
+          });
+          dispatch(setAWSUser(newUser));
+          dispatch(setUserXp(newUserXp));
+        } else {
+          dispatch(setAWSUser(dbUser));
+          const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
+          const updatedUserXp = await updateLastLogin(
+            dbUser.userUserXpId,
+            parseInt(level.level, 10),
+            parseInt(level.xpNeeded, 10),
+            parseFloat(level.progress.toFixed(1))
+          );
+          dispatch(setUserXp(updatedUserXp));
+        }
+      };
+      checkUser();
     }
-  }, [user, userIsLoading, dispatch]);
+  }, [user, awsUser, userIsLoading, dispatch]);
 
   // SSO logic: only run for authenticated users, gated by userProcessedRef
   useEffect(() => {
-    const checkUser = async () => {
-      if (!user?.email) return;
-
-      const dbUser = await getAWSUser(user.email);
-      if (!dbUser) {
-        const newUser = await createAWSUser({
-          email: user.email,
-          name: user.name,
-          lastLogin: new Date().toISOString(),
-        });
-        const newUserXp = await createNewUserXp(newUser.id, newUser.lastLogin);
-        await updateAWSUser({
-          id: newUser.id,
-          userUserXpId: newUserXp.id,
-        });
-
-        dispatch(setAWSUser(newUser));
-
-        dispatch(setUserXp(newUserXp));
-      } else {
-        dispatch(setAWSUser(dbUser));
-        const level = getUserLevel(dbUser.userXp.totalXp, dbUser);
-        const updatedUserXp = await updateLastLogin(
-          dbUser.userUserXpId,
-          parseInt(level.level, 10),
-          parseInt(level.xpNeeded, 10),
-          parseFloat(level.progress.toFixed(1))
-        );
-        dispatch(setUserXp(updatedUserXp));
-      }
-    };
-
-    // Only show SSO loader if SSO is in progress for a logged-in user
-    if (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
-      return (
-        <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black'>
-          <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
-          <div className='spinner mb-4' />
-          <p className='text-lg font-semibold'>
-            Connecting you to our learning platform…
-          </p>
-        </div>
-      );
-    }
-
-    // Only show post-SSO loader if just returned from SSO
-    if (showPostSSOLoader) {
-      return (
-        <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
-          <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
-          <div className='spinner mb-4' />
-          <p className='text-lg font-semibold'>Finishing up your login…</p>
-        </div>
-      );
-    }
-
-    // Do NOT block UI for userIsLoading alone; allow anonymous users to use the site freely
-
-    // SSO logic: only run for authenticated users
     if (!userIsLoading && user && !userProcessedRef.current) {
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
       if (user.ssoRedirectUrl && !hasCompletedSSO) {
@@ -122,7 +93,7 @@ const Layout = ({ children }) => {
         return;
       }
       userProcessedRef.current = true;
-      user && checkUser();
+      // No checkUser here anymore
     }
   }, [user, userIsLoading]);
 

@@ -24,7 +24,7 @@ export default withPageAuthRequired(function Page() {
     }
 
     // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
-  }, [awsUser, thinkificUser]);
+  }, [awsUser, thinkificUser, user]);
 
   const refreshUser = async () => {
     setIsLoading(true);
