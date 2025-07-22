@@ -40,9 +40,9 @@ const Layout = ({ children }) => {
   const router = useRouter();
   const userProcessedRef = useRef(false);
   const [showPostSSOLoader, setShowPostSSOLoader] = useState(false);
-  console.log('user', user);
-  console.log('awsUser', awsUser);
-  console.log('thinkificUser', thinkificUser);
+  // console.log('user', user);
+  // console.log('awsUser', awsUser);
+  // console.log('thinkificUser', thinkificUser);
 
   // Unified user setup: runs after Auth0 user is available and not loading
   useEffect(() => {

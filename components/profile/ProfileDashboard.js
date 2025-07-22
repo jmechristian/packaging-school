@@ -27,6 +27,13 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('courses');
 
+  // Debug log to help diagnose infinite loop/data loss
+  console.log('ProfileDashboard render:', {
+    awsUser,
+    thinkificUser,
+    activeTab,
+  });
+
   // Add effect to sync with URL on mount and URL changes
   useEffect(() => {
     const tabFromUrl = router.query.tab;
@@ -166,6 +173,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
     navigateToThinkific,
   ]);
 
+  // Guard: Only render tab content if both awsUser and thinkificUser are present and stable
   if (!awsUser || !thinkificUser) {
     return (
       <div className='flex items-center justify-center w-full h-screen bg-gray-100'>
