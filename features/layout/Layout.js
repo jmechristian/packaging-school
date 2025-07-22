@@ -50,19 +50,26 @@ const Layout = ({ children }) => {
   const userSetupStarted = useRef(false);
   // State for minimum loader display time
   const [minLoaderDone, setMinLoaderDone] = useState(false);
+  const [loaderActive, setLoaderActive] = useState(false);
 
-  const isAuthenticated = !!user;
+  // Determine if the loader should be active
+  const shouldShowLoader =
+    (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
+    showPostSSOLoader;
 
-  // Minimum loader display time logic
+  // Refined minimum loader timer logic
   useEffect(() => {
-    if (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) {
+    if (shouldShowLoader && !loaderActive) {
+      setLoaderActive(true);
       setMinLoaderDone(false);
-      const timer = setTimeout(() => setMinLoaderDone(true), 400); // 400ms minimum
+      const timer = setTimeout(() => setMinLoaderDone(true), 400);
       return () => clearTimeout(timer);
-    } else {
-      setMinLoaderDone(true);
     }
-  }, [isAuthenticated, userSetupComplete, awsUser, thinkificUser]);
+    if (!shouldShowLoader && loaderActive) {
+      setLoaderActive(false);
+      setMinLoaderDone(false);
+    }
+  }, [shouldShowLoader, loaderActive]);
 
   // SSO logic: only run for authenticated users, gated by userProcessedRef
   useEffect(() => {
