@@ -33,12 +33,16 @@ const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const { darkMode, signInModal } = useSelector((state) => state.layout);
   const { showToast } = useSelector((state) => state.nav);
-  const { location, cart, awsUser } = useSelector((state) => state.auth);
+  const { location, cart, awsUser, thinkificUser } = useSelector(
+    (state) => state.auth
+  );
   const { user, isLoading: userIsLoading } = useUser();
   const router = useRouter();
   const userProcessedRef = useRef(false);
   const [showPostSSOLoader, setShowPostSSOLoader] = useState(false);
   console.log('user', user);
+  console.log('awsUser', awsUser);
+  console.log('thinkificUser', thinkificUser);
 
   // Always set Redux user as soon as Auth0 user is available
   useEffect(() => {
