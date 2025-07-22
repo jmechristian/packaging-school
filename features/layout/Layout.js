@@ -51,6 +51,8 @@ const Layout = ({ children }) => {
   // State for minimum loader display time
   const [minLoaderDone, setMinLoaderDone] = useState(false);
   const [loaderActive, setLoaderActive] = useState(false);
+  // State for loader fade-out
+  const [loaderFadeOut, setLoaderFadeOut] = useState(false);
 
   // Define isAuthenticated before using it
   const isAuthenticated = !!user;
@@ -60,17 +62,24 @@ const Layout = ({ children }) => {
     (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
     showPostSSOLoader;
 
-  // Refined minimum loader timer logic
+  // Refined minimum loader timer logic with fade-out
   useEffect(() => {
     if (shouldShowLoader && !loaderActive) {
       setLoaderActive(true);
       setMinLoaderDone(false);
-      const timer = setTimeout(() => setMinLoaderDone(true), 400);
+      setLoaderFadeOut(false);
+      const timer = setTimeout(() => setMinLoaderDone(true), 700); // 700ms minimum
       return () => clearTimeout(timer);
     }
     if (!shouldShowLoader && loaderActive) {
-      setLoaderActive(false);
-      setMinLoaderDone(false);
+      // Trigger fade-out before unmounting loader
+      setLoaderFadeOut(true);
+      const fadeTimer = setTimeout(() => {
+        setLoaderActive(false);
+        setMinLoaderDone(false);
+        setLoaderFadeOut(false);
+      }, 500); // 500ms fade-out duration
+      return () => clearTimeout(fadeTimer);
     }
   }, [shouldShowLoader, loaderActive]);
 
@@ -212,10 +221,15 @@ const Layout = ({ children }) => {
     (isAuthenticated &&
       (!userSetupComplete || !awsUser || !thinkificUser) &&
       !minLoaderDone) ||
-    showPostSSOLoader
+    showPostSSOLoader ||
+    loaderActive // Keep loader mounted during fade-out
   ) {
     return (
-      <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black fade-in'>
+      <div
+        className={`min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black ${
+          loaderFadeOut ? 'fade-out' : 'fade-in'
+        }`}
+      >
         <img src='/logo.png' alt='Logo' className='w-32 mb-6' />
         <div className='spinner mb-4' />
         <p className='text-lg font-semibold'>
@@ -227,10 +241,11 @@ const Layout = ({ children }) => {
     );
   }
 
+  // Main UI with fade-in
   return (
     <>
       <CookieConsent />
-      <div className={`${darkMode ? 'dark' : ''} relative`}>
+      <div className={`${darkMode ? 'dark' : ''} relative fade-in`}>
         <div className='flex flex-col justify-between'>
           {/* {location && location.country === 'India' && <IndiaBanner />} */}
           {/* <Loading /> */}
