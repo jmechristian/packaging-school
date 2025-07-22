@@ -226,6 +226,9 @@ const Layout = ({ children }) => {
       router.pathname !== '/profile'
     ) {
       router.push('/profile');
+      setMinLoaderDone(true);
+      setLoaderActive(false);
+      setLoaderFadeOut(false);
     }
   }, [isAuthenticated, awsUser, router]);
 
