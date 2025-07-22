@@ -29,10 +29,17 @@ export default function HeaderNew() {
   const [open, setOpen] = useState(false);
   const { navigateToThinkific } = useThinkificLink();
   // Use Redux user for UI logic
-  const { user, thinkificUser } = useSelector((state) => state.auth);
+  const { user, thinkificUser, awsUser } = useSelector((state) => state.auth);
 
   // Debug log
-  console.log('Header user:', user, 'thinkificUser:', thinkificUser);
+  console.log(
+    'Header user:',
+    user,
+    'thinkificUser:',
+    thinkificUser,
+    'awsUser:',
+    awsUser
+  );
 
   // Robust check for signed-in user
   const isUser = Boolean(user && user.email);
