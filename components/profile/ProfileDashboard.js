@@ -95,6 +95,24 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
     },
   ];
 
+  const profileItems = [
+    {
+      title: 'Daily Streak',
+      icon: TbBolt,
+      value: awsUser?.dailyStreak || 1,
+    },
+    {
+      title: 'Courses Completed',
+      icon: TbBrain,
+      value: 0, // You can update this if you have the data
+    },
+    {
+      title: 'Lessons Completed',
+      icon: TbBook,
+      value: awsUser?.lessonsCompleted?.items?.length || 0,
+    },
+  ];
+
   // Memoize tab content to avoid unnecessary re-renders
   const tabContent = useMemo(() => {
     switch (activeTab) {
