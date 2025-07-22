@@ -31,6 +31,9 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
       ? 'http://localhost:3001'
       : window.location.origin;
 
+  // Only call refreshUser after a real update (after onboarding complete)
+  // Do NOT call refreshUser in useEffect or on mount
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,7 +123,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
           console.error('Error creating Thinkific user:', error);
         }
       }
-      await refreshUser();
+      await refreshUser(); // Only here, not on mount
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);

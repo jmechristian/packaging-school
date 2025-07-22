@@ -27,6 +27,9 @@ const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
     }
   }, [awsUser]);
 
+  // Only call refreshUser after a real update (after profile save)
+  // Do NOT call refreshUser in useEffect or on mount
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -49,7 +52,7 @@ const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
     } catch (error) {
       console.error('Error updating profile:', error);
     } finally {
-      refreshUser();
+      refreshUser(); // Only here, not on mount
       setIsSubmitting(false);
     }
   };

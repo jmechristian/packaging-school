@@ -35,6 +35,9 @@ const ProfileEnrollments = ({
     fetchEnrollments();
   }, [email]);
 
+  // Only call refreshUser after a real update (e.g., after re-enroll or expire)
+  // Do NOT call refreshUser in useEffect or on mount
+
   // const refreshEnrollments = async () => {
   //   const enrollments = await fetch(
   //     `/api/thinkific/get-enrollments?email=${email}`
