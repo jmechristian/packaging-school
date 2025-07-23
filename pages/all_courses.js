@@ -816,52 +816,68 @@ const Page = () => {
               <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0'>
                 {sortedCertificates &&
                   sortedCertificates.length > 0 &&
-                  [...sortedCertificates].map((cert) => (
-                    <CertCard
-                      cert={cert}
+                  [...sortedCertificates].map((cert, i) => (
+                    <motion.div
                       key={cert.id}
-                      purchaseText={
-                        cert.abbreviation === 'CPS' ||
-                        cert.abbreviation === 'CMPM'
-                          ? 'Apply Now'
-                          : 'Enroll Now'
-                      }
-                      cardClickHandler={(
-                        abbreviation,
-                        type,
-                        link,
-                        applicationLink
-                      ) =>
-                        handleCertCardClick(
-                          cert,
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, delay: i * 0.1 }}
+                    >
+                      <CertCard
+                        cert={cert}
+                        key={cert.id}
+                        purchaseText={
+                          cert.abbreviation === 'CPS' ||
+                          cert.abbreviation === 'CMPM'
+                            ? 'Apply Now'
+                            : 'Enroll Now'
+                        }
+                        cardClickHandler={(
                           abbreviation,
                           type,
                           link,
                           applicationLink
-                        )
-                      }
-                    />
+                        ) =>
+                          handleCertCardClick(
+                            cert,
+                            abbreviation,
+                            type,
+                            link,
+                            applicationLink
+                          )
+                        }
+                      />
+                    </motion.div>
                   ))}
                 {sortedAndSearchedCourses &&
                   sortedAndSearchedCourses.length > 0 &&
-                  [...sortedAndSearchedCourses].map((course) => (
-                    <CourseCard
-                      course={course}
+                  [...sortedAndSearchedCourses].map((course, i) => (
+                    <motion.div
                       key={course.id}
-                      cardClickHandler={() =>
-                        cardClickHandler(
-                          course.id,
-                          course.slug,
-                          course.altLink,
-                          course.type
-                        )
-                      }
-                      cardPurchaseHandler={() => orderHandler(course)}
-                      cardFavoriteHandler={() => handleAddToWishlist(course.id)}
-                      isFavorite={awsUser?.wishlist?.items.some(
-                        (item) => item.lMSCourse.id === course.id
-                      )}
-                    />
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, delay: i * 0.1 }}
+                    >
+                      <CourseCard
+                        course={course}
+                        key={course.id}
+                        cardClickHandler={() =>
+                          cardClickHandler(
+                            course.id,
+                            course.slug,
+                            course.altLink,
+                            course.type
+                          )
+                        }
+                        cardPurchaseHandler={() => orderHandler(course)}
+                        cardFavoriteHandler={() =>
+                          handleAddToWishlist(course.id)
+                        }
+                        isFavorite={awsUser?.wishlist?.items.some(
+                          (item) => item.lMSCourse.id === course.id
+                        )}
+                      />
+                    </motion.div>
                   ))}
               </div>
             ) : (
