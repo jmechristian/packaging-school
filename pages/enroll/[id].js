@@ -79,7 +79,10 @@ export default function Enroll() {
         }
       };
 
-      fetchCouponInfo();
+      // Add a small delay to ensure router query is fully available
+      setTimeout(() => {
+        fetchCouponInfo();
+      }, 200);
     } else if (router.isReady && !coupon && !couponAttempted) {
       // No coupon provided, mark as attempted
       console.log('No coupon provided, marking as attempted');
