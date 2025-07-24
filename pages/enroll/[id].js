@@ -192,19 +192,27 @@ export default function Enroll() {
     }
   }, [product, couponInfo, discount, order]);
 
-  // Simulate progress for loader
+  // Live progress based on enrollment steps
   useEffect(() => {
-    let interval;
-    setSimProgress(0);
-    interval = setInterval(() => {
-      setSimProgress((prev) => {
-        if (prev >= 100) return 100;
-        return prev + Math.random() * 8 + 2; // random increment for realism
-      });
-    }, 80);
+    let progress = 0;
 
-    return () => clearInterval(interval);
-  }, []);
+    // Base progress for router ready
+    if (router.isReady) progress += 10;
+
+    // Progress for product loaded
+    if (product) progress += 30;
+
+    // Progress for coupon attempted
+    if (couponAttempted) progress += 20;
+
+    // Progress for coupon info loaded
+    if (couponInfo) progress += 20;
+
+    // Progress for order created
+    if (order) progress += 20;
+
+    setSimProgress(progress);
+  }, [router.isReady, product, couponAttempted, couponInfo, order]);
 
   // Always show loader - redirect will handle the UI
   return (
