@@ -12,6 +12,7 @@ export default function Enroll() {
   const [couponInfo, setCouponInfo] = useState(null);
   const [couponAttempted, setCouponAttempted] = useState(false);
   const [simProgress, setSimProgress] = useState(0);
+  const [redirecting, setRedirecting] = useState(false);
   const router = useRouter();
   const { id, price_id, coupon, discount_code } = router.query;
   const { awsUser } = useSelector((state) => state.auth);
@@ -179,6 +180,7 @@ export default function Enroll() {
 
         console.log('Order created:', orderId);
         setOrder(orderId);
+        setRedirecting(true); // Mark as redirecting
         setIsLoading(true); // Keep loading during redirect
 
         if (awsUser && awsUser.name.includes(' ')) {
@@ -212,10 +214,17 @@ export default function Enroll() {
     if (order) progress += 15;
 
     // Progress for redirect initiated
-    if (order && isLoading) progress += 20;
+    if (redirecting) progress += 20;
 
     setSimProgress(progress);
-  }, [router.isReady, product, couponAttempted, couponInfo, order, isLoading]);
+  }, [
+    router.isReady,
+    product,
+    couponAttempted,
+    couponInfo,
+    order,
+    redirecting,
+  ]);
 
   // Always show loader - redirect will handle the UI
   return (
