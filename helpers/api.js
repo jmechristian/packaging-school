@@ -2095,3 +2095,15 @@ export const createNewOrder = async (data) => {
   });
   return res.data.createOrder;
 };
+
+export const getProductId = async (id) => {
+  const res = await fetch(`/api/thinkific/get-prouct-id?id=${id}`);
+  return res.json();
+};
+
+export const getCouponInfo = async (id, coupon) => {
+  const res = await fetch(
+    `/api/thinkific/get-coupon-info?id=${id}&coupon=${coupon}`
+  );
+  return res.json();
+};

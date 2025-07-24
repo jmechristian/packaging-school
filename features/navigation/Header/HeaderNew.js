@@ -32,14 +32,14 @@ export default function HeaderNew() {
   const { user, thinkificUser, awsUser } = useSelector((state) => state.auth);
 
   // Debug log
-  console.log(
-    'Header user:',
-    user,
-    'thinkificUser:',
-    thinkificUser,
-    'awsUser:',
-    awsUser
-  );
+  // console.log(
+  //   'Header user:',
+  //   user,
+  //   'thinkificUser:',
+  //   thinkificUser,
+  //   'awsUser:',
+  //   awsUser
+  // );
 
   // Robust check for signed-in user
   const isUser = Boolean(user && user.email);
