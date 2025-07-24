@@ -2096,14 +2096,18 @@ export const createNewOrder = async (data) => {
   return res.data.createOrder;
 };
 
-export const getProductId = async (id) => {
-  const res = await fetch(`/api/thinkific/get-prouct-id?id=${id}`);
+export const getProductId = async (id, baseUrl = '') => {
+  const url = baseUrl
+    ? `${baseUrl}/api/thinkific/get-product-id?id=${id}`
+    : `/api/thinkific/get-product-id?id=${id}`;
+  const res = await fetch(url);
   return res.json();
 };
 
-export const getCouponInfo = async (id, coupon) => {
-  const res = await fetch(
-    `/api/thinkific/get-coupon-info?id=${id}&coupon=${coupon}`
-  );
+export const getCouponInfo = async (id, coupon, baseUrl = '') => {
+  const url = baseUrl
+    ? `${baseUrl}/api/thinkific/get-coupon-info?id=${id}&coupon=${coupon}`
+    : `/api/thinkific/get-coupon-info?id=${id}&coupon=${coupon}`;
+  const res = await fetch(url);
   return res.json();
 };

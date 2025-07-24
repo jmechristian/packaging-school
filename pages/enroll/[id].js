@@ -4,250 +4,35 @@ import { createNewOrder, getCouponInfo, getProductId } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 
-export default function Enroll() {
+export default function Enroll({ product, couponInfo, orderId, redirectUrl }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [order, setOrder] = useState(null);
-  const [product, setProduct] = useState(null);
-  const [discount, setDiscount] = useState(null);
-  const [couponInfo, setCouponInfo] = useState(null);
-  const [couponAttempted, setCouponAttempted] = useState(false);
   const [simProgress, setSimProgress] = useState(0);
-  const [redirecting, setRedirecting] = useState(false);
   const router = useRouter();
-  const { id, price_id, coupon, discount_code } = router.query;
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
 
+  // Simulate progress for better UX
   useEffect(() => {
-    // Only fetch if we have an id and haven't already loaded the product
-    if (id && !product) {
-      const fetchProduct = async () => {
-        try {
-          console.log('Fetching product for id:', id);
-          const productData = await getProductId(id);
-          console.log('Product loaded:', productData);
-          setProduct(productData);
-        } catch (error) {
-          console.error('Error fetching product:', error);
-        }
-      };
+    const interval = setInterval(() => {
+      setSimProgress((prev) => {
+        if (prev >= 100) return 100;
+        return prev + Math.random() * 8 + 2;
+      });
+    }, 80);
 
-      fetchProduct();
-    }
-  }, [id, product]);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Reset coupon state when router query changes
+  // Handle redirect based on server-side data
   useEffect(() => {
-    if (router.isReady && id && coupon) {
-      console.log('Resetting coupon state for:', { id, coupon });
-      setCouponAttempted(false);
-      setCouponInfo(null);
-      setDiscount(null);
-    }
-  }, [router.isReady, id, coupon]);
-
-  useEffect(() => {
-    console.log('Coupon effect check:', {
-      id,
-      coupon,
-      couponAttempted,
-      routerReady: router.isReady,
-    });
-
-    // Only fetch coupon info if router is ready, we have both id and coupon, and haven't already attempted it
-    if (router.isReady && id && coupon && !couponAttempted) {
-      console.log('Starting coupon fetch...');
-      setCouponAttempted(true);
-      const fetchCouponInfo = async () => {
-        try {
-          console.log('Fetching coupon info for:', { id, coupon });
-          const response = await getCouponInfo(id, coupon);
-          console.log('Coupon info response:', response);
-
-          // Check if the response indicates an error
-          if (response.error || response.message === 'Coupon not found') {
-            console.log('Coupon not found or invalid:', response);
-            setCouponInfo(null);
-          } else {
-            console.log('Setting coupon info:', response);
-            setCouponInfo(response);
-          }
-        } catch (error) {
-          console.error('Error fetching coupon info:', error);
-          // Set couponInfo to null to indicate it was attempted but failed
-          setCouponInfo(null);
-        }
-      };
-
-      // Add a small delay to ensure router query is fully available
-      setTimeout(() => {
-        fetchCouponInfo();
-      }, 200);
-    } else if (router.isReady && !coupon && !couponAttempted) {
-      // No coupon provided, mark as attempted
-      console.log('No coupon provided, marking as attempted');
-      setCouponAttempted(true);
-      setCouponInfo(null);
-    }
-  }, [router.isReady, id, coupon, couponAttempted]);
-
-  useEffect(() => {
-    if (couponInfo) {
-      // Handle different discount types and field names
-      if (couponInfo.amount) {
-        setDiscount(couponInfo.amount);
-      } else if (couponInfo.discount) {
-        setDiscount(couponInfo.discount);
+    if (redirectUrl) {
+      if (awsUser && awsUser.name.includes(' ')) {
+        navigateToThinkific(redirectUrl, redirectUrl);
+      } else {
+        router.push(`/order/${orderId}`);
       }
     }
-  }, [couponInfo]);
-
-  useEffect(() => {
-    // Only run order handler once when we have all required data
-    // Make sure we've attempted to load coupon info first (even if it failed)
-    console.log('Order handler effect check:', {
-      product: !!product,
-      order: !!order,
-      couponAttempted,
-      couponInfo,
-      discount,
-    });
-
-    // Wait a bit longer to ensure coupon processing is complete
-    if (product && !order && couponAttempted) {
-      const orderHandler = async () => {
-        // Add a small delay to ensure coupon processing is complete
-        await new Promise((resolve) => setTimeout(resolve, 300));
-
-        console.log('Running order handler with:', {
-          product,
-          couponInfo,
-          discount,
-        });
-
-        // Build course link with optional parameters
-        const courseLinkParams = new URLSearchParams();
-        if (price_id) courseLinkParams.append('price_id', price_id);
-        if (coupon) courseLinkParams.append('coupon', coupon);
-        if (discount_code)
-          courseLinkParams.append('discount_code', discount_code);
-
-        const courseLink = `https://learn.packagingschool.com/enroll/${id}${
-          courseLinkParams.toString() ? `?${courseLinkParams.toString()}` : ''
-        }`;
-
-        // Safely get the price
-        let total;
-        console.log('Price calculation debug:', {
-          price_id,
-          product_price: product.price,
-          product_prices: product.product_prices,
-          product_prices_length: product.product_prices?.length,
-        });
-
-        if (
-          price_id &&
-          product.product_prices &&
-          Array.isArray(product.product_prices)
-        ) {
-          const selectedPrice = product.product_prices.find(
-            (price) => price.id === parseInt(price_id)
-          );
-          console.log('Selected price by ID:', selectedPrice);
-          total = selectedPrice?.price;
-        } else {
-          console.log('Using fallback price:', {
-            product_price: product.price,
-            first_product_price: product.product_prices?.[0]?.price,
-          });
-          total = product.price || product.product_prices?.[0]?.price;
-        }
-
-        console.log('Total before conversion:', total, typeof total);
-
-        // Convert string price to number if needed
-        if (total && typeof total === 'string') {
-          total = parseFloat(total);
-        }
-
-        console.log('Final total:', total, typeof total);
-
-        // Only proceed if we have a valid total (including 0 for free courses)
-        if (total === null || total === undefined) {
-          console.log('No valid total found, skipping order creation');
-          console.log('Product data:', product);
-          return;
-        }
-
-        // Convert discount to number if it's a string
-        const numericDiscount = discount ? parseFloat(discount) : 0;
-
-        console.log('Creating order with coupon info:', {
-          courseDiscount: numericDiscount,
-          originalDiscount: discount,
-          couponInfo: couponInfo,
-          coupon: coupon,
-        });
-
-        const orderId = await createNewOrder({
-          courseDescription: product.description,
-          courseDiscount: numericDiscount,
-          courseImage: product.card_image_url,
-          courseName: product.name,
-          courseLink: courseLink,
-          total: total,
-          userID: awsUser ? awsUser.id : null,
-          email: awsUser ? awsUser.email : null,
-          name: awsUser ? awsUser.name : null,
-        });
-
-        console.log('Order created:', orderId);
-        setOrder(orderId);
-        setRedirecting(true); // Mark as redirecting
-        setIsLoading(true); // Keep loading during redirect
-
-        if (awsUser && awsUser.name.includes(' ')) {
-          navigateToThinkific(courseLink, courseLink);
-        } else {
-          router.push(`/order/${orderId.id}`);
-        }
-      };
-
-      orderHandler();
-    }
-  }, [product, couponInfo, discount, order]);
-
-  // Live progress based on enrollment steps
-  useEffect(() => {
-    let progress = 0;
-
-    // Base progress for router ready
-    if (router.isReady) progress += 10;
-
-    // Progress for product loaded
-    if (product) progress += 25;
-
-    // Progress for coupon attempted
-    if (couponAttempted) progress += 15;
-
-    // Progress for coupon info loaded
-    if (couponInfo) progress += 15;
-
-    // Progress for order created
-    if (order) progress += 15;
-
-    // Progress for redirect initiated
-    if (redirecting) progress += 20;
-
-    setSimProgress(progress);
-  }, [
-    router.isReady,
-    product,
-    couponAttempted,
-    couponInfo,
-    order,
-    redirecting,
-  ]);
+  }, [redirectUrl, orderId, awsUser, navigateToThinkific, router]);
 
   // Always show loader - redirect will handle the UI
   return (
@@ -279,4 +64,116 @@ export default function Enroll() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { id, price_id, coupon, discount_code } = context.query;
+  const protocol = context.req.headers['x-forwarded-proto'] || 'http';
+  const host = context.req.headers.host;
+  const baseUrl = `${protocol}://${host}`;
+
+  try {
+    console.log('Server-side enrollment processing:', {
+      id,
+      price_id,
+      coupon,
+      discount_code,
+    });
+
+    // 1. Fetch product
+    const product = await getProductId(id, baseUrl);
+    console.log('Product loaded:', product);
+
+    // 2. Fetch coupon info if provided
+    let couponInfo = null;
+    let discount = 0;
+
+    if (coupon) {
+      try {
+        couponInfo = await getCouponInfo(id, coupon, baseUrl);
+        console.log('Coupon info loaded:', couponInfo);
+
+        if (couponInfo && !couponInfo.error) {
+          discount = couponInfo.amount || couponInfo.discount || 0;
+        }
+      } catch (error) {
+        console.error('Error fetching coupon info:', error);
+      }
+    }
+
+    // 3. Calculate total price
+    let total;
+    if (
+      price_id &&
+      product.product_prices &&
+      Array.isArray(product.product_prices)
+    ) {
+      const selectedPrice = product.product_prices.find(
+        (price) => price.id === parseInt(price_id)
+      );
+      total = selectedPrice?.price;
+    } else {
+      total = product.price || product.product_prices?.[0]?.price;
+    }
+
+    // Convert string price to number if needed
+    if (total && typeof total === 'string') {
+      total = parseFloat(total);
+    }
+
+    // 4. Build course link
+    const courseLinkParams = new URLSearchParams();
+    if (price_id) courseLinkParams.append('price_id', price_id);
+    if (coupon) courseLinkParams.append('coupon', coupon);
+    if (discount_code) courseLinkParams.append('discount_code', discount_code);
+
+    const courseLink = `https://learn.packagingschool.com/enroll/${id}${
+      courseLinkParams.toString() ? `?${courseLinkParams.toString()}` : ''
+    }`;
+
+    // 5. Create order
+    const numericDiscount = discount ? parseFloat(discount) : 0;
+
+    console.log('Creating order with:', {
+      courseDiscount: numericDiscount,
+      total,
+      couponInfo,
+      coupon,
+    });
+
+    const orderId = await createNewOrder({
+      courseDescription: product.description,
+      courseDiscount: numericDiscount,
+      courseImage: product.card_image_url,
+      courseName: product.name,
+      courseLink: courseLink,
+      total: total,
+      userID: null, // Will be set on client side if user is logged in
+      email: null,
+      name: null,
+    });
+
+    console.log('Order created:', orderId);
+
+    return {
+      props: {
+        product,
+        couponInfo,
+        orderId: orderId.id,
+        redirectUrl: courseLink,
+      },
+    };
+  } catch (error) {
+    console.error('Error in getServerSideProps:', error);
+
+    return {
+      props: {
+        product: null,
+        couponInfo: null,
+        orderId: null,
+        redirectUrl: null,
+        error: error.message,
+      },
+    };
+  }
 }
