@@ -200,19 +200,22 @@ export default function Enroll() {
     if (router.isReady) progress += 10;
 
     // Progress for product loaded
-    if (product) progress += 30;
+    if (product) progress += 25;
 
     // Progress for coupon attempted
-    if (couponAttempted) progress += 20;
+    if (couponAttempted) progress += 15;
 
     // Progress for coupon info loaded
-    if (couponInfo) progress += 20;
+    if (couponInfo) progress += 15;
 
     // Progress for order created
-    if (order) progress += 20;
+    if (order) progress += 15;
+
+    // Progress for redirect initiated
+    if (order && isLoading) progress += 20;
 
     setSimProgress(progress);
-  }, [router.isReady, product, couponAttempted, couponInfo, order]);
+  }, [router.isReady, product, couponAttempted, couponInfo, order, isLoading]);
 
   // Always show loader - redirect will handle the UI
   return (
