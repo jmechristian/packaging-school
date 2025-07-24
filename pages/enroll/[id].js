@@ -113,8 +113,12 @@ export default function Enroll() {
       discount,
     });
 
+    // Wait a bit longer to ensure coupon processing is complete
     if (product && !order && couponAttempted) {
       const orderHandler = async () => {
+        // Add a small delay to ensure coupon processing is complete
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
         console.log('Running order handler with:', {
           product,
           couponInfo,
@@ -175,9 +179,19 @@ export default function Enroll() {
           return;
         }
 
+        // Convert discount to number if it's a string
+        const numericDiscount = discount ? parseFloat(discount) : 0;
+
+        console.log('Creating order with coupon info:', {
+          courseDiscount: numericDiscount,
+          originalDiscount: discount,
+          couponInfo: couponInfo,
+          coupon: coupon,
+        });
+
         const orderId = await createNewOrder({
           courseDescription: product.description,
-          courseDiscount: discount,
+          courseDiscount: numericDiscount,
           courseImage: product.card_image_url,
           courseName: product.name,
           courseLink: courseLink,
