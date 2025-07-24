@@ -38,7 +38,8 @@ export default function Enroll() {
 
   // Reset coupon state when router query changes
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && id && coupon) {
+      console.log('Resetting coupon state for:', { id, coupon });
       setCouponAttempted(false);
       setCouponInfo(null);
       setDiscount(null);
@@ -46,10 +47,15 @@ export default function Enroll() {
   }, [router.isReady, id, coupon]);
 
   useEffect(() => {
-    console.log('Coupon effect check:', { id, coupon, couponAttempted });
+    console.log('Coupon effect check:', {
+      id,
+      coupon,
+      couponAttempted,
+      routerReady: router.isReady,
+    });
 
-    // Only fetch coupon info if we have both id and coupon, and haven't already attempted it
-    if (id && coupon && !couponAttempted) {
+    // Only fetch coupon info if router is ready, we have both id and coupon, and haven't already attempted it
+    if (router.isReady && id && coupon && !couponAttempted) {
       console.log('Starting coupon fetch...');
       setCouponAttempted(true);
       const fetchCouponInfo = async () => {
@@ -74,13 +80,13 @@ export default function Enroll() {
       };
 
       fetchCouponInfo();
-    } else if (!coupon && !couponAttempted) {
+    } else if (router.isReady && !coupon && !couponAttempted) {
       // No coupon provided, mark as attempted
       console.log('No coupon provided, marking as attempted');
       setCouponAttempted(true);
       setCouponInfo(null);
     }
-  }, [id, coupon, couponAttempted]);
+  }, [router.isReady, id, coupon, couponAttempted]);
 
   useEffect(() => {
     if (couponInfo) {
