@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';

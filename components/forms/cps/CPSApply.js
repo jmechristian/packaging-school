@@ -357,7 +357,7 @@ const CPSApply = ({ email, free, onSubmit }) => {
                 htmlFor='pay-full'
                 className='block font-medium font-greycliff leading-6 text-slate-900'
               >
-                Pay in Full
+                Pay in Full ($2,400)
               </label>
             </div>
             <div className='flex items-center gap-x-3'>
@@ -373,7 +373,7 @@ const CPSApply = ({ email, free, onSubmit }) => {
                 htmlFor='pay-installment'
                 className='block font-medium font-greycliff leading-6 text-slate-900'
               >
-                Subscription (5 payments of $800)
+                Subscription (6 payments of $415)
               </label>
             </div>
           </div>
