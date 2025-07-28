@@ -141,13 +141,7 @@ const WhyPschool = () => {
               width={400}
               height={400}
             />
-            <img
-              className='col-span-2 max-h-28 w-full object-contain lg:col-span-1'
-              src='https://packschool.s3.amazonaws.com/starbucks-coffee-logo.png'
-              alt='Starbucks'
-              width={400}
-              height={400}
-            />
+
             <img
               className='col-span-2 max-h-28 w-full object-contain lg:col-span-1'
               src='https://packschool.s3.amazonaws.com/coke.png'
@@ -163,16 +157,9 @@ const WhyPschool = () => {
               height={400}
             />
             <img
-              className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
-              src='https://packschool.s3.amazonaws.com/3m.png'
-              alt='3M'
-              width={400}
-              height={400}
-            />
-            <img
-              className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
-              src='https://packschool.s3.amazonaws.com/colgate.png'
-              alt='3M'
+              className='col-span-2 max-h-28 w-full object-contain lg:col-span-1'
+              src='https://packschool.s3.amazonaws.com/starbucks-coffee-logo.png'
+              alt='Starbucks'
               width={400}
               height={400}
             />
@@ -180,6 +167,21 @@ const WhyPschool = () => {
               className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
               src='https://packschool.s3.amazonaws.com/3m.png'
               alt='3M'
+              width={400}
+              height={400}
+            />
+
+            <img
+              className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/CBFoundationBlackLogo.png'
+              alt='Conagra Brands'
+              width={400}
+              height={400}
+            />
+            <img
+              className='col-span-2 col-start-2 max-h-28 w-full object-contain sm:col-start-auto lg:col-span-1'
+              src='https://packschool.s3.us-east-1.amazonaws.com/hood-stacked-logo-1-1.png'
+              alt='Hood Containers'
               width={400}
               height={400}
             />
