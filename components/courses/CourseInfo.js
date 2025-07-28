@@ -28,13 +28,24 @@ const CourseInfo = ({
   const router = useRouter();
 
   const orderHandler = async (type) => {
+    console.log(type);
     const orderId = await createNewOrder({
       courseDescription: description,
       courseDiscount: 0,
       courseImage: seoImage,
       courseName: title,
-      courseLink: type === 'SUBSCRIPTION' ? subscriptionLink : link,
-      total: type === 'SUBSCRIPTION' ? subscriptionPrice : price,
+      courseLink:
+        type === 'SUBSCRIPTION'
+          ? subscriptionLink
+          : type === 'TRIAL'
+          ? `${link}?et=free_trial`
+          : link,
+      total:
+        type === 'SUBSCRIPTION'
+          ? subscriptionPrice
+          : type === 'TRIAL'
+          ? 0
+          : price,
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
