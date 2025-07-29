@@ -14,10 +14,7 @@ export default function LoginPage() {
   const getReturnTo = () => {
     if (returnTo) {
       // If returnTo is an external URL (learn subdomain), store it for later use
-      if (
-        returnTo.includes('learn.packagingschool.com') ||
-        returnTo.includes('bmw.packagingschool.com')
-      ) {
+      if (returnTo.includes('learn.packagingschool.com')) {
         if (typeof window !== 'undefined') {
           sessionStorage.setItem('externalReturnTo', returnTo);
         }
