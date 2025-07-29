@@ -25,10 +25,11 @@ const CourseInfo = ({
 }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const orderHandler = async (type) => {
-    console.log(type);
+    setIsLoading(true);
     const orderId = await createNewOrder({
       courseDescription: description,
       courseDiscount: 0,
@@ -60,6 +61,7 @@ const CourseInfo = ({
     } else {
       router.push(`/order/${orderId.id}`);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -131,8 +133,10 @@ const CourseInfo = ({
                         <CTAButtonLarge
                           link={link}
                           onClick={() => orderHandler('BUY')}
+                          isLoading={isLoading}
                         />
                         <CTAButtonTrial
+                          isLoading={isLoading}
                           link={trialLink}
                           onClick={() => orderHandler('TRIAL')}
                         />

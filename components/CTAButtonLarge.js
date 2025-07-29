@@ -3,7 +3,7 @@ import React from 'react';
 import { useThinkificLink } from '../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 
-const CTAButtonLarge = ({ link, onClick }) => {
+const CTAButtonLarge = ({ link, onClick, isLoading }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
@@ -18,11 +18,12 @@ const CTAButtonLarge = ({ link, onClick }) => {
 
   return (
     <button
-      className='w-full bg-clemson hover:bg-clemson-dark text-center rounded-md'
+      className='w-full bg-clemson hover:bg-clemson-dark text-center rounded-md disabled:opacity-50 disabled:cursor-not-allowed'
       onClick={onClick}
+      disabled={isLoading}
     >
       <div className='w-full py-4 uppercase font-bold text-xl text-white'>
-        Enroll Now!
+        {isLoading ? 'Loading...' : 'Enroll Now!'}
       </div>
     </button>
   );
