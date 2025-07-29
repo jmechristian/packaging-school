@@ -1057,8 +1057,8 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/signin',
-        destination: '/api/auth/login',
+        source: '/sign_in',
+        destination: '/login',
         permanent: true,
       },
     ];
