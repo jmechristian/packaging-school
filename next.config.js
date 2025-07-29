@@ -1056,6 +1056,11 @@ const nextConfig = {
         destination: '/api/auth/password-reset',
         permanent: true,
       },
+      {
+        source: '/signin',
+        destination: '/api/auth/login',
+        permanent: true,
+      },
     ];
   },
 };

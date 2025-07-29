@@ -469,3 +469,31 @@ export const createCSPDeal = async (contact, title) => {
 
   return deal;
 };
+
+export const createContact = async (email, firstName, lastName) => {
+  const contact = await fetch(
+    `https://packagingschool42200.api-us1.com/api/3/contacts`,
+    {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'Api-Token':
+          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+      },
+      body: JSON.stringify({
+        contact: {
+          email,
+          firstName,
+          lastName,
+        },
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .catch((err) => {
+      console.log(err);
+    });
+
+  return contact;
+};
