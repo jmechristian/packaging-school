@@ -57,7 +57,7 @@ export default handleAuth({
           const baseUrl =
             process.env.NODE_ENV === 'development'
               ? 'http://localhost:3001'
-              : 'https://packaging-school-git-dev-packaging-school.vercel.app';
+              : 'https://packagingschool.com';
           const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
             finalReturnTo
           )}`;
