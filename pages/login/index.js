@@ -1,20 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
   const { returnTo } = router.query;
+  const { user, isLoading: userIsLoading } = useUser();
 
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
     if (returnTo) {
       // If returnTo is an external URL (learn subdomain), store it for later use
-      if (returnTo.includes('learn.packagingschool.com')) {
+      if (
+        returnTo.includes('learn.packagingschool.com') ||
+        returnTo.includes('bmw.packagingschool.com')
+      ) {
         if (typeof window !== 'undefined') {
           sessionStorage.setItem('externalReturnTo', returnTo);
         }
@@ -28,6 +34,32 @@ export default function LoginPage() {
 
     return null;
   };
+
+  // Handle already authenticated users
+  useEffect(() => {
+    if (!userIsLoading) {
+      setIsCheckingAuth(false);
+
+      if (user) {
+        // User is already authenticated, redirect them
+        const returnToUrl = getReturnTo();
+
+        if (returnToUrl) {
+          // If there's a returnTo URL, redirect to it
+          if (returnToUrl.startsWith('/api/auth/external-redirect')) {
+            // For external URLs, use the external redirect handler
+            window.location.href = returnToUrl;
+          } else {
+            // For internal URLs, use router.push
+            router.push(returnToUrl);
+          }
+        } else {
+          // No returnTo, redirect to profile
+          router.push('/profile');
+        }
+      }
+    }
+  }, [user, userIsLoading, router, returnTo]);
 
   const handleMagicLink = () => {
     if (!email) return;
@@ -46,6 +78,24 @@ export default function LoginPage() {
       returnToUrl ? `?returnTo=${encodeURIComponent(returnToUrl)}` : ''
     }`;
   };
+
+  // Show loading state while checking authentication
+  if (isCheckingAuth || userIsLoading) {
+    return (
+      <div className='fixed inset-0 flex flex-col items-center justify-center px-4 py-8 z-50'>
+        <div className='absolute top-0 left-0 w-full h-full bg-black opacity-80 z-10'></div>
+        <div className='max-w-md w-full space-y-5 bg-white py-6 md:!py-9 px-4 md:!px-8 rounded-xl shadow relative z-20 flex flex-col items-center'>
+          <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin mb-4'></div>
+          <p className='text-gray-600'>Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render login form if user is already authenticated
+  if (user) {
+    return null;
+  }
 
   return (
     <div className='fixed inset-0 flex flex-col items-center justify-center px-4 py-8 z-50'>

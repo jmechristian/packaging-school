@@ -40,7 +40,7 @@ export default async function externalRedirectHandler(req, res) {
         name: session.user.name,
       });
 
-      // Get the actual returnTo URL from sessionStorage (we'll need to pass it through the URL)
+      // Get the actual returnTo URL from query parameter
       const actualReturnTo =
         req.query.returnTo || 'https://learn.packagingschool.com';
 

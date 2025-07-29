@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from 'next/router';
 
 const PurchaseLogin = ({ order }) => {
   const returnTo = order.courseLink;
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const { user, isLoading: userIsLoading } = useUser();
+  const router = useRouter();
 
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
@@ -25,6 +30,32 @@ const PurchaseLogin = ({ order }) => {
     return null;
   };
 
+  // Handle already authenticated users
+  useEffect(() => {
+    if (!userIsLoading) {
+      setIsCheckingAuth(false);
+
+      if (user) {
+        // User is already authenticated, redirect them to the course
+        const returnToUrl = getReturnTo();
+
+        if (returnToUrl) {
+          // If there's a returnTo URL, redirect to it
+          if (returnToUrl.startsWith('/api/auth/external-redirect')) {
+            // For external URLs, use the external redirect handler
+            window.location.href = returnToUrl;
+          } else {
+            // For internal URLs, use router.push
+            router.push(returnToUrl);
+          }
+        } else {
+          // No returnTo, redirect to profile
+          router.push('/profile');
+        }
+      }
+    }
+  }, [user, userIsLoading, router, returnTo]);
+
   const handleMagicLink = () => {
     if (!email) return;
 
@@ -42,6 +73,21 @@ const PurchaseLogin = ({ order }) => {
       returnToUrl ? `?returnTo=${encodeURIComponent(returnToUrl)}` : ''
     }`;
   };
+
+  // Show loading state while checking authentication
+  if (isCheckingAuth || userIsLoading) {
+    return (
+      <div className='flex flex-col items-center justify-center gap-4'>
+        <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
+        <p className='text-gray-600'>Checking authentication...</p>
+      </div>
+    );
+  }
+
+  // Don't render login form if user is already authenticated
+  if (user) {
+    return null;
+  }
 
   return (
     <div className='flex flex-col gap-5'>
