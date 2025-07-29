@@ -137,8 +137,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
           <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
           <button
             onClick={() => {
-              navigateToThinkific(
-                `https://learn.packagingschool.com/courses/take/${course.slug}`,
+              router.push(
                 `https://learn.packagingschool.com/courses/take/${course.slug}`
               );
             }}
@@ -152,8 +151,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
             <div
               className='font-semibold text-gray-900 tracking-tight leading-tight cursor-pointer'
               onClick={() => {
-                navigateToThinkific(
-                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                router.push(
                   `https://learn.packagingschool.com/courses/take/${course.slug}`
                 );
               }}

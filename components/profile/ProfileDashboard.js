@@ -28,11 +28,11 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
   const [activeTab, setActiveTab] = useState('courses');
 
   // Debug log to help diagnose infinite loop/data loss
-  console.log('ProfileDashboard render:', {
-    awsUser,
-    thinkificUser,
-    activeTab,
-  });
+  // console.log('ProfileDashboard render:', {
+  //   awsUser,
+  //   thinkificUser,
+  //   activeTab,
+  // });
 
   // Add effect to sync with URL on mount and URL changes
   useEffect(() => {
