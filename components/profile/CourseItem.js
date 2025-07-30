@@ -128,7 +128,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
     course && (
       <div
         key={course.id}
-        className={`border flex flex-col rounded-lg space-y-3 hover:shadow-md transition-shadow bg-gray-100 p-2.5`}
+        className={`border flex flex-col rounded-lg space-y-3 hover:shadow-md transition-shadow bg-gray-50 p-2.5`}
       >
         <div
           className='w-full aspect-[16/9] bg-gray-200 rounded-lg flex items-center justify-center bg-cover bg-center relative'
@@ -205,6 +205,24 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
               >
                 Leave a Rating
               </div>
+            </div>
+          </div>
+          <div
+            className='w-full flex items-center justify-center gap-1 p-2 bg-base-brand text-white font-semibold rounded-md hover:bg-base-dark transition-all duration-300 cursor-pointer mt-2'
+            onClick={() => {
+              user.sub.includes('email')
+                ? navigateToThinkific(
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`
+                  )
+                : router.push(
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`
+                  );
+            }}
+          >
+            <div>Continue Course</div>
+            <div>
+              <MdPlayCircle size={20} />
             </div>
           </div>
         </div>
