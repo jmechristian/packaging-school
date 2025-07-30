@@ -85,6 +85,9 @@ module.exports = {
         'ap-blue': '#0873B8',
         'ap-red': '#E43A00',
         'cummins-red': '#D02323',
+        'icpf-dark': '#4E6F18',
+        'icpf-base': '#6EB33F',
+        'icpf-light': '#B3D88B',
       },
       backgroundImage: {
         'dark-mobile':
