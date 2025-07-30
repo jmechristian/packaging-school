@@ -18,7 +18,9 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
   const [comment, setComment] = useState('');
   const [courseId, setCourseId] = useState(null);
   const [userReview, setUserReview] = useState(null);
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, user } = useSelector((state) => state.auth);
+
+  console.log(user);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -137,9 +139,14 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
           <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
           <button
             onClick={() => {
-              router.push(
-                `https://learn.packagingschool.com/courses/take/${course.slug}`
-              );
+              user.sub.includes('email')
+                ? navigateToThinkific(
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`
+                  )
+                : router.push(
+                    `https://learn.packagingschool.com/courses/take/${course.slug}`
+                  );
             }}
             className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'
           >
@@ -151,9 +158,14 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
             <div
               className='font-semibold text-gray-900 tracking-tight leading-tight cursor-pointer'
               onClick={() => {
-                router.push(
-                  `https://learn.packagingschool.com/courses/take/${course.slug}`
-                );
+                user.sub.includes('email')
+                  ? navigateToThinkific(
+                      `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                      `https://learn.packagingschool.com/courses/take/${course.slug}`
+                    )
+                  : router.push(
+                      `https://learn.packagingschool.com/courses/take/${course.slug}`
+                    );
               }}
             >
               {course.title}
