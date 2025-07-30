@@ -111,52 +111,16 @@ const Layout = ({ children }) => {
   // SSO logic: only run for authenticated users, gated by userProcessedRef
   useEffect(() => {
     if (!userIsLoading && user && !userProcessedRef.current) {
-      // Check if SSO was completed recently (within last 5 minutes)
-      const ssoTimestamp = sessionStorage.getItem('ssoTimestamp');
-      const redirectCount = parseInt(
-        sessionStorage.getItem('ssoRedirectCount') || '0'
-      );
-      const now = Date.now();
-      const fiveMinutes = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-      // Only skip SSO if it was completed very recently (within 5 minutes)
-      const hasRecentSSO =
-        ssoTimestamp && now - parseInt(ssoTimestamp) < fiveMinutes;
-
-      // Prevent infinite redirect loops (max 3 redirects)
-      const maxRedirects = 3;
-
-      if (
-        user.ssoRedirectUrl &&
-        !hasRecentSSO &&
-        redirectCount < maxRedirects
-      ) {
-        // Increment redirect count
-        sessionStorage.setItem(
-          'ssoRedirectCount',
-          (redirectCount + 1).toString()
-        );
-        // Set timestamp for this SSO attempt
-        sessionStorage.setItem('ssoTimestamp', now.toString());
+      const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+      if (user.ssoRedirectUrl && !hasCompletedSSO) {
+        sessionStorage.setItem('ssoComplete', 'true');
         setTimeout(() => {
           window.location.href = user.ssoRedirectUrl;
         }, 100);
         return;
-      } else if (redirectCount >= maxRedirects) {
-        console.warn('SSO redirect limit reached, clearing redirect count');
-        sessionStorage.removeItem('ssoRedirectCount');
-        sessionStorage.removeItem('ssoTimestamp');
       }
       userProcessedRef.current = true;
       // No user setup here
-    }
-  }, [user, userIsLoading]);
-
-  // Clear SSO timestamp when user logs out
-  useEffect(() => {
-    if (!user && !userIsLoading) {
-      sessionStorage.removeItem('ssoTimestamp');
-      sessionStorage.removeItem('ssoRedirectCount');
     }
   }, [user, userIsLoading]);
 
