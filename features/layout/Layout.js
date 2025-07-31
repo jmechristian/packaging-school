@@ -136,14 +136,35 @@ const Layout = ({ children }) => {
       const setupUser = async () => {
         // 1. Set Auth0 user in Redux
         dispatch(setUser(user));
-        // 2. Check/create AWS user
+        // 2. Check/create Thinkific user
+        try {
+          const thinkificUserRes = await fetch(
+            `/api/thinkific/get-user?email=${user.email}`
+          );
+          const thinkificData = await thinkificUserRes.json();
+          if (thinkificData?.data?.data?.userByEmail) {
+            dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
+            const enrollments = await fetch(
+              `/api/thinkific/get-enrollments?email=${user.email}`
+            );
+            const enrollmentsData = await enrollments.json();
+            dispatch(setEnrollments(enrollmentsData.items));
+          } else {
+            console.warn('No Thinkific user found for', user.email);
+          }
+        } catch (err) {
+          console.error('Thinkific user setup error:', err);
+        }
+        // 3. Check/create AWS user
         let dbUser = null;
         try {
           dbUser = await getAWSUser(user.email);
           if (!dbUser) {
             const newUser = await createAWSUser({
               email: user.email,
-              name: user.name,
+              name: thinkificUser
+                ? thinkificUser.firstName + ' ' + thinkificUser.lastName
+                : user.name,
               lastLogin: new Date().toISOString(),
             });
             const newUserXp = await createNewUserXp(
@@ -171,25 +192,7 @@ const Layout = ({ children }) => {
         } catch (err) {
           console.error('AWS user setup error:', err);
         }
-        // 3. Check/create Thinkific user
-        try {
-          const thinkificUserRes = await fetch(
-            `/api/thinkific/get-user?email=${user.email}`
-          );
-          const thinkificData = await thinkificUserRes.json();
-          if (thinkificData?.data?.data?.userByEmail) {
-            dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
-            const enrollments = await fetch(
-              `/api/thinkific/get-enrollments?email=${user.email}`
-            );
-            const enrollmentsData = await enrollments.json();
-            dispatch(setEnrollments(enrollmentsData.items));
-          } else {
-            console.warn('No Thinkific user found for', user.email);
-          }
-        } catch (err) {
-          console.error('Thinkific user setup error:', err);
-        }
+
         setUserSetupComplete(true);
       };
       setupUser();
