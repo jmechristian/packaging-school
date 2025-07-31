@@ -1,4 +1,5 @@
 import axios from 'axios';
+import crypto from 'crypto';
 
 function generatePassword(length = 12) {
   const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -100,22 +101,100 @@ async function createAuth0User(userData, token) {
   }
 }
 
+function verifyWebhookSignature(payload, signature, secret) {
+  if (!signature || !secret) {
+    console.warn('No signature or secret provided for webhook verification');
+    return true; // Skip verification if not configured
+  }
+
+  try {
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(payload, 'utf8')
+      .digest('hex');
+
+    return crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature)
+    );
+  } catch (error) {
+    console.error('Error verifying webhook signature:', error);
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    // Extract webhook payload
-    const webhookData = req.body;
+  // Log the incoming request for debugging
+  console.log('Webhook received:', {
+    method: req.method,
+    headers: req.headers,
+    body: req.body,
+    query: req.query,
+  });
 
-    // Validate webhook structure
-    if (!webhookData || !webhookData.payload || !webhookData.payload.email) {
-      return res.status(400).json({ error: 'Invalid webhook payload' });
+  // Verify webhook signature if configured
+  const webhookSecret = process.env.THINKIFIC_WEBHOOK_SECRET;
+  const signature =
+    req.headers['x-thinkific-signature'] || req.headers['x-webhook-signature'];
+
+  if (webhookSecret && signature) {
+    const rawBody =
+      typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
+
+    if (!isValid) {
+      console.error('Invalid webhook signature');
+      return res.status(401).json({ error: 'Invalid webhook signature' });
+    }
+    console.log('Webhook signature verified successfully');
+  }
+
+  try {
+    // Extract webhook payload - handle different possible structures
+    let webhookData = req.body;
+
+    // If the body is a string, try to parse it as JSON
+    if (typeof webhookData === 'string') {
+      try {
+        webhookData = JSON.parse(webhookData);
+      } catch (parseError) {
+        console.error('Failed to parse webhook body as JSON:', parseError);
+        return res.status(400).json({ error: 'Invalid JSON payload' });
+      }
     }
 
-    const { payload } = webhookData;
-    const { email, first_name, last_name } = payload;
+    console.log('Parsed webhook data:', webhookData);
+
+    // Handle different possible webhook payload structures
+    let userData;
+
+    if (webhookData.payload && webhookData.payload.email) {
+      // Standard Thinkific webhook structure
+      userData = webhookData.payload;
+    } else if (webhookData.email) {
+      // Direct user data structure
+      userData = webhookData;
+    } else {
+      console.error('Invalid webhook payload structure:', webhookData);
+      return res.status(400).json({
+        error: 'Invalid webhook payload structure',
+        received: webhookData,
+      });
+    }
+
+    const { email, first_name, last_name } = userData;
+
+    if (!email || !first_name || !last_name) {
+      console.error('Missing required user fields:', userData);
+      return res.status(400).json({
+        error: 'Missing required user fields',
+        received: userData,
+      });
+    }
 
     console.log(`Processing Thinkific signup for: ${email}`);
 
@@ -135,7 +214,7 @@ export default async function handler(req, res) {
     }
 
     // Create user in Auth0
-    const createdUser = await createAuth0User(payload, token);
+    const createdUser = await createAuth0User(userData, token);
 
     console.log(`Successfully created Auth0 user for: ${email}`);
 
