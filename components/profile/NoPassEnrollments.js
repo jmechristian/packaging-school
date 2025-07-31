@@ -87,7 +87,7 @@ const NoPassEnrollments = ({
               />
             );
           })}
-          <div className='col-span-1 lg:col-span-3'>
+          <div className='col-span-1 lg:!col-span-3 flex justify-center'>
             {totalActivePages > 1 && (
               <PaginationControls
                 currentPage={currentActivePage}
@@ -95,6 +95,19 @@ const NoPassEnrollments = ({
                 onPageChange={setCurrentActivePage}
               />
             )}
+          </div>
+          <div className='col-span-1 lg:!col-span-3 flex justify-center'>
+            <div
+              className='bg-slate-100 w-full p-3 rounded cursor-pointer hover:bg-slate-200 transition-colors duration-200 text-sm text-center'
+              onClick={() => {
+                navigateToThinkific(
+                  'https://learn.packagingschool.com/enrollments?role=classic',
+                  'https://learn.packagingschool.com/enrollments?role=classic'
+                );
+              }}
+            >
+              Trouble accessing your courses? Try Classic View.
+            </div>
           </div>
         </div>
       ) : (
