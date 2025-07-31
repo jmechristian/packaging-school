@@ -76,7 +76,7 @@ const VideoPlayer = ({
           height={'100%'}
           onError={() => setIsError(true)}
           controls
-          light={true}
+          light={light}
           playing={playing}
         />
         {/* )} */}
