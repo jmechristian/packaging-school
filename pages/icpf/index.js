@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdCalendarMonth } from 'react-icons/md';
+import { MdCalendarMonth, MdChatBubble, MdSchool } from 'react-icons/md';
 import {
   AcademicCapIcon,
   BriefcaseIcon,
@@ -136,66 +136,105 @@ const ICPF = () => {
           </div>
         </div>
       </div>
-      <div className='md:col-span-6 text-center'>
+      <div className='md:col-span-6 text-center border-b border-b-icpf-base pb-7'>
         <div className='h3-base'>
           What’s Included in the 12-Week CMPM Program
         </div>
       </div>
-      <div className='md:col-span-4 flex flex-col gap-4'>
+      <div className='md:col-span-4 flex flex-col gap-6'>
+        <div className='h4-base flex items-center gap-2'>
+          <div>
+            <MdSchool />
+          </div>
+          <div>10 Online, Self-Paced Courses </div>
+        </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Global Competitive Landscape
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Global Competitive Landscape
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Project Management Essentials
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Project Management Essentials
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Regulations and Corporate Sustainability
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Regulations and Corporate Sustainability
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Materials Management I
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Materials Management I
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Materials Management II
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Materials Management II
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Package Labeling and Finishing
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Package Labeling and Finishing
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Packaging Development Workflow
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Packaging Development Workflow
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Capital Equipment and Manufacturing
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Capital Equipment and Manufacturing
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Logistics and Supply Chain Management
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Logistics and Supply Chain Management
+            </div>
           </div>
-          <div className='bg-slate-100 p-4 rounded-lg shadow-sm border border-gray-100 flex items-center justify-center text-center text-sm font-medium'>
-            Leveraging Human Factors in Packaging Design
+          <div className='bg-icpf-base/10 p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center text-sm font-medium'>
+            <div className='font-[500] text-slate-700 text-lg'>
+              Leveraging Human Factors in Packaging Design
+            </div>
           </div>
         </div>
       </div>
       <div className='md:col-span-2 flex flex-col gap-4'>
-        <div className='w-full h-full bg-yellow-400 flex items-center justify-center'>
-          Packaging Development Plan (PDP)
+        <div className='w-full h-full bg-icpf-dark text-white py-5 px-7 rounded-lg flex flex-col gap-2'>
+          <div className='h4-base'>Packaging Development Plan (PDP)</div>
+          <div className='leading-snug'>
+            Apply what you learn by creating your own Packaging Development Plan
+            using our guided template—customizable for real-world packaging
+            projects across any industry.
+          </div>
         </div>
-        <div className='w-full h-full bg-yellow-400 flex items-center justify-center'>
-          Weekly Office Hours with a PhD
+        <div className='w-full h-full bg-icpf-base text-white py-5 px-7 rounded-lg flex flex-col gap-2'>
+          <div className='flex items-center gap-2'>
+            <div className='h4-base max-w-[80%]'>
+              Weekly Office Hours with a PhD
+            </div>
+          </div>
+          <div className='leading-snug'>
+            Get personalized support during live, weekly office hours—ask
+            questions, get feedback, and connect directly with program
+            instructors.
+          </div>
         </div>
       </div>
-      <div className='md:col-span-6 bg-icpf-light/30 p-10 rounded-lg'>
+      <div className='md:col-span-6 border-y border-y-icpf-base py-7'>
         <div className='text-center flex flex-col gap-2'>
           <div className='text-lg font-bold'>
-            For more information about the CMPM program, visit:
-          </div>
-          <div className='text-lg font-bold'>
+            Click{' '}
             <a
               href='https://packagingschool.com/certifications/get-to-know-cmpm'
               target='_blank'
               rel='noopener noreferrer'
             >
-              https://packagingschool.com/certifications/get-to-know-cmpm
-            </a>
+              HERE
+            </a>{' '}
+            to learn more about the CMPM program
           </div>
         </div>
       </div>
