@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 
 const ICPF = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const benefits = [
     {
       description:
@@ -111,6 +112,7 @@ const ICPF = () => {
               <div
                 className='w-full rounded-lg bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white p-4'
                 onClick={async () => {
+                  setIsLoading(true);
                   const form = await createCMPMFormICPF({
                     age: '',
                     addressExtra: '',
@@ -151,10 +153,13 @@ const ICPF = () => {
                     whyPackaging: '',
                     yearGoals: '',
                   });
+                  setIsLoading(false);
                   router.push(`/forms/cmpm/icpf/${form.id}`);
                 }}
               >
-                <div className='text-center font-bold text-lg'>Apply Now</div>
+                <div className='text-center font-bold text-lg'>
+                  {isLoading ? 'Preparing Application...' : 'Apply Now'}
+                </div>
               </div>
             </div>
           </div>
