@@ -9,6 +9,7 @@ import {
   UserIcon,
   BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 const ICPF = () => {
   const benefits = [
@@ -48,8 +49,8 @@ const ICPF = () => {
 
   return (
     <div className='w-full grid grid-cols-1 md:grid-cols-6 gap-10 md:gap-24 py-10 lg:py-20 px-4 xl:px-0 max-w-7xl mx-auto'>
-      <div className='md:col-span-4 flex flex-col gap-10 w-full'>
-        <div className='flex flex-col gap-1.5'>
+      <div className='md:col-span-4 flex flex-col gap-12 w-full'>
+        <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-3'>
             <div className='text-icpf-dark font-oswald uppercase text-lg'>
               Oct 27, 2025 - Jan 19, 2026
@@ -61,12 +62,12 @@ const ICPF = () => {
         </div>
 
         <div className='flex flex-col gap-5 md:col-span-4'>
-          <div className='text-lg'>
+          <div className='text-xl leading-relaxed'>
             ICPF is awarding several FULL scholarships to the 12-week online
             Certificate of Mastery in Packaging Management program—a $7,000
             value each.
           </div>
-          <div className='text-lg'>
+          <div className='text-xl leading-relaxed'>
             Open to current students (age 18–25) who are studying business,
             supply chain, design, engineering, environmental science, or
             packaging at a college, university, trade/technical school, or
@@ -77,12 +78,17 @@ const ICPF = () => {
         </div>
       </div>
       <div className='md:col-span-2'>
-        <div>
+        <div className='flex flex-col gap-7'>
+          <div className='w-full h-full max-w-[60%] mx-auto'>
+            <Image
+              src='https://packschool.s3.us-east-1.amazonaws.com/ICPF-Logo.png'
+              alt='ICPF Logo'
+              width={939}
+              height={523}
+            />
+          </div>
           <div className='bg-icpf-light p-5 rounded-lg flex flex-col gap-4 md:col-span-2'>
-            <div className='text-sm font-bold uppercase pb-2 border-b border-b-icpf-dark'>
-              Details
-            </div>
-            <div className='flex flex-col gap-5'>
+            <div className='flex flex-col gap-4'>
               <div className='flex flex-col gap-0.5'>
                 <div className='text-lg font-bold'>CMPM Fall 2</div>
                 <div>ICPF Sponsored Cohort</div>
@@ -93,13 +99,13 @@ const ICPF = () => {
                 </div>
                 <div className='font-bold'>Oct 27, 2025 - Jan 19, 2026</div>
               </div>
-              <div className='flex flex-col gap-0.5'>
+              <div className='flex flex-col gap-0'>
                 <div className='text-lg font-bold'>Deadline</div>
                 <div>Oct 25, 2025</div>
               </div>
             </div>
             <div>
-              <div className='w-full rounded-lg bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white p-4 mt-2'>
+              <div className='w-full rounded-lg bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white p-4'>
                 <div className='text-center font-bold text-lg'>Apply Now</div>
               </div>
             </div>
