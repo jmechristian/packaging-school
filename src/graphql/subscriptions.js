@@ -2658,6 +2658,7 @@ export const onCreateCompany = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -2728,6 +2729,7 @@ export const onUpdateCompany = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -2798,6 +2800,7 @@ export const onDeleteCompany = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3322,6 +3325,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3393,6 +3397,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3530,6 +3535,7 @@ export const onCreateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3591,6 +3597,91 @@ export const onCreateUser = /* GraphQL */ `
           userOrdersId
         }
         nextToken
+      }
+      icpfCmpmFormID
+      icpfCmpmForm {
+        id
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          tourCompleted
+          icpfCmpmFormID
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        firstName
+        lastName
+        email
+        age
+        phone
+        streetAddress
+        addressExtra
+        city
+        state
+        country
+        companyName
+        companyTitle
+        linkedin
+        background
+        whyPackaging
+        areaOfInterest
+        sessionApplying
+        referral
+        payment
+        yearGoals
+        cmpmGoals
+        school
+        schoolType
+        studying
+        credential
+        credentialProgress
+        credentialYear
+        fullTime
+        organizations
+        transcript
+        resume
+        corrugatedImpact
+        opportunities
+        moreAboutYou
+        optOut
+        birthYear
+        paymentConfirmation
+        status
+        createdOn
+        updatedOn
+        icpfCmpmFormUserId
       }
       createdAt
       updatedAt
@@ -3664,6 +3755,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3735,6 +3827,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3872,6 +3965,7 @@ export const onUpdateUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3933,6 +4027,91 @@ export const onUpdateUser = /* GraphQL */ `
           userOrdersId
         }
         nextToken
+      }
+      icpfCmpmFormID
+      icpfCmpmForm {
+        id
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          tourCompleted
+          icpfCmpmFormID
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        firstName
+        lastName
+        email
+        age
+        phone
+        streetAddress
+        addressExtra
+        city
+        state
+        country
+        companyName
+        companyTitle
+        linkedin
+        background
+        whyPackaging
+        areaOfInterest
+        sessionApplying
+        referral
+        payment
+        yearGoals
+        cmpmGoals
+        school
+        schoolType
+        studying
+        credential
+        credentialProgress
+        credentialYear
+        fullTime
+        organizations
+        transcript
+        resume
+        corrugatedImpact
+        opportunities
+        moreAboutYou
+        optOut
+        birthYear
+        paymentConfirmation
+        status
+        createdOn
+        updatedOn
+        icpfCmpmFormUserId
       }
       createdAt
       updatedAt
@@ -4006,6 +4185,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -4077,6 +4257,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -4214,6 +4395,7 @@ export const onDeleteUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -4275,6 +4457,91 @@ export const onDeleteUser = /* GraphQL */ `
           userOrdersId
         }
         nextToken
+      }
+      icpfCmpmFormID
+      icpfCmpmForm {
+        id
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          tourCompleted
+          icpfCmpmFormID
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        firstName
+        lastName
+        email
+        age
+        phone
+        streetAddress
+        addressExtra
+        city
+        state
+        country
+        companyName
+        companyTitle
+        linkedin
+        background
+        whyPackaging
+        areaOfInterest
+        sessionApplying
+        referral
+        payment
+        yearGoals
+        cmpmGoals
+        school
+        schoolType
+        studying
+        credential
+        credentialProgress
+        credentialYear
+        fullTime
+        organizations
+        transcript
+        resume
+        corrugatedImpact
+        opportunities
+        moreAboutYou
+        optOut
+        birthYear
+        paymentConfirmation
+        status
+        createdOn
+        updatedOn
+        icpfCmpmFormUserId
       }
       createdAt
       updatedAt
@@ -4422,6 +4689,51 @@ export const onCreateUserXp = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -4582,6 +4894,51 @@ export const onUpdateUserXp = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -4740,6 +5097,51 @@ export const onDeleteUserXp = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -5221,6 +5623,51 @@ export const onCreateLearningPathProgress = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5404,6 +5851,51 @@ export const onUpdateLearningPathProgress = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5586,6 +6078,51 @@ export const onDeleteLearningPathProgress = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -6358,6 +6895,51 @@ export const onCreateCMPMForm = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -6533,6 +7115,51 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -6710,6 +7337,51 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -6742,6 +7414,708 @@ export const onDeleteCMPMForm = /* GraphQL */ `
       createdOn
       updatedOn
       cMPMFormUserId
+    }
+  }
+`;
+export const onCreateIcpfCmpmForm = /* GraphQL */ `
+  subscription OnCreateIcpfCmpmForm {
+    onCreateIcpfCmpmForm {
+      id
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      firstName
+      lastName
+      email
+      age
+      phone
+      streetAddress
+      addressExtra
+      city
+      state
+      country
+      companyName
+      companyTitle
+      linkedin
+      background
+      whyPackaging
+      areaOfInterest
+      sessionApplying
+      referral
+      payment
+      yearGoals
+      cmpmGoals
+      school
+      schoolType
+      studying
+      credential
+      credentialProgress
+      credentialYear
+      fullTime
+      organizations
+      transcript
+      resume
+      corrugatedImpact
+      opportunities
+      moreAboutYou
+      optOut
+      birthYear
+      paymentConfirmation
+      status
+      createdOn
+      updatedOn
+      icpfCmpmFormUserId
+    }
+  }
+`;
+export const onUpdateIcpfCmpmForm = /* GraphQL */ `
+  subscription OnUpdateIcpfCmpmForm {
+    onUpdateIcpfCmpmForm {
+      id
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      firstName
+      lastName
+      email
+      age
+      phone
+      streetAddress
+      addressExtra
+      city
+      state
+      country
+      companyName
+      companyTitle
+      linkedin
+      background
+      whyPackaging
+      areaOfInterest
+      sessionApplying
+      referral
+      payment
+      yearGoals
+      cmpmGoals
+      school
+      schoolType
+      studying
+      credential
+      credentialProgress
+      credentialYear
+      fullTime
+      organizations
+      transcript
+      resume
+      corrugatedImpact
+      opportunities
+      moreAboutYou
+      optOut
+      birthYear
+      paymentConfirmation
+      status
+      createdOn
+      updatedOn
+      icpfCmpmFormUserId
+    }
+  }
+`;
+export const onDeleteIcpfCmpmForm = /* GraphQL */ `
+  subscription OnDeleteIcpfCmpmForm {
+    onDeleteIcpfCmpmForm {
+      id
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      firstName
+      lastName
+      email
+      age
+      phone
+      streetAddress
+      addressExtra
+      city
+      state
+      country
+      companyName
+      companyTitle
+      linkedin
+      background
+      whyPackaging
+      areaOfInterest
+      sessionApplying
+      referral
+      payment
+      yearGoals
+      cmpmGoals
+      school
+      schoolType
+      studying
+      credential
+      credentialProgress
+      credentialYear
+      fullTime
+      organizations
+      transcript
+      resume
+      corrugatedImpact
+      opportunities
+      moreAboutYou
+      optOut
+      birthYear
+      paymentConfirmation
+      status
+      createdOn
+      updatedOn
+      icpfCmpmFormUserId
     }
   }
 `;
@@ -6885,6 +8259,51 @@ export const onCreateCPSForm = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -7064,6 +8483,51 @@ export const onUpdateCPSForm = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -7241,6 +8705,51 @@ export const onDeleteCPSForm = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -12008,6 +13517,51 @@ export const onCreateCourseReview = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12218,6 +13772,51 @@ export const onUpdateCourseReview = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -12430,6 +14029,51 @@ export const onDeleteCourseReview = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12584,6 +14228,51 @@ export const onCreateOrder = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -12748,6 +14437,51 @@ export const onUpdateOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12910,6 +14644,51 @@ export const onDeleteOrder = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -13838,6 +15617,51 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14046,6 +15870,51 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14253,6 +16122,51 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -14538,6 +16452,51 @@ export const onCreateAPSUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14708,6 +16667,51 @@ export const onUpdateAPSUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -14877,6 +16881,51 @@ export const onDeleteAPSUser = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -15465,6 +17514,51 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -15631,6 +17725,51 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -15799,6 +17938,51 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -15965,6 +18149,51 @@ export const onCreateCohortUsers = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -16147,6 +18376,51 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -16328,6 +18602,51 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -16508,6 +18827,51 @@ export const onCreateUserWishlist = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -16716,6 +19080,51 @@ export const onUpdateUserWishlist = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -16922,6 +19331,51 @@ export const onDeleteUserWishlist = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt

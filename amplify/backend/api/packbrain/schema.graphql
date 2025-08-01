@@ -527,6 +527,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   interests: String
   goals: String
   cell: String
+
   picture: String
   linkedin: String
   location: String
@@ -561,6 +562,8 @@ type User @model @auth(rules: [{ allow: public }]) {
   reviews: [CourseReview] @hasMany
   tourCompleted: Boolean @default(value: "false")
   orders: [Order] @hasMany(indexName: "orderByUserId")
+  icpfCmpmFormID: ID
+  icpfCmpmForm: IcpfCmpmForm @hasOne(fields: ["icpfCmpmFormID"])
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -671,6 +674,51 @@ type CMPMForm
   moreAboutYou: String
   birthYear: String
   optOut: Boolean
+  paymentConfirmation: String
+  status: String @default(value: "DRAFT")
+}
+
+type IcpfCmpmForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  age: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  sessionApplying: String
+  referral: String
+  payment: String
+  yearGoals: String
+  cmpmGoals: String
+  school: String
+  schoolType: String
+  studying: String
+  credential: String
+  credentialProgress: String
+  credentialYear: String
+  fullTime: Boolean
+  organizations: String
+  transcript: String
+  resume: String
+  corrugatedImpact: String
+  opportunities: Boolean
+  moreAboutYou: String
+  optOut: Boolean
+  birthYear: String
   paymentConfirmation: String
   status: String @default(value: "DRAFT")
 }

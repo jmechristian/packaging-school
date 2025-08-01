@@ -2349,6 +2349,7 @@ export const getCompany = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -2833,6 +2834,7 @@ export const getUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -2904,6 +2906,7 @@ export const getUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3041,6 +3044,7 @@ export const getUser = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -3102,6 +3106,91 @@ export const getUser = /* GraphQL */ `
           userOrdersId
         }
         nextToken
+      }
+      icpfCmpmFormID
+      icpfCmpmForm {
+        id
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          tourCompleted
+          icpfCmpmFormID
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        firstName
+        lastName
+        email
+        age
+        phone
+        streetAddress
+        addressExtra
+        city
+        state
+        country
+        companyName
+        companyTitle
+        linkedin
+        background
+        whyPackaging
+        areaOfInterest
+        sessionApplying
+        referral
+        payment
+        yearGoals
+        cmpmGoals
+        school
+        schoolType
+        studying
+        credential
+        credentialProgress
+        credentialYear
+        fullTime
+        organizations
+        transcript
+        resume
+        corrugatedImpact
+        opportunities
+        moreAboutYou
+        optOut
+        birthYear
+        paymentConfirmation
+        status
+        createdOn
+        updatedOn
+        icpfCmpmFormUserId
       }
       createdAt
       updatedAt
@@ -3252,6 +3341,51 @@ export const listUsers = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -3413,6 +3547,51 @@ export const usersByName = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3572,6 +3751,51 @@ export const usersByEmail = /* GraphQL */ `
         tourCompleted
         orders {
           nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
         }
         createdAt
         updatedAt
@@ -3733,6 +3957,51 @@ export const usersByCompanyID = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3882,6 +4151,51 @@ export const getUserXp = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -3944,6 +4258,7 @@ export const listUserXps = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -4326,6 +4641,51 @@ export const getLearningPathProgress = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -4416,6 +4776,7 @@ export const listLearningPathProgresses = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -5006,6 +5367,51 @@ export const getCMPMForm = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5085,6 +5491,7 @@ export const listCMPMForms = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -5117,6 +5524,335 @@ export const listCMPMForms = /* GraphQL */ `
         createdOn
         updatedOn
         cMPMFormUserId
+      }
+      nextToken
+    }
+  }
+`;
+export const getIcpfCmpmForm = /* GraphQL */ `
+  query GetIcpfCmpmForm($id: ID!) {
+    getIcpfCmpmForm(id: $id) {
+      id
+      user {
+        id
+        thinkificId
+        name
+        title
+        company
+        email
+        office
+        bio
+        interests
+        goals
+        cell
+        picture
+        linkedin
+        location
+        companyID
+        apss {
+          nextToken
+        }
+        cmpmFormID
+        cmpmForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          moreAboutYou
+          birthYear
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cMPMFormUserId
+        }
+        cpsFormID
+        cpsForm {
+          id
+          firstName
+          lastName
+          email
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          birthYear
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cpsGoals
+          paymentType
+          moreAboutYou
+          elective
+          optOut
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          cPSFormUserId
+        }
+        savedCourses
+        savedLessons
+        savedArticles
+        source
+        achievements {
+          nextToken
+        }
+        onboardingComplete
+        onboardingCompleteDate
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        cohorts {
+          nextToken
+        }
+        allAccess
+        allAccessStartDate
+        allAccessEndDate
+        lessonsCompleted {
+          nextToken
+        }
+        learningPathProgress {
+          nextToken
+        }
+        userXp {
+          id
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          progress
+          createdAt
+          updatedAt
+          userXpUserId
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        tourCompleted
+        orders {
+          nextToken
+        }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
+        createdAt
+        updatedAt
+        userUserXpId
+      }
+      firstName
+      lastName
+      email
+      age
+      phone
+      streetAddress
+      addressExtra
+      city
+      state
+      country
+      companyName
+      companyTitle
+      linkedin
+      background
+      whyPackaging
+      areaOfInterest
+      sessionApplying
+      referral
+      payment
+      yearGoals
+      cmpmGoals
+      school
+      schoolType
+      studying
+      credential
+      credentialProgress
+      credentialYear
+      fullTime
+      organizations
+      transcript
+      resume
+      corrugatedImpact
+      opportunities
+      moreAboutYou
+      optOut
+      birthYear
+      paymentConfirmation
+      status
+      createdOn
+      updatedOn
+      icpfCmpmFormUserId
+    }
+  }
+`;
+export const listIcpfCmpmForms = /* GraphQL */ `
+  query ListIcpfCmpmForms(
+    $filter: ModelIcpfCmpmFormFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listIcpfCmpmForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        user {
+          id
+          thinkificId
+          name
+          title
+          company
+          email
+          office
+          bio
+          interests
+          goals
+          cell
+          picture
+          linkedin
+          location
+          companyID
+          cmpmFormID
+          cpsFormID
+          savedCourses
+          savedLessons
+          savedArticles
+          source
+          onboardingComplete
+          onboardingCompleteDate
+          totalXp
+          thinkificXp
+          psXp
+          level
+          xpToNextLevel
+          lastLogin
+          dailyStreak
+          allAccess
+          allAccessStartDate
+          allAccessEndDate
+          tourCompleted
+          icpfCmpmFormID
+          createdAt
+          updatedAt
+          userUserXpId
+        }
+        firstName
+        lastName
+        email
+        age
+        phone
+        streetAddress
+        addressExtra
+        city
+        state
+        country
+        companyName
+        companyTitle
+        linkedin
+        background
+        whyPackaging
+        areaOfInterest
+        sessionApplying
+        referral
+        payment
+        yearGoals
+        cmpmGoals
+        school
+        schoolType
+        studying
+        credential
+        credentialProgress
+        credentialYear
+        fullTime
+        organizations
+        transcript
+        resume
+        corrugatedImpact
+        opportunities
+        moreAboutYou
+        optOut
+        birthYear
+        paymentConfirmation
+        status
+        createdOn
+        updatedOn
+        icpfCmpmFormUserId
       }
       nextToken
     }
@@ -5263,6 +5999,51 @@ export const getCPSForm = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -5344,6 +6125,7 @@ export const listCPSForms = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -9511,6 +10293,51 @@ export const getCourseReview = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -9604,6 +10431,7 @@ export const listCourseReviews = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -9707,6 +10535,7 @@ export const courseReviewsByUserID = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -9810,6 +10639,7 @@ export const courseReviewsByThinkificId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -9967,6 +10797,51 @@ export const getOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -10033,6 +10908,7 @@ export const listOrders = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -10109,6 +10985,7 @@ export const ordersByEmail = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -10185,6 +11062,7 @@ export const ordersByUserID = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -11342,6 +12220,51 @@ export const getUserCompletedLessons = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -11431,6 +12354,7 @@ export const listUserCompletedLessons = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -11526,6 +12450,7 @@ export const userCompletedLessonsByLessonId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -11621,6 +12546,7 @@ export const userCompletedLessonsByUserId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -11955,6 +12881,51 @@ export const getAPSUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12016,6 +12987,7 @@ export const listAPSUsers = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -12087,6 +13059,7 @@ export const aPSUsersByAPSId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -12158,6 +13131,7 @@ export const aPSUsersByUserId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -12874,6 +13848,51 @@ export const getAchievementUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -12948,6 +13967,7 @@ export const listAchievementUsers = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13022,6 +14042,7 @@ export const achievementUsersByUserId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13096,6 +14117,7 @@ export const achievementUsersByAchievementId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13259,6 +14281,51 @@ export const getCohortUsers = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -13343,6 +14410,7 @@ export const listCohortUsers = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13422,6 +14490,7 @@ export const cohortUsersByUserId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13501,6 +14570,7 @@ export const cohortUsersByCohortId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13669,6 +14739,51 @@ export const getUserWishlist = /* GraphQL */ `
         orders {
           nextToken
         }
+        icpfCmpmFormID
+        icpfCmpmForm {
+          id
+          firstName
+          lastName
+          email
+          age
+          phone
+          streetAddress
+          addressExtra
+          city
+          state
+          country
+          companyName
+          companyTitle
+          linkedin
+          background
+          whyPackaging
+          areaOfInterest
+          sessionApplying
+          referral
+          payment
+          yearGoals
+          cmpmGoals
+          school
+          schoolType
+          studying
+          credential
+          credentialProgress
+          credentialYear
+          fullTime
+          organizations
+          transcript
+          resume
+          corrugatedImpact
+          opportunities
+          moreAboutYou
+          optOut
+          birthYear
+          paymentConfirmation
+          status
+          createdOn
+          updatedOn
+          icpfCmpmFormUserId
+        }
         createdAt
         updatedAt
         userUserXpId
@@ -13779,6 +14894,7 @@ export const listUserWishlists = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13878,6 +14994,7 @@ export const userWishlistsByUserId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId
@@ -13977,6 +15094,7 @@ export const userWishlistsByLMSCourseId = /* GraphQL */ `
           allAccessStartDate
           allAccessEndDate
           tourCompleted
+          icpfCmpmFormID
           createdAt
           updatedAt
           userUserXpId

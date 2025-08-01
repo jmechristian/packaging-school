@@ -10,8 +10,11 @@ import {
   BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { createCMPMFormICPF } from '../../helpers/api';
+import { useRouter } from 'next/router';
 
 const ICPF = () => {
+  const router = useRouter();
   const benefits = [
     {
       description:
@@ -105,7 +108,52 @@ const ICPF = () => {
               </div>
             </div>
             <div>
-              <div className='w-full rounded-lg bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white p-4'>
+              <div
+                className='w-full rounded-lg bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white p-4'
+                onClick={async () => {
+                  const form = await createCMPMFormICPF({
+                    age: '',
+                    addressExtra: '',
+                    areaOfInterest: '',
+                    background: '',
+                    birthYear: '',
+                    city: '',
+                    cmpmGoals: '',
+                    companyTitle: '',
+                    companyName: '',
+                    corrugatedImpact: '',
+                    country: '',
+                    credential: '',
+                    credentialProgress: '',
+                    credentialYear: '',
+                    email: '',
+                    firstName: '',
+                    fullTime: false,
+                    lastName: '',
+                    linkedin: '',
+                    moreAboutYou: '',
+                    opportunities: false,
+                    optOut: false,
+                    organizations: '',
+                    payment: '',
+                    paymentConfirmation: 'WAIVED',
+                    phone: '',
+                    referral: '',
+                    resume: '',
+                    school: '',
+                    schoolType: '',
+                    sessionApplying: '',
+                    state: '',
+                    status: 'DRAFT',
+                    streetAddress: '',
+                    studying: '',
+                    transcript: '',
+                    whyPackaging: '',
+                    yearGoals: '',
+                  });
+                  router.push(`/forms/cmpm/icpf/${form.id}`);
+                }}
+              >
                 <div className='text-center font-bold text-lg'>Apply Now</div>
               </div>
             </div>

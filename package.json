@@ -52,6 +52,7 @@
     "cookies-next": "^4.1.0",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.0",
+    "formidable": "^3.5.4",
     "framer-motion": "^7.4.0",
     "google-map-react": "^2.2.1",
     "graphql": "^16.6.0",

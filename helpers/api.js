@@ -54,6 +54,8 @@ import {
   createCPSForm,
   updateCPSForm,
   createOrder,
+  createIcpfCmpmForm,
+  updateIcpfCmpmForm,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -2005,6 +2007,14 @@ export const saveCmpmForm = async (data) => {
   return res.data.updateCMPMForm;
 };
 
+export const saveIcpfCmpmForm = async (data) => {
+  const res = await API.graphql({
+    query: updateIcpfCmpmForm,
+    variables: { input: { ...data } },
+  });
+  return res.data.updateIcpfCmpmForm;
+};
+
 export const createCpsFromAppStart = async (data) => {
   const res = await API.graphql({
     query: createCPSForm,
@@ -2110,4 +2120,14 @@ export const getCouponInfo = async (id, coupon, baseUrl = '') => {
     : `/api/thinkific/get-coupon-info?id=${id}&coupon=${coupon}`;
   const res = await fetch(url);
   return res.json();
+};
+
+export const createCMPMFormICPF = async (data) => {
+  const res = await API.graphql({
+    query: createIcpfCmpmForm,
+    variables: {
+      input: { ...data },
+    },
+  });
+  return res.data.createIcpfCmpmForm;
 };
