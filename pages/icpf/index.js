@@ -107,9 +107,13 @@ const ICPF = () => {
         </div>
       </div>
       <div className='md:col-span-2'>
-        <div className='w-full h-full bg-yellow-400 flex items-center justify-center'>
-          GRAPHIC?
-        </div>
+        <div
+          className='w-full h-full flex items-center justify-center bg-contain bg-center bg-no-repeat'
+          style={{
+            backgroundImage:
+              "url('https://packschool.s3.us-east-1.amazonaws.com/Unbox-potential-02.png')",
+          }}
+        ></div>
       </div>
       <div className='md:col-span-4'>
         <div className='flex flex-col gap-6'>
