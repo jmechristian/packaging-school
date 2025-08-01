@@ -153,7 +153,7 @@ const ICPF = () => {
                     whyPackaging: '',
                     yearGoals: '',
                   });
-                  setIsLoading(false);
+
                   router.push(`/forms/cmpm/icpf/${form.id}`);
                 }}
               >
