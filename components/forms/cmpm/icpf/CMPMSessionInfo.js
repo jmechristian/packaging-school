@@ -59,33 +59,7 @@ const CMPMSessionInfo = ({ email, free }) => {
           )}
         </div>
       </fieldset>
-      <div className='relative flex gap-x-3 pt-6'>
-        <div className='flex h-6 items-center'>
-          <input
-            {...register('optOut')}
-            id='optOut'
-            name='optOut'
-            type='checkbox'
-            className='h-4 w-4 rounded border-slate-300 text-base-brand focus:ring-base-brand'
-          />
-        </div>
-        <div className='leading-6'>
-          <label
-            htmlFor='comments'
-            className='font-semibold font-greycliff text-slate-700'
-          >
-            I would like to opt out of early access to the online lessons.
-          </label>
-          <p className='text-sm mt-2 px-0 md:pr-9 text-slate-600 leading-normal'>
-            Early access to the online lessons can be granted to anyone upon
-            full payment of the tuition. Students participating in early access
-            will not receive any feedback from the instructor until the cohort
-            start date selected above. Students opting to not pay early in full
-            will receive access to the lessons along with the rest of their
-            cohort on the selected start date.
-          </p>
-        </div>
-      </div>
+
       <fieldset>
         <div className='flex justify-between items-center'>
           <legend className='text-sm md:text-base max-w-[75%] font-semibold leading-6 text-slate-700 font-greycliff'>
