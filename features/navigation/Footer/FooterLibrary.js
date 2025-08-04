@@ -10,7 +10,7 @@ const FooterLibrary = () => {
       <div className='grid grid-cols-2 gap-y-1 gap-x-8 lg:gap-x-4 justify-between'>
         <div className='flex flex-col gap-1'>
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
-            <Link href={'/lessons'}>Learing of the Month</Link>
+            <Link href={'/lessons'}>Learning of the Month</Link>
           </p>
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
             <Link href={'/lessons'}>Regulation of the Month</Link>
