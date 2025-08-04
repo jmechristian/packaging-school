@@ -40,7 +40,7 @@ export default async function passwordReset(req, res) {
     const ticketResponse = await axios.post(
       url,
       {
-        email: email,
+        email: email.toLowerCase(),
         connection_id: 'con_0mWq8J8cr8GzbEgx',
         ttl_sec: 3600, // Reduced to 1 hour for testing
         mark_email_as_verified: true,
