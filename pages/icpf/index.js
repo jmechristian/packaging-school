@@ -19,7 +19,7 @@ const ICPF = () => {
   const benefits = [
     {
       description:
-        'Enrollment in the Certificate of Mastery in Packaging Management — a $7,000 Clemson University Center for Corporate Learning program - sponsored by ICPF',
+        'Enrollment in the Certificate of Mastery in Packaging Management––a $7,000 Clemson University Center for Corporate Learning program––sponsored by ICPF',
       icon: AcademicCapIcon,
     },
     {
@@ -302,13 +302,13 @@ const ICPF = () => {
           <div className='h3-base'>Scholarship Criteria & Award Process</div>
           <div className='text-lg'>
             TPS and ICPF will collect and review applications for the CMPM FALL
-            2 scholarship opportunity. It is important to note, the following
-            key ethical considerations for the scholarship:
+            2 scholarship opportunity. It is important to note the following key
+            ethical considerations for the scholarship:
           </div>
           <div className=''>
             <ul className='list-disc list-outside text-lg flex flex-col gap-4 pl-4'>
               <li>
-                Basic student information will be safeguarded, and no sensitive
+                Basic student information will be safeguarded and no sensitive
                 or financial based data will be sought or obtained through the
                 scholarship process.
               </li>
@@ -326,7 +326,7 @@ const ICPF = () => {
               </li>
               <li>
                 The inaugural process will be managed and evaluated for outcomes
-                against the stated goal, and adjusted in the future as needed.
+                against the stated goal and adjusted in the future as needed.
               </li>
               <li>
                 The review committee will avoid conflicts of interest, whereas
@@ -349,7 +349,7 @@ const ICPF = () => {
                 packaging facility.
               </li>
               <li>
-                Majoring in business, supply chain management,
+                Must be majoring in business, supply chain management,
                 industrial/graphic design, engineering, environmental science,
                 or packaging.
               </li>
@@ -359,9 +359,9 @@ const ICPF = () => {
                 internship with a corrugated packaging manufacturer.
               </li>
               <li>
-                Demonstrated interest in the packaging, corrugated, or
+                Must have demonstrated interest in the packaging, corrugated, or
                 paperboard industry (via coursework, internships, projects,
-                student organizations, etc. ).
+                student organizations, etc.).
               </li>
             </ul>
           </div>
@@ -392,7 +392,7 @@ const ICPF = () => {
                   </td>
                   <td className='border border-gray-300 p-3'>15%</td>
                   <td className='border border-gray-300 p-3'>
-                    GPA, rigor of coursework, relevant classes.
+                    GPA, rigor of coursework, relevant classes
                   </td>
                 </tr>
                 <tr className='bg-gray-50'>
@@ -401,7 +401,7 @@ const ICPF = () => {
                   </td>
                   <td className='border border-gray-300 p-3'>20%</td>
                   <td className='border border-gray-300 p-3'>
-                    Demonstrated interest in packaging/supply chain.
+                    Demonstrated interest in packaging/supply chain
                   </td>
                 </tr>
                 <tr className='bg-white'>
@@ -411,7 +411,7 @@ const ICPF = () => {
                   <td className='border border-gray-300 p-3'>10%</td>
                   <td className='border border-gray-300 p-3'>
                     Extracurriculars, campus involvement, student orgs,
-                    competitions.
+                    competitions
                   </td>
                 </tr>
                 <tr className='bg-gray-50'>
@@ -430,7 +430,7 @@ const ICPF = () => {
                   <td className='border border-gray-300 p-3'>40%</td>
                   <td className='border border-gray-300 p-3'>
                     Motivation for pursuing CMPM, industry impact, and career
-                    goals.
+                    goals
                   </td>
                 </tr>
               </tbody>
