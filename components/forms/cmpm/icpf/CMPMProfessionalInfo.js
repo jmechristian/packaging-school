@@ -113,7 +113,6 @@ const CMPMProfessionalInfo = () => {
             label={
               'Please upload a PDF, image, or screenshot (JPG, PNG, etc.) of your current transcript or most recent report card.'
             }
-            required
             accept={'.pdf,.jpg,.jpeg,.png'}
             maxSize={5 * 1024 * 1024} // 5MB
             placeholder={
@@ -132,7 +131,6 @@ const CMPMProfessionalInfo = () => {
           <FileUpload
             name={'resume'}
             label={'Upload your resume (if available)'}
-            required
             accept={'.pdf,.jpg,.jpeg,.png'}
             maxSize={5 * 1024 * 1024} // 5MB
           />
