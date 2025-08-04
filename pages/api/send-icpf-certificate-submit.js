@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     '                     <tbody style="width:100%">' +
     '                       <tr style="width:100%">' +
     '                         <td data-id="__react-email-column">' +
-    '                           <p style="font-size:1.125rem;line-height:1.25;margin:16px 0;font-weight:700;color:rgb(255,255,255)">CMPM Application Submission</p>' +
+    '                           <p style="font-size:1.125rem;line-height:1.25;margin:16px 0;font-weight:700;color:rgb(255,255,255)">CMPM ICPF Application Submission</p>' +
     '                         </td>' +
     '                         <td align="right" data-id="__react-email-column"><img height="50" src="https://packschool.s3.amazonaws.com/email-logo.png" style="display:block;outline:none;border:none;text-decoration:none" /></td>' +
     '                       </tr>' +
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">LinkedIn Profile</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.linkedin}</p>` +
-    +'                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Explain why you are interested in a career in the packaging or supply chain industry. How do you see the CMPM program helping you achieve your goals, and what impact do you hope to make in the corrugated packaging sector?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.yearGoals}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
