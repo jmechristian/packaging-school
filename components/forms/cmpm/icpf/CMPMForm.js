@@ -168,7 +168,7 @@ const CMPMForm = ({ methods, email, free, id }) => {
   };
 
   const sendSubmitNotification = async (data) => {
-    await fetch('/api/send-certificate-submit', {
+    await fetch('/api/send-icpf-certificate-submit', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

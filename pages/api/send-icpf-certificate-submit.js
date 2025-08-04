@@ -59,6 +59,9 @@ export default async function handler(req, res) {
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Email</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.email}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Age</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.age}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Phone Number</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.phone}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
@@ -80,44 +83,56 @@ export default async function handler(req, res) {
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Year of Birth</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.birthYear}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Company Name</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.companyName}</p>` +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">School</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.school}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Company Title</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.companyTitle}</p>` +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">School Type</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.schoolType}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What is your current area of study or program focus?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.studying}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Credential or degree</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.credential}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What year are you in your program?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.credentialProgress}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Year of graduation</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.credentialYear}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Are you attending full-time or part-time?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.fullTime}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Are you involved in any student organizations, internships, or related experiences?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.organizations}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Upload your transcript</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.transcript}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Upload your resume</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.resume}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">LinkedIn Profile</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.linkedin}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Your Background</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.background}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Why did you get into packaging?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.whyPackaging}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What is your main area of interest?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.areaOfInterest}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What goals do you have for yourself in the next 12 months?</p>' +
+    +'                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Explain why you are interested in a career in the packaging or supply chain industry. How do you see the CMPM program helping you achieve your goals, and what impact do you hope to make in the corrugated packaging sector?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.yearGoals}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How do you see The Certificate of Mastery in Packaging Management helping you achieve those goals?</p>' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How do you see the CMPM program helping you achieve your academic or career goals?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.cmpmGoals}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">We know written applications can only capture so much. As we review your application, what more would you like us to know?</p>' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What kind of impact does the corrugated packaging industry have on the global marketplace, and why does this field matter to you?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.moreAboutYou}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Are you open to internship or job opportunities with ICPF partner companies after completing your program?</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.opportunities}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Session Applying</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.sessionApplying}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Where did you hear about the Certificate of Mastery in Packaging Management?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.referral}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How will you be paying for this program?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.payment}</p>` +
-    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Payment Confirmation</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.paymentConfirmation}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                         </td>' +
     '                       </tr>' +
@@ -157,7 +172,7 @@ export default async function handler(req, res) {
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: `${body.form} Application Submit`,
+          Data: `${body.form} ICPF Application Submit`,
         },
       },
       Source: fromAddress,
