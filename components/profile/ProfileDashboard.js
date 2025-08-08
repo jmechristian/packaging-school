@@ -24,6 +24,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
   );
+  console.log('awsUser', awsUser);
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('courses');
 

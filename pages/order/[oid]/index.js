@@ -201,6 +201,8 @@ const Order = (props) => {
                           ).toFixed(2)}
                         </div>
                       </div>
+                      <div className='text-center'>Coupon? Login to redeem</div>
+
                       <div className='w-full text-center font-raleway text-base text-[#36394d] leading-[1.5]'>
                         Need help placing your order?{' '}
                         <span className='underline cursor-pointer'>
