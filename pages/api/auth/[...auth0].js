@@ -135,7 +135,7 @@ export default handleAuth({
               baseUrl,
             });
             console.log('SSO redirect URL generated:', ssoUrl);
-            // session.user.ssoRedirectUrl = ssoUrl;
+            session.user.ssoRedirectUrl = ssoUrl;
             return session;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
