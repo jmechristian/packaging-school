@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import PurchaseLogin from '../../../components/login/PurchaseLogin';
-import { getOrderByID } from '../../../helpers/api';
+import { getOrderByID, getCouponInfo } from '../../../helpers/api';
 
 // Loading Skeleton Component
 const OrderSkeleton = () => {
@@ -82,8 +82,26 @@ const OrderSkeleton = () => {
 
 const Order = (props) => {
   const { order } = props;
+  console.log(order);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const [showCouponModal, setShowCouponModal] = useState(false);
+  const [couponEntered, setCouponEntered] = useState('');
+  const [couponInfo, setCouponInfo] = useState(null);
+
+  const handleCouponSubmit = async () => {
+    // Extract course ID from the courseLink URL
+    const courseID = order.courseLink
+      ? order.courseLink.split('/enroll/')[1]
+      : order.courseID;
+    const couponInfo = await getCouponInfo(courseID, couponEntered);
+    setCouponInfo(couponInfo);
+  };
+
+  const handleCouponClose = () => {
+    setShowCouponModal(false);
+    setCouponInfo(null);
+  };
 
   useEffect(() => {
     // Show loading for a minimum time to prevent flash
@@ -174,13 +192,16 @@ const Order = (props) => {
                           </div>
                         </div>
                       )}
-                      {order.courseDiscount > 0 && (
+                      {(order.courseDiscount > 0 ||
+                        (couponInfo && couponInfo.amount > 0)) && (
                         <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
                           <div>Coupon</div>
                           <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
                             -$
                             {parseInt(
-                              (order.total * order.courseDiscount) / 100
+                              (order.total *
+                                (order.courseDiscount || couponInfo.amount)) /
+                                100
                             ).toFixed(2)}
                           </div>
                         </div>
@@ -197,11 +218,44 @@ const Order = (props) => {
                           $
                           {parseInt(
                             order.total -
-                              (order.total * order.courseDiscount) / 100
+                              (order.total *
+                                (order.courseDiscount ||
+                                  (couponInfo && couponInfo.amount))) /
+                                100
                           ).toFixed(2)}
                         </div>
                       </div>
-                      <div className='text-center'>Coupon? Login to redeem</div>
+                      {order.courseDiscount === 0 && !showCouponModal ? (
+                        <div className='text-center'>
+                          Coupon?{' '}
+                          <span
+                            className='underline cursor-pointer'
+                            onClick={() => setShowCouponModal(true)}
+                          >
+                            Click here to redeem
+                          </span>
+                        </div>
+                      ) : order.courseDiscount === 0 && showCouponModal ? (
+                        <div className='flex gap-2 items-center justify-center'>
+                          <input
+                            type='text'
+                            className='w-full border border-gray-300 rounded-md px-2 py-2 text-sm'
+                            value={couponEntered}
+                            onChange={(e) => setCouponEntered(e.target.value)}
+                            placeholder='Enter coupon code'
+                          />
+                          <button
+                            onClick={handleCouponSubmit}
+                            className='bg-black text-white px-4 py-2 rounded-md text-sm'
+                          >
+                            Apply
+                          </button>
+                        </div>
+                      ) : (
+                        <div className='text-center'>
+                          Coupon applied: {order.courseDiscount}%
+                        </div>
+                      )}
 
                       <div className='w-full text-center font-raleway text-base text-[#36394d] leading-[1.5]'>
                         Need help placing your order?{' '}
@@ -219,7 +273,7 @@ const Order = (props) => {
                 <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.3]'>
                   Sign in or sign up to complete your purchase
                 </div>
-                <PurchaseLogin order={order} />
+                <PurchaseLogin order={order} couponInfo={couponInfo} />
               </div>
             </div>
           </div>

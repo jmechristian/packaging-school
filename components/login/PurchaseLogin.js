@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/router';
 
-const PurchaseLogin = ({ order }) => {
-  const returnTo = order.courseLink;
+const PurchaseLogin = ({ order, couponInfo }) => {
+  const returnTo = couponInfo
+    ? `${order.courseLink}?coupon=${couponInfo.name}`
+    : order.courseLink;
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
