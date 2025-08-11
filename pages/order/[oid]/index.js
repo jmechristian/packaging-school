@@ -314,7 +314,11 @@ const Order = (props) => {
                 <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.3]'>
                   Sign in or sign up to complete your purchase
                 </div>
-                <PurchaseLogin order={order} couponInfo={couponInfo} />
+                <PurchaseLogin
+                  order={order}
+                  couponInfo={couponInfo}
+                  coupon={couponEntered}
+                />
               </div>
             </div>
           </div>
