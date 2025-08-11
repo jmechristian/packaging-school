@@ -88,14 +88,20 @@ const Order = (props) => {
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [couponEntered, setCouponEntered] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
-
+  const [error, setError] = useState(null);
   const handleCouponSubmit = async () => {
     // Extract course ID from the courseLink URL
     const courseID = order.courseLink
       ? order.courseLink.split('/enroll/')[1]
       : order.courseID;
     const couponInfo = await getCouponInfo(courseID, couponEntered);
-    setCouponInfo(couponInfo);
+    if (couponInfo.error) {
+      setCouponInfo(null);
+      setError(couponInfo.message);
+    } else {
+      setCouponInfo(couponInfo);
+      setError(null);
+    }
   };
 
   const handleCouponClose = () => {
@@ -256,7 +262,11 @@ const Order = (props) => {
                           Coupon applied: {order.courseDiscount}%
                         </div>
                       )}
-
+                      {error && (
+                        <div className='text-center font-raleway text-base text-red-500 leading-[1.5]'>
+                          {error}
+                        </div>
+                      )}
                       <div className='w-full text-center font-raleway text-base text-[#36394d] leading-[1.5]'>
                         Need help placing your order?{' '}
                         <span className='underline cursor-pointer'>
