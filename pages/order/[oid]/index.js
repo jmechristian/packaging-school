@@ -233,33 +233,29 @@ const Order = (props) => {
                           <span className='text-base font-[400] mr-2.5'>
                             USD
                           </span>
-                          {order.courseDiscount > 0 && (
-                            <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
-                              <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
-                                -$
-                                {parseInt(
-                                  (order.total * order.courseDiscount) / 100
-                                ).toFixed(2)}
-                              </div>
-                            </div>
-                          )}
-                          {couponInfo && couponInfo.amount > 0 && (
-                            <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
-                              <div className='font-raleway  font-[600] text-[#36394d] leading-[1.5]'>
-                                {couponInfo.discount_type === 'percentage'
-                                  ? `$${parseInt(
-                                      order.total -
-                                        (couponInfo.amount / 100) * order.total
-                                    ).toFixed(2)}`
-                                  : `$${parseInt(
-                                      order.total - couponInfo.amount
-                                    ).toFixed(2)}`}
-                              </div>
-                            </div>
-                          )}
-                          {order.courseDiscount === 0 &&
-                            !couponInfo &&
-                            `$${parseInt(order.total).toFixed(2)}`}
+                          {(() => {
+                            let finalTotal = order.total;
+
+                            // Apply course discount
+                            if (order.courseDiscount > 0) {
+                              finalTotal =
+                                finalTotal -
+                                (finalTotal * order.courseDiscount) / 100;
+                            }
+
+                            // Apply coupon discount
+                            if (couponInfo && couponInfo.amount > 0) {
+                              if (couponInfo.discount_type === 'percentage') {
+                                finalTotal =
+                                  finalTotal -
+                                  (finalTotal * couponInfo.amount) / 100;
+                              } else {
+                                finalTotal = finalTotal - couponInfo.amount;
+                              }
+                            }
+
+                            return `$${parseInt(finalTotal).toFixed(2)}`;
+                          })()}
                         </div>
                       </div>
                       {order.courseDiscount === 0 && !showCouponModal ? (
@@ -289,9 +285,7 @@ const Order = (props) => {
                           </button>
                         </div>
                       ) : (
-                        <div className='text-center'>
-                          Coupon applied: {order.courseDiscount}%
-                        </div>
+                        <div className='text-center'>Coupon applied</div>
                       )}
                       {error && (
                         <div className='text-center font-raleway text-base text-red-500 leading-[1.5]'>
