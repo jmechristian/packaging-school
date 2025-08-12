@@ -205,7 +205,7 @@ const Page = ({ customer }) => {
             'https://packschool.s3.amazonaws.com/pda-logo-2020-05-small.png'
           }
           slides={
-            'https://docs.google.com/presentation/d/1D55F8-sT5E-XJk73XFyn_rwBbYqE2OlqOGBIctQNkTI/edit?usp=sharing'
+            'https://docs.google.com/presentation/d/1D55F8-sT5E-XJk73XFyn_rwBbYqE2OlqOGBIctQNkTI/embed?start=false&loop=false&delayms=3000'
           }
           callout={`Discover your library courses BELOW at the special discounted ${customer.displayName} rate of $75. If you have any questions, please reach out to ${customer.email}. Please note: A company email is required to sign up for these online courses.`}
         />
