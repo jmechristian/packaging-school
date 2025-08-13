@@ -5,7 +5,9 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function AfterSSO() {
   const router = useRouter();
-  const { userSetupComplete, awsUser } = useSelector((state) => state.auth);
+  const { userSetupComplete, awsUser, thinkificUser } = useSelector(
+    (state) => state.auth
+  );
   const { user, isLoading: userIsLoading } = useUser();
   const [redirectAttempted, setRedirectAttempted] = useState(false);
 
@@ -13,7 +15,13 @@ export default function AfterSSO() {
     const { returnTo = '/' } = router.query;
     if (typeof returnTo === 'string' && !redirectAttempted) {
       // Wait for user setup to complete before redirecting
-      if (!userIsLoading && user && userSetupComplete && awsUser) {
+      if (
+        !userIsLoading &&
+        user &&
+        userSetupComplete &&
+        awsUser &&
+        thinkificUser !== undefined
+      ) {
         setRedirectAttempted(true);
         router.replace(returnTo);
       } else if (!userIsLoading && user) {
@@ -34,6 +42,7 @@ export default function AfterSSO() {
     userIsLoading,
     userSetupComplete,
     awsUser,
+    thinkificUser,
     redirectAttempted,
   ]);
 

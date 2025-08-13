@@ -145,7 +145,8 @@ const Layout = ({ children }) => {
         dispatch(setUser(user));
         // 2. Check/create Thinkific user (only if we haven't already determined they don't exist)
         if (thinkificUser === null) {
-          // User doesn't exist in Thinkific, skip the check
+          // User doesn't exist in Thinkific, ensure it's set to null in Redux
+          dispatch(setThinkificUser(null));
         } else if (!thinkificUser) {
           // thinkificUser is undefined, so we need to check
           try {
