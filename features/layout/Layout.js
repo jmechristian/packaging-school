@@ -151,18 +151,22 @@ const Layout = ({ children }) => {
       const setupUser = async () => {
         // 1. Set Auth0 user in Redux
         dispatch(setUser(user));
-        // 2. Check/create Thinkific user (only if we haven't already determined they don't exist)
-        if (thinkificUser === null) {
-          // User doesn't exist in Thinkific, ensure it's set to null in Redux
-          dispatch(setThinkificUser(null));
-        } else if (!thinkificUser) {
-          // thinkificUser is undefined, so we need to check
+        // 2. Check/create Thinkific user (always check if thinkificUser is null or undefined)
+        if (thinkificUser === null || !thinkificUser) {
+          // Always check the API, even if thinkificUser was null from a previous session
           try {
+            console.log('Layout - Fetching Thinkific user for:', user.email);
             const thinkificUserRes = await fetch(
               `/api/thinkific/get-user?email=${user.email}`
             );
             const thinkificData = await thinkificUserRes.json();
+            console.log('Layout - Thinkific API response:', thinkificData);
+
             if (thinkificData?.data?.data?.userByEmail) {
+              console.log(
+                'Layout - Thinkific user found:',
+                thinkificData.data.data.userByEmail
+              );
               dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
               const enrollments = await fetch(
                 `/api/thinkific/get-enrollments?email=${user.email}`
@@ -170,6 +174,7 @@ const Layout = ({ children }) => {
               const enrollmentsData = await enrollments.json();
               dispatch(setEnrollments(enrollmentsData.items));
             } else {
+              console.log('Layout - No Thinkific user found for:', user.email);
               // Set a flag to indicate we've checked and user doesn't exist in Thinkific
               dispatch(setThinkificUser(null));
             }
