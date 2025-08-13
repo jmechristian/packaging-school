@@ -67,7 +67,8 @@ const Layout = ({ children }) => {
 
   // Determine if the loader should be active
   const shouldShowLoader =
-    (isAuthenticated && (!userSetupComplete || !awsUser || !thinkificUser)) ||
+    (isAuthenticated &&
+      (!userSetupComplete || !awsUser || thinkificUser === undefined)) ||
     showPostSSOLoader;
 
   // Refined minimum loader timer logic with fade-out
@@ -136,7 +137,7 @@ const Layout = ({ children }) => {
       !userIsLoading &&
       user &&
       !userSetupStarted.current &&
-      (!userSetupComplete || !awsUser || !thinkificUser)
+      (!userSetupComplete || !awsUser || thinkificUser === undefined)
     ) {
       userSetupStarted.current = true;
       const setupUser = async () => {
