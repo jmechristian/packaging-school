@@ -127,8 +127,8 @@ const Layout = ({ children }) => {
         return;
       }
 
+      // Mark user as processed for both SSO and normal logins
       userProcessedRef.current = true;
-      // No user setup here
     }
   }, [user, userIsLoading]);
 
