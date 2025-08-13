@@ -11,8 +11,20 @@ export default function AfterSSO() {
   const { user, isLoading: userIsLoading } = useUser();
   const [redirectAttempted, setRedirectAttempted] = useState(false);
 
+  // Debug logging
+  console.log('AfterSSO Debug:', {
+    userIsLoading,
+    user: !!user,
+    userSetupComplete,
+    awsUser: !!awsUser,
+    thinkificUser,
+    redirectAttempted,
+  });
+
   useEffect(() => {
     const { returnTo = '/' } = router.query;
+    console.log('AfterSSO useEffect - returnTo:', returnTo);
+
     if (typeof returnTo === 'string' && !redirectAttempted) {
       // Wait for user setup to complete before redirecting
       if (
@@ -22,12 +34,18 @@ export default function AfterSSO() {
         awsUser &&
         thinkificUser !== undefined
       ) {
+        console.log('AfterSSO - All conditions met, redirecting to:', returnTo);
         setRedirectAttempted(true);
         router.replace(returnTo);
       } else if (!userIsLoading && user) {
+        console.log('AfterSSO - User loaded but setup incomplete, waiting...');
         // If user is loaded but setup isn't complete, wait a bit longer
         const timeout = setTimeout(() => {
           if (!redirectAttempted) {
+            console.log(
+              'AfterSSO - Fallback timeout, redirecting to:',
+              returnTo
+            );
             setRedirectAttempted(true);
             router.replace(returnTo);
           }
