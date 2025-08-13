@@ -136,7 +136,7 @@ const Page = () => {
         }
         image={'https://packschool.s3.amazonaws.com/acccsa-seoImage.webp'}
       />
-      <div className='relative z-0'>
+      <div className='!relative z-0'>
         {/* <div
         className='w-full flex justify-center items-center bg-base-mid overflow-scroll'
         id='scrollers'

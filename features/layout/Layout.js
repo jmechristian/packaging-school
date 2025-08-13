@@ -112,6 +112,13 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (!userIsLoading && user && !userProcessedRef.current) {
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
+
+      // Clear SSO flag if user doesn't have a redirect URL (normal login)
+      if (!user.ssoRedirectUrl && hasCompletedSSO) {
+        sessionStorage.removeItem('ssoComplete');
+      }
+
+      // Only redirect if user has SSO redirect URL and hasn't completed SSO
       if (user.ssoRedirectUrl && !hasCompletedSSO) {
         sessionStorage.setItem('ssoComplete', 'true');
         setTimeout(() => {
@@ -119,6 +126,7 @@ const Layout = ({ children }) => {
         }, 100);
         return;
       }
+
       userProcessedRef.current = true;
       // No user setup here
     }
