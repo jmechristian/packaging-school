@@ -142,24 +142,32 @@ const Layout = ({ children }) => {
       const setupUser = async () => {
         // 1. Set Auth0 user in Redux
         dispatch(setUser(user));
-        // 2. Check/create Thinkific user
-        try {
-          const thinkificUserRes = await fetch(
-            `/api/thinkific/get-user?email=${user.email}`
-          );
-          const thinkificData = await thinkificUserRes.json();
-          if (thinkificData?.data?.data?.userByEmail) {
-            dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
-            const enrollments = await fetch(
-              `/api/thinkific/get-enrollments?email=${user.email}`
+        // 2. Check/create Thinkific user (only if we haven't already determined they don't exist)
+        if (thinkificUser === null) {
+          // User doesn't exist in Thinkific, skip the check
+        } else if (!thinkificUser) {
+          // thinkificUser is undefined, so we need to check
+          try {
+            const thinkificUserRes = await fetch(
+              `/api/thinkific/get-user?email=${user.email}`
             );
-            const enrollmentsData = await enrollments.json();
-            dispatch(setEnrollments(enrollmentsData.items));
-          } else {
-            console.warn('No Thinkific user found for', user.email);
+            const thinkificData = await thinkificUserRes.json();
+            if (thinkificData?.data?.data?.userByEmail) {
+              dispatch(setThinkificUser(thinkificData.data.data.userByEmail));
+              const enrollments = await fetch(
+                `/api/thinkific/get-enrollments?email=${user.email}`
+              );
+              const enrollmentsData = await enrollments.json();
+              dispatch(setEnrollments(enrollmentsData.items));
+            } else {
+              // Set a flag to indicate we've checked and user doesn't exist in Thinkific
+              dispatch(setThinkificUser(null));
+            }
+          } catch (err) {
+            console.error('Thinkific user setup error:', err);
+            // Set a flag to indicate we've checked and there was an error
+            dispatch(setThinkificUser(null));
           }
-        } catch (err) {
-          console.error('Thinkific user setup error:', err);
         }
         // 3. Check/create AWS user
         let dbUser = null;
