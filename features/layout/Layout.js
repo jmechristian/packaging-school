@@ -132,14 +132,6 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     // Run user setup if Auth0 user is available, not loading, and setup is needed
-    console.log('Layout Debug - User Setup Check:', {
-      userIsLoading,
-      user: !!user,
-      userSetupStarted: userSetupStarted.current,
-      userSetupComplete,
-      awsUser: !!awsUser,
-      thinkificUser,
-    });
 
     if (
       !userIsLoading &&

@@ -1113,11 +1113,19 @@ export const getCPSCourses = async () => {
   return res.data.listLMSCourses.items;
 };
 
-export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
-  const baseUrl =
-    process.env.NODE_ENV === 'development'
+export const handleSSO = async ({
+  email,
+  first_name,
+  last_name,
+  returnTo,
+  baseUrl,
+}) => {
+  // Use provided baseUrl or fallback to default
+  const finalBaseUrl =
+    baseUrl ||
+    (process.env.NODE_ENV === 'development'
       ? 'http://localhost:3001'
-      : 'https://packagingschool.com';
+      : 'https://packagingschool.com');
 
   if (!email || !first_name || !last_name) {
     throw new Error('Missing required fields for SSO');
@@ -1130,7 +1138,7 @@ export const handleSSO = async ({ email, first_name, last_name, returnTo }) => {
     return_to: returnTo,
   };
 
-  const response = await fetch(`${baseUrl}/api/generateJWT`, {
+  const response = await fetch(`${finalBaseUrl}/api/generateJWT`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
