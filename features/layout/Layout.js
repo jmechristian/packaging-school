@@ -132,6 +132,14 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     // Run user setup if Auth0 user is available, not loading, and setup is needed
+    console.log('Layout - User setup condition check:', {
+      userIsLoading,
+      user: !!user,
+      userSetupStarted: userSetupStarted.current,
+      userSetupComplete,
+      awsUser: !!awsUser,
+      thinkificUser,
+    });
 
     if (
       !userIsLoading &&
@@ -229,11 +237,20 @@ const Layout = ({ children }) => {
 
   // Reset userSetupStarted when user changes (for SSO scenarios)
   useEffect(() => {
+    console.log('Layout - Reset check:', {
+      user: !!user,
+      userSetupStarted: userSetupStarted.current,
+      userSetupComplete,
+      awsUser: !!awsUser,
+      thinkificUser,
+    });
+
     if (
       user &&
       userSetupStarted.current &&
       (!userSetupComplete || !awsUser || thinkificUser === undefined)
     ) {
+      console.log('Layout - Resetting userSetupStarted');
       userSetupStarted.current = false;
     }
   }, [user, userSetupComplete, awsUser, thinkificUser]);
