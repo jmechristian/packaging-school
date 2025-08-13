@@ -132,10 +132,14 @@ const Layout = ({ children }) => {
   useEffect(() => {
     // Run user setup if Auth0 user is available, not loading, and not already started
     // Also run if userSetupComplete is true but awsUser or thinkificUser are missing
+    // For SSO scenarios, allow setup to run even if previously started
     if (
       !userIsLoading &&
       user &&
-      !userSetupStarted.current &&
+      (!userSetupStarted.current ||
+        !userSetupComplete ||
+        !awsUser ||
+        !thinkificUser) &&
       (!userSetupComplete || !awsUser || !thinkificUser)
     ) {
       userSetupStarted.current = true;
