@@ -131,8 +131,7 @@ const Layout = ({ children }) => {
   }, [user, userIsLoading]);
 
   useEffect(() => {
-    // Run user setup if Auth0 user is available, not loading, and not already started
-    // Also run if userSetupComplete is true but awsUser or thinkificUser are missing
+    // Run user setup if Auth0 user is available, not loading, and setup is needed
     if (
       !userIsLoading &&
       user &&
@@ -229,10 +228,14 @@ const Layout = ({ children }) => {
 
   // Reset userSetupStarted when user changes (for SSO scenarios)
   useEffect(() => {
-    if (user && userSetupStarted.current) {
+    if (
+      user &&
+      userSetupStarted.current &&
+      (!userSetupComplete || !awsUser || thinkificUser === undefined)
+    ) {
       userSetupStarted.current = false;
     }
-  }, [user]);
+  }, [user, userSetupComplete, awsUser, thinkificUser]);
 
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
