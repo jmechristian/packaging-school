@@ -3,10 +3,11 @@ import { API } from 'aws-amplify';
 import { CheckIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { listCMPMSessions } from '../../../src/graphql/queries';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function CMPMPricing() {
   const [sessions, setSessions] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     const getSessions = async () => {
       const res = await API.graphql({ query: listCMPMSessions });
@@ -26,7 +27,7 @@ export default function CMPMPricing() {
   };
 
   return (
-    (<div>
+    <div>
       <div className='mx-auto'>
         <h2 className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-5xl'>
           Future Proof Your Skills
@@ -102,13 +103,27 @@ export default function CMPMPricing() {
                       <div className='text-white dark:text-gray-400  text-lg font-bold whitespace-pre-wrap'>
                         {translateDate(it.deadline)}
                       </div>
+                      <div
+                        className='bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white font-bold text-center text-sm px-4 py-2 rounded-md mt-3'
+                        onClick={() => {
+                          if (it.title.includes('ICPF')) {
+                            router.push(`/icpf`);
+                          } else {
+                            router.push(
+                              `/certificate-of-mastery-in-packaging-management`
+                            );
+                          }
+                        }}
+                      >
+                        Apply Now
+                      </div>
                     </div>
                   </div>
                 ))}
           </div>
         </div>
         <div className='-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0'>
-          <div className='rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16'>
+          <div className='rounded-2xl bg-gray-50 h-full py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16'>
             <div className='mx-auto max-w-xs px-8'>
               <p className='text-base font-semibold text-gray-600'>
                 Payment Plans are Available
@@ -121,13 +136,12 @@ export default function CMPMPricing() {
                   USD
                 </span>
               </p>
-              <Link
+              {/* <Link
                 href='/certificate-of-mastery-in-packaging-management'
-                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'>
-                
-                  Apply Now
-                
-              </Link>
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Apply Now
+              </Link> */}
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
               </p>
@@ -135,6 +149,6 @@ export default function CMPMPricing() {
           </div>
         </div>
       </div>
-    </div>)
+    </div>
   );
 }
