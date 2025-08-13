@@ -108,9 +108,9 @@ const Layout = ({ children }) => {
     return () => clearInterval(interval);
   }, [shouldShowLoader, loaderActive]);
 
-  // SSO logic: only run for authenticated users, gated by userProcessedRef
+  // SSO logic: only run for authenticated users
   useEffect(() => {
-    if (!userIsLoading && user && !userProcessedRef.current) {
+    if (!userIsLoading && user) {
       const hasCompletedSSO = sessionStorage.getItem('ssoComplete');
 
       // Clear SSO flag if user doesn't have a redirect URL (normal login)
@@ -126,9 +126,6 @@ const Layout = ({ children }) => {
         }, 100);
         return;
       }
-
-      // Mark user as processed for both SSO and normal logins
-      userProcessedRef.current = true;
     }
   }, [user, userIsLoading]);
 
