@@ -11,11 +11,25 @@ export default function AfterSSO() {
   const { user, isLoading: userIsLoading } = useUser();
   const [redirectAttempted, setRedirectAttempted] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const { returnTo = '/' } = router.query;
+    const { returnTo = '/', error } = router.query;
 
-    if (typeof returnTo === 'string' && !redirectAttempted) {
+    // Check for SSO errors
+    if (error) {
+      console.log('AfterSSO - SSO error detected:', error);
+      setHasError(true);
+      setErrorMessage(
+        error === 'tunnel_connection_failed'
+          ? 'Corporate network restrictions are preventing the login process. Please try accessing from a different network or contact your IT department.'
+          : 'An error occurred during login. Please try again.'
+      );
+      return;
+    }
+
+    if (typeof returnTo === 'string' && !redirectAttempted && !hasError) {
       // Wait for user setup to complete before redirecting
       if (
         !userIsLoading &&
@@ -55,6 +69,7 @@ export default function AfterSSO() {
     awsUser,
     thinkificUser,
     redirectAttempted,
+    hasError,
   ]);
 
   // Force redirect after 5 seconds as ultimate fallback
@@ -75,6 +90,40 @@ export default function AfterSSO() {
       return () => clearTimeout(forceTimeout);
     }
   }, [router, redirectAttempted]);
+
+  // Show error state
+  if (hasError) {
+    return (
+      <div className='min-h-screen flex flex-col items-center justify-center bg-dark dark:bg-black fade-in'>
+        <img src='/logos/logo-sq-wh.svg' alt='Logo' className='w-40 mb-6' />
+        <div className='flex flex-col items-center gap-6 max-w-md text-center'>
+          <div className='text-red-400 text-6xl mb-4'>⚠️</div>
+          <h1 className='text-xl font-semibold text-white mb-2'>Login Error</h1>
+          <p className='text-slate-300 text-sm leading-relaxed mb-6'>
+            {errorMessage}
+          </p>
+          <div className='flex flex-col gap-3 w-full'>
+            <button
+              onClick={() =>
+                (window.location.href = `/corporate-login?returnTo=${encodeURIComponent(
+                  router.query.returnTo || '/'
+                )}`)
+              }
+              className='bg-clemson hover:bg-clemson/90 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+            >
+              Try Corporate Login
+            </button>
+            <button
+              onClick={() => (window.location.href = '/')}
+              className='bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+            >
+              Return to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
