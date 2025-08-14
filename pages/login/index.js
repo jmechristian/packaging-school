@@ -13,6 +13,8 @@ export default function LoginPage() {
   const { returnTo } = router.query;
   const { user, isLoading: userIsLoading } = useUser();
 
+  console.log(document.referrer);
+
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
     if (returnTo) {
