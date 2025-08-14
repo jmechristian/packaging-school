@@ -32,9 +32,9 @@ export default function CorporateLogin() {
           Corporate Network Detected
         </h1>
         <p className='text-slate-300 text-sm leading-relaxed mb-6'>
-          We detected that you're accessing from a corporate network that may
-          block our SSO system. You can try the direct login option below, or
-          contact your IT department to whitelist our domain.
+          We detected that you &apos;re accessing from a corporate network that
+          may block our SSO system. You can try the direct login option below,
+          or contact your IT department to whitelist our domain.
         </p>
         <div className='flex flex-col gap-3 w-full'>
           <button
