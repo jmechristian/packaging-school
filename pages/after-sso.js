@@ -77,7 +77,11 @@ export default function AfterSSO() {
   }, [router, redirectAttempted]);
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center bg-dark dark:bg-black'>
+    <div
+      className={`min-h-screen flex flex-col items-center justify-center bg-dark dark:bg-black ${
+        isFadingOut ? 'fade-out' : 'fade-in'
+      }`}
+    >
       <img src='/logos/logo-sq-wh.svg' alt='Logo' className='w-40 mb-6' />
       <div className='flex flex-col items-center gap-4'>
         <div role='status'>
