@@ -10,6 +10,7 @@ export default function AfterSSO() {
   );
   const { user, isLoading: userIsLoading } = useUser();
   const [redirectAttempted, setRedirectAttempted] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     const { returnTo = '/' } = router.query;
@@ -24,16 +25,22 @@ export default function AfterSSO() {
         thinkificUser !== undefined
       ) {
         console.log('AfterSSO - All conditions met, redirecting');
-        setRedirectAttempted(true);
-        router.replace(returnTo);
+        setIsFadingOut(true);
+        setTimeout(() => {
+          setRedirectAttempted(true);
+          router.replace(returnTo);
+        }, 300);
       } else if (!userIsLoading && user) {
         console.log('AfterSSO - User loaded but setup incomplete, waiting...');
         // If user is loaded but setup isn't complete, wait a bit longer
         const timeout = setTimeout(() => {
           if (!redirectAttempted) {
             console.log('AfterSSO - Fallback timeout, redirecting');
-            setRedirectAttempted(true);
-            router.replace(returnTo);
+            setIsFadingOut(true);
+            setTimeout(() => {
+              setRedirectAttempted(true);
+              router.replace(returnTo);
+            }, 300);
           }
         }, 2000); // 2 second fallback
 
@@ -57,8 +64,11 @@ export default function AfterSSO() {
       const forceTimeout = setTimeout(() => {
         if (!redirectAttempted) {
           console.log('AfterSSO - Force redirect after 5 seconds');
-          setRedirectAttempted(true);
-          router.replace(returnTo);
+          setIsFadingOut(true);
+          setTimeout(() => {
+            setRedirectAttempted(true);
+            router.replace(returnTo);
+          }, 300);
         }
       }, 5000);
 
@@ -69,8 +79,8 @@ export default function AfterSSO() {
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-dark dark:bg-black'>
       <img src='/logos/logo-sq-wh.svg' alt='Logo' className='w-40 mb-6' />
-      <div className='grid place-items-center'>
-        <div role='status' className='col-start-1 row-start-1'>
+      <div className='flex flex-col items-center gap-4'>
+        <div role='status'>
           <svg
             aria-hidden='true'
             className='w-32 h-32 text-slate-800 animate-spin fill-clemson'
@@ -89,7 +99,7 @@ export default function AfterSSO() {
           </svg>
           <span className='sr-only'>Loading...</span>
         </div>
-        <div className='text-center text-sm text-slate-500 col-start-1 row-start-1'>
+        <div className='text-center text-sm text-slate-500'>
           Finishing authentication...
         </div>
       </div>
