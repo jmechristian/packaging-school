@@ -9,10 +9,20 @@ export default async function externalRedirectHandler(req, res) {
       return res.redirect('/login');
     }
 
-    const baseUrl =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3001'
-        : 'https://packagingschool.com';
+    // Dynamically determine the base URL based on the request
+    let baseUrl;
+    if (process.env.NODE_ENV === 'development') {
+      baseUrl = 'http://localhost:3001';
+    } else {
+      // Get the protocol and host from the request
+      const protocol =
+        req.headers['x-forwarded-proto'] ||
+        req.headers['x-forwarded-ssl'] === 'on'
+          ? 'https'
+          : 'http';
+      const host = req.headers.host;
+      baseUrl = `${protocol}://${host}`;
+    }
 
     // Check if user exists in Thinkific
     const thinkificUser = await fetch(
