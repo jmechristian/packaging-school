@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { logReferrerAnalytics } from '../../helpers/referrerAnalytics';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,27 @@ export default function LoginPage() {
   const { returnTo } = router.query;
   const { user, isLoading: userIsLoading } = useUser();
 
-  console.log(document.referrer);
+  // Enhanced referrer tracking
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const referrerInfo = {
+        referrer: document.referrer,
+        referrerUrl: window.location.href,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        returnTo: returnTo,
+        queryParams: router.query,
+      };
+
+      console.log('🔍 Referrer Information:', referrerInfo);
+
+      // Store referrer info in sessionStorage for later use
+      sessionStorage.setItem('loginReferrerInfo', JSON.stringify(referrerInfo));
+
+      // Analyze and log referrer analytics
+      logReferrerAnalytics(referrerInfo);
+    }
+  }, [returnTo, router.query]);
 
   // Get the referring URL if no returnTo is specified
   const getReturnTo = () => {
