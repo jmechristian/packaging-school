@@ -1,38 +1,33 @@
+import React, { useState, useEffect } from 'react';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
-import { useState, useEffect } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
-const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
+const EditProfileForm = ({ awsUser, thinkificUser }) => {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
-    company: '',
-    title: '',
-    location: '',
-    bio: '',
-    interests: '',
-    goals: '',
-    linkedin: '',
+    firstName: awsUser.name.split(' ')[0],
+    lastName: awsUser.name.split(' ')[1],
+    company: awsUser.company,
+    title: awsUser.title,
+    bio: awsUser.bio,
+    interests: awsUser.interests,
+    goals: awsUser.goals,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (awsUser) {
-      setFormData({
-        company: awsUser.company || '',
-        title: awsUser.title || '',
-        location: awsUser.location || '',
-        bio: awsUser.bio || '',
-        interests: awsUser.interests || '',
-        goals: awsUser.goals || '',
-        linkedin: awsUser.linkedin || '',
-      });
-    }
-  }, [awsUser]);
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3001'
+      : window.location.origin;
 
   // Only call refreshUser after a real update (after profile save)
   // Do NOT call refreshUser in useEffect or on mount
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsLoading(true);
     try {
       const response = await updateAWSUser({
         id: awsUser.id,
@@ -52,8 +47,8 @@ const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
     } catch (error) {
       console.error('Error updating profile:', error);
     } finally {
-      refreshUser(); // Only here, not on mount
-      setIsSubmitting(false);
+      window.location.reload(); // Only here, not on mount
+      setIsLoading(false);
     }
   };
 
@@ -173,10 +168,10 @@ const EditProfileForm = ({ awsUser, thinkificUser, refreshUser }) => {
         <div className='flex justify-end gap-3 pt-4 border-t'>
           <button
             type='submit'
-            disabled={isSubmitting}
+            disabled={isLoading}
             className='px-6 py-2 bg-clemson text-white rounded-lg font-bold hover:bg-clemson/90 transition-colors disabled:opacity-50 flex items-center gap-2'
           >
-            {isSubmitting ? (
+            {isLoading ? (
               <>
                 <svg className='animate-spin h-5 w-5' viewBox='0 0 24 24'>
                   <circle

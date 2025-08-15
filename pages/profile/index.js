@@ -108,13 +108,9 @@ export default withPageAuthRequired(function Page() {
 
   return (
     <>
-      <ProfileDashboard
-        navigateToThinkific={navigateToThinkific}
-      />
+      <ProfileDashboard navigateToThinkific={navigateToThinkific} />
       {showOnboardingModal && (
-        <OnboardingModal
-          onClose={() => setShowOnboardingModal(false)}
-        />
+        <OnboardingModal onClose={() => setShowOnboardingModal(false)} />
       )}
       {showTourModal && !showOnboardingModal && (
         <TourModal onClose={() => closeTourModal()} />

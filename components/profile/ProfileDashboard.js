@@ -20,7 +20,7 @@ import ProfilePaths from './ProfilePaths';
 import ProfileApplications from './ProfileApplications';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
-const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
+const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
   );
@@ -129,7 +129,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
           <ProfileEnrollments
             courses={thinkificUser && thinkificUser.courses.nodes}
             email={user?.email}
-            refreshUser={refreshUser}
+            refreshUser={() => window.location.reload()}
             navigateToThinkific={navigateToThinkific}
           />
         );
@@ -146,7 +146,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
         return (
           <ProfileWishlist
             courses={awsUser?.wishlist?.items}
-            refreshUser={refreshUser}
+            refreshUser={() => window.location.reload()}
             awsUser={awsUser}
           />
         );
@@ -159,7 +159,7 @@ const ProfileDashboard = ({ refreshUser, isLoading, navigateToThinkific }) => {
           <EditProfileForm
             awsUser={awsUser}
             thinkificUser={thinkificUser}
-            refreshUser={refreshUser}
+            refreshUser={() => window.location.reload()}
           />
         );
       default:

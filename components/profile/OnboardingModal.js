@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { MdError } from 'react-icons/md';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-export const OnboardingModal = ({ onClose, refreshUser }) => {
+export const OnboardingModal = ({ onClose }) => {
   const { user } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const router = useRouter();
@@ -123,7 +123,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
           console.error('Error creating Thinkific user:', error);
         }
       }
-      await refreshUser(); // Only here, not on mount
+      window.location.reload(); // Only here, not on mount
       onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -147,7 +147,7 @@ export const OnboardingModal = ({ onClose, refreshUser }) => {
       onboardingCompleteDate: new Date().toISOString(),
       psXp: awsUser.psXp + 50,
     });
-    await refreshUser();
+    window.location.reload();
     onClose();
   };
 
