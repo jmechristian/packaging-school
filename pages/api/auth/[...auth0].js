@@ -3,7 +3,7 @@ import { handleSSO } from '../../../helpers/api';
 import { runThinkificSSO } from '../../../helpers/sso';
 import { getAWSUser } from '../../../helpers/api';
 
-console.log('Auth0 API route initialized'); // Log when the API route is loaded
+console.log('Auth0 API route initialized');
 
 export default handleAuth({
   authorizationParams: {
@@ -34,45 +34,26 @@ export default handleAuth({
       console.log('returnTo from query params:', returnTo);
     }
 
-    // Log when callback is triggered
     try {
       await handleCallback(req, res, {
-        returnTo: returnTo, // Pass returnTo directly to handleCallback
+        returnTo: returnTo || '/profile', // Default to profile
         afterCallback: async (req, res, session) => {
-          console.log(
-            'afterCallback called for',
-            session?.user?.email,
-            'connection:',
-            session?.user?.sub,
-            'full user:',
-            session?.user
-          );
+          console.log('afterCallback called for', session?.user?.email);
+
           if (!session?.user) {
             console.log('No user in session');
             return session;
           }
 
-          // Use returnTo if available, otherwise use default
-          const finalReturnTo = returnTo || '/profile';
-
-          // Dynamically determine the base URL based on the request
+          // Dynamically determine the base URL
           let baseUrl;
           if (process.env.NODE_ENV === 'development') {
             baseUrl = 'http://localhost:3001';
           } else {
-            // Get the protocol and host from the request
-            const protocol =
-              req.headers['x-forwarded-proto'] ||
-              req.headers['x-forwarded-ssl'] === 'on'
-                ? 'https'
-                : 'http';
+            const protocol = req.headers['x-forwarded-proto'] || 'http';
             const host = req.headers.host;
             baseUrl = `${protocol}://${host}`;
           }
-
-          const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
-            finalReturnTo
-          )}`;
 
           try {
             console.log('Processing user for SSO:', session.user.email);
@@ -81,12 +62,7 @@ export default handleAuth({
             let awsUser = null;
             try {
               awsUser = await getAWSUser(session.user.email);
-              console.log(
-                'AWS user:',
-                awsUser,
-                'awsUser.name:',
-                awsUser && awsUser.name
-              );
+              console.log('AWS user:', awsUser);
             } catch (err) {
               console.warn('Could not fetch AWS user for SSO fallback:', err);
             }
@@ -96,17 +72,15 @@ export default handleAuth({
               return str && str.includes('@');
             }
 
-            // Use Auth0 user fields, or fallback to AWS user name, never use email as name
+            // Use Auth0 user fields, or fallback to AWS user name
             const nameParts =
               (awsUser && awsUser.name && awsUser.name.trim().split(' ')) ||
               (!isEmail(session.user.name) && session.user.name?.split(' ')) ||
               [];
 
             const firstName = session.user.given_name || nameParts[0] || '';
-            console.log('firstName', firstName);
             const lastName =
               session.user.family_name || nameParts.slice(1).join(' ') || '';
-            console.log('lastName', lastName);
 
             // Only run SSO if both first and last name are present
             if (!firstName || !lastName) {
@@ -137,17 +111,24 @@ export default handleAuth({
               console.log('User created in Thinkific');
             }
 
-            // Always set SSO redirect URL on the user object
-            console.log('Calling handleSSO for user:', session.user.email);
-            const ssoUrl = await handleSSO({
-              email: session.user.email,
-              first_name: firstName,
-              last_name: lastName,
-              returnTo: afterSSOUrl,
-              baseUrl,
-            });
-            console.log('SSO redirect URL generated:', ssoUrl);
-            session.user.ssoRedirectUrl = ssoUrl;
+            // Generate SSO URL for external redirects
+            if (
+              returnTo &&
+              (returnTo.includes('learn.packagingschool.com') ||
+                returnTo.includes('bmw.packagingschool.com'))
+            ) {
+              console.log('External returnTo detected, generating SSO URL');
+              const ssoUrl = await handleSSO({
+                email: session.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                returnTo: returnTo,
+                baseUrl,
+              });
+              console.log('SSO redirect URL generated:', ssoUrl);
+              session.user.ssoRedirectUrl = ssoUrl;
+            }
+
             return session;
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
@@ -162,5 +143,3 @@ export default handleAuth({
     }
   },
 });
-
-console.log('Auth0 API route initialized');

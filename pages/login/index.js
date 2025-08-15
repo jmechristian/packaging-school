@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { logReferrerAnalytics } from '../../helpers/referrerAnalytics';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,50 +13,6 @@ export default function LoginPage() {
   const { returnTo } = router.query;
   const { user, isLoading: userIsLoading } = useUser();
 
-  // Enhanced referrer tracking
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const referrerInfo = {
-        referrer: document.referrer,
-        referrerUrl: window.location.href,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        returnTo: returnTo,
-        queryParams: router.query,
-      };
-
-      console.log('🔍 Referrer Information:', referrerInfo);
-
-      // Store referrer info in sessionStorage for later use
-      sessionStorage.setItem('loginReferrerInfo', JSON.stringify(referrerInfo));
-
-      // Analyze and log referrer analytics
-      logReferrerAnalytics(referrerInfo);
-    }
-  }, [returnTo, router.query]);
-
-  // Get the referring URL if no returnTo is specified
-  const getReturnTo = () => {
-    if (returnTo) {
-      // If returnTo is an external URL (learn subdomain), store it for later use
-      if (
-        returnTo.includes('learn.packagingschool.com') ||
-        returnTo.includes('bmw.packagingschool.com')
-      ) {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('externalReturnTo', returnTo);
-        }
-        // Return a local URL that will trigger the external redirect logic
-        return `/api/auth/external-redirect?returnTo=${encodeURIComponent(
-          returnTo
-        )}`;
-      }
-      return returnTo;
-    }
-
-    return null;
-  };
-
   // Handle already authenticated users
   useEffect(() => {
     if (!userIsLoading) {
@@ -65,20 +20,14 @@ export default function LoginPage() {
 
       if (user) {
         // User is already authenticated, redirect them
-        const returnToUrl = getReturnTo();
-
-        if (returnToUrl) {
-          // If there's a returnTo URL, redirect to it
-          if (returnToUrl.startsWith('/api/auth/external-redirect')) {
-            // For external URLs, use the external redirect handler
-            window.location.href = returnToUrl;
-          } else {
-            // For internal URLs, use router.push
-            router.push(returnToUrl);
-          }
+        const targetUrl = returnTo || '/profile';
+        
+        if (targetUrl.startsWith('http')) {
+          // External URL - redirect directly
+          window.location.href = targetUrl;
         } else {
-          // No returnTo, redirect to profile
-          router.push('/profile');
+          // Internal URL - use router
+          router.push(targetUrl);
         }
       }
     }
@@ -87,18 +36,17 @@ export default function LoginPage() {
   const handleMagicLink = () => {
     if (!email) return;
 
-    const returnToUrl = getReturnTo();
-    // Redirect directly to the magic link endpoint
+    const targetUrl = returnTo || '/profile';
     const magicLinkUrl = `/api/magic-link?email=${encodeURIComponent(email)}${
-      returnToUrl ? `&returnTo=${encodeURIComponent(returnToUrl)}` : ''
+      targetUrl ? `&returnTo=${encodeURIComponent(targetUrl)}` : ''
     }`;
     window.location.href = magicLinkUrl;
   };
 
   const getAuthUrl = (baseUrl) => {
-    const returnToUrl = getReturnTo();
+    const targetUrl = returnTo || '/profile';
     return `${baseUrl}${
-      returnToUrl ? `?returnTo=${encodeURIComponent(returnToUrl)}` : ''
+      targetUrl ? `?returnTo=${encodeURIComponent(targetUrl)}` : ''
     }`;
   };
 
@@ -232,8 +180,8 @@ export default function LoginPage() {
                   ? `/api/auth/password-login?email=${encodeURIComponent(
                       email
                     )}${
-                      getReturnTo()
-                        ? `&returnTo=${encodeURIComponent(getReturnTo())}`
+                      returnTo
+                        ? `&returnTo=${encodeURIComponent(returnTo)}`
                         : ''
                     }`
                   : getAuthUrl('/api/auth/password-login')

@@ -2,6 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
+  // Auth state
+  isAuthenticated: false,
+  isLoading: false,
+  setupComplete: false,
+  error: null,
+
+  // User data
   user: null,
   awsUser: null,
   thinkificUser: null,
@@ -17,12 +24,16 @@ const initialState = {
     lastLogin: '',
     dailyStreak: 0,
   },
+
+  // Location
   location: {
     ip: null,
     country: null,
     lat: null,
     long: null,
   },
+
+  // Cart
   cart: {
     id: null,
     items: [],
@@ -33,21 +44,71 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    // Auth state management
+    setAuthLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setAuthError: (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    clearAuthError: (state) => {
+      state.error = null;
+    },
+
+    // User setup
+    setUserSetupComplete: (state, action) => {
+      state.setupComplete = action.payload;
+      state.isLoading = false;
+    },
+
+    // User data
     setUser: (state, action) => {
       state.user = action.payload;
+      state.isAuthenticated = !!action.payload;
     },
     clearUser: (state) => {
       state.user = null;
+      state.awsUser = null;
+      state.thinkificUser = null;
+      state.isAuthenticated = false;
+      state.setupComplete = false;
+      state.error = null;
     },
-    toggleLogin: (state) => {
-      state.loginOpen = !state.loginOpen;
+
+    // AWS and Thinkific users
+    setAWSUser: (state, action) => {
+      state.awsUser = action.payload;
+      if (action.payload?.userXp) {
+        state.userXp = action.payload.userXp;
+      }
     },
+    setThinkificUser: (state, action) => {
+      state.thinkificUser = action.payload;
+    },
+    updateUser: (state, action) => {
+      state.awsUser = { ...state.awsUser, ...action.payload };
+    },
+
+    // Enrollments
+    setEnrollments: (state, action) => {
+      state.enrollments = action.payload;
+    },
+
+    // User XP
+    setUserXp: (state, action) => {
+      state.userXp = action.payload;
+    },
+
+    // Location
     setLocation: (state, action) => {
       state.location.ip = action.payload.ip;
       state.location.country = action.payload.country;
       state.location.lat = action.payload.lat;
       state.location.long = action.payload.long;
     },
+
+    // Cart management
     addToCart: (state, action) => {
       if (!state.cart.id) {
         state.cart.id = uuidv4();
@@ -73,39 +134,27 @@ export const authSlice = createSlice({
         state.cart.items[itemIndex].quantity = quantity;
       }
     },
-    setAWSUser: (state, action) => {
-      state.awsUser = action.payload;
-    },
-    updateUser: (state, action) => {
-      state.awsUser = { ...state.awsUser, ...action.payload };
-    },
-    setThinkificUser: (state, action) => {
-      state.thinkificUser = action.payload;
-    },
-    setEnrollments: (state, action) => {
-      state.enrollments = action.payload;
-    },
-    setUserXp: (state, action) => {
-      state.userXp = action.payload;
-    },
   },
 });
 
 export const {
+  setAuthLoading,
+  setAuthError,
+  clearAuthError,
+  setUserSetupComplete,
   setUser,
   clearUser,
-  toggleLogin,
+  setAWSUser,
+  setThinkificUser,
+  updateUser,
+  setEnrollments,
+  setUserXp,
   setLocation,
   addToCart,
   removeFromCart,
   setCartId,
   updateCartItemQuantity,
   clearCart,
-  setAWSUser,
-  updateUser,
-  setThinkificUser,
-  setEnrollments,
-  setUserXp,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,56 +1,32 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setThinkificUser, setAWSUser } from '../../features/auth/authslice';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
-import { getAWSUser, updateAWSUser } from '../../helpers/api';
+import { updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
 import { TourModal } from '../../components/profile/TourModal';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useAuth } from '../../hooks/useAuth';
 
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
-  const { user, isLoading: userIsLoading } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
+  const { isReady, needsOnboarding } = useAuth();
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const { navigateToThinkific } = useThinkificLink();
+
+  // Show onboarding modal when ready and needed
   useEffect(() => {
-    if (awsUser) {
-      setIsLoading(false);
-      setShowOnboardingModal(!awsUser.name || !awsUser.name.includes(' '));
+    if (isReady && needsOnboarding) {
+      setShowOnboardingModal(true);
     }
+  }, [isReady, needsOnboarding]);
 
-    // Show onboarding modal if onboarding is not complete OR if thinkific user doesn't exist
-  }, [awsUser, thinkificUser, user]);
-
-  const refreshUser = async () => {
-    setIsLoading(true);
-    const thinkificUser = await fetch(
-      `/api/thinkific/get-user?email=${user.email}`
-    );
-
-    const data = await thinkificUser.json();
-    if (data?.data?.data?.userByEmail) {
-      dispatch(setThinkificUser(data.data.data.userByEmail));
-    }
-
-    const dbUser = await getAWSUser(user.email);
-    if (dbUser) {
-      dispatch(setAWSUser(dbUser));
-    }
-    setIsLoading(false);
-  };
-
+  // Show tour modal when user hasn't completed tour
   useEffect(() => {
     if (awsUser && !awsUser.tourCompleted && !showOnboardingModal) {
       setShowTourModal(true);
-    }
-
-    if (awsUser && awsUser.tourCompleted === true) {
-      setShowTourModal(false);
     }
   }, [awsUser, showOnboardingModal]);
 
@@ -93,22 +69,31 @@ export default withPageAuthRequired(function Page() {
     }
   };
 
+  // Update login streak on mount
   useEffect(() => {
-    updateLoginStreak();
-  }, [awsUser]); // Run once when component mounts
+    if (isReady) {
+      updateLoginStreak();
+    }
+  }, [isReady]);
 
-  const closeTourModal = () => {
+  const closeTourModal = async () => {
     setShowTourModal(false);
     if (awsUser) {
-      updateAWSUser({
-        id: awsUser.id,
-        tourCompleted: true,
-      });
-      refreshUser();
+      try {
+        await updateAWSUser({
+          id: awsUser.id,
+          tourCompleted: true,
+        });
+        // Refresh user data through the auth service
+        window.location.reload();
+      } catch (error) {
+        console.error('Error updating tour completion:', error);
+      }
     }
   };
 
-  if (isLoading) {
+  // Show loading until user data is ready
+  if (!isReady) {
     return (
       <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
         <div className='flex flex-col items-center gap-4'>
@@ -124,13 +109,11 @@ export default withPageAuthRequired(function Page() {
   return (
     <>
       <ProfileDashboard
-        refreshUser={refreshUser}
         navigateToThinkific={navigateToThinkific}
       />
       {showOnboardingModal && (
         <OnboardingModal
           onClose={() => setShowOnboardingModal(false)}
-          refreshUser={refreshUser}
         />
       )}
       {showTourModal && !showOnboardingModal && (
