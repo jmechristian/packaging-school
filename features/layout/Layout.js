@@ -38,6 +38,25 @@ const Layout = ({ children }) => {
       .catch((error) => console.log(error));
   }, [dispatch]);
 
+  // Handle SSO redirect
+  useEffect(() => {
+    if (user) {
+      // Clear SSO flag if user doesn't have a redirect URL (normal login)
+      if (!user.ssoRedirectUrl && sessionStorage.getItem('ssoComplete')) {
+        sessionStorage.removeItem('ssoComplete');
+      }
+
+      // Only redirect if user has SSO redirect URL and hasn't completed SSO
+      if (user.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
+        console.log('SSO redirect detected:', user.ssoRedirectUrl);
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+      }
+    }
+  }, [user]);
+
   // Redirect to profile for onboarding if needed
   useEffect(() => {
     if (isReady && needsOnboarding && router.pathname !== '/profile') {
