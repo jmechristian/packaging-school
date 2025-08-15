@@ -53,7 +53,7 @@ export default handleAuth({
           }
 
           // Use returnTo if available, otherwise use default
-          const finalReturnTo = returnTo || '/';
+          const finalReturnTo = returnTo || '/profile';
 
           // Dynamically determine the base URL based on the request
           let baseUrl;
