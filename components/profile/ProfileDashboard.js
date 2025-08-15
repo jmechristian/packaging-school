@@ -165,14 +165,7 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
       default:
         return null;
     }
-  }, [
-    activeTab,
-    thinkificUser,
-    awsUser,
-    user,
-    refreshUser,
-    navigateToThinkific,
-  ]);
+  }, [activeTab, thinkificUser, awsUser, user, navigateToThinkific]);
 
   // Guard: Only render tab content if both awsUser and thinkificUser are present and stable
   if (!awsUser || !thinkificUser) {
