@@ -35,16 +35,16 @@ export const useAuth = () => {
       dispatch(setAuthError(null));
 
       console.log('useAuth: Setting up user data');
-      
+
       // Use centralized auth service
       const userData = await authService.setupUser(user);
-      
+
       // Update Redux state
       dispatch(setUser(user));
       dispatch(setAWSUser(userData.awsUser));
       dispatch(setThinkificUser(userData.thinkificUser));
       dispatch(setUserSetupComplete(true));
-      
+
       // Fetch enrollments if Thinkific user exists
       if (userData.thinkificUser) {
         try {
@@ -80,11 +80,12 @@ export const useAuth = () => {
     }
   }, [user, userIsLoading, isAuthenticated]);
 
-  // Check if user data is ready
+  // Check if user data is ready - only depend on AWS user, not Thinkific user
   const isReady = !userIsLoading && !isLoading && setupComplete && awsUser;
 
   // Check if onboarding is needed
-  const needsOnboarding = awsUser && (!awsUser.name || !awsUser.name.includes(' '));
+  const needsOnboarding =
+    awsUser && (!awsUser.name || !awsUser.name.includes(' '));
 
   return {
     // Auth state
@@ -94,13 +95,13 @@ export const useAuth = () => {
     error,
     isReady,
     needsOnboarding,
-    
+
     // User data
     user,
     awsUser,
     thinkificUser,
     userXp,
-    
+
     // Actions
     setupUser,
   };

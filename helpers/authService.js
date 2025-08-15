@@ -98,6 +98,14 @@ class AuthService {
   }
 
   async _getThinkificUserWithRetry(email, maxRetries = 3) {
+    // Check if we've already determined this user doesn't exist in Thinkific
+    if (this.userData && this.userData.thinkificUser === null) {
+      console.log(
+        'AuthService: Thinkific user already checked and not found, skipping'
+      );
+      return null;
+    }
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         console.log(

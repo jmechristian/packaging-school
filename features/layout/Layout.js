@@ -64,8 +64,8 @@ const Layout = ({ children }) => {
     }
   }, [isReady, needsOnboarding, router]);
 
-  // Show loading screen only when necessary
-  const shouldShowLoader = userIsLoading || isLoading || (user && !isReady);
+  // Show loading screen only when absolutely necessary
+  const shouldShowLoader = userIsLoading || (user && isLoading && !isReady);
 
   if (shouldShowLoader) {
     return (
