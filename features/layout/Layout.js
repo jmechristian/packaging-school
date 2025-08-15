@@ -40,11 +40,20 @@ const Layout = ({ children }) => {
 
   // Handle SSO redirect
   useEffect(() => {
-    if (user?.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
-      sessionStorage.setItem('ssoComplete', 'true');
-      setTimeout(() => {
-        window.location.href = user.ssoRedirectUrl;
-      }, 100);
+    if (user) {
+      // Clear SSO flag if user doesn't have a redirect URL (normal login)
+      if (!user.ssoRedirectUrl && sessionStorage.getItem('ssoComplete')) {
+        sessionStorage.removeItem('ssoComplete');
+      }
+
+      // Only redirect if user has SSO redirect URL and hasn't completed SSO
+      if (user.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
+        console.log('SSO redirect detected:', user.ssoRedirectUrl);
+        sessionStorage.setItem('ssoComplete', 'true');
+        setTimeout(() => {
+          window.location.href = user.ssoRedirectUrl;
+        }, 100);
+      }
     }
   }, [user]);
 
@@ -82,9 +91,7 @@ const Layout = ({ children }) => {
             </svg>
             <span className='sr-only'>Loading...</span>
           </div>
-          <div className='text-center text-sm text-slate-500'>
-            Loading...
-          </div>
+          <div className='text-center text-sm text-slate-500'>Loading...</div>
         </div>
       </div>
     );

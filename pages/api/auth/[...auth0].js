@@ -34,9 +34,17 @@ export default handleAuth({
       console.log('returnTo from query params:', returnTo);
     }
 
+    // Check if this is an external URL that needs SSO
+    const isExternalUrl =
+      returnTo &&
+      (returnTo.includes('learn.packagingschool.com') ||
+        returnTo.includes('bmw.packagingschool.com'));
+
     try {
       await handleCallback(req, res, {
-        returnTo: returnTo || '/profile', // Default to profile
+        // For external URLs, redirect to profile first, then SSO will handle the redirect
+        // For internal URLs, redirect directly
+        returnTo: isExternalUrl ? '/profile' : returnTo || '/profile',
         afterCallback: async (req, res, session) => {
           console.log('afterCallback called for', session?.user?.email);
 
@@ -112,11 +120,7 @@ export default handleAuth({
             }
 
             // Generate SSO URL for external redirects
-            if (
-              returnTo &&
-              (returnTo.includes('learn.packagingschool.com') ||
-                returnTo.includes('bmw.packagingschool.com'))
-            ) {
+            if (isExternalUrl) {
               console.log('External returnTo detected, generating SSO URL');
               const ssoUrl = await handleSSO({
                 email: session.user.email,
