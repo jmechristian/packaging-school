@@ -44,18 +44,26 @@ const Layout = ({ children }) => {
       // Clear SSO flag if user doesn't have a redirect URL (normal login)
       if (!user.ssoRedirectUrl && sessionStorage.getItem('ssoComplete')) {
         sessionStorage.removeItem('ssoComplete');
+        sessionStorage.removeItem('ssoRedirectAttempted');
       }
 
-      // Only redirect if user has SSO redirect URL and hasn't completed SSO
-      if (user.ssoRedirectUrl && !sessionStorage.getItem('ssoComplete')) {
+      // Only redirect if user has SSO redirect URL, hasn't completed SSO, and we're not already on profile page
+      if (
+        user.ssoRedirectUrl &&
+        !sessionStorage.getItem('ssoComplete') &&
+        !sessionStorage.getItem('ssoRedirectAttempted') &&
+        router.pathname !== '/profile'
+      ) {
         console.log('SSO redirect detected:', user.ssoRedirectUrl);
         sessionStorage.setItem('ssoComplete', 'true');
+        sessionStorage.setItem('ssoRedirectAttempted', 'true');
+
         setTimeout(() => {
           window.location.href = user.ssoRedirectUrl;
         }, 100);
       }
     }
-  }, [user]);
+  }, [user, router.pathname]);
 
   // Redirect to profile for onboarding if needed
   useEffect(() => {
