@@ -34,17 +34,9 @@ export default handleAuth({
       console.log('returnTo from query params:', returnTo);
     }
 
-    // Check if this is an external URL that needs SSO
-    const isExternalUrl =
-      returnTo &&
-      (returnTo.includes('learn.packagingschool.com') ||
-        returnTo.includes('bmw.packagingschool.com'));
-
     try {
       await handleCallback(req, res, {
-        // For external URLs, redirect to profile first, then SSO will handle the redirect
-        // For internal URLs, redirect directly
-        returnTo: isExternalUrl ? '/profile' : returnTo || '/profile',
+        returnTo: returnTo || '/profile',
         afterCallback: async (req, res, session) => {
           console.log('afterCallback called for', session?.user?.email);
 
@@ -119,14 +111,22 @@ export default handleAuth({
               console.log('User created in Thinkific');
             }
 
-            // Generate SSO URL for external redirects
-            if (isExternalUrl) {
+            // Always set SSO redirect URL on the user object for external URLs
+            if (
+              returnTo &&
+              (returnTo.includes('learn.packagingschool.com') ||
+                returnTo.includes('bmw.packagingschool.com'))
+            ) {
               console.log('External returnTo detected, generating SSO URL');
+              const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
+                returnTo
+              )}`;
+
               const ssoUrl = await handleSSO({
                 email: session.user.email,
                 first_name: firstName,
                 last_name: lastName,
-                returnTo: returnTo,
+                returnTo: afterSSOUrl,
                 baseUrl,
               });
               console.log('SSO redirect URL generated:', ssoUrl);
