@@ -106,6 +106,7 @@ const CourseCard = ({ course, searchQuery }) => {
   const { navigateToThinkific } = useThinkificLink();
   const [courseData, setCourseData] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -127,6 +128,7 @@ const CourseCard = ({ course, searchQuery }) => {
   if (!isVisible) return null;
 
   const orderHandler = async () => {
+    setIsLoading(true);
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
       courseDiscount: 100,
@@ -196,7 +198,13 @@ const CourseCard = ({ course, searchQuery }) => {
               orderHandler();
             }}
           >
-            Begin Course
+            {isLoading ? (
+              <div className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-cummins-red transition-all duration-300'>
+                <MdOutlineTimer className='animate-spin mr-2' /> Preparing...
+              </div>
+            ) : (
+              'Begin Course'
+            )}
           </div>
         </div>
       </div>
