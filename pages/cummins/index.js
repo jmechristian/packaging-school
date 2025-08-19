@@ -106,7 +106,7 @@ const CourseCard = ({ course, searchQuery }) => {
   const { navigateToThinkific } = useThinkificLink();
   const [courseData, setCourseData] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCourseData = async () => {
