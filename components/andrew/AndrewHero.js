@@ -69,7 +69,7 @@ const AndrewHero = () => {
           />
         </div>
         <div className='overflow-hidden'>
-          <div className='mx-auto max-w-7xl px-6 pb-32 pt-36 sm:pt-60 lg:px-8 lg:pt-32'>
+          <div className='mx-auto max-w-7xl px-6 py-16'>
             <div className='mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center'>
               <div className='w-full max-w-xl lg:shrink-0 xl:max-w-2xl'>
                 <h1 className='text-4xl font-bold tracking-tight font-greycliff text-gray-900 sm:text-6xl'>
@@ -95,53 +95,13 @@ const AndrewHero = () => {
                   </a>
                 </div>
               </div>
-              <div className='mt-14 flex justify-end gap-8 sm:-mt-44 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0'>
-                <div className='ml-auto w-44 flex-none space-y-8 pt-32 sm:ml-0 sm:pt-80 lg:order-last lg:pt-36 xl:order-none xl:pt-80'>
-                  <div className='relative'>
-                    <img
-                      src='https://packschool.s3.us-east-1.amazonaws.com/hurley-1.png'
-                      alt=''
-                      className='aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg'
-                    />
-                    <div className='pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10' />
-                  </div>
-                </div>
-                <div className='mr-auto w-44 flex-none space-y-8 sm:mr-0 sm:pt-52 lg:pt-36'>
-                  <div className='relative'>
-                    <img
-                      src='https://packschool.s3.us-east-1.amazonaws.com/hurley-2.png'
-                      alt=''
-                      className='aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg'
-                    />
-                    <div className='pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10' />
-                  </div>
-                  <div className='relative'>
-                    <img
-                      src='https://packschool.s3.us-east-1.amazonaws.com/hurley-3.png'
-                      alt=''
-                      className='aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg'
-                    />
-                    <div className='pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10' />
-                  </div>
-                </div>
-                <div className='w-44 flex-none space-y-8 pt-32 sm:pt-0'>
-                  <div className='relative'>
-                    <img
-                      src='https://packschool.s3.us-east-1.amazonaws.com/hurley-4.png'
-                      alt=''
-                      className='aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg'
-                    />
-                    <div className='pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10' />
-                  </div>
-                  <div className='relative'>
-                    <img
-                      src='https://packschool.s3.us-east-1.amazonaws.com/hurley-5.png'
-                      alt=''
-                      className='aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg'
-                    />
-                    <div className='pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10' />
-                  </div>
-                </div>
+              <div className='flex justify-end gap-8 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0 w-full'>
+                <div
+                  className='aspect-[4/5] bg-black w-full h-full rounded-lg bg-cover bg-center'
+                  style={{
+                    backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/meet-hurley.png')`,
+                  }}
+                ></div>
               </div>
             </div>
           </div>

@@ -33,25 +33,25 @@ const features = [
 
 export default function AndrewAbout() {
   return (
-    <div className='bg-white py-24 sm:py-32'>
+    <div className='bg-white py-16'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
-        <div className='mx-auto max-w-2xl lg:text-center'>
+        <div className='mx-auto max-w-5xl lg:text-center'>
           <p className='mt-2 text-3xl font-bold tracking-tight font-greycliff text-gray-900 sm:text-4xl'>
             Who is Dr. Andrew Hurley?
           </p>
           <p className='mt-6 text-lg leading-8 text-gray-600'>
-            Andrew’s research lab answers complex questions on product marketing
-            and packaging. His experienced group has tested thousands of
-            packages for hundreds of brands. Hurley’s efforts have resulted in
+            Dr. Hurley’s research lab answers complex questions on product
+            marketing and packaging. His experienced group has tested thousands
+            of packages for hundreds of brands. And his efforts have resulted in
             multiple awards, patents, and increased sales by 40% for small and
             large businesses.
           </p>
           <p className='mt-6 text-lg leading-8 text-gray-600'>
-            Andrew is also the lead instructor for Clemson University’s Center
-            for Corporate Learning’s Certificate of Mastery in Packaging
-            Management, a state-of-the-art online curriculum that teaches the
-            necessary business acumen and professional vocabulary to work
-            successfully within the packaging industry.
+            Dr. Hurley is also the lead instructor for the Certificate of
+            Mastery in Packaging Management run through Clemson University’s
+            Center for Corporate Learning. This program is a state-of-the-art,
+            online curriculum teaching the business acumen and professional
+            vocabulary necessary to succeed within the packaging industry.
           </p>
         </div>
         <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none'>
