@@ -2,7 +2,12 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { getAuth0User, updateAuth0UserPassword } from '../../helpers/api';
+import {
+  getAuth0User,
+  updateAuth0UserPassword,
+  getThinkificUser,
+  updateThinkificUserPassword,
+} from '../../helpers/api';
 
 const Page = () => {
   const router = useRouter();
@@ -15,17 +20,40 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userId, setUserId] = useState('');
+  const [thinkificId, setThinkificId] = useState('');
 
   // Set email from URL query parameter
   React.useEffect(() => {
     async function fetchUser() {
-      if (router.query.email) {
-        setEmail(router.query.email);
-        const response = await getAuth0User(router.query.email);
+      if (!router.query.email) {
+        setError('No email provided');
+        return;
+      }
 
-        if (response.data && response.data.length > 0) {
+      setEmail(router.query.email);
+
+      try {
+        // Fetch user data from both Auth0 and Thinkific
+        const [auth0Response, thinkificResponse] = await Promise.all([
+          getAuth0User(router.query.email),
+          getThinkificUser(router.query.email),
+        ]);
+
+        console.log(
+          'Thinkific Response:',
+          thinkificResponse.data.data.userByEmail.id
+        );
+
+        // Set Thinkific ID if available
+        if (thinkificResponse.data?.data?.userByEmail?.id) {
+          setThinkificId(thinkificResponse.data.data.userByEmail.id);
+          console.log('Thinkific ID:', thinkificResponse.data.id);
+        }
+
+        // Check Auth0 user data
+        if (auth0Response.data && auth0Response.data.length > 0) {
           // Find user with Username-Password-Authentication connection
-          const passwordUser = response.data.find(
+          const passwordUser = auth0Response.data.find(
             (user) =>
               user.identities &&
               user.identities.some(
@@ -38,16 +66,18 @@ const Page = () => {
             setUserId(passwordUser.user_id);
             console.log('User ID:', passwordUser.user_id);
             setError(null); // Clear any existing error
-          } else {
-            setError('No Email/Password found');
+            return;
           }
-        } else {
-          setError('No Email/Password found');
         }
-      } else {
-        setError('No email provided');
+
+        // If we reach here, no valid Auth0 password user was found
+        setError('No Email/Password authentication found');
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError('Error fetching user data');
       }
     }
+
     fetchUser();
   }, [router.query.email]);
 
@@ -116,8 +146,12 @@ const Page = () => {
     setIsLoading(true);
     try {
       const response = await updateAuth0UserPassword(userId, password);
+      const thinkificResponse = await updateThinkificUserPassword(
+        thinkificId,
+        password
+      );
       console.log('Response:', response);
-
+      console.log('Thinkific Response:', thinkificResponse);
       // Check if response has an error property (API returned error)
       if (response.error) {
         setError(response.error);

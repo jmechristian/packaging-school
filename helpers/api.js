@@ -2162,6 +2162,19 @@ export const updateAuth0UserPassword = async (userId, password) => {
   return res.json();
 };
 
+export const getThinkificUser = async (email) => {
+  const res = await fetch(
+    `/api/thinkific/get-user?email=${encodeURIComponent(email)}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return res.json();
+};
+
 export const updateThinkificUserPassword = async (id, password) => {
   const res = await fetch(`/api/thinkific/update-password`, {
     method: 'PUT',
