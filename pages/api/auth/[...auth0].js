@@ -115,22 +115,23 @@ export default handleAuth({
               console.log('User created in Thinkific');
             }
 
-            // Always generate SSO URL (use default returnTo if none provided)
-            const finalReturnTo = returnTo || '/profile';
-            console.log('Generating SSO URL for returnTo:', finalReturnTo);
-            const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
-              finalReturnTo
-            )}`;
+            // Always generate SSO URL if there's a returnTo
+            if (returnTo) {
+              console.log('Generating SSO URL for returnTo:', returnTo);
+              const afterSSOUrl = `${baseUrl}/after-sso?returnTo=${encodeURIComponent(
+                returnTo
+              )}`;
 
-            const ssoUrl = await handleSSO({
-              email: session.user.email,
-              first_name: firstName,
-              last_name: lastName,
-              returnTo: afterSSOUrl,
-              baseUrl,
-            });
-            console.log('SSO redirect URL generated:', ssoUrl);
-            session.user.ssoRedirectUrl = ssoUrl;
+              const ssoUrl = await handleSSO({
+                email: session.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                returnTo: afterSSOUrl,
+                baseUrl,
+              });
+              console.log('SSO redirect URL generated:', ssoUrl);
+              session.user.ssoRedirectUrl = ssoUrl;
+            }
 
             return session;
           } catch (ssoError) {

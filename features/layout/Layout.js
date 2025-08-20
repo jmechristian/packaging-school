@@ -47,13 +47,6 @@ const Layout = ({ children }) => {
         sessionStorage.removeItem('ssoRedirectAttempted');
       }
 
-      // Clear SSO flags when user has ssoRedirectUrl (indicating fresh login)
-      // This ensures SSO works for new login sessions
-      if (user.ssoRedirectUrl) {
-        sessionStorage.removeItem('ssoComplete');
-        sessionStorage.removeItem('ssoRedirectAttempted');
-      }
-
       // Only redirect if user has SSO redirect URL, hasn't completed SSO, and we're not already on profile page
       if (
         user.ssoRedirectUrl &&
