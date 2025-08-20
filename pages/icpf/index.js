@@ -111,7 +111,7 @@ const ICPF = () => {
                 </div>
                 <div className='flex flex-col gap-0'>
                   <div className='text-lg font-bold'>Deadline</div>
-                  <div>Oct 25, 2025</div>
+                  <div>Oct 10, 2025</div>
                 </div>
               </div>
               <div>
