@@ -10,8 +10,15 @@ export default function LoginPage() {
   const [message, setMessage] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
-  const { returnTo } = router.query;
+  const { returnTo, email: emailParam } = router.query;
   const { user, isLoading: userIsLoading } = useUser();
+
+  // Handle email parameter from URL
+  useEffect(() => {
+    if (emailParam && typeof emailParam === 'string') {
+      setEmail(emailParam);
+    }
+  }, [emailParam]);
 
   // Handle already authenticated users
   useEffect(() => {
@@ -21,7 +28,7 @@ export default function LoginPage() {
       if (user) {
         // User is already authenticated, redirect them
         const targetUrl = returnTo || '/profile';
-        
+
         if (targetUrl.startsWith('http')) {
           // External URL - redirect directly
           window.location.href = targetUrl;

@@ -45,9 +45,8 @@ export default async function passwordReset(req, res) {
         ttl_sec: 3600, // Reduced to 1 hour for testing
         mark_email_as_verified: true,
         includeEmailInRedirect: true,
-        result_url: `${
-          process.env.NEXT_PUBLIC_BASE_URL || 'https://packagingschool.com'
-        }/login${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`,
+        // Note: result_url doesn't work with Auth0 password change tickets
+        // Users will need to manually navigate to login page after reset
       },
       {
         headers: {

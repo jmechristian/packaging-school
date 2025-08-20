@@ -2139,3 +2139,25 @@ export const createCMPMFormICPF = async (data) => {
   });
   return res.data.createIcpfCmpmForm;
 };
+
+export const getAuth0User = async (email) => {
+  const res = await fetch(`/api/get-auth0-user-email`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+  return res.json();
+};
+
+export const updateAuth0UserPassword = async (userId, password) => {
+  const res = await fetch(`/api/update-auth0-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ userId, password }),
+  });
+  return res.json();
+};
