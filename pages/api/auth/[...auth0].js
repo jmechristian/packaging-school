@@ -117,15 +117,14 @@ export default handleAuth({
 
             // Always generate SSO URL for password logins
             console.log('Generating SSO URL for password login');
-            const afterSSOUrl = returnTo
-              ? `${baseUrl}/after-sso?returnTo=${encodeURIComponent(returnTo)}`
-              : `${baseUrl}/after-sso`;
+            // Use the final destination directly instead of intermediate after-sso page
+            const finalDestination = returnTo || `${baseUrl}/profile`;
 
             const ssoUrl = await handleSSO({
               email: session.user.email,
               first_name: firstName,
               last_name: lastName,
-              returnTo: afterSSOUrl,
+              returnTo: finalDestination,
               baseUrl,
             });
             console.log('SSO redirect URL generated:', ssoUrl);

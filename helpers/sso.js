@@ -14,7 +14,7 @@ export const runThinkificSSO = async (user, returnTo) => {
         email: user.email,
         first_name: user.name.split(' ')[0],
         last_name: user.name.split(' ')[1],
-        return_to: returnTo,
+        return_to: returnTo, // This will now be the final destination directly
       }),
     });
 
@@ -22,7 +22,7 @@ export const runThinkificSSO = async (user, returnTo) => {
     if (data.url) {
       // Only run in browser environment
       if (typeof window !== 'undefined') {
-        // Simple redirect to Thinkific
+        // Simple redirect to Thinkific with direct return_to
         window.location.href = data.url;
       }
     }

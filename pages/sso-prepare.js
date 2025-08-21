@@ -24,11 +24,7 @@ export default function SsoPrepare() {
             email: session.ssoUser.email,
             first_name: session.ssoUser.first_name,
             last_name: session.ssoUser.last_name,
-            returnTo: `${
-              window.location.origin
-            }/after-sso?returnTo=${encodeURIComponent(
-              session.ssoUser.returnTo
-            )}`,
+            returnTo: session.ssoUser.returnTo, // Use final destination directly
             baseUrl: session.ssoUser.baseUrl,
           }),
         });
