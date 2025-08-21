@@ -35,8 +35,7 @@ const Page = () => {
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                Connect on LinkedIn{' '}
-                <MdLaunch className='w-7 h-7 text-white/50' />
+                Connect via Email <MdLaunch className='w-7 h-7 text-white/50' />
               </a>
             </div>
           </div>
