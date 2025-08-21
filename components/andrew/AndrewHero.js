@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdArrowRight, MdLaunch } from 'react-icons/md';
 const incentives = [
   {
     name: 'Research',
@@ -69,37 +70,40 @@ const AndrewHero = () => {
           />
         </div>
         <div className='overflow-hidden'>
-          <div className='mx-auto max-w-7xl px-6 py-16'>
-            <div className='mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center'>
-              <div className='w-full max-w-xl lg:shrink-0 xl:max-w-2xl'>
-                <h1 className='text-4xl font-bold tracking-tight font-greycliff text-gray-900 sm:text-6xl'>
+          <div className='mx-auto max-w-7xl px-6 py-16 lg:py-24'>
+            <div className='mx-auto grid grid-cols-1 lg:grid-cols-6 gap-20 items-center'>
+              <div className='col-span-4'>
+                <h1 className='  text-gray-900 h1-base'>
                   Meet Dr. Andrew Hurley.
                 </h1>
-                <p className='relative mt-6 text-lg xl:text-2xl leading-8 text-base-mid font-greycliff font-semibold sm:max-w-md lg:max-w-none'>
+                <div className=' mt-6 text-base-mid h3-base leading-relaxed lg:leading-relaxed lg:h3-base'>
                   Professor. Inventor. Researcher. Entrepreneur. This guy is
                   passionate about packaging.
-                </p>
-                <p className='relative mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none'>
+                </div>
+                <div className=' mt-6 text-lg lg:text-xl text-gray-600 leading-relaxed lg:leading-relaxed'>
                   This guy is passionate about packaging. Dr. Andrew Hurley is a
                   Professor of Food, Nutrition and Packaging Science at Clemson
                   University. Dr. Hurley chairs committees, guides students
                   through consumer packaged goods development, and supports
                   industries with their packaging R&D needs.
-                </p>
-                <div className='mt-10 flex items-center gap-x-6'>
+                </div>
+                <div className='mt-10 flex items-center gap-x-6 w-full'>
                   <a
                     href='https://www.researchgate.net/profile/Rupert_Hurley'
-                    className='rounded-md font-greycliff bg-clemson px-3.5 py-2.5 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    className='rounded-md font-greycliff bg-clemson px-6 py-3 font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 cursor-pointer text-lg focus-visible:outline-clemson flex items-center gap-x-2'
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    Connect on LinkedIn
+                    Connect on LinkedIn{' '}
+                    <MdLaunch className='w-7 h-7 text-white/50' />
                   </a>
                 </div>
               </div>
-              <div className='flex justify-end gap-8 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0 w-full'>
+              <div className='hidden lg:flex gap-8 w-full col-span-2'>
                 <div
                   className='aspect-[4/5] bg-black w-full h-full rounded-lg bg-cover bg-center'
                   style={{
-                    backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/meet-hurley.png')`,
+                    backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/post-cG9zdDo1ODU%3D-ANDREW-2018-sm.jpg')`,
                   }}
                 ></div>
               </div>
