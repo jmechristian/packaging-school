@@ -10,6 +10,7 @@ export { sesClient };
 
 export default async function handler(req, res) {
   const body = req.body;
+  console.log('CPS Form submission data:', JSON.stringify(body, null, 2));
 
   var myVar =
     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
@@ -51,76 +52,129 @@ export default async function handler(req, res) {
     '                       <tr style="width:100%">' +
     '                         <td data-id="__react-email-column">' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">First Name</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.firstName}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.firstName || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Last Name</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.lastName}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.lastName || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Email</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.email}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.email || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Phone Number</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.phone}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.phone || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Street Address</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.streetAddress}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.streetAddress || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Address Line 2</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.extraAddress}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.addressExtra || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">City</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.city}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.city || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">State/ Province/ Region</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.state}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.state || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Country</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.country}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.country || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Year of Birth</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.birthYear}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.birthYear || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Company Name</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.companyName}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.companyName || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Company Title</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.companyTitle}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.companyTitle || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">LinkedIn Profile</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.linkedIn}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.linkedin || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Your Background</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.background}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.background || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Why did you get into packaging?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.whyPackaging}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.whyPackaging || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What is your main area of interest?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.areaOfInterest}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.areaOfInterest || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">What goals do you have for yourself in the next 12 months?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.yearGoals}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.yearGoals || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How do you see The Certificate of Packaging Science helping you achieve those goals?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.cpsGoals}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.cpsGoals || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">We know written applications can only capture so much. As we review your application, what more would you like us to know?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.moreAboutYou}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.moreAboutYou || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Elective</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.elective}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.elective || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Where did you hear about the Certificate of Packaging Science?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.referral}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.referral || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">How will you be paying for this program?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.payment}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.payment || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Payment Type?</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.paymentType}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.paymentType || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Payment Confirmation</p>' +
-    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.paymentConfirmation}</p>` +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.paymentConfirmation || 'Not provided'
+    }</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Opt Out</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.optOut || 'Not provided'
+    }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                         </td>' +
     '                       </tr>' +
@@ -177,9 +231,12 @@ export default async function handler(req, res) {
         'jamie@packagingschool.com'
       )
     );
-    return res.status(200).json({ message: 'Success' + res });
+    console.log('CPS Form email sent successfully');
+    return res.status(200).json({ message: 'Success' });
   } catch (error) {
-    console.log(error);
-    return res.status(410).json({ message: error + 'error' });
+    console.error('Error sending CPS form email:', error);
+    return res
+      .status(500)
+      .json({ message: 'Error sending email: ' + error.message });
   }
 }

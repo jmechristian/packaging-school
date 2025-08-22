@@ -89,7 +89,7 @@ const CPSForm = ({ methods, email, free, id }) => {
     }, 3000);
   };
 
-  const sendSubmitNotification = async (data) => {
+  const sendSubmitNotification = async () => {
     await fetch('/api/send-cps-submit', {
       method: 'POST',
       headers: {
@@ -97,7 +97,34 @@ const CPSForm = ({ methods, email, free, id }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...data,
+        firstName: methods.getValues('firstName'),
+        lastName: methods.getValues('lastName'),
+        email: methods.getValues('email'),
+        phone: methods.getValues('phone'),
+        streetAddress: methods.getValues('streetAddress'),
+        addressExtra: methods.getValues('streetAddressExtra'),
+        city: methods.getValues('city'),
+        state: methods.getValues('state'),
+        country: methods.getValues('country'),
+        birthYear: methods.getValues('birthYear'),
+        companyName: methods.getValues('companyName'),
+        companyTitle: methods.getValues('companyTitle'),
+        linkedin: methods.getValues('linkedin'),
+        background: methods.getValues('background'),
+        whyPackaging: methods.getValues('whyPackaging'),
+        areaOfInterest: methods.getValues('areaOfInterest'),
+        sessionApplying: methods.getValues('sessionApplying'),
+        referral: methods.getValues('referral'),
+        payment: methods.getValues('payment'),
+        yearGoals: methods.getValues('yearGoals'),
+        cpsGoals: methods.getValues('cpsGoals'),
+        paymentType: methods.getValues('paymentType'),
+        moreAboutYou: methods.getValues('moreAboutYou'),
+        elective: methods.getValues('elective'),
+        optOut: methods.getValues('optOut'),
+        paymentConfirmation: free
+          ? 'WAIVED'
+          : methods.getValues('paymentConfirmation'),
         form: 'CPS',
       }),
     });
@@ -106,7 +133,7 @@ const CPSForm = ({ methods, email, free, id }) => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     await saveHandler('SUBMITTED');
-    sendSubmitNotification(data);
+    sendSubmitNotification();
     setIsSubmitting(false);
     router.push('/cps-application-confirmation');
   };
