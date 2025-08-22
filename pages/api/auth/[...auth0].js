@@ -118,17 +118,27 @@ export default handleAuth({
             // Always generate SSO URL for password logins
             console.log('Generating SSO URL for password login');
             // Use the final destination directly instead of intermediate after-sso page
+            // Always provide a returnTo to avoid timeout issues
             const finalDestination = returnTo || `${baseUrl}/profile`;
 
-            const ssoUrl = await handleSSO({
-              email: session.user.email,
-              first_name: firstName,
-              last_name: lastName,
-              returnTo: finalDestination,
-              baseUrl,
-            });
-            console.log('SSO redirect URL generated:', ssoUrl);
-            session.user.ssoRedirectUrl = ssoUrl;
+            try {
+              const ssoUrl = await handleSSO({
+                email: session.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                returnTo: finalDestination,
+                baseUrl,
+              });
+              console.log('SSO redirect URL generated:', ssoUrl);
+              session.user.ssoRedirectUrl = ssoUrl;
+            } catch (ssoError) {
+              console.warn(
+                'SSO failed, using fallback redirect:',
+                ssoError.message
+              );
+              // Fallback: redirect directly to final destination without SSO
+              session.user.ssoRedirectUrl = finalDestination;
+            }
 
             return session;
           } catch (ssoError) {

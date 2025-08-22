@@ -3,12 +3,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import LoadingState from '../../components/shared/LoadingState';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isSlowNetwork, setIsSlowNetwork] = useState(false);
   const router = useRouter();
   const { returnTo, email: emailParam } = router.query;
   const { user, isLoading: userIsLoading } = useUser();
@@ -57,6 +59,28 @@ export default function LoginPage() {
     }`;
   };
 
+  const handlePasswordLogin = async (email) => {
+    setLoading(true);
+    setIsSlowNetwork(false);
+
+    // Set a timeout to detect slow networks
+    const slowNetworkTimeout = setTimeout(() => {
+      setIsSlowNetwork(true);
+    }, 5000); // 5 seconds
+
+    try {
+      const targetUrl = returnTo || '/profile';
+      const loginUrl = `/api/auth/password-login?email=${encodeURIComponent(
+        email
+      )}${targetUrl ? `&returnTo=${encodeURIComponent(targetUrl)}` : ''}`;
+      window.location.href = loginUrl;
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoading(false);
+      setIsSlowNetwork(false);
+    }
+  };
+
   // Show loading state while checking authentication
   if (isCheckingAuth || userIsLoading) {
     return (
@@ -67,6 +91,12 @@ export default function LoginPage() {
           <p className='text-gray-600'>Checking authentication...</p>
         </div>
       </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <LoadingState message='Signing you in...' isSlowNetwork={isSlowNetwork} />
     );
   }
 
