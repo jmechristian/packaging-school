@@ -55,6 +55,10 @@ export default function Document() {
           href='https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap'
           rel='stylesheet'
         ></link>
+        <meta
+          name='google-site-verification'
+          content='0J1SRWS-xIM_nHRIochuPhFVG-Yfa3lPy3Y7qoAsx8Y'
+        />
       </Head>
       <body className='flex flex-col' id='home'>
         <Main />
