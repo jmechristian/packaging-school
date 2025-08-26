@@ -6,8 +6,7 @@ export default async function handler(req, res) {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      'Api-Token':
-        '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+      'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
     },
   };
 
@@ -17,8 +16,7 @@ export default async function handler(req, res) {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         contactList: {

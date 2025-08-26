@@ -264,8 +264,7 @@ const userOptions = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    'Api-Token':
-      '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+    'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
   },
 };
 
@@ -273,8 +272,7 @@ const dealsOptions = {
   method: 'POST',
   headers: {
     accept: 'application/json',
-    'Api-Token':
-      '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+    'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
   },
   body: JSON.stringify({
     deal: {
@@ -311,8 +309,7 @@ export const createUser = async (email, firstName, lastName, phone) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         contact: {
@@ -353,8 +350,7 @@ export const createDeal = async (contact, formType) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         deal: {
@@ -386,8 +382,7 @@ export const updateDeal = async (id, formType) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         deal: {
@@ -412,8 +407,7 @@ export const createCMPMDeal = async (contact, title) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         deal: {
@@ -445,8 +439,7 @@ export const createCSPDeal = async (contact, title) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         deal: {
@@ -478,8 +471,7 @@ export const createContact = async (email, firstName, lastName) => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'Api-Token':
-          '5b711970d216e0f86172aa745b874bcd8ab60f27e791dce12137beb0533c3cd6618d1021',
+        'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
       },
       body: JSON.stringify({
         contact: {
