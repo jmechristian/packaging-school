@@ -11,11 +11,14 @@ import {
   GiAstronautHelmet,
   GiDiploma,
 } from 'react-icons/gi';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import pathComplete from '/public/pathcomplete.json';
 import { FaLinkedinIn, FaSpinner } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import { updateAWSUser } from '../../helpers/api';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const PathCompleteModal = ({ path, onClose, credential }) => {
   const { awsUser } = useSelector((state) => state.auth);

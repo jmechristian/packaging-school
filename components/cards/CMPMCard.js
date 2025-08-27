@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Lottie from 'lottie-react';
-
+import dynamic from 'next/dynamic';
 import poofAnimation from '../../public/poof.json';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const CMPMCard = () => {
   const [isHovering, setIsHovering] = useState(false);

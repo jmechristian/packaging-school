@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import loadingAnimation from '../../loading.json';
 import { AnimatePresence, motion } from 'framer-motion';
 import FadeIn from '../../helpers/FadeIn';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const Loading = () => {
   const [loading, setLoading] = useState(false);

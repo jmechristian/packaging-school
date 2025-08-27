@@ -4,8 +4,11 @@ import { TrophyIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideToast } from '../../features/navigation/navigationSlice';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import toastAnimation from '/public/toast.json';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function Toast() {
   const dispatch = useDispatch();

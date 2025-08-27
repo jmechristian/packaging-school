@@ -1,11 +1,14 @@
 import React from 'react';
 import CourseMenuWrapper from '../../../../../../components/lms/shared/courseMenu/CourseMenuWrapper';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import VideoBody from '../../../../../../components/lms/video/VideoBody';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import bonusAnimation from '../../../../../../bonus.json';
 import ActivitySteps from '../../../../../../components/lms/shared/ActivitySteps';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const Page = () => {
   const router = useRouter();

@@ -17,7 +17,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import brandingAnimation from '../../../../../src/brandingg.json';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+
+// Dynamic import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const Page = () => {
   const router = useRouter();
