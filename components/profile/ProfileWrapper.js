@@ -225,22 +225,22 @@ const ProfileWrapper = ({ children }) => {
     return calculateLevelProgress(thinkificXp + (awsUser.psXp || 0));
   }, [thinkificXp, awsUser]);
 
-  // useEffect(() => {
-  //   const updateUserXP = async () => {
-  //     if (awsUser.totalXp !== thinkificXp + (awsUser.psXp || 0)) {
-  //       await updateAWSUser({
-  //         id: awsUser.id,
-  //         totalXp: thinkificXp + (awsUser.psXp || 0),
-  //         psXp: awsUser.psXp || 0,
-  //         thinkificXp: thinkificXp,
-  //         level: userLevel.level,
-  //         xpToNextLevel: userLevel.xpNeeded,
-  //       });
-  //     }
-  //   };
+  useEffect(() => {
+    const updateUserXP = async () => {
+      if (awsUser.totalXp !== thinkificXp + (awsUser.psXp || 0)) {
+        await updateAWSUser({
+          id: awsUser.id,
+          totalXp: thinkificXp + (awsUser.psXp || 0),
+          psXp: awsUser.psXp || 0,
+          thinkificXp: thinkificXp,
+          level: userLevel.level,
+          xpToNextLevel: userLevel.xpNeeded,
+        });
+      }
+    };
 
-  //   awsUser && thinkificUser && updateUserXP();
-  // }, [thinkificUser, thinkificXp, userLevel, awsUser]);
+    awsUser && thinkificUser && updateUserXP();
+  }, [thinkificUser, thinkificXp, userLevel, awsUser]);
 
   return React.cloneElement(children, {
     awsUser,

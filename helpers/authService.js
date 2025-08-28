@@ -77,6 +77,15 @@ class AuthService {
         });
 
         awsUser = { ...newUser, userXp: newUserXp };
+      } else if (awsUser && !awsUser.userUserXpId) {
+        console.log('AuthService: Found existing AWS user but no userUserXpId');
+        // Create new userXp
+        const newUserXp = await createNewUserXp(awsUser.id, awsUser.lastLogin);
+        await updateAWSUser({
+          id: awsUser.id,
+          userUserXpId: newUserXp.id,
+        });
+        awsUser.userXp = newUserXp;
       } else {
         console.log('AuthService: Found existing AWS user');
         // Update last login and level
