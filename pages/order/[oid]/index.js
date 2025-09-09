@@ -179,7 +179,8 @@ const Order = (props) => {
                       <div className='line-clamp-2 font-raleway text-base text-[#36394d] leading-[22px]'>
                         {order.courseDescription}
                       </div>
-                      {order.type === 'SUBSCRIPTION' ? (
+                      {order.type === 'SUBSCRIPTION' ||
+                      order.courseName.includes('Subscription') ? (
                         <div className='font-raleway text-[#36394d] leading-[1.5] flex items-center justify-between'>
                           <div>Payment plan</div>
                           <div className='flex flex-col gap-0 items-end'>
@@ -227,7 +228,10 @@ const Order = (props) => {
                       <div className='py-5 border-y border-y-gray-300 font-raleway text-base text-[#36394d] leading-[1.5] flex items-center justify-between'>
                         <div>
                           Total{' '}
-                          {order.type === 'SUBSCRIPTION' ? 'due today' : ''}
+                          {order.type === 'SUBSCRIPTION' ||
+                          order.courseName.includes('Subscription')
+                            ? 'due today'
+                            : ''}
                         </div>
                         <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5] flex items-center'>
                           <span className='text-base font-[400] mr-2.5'>
