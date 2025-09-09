@@ -862,6 +862,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   achievements: [Achievement] @manyToMany(relationName: "AchievementCourses")
   wishlist: [User] @manyToMany(relationName: "UserWishlist")
   reviews: [CourseReview] @hasMany
+  partner: [Partner] @manyToMany(relationName: "PartnerCourses")
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -1414,4 +1415,50 @@ type Order @model @auth(rules: [{ allow: public }]) {
   courseDescription: String
   type: String
   paymentPlan: String
+}
+
+######### SEARCH LOGS #########
+
+type SearchLog @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  timestamp: String! @index(name: "searchLogByTimestamp", sortKeyFields: ["id"])
+  query: String!
+  results_count: Int!
+  results: [SearchResult]
+  answer: String!
+  model: String!
+  collection: String!
+  response_time_ms: Int!
+  user_rating: Int # 1-5 star rating
+  rating_comment: String # Optional user feedback
+  rating_timestamp: String # When rating was given
+  helpful: Boolean # Was the result helpful?
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type SearchResult {
+  id: String!
+  score: Float!
+  title: String!
+  link: String!
+}
+
+######### Partners #########
+
+type Partner @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  image: String
+  link: String
+  courses: [LMSCourse] @manyToMany(relationName: "PartnerCourses")
+  admins: [PartnerAdmin] @manyToMany(relationName: "PartnerAdminUsers")
+}
+
+type PartnerAdmin @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  email: String
+  password: String
+  partner: [Partner] @manyToMany(relationName: "PartnerAdminUsers")
 }

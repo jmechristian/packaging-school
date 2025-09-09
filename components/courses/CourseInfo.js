@@ -6,7 +6,7 @@ import HoverCard from '../shared/HoverCard';
 import { LuRocket } from 'react-icons/lu';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { createNewOrder } from '../../helpers/api';
+import { createNewOrder, registgerCourseClick } from '../../helpers/api';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 const CourseInfo = ({
@@ -22,6 +22,10 @@ const CourseInfo = ({
   embedid,
   partOf,
   type,
+  id,
+  location,
+  next,
+  format,
 }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
@@ -30,6 +34,7 @@ const CourseInfo = ({
 
   const orderHandler = async (type) => {
     setIsLoading(true);
+    await registgerCourseClick(id, router.asPath, location, next, format);
     const orderId = await createNewOrder({
       courseDescription: description,
       courseDiscount: 0,

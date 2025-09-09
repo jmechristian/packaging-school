@@ -12,6 +12,7 @@ import Meta from '../../components/shared/Meta';
 const Page = ({ course }) => {
   const dispatch = useDispatch();
   const { preview } = useSelector((state) => state.course_filter);
+  const { location } = useSelector((state) => state.auth);
   return (
     <>
       <Meta
@@ -20,7 +21,12 @@ const Page = ({ course }) => {
         image={course && course.seoImage}
       />
       <div className='relative py-16'>
-        <CourseMain data={course} />
+        <CourseMain
+          data={course}
+          location={location}
+          next={course.link}
+          format='COURSE'
+        />
         <CourseBottom
           category={course && course.categoryArray}
           id={course && course.id}

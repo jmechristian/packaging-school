@@ -23,6 +23,8 @@ import {
   getCPSForm,
   courseReviewsByUserID,
   getOrder,
+  getPartner,
+  listCourseClicks,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -2184,4 +2186,135 @@ export const updateThinkificUserPassword = async (id, password) => {
     body: JSON.stringify({ id, password }),
   });
   return res.json();
+};
+
+export const getPartnerById = async (id) => {
+  const res = await API.graphql({
+    query: getPartner,
+    variables: { id: id },
+  });
+  return res.data.getPartner;
+};
+
+export const getPartnerCourseClicks = async (id) => {
+  try {
+    // console.log('Starting getPartnerCourseClicks for course ID:', id);
+    let allItems = [];
+    let nextToken = null;
+
+    do {
+      // console.log('Making GraphQL request with nextToken:', nextToken);
+
+      const res = await API.graphql({
+        query: listCourseClicks,
+        variables: {
+          filter: {
+            courseID: { eq: id },
+          },
+          limit: 1000,
+          nextToken: nextToken,
+        },
+      });
+
+      // console.log('GraphQL response:', res);
+
+      const items = res.data.listCourseClicks.items || [];
+      allItems = allItems.concat(items);
+      nextToken = res.data.listCourseClicks.nextToken;
+
+      // console.log(
+      //   `Fetched ${items.length} items, total so far: ${allItems.length}`
+      // );
+    } while (nextToken);
+
+    // console.log(`Total course clicks fetched: ${allItems.length}`);
+    return allItems;
+  } catch (error) {
+    console.error('Error in getPartnerCourseClicks:', error);
+    throw error;
+  }
+};
+
+export const calculateClickStats = (courseClicks) => {
+  if (!courseClicks || courseClicks.length === 0) {
+    return {
+      totalClicks: {
+        currentPeriodClicks: 0,
+        previousPeriodClicks: 0,
+        percentageChange: 0,
+        changeType: 'no-change',
+      },
+      addToCartClicks: {
+        currentPeriodClicks: 0,
+        previousPeriodClicks: 0,
+        percentageChange: 0,
+        changeType: 'no-change',
+      },
+      courseViewClicks: {
+        currentPeriodClicks: 0,
+        previousPeriodClicks: 0,
+        percentageChange: 0,
+        changeType: 'no-change',
+      },
+    };
+  }
+
+  const now = new Date();
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+  const oneHundredEightyDaysAgo = new Date(
+    now.getTime() - 180 * 24 * 60 * 60 * 1000
+  );
+
+  // Helper function to calculate stats for a filtered set of clicks
+  const calculatePeriodStats = (filteredClicks, type = '') => {
+    const currentPeriodClicks = filteredClicks.filter((click) => {
+      const clickDate = new Date(click.createdAt);
+      return clickDate >= ninetyDaysAgo;
+    }).length;
+
+    const previousPeriodClicks = filteredClicks.filter((click) => {
+      const clickDate = new Date(click.createdAt);
+      return clickDate >= oneHundredEightyDaysAgo && clickDate < ninetyDaysAgo;
+    }).length;
+
+    let percentageChange = 0;
+    let changeType = 'no-change';
+
+    if (previousPeriodClicks > 0) {
+      percentageChange =
+        ((currentPeriodClicks - previousPeriodClicks) / previousPeriodClicks) *
+        100;
+      changeType =
+        percentageChange > 0
+          ? 'increase'
+          : percentageChange < 0
+          ? 'decrease'
+          : 'no-change';
+    } else if (currentPeriodClicks > 0) {
+      percentageChange = 100;
+      changeType = 'increase';
+    }
+
+    return {
+      currentPeriodClicks,
+      previousPeriodClicks,
+      percentageChange: Math.round(percentageChange * 100) / 100,
+      changeType,
+    };
+  };
+
+  // Filter clicks by type
+  const addToCartClicks = courseClicks.filter((click) =>
+    click.nextPath?.includes('learn.packagingschool.com')
+  );
+
+  const courseViewClicks = courseClicks.filter(
+    (click) => !click.nextPath?.includes('learn.packagingschool.com')
+  );
+
+  return {
+    totalClicks: calculatePeriodStats(courseClicks),
+    addToCartClicks: calculatePeriodStats(addToCartClicks),
+    courseViewClicks: calculatePeriodStats(courseViewClicks),
+  };
 };

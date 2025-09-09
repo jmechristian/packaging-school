@@ -4,7 +4,7 @@ import CourseInfo from './CourseInfo';
 import CourseObjectives from './CourseObjectives';
 import { motion } from 'framer-motion';
 
-const CourseMain = ({ data }) => {
+const CourseMain = ({ data, location, next, format }) => {
   return (
     data && (
       <section className='w-full h-full bg-white dark:bg-dark-dark bg-cover'>
@@ -53,6 +53,10 @@ const CourseMain = ({ data }) => {
                   subscriptionPrice={
                     data.subscriptionPrice ? data.subscriptionPrice : null
                   }
+                  id={data.id}
+                  location={location}
+                  next={next}
+                  format={format}
                 />
               </div>
               <CourseObjectives
@@ -79,6 +83,10 @@ const CourseMain = ({ data }) => {
                 partOf={data.partOf ? data.partOf : undefined}
                 seoImage={data.seoImage}
                 type={data.type}
+                id={data.id}
+                location={location}
+                next={next}
+                format={format}
               />
             </div>
           </div>

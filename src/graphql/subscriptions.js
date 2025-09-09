@@ -6223,6 +6223,9 @@ export const onCreateLearningPathCourse = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6314,6 +6317,9 @@ export const onUpdateLearningPathCourse = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6403,6 +6409,9 @@ export const onDeleteLearningPathCourse = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -9180,6 +9189,16 @@ export const onCreateLMSCourse = /* GraphQL */ `
         }
         nextToken
       }
+      partner {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -9295,6 +9314,16 @@ export const onUpdateLMSCourse = /* GraphQL */ `
         }
         nextToken
       }
+      partner {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -9407,6 +9436,16 @@ export const onDeleteLMSCourse = /* GraphQL */ `
           updatedAt
           userReviewsId
           lMSCourseReviewsId
+        }
+        nextToken
+      }
+      partner {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
         }
         nextToken
       }
@@ -13374,6 +13413,9 @@ export const onCreateCourseReview = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -13630,6 +13672,9 @@ export const onUpdateCourseReview = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -13884,6 +13929,9 @@ export const onDeleteCourseReview = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -14707,6 +14755,246 @@ export const onDeleteOrder = /* GraphQL */ `
       createdAt
       updatedAt
       userOrdersId
+    }
+  }
+`;
+export const onCreateSearchLog = /* GraphQL */ `
+  subscription OnCreateSearchLog {
+    onCreateSearchLog {
+      id
+      timestamp
+      query
+      results_count
+      results {
+        id
+        score
+        title
+        link
+      }
+      answer
+      model
+      collection
+      response_time_ms
+      user_rating
+      rating_comment
+      rating_timestamp
+      helpful
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSearchLog = /* GraphQL */ `
+  subscription OnUpdateSearchLog {
+    onUpdateSearchLog {
+      id
+      timestamp
+      query
+      results_count
+      results {
+        id
+        score
+        title
+        link
+      }
+      answer
+      model
+      collection
+      response_time_ms
+      user_rating
+      rating_comment
+      rating_timestamp
+      helpful
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSearchLog = /* GraphQL */ `
+  subscription OnDeleteSearchLog {
+    onDeleteSearchLog {
+      id
+      timestamp
+      query
+      results_count
+      results {
+        id
+        score
+        title
+        link
+      }
+      answer
+      model
+      collection
+      response_time_ms
+      user_rating
+      rating_comment
+      rating_timestamp
+      helpful
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePartner = /* GraphQL */ `
+  subscription OnCreatePartner {
+    onCreatePartner {
+      id
+      name
+      image
+      link
+      courses {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      admins {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePartner = /* GraphQL */ `
+  subscription OnUpdatePartner {
+    onUpdatePartner {
+      id
+      name
+      image
+      link
+      courses {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      admins {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePartner = /* GraphQL */ `
+  subscription OnDeletePartner {
+    onDeletePartner {
+      id
+      name
+      image
+      link
+      courses {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      admins {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePartnerAdmin = /* GraphQL */ `
+  subscription OnCreatePartnerAdmin {
+    onCreatePartnerAdmin {
+      id
+      name
+      email
+      password
+      partner {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePartnerAdmin = /* GraphQL */ `
+  subscription OnUpdatePartnerAdmin {
+    onUpdatePartnerAdmin {
+      id
+      name
+      email
+      password
+      partner {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePartnerAdmin = /* GraphQL */ `
+  subscription OnDeletePartnerAdmin {
+    onDeletePartnerAdmin {
+      id
+      name
+      email
+      password
+      partner {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -18929,6 +19217,9 @@ export const onCreateUserWishlist = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -19179,6 +19470,9 @@ export const onUpdateUserWishlist = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -19433,6 +19727,9 @@ export const onDeleteUserWishlist = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -19509,6 +19806,9 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -19589,6 +19889,9 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -19667,6 +19970,9 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -19731,6 +20037,9 @@ export const onCreateCourseLessons = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -19817,6 +20126,9 @@ export const onUpdateCourseLessons = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -19899,6 +20211,9 @@ export const onDeleteCourseLessons = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -19985,6 +20300,9 @@ export const onCreateCourseInstructors = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -20067,6 +20385,9 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -20153,6 +20474,9 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -20237,6 +20561,9 @@ export const onCreateAchievementCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -20316,6 +20643,9 @@ export const onUpdateAchievementCourses = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -20399,6 +20729,9 @@ export const onDeleteAchievementCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -20412,6 +20745,255 @@ export const onDeleteAchievementCourses = /* GraphQL */ `
         }
         coursesRequired
         users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePartnerCourses = /* GraphQL */ `
+  subscription OnCreatePartnerCourses {
+    onCreatePartnerCourses {
+      id
+      lMSCourseId
+      partnerId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePartnerCourses = /* GraphQL */ `
+  subscription OnUpdatePartnerCourses {
+    onUpdatePartnerCourses {
+      id
+      lMSCourseId
+      partnerId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePartnerCourses = /* GraphQL */ `
+  subscription OnDeletePartnerCourses {
+    onDeletePartnerCourses {
+      id
+      lMSCourseId
+      partnerId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
           nextToken
         }
         createdAt
@@ -20523,6 +21105,114 @@ export const onDeleteIndexTemplateRows = /* GraphQL */ `
         type
         content
         templates {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePartnerAdminUsers = /* GraphQL */ `
+  subscription OnCreatePartnerAdminUsers {
+    onCreatePartnerAdminUsers {
+      id
+      partnerId
+      partnerAdminId
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partnerAdmin {
+        id
+        name
+        email
+        password
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePartnerAdminUsers = /* GraphQL */ `
+  subscription OnUpdatePartnerAdminUsers {
+    onUpdatePartnerAdminUsers {
+      id
+      partnerId
+      partnerAdminId
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partnerAdmin {
+        id
+        name
+        email
+        password
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePartnerAdminUsers = /* GraphQL */ `
+  subscription OnDeletePartnerAdminUsers {
+    onDeletePartnerAdminUsers {
+      id
+      partnerId
+      partnerAdminId
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partnerAdmin {
+        id
+        name
+        email
+        password
+        partner {
           nextToken
         }
         createdAt

@@ -4869,6 +4869,9 @@ export const getLearningPathCourse = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6667,6 +6670,16 @@ export const getLMSCourse = /* GraphQL */ `
         }
         nextToken
       }
+      partner {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6729,6 +6742,9 @@ export const listLMSCourses = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -6805,6 +6821,9 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6877,6 +6896,9 @@ export const lMSCoursesBySlug = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -10150,6 +10172,9 @@ export const getCourseReview = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -11080,6 +11105,209 @@ export const ordersByUserID = /* GraphQL */ `
         createdAt
         updatedAt
         userOrdersId
+      }
+      nextToken
+    }
+  }
+`;
+export const getSearchLog = /* GraphQL */ `
+  query GetSearchLog($id: ID!) {
+    getSearchLog(id: $id) {
+      id
+      timestamp
+      query
+      results_count
+      results {
+        id
+        score
+        title
+        link
+      }
+      answer
+      model
+      collection
+      response_time_ms
+      user_rating
+      rating_comment
+      rating_timestamp
+      helpful
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSearchLogs = /* GraphQL */ `
+  query ListSearchLogs(
+    $filter: ModelSearchLogFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSearchLogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        timestamp
+        query
+        results_count
+        results {
+          id
+          score
+          title
+          link
+        }
+        answer
+        model
+        collection
+        response_time_ms
+        user_rating
+        rating_comment
+        rating_timestamp
+        helpful
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const searchLogsByTimestampAndId = /* GraphQL */ `
+  query SearchLogsByTimestampAndId(
+    $timestamp: String!
+    $id: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelSearchLogFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchLogsByTimestampAndId(
+      timestamp: $timestamp
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        timestamp
+        query
+        results_count
+        results {
+          id
+          score
+          title
+          link
+        }
+        answer
+        model
+        collection
+        response_time_ms
+        user_rating
+        rating_comment
+        rating_timestamp
+        helpful
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPartner = /* GraphQL */ `
+  query GetPartner($id: ID!) {
+    getPartner(id: $id) {
+      id
+      name
+      image
+      link
+      courses {
+        items {
+          id
+          lMSCourseId
+          partnerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      admins {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPartners = /* GraphQL */ `
+  query ListPartners(
+    $filter: ModelPartnerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPartners(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPartnerAdmin = /* GraphQL */ `
+  query GetPartnerAdmin($id: ID!) {
+    getPartnerAdmin(id: $id) {
+      id
+      name
+      email
+      password
+      partner {
+        items {
+          id
+          partnerId
+          partnerAdminId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPartnerAdmins = /* GraphQL */ `
+  query ListPartnerAdmins(
+    $filter: ModelPartnerAdminFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPartnerAdmins(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        password
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -14840,6 +15068,9 @@ export const getUserWishlist = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15210,6 +15441,9 @@ export const getCirriculumCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -15477,6 +15711,9 @@ export const getCourseLessons = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -15769,6 +16006,9 @@ export const getCourseInstructors = /* GraphQL */ `
           nextToken
         }
         reviews {
+          nextToken
+        }
+        partner {
           nextToken
         }
         createdAt
@@ -16067,6 +16307,9 @@ export const getAchievementCourses = /* GraphQL */ `
         reviews {
           nextToken
         }
+        partner {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -16293,6 +16536,285 @@ export const achievementCoursesByAchievementId = /* GraphQL */ `
     }
   }
 `;
+export const getPartnerCourses = /* GraphQL */ `
+  query GetPartnerCourses($id: ID!) {
+    getPartnerCourses(id: $id) {
+      id
+      lMSCourseId
+      partnerId
+      lMSCourse {
+        id
+        thinkificId
+        learningPaths {
+          nextToken
+        }
+        courseId
+        category
+        categoryArray
+        type
+        cirriculum {
+          nextToken
+        }
+        lmsLessons {
+          nextToken
+        }
+        instructors {
+          nextToken
+        }
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        achievements {
+          nextToken
+        }
+        wishlist {
+          nextToken
+        }
+        reviews {
+          nextToken
+        }
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPartnerCourses = /* GraphQL */ `
+  query ListPartnerCourses(
+    $filter: ModelPartnerCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPartnerCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        lMSCourseId
+        partnerId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const partnerCoursesByLMSCourseId = /* GraphQL */ `
+  query PartnerCoursesByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPartnerCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    partnerCoursesByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        partnerId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const partnerCoursesByPartnerId = /* GraphQL */ `
+  query PartnerCoursesByPartnerId(
+    $partnerId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPartnerCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    partnerCoursesByPartnerId(
+      partnerId: $partnerId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        partnerId
+        lMSCourse {
+          id
+          thinkificId
+          courseId
+          category
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          videos
+          preview
+          seoImage
+          infoSheet
+          title
+          subheadline
+          what_learned
+          objectives
+          link
+          trial_link
+          percentComplete
+          slug
+          collection
+          demo
+          partOf
+          altLink
+          shortDescription
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          callout
+          createdAt
+          updatedAt
+        }
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getIndexTemplateRows = /* GraphQL */ `
   query GetIndexTemplateRows($id: ID!) {
     getIndexTemplateRows(id: $id) {
@@ -16445,6 +16967,164 @@ export const indexTemplateRowsByIndexRowId = /* GraphQL */ `
           subhead
           type
           content
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPartnerAdminUsers = /* GraphQL */ `
+  query GetPartnerAdminUsers($id: ID!) {
+    getPartnerAdminUsers(id: $id) {
+      id
+      partnerId
+      partnerAdminId
+      partner {
+        id
+        name
+        image
+        link
+        courses {
+          nextToken
+        }
+        admins {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      partnerAdmin {
+        id
+        name
+        email
+        password
+        partner {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPartnerAdminUsers = /* GraphQL */ `
+  query ListPartnerAdminUsers(
+    $filter: ModelPartnerAdminUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPartnerAdminUsers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        partnerId
+        partnerAdminId
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        partnerAdmin {
+          id
+          name
+          email
+          password
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const partnerAdminUsersByPartnerId = /* GraphQL */ `
+  query PartnerAdminUsersByPartnerId(
+    $partnerId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPartnerAdminUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    partnerAdminUsersByPartnerId(
+      partnerId: $partnerId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        partnerId
+        partnerAdminId
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        partnerAdmin {
+          id
+          name
+          email
+          password
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const partnerAdminUsersByPartnerAdminId = /* GraphQL */ `
+  query PartnerAdminUsersByPartnerAdminId(
+    $partnerAdminId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPartnerAdminUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    partnerAdminUsersByPartnerAdminId(
+      partnerAdminId: $partnerAdminId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        partnerId
+        partnerAdminId
+        partner {
+          id
+          name
+          image
+          link
+          createdAt
+          updatedAt
+        }
+        partnerAdmin {
+          id
+          name
+          email
+          password
           createdAt
           updatedAt
         }
