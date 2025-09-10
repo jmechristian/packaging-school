@@ -72,6 +72,19 @@ const NoPassEnrollments = ({
     <div className='flex flex-col gap-4'>
       {activeEnrollments.length > 0 ? (
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-5 overflow-hidden'>
+          <div className='col-span-1 lg:!col-span-3 flex justify-center'>
+            <div
+              className='bg-slate-100 w-full p-3 rounded cursor-pointer hover:bg-slate-200 transition-colors duration-200 text-sm text-center'
+              onClick={() => {
+                navigateToThinkific(
+                  'https://learn.packagingschool.com/enrollments?role=classic',
+                  'https://learn.packagingschool.com/enrollments?role=classic'
+                );
+              }}
+            >
+              Trouble accessing your courses? Try Classic View.
+            </div>
+          </div>
           {paginatedActiveEnrollments.map((enrollment, index) => {
             const matchedCourse = courses?.find(
               (course) => course.id === enrollment.course_id.toString()
@@ -95,19 +108,6 @@ const NoPassEnrollments = ({
                 onPageChange={setCurrentActivePage}
               />
             )}
-          </div>
-          <div className='col-span-1 lg:!col-span-3 flex justify-center'>
-            <div
-              className='bg-slate-100 w-full p-3 rounded cursor-pointer hover:bg-slate-200 transition-colors duration-200 text-sm text-center'
-              onClick={() => {
-                navigateToThinkific(
-                  'https://learn.packagingschool.com/enrollments?role=classic',
-                  'https://learn.packagingschool.com/enrollments?role=classic'
-                );
-              }}
-            >
-              Trouble accessing your courses? Try Classic View.
-            </div>
           </div>
         </div>
       ) : (
