@@ -9,7 +9,7 @@ import {
 
 const URL = 'https://packagingschool.com';
 
-function generateSiteMap(lessons, courses, articles, careers) {
+function generateSiteMap(lessons, courses, careers) {
   function formatDate(date) {
     const convertedDate = new Date(date);
     const year = convertedDate.getFullYear();
@@ -156,16 +156,6 @@ function generateSiteMap(lessons, courses, articles, careers) {
              `;
            })
            .join('')}
-           ${articles
-             .map(({ slug, date }) => {
-               return `
-                <url>
-                    <loc>${`${URL}/articles/${slug}`}</loc>
-                    <lastmod>${formatDate(date)}</lastmod>
-                </url>
-              `;
-             })
-             .join('')}
            ${careers
              .map(({ slug, updatedAt }) => {
                return `
@@ -191,21 +181,21 @@ export async function getServerSideProps({ res }) {
     variables: { filter: { collection: { contains: 'null' } }, limit: 500 },
   });
 
-  const getArticles = /* GraphQL */ `
-    query MyQuery {
-      listBlogs {
-        items {
-          id
-          slug
-          title
-          content
-          date
-        }
-      }
-    }
-  `;
+  // const getArticles = /* GraphQL */ `
+  //   query MyQuery {
+  //     listBlogs {
+  //       items {
+  //         id
+  //         slug
+  //         title
+  //         content
+  //         date
+  //       }
+  //     }
+  //   }
+  // `;
 
-  const articles = await API.graphql(graphqlOperation(getArticles));
+  // const articles = await API.graphql(graphqlOperation(getArticles));
 
   const careers = await API.graphql(graphqlOperation(listCareers));
 
@@ -213,7 +203,7 @@ export async function getServerSideProps({ res }) {
   const sitemap = generateSiteMap(
     lessons.data.listLessons.items,
     courses.data.listLMSCourses.items,
-    articles.data.listBlogs.items,
+    // articles.data.listBlogs.items,
     careers.data.listCareers.items
   );
 

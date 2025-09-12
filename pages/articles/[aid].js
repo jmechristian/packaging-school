@@ -19,7 +19,7 @@ import Meta from '../../components/shared/Meta';
 const Index = ({ article }) => {
   return (
     <>
-      {/* <Head>
+      <Head>
         <title>{article.title}</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         <meta name='title' content={article.title} />
@@ -28,13 +28,13 @@ const Index = ({ article }) => {
           content='The Packaging School brings together the business, art, and science of packaging so you can lead projects, optimize supply chains, increase margins, and develop sustainable solutions.'
         />
         <meta name='keywords' content='packaging, sustainability' />
-        <meta name='robots' content='index, follow' />
-      </Head> */}
-      <Meta
+        <meta name='robots' content='noindex, nofollow' />
+      </Head>
+      {/* <Meta
         title={article.title}
         description={article.subhead}
         image={article.media}
-      />
+      /> */}
       <div className='flex flex-col gap-12 pt-12 dark:bg-dark-dark'>
         <ArticleHeader
           title={article.title}

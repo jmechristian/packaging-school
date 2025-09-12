@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import Head from 'next/head';
 import ProfileDashboard from '../../components/profile/ProfileDashboard';
 import { updateAWSUser } from '../../helpers/api';
 import { OnboardingModal } from '../../components/profile/OnboardingModal';
@@ -92,28 +93,31 @@ export default withPageAuthRequired(function Page() {
     }
   };
 
-  // Show loading until user data is ready
-  if (!isReady) {
-    return (
-      <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
-        <div className='flex flex-col items-center gap-4'>
-          <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
-          <div className='text-gray-600 font-medium'>
-            Loading your profile...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      <ProfileDashboard navigateToThinkific={navigateToThinkific} />
-      {showOnboardingModal && (
-        <OnboardingModal onClose={() => setShowOnboardingModal(false)} />
-      )}
-      {showTourModal && !showOnboardingModal && (
-        <TourModal onClose={() => closeTourModal()} />
+      <Head>
+        <meta name='robots' content='noindex, nofollow' />
+        <meta name='googlebot' content='noindex, nofollow' />
+      </Head>
+      {!isReady ? (
+        <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
+          <div className='flex flex-col items-center gap-4'>
+            <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
+            <div className='text-gray-600 font-medium'>
+              Loading your profile...
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <ProfileDashboard navigateToThinkific={navigateToThinkific} />
+          {showOnboardingModal && (
+            <OnboardingModal onClose={() => setShowOnboardingModal(false)} />
+          )}
+          {showTourModal && !showOnboardingModal && (
+            <TourModal onClose={() => closeTourModal()} />
+          )}
+        </>
       )}
     </>
   );
