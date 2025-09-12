@@ -50,7 +50,7 @@ function generateSiteMap(lessons, courses) {
              .map(({ slug, updatedAt, media, title, subhead }) => {
                return `
                 <url>
-                    <loc>${`${URL}/courses/${slug}`}</loc>
+                    <loc>${`${URL}/lessons/${slug}`}</loc>
                     <lastmod>${formatDate(updatedAt)}</lastmod>
                     <video:video>
                      <video:content_loc>${media}</video:content_loc>
