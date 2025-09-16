@@ -233,20 +233,18 @@ const Page = () => {
               'url(https://packschool.s3.us-east-1.amazonaws.com/dvi-back.png)',
           }}
         >
-          <div className='w-1/2 flex flex-col gap-5 px-16'>
-            <div className='text-4xl font-bold text- tracking-wide'>
-              Welcome!
-            </div>
+          <div className='w-1/2 flex gap-5 px-6 items-center'>
             <div className='w-[380px]'>
               <Image
                 src={
-                  'https://packschool.s3.us-east-1.amazonaws.com/dvi-logo-96.png'
+                  'https://packschool.s3.us-east-1.amazonaws.com/Church+and+Dwight_idGkwhDpFy_1.png'
                 }
-                alt='dvi-logo'
-                width={698}
-                height={134}
+                alt='church-and-dwight-logo'
+                width={800}
+                height={807}
               />
             </div>
+            <div className='text-white h2-base'>Welcome, Church & Dwight!</div>
           </div>
         </div>
         <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-[60%]'>
@@ -255,7 +253,7 @@ const Page = () => {
               width={'100%'}
               height={'100%'}
               slidesLink={
-                'https://docs.google.com/presentation/d/1dBW36ISkbHXxrFKQKt6QGflL1kF72B80WqvfMy8bcUk/edit?usp=drivesdk'
+                'https://docs.google.com/presentation/d/1Anh_TCkYQaRUomG2Bd8x5wpfpDlKy81NuMCV-buafXA/edit?usp=drivesdk'
               }
               position={1}
               showControls
