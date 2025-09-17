@@ -55,7 +55,7 @@ const LOTMCard = ({ lesson }) => {
           }}
         ></div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
-          <div className='font-semibold leading-tight text-[#fd3841] w-full h-16 mt-1 line-clamp-3  max-w-[90%]'>
+          <div className='font-semibold leading-tight text-[#bf0031] w-full h-16 mt-1 line-clamp-3  max-w-[90%]'>
             <span className='text-gray-700 leading-tight'>{lesson.title}</span>
           </div>
           <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-gray-700'>
@@ -70,7 +70,7 @@ const LOTMCard = ({ lesson }) => {
             {lesson.subhead}
           </div>
           <div
-            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
+            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#bf0031] transition-all duration-300'
             onClick={() => {
               window.open(`/lessons/${lesson.slug}`, '_blank');
             }}
@@ -227,7 +227,7 @@ const Page = () => {
 
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
         <div
-          className='bg-[#fd3841] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-cover bg-center flex items-center'
+          className='bg-[#bf0031] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-cover bg-center flex items-center'
           style={{
             backgroundImage:
               'url(https://packschool.s3.us-east-1.amazonaws.com/cd-back.png)',
@@ -309,7 +309,7 @@ const Page = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder='Search courses...'
-              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fd3841] focus:border-transparent'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#bf0031] focus:border-transparent'
             />
             <MdSearch className='absolute left-3 text-gray-400 text-xl' />
           </div>
@@ -336,7 +336,7 @@ const Page = () => {
                 }}
               ></div>
               <div className='w-full flex flex-col gap-2 px-3 py-2'>
-                <div className='font-semibold leading-tight text-[#fd3841] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+                <div className='font-semibold leading-tight text-[#bf0031] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
                   {cpsExam.courseId}{' '}
                   <span className='text-gray-700'>{cpsExam.title}</span>
                 </div>
@@ -356,7 +356,7 @@ const Page = () => {
                   {cpsExam.subheadline}
                 </div>
                 <div
-                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
+                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#bf0031] transition-all duration-300'
                   onClick={() => {
                     window.open(
                       'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=churchanddwight2025',
@@ -382,7 +382,7 @@ const Page = () => {
               value={learningOfTheMonthQuery}
               onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
               placeholder='Search courses...'
-              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fd3841] focus:border-transparent'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#bf0031] focus:border-transparent'
             />
             <MdSearch className='absolute left-3 text-gray-400 text-xl' />
           </div>
@@ -402,7 +402,7 @@ const Page = () => {
               className={`flex items-center gap-1 ${
                 currentPage === 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:text-[#fd3841]'
+                  : 'text-gray-700 hover:text-[#bf0031]'
               } transition-all duration-300`}
             >
               ←
@@ -418,7 +418,7 @@ const Page = () => {
               className={`flex items-center gap-1 ${
                 currentPage === totalPages
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:text-[#fd3841]'
+                  : 'text-gray-700 hover:text-[#bf0031]'
               } transition-all duration-300`}
             >
               →
