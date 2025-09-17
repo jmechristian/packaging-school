@@ -129,7 +129,7 @@ const CourseCard = ({ course }) => {
           />
         </div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
-          <div className='font-semibold leading-tight text-[#fd3841] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+          <div className='font-semibold leading-tight text-[#bf0031] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
             {courseData && courseData.courseId}{' '}
             <span className='text-gray-700'>
               {courseData && courseData.title}
@@ -155,7 +155,7 @@ const CourseCard = ({ course }) => {
               : courseData && courseData.subheadline}
           </div>
           <div
-            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
+            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#bf0031] transition-all duration-300'
             onClick={orderHandler}
           >
             Begin Course
@@ -178,7 +178,7 @@ const Page = () => {
       id: 2,
       question: 'What if I run into technical difficulties?',
       answer:
-        'We are happy to help at the Packaging School—email info@packagingschool.com.',
+        'We are happy to help at The Packaging School—email info@packagingschool.com.',
     },
     {
       id: 3,
@@ -316,8 +316,8 @@ const Page = () => {
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-red-100 px-3'>
-          <div className='text-gray-700 text-sm py-1.5 rounded'>
+        <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-[#bf0031] px-3'>
+          <div className='text-white py-1.5 rounded font-bold'>
             Company funds have enabled this course access —you may not enroll
             anonymously or with private email addresses
           </div>
