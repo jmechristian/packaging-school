@@ -129,7 +129,7 @@ const CourseCard = ({ course }) => {
           />
         </div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
-          <div className='font-semibold leading-tight text-[#bf0031] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+          <div className='font-semibold leading-tight text-[0.9rem] text-[#bf0031] w-full h-10 mt-1 line-clamp-3 max-w-[80%]'>
             {courseData && courseData.courseId}{' '}
             <span className='text-gray-700'>
               {courseData && courseData.title}
