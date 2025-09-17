@@ -359,7 +359,7 @@ const Page = () => {
                   className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#fd3841] transition-all duration-300'
                   onClick={() => {
                     window.open(
-                      'https://learn.packagingschool.com/enroll/235882?price_id=242074',
+                      'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=churchanddwight2025',
                       '_blank'
                     );
                   }}
