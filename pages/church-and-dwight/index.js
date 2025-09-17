@@ -227,10 +227,10 @@ const Page = () => {
 
       <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
         <div
-          className='bg-[#fd3841] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-repeat flex items-center'
+          className='bg-[#fd3841] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-cover bg-center flex items-center'
           style={{
             backgroundImage:
-              'url(https://packschool.s3.us-east-1.amazonaws.com/dvi-back.png)',
+              'url(https://packschool.s3.us-east-1.amazonaws.com/cd-back.png)',
           }}
         >
           <div className='w-1/2 flex gap-5 px-6 items-center'>
@@ -244,7 +244,9 @@ const Page = () => {
                 height={807}
               />
             </div>
-            <div className='text-white h2-base'>Welcome, Church & Dwight!</div>
+            <div className='text-white h2-base'>
+              Welcome, <span className='text-[#FFA300]'>Church & Dwight!</span>
+            </div>
           </div>
         </div>
         <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-[60%]'>
@@ -263,7 +265,7 @@ const Page = () => {
               className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
               onClick={() => {
                 window.open(
-                  'https://packschool.s3.us-east-1.amazonaws.com/4_9_25-DVI-Instructions-for-Library.pdf',
+                  'https://packschool.s3.us-east-1.amazonaws.com/C%26D+Library+Instructions.pdf',
                   '_blank'
                 );
               }}
@@ -330,7 +332,7 @@ const Page = () => {
                 className='w-full aspect-[16/9] bg-black bg-cover bg-center'
                 style={{
                   backgroundImage:
-                    'url(https://packschool.s3.us-east-1.amazonaws.com/final-exam-dvi.png)',
+                    'url(https://packschool.s3.us-east-1.amazonaws.com/cd-final-exam.png)',
                 }}
               ></div>
               <div className='w-full flex flex-col gap-2 px-3 py-2'>
