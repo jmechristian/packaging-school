@@ -11313,6 +11313,35 @@ export const listPartnerAdmins = /* GraphQL */ `
     }
   }
 `;
+export const getLibrarySurvey = /* GraphQL */ `
+  query GetLibrarySurvey($id: ID!) {
+    getLibrarySurvey(id: $id) {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLibrarySurveys = /* GraphQL */ `
+  query ListLibrarySurveys(
+    $filter: ModelLibrarySurveyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLibrarySurveys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        company
+        options
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {

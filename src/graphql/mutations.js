@@ -15934,6 +15934,48 @@ export const deletePartnerAdmin = /* GraphQL */ `
     }
   }
 `;
+export const createLibrarySurvey = /* GraphQL */ `
+  mutation CreateLibrarySurvey(
+    $input: CreateLibrarySurveyInput!
+    $condition: ModelLibrarySurveyConditionInput
+  ) {
+    createLibrarySurvey(input: $input, condition: $condition) {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLibrarySurvey = /* GraphQL */ `
+  mutation UpdateLibrarySurvey(
+    $input: UpdateLibrarySurveyInput!
+    $condition: ModelLibrarySurveyConditionInput
+  ) {
+    updateLibrarySurvey(input: $input, condition: $condition) {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLibrarySurvey = /* GraphQL */ `
+  mutation DeleteLibrarySurvey(
+    $input: DeleteLibrarySurveyInput!
+    $condition: ModelLibrarySurveyConditionInput
+  ) {
+    deleteLibrarySurvey(input: $input, condition: $condition) {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!

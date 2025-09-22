@@ -170,7 +170,7 @@ const Page = () => {
   const faqs = [
     {
       id: 1,
-      question: 'Who is my Church & Dwight contact?',
+      question: 'Who is my Schwarz Partners contact?',
       answer:
         'If you have any questions regarding curriculum, reach out to sparks@schwarzpartners.com.',
     },
@@ -187,10 +187,37 @@ const Page = () => {
         'Refer to the slide deck / PDF at the top of the page or email info@packagingschool.com.',
     },
   ];
+
+  // Course topics for the checkbox question
+  const courseTopics = [
+    'Returnable Packaging',
+    'Expendable Packaging',
+    'Packaging Distributors',
+    'Packaging Operations at OEMs',
+    'Tier 1 Packaging Operations',
+    'Transportation',
+    'HAZMAT Packaging',
+    'Sustainability in Automotive Packaging',
+    'Technology Solutions',
+    'Food Packaging Certificate: Packaging and Preservation',
+    'Temperature Assurance Packaging Fundamentals',
+    'Leveraging Human Factors in Packaging Design',
+    'Flexographic Print Fundamentals',
+    'Project Management Essentials',
+    'Pack Design Workshop',
+    'Introduction to Corrugated Design',
+    'Pressure Sensitive Labels 101',
+    'Packaging Boot Camp 101',
+    'Solidworks for Packaging Basics',
+    'IADD Diecutting Academy: Diecutting 101',
+    'IADD Diecutting Academy: Diemaking 101',
+  ];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [learningOfTheMonthQuery, setLearningOfTheMonthQuery] = useState('');
   const [learningOfTheMonths, setLearningOfTheMonths] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [checkedTopics, setCheckedTopics] = useState([]);
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -217,6 +244,30 @@ const Page = () => {
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  // Handle checkbox changes
+  const handleCheckboxChange = (topic) => {
+    setCheckedTopics((prev) => {
+      if (prev.includes(topic)) {
+        return prev.filter((item) => item !== topic);
+      } else {
+        return [...prev, topic];
+      }
+    });
+  };
+
+  // Submit function for the form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Selected topics:', checkedTopics);
+    // Here you can add your submission logic
+    // For example, send to an API endpoint
+    alert(
+      `Thank you! You selected ${
+        checkedTopics.length
+      } topics: ${checkedTopics.join(', ')}`
+    );
+  };
 
   return (
     <div className='w-full flex flex-col pt-10 pb-40'>
@@ -378,6 +429,50 @@ const Page = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* Course Topics Checkbox Question */}
+      <div className='mx-auto w-full max-w-7xl bg-white rounded-lg p-10 mt-10 border border-gray-200'>
+        <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 mb-6'>
+          Course Topic Preferences (Optional)
+        </h2>
+        <p className='text-lg text-gray-600 mb-8'>
+          What additional course topics would you like to see added to your
+          learning library?
+        </p>
+
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {courseTopics.map((topic, index) => (
+              <label
+                key={index}
+                className='flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors'
+              >
+                <input
+                  type='checkbox'
+                  checked={checkedTopics.includes(topic)}
+                  onChange={() => handleCheckboxChange(topic)}
+                  className='mt-1 h-4 w-4 text-[#37528a] focus:ring-[#37528a] border-gray-300 rounded'
+                />
+                <span className='text-sm text-gray-700 leading-relaxed'>
+                  {topic}
+                </span>
+              </label>
+            ))}
+          </div>
+
+          <div className='flex justify-between items-center pt-6 border-t border-gray-200'>
+            <div className='text-sm text-gray-500'>
+              {checkedTopics.length} topic
+              {checkedTopics.length !== 1 ? 's' : ''} selected
+            </div>
+            <button
+              type='submit'
+              className='px-6 py-2 bg-[#37528a] text-white rounded-md hover:bg-[#2a3f6b] transition-colors duration-300 font-medium'
+            >
+              Submit Preferences
+            </button>
+          </div>
+        </form>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex items-center justify-between'>

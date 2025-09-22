@@ -14998,6 +14998,39 @@ export const onDeletePartnerAdmin = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLibrarySurvey = /* GraphQL */ `
+  subscription OnCreateLibrarySurvey {
+    onCreateLibrarySurvey {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLibrarySurvey = /* GraphQL */ `
+  subscription OnUpdateLibrarySurvey {
+    onUpdateLibrarySurvey {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLibrarySurvey = /* GraphQL */ `
+  subscription OnDeleteLibrarySurvey {
+    onDeleteLibrarySurvey {
+      id
+      company
+      options
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {
