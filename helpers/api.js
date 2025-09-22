@@ -58,6 +58,7 @@ import {
   createOrder,
   createIcpfCmpmForm,
   updateIcpfCmpmForm,
+  createLibrarySurvey,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -2317,4 +2318,12 @@ export const calculateClickStats = (courseClicks) => {
     addToCartClicks: calculatePeriodStats(addToCartClicks),
     courseViewClicks: calculatePeriodStats(courseViewClicks),
   };
+};
+
+export const createNewLibrarySurvey = async (data) => {
+  const res = await API.graphql({
+    query: createLibrarySurvey,
+    variables: { input: data },
+  });
+  return res.data.createLibrarySurvey;
 };

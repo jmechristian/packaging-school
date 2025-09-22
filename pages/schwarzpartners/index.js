@@ -21,7 +21,11 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { cpsCourses, createNewOrder } from '../../helpers/api';
+import {
+  cpsCourses,
+  createNewOrder,
+  createNewLibrarySurvey,
+} from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -218,6 +222,9 @@ const Page = () => {
   const [learningOfTheMonths, setLearningOfTheMonths] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [checkedTopics, setCheckedTopics] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -257,16 +264,24 @@ const Page = () => {
   };
 
   // Submit function for the form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Selected topics:', checkedTopics);
-    // Here you can add your submission logic
-    // For example, send to an API endpoint
-    alert(
-      `Thank you! You selected ${
-        checkedTopics.length
-      } topics: ${checkedTopics.join(', ')}`
-    );
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const data = await createNewLibrarySurvey({
+        company: 'Schwarz Partners',
+        options: checkedTopics,
+      });
+      console.log('Selected topics:', data);
+      setSubmitSuccess(true);
+    } catch (error) {
+      console.error('Error submitting survey:', error);
+      setSubmitError('Failed to submit preferences. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -440,39 +455,66 @@ const Page = () => {
           learning library?
         </p>
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {courseTopics.map((topic, index) => (
-              <label
-                key={index}
-                className='flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors'
-              >
-                <input
-                  type='checkbox'
-                  checked={checkedTopics.includes(topic)}
-                  onChange={() => handleCheckboxChange(topic)}
-                  className='mt-1 h-4 w-4 text-[#37528a] focus:ring-[#37528a] border-gray-300 rounded'
-                />
-                <span className='text-sm text-gray-700 leading-relaxed'>
-                  {topic}
-                </span>
-              </label>
-            ))}
-          </div>
-
-          <div className='flex justify-between items-center pt-6 border-t border-gray-200'>
-            <div className='text-sm text-gray-500'>
-              {checkedTopics.length} topic
-              {checkedTopics.length !== 1 ? 's' : ''} selected
+        {submitSuccess ? (
+          <div className='text-center py-8'>
+            <div className='text-green-600 text-lg font-semibold mb-2'>
+              ✅ Thank you for your feedback!
             </div>
-            <button
-              type='submit'
-              className='px-6 py-2 bg-[#37528a] text-white rounded-md hover:bg-[#2a3f6b] transition-colors duration-300 font-medium'
-            >
-              Submit Preferences
-            </button>
+            <p className='text-gray-600'>
+              Your course topic preferences have been submitted successfully.
+            </p>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className='space-y-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              {courseTopics.map((topic, index) => (
+                <label
+                  key={index}
+                  className={`flex items-start space-x-3 p-2 rounded-md transition-colors ${
+                    isSubmitting
+                      ? 'cursor-not-allowed opacity-50'
+                      : 'cursor-pointer hover:bg-gray-50'
+                  }`}
+                >
+                  <input
+                    type='checkbox'
+                    checked={checkedTopics.includes(topic)}
+                    onChange={() => handleCheckboxChange(topic)}
+                    disabled={isSubmitting}
+                    className='mt-1 h-4 w-4 text-[#37528a] focus:ring-[#37528a] border-gray-300 rounded disabled:cursor-not-allowed'
+                  />
+                  <span className='text-sm text-gray-700 leading-relaxed'>
+                    {topic}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            {submitError && (
+              <div className='text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-200'>
+                {submitError}
+              </div>
+            )}
+
+            <div className='flex justify-between items-center pt-6 border-t border-gray-200'>
+              <div className='text-sm text-gray-500'>
+                {checkedTopics.length} topic
+                {checkedTopics.length !== 1 ? 's' : ''} selected
+              </div>
+              <button
+                type='submit'
+                disabled={isSubmitting}
+                className={`px-6 py-2 rounded-md transition-colors duration-300 font-medium ${
+                  isSubmitting
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-[#37528a] text-white hover:bg-[#2a3f6b]'
+                }`}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Preferences'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex items-center justify-between'>
