@@ -262,7 +262,7 @@ const Page = () => {
               width={'100%'}
               height={'100%'}
               slidesLink={
-                'https://docs.google.com/presentation/d/1Anh_TCkYQaRUomG2Bd8x5wpfpDlKy81NuMCV-buafXA/edit?usp=drivesdk'
+                'https://docs.google.com/presentation/d/1gyLpP1gIChnKlklmDvDKSwIUTzYJqgzTqYSLePLHfRs/edit?usp=drivesdk'
               }
               position={1}
               showControls
@@ -272,7 +272,7 @@ const Page = () => {
               className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
               onClick={() => {
                 window.open(
-                  'https://packschool.s3.us-east-1.amazonaws.com/C%26D+Library+Instructions.pdf',
+                  'https://packschool.s3.us-east-1.amazonaws.com/SPC-Library_C%26D.pdf',
                   '_blank'
                 );
               }}
