@@ -159,7 +159,13 @@ const Page = () => {
         setMessage('Password reset successful');
         setPassword('');
         setConfirmPassword('');
-        router.push(`/login?email=${email}`);
+        // Auto-trigger login to enable SSO
+        setTimeout(() => {
+          const loginUrl = `/api/auth/password-login?email=${encodeURIComponent(
+            email
+          )}`;
+          window.location.href = loginUrl;
+        }, 1000);
       } else {
         setError('Password reset failed');
       }
