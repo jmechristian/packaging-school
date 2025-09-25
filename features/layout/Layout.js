@@ -47,12 +47,11 @@ const Layout = ({ children }) => {
         sessionStorage.removeItem('ssoRedirectAttempted');
       }
 
-      // Only redirect if user has SSO redirect URL, hasn't completed SSO, and we're not already on profile page
+      // Only redirect if user has SSO redirect URL, hasn't completed SSO
       if (
         user.ssoRedirectUrl &&
         !sessionStorage.getItem('ssoComplete') &&
-        !sessionStorage.getItem('ssoRedirectAttempted') &&
-        router.pathname !== '/profile'
+        !sessionStorage.getItem('ssoRedirectAttempted')
       ) {
         console.log('SSO redirect detected:', user.ssoRedirectUrl);
         sessionStorage.setItem('ssoComplete', 'true');
