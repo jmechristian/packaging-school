@@ -39,8 +39,8 @@ export default handleAuth({
 
     try {
       await handleCallback(req, res, {
-        // Always redirect to profile first so our callback runs
-        returnTo: '/profile',
+        // Let the afterCallback handle the redirect
+        returnTo: null,
         afterCallback: async (req, res, session) => {
           console.log('afterCallback called for', session?.user?.email);
 
@@ -140,11 +140,24 @@ export default handleAuth({
               session.user.ssoRedirectUrl = finalDestination;
             }
 
-            return session;
+            // Handle the redirect after SSO processing
+            if (session?.user?.ssoRedirectUrl) {
+              console.log(
+                'Redirecting to SSO URL:',
+                session.user.ssoRedirectUrl
+              );
+              res.redirect(session.user.ssoRedirectUrl);
+              return;
+            } else {
+              console.log('No SSO URL found, redirecting to profile');
+              res.redirect('/profile');
+              return;
+            }
           } catch (ssoError) {
             console.error('SSO handling error:', ssoError);
             // Still return session even if SSO fails
-            return session;
+            res.redirect('/profile');
+            return;
           }
         },
       });
