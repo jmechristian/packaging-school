@@ -231,8 +231,8 @@ const Page = ({ lesson }) => {
           description={lesson.subhead}
           image={lesson.seoImage}
         />
-        <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col'>
-          <div className='w-full grid grid-cols-12 gap-10 relative'>
+        <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col px-4 lg:px-0'>
+          <div className='w-full grid grid-cols-12 gap-4 lg:gap-10 relative'>
             <div className='absolute top-0 -left-16 !hidden lg:!flex h-full w-fit'>
               <div className='flex flex-col gap-2 w-fit sticky top-32 h-screen'>
                 {isSaved ? (
@@ -287,15 +287,17 @@ const Page = ({ lesson }) => {
               </div>
             </div>
             <div className='col-span-12 lg:!col-span-9 flex flex-col gap-6 lg:gap-10'>
-              <div className='w-full flex flex-col gap-5 lg:!gap-9  max-w-4xl px-4 lg:px-0'>
+              <div className='w-full flex flex-col gap-5 lg:!gap-9 max-w-4xl'>
                 <div className='text-4xl lg:text-5xl font-medium font-oswald'>
                   {lesson.title}
                 </div>
                 <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
               </div>
               {lesson.mediaType === 'VIDEO' && (
-                <div className='max-w-7xl mx-auto object-cover w-full border-b border-b-gray-400 mb-5'>
-                  <VideoPlayer light={false} videoEmbedLink={lesson.media} />
+                <div className='w-full object-cover border-b border-b-gray-400 mb-5'>
+                  <div className='w-full h-full'>
+                    <VideoPlayer light={false} videoEmbedLink={lesson.media} />
+                  </div>
                   {lesson.videoLink && (
                     <div className='w-full py-2 flex items-center justify-center bg-base-dark'>
                       <div className='text-white font-semibold'>
@@ -321,7 +323,7 @@ const Page = ({ lesson }) => {
               )}
               <div
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
-                className='tiptap lg:text-lg px-4 lg:px-0'
+                className='tiptap lg:text-lg'
               ></div>
               {lesson.analysis && awsUser && (
                 <div className='w-full'>
@@ -329,9 +331,9 @@ const Page = ({ lesson }) => {
                 </div>
               )}
             </div>
-            <div className='col-span-12 lg:col-span-3 border-l border-l-gray-400'>
+            <div className='col-span-12 lg:col-span-3 border-l-0 lg:border-l border-l-gray-400'>
               <div className='w-full flex flex-col'>
-                <div className='flex flex-col gap-5 px-4'>
+                <div className='flex flex-col gap-5 px-4 lg:px-0'>
                   <div className='text-sm text-gray-700'>{newDate}</div>
                   {lesson.author && (
                     <div className='flex flex-col w-full gap-3 '>
@@ -343,7 +345,7 @@ const Page = ({ lesson }) => {
                     </div>
                   )}
                 </div>
-                <div className='flex flex-col gap-5 py-5 px-4'>
+                <div className='flex flex-col gap-5 py-5 px-4 lg:px-0'>
                   <div className='grid grid-cols-3 gap-2 w-fit lg:hidden'>
                     {isSaved ? (
                       <div
@@ -412,7 +414,7 @@ const Page = ({ lesson }) => {
                 </div>
               </div>
               <div className='w-full border-b border-b-gray-400 py-2'></div>
-              <div className='flex flex-col gap-5 py-5 pl-2'>
+              <div className='flex flex-col gap-5 py-5 px-4 lg:px-0'>
                 <div className='flex flex-col gap-3 bg-brand-yellow/20 dark:bg-base-mid dark:text-white px-3 py-4 lg:rounded'>
                   <div className='flex items-center gap-0'>
                     <div>
@@ -484,17 +486,19 @@ const Page = ({ lesson }) => {
               </div>
               <div className='w-full border-b border-b-gray-400 pt-2'></div>
 
-              <div className='flex flex-col pl-5 py-5 gap-3'>
+              <div className='flex flex-col py-5 gap-3 w-full px-4 lg:px-0'>
                 <div className='font-bold text-sm'>Related Lessons</div>
                 <div className='flex flex-col gap-5'>
                   {lesson.related && lesson.related.length > 0 ? (
                     lesson.related.map((cou) => (
-                      <WiredLessonCard
-                        key={cou}
-                        id={cou}
-                        external={true}
-                        reference={`/lessons/${cou}`}
-                      />
+                      <div className='w-full' key={cou}>
+                        <WiredLessonCard
+                          key={cou}
+                          id={cou}
+                          external={true}
+                          reference={`/lessons/${cou}`}
+                        />
+                      </div>
                     ))
                   ) : (
                     <></>
@@ -502,13 +506,13 @@ const Page = ({ lesson }) => {
                 </div>
               </div>
               <div className='w-full border-b border-b-gray-400 pt-2'></div>
-              <div className='flex flex-col gap-5 py-5 pl-2 mt-3'>
+              <div className='flex flex-col gap-5 py-5 mt-3 px-4 lg:px-0'>
                 <LessonSubscribe />
               </div>
             </div>
-            <div className='col-span-full'>
+            <div className='col-span-full overflow-hidden'>
               {lesson.sources && sortedSources && sortedSources.length > 0 && (
-                <div className='hidden lg:flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6  px-6 lg:px-0'>
+                <div className='hidden lg:flex flex-col gap-3 border-t border-t-black dark:border-t-white pt-6'>
                   <div className='font-bold dark:text-white'>Sources</div>
                   <div className='grid lg:grid-cols-2 dark:text-white gap-3 text-xs'>
                     <div className='flex flex-col gap-3'>
