@@ -1061,6 +1061,11 @@ const nextConfig = {
         destination: '/login',
         permanent: true,
       },
+      {
+        source: '/card',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 };
