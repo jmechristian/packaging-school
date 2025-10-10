@@ -127,10 +127,19 @@ const CourseCard = ({ course }) => {
     <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
         <div className='w-full aspect-[16/9] bg-black'>
-          <VideoPlayer
-            videoEmbedLink={courseData && courseData.preview}
-            light
-          />
+          {courseData && courseData.preview ? (
+            <VideoPlayer
+              videoEmbedLink={courseData && courseData.preview}
+              light
+            />
+          ) : (
+            <div
+              className='w-full aspect-[16/9] bg-cover bg-center'
+              style={{
+                backgroundImage: `url(${courseData && courseData.seoImage})`,
+              }}
+            ></div>
+          )}
         </div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
           <div className='font-semibold leading-tight text-[0.9rem] text-[#bf0031] w-full h-10 mt-1 line-clamp-3 max-w-[100%]'>
