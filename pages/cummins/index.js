@@ -113,6 +113,7 @@ const CourseCard = ({ course, searchQuery }) => {
       const data = await getCourseByID(course);
       setCourseData(data);
       // Check if course matches search query
+
       if (searchQuery && data) {
         const matches = data.title
           .toLowerCase()
@@ -203,7 +204,7 @@ const CourseCard = ({ course, searchQuery }) => {
                 <MdOutlineTimer className='animate-spin mr-2' /> Preparing...
               </div>
             ) : (
-              'Begin Course'
+              'Enroll in Course'
             )}
           </div>
         </div>
@@ -344,10 +345,16 @@ const Page = () => {
             packaging skills and advancing their careers.
           </div>
         </div>
-        <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-red-100 px-3'>
-          <div className='text-gray-700 text-sm py-1.5 rounded'>
-            Company funds have enabled this course access —you may not enroll
-            anonymously or with private email addresses
+        <div className='flex flex-col gap-4'>
+          {/* <div className='bg-base-brand/20 p-4 rounded-lg flex items-center justify-between w-fullmx-auto'>
+            Looking for your current enrollments? Access your learning dashboard
+            Here
+          </div> */}
+          <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-red-100 px-3'>
+            <div className='text-gray-700 text-sm py-1.5 rounded'>
+              Company funds have enabled this course access —you may not enroll
+              anonymously or with private email addresses
+            </div>
           </div>
         </div>
       </div>

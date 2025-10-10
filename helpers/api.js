@@ -75,6 +75,18 @@ export const cpsCourses = [
   'e39e127a-11bc-448d-a8c0-209b3abbfdb9',
 ];
 
+export const churchAndDwightElectives = [
+  '2a0796ab-7a60-455b-b6b2-f95697f1c338',
+  '4e32d164-d4d9-4ba2-bcc5-ce882df75b71',
+  '7dcbae38-2cf5-4d71-9266-4f11cbb0d2ff',
+  '255394df-4fa0-477d-b19a-a8e04837cdb4',
+  'add4bc7a-c161-4fae-aba7-346cb2b784fd',
+  '62fe0081-a7e4-4eff-bc36-9fa07786c91f',
+  '78349554-27bf-4a86-b2e1-211afb3fa0cf',
+  'fef1f2a6-b9b9-4619-9900-c677f91681c7',
+  '5928b3b2-dd49-4d5c-86ea-e343b7ffaa75',
+];
+
 export const cumminsLevel1 = [
   'fef1f2a6-b9b9-4619-9900-c677f91681c7',
   '86d25aa4-620b-4632-ac11-60f7bab6f3a8',

@@ -1,6 +1,5 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
-import { runThinkificSSO } from '../../../helpers/sso';
 import { getAWSUser } from '../../../helpers/api';
 
 console.log('Auth0 API route initialized');
@@ -121,6 +120,7 @@ export default handleAuth({
             // Always provide a returnTo to avoid timeout issues
             const finalDestination = returnTo || `${baseUrl}/profile`;
 
+            // Always generate SSO URL to test functionality
             try {
               const ssoUrl = await handleSSO({
                 email: session.user.email,
@@ -130,14 +130,24 @@ export default handleAuth({
                 baseUrl,
               });
               console.log('SSO redirect URL generated:', ssoUrl);
-              session.user.ssoRedirectUrl = ssoUrl;
+
+              // Only attach to session in production
+              if (process.env.NODE_ENV === 'production') {
+                session.user.ssoRedirectUrl = ssoUrl;
+              } else {
+                console.log(
+                  'Development mode: SSO URL generated but not attached to session'
+                );
+              }
             } catch (ssoError) {
               console.warn(
                 'SSO failed, using fallback redirect:',
                 ssoError.message
               );
-              // Fallback: redirect directly to final destination without SSO
-              session.user.ssoRedirectUrl = finalDestination;
+              // Only set fallback in production
+              if (process.env.NODE_ENV === 'production') {
+                session.user.ssoRedirectUrl = finalDestination;
+              }
             }
 
             return session;

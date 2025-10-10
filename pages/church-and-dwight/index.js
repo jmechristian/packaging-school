@@ -21,7 +21,11 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { cpsCourses, createNewOrder } from '../../helpers/api';
+import {
+  cpsCourses,
+  createNewOrder,
+  churchAndDwightElectives,
+} from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -129,7 +133,7 @@ const CourseCard = ({ course }) => {
           />
         </div>
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
-          <div className='font-semibold leading-tight text-[0.9rem] text-[#bf0031] w-full h-10 mt-1 line-clamp-3 max-w-[80%]'>
+          <div className='font-semibold leading-tight text-[0.9rem] text-[#bf0031] w-full h-10 mt-1 line-clamp-3 max-w-[100%]'>
             {courseData && courseData.courseId}{' '}
             <span className='text-gray-700'>
               {courseData && courseData.title}
@@ -301,7 +305,7 @@ const Page = () => {
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex items-center justify-between'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Your Courses
+            Your Packaging Science Courses
           </div>
           <div className='relative flex items-center'>
             <input
@@ -371,6 +375,34 @@ const Page = () => {
           </div>
         </div>
       </div>
+
+      {/* Electives */}
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+        <div className='w-full flex items-center justify-between'>
+          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+            Your Electives
+          </div>
+          <div className='relative flex items-center'>
+            <input
+              type='text'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder='Search courses...'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#bf0031] focus:border-transparent'
+            />
+            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+          {churchAndDwightElectives.map((course) => (
+            <CourseCard key={course} course={course} />
+          ))}
+        </div>
+      </div>
+
+      {/* Learning of the Month */}
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
         <div className='w-full flex items-center justify-between'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
