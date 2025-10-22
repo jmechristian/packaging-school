@@ -7,6 +7,9 @@ import {
   MdOutlineTimer,
   MdOutlineBook,
   MdDownloadForOffline,
+  MdLock,
+  MdCheck,
+  MdError,
 } from 'react-icons/md';
 import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
 import {
@@ -30,6 +33,28 @@ import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
+// Cookie utility functions
+const setCookie = (name, value, days) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+};
+
+const getCookie = (name) => {
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
+const deleteCookie = (name) => {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+};
+
 const cpsExam = {
   courseId: 'CPS-C13',
   title: 'CPS Final Exam',
@@ -37,6 +62,101 @@ const cpsExam = {
   hours: 10,
   lessons: 10,
   subheadline: 'Test your knowledge with our comprehensive exam.',
+};
+
+const PasswordModal = ({ isOpen, onClose, onSuccess }) => {
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    // Simulate a brief delay for better UX
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (password === 'psschwarz') {
+      onSuccess();
+    } else {
+      setError('Incorrect password. Please try again.');
+    }
+    setIsLoading(false);
+  };
+
+  const handleClose = () => {
+    setPassword('');
+    setError('');
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+      <div className='bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl'>
+        <div className='flex items-center justify-center mb-2'>
+          <MdLock className='text-[#37528a] text-4xl' />
+        </div>
+        <h2 className='text-2xl font-bold text-center text-gray-900 mb-2'>
+          Password Required
+        </h2>
+        <p className='text-gray-600 text-center mb-6'>
+          Please enter the password to access this content.
+        </p>
+
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <input
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder='Enter password'
+              className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#37528a] focus:border-transparent'
+              disabled={isLoading}
+              autoFocus
+            />
+          </div>
+
+          {error && (
+            <div className='flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-md'>
+              <MdError className='text-lg' />
+              <span className='text-sm'>{error}</span>
+            </div>
+          )}
+
+          <div className='flex gap-3'>
+            <button
+              type='button'
+              onClick={handleClose}
+              className='flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors'
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              disabled={isLoading || !password.trim()}
+              className='flex-1 px-4 py-3 bg-[#37528a] text-white rounded-lg hover:bg-[#2a3f6b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+            >
+              {isLoading ? (
+                <>
+                  <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <MdCheck className='text-lg' />
+                  Access
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 const LOTMCard = ({ lesson }) => {
@@ -171,6 +291,30 @@ const CourseCard = ({ course }) => {
 };
 
 const Page = () => {
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check for existing authentication cookie on component mount
+  useEffect(() => {
+    const authCookie = getCookie('schwarzpartners_auth');
+    if (authCookie === 'authenticated') {
+      setIsAuthenticated(true);
+      setIsPasswordModalOpen(false);
+    }
+  }, []);
+
+  const handlePasswordSuccess = () => {
+    // Set cookie for 30 days
+    setCookie('schwarzpartners_auth', 'authenticated', 30);
+    setIsAuthenticated(true);
+    setIsPasswordModalOpen(false);
+  };
+
+  const handlePasswordClose = () => {
+    // Don't allow closing without authentication
+    // This prevents users from bypassing the password
+  };
+
   const faqs = [
     {
       id: 1,
@@ -291,320 +435,345 @@ const Page = () => {
         <meta name='robots' content='noindex,nofollow' />
       </Head>
 
-      <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
-        <div
-          className='bg-[#37528a] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-cover bg-center flex items-center'
-          style={{
-            backgroundImage:
-              'url(https://packschool.s3.us-east-1.amazonaws.com/schwarz-back.png)',
-          }}
-        >
-          <div className='w-1/2 flex flex-col gap-0 pl-16'>
-            <div className='text-[#fac02f] h2-base -mb-4'>Welcome</div>
-            <div className='w-[266px]'>
-              <Image
-                src={
-                  'https://packschool.s3.us-east-1.amazonaws.com/sparks-white-color.png'
-                }
-                alt='schwarz-partners-logo'
-                width={500}
-                height={214}
-              />
-            </div>
-          </div>
-        </div>
-        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-[20%]'>
-          <div className='w-full aspect-[16/9]'>
-            <ReactGoogleSlides
-              width={'100%'}
-              height={'100%'}
-              slidesLink={
-                'https://docs.google.com/presentation/d/1_yUhjkjRwe-xtE4HPsmPgcWY2Tf8SBtieO9APsGR1fc/edit?usp=drivesdk'
-              }
-              position={1}
-              showControls
-              loop
-            />
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={handlePasswordClose}
+        onSuccess={handlePasswordSuccess}
+      />
+
+      {!isAuthenticated && (
+        <div className='w-full h-screen flex items-center justify-center bg-gray-50'></div>
+      )}
+
+      {isAuthenticated && (
+        <>
+          <div className='w-full max-w-7xl mx-auto grid grid-cols-12 items-center relative'>
             <div
-              className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
-              onClick={() => {
-                window.open(
-                  'https://packschool.s3.us-east-1.amazonaws.com/Schwarz-Partners-Library-Instructions.pdf',
-                  '_blank'
-                );
+              className='bg-[#37528a] rounded-lg h-[240px] row-span-full col-start-1 col-span-9 self-center bg-cover bg-center flex items-center'
+              style={{
+                backgroundImage:
+                  'url(https://packschool.s3.us-east-1.amazonaws.com/schwarz-back.png)',
               }}
             >
-              <div className='text-gray-700 text-sm font-semibold'>
-                Download as PDF
+              <div className='w-1/2 flex flex-col gap-0 pl-16'>
+                <div className='text-[#fac02f] h2-base -mb-4'>Welcome</div>
+                <div className='w-[266px]'>
+                  <Image
+                    src={
+                      'https://packschool.s3.us-east-1.amazonaws.com/sparks-white-color.png'
+                    }
+                    alt='schwarz-partners-logo'
+                    width={500}
+                    height={214}
+                  />
+                </div>
               </div>
-              <MdDownloadForOffline className='text-gray-700' size={20} />
             </div>
-          </div>
-        </div>
-      </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pt-8 pb-16 border-b border-gray-300'>
-        <div className='w-full flex flex-col gap-5 mt-12 lg:mt-6'>
-          <div className='max-w-xl w-full text-gray-700'>
-            Schwarz Partners is deeply committed to investing in the growth and
-            development of our employees, recognizing that continuous learning
-            is essential to innovation and long-term success.
-          </div>
-          <div className='max-w-xl w-full text-gray-700'>
-            As an extension of our SPARKS program, we are proud to partner with
-            The Packaging School to offer our packaging team access to
-            industry-leading education tailored to their unique roles and needs.
-          </div>
-          <div className='max-w-4xl w-full text-gray-700'>
-            This program is designed to support our packaging professionals at
-            every stage of their career, whether they’re building foundational
-            knowledge or exploring more specialized areas. The curriculum covers
-            essential topics including packaging materials, industrial
-            processes, design, supply chain, sustainability, and emerging
-            industry trends.
-          </div>
-          <div className='max-w-4xl w-full text-gray-700'>
-            With access to over 4,000 continuously updated learning assets, this
-            initiative empowers our team to sharpen their skills, stay ahead of
-            industry changes, become better stewards, and continue growing
-            smarter—both personally and professionally—at Schwarz Partners.
-          </div>
-        </div>
-      </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-between'>
-          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Your Courses
-          </div>
-          <div className='relative flex items-center'>
-            <input
-              type='text'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder='Search courses...'
-              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#37528a] focus:border-transparent'
-            />
-            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
-          </div>
-        </div>
-      </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-[#829fd0] px-3'>
-          <div className='text-white py-1.5 rounded font-bold'>
-            Company funds have enabled this course access —you may not enroll
-            anonymously or with private email addresses
-          </div>
-        </div>
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {cpsCourses.map((course) => (
-            <CourseCard key={course} course={course} />
-          ))}
-          <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
-            <div className='flex flex-col'>
-              <div
-                className='w-full aspect-[16/9] bg-black bg-cover bg-center'
-                style={{
-                  backgroundImage:
-                    'url(https://packschool.s3.us-east-1.amazonaws.com/sparks-final-exam.png)',
-                }}
-              ></div>
-              <div className='w-full flex flex-col gap-2 px-3 py-2'>
-                <div className='font-semibold leading-tight text-[#37528a] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
-                  {cpsExam.courseId}{' '}
-                  <span className='text-gray-700 text-[0.9rem]'>
-                    {cpsExam.title}
-                  </span>
-                </div>
-                <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
-                  <div className='flex items-center gap-1'>
-                    <div className='font-semibold line-through text-gray-400'>
-                      ${cpsExam.price}
-                    </div>
-                    <div className='font-semibold'>$0</div>
-                  </div>
-                  <div className='font-semibold flex items-center gap-1'>
-                    {cpsExam.hours}
-                    <MdOutlineTimer /> / {cpsExam.lessons} <MdOutlineBook />
-                  </div>
-                </div>
-                <div className='text-xs text-gray-700 h-20 mb-2'>
-                  {cpsExam.subheadline}
-                </div>
+            <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-[20%]'>
+              <div className='w-full aspect-[16/9]'>
+                <ReactGoogleSlides
+                  width={'100%'}
+                  height={'100%'}
+                  slidesLink={
+                    'https://docs.google.com/presentation/d/1_yUhjkjRwe-xtE4HPsmPgcWY2Tf8SBtieO9APsGR1fc/edit?usp=drivesdk'
+                  }
+                  position={1}
+                  showControls
+                  loop
+                />
                 <div
-                  className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#37528a] transition-all duration-300'
+                  className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
                   onClick={() => {
                     window.open(
-                      'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=schwarzpartners2025',
+                      'https://packschool.s3.us-east-1.amazonaws.com/Schwarz-Partners-Library-Instructions.pdf',
                       '_blank'
                     );
                   }}
                 >
-                  Begin Course
+                  <div className='text-gray-700 text-sm font-semibold'>
+                    Download as PDF
+                  </div>
+                  <MdDownloadForOffline className='text-gray-700' size={20} />
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* Course Topics Checkbox Question */}
-      <div className='mx-auto w-full max-w-7xl bg-white rounded-lg p-10 mt-10 border border-gray-200'>
-        <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 mb-6'>
-          Course Topic Preferences (Optional)
-        </h2>
-        <p className='text-lg text-gray-600 mb-8'>
-          What additional course topics would you like to see added to your
-          learning library?
-        </p>
-
-        {submitSuccess ? (
-          <div className='text-center py-8'>
-            <div className='text-green-600 text-lg font-semibold mb-2'>
-              ✅ Thank you for your feedback!
+          <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pt-8 pb-16 border-b border-gray-300'>
+            <div className='w-full flex flex-col gap-5 mt-12 lg:mt-6'>
+              <div className='max-w-xl w-full text-gray-700'>
+                Schwarz Partners is deeply committed to investing in the growth
+                and development of our employees, recognizing that continuous
+                learning is essential to innovation and long-term success.
+              </div>
+              <div className='max-w-xl w-full text-gray-700'>
+                As an extension of our SPARKS program, we are proud to partner
+                with The Packaging School to offer our packaging team access to
+                industry-leading education tailored to their unique roles and
+                needs.
+              </div>
+              <div className='max-w-4xl w-full text-gray-700'>
+                This program is designed to support our packaging professionals
+                at every stage of their career, whether they’re building
+                foundational knowledge or exploring more specialized areas. The
+                curriculum covers essential topics including packaging
+                materials, industrial processes, design, supply chain,
+                sustainability, and emerging industry trends.
+              </div>
+              <div className='max-w-4xl w-full text-gray-700'>
+                With access to over 4,000 continuously updated learning assets,
+                this initiative empowers our team to sharpen their skills, stay
+                ahead of industry changes, become better stewards, and continue
+                growing smarter—both personally and professionally—at Schwarz
+                Partners.
+              </div>
             </div>
-            <p className='text-gray-600'>
-              Your course topic preferences have been submitted successfully.
-            </p>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              {courseTopics.map((topic, index) => (
-                <label
-                  key={index}
-                  className={`flex items-start space-x-3 p-2 rounded-md transition-colors ${
-                    isSubmitting
-                      ? 'cursor-not-allowed opacity-50'
-                      : 'cursor-pointer hover:bg-gray-50'
-                  }`}
-                >
-                  <input
-                    type='checkbox'
-                    checked={checkedTopics.includes(topic)}
-                    onChange={() => handleCheckboxChange(topic)}
+          <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+            <div className='w-full flex items-center justify-between'>
+              <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+                Your Courses
+              </div>
+              <div className='relative flex items-center'>
+                <input
+                  type='text'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder='Search courses...'
+                  className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#37528a] focus:border-transparent'
+                />
+                <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+              </div>
+            </div>
+          </div>
+          <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+            <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-[#829fd0] px-3'>
+              <div className='text-white py-1.5 rounded font-bold'>
+                Company funds have enabled this course access —you may not
+                enroll anonymously or with private email addresses
+              </div>
+            </div>
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+              {cpsCourses.map((course) => (
+                <CourseCard key={course} course={course} />
+              ))}
+              <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
+                <div className='flex flex-col'>
+                  <div
+                    className='w-full aspect-[16/9] bg-black bg-cover bg-center'
+                    style={{
+                      backgroundImage:
+                        'url(https://packschool.s3.us-east-1.amazonaws.com/sparks-final-exam.png)',
+                    }}
+                  ></div>
+                  <div className='w-full flex flex-col gap-2 px-3 py-2'>
+                    <div className='font-semibold leading-tight text-[#37528a] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
+                      {cpsExam.courseId}{' '}
+                      <span className='text-gray-700 text-[0.9rem]'>
+                        {cpsExam.title}
+                      </span>
+                    </div>
+                    <div className='w-full h-7 border-y border-gray-300 flex items-center justify-between text-sm text-gray-700'>
+                      <div className='flex items-center gap-1'>
+                        <div className='font-semibold line-through text-gray-400'>
+                          ${cpsExam.price}
+                        </div>
+                        <div className='font-semibold'>$0</div>
+                      </div>
+                      <div className='font-semibold flex items-center gap-1'>
+                        {cpsExam.hours}
+                        <MdOutlineTimer /> / {cpsExam.lessons} <MdOutlineBook />
+                      </div>
+                    </div>
+                    <div className='text-xs text-gray-700 h-20 mb-2'>
+                      {cpsExam.subheadline}
+                    </div>
+                    <div
+                      className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#37528a] transition-all duration-300'
+                      onClick={() => {
+                        window.open(
+                          'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=schwarzpartners2025',
+                          '_blank'
+                        );
+                      }}
+                    >
+                      Begin Course
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Course Topics Checkbox Question */}
+          <div className='mx-auto w-full max-w-7xl bg-white rounded-lg p-10 mt-10 border border-gray-200'>
+            <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 mb-6'>
+              Course Topic Preferences (Optional)
+            </h2>
+            <p className='text-lg text-gray-600 mb-8'>
+              What additional course topics would you like to see added to your
+              learning library?
+            </p>
+
+            {submitSuccess ? (
+              <div className='text-center py-8'>
+                <div className='text-green-600 text-lg font-semibold mb-2'>
+                  ✅ Thank you for your feedback!
+                </div>
+                <p className='text-gray-600'>
+                  Your course topic preferences have been submitted
+                  successfully.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className='space-y-4'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {courseTopics.map((topic, index) => (
+                    <label
+                      key={index}
+                      className={`flex items-start space-x-3 p-2 rounded-md transition-colors ${
+                        isSubmitting
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'cursor-pointer hover:bg-gray-50'
+                      }`}
+                    >
+                      <input
+                        type='checkbox'
+                        checked={checkedTopics.includes(topic)}
+                        onChange={() => handleCheckboxChange(topic)}
+                        disabled={isSubmitting}
+                        className='mt-1 h-4 w-4 text-[#37528a] focus:ring-[#37528a] border-gray-300 rounded disabled:cursor-not-allowed'
+                      />
+                      <span className='text-sm text-gray-700 leading-relaxed'>
+                        {topic}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+                {submitError && (
+                  <div className='text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-200'>
+                    {submitError}
+                  </div>
+                )}
+
+                <div className='flex justify-between items-center pt-6 border-t border-gray-200'>
+                  <div className='text-sm text-gray-500'>
+                    {checkedTopics.length} topic
+                    {checkedTopics.length !== 1 ? 's' : ''} selected
+                  </div>
+                  <button
+                    type='submit'
                     disabled={isSubmitting}
-                    className='mt-1 h-4 w-4 text-[#37528a] focus:ring-[#37528a] border-gray-300 rounded disabled:cursor-not-allowed'
-                  />
-                  <span className='text-sm text-gray-700 leading-relaxed'>
-                    {topic}
-                  </span>
-                </label>
+                    className={`px-6 py-2 rounded-md transition-colors duration-300 font-medium ${
+                      isSubmitting
+                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                        : 'bg-[#37528a] text-white hover:bg-[#2a3f6b]'
+                    }`}
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Preferences'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+          <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+            <div className='w-full flex items-center justify-between'>
+              <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+                Your Learning of the Month
+              </div>
+              <div className='relative flex items-center'>
+                <input
+                  type='text'
+                  value={learningOfTheMonthQuery}
+                  onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
+                  placeholder='Search courses...'
+                  className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#37528a] focus:border-transparent'
+                />
+                <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+              </div>
+            </div>
+          </div>
+          <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+              {currentItems.map((lesson) => (
+                <LOTMCard key={lesson.id} lesson={lesson} />
               ))}
             </div>
-
-            {submitError && (
-              <div className='text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-200'>
-                {submitError}
+            {totalPages > 1 && (
+              <div className='flex justify-center items-center gap-4 mt-8'>
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className={`flex items-center gap-1 ${
+                    currentPage === 1
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:text-[#37528a]'
+                  } transition-all duration-300`}
+                >
+                  ←
+                </button>
+                <span className='text-gray-700'>
+                  {currentPage} / {totalPages}
+                </span>
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className={`flex items-center gap-1 ${
+                    currentPage === totalPages
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:text-[#37528a]'
+                  } transition-all duration-300`}
+                >
+                  →
+                </button>
               </div>
             )}
-
-            <div className='flex justify-between items-center pt-6 border-t border-gray-200'>
-              <div className='text-sm text-gray-500'>
-                {checkedTopics.length} topic
-                {checkedTopics.length !== 1 ? 's' : ''} selected
-              </div>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                className={`px-6 py-2 rounded-md transition-colors duration-300 font-medium ${
-                  isSubmitting
-                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                    : 'bg-[#37528a] text-white hover:bg-[#2a3f6b]'
-                }`}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Preferences'}
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
-        <div className='w-full flex items-center justify-between'>
-          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-            Your Learning of the Month
           </div>
-          <div className='relative flex items-center'>
-            <input
-              type='text'
-              value={learningOfTheMonthQuery}
-              onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
-              placeholder='Search courses...'
-              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#37528a] focus:border-transparent'
-            />
-            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
+          <div className='mx-auto divide-y divide-gray-900/10 w-full max-w-7xl bg-[#f4f4f5] rounded-lg p-10 mt-10'>
+            <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>
+              Frequently asked questions
+            </h2>
+            <dl className='mt-10 space-y-6 divide-y divide-gray-900/10'>
+              {faqs.map((faq) => (
+                <Disclosure as='div' key={faq.question} className='pt-6'>
+                  {({ open }) => (
+                    <>
+                      <dt>
+                        <Disclosure.Button className='flex w-full items-start justify-between text-left text-gray-900'>
+                          <span className='text-base font-semibold leading-7'>
+                            {faq.question}
+                          </span>
+                          <span className='ml-6 flex h-7 items-center'>
+                            {open ? (
+                              <MinusIcon
+                                className='h-6 w-6'
+                                aria-hidden='true'
+                              />
+                            ) : (
+                              <PlusIcon
+                                className='h-6 w-6'
+                                aria-hidden='true'
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </dt>
+                      <Disclosure.Panel as='dd' className='mt-2 pr-12'>
+                        <p className='text-base leading-7 text-gray-600'>
+                          {faq.answer}
+                        </p>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              ))}
+            </dl>
           </div>
-        </div>
-      </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {currentItems.map((lesson) => (
-            <LOTMCard key={lesson.id} lesson={lesson} />
-          ))}
-        </div>
-        {totalPages > 1 && (
-          <div className='flex justify-center items-center gap-4 mt-8'>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className={`flex items-center gap-1 ${
-                currentPage === 1
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:text-[#37528a]'
-              } transition-all duration-300`}
-            >
-              ←
-            </button>
-            <span className='text-gray-700'>
-              {currentPage} / {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className={`flex items-center gap-1 ${
-                currentPage === totalPages
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:text-[#37528a]'
-              } transition-all duration-300`}
-            >
-              →
-            </button>
-          </div>
-        )}
-      </div>
-      <div className='mx-auto divide-y divide-gray-900/10 w-full max-w-7xl bg-[#f4f4f5] rounded-lg p-10 mt-10'>
-        <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>
-          Frequently asked questions
-        </h2>
-        <dl className='mt-10 space-y-6 divide-y divide-gray-900/10'>
-          {faqs.map((faq) => (
-            <Disclosure as='div' key={faq.question} className='pt-6'>
-              {({ open }) => (
-                <>
-                  <dt>
-                    <Disclosure.Button className='flex w-full items-start justify-between text-left text-gray-900'>
-                      <span className='text-base font-semibold leading-7'>
-                        {faq.question}
-                      </span>
-                      <span className='ml-6 flex h-7 items-center'>
-                        {open ? (
-                          <MinusIcon className='h-6 w-6' aria-hidden='true' />
-                        ) : (
-                          <PlusIcon className='h-6 w-6' aria-hidden='true' />
-                        )}
-                      </span>
-                    </Disclosure.Button>
-                  </dt>
-                  <Disclosure.Panel as='dd' className='mt-2 pr-12'>
-                    <p className='text-base leading-7 text-gray-600'>
-                      {faq.answer}
-                    </p>
-                  </Disclosure.Panel>
-                </>
-              )}
-            </Disclosure>
-          ))}
-        </dl>
-      </div>
+        </>
+      )}
     </div>
   );
 };
