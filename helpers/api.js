@@ -25,6 +25,7 @@ import {
   getOrder,
   getPartner,
   listCourseClicks,
+  listTestimonials,
 } from '../src/graphql/queries';
 import {
   createClick,
