@@ -823,21 +823,10 @@ const EventPage = ({ event }) => {
   );
 };
 
-export async function getStaticPaths() {
-  const events = await getAllEvents();
-  const paths = events.map((event) => ({
-    params: { slug: event.slug },
-  }));
+export async function getServerSideProps() {
+  const event = await getEventBySlug('aps-2024');
 
-  return { paths, fallback: true };
-}
-
-export async function getStaticProps({ params }) {
-  const { slug } = params;
-
-  const event = await getEventBySlug(slug);
-
-  return { props: { event: event.items[0] }, revalidate: 10 };
+  return { props: { event: event.items[0] } };
 }
 
 export default EventPage;
