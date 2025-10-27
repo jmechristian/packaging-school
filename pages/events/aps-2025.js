@@ -347,7 +347,7 @@ const EventPage = ({ event }) => {
             description={event.description}
             image={event.hero}
           />
-          <div className='max-w-7xl mx-auto flex flex-col py-10 lg:!py-20 relative'>
+          <div className='max-w-7xl mx-auto flex flex-col py-10 relative'>
             {/*  LOGIN MODAL */}
             {isUnlocking && (
               <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
