@@ -494,6 +494,13 @@ export const registerEventClick = async (data) => {
   return res.data.createEventClick;
 };
 
+export const getAllTestimonials = async () => {
+  const res = await API.graphql({
+    query: listTestimonials,
+  });
+  return res.data.listTestimonials.items;
+};
+
 export const getAuthors = async (id) => {
   const items = await API.graphql({
     query: getAuthor,
