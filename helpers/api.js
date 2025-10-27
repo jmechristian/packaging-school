@@ -475,6 +475,25 @@ export const registerClick = async (
   });
 };
 
+export const registerEventClick = async (data) => {
+  const res = await API.graphql({
+    query: createEventClick,
+    variables: {
+      input: {
+        country: data.country,
+        email: data.email,
+        eventTemplateClicksId: data.eventTemplateClicksId,
+        ipAddress: data.ipAddress,
+        object: data.object,
+        objectId: data.objectId,
+        page: data.page,
+        type: data.type,
+      },
+    },
+  });
+  return res.data.createEventClick;
+};
+
 export const getAuthors = async (id) => {
   const items = await API.graphql({
     query: getAuthor,
