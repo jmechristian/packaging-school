@@ -330,7 +330,6 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   company: APSCompany @belongsTo
   jobTitle: String
   attendeeType: String
-  tableNumber: Int
   termsAccepted: Boolean
   interests: [String]
   otherInterest: String
@@ -374,6 +373,38 @@ type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
   aristoStatus: String
   aristoTransportation: String
   bio: String
+  seatingChartRegistrant: APS2025SeatingChartRegistrant @hasOne
+}
+
+type APS2025SeatingChartRegistrant @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  category: String
+  firstName: String
+  lastName: String
+  company: String
+  email: String @index(name: "seatByEmail")
+  role: String
+  tableNumber: Int
+  notes: String
+  seatingChartID: ID @index(name: "seatByChart")
+  seatingChart: APS2025SeatingChart @belongsTo(fields: ["seatingChartID"])
+  registrantID: ID @index(name: "seatByRegistrant")
+  registrant: APSRegistrant2025 @belongsTo(fields: ["registrantID"])
+}
+
+type APS2025SeatingChart @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  registrants: [APS2025SeatingChartRegistrant]
+    @hasMany(indexName: "seatByChart", fields: ["id"])
+}
+
+type APS2025MediaItem @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  url: String!
+  type: String!
+  caption: String
+  uploadedBy: String
 }
 
 type APSCode2025 @model @auth(rules: [{ allow: public }]) {

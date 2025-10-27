@@ -1493,7 +1493,6 @@ export const getAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
-          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1540,6 +1539,7 @@ export const getAPSCompany = /* GraphQL */ `
           updatedAt
           aPSCompanyApsRegistrantsId
           aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
         }
         nextToken
       }
@@ -1553,7 +1553,6 @@ export const getAPSCompany = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
-          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -1600,6 +1599,7 @@ export const getAPSCompany = /* GraphQL */ `
           updatedAt
           aPSCompanyApsRegistrantsId
           aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
         }
         nextToken
       }
@@ -1817,7 +1817,6 @@ export const getAPSRegistrant2025 = /* GraphQL */ `
       }
       jobTitle
       attendeeType
-      tableNumber
       termsAccepted
       interests
       otherInterest
@@ -1870,10 +1869,87 @@ export const getAPSRegistrant2025 = /* GraphQL */ `
       aristoStatus
       aristoTransportation
       bio
+      seatingChartRegistrant {
+        id
+        category
+        firstName
+        lastName
+        company
+        email
+        role
+        tableNumber
+        notes
+        seatingChartID
+        seatingChart {
+          id
+          createdAt
+          updatedAt
+        }
+        registrantID
+        registrant {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
       aPSCompanyApsRegistrantsId
       aPSCompanyRegistrantsId
+      aPSRegistrant2025SeatingChartRegistrantId
     }
   }
 `;
@@ -1904,7 +1980,6 @@ export const listAPSRegistrant2025s = /* GraphQL */ `
         }
         jobTitle
         attendeeType
-        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -1950,10 +2025,26 @@ export const listAPSRegistrant2025s = /* GraphQL */ `
         aristoStatus
         aristoTransportation
         bio
+        seatingChartRegistrant {
+          id
+          category
+          firstName
+          lastName
+          company
+          email
+          role
+          tableNumber
+          notes
+          seatingChartID
+          registrantID
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
         aPSCompanyRegistrantsId
+        aPSRegistrant2025SeatingChartRegistrantId
       }
       nextToken
     }
@@ -1990,7 +2081,6 @@ export const aPSRegistrant2025sByEmail = /* GraphQL */ `
         }
         jobTitle
         attendeeType
-        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -2036,10 +2126,600 @@ export const aPSRegistrant2025sByEmail = /* GraphQL */ `
         aristoStatus
         aristoTransportation
         bio
+        seatingChartRegistrant {
+          id
+          category
+          firstName
+          lastName
+          company
+          email
+          role
+          tableNumber
+          notes
+          seatingChartID
+          registrantID
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
         aPSCompanyRegistrantsId
+        aPSRegistrant2025SeatingChartRegistrantId
+      }
+      nextToken
+    }
+  }
+`;
+export const getAPS2025SeatingChartRegistrant = /* GraphQL */ `
+  query GetAPS2025SeatingChartRegistrant($id: ID!) {
+    getAPS2025SeatingChartRegistrant(id: $id) {
+      id
+      category
+      firstName
+      lastName
+      company
+      email
+      role
+      tableNumber
+      notes
+      seatingChartID
+      seatingChart {
+        id
+        registrants {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      registrantID
+      registrant {
+        id
+        firstName
+        lastName
+        email
+        phone
+        company {
+          name
+          email
+          type
+          id
+          createdAt
+          updatedAt
+        }
+        jobTitle
+        attendeeType
+        termsAccepted
+        interests
+        otherInterest
+        speedNetworking
+        speedNetworkingStatus
+        billingAddressFirstName
+        billingAddressLastName
+        billingAddressEmail
+        billingAddressPhone
+        billingAddressStreet
+        billingAddressCity
+        billingAddressState
+        billingAddressZip
+        sameAsAttendee
+        speakerTopic
+        learningObjectives
+        totalAmount
+        discountCode
+        status
+        addOns {
+          nextToken
+        }
+        morrisetteTransportation
+        morrisetteStatus
+        paymentConfirmation
+        registrationEmailSent
+        registrationEmailSentDate
+        registrationEmailReceived
+        registrationEmailReceivedDate
+        welcomeEmailSent
+        welcomeEmailSentDate
+        welcomeEmailReceived
+        welcomeEmailReceivedDate
+        paymentMethod
+        paymentLast4
+        approvedAt
+        headshot
+        presentation
+        presentationTitle
+        presentationSummary
+        magnaStatus
+        magnaTransportation
+        aristoStatus
+        aristoTransportation
+        bio
+        seatingChartRegistrant {
+          id
+          category
+          firstName
+          lastName
+          company
+          email
+          role
+          tableNumber
+          notes
+          seatingChartID
+          registrantID
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        aPSCompanyApsRegistrantsId
+        aPSCompanyRegistrantsId
+        aPSRegistrant2025SeatingChartRegistrantId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAPS2025SeatingChartRegistrants = /* GraphQL */ `
+  query ListAPS2025SeatingChartRegistrants(
+    $filter: ModelAPS2025SeatingChartRegistrantFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAPS2025SeatingChartRegistrants(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        category
+        firstName
+        lastName
+        company
+        email
+        role
+        tableNumber
+        notes
+        seatingChartID
+        seatingChart {
+          id
+          createdAt
+          updatedAt
+        }
+        registrantID
+        registrant {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const aPS2025SeatingChartRegistrantsByEmail = /* GraphQL */ `
+  query APS2025SeatingChartRegistrantsByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAPS2025SeatingChartRegistrantFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    aPS2025SeatingChartRegistrantsByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        category
+        firstName
+        lastName
+        company
+        email
+        role
+        tableNumber
+        notes
+        seatingChartID
+        seatingChart {
+          id
+          createdAt
+          updatedAt
+        }
+        registrantID
+        registrant {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const aPS2025SeatingChartRegistrantsBySeatingChartID = /* GraphQL */ `
+  query APS2025SeatingChartRegistrantsBySeatingChartID(
+    $seatingChartID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAPS2025SeatingChartRegistrantFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    aPS2025SeatingChartRegistrantsBySeatingChartID(
+      seatingChartID: $seatingChartID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        category
+        firstName
+        lastName
+        company
+        email
+        role
+        tableNumber
+        notes
+        seatingChartID
+        seatingChart {
+          id
+          createdAt
+          updatedAt
+        }
+        registrantID
+        registrant {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const aPS2025SeatingChartRegistrantsByRegistrantID = /* GraphQL */ `
+  query APS2025SeatingChartRegistrantsByRegistrantID(
+    $registrantID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAPS2025SeatingChartRegistrantFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    aPS2025SeatingChartRegistrantsByRegistrantID(
+      registrantID: $registrantID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        category
+        firstName
+        lastName
+        company
+        email
+        role
+        tableNumber
+        notes
+        seatingChartID
+        seatingChart {
+          id
+          createdAt
+          updatedAt
+        }
+        registrantID
+        registrant {
+          id
+          firstName
+          lastName
+          email
+          phone
+          jobTitle
+          attendeeType
+          termsAccepted
+          interests
+          otherInterest
+          speedNetworking
+          speedNetworkingStatus
+          billingAddressFirstName
+          billingAddressLastName
+          billingAddressEmail
+          billingAddressPhone
+          billingAddressStreet
+          billingAddressCity
+          billingAddressState
+          billingAddressZip
+          sameAsAttendee
+          speakerTopic
+          learningObjectives
+          totalAmount
+          discountCode
+          status
+          morrisetteTransportation
+          morrisetteStatus
+          paymentConfirmation
+          registrationEmailSent
+          registrationEmailSentDate
+          registrationEmailReceived
+          registrationEmailReceivedDate
+          welcomeEmailSent
+          welcomeEmailSentDate
+          welcomeEmailReceived
+          welcomeEmailReceivedDate
+          paymentMethod
+          paymentLast4
+          approvedAt
+          headshot
+          presentation
+          presentationTitle
+          presentationSummary
+          magnaStatus
+          magnaTransportation
+          aristoStatus
+          aristoTransportation
+          bio
+          createdAt
+          updatedAt
+          aPSCompanyApsRegistrantsId
+          aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAPS2025SeatingChart = /* GraphQL */ `
+  query GetAPS2025SeatingChart($id: ID!) {
+    getAPS2025SeatingChart(id: $id) {
+      id
+      registrants {
+        items {
+          id
+          category
+          firstName
+          lastName
+          company
+          email
+          role
+          tableNumber
+          notes
+          seatingChartID
+          registrantID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAPS2025SeatingCharts = /* GraphQL */ `
+  query ListAPS2025SeatingCharts(
+    $filter: ModelAPS2025SeatingChartFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAPS2025SeatingCharts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        registrants {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAPS2025MediaItem = /* GraphQL */ `
+  query GetAPS2025MediaItem($id: ID!) {
+    getAPS2025MediaItem(id: $id) {
+      id
+      title
+      url
+      type
+      caption
+      uploadedBy
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAPS2025MediaItems = /* GraphQL */ `
+  query ListAPS2025MediaItems(
+    $filter: ModelAPS2025MediaItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAPS2025MediaItems(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        url
+        type
+        caption
+        uploadedBy
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -13619,7 +14299,6 @@ export const getApsRegistrantAddOns25 = /* GraphQL */ `
         }
         jobTitle
         attendeeType
-        tableNumber
         termsAccepted
         interests
         otherInterest
@@ -13665,10 +14344,26 @@ export const getApsRegistrantAddOns25 = /* GraphQL */ `
         aristoStatus
         aristoTransportation
         bio
+        seatingChartRegistrant {
+          id
+          category
+          firstName
+          lastName
+          company
+          email
+          role
+          tableNumber
+          notes
+          seatingChartID
+          registrantID
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
         aPSCompanyApsRegistrantsId
         aPSCompanyRegistrantsId
+        aPSRegistrant2025SeatingChartRegistrantId
       }
       createdAt
       updatedAt
@@ -13713,7 +14408,6 @@ export const listApsRegistrantAddOns25s = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
-          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -13760,6 +14454,7 @@ export const listApsRegistrantAddOns25s = /* GraphQL */ `
           updatedAt
           aPSCompanyApsRegistrantsId
           aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
         }
         createdAt
         updatedAt
@@ -13810,7 +14505,6 @@ export const apsRegistrantAddOns25sByAPSAddOn2025Id = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
-          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -13857,6 +14551,7 @@ export const apsRegistrantAddOns25sByAPSAddOn2025Id = /* GraphQL */ `
           updatedAt
           aPSCompanyApsRegistrantsId
           aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
         }
         createdAt
         updatedAt
@@ -13907,7 +14602,6 @@ export const apsRegistrantAddOns25sByAPSRegistrant2025Id = /* GraphQL */ `
           phone
           jobTitle
           attendeeType
-          tableNumber
           termsAccepted
           interests
           otherInterest
@@ -13954,6 +14648,7 @@ export const apsRegistrantAddOns25sByAPSRegistrant2025Id = /* GraphQL */ `
           updatedAt
           aPSCompanyApsRegistrantsId
           aPSCompanyRegistrantsId
+          aPSRegistrant2025SeatingChartRegistrantId
         }
         createdAt
         updatedAt
