@@ -8,7 +8,7 @@ import {
   getAllEvents,
   getEventBySlug,
   uploadUserEventPhoto,
-  uploadToAPS3,
+  uploadToAPS25,
   registerEventClick,
   sendAPSRecoveryEmail,
 } from '../../helpers/api';
@@ -33,7 +33,7 @@ import APSImageGallery from '../../components/shared/APSImageGallery';
 import APSAgenda from '../../components/shared/APSAgenda';
 import Meta from '../../components/shared/Meta';
 import { presentations } from '../../data/presentations';
-import { sessionData } from '../../data/sessionData';
+import { sessionData25 } from '../../data/sessionData25';
 import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookie';
@@ -160,9 +160,9 @@ const EventPage = ({ event }) => {
   const [isPasswordSending, setIsPasswordSending] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
 
-  const dayOne = sessionData.filter((s) => s.date === '2024-10-21');
-  const dayTwo = sessionData.filter((s) => s.date === '2024-10-22');
-  const dayThree = sessionData.filter((s) => s.date === '2024-10-23');
+  const dayOne = sessionData25.filter((s) => s.date === '2025-10-15');
+  const dayTwo = sessionData25.filter((s) => s.date === '2025-10-16');
+  const dayThree = sessionData25.filter((s) => s.date === '2025-10-17');
 
   useEffect(() => {
     const mappedImages =
@@ -195,7 +195,7 @@ const EventPage = ({ event }) => {
   };
 
   const validatePasswordHandler = async () => {
-    if (isPassword.toLowerCase() === 'autopack2024') {
+    if (isPassword.toLowerCase() === 'autopack2025') {
       // Set cookie to expire in 30 days
       Cookies.set('aps_user_email', isUser, { expires: 30 });
 
@@ -293,7 +293,7 @@ const EventPage = ({ event }) => {
       //   )}KB`
       // );
 
-      const photoUrl = await uploadToAPS3(resizedImage.file);
+      const photoUrl = await uploadToAPS25(resizedImage.file);
       if (photoUrl) {
         setIsUploadedPhoto(photoUrl);
       }
@@ -540,9 +540,9 @@ const EventPage = ({ event }) => {
                       </div>
                       <div className='flex flex-col '>
                         <span className='font-semibold '>
-                          October 21, 2024 -
+                          October 15, 2025 -
                         </span>
-                        <span className='font-semibold'>October 23, 2024</span>
+                        <span className='font-semibold'>October 17, 2025</span>
                       </div>
                     </div>
                     <div className='flex items-center gap-2'>
@@ -646,7 +646,7 @@ const EventPage = ({ event }) => {
                 }}
               />
               {/* PRESENTATIONS */}
-              <div id='presentations' className='scroll-mt-20'>
+              {/* <div id='presentations' className='scroll-mt-20'>
                 <div className='flex flex-col gap-8 md:gap-10'>
                   <APSPresentations
                     presentations={presentations}
@@ -656,7 +656,7 @@ const EventPage = ({ event }) => {
                     user={isUser}
                   />
                 </div>
-              </div>
+              </div> */}
 
               {/* AGENDA */}
               <div
@@ -823,21 +823,19 @@ const EventPage = ({ event }) => {
   );
 };
 
-export async function getStaticPaths() {
-  const events = await getAllEvents();
-  const paths = events.map((event) => ({
-    params: { slug: event.slug },
-  }));
+// export async function getStaticPaths() {
+//   const events = await getAllEvents();
+//   const paths = events.map((event) => ({
+//     params: { slug: event.slug },
+//   }));
 
-  return { paths, fallback: true };
-}
+//   return { paths, fallback: true };
+// }
 
-export async function getStaticProps({ params }) {
-  const { slug } = params;
+export async function getServerSideProps({ params }) {
+  const event = await getEventBySlug('aps-2025');
 
-  const event = await getEventBySlug(slug);
-
-  return { props: { event: event.items[0] }, revalidate: 10 };
+  return { props: { event: event.items[0] } };
 }
 
 export default EventPage;

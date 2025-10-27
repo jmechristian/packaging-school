@@ -737,23 +737,41 @@ export const uploadToAPS3 = async (file) => {
   }
 };
 
-export const registerEventClick = async (data) => {
-  const res = await API.graphql({
-    query: createEventClick,
-    variables: {
-      input: {
-        country: data.country,
-        email: data.email,
-        eventTemplateClicksId: data.eventTemplateClicksId,
-        ipAddress: data.ipAddress,
-        object: data.object,
-        objectId: data.objectId,
-        page: data.page,
-        type: data.type,
-      },
-    },
-  });
-  return res.data.createEventClick;
+export const uploadToAPS25 = async (file) => {
+  if (!file) return;
+
+  try {
+    // Sanitize the filename to make it URL-safe
+    const sanitizeFilename = (filename) => {
+      const lastDot = filename.lastIndexOf('.');
+      const name = lastDot > 0 ? filename.substring(0, lastDot) : filename;
+      const ext = lastDot > 0 ? filename.substring(lastDot) : '';
+
+      // Remove or replace special characters and spaces
+      const sanitized = name
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/[()@!#$%^&*+=\[\]{}|\\:;"'<>,.?/~`]/g, '') // Remove special characters
+        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+      return sanitized + ext.toLowerCase();
+    };
+
+    const sanitizedFilename = sanitizeFilename(file.name);
+    const fileName = `aps-2025/user-event-photos/${sanitizedFilename}`;
+
+    const res = await Storage.put(fileName, file, {
+      contentType: file.type,
+      resumable: true,
+    });
+
+    const photoUrl = `https://packmedia54032-staging.s3.us-east-1.amazonaws.com/public/${res.params.Key}`;
+
+    return photoUrl;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
 };
 
 export const sendAPSRecoveryEmail = async (email) => {
