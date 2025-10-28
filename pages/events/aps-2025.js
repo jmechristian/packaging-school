@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import Image from 'next/legacy/image';
+import Link from 'next/link';
 import {
   getAllEvents,
   getEventBySlug,
@@ -11,6 +12,10 @@ import {
   uploadToAPS25,
   registerEventClick,
   sendAPSRecoveryEmail,
+  getAllCertificates,
+  registerCertificateClick,
+  createNewOrder,
+  getDeviceType,
 } from '../../helpers/api';
 import {
   MdCalendarMonth,
@@ -22,11 +27,7 @@ import {
   MdCheckCircle,
   MdError,
 } from 'react-icons/md';
-import {
-  BrutalButton,
-  CertCallout,
-  H2,
-} from '@jmechristian/ps-component-library';
+import { BrutalButton, CertCard, H2 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
 import APSPresentations from '../../components/shared/APSPresentations';
 import APSImageGallery from '../../components/shared/APSImageGallery';
@@ -37,6 +38,7 @@ import { sessionData25 } from '../../data/sessionData25';
 import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookie';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
 
@@ -138,7 +140,9 @@ const dataURLtoFile = (dataurl, filename) => {
 
 const EventPage = ({ event }) => {
   const router = useRouter();
-  const { location } = useSelector((state) => state.auth);
+  const { location, awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const deviceType = getDeviceType();
   const [isUser, setIsUser] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isPassword, setIsPassword] = useState('');
@@ -159,10 +163,29 @@ const EventPage = ({ event }) => {
   const [isUploadedPhoto, setIsUploadedPhoto] = useState(null);
   const [isPasswordSending, setIsPasswordSending] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [certificates, setCertificates] = useState([]);
+
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      const certificates = await getAllCertificates();
+      setCertificates(certificates);
+    };
+    fetchCertificates();
+  }, []);
 
   const dayOne = sessionData25.filter((s) => s.date === '2025-10-15');
   const dayTwo = sessionData25.filter((s) => s.date === '2025-10-16');
   const dayThree = sessionData25.filter((s) => s.date === '2025-10-17');
+
+  const certPoints = [
+    'Automotive packaging overview',
+    'Returnable packaging',
+    'Expendable packaging',
+    'Packaging distributors',
+    'Packaging operations at OEMs/Tier 1s',
+    'Transportation',
+    'Hazmat Packaging',
+  ];
 
   useEffect(() => {
     const mappedImages =
@@ -338,6 +361,62 @@ const EventPage = ({ event }) => {
     setIsLocked(true);
   };
 
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription: cert.description,
+      courseDiscount: 0,
+      courseImage: cert.seoImage,
+      courseName: cert.title,
+      courseLink: `${cert.purchaseLink}`,
+      total: cert.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${cert.purchaseLink}`, `${cert.purchaseLink}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
+
+  const handleCardClick = async (
+    cert,
+    abbreviation,
+    type,
+    link,
+    applicationLink
+  ) => {
+    await registerCertificateClick({
+      country: location.country,
+      ipAddress: location.ipAddress,
+      device: deviceType,
+      object: abbreviation,
+      page: '/certifications',
+      type: type,
+    });
+
+    if (type === 'CERTIFICATE-VIEW') {
+      router.push(link);
+    } else if (type === 'CERTIFICATE-APPLY') {
+      if (abbreviation === 'CPS' || abbreviation === 'CMPM') {
+        router.push(applicationLink);
+      } else {
+        orderHandler({
+          subheadline: cert.description,
+          seoImage: cert.seoImage,
+          title: cert.title,
+          link: `${cert.applicationLink}`,
+          price: cert.price,
+          total: cert.price,
+        });
+      }
+    } else {
+      router.push(link);
+    }
+  };
+
   return (
     <>
       {event ? (
@@ -347,7 +426,7 @@ const EventPage = ({ event }) => {
             description={event.description}
             image={event.hero}
           />
-          <div className='max-w-7xl mx-auto flex flex-col py-10 relative'>
+          <div className='max-w-7xl mx-auto flex flex-col py-20 relative'>
             {/*  LOGIN MODAL */}
             {isUnlocking && (
               <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
@@ -563,7 +642,7 @@ const EventPage = ({ event }) => {
                 </div>
               </div>
             </div>
-            <div className='sticky z-20 top-2 mt-10 lg:!mt-28'>
+            <div className='sticky z-20 top-2 mt-10 lg:!mt-20'>
               <div className='w-full bg-black/60 backdrop-blur-sm flex items-center justify-start p-5'>
                 <div className='flex items-center gap-3'>
                   <div className='grid grid-cols-3 gap-4'>
@@ -634,17 +713,65 @@ const EventPage = ({ event }) => {
                 />
               </div>
             </div>
-            <div className='flex flex-col gap-10 lg:gap-24'>
-              <CertCallout
-                headline='Master Automotive Packaging – Lead with Expertise and Innovation'
-                subheadline='Gain the industry’s only 100% online certification designed for automotive packaging professionals. Develop critical skills with insights from leading experts and prepare to excel in a dynamic field.'
-                linkText='Enroll Now and Accelerate Your Career'
-                cert={'APC'}
-                link='certifications/get-to-know-apc'
-                cardClickHandler={() => {
-                  router.push('/certifications/get-to-know-apc');
-                }}
-              />
+            <div className='flex flex-col gap-10 lg:!gap-24 w-full px-5 lg:!px-0'>
+              <div className='flex flex-col lg:!flex-row w-full gap-10 mx-auto justify-between items-center border border-gray-300 rounded-lg p-10'>
+                <div className='flex flex-col gap-6 px-5'>
+                  <div>
+                    <h2 className='h3-base'>
+                      Revolutionize Your Career in Automotive Packaging with the
+                      First 100% Online Academic Program Tailored for Industry
+                      Professionals.
+                    </h2>
+                  </div>
+                  <div className='text-xl text-gray-600'>
+                    Master the essential skills for success with our program,
+                    designed for packaging and logistics professionals,
+                    engineers, sales, and customer service teams in the
+                    automotive industry.
+                  </div>
+                  <div className='flex flex-col lg:!flex-wrap gap-5'>
+                    {certPoints.map((point) => (
+                      <div key={point} className='flex items-center gap-2'>
+                        <MdCheckCircle color='green' size={24} />
+                        <div className='font-medium'>{point}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* <Link passHref href={'/certifications/get-to-know-apc'}>
+                    <div className='lg:hidden font-semibold text-brand-indigo'>
+                      View Certificate
+                    </div>
+                  </Link> */}
+                </div>
+                <div className='w-full flex justify-end items-center'>
+                  <div className='w-full max-w-[360px] md:max-w-[400px] h-[515px] cursor-pointer'>
+                    {certificates.length > 0 && (
+                      <CertCard
+                        cert={certificates.find(
+                          (cert) => cert.abbreviation === 'APC'
+                        )}
+                        cardClickHandler={(
+                          abbreviation,
+                          type,
+                          link,
+                          applicationLink
+                        ) =>
+                          handleCardClick(
+                            certificates.find(
+                              (cert) => cert.abbreviation === 'APC'
+                            ),
+                            abbreviation,
+                            type,
+                            link,
+                            applicationLink
+                          )
+                        }
+                        purchaseText='Enroll Now'
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
               {/* PRESENTATIONS */}
               {/* <div id='presentations' className='scroll-mt-20'>
                 <div className='flex flex-col gap-8 md:gap-10'>
