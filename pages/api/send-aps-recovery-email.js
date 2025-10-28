@@ -14,7 +14,7 @@ export { sesClient };
 export default async function handler(req, res) {
   const body = req.body;
   const emailHtml = render(
-    <PlaidVerifyIdentityEmail validationCode={'AUTOPACK2024'} />
+    <PlaidVerifyIdentityEmail validationCode={'AUTOPACK2025'} />
   );
 
   const createSendEmailCommand = (toAddress, fromAddress) => {
