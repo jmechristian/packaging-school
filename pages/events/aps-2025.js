@@ -566,37 +566,33 @@ const EventPage = ({ event }) => {
             <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
               <div className='flex flex-col gap-5 lg:col-span-9 '>
                 <H2 textColor='text-black'>
-                  AutoPack Summit 2024 – Paving the Way for the Future of
-                  Automotive Packaging
+                  AutoPack Summit 2025–Driving Innovation & Partnerships
                 </H2>
                 <div>
-                  AutoPack Summit 2024 concluded on a high note, bringing
-                  together top industry leaders, experts, and innovators for a
-                  dynamic exchange of ideas and strategies. Held over three
-                  days, the summit explored critical topics shaping the future
-                  of automotive packaging, from sustainable innovations to
-                  cutting-edge technology integration.
+                  The Packaging School team hosted the ninth annual Automotive
+                  Packaging Summit (APS) in downtown Greenville, South
+                  Carolina—bringing together OEMs, Tier 1 suppliers, and
+                  packaging solution providers from around the globe for three
+                  days of collaboration, learning, and innovation.
                 </div>
                 <div>
-                  Throughout the summit, attendees actively participated in
-                  Mentimeter-powered Q&A sessions, fostering real-time
-                  interaction on topics like material innovations, regulatory
-                  impacts, and future trends. Networking opportunities,
-                  including speed networking rounds focused on Production
-                  Packaging and Expendable & Aftersales Packaging, provided
-                  valuable connections and insights.
+                  This year’s sessions covered a range of critical topics, from
+                  EV and lithium battery packaging to VCI film chemistry, EPP
+                  tray innovations, and real-time container tracking. A
+                  highlight came from Bosch USA and G2 Supply, who shared how a
+                  partnership formed at last year’s Speed Networking event led
+                  to a redesigned hydro-boost packaging system—proof of the
+                  summit’s power to spark meaningful collaboration.
                 </div>
                 <div>
-                  With an impressive lineup of speakers, case studies, and
-                  interactive discussions, AutoPack Summit 2024 solidified its
-                  role as a premier platform for advancing the automotive
-                  packaging industry. Attendees left with actionable strategies
-                  to implement in their organizations, paving the way for a more
-                  sustainable and efficient automotive supply chain.
+                  Attendees also toured Morrisette Packaging, Aristo Industries,
+                  and Magna International’s Mirror Facility, gaining insight
+                  into cutting-edge manufacturing and sustainability practices
+                  shaping the industry’s future.
                 </div>
                 <div>
                   We look forward to welcoming everyone back next year for
-                  AutoPack Summit 2025!
+                  AutoPack Summit 2026!
                 </div>
               </div>
               <div className='lg:col-span-3 w-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
