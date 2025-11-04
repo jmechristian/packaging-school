@@ -84,12 +84,12 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
 
         <div
           className='w-full rounded-b-xl relative bg-neutral-900 flex flex-col lg:flex-row items-center cursor-pointer'
-          onClick={() =>
-            clickHandler(
-              'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-              'Keynote'
-            )
-          }
+          // onClick={() =>
+          //   clickHandler(
+          //     'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+          //     'Keynote'
+          //   )
+          // }
         >
           <div className='max-w-5xl flex flex-col mx-auto gap-4 w-full h-full justify-end lg:justify-center p-6 md:py-12 lg:py-10 relative'>
             <div className='flex items-center gap-1 py-2 px-3 bg-ap-yellow w-fit rounded'>
