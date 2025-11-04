@@ -42,7 +42,7 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
         <div className='w-full bg-neutral-800 rounded-t-lg'>
           <div className='w-full flex justify-between items-center px-5 py-4'>
             <div className='font-oswald uppercase text-white text-xl md:text-2xl tracking-wide'>
-              <span className='text-ap-yellow'>Presentations</span> / 2024
+              <span className='text-ap-yellow'>Presentations</span> / 2025
             </div>
             <div className='flex gap-3 items-center h-full -mr-3 md:mr-0'>
               <div
@@ -97,13 +97,13 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
                 <BoltIcon className='w-5 h-5 stroke-white' />
               </div>
               <div className='text-sm text-white font-bold rounded-lg'>
-                KEYNOTE
+                COMING SOON
               </div>
             </div>
             <div className='text-white max-w-xl text-4xl font-oswald font-bold lg:first-letter:leading-tight'>
-              Containers Integration into Automated Material Ecosystem
+              Stay tuned for presentations coming end of November.
             </div>
-            <div className='grid md:grid-cols-2 gap-5'>
+            {/* <div className='grid md:grid-cols-2 gap-5'>
               <div className='flex flex-col'>
                 <div className='font-bold text-lg text-ap-blue'>
                   Katie Bonnette
@@ -121,17 +121,17 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
                   Manager Container Program Management, GM Motors
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div
             className='aspect-square bg-no-repeat w-full lg:aspect-auto lg:h-[400px] lg:w-[400px] rounded-xl bg-white bg-cover bg-top'
             style={{
-              backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/gm-cover.png')`,
+              backgroundImage: `url('https://packmedia54032-staging.s3.us-east-1.amazonaws.com/todd-bw.png')`,
             }}
           ></div>
         </div>
 
-        <div className='w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 rounded-xl gap-1'>
+        {/* <div className='w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 rounded-xl gap-1'>
           {presentations &&
             presentations.map((pres, i) => (
               <div
@@ -148,7 +148,7 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
                 />
               </div>
             ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Modal for video */}
