@@ -26,6 +26,7 @@ import {
   MdSync,
   MdCheckCircle,
   MdError,
+  MdArrowForward,
 } from 'react-icons/md';
 import { BrutalButton, CertCard, H2 } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
@@ -430,7 +431,7 @@ const EventPage = ({ event }) => {
             {/*  LOGIN MODAL */}
             {isUnlocking && (
               <div className='fixed mx-auto inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
-                <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+                <div className='w-full max-w-xl p-10 bg-white border border-black relative'>
                   <button
                     onClick={() => {
                       setIsUnlocking(false);
@@ -563,8 +564,8 @@ const EventPage = ({ event }) => {
               </div>
             )}
             {/* HEADER */}
-            <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10'>
-              <div className='flex flex-col gap-5 lg:col-span-9 '>
+            <div className='grid p-5 md:!p-[2.5rem] lg:!p-0 grid-cols-1 lg:grid-cols-12 gap-10 lg:!gap-20'>
+              <div className='flex flex-col gap-5 lg:!col-span-9  '>
                 <H2 textColor='text-black'>
                   AutoPack Summit 2025–Driving Innovation & Partnerships
                 </H2>
@@ -595,7 +596,7 @@ const EventPage = ({ event }) => {
                   AutoPack Summit 2026!
                 </div>
               </div>
-              <div className='lg:col-span-3 w-full border-2 border-black shadow-[5px_5px_0px_black] bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
+              <div className='lg:col-span-3 w-full border border-black rounded-md overflow-hidden bg-ap-yellow/40 flex flex-col md:!flex-row lg:!flex-col'>
                 <div className='w-full aspect-video md:!aspect-square border bg-white p-16 lg:!p-8 flex items-center justify-center'>
                   <Image
                     src={
@@ -710,14 +711,15 @@ const EventPage = ({ event }) => {
               </div>
             </div>
             <div className='flex flex-col gap-10 lg:!gap-24 w-full px-5 lg:!px-0'>
+              {/* CERTIFICATIONS */}
               <div className='flex flex-col lg:!flex-row w-full gap-10 mx-auto justify-between items-center border border-gray-300 rounded-lg p-10'>
                 <div className='flex flex-col gap-6 px-5'>
                   <div>
-                    <h2 className='h3-base'>
+                    <div className='h2-base'>
                       Revolutionize Your Career in Automotive Packaging with the
                       First 100% Online Academic Program Tailored for Industry
                       Professionals.
-                    </h2>
+                    </div>
                   </div>
                   <div className='text-xl text-gray-600'>
                     Master the essential skills for success with our program,
@@ -780,7 +782,48 @@ const EventPage = ({ event }) => {
                   />
                 </div>
               </div>
+              {/* SUCCESS STORIES */}
+              <div className='w-full flex flex-col gap-10 rounded-md border border-gray-300 p-12'>
+                <div className='flex flex-col gap-10 lg:!flex-row lg:!justify-between lg:!items-center w-full'>
+                  <div className='w-full aspect-[4/3] max-w-[500px] rounded-md'>
+                    <Image
+                      src='https://packmedia54032-staging.s3.amazonaws.com/public/Blake%20Watkins%20and%20John%20Onaga%20edited%20compressed.png'
+                      alt='Success Story'
+                      width={932}
+                      height={655}
+                      className='w-full h-full object-cover'
+                    />
+                  </div>
 
+                  <div className='flex flex-col gap-10 '>
+                    <div className='flex flex-col gap-5'>
+                      <div className='h2-base'>
+                        Success Through Collaboration: Bosch & G2 at Automotive
+                        Packaging Summit
+                      </div>
+                      <div className='text-xl text-gray-600'>
+                        At the Automotive Packaging Summit, Bosch and G2 joined
+                        forces to tackle their toughest packaging logistics
+                        issues — driving real-time problem solving through
+                        collaboration, innovation and industry data to move from
+                        challenge to solution fast.
+                      </div>
+                      <div
+                        className='font-semibold text-brand-indigo flex items-center gap-2 text-xl cursor-pointer'
+                        onClick={() => {
+                          window.open(
+                            '/lessons/success-through-collaboration-bosch-g2-at-automotive-packaging-summit',
+                            '_blank'
+                          );
+                        }}
+                      >
+                        Learn more about the partnership
+                        <MdArrowForward className='w-4 h-4 stroke-brand-indigo' />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {/* AGENDA */}
               <div
                 id='agenda'
@@ -798,7 +841,7 @@ const EventPage = ({ event }) => {
             {/* Upload Modal */}
             {isUploadOpen && (
               <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center'>
-                <div className='w-full max-w-xl p-10 bg-white border-2 border-black relative'>
+                <div className='w-full max-w-xl p-10 bg-white border border-black relative'>
                   <AnimatePresence>
                     {isUploadSuccess && (
                       <motion.div
@@ -855,7 +898,7 @@ const EventPage = ({ event }) => {
 
                     {/* File Drop Zone */}
                     <div
-                      className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400'
+                      className='border border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400'
                       onDrop={(e) => {
                         e.preventDefault();
                         const file = e.dataTransfer.files[0];
