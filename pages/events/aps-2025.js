@@ -40,6 +40,7 @@ import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookie';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
+import VideoPlayer from '../../components/VideoPlayer';
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
 
@@ -835,6 +836,28 @@ const EventPage = ({ event }) => {
                   dayThree={dayThree}
                   enabled={true}
                 />
+              </div>
+              {/* AGENDA */}
+              <div className='w-full flex flex-col gap-10 rounded-md border border-gray-300 lg:!p-12 p-6'>
+                <div className='flex flex-col gap-5 items-center justify-center max-w-3xl mx-auto text-center'>
+                  <div className='h2-base'>
+                    Thank you for attending the Automotive Packaging Summit
+                    2025!
+                  </div>
+                  <div className='text-xl text-gray-600'>
+                    We hope you enjoyed the event, learned something new, and
+                    had a chance to network with other industry professionals.
+                    We can&apos;t wait to see you next year!
+                  </div>
+                </div>
+                <div className='w-full aspect-[16/9] rounded-md'>
+                  <VideoPlayer
+                    light={false}
+                    videoEmbedLink={
+                      'https://youtu.be/QZF8kcmJbcA?si=NPE_8tWlKDwXgCDd'
+                    }
+                  />
+                </div>
               </div>
             </div>
 
