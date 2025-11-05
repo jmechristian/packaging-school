@@ -199,6 +199,18 @@ const timeline = [
     description: 'Packaging School Library debut with Cummins Inc.',
     date: '2025',
   },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for Church & Dwight.',
+    date: '2025',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'First published courses as an education partner for Schwarz Partners.',
+    date: '2025',
+  },
 ];
 
 const Timeline = () => {
