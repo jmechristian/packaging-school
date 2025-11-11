@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: 'Automotive Packaging Summit Password',
+          Data: `APS Password Requestfor ${body.email}`,
         },
       },
       Source: fromAddress,
