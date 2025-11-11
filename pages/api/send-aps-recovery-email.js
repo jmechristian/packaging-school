@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           /* more items */
         ],
         BccAddresses: ['jamie@packagingschool.com'],
-        ToAddresses: [toAddress],
+        ToAddresses: ['bianca@packagingschool.com', 'lars@packagingschool.com'],
       },
       Message: {
         /* required */
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: 'Automotive Packaging Summit 2024 Password',
+          Data: 'Automotive Packaging Summit Password',
         },
       },
       Source: fromAddress,
