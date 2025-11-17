@@ -759,7 +759,7 @@ const EventPage = ({ event }) => {
                 </div>
               </div>
               {/* PRESENTATIONS */}
-              <div id='presentations' className='scroll-mt-20'>
+              {/* <div id='presentations' className='scroll-mt-20'>
                 <div className='flex flex-col gap-8 md:gap-10'>
                   <APSPresentations
                     presentations={presentations25}
@@ -769,7 +769,7 @@ const EventPage = ({ event }) => {
                     user={isUser}
                   />
                 </div>
-              </div>
+              </div> */}
               {/* SUCCESS STORIES */}
               <div className='w-full flex flex-col gap-10 rounded-md border border-gray-300 p-12'>
                 <div className='flex flex-col gap-10 lg:!flex-row lg:!justify-between lg:!items-center w-full'>
