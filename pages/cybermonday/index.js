@@ -88,7 +88,7 @@ const Page = () => {
                 className='w-full h-full'
               />
             </div>
-            <div className='flex flex-wrap items-center justify-center relative font-oswald uppercase text-7xl tracking-[-0.03em] gap-2 text-center font-base leading-[0.95em]'>
+            <div className='flex flex-wrap items-center justify-center relative font-oswald uppercase text-7xl tracking-[-0.03em] gap-2 text-center font-base leading-[0.99em]'>
               Celebrating{' '}
               <span className='text-white bg-clemson px-4 pb-3 rounded-md font-medium mt-2'>
                 10 Years
@@ -106,7 +106,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-6xl mx-auto bg-black rounded-[2.5rem] p-16'>
+      <div className='w-full max-w-6xl mx-auto bg-zinc-900 rounded-[2.5rem] p-16'>
         <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center'>
           <div className='flex flex-col gap-8 items-center'>
             <div className='h2-base text-white'>
@@ -142,8 +142,50 @@ const Page = () => {
             </div>
             <div className='text-white text-2xl font-bold'>{remainingTime}</div>
           </div>
+          <div className='w-full h-px bg-gray-600'></div>
+          <div className='grid lg:grid-cols-3 gap-8 w-full'>
+            <div className='w-full h-full bg-gray-200 flex flex-col gap-4 p-6 rounded-2xl items-center text-center'>
+              <div className='w-16 h-16 bg-clemson rounded-full flex items-center justify-center text-2xl font-bold text-white'>
+                1
+              </div>
+              <div className='text-gray-800 text-lg font-medium leading-relaxed'>
+                Check the website each day to check the status of that
+                day&apos;s code.{' '}
+                <span className='text-clemson font-bold'>
+                  Once the daily coupon is gone, it’s gone.
+                </span>
+              </div>
+            </div>
+            <div className='w-full h-full bg-gray-200 flex flex-col gap-4 p-6 rounded-2xl items-center text-center'>
+              <div className='w-16 h-16 bg-clemson rounded-full flex items-center justify-center text-2xl font-bold text-white'>
+                2
+              </div>
+              <div className='text-gray-800 text-lg font-medium leading-relaxed'>
+                This anniversary offer applies to{' '}
+                <span className='text-clemson font-bold'>
+                  all certificates<sup>*</sup> and courses
+                </span>{' '}
+                (except the Certificate of Mastery in Packaging Management
+                program).
+              </div>
+            </div>
+            <div className='w-full h-full bg-gray-200 flex flex-col gap-4 p-6 rounded-2xl items-center  text-center'>
+              <div className='w-16 h-16 bg-clemson rounded-full flex items-center justify-center text-2xl font-bold text-white'>
+                3
+              </div>
+              <div className='text-gray-800 text-lg font-medium leading-relaxed'>
+                If day&apos;s coupon has been claimed, celebrate with us and
+                watch our new 10-Year Anniversary video. Be sure to{' '}
+                <span className='text-clemson font-bold'>
+                  check back tomorrow
+                </span>{' '}
+                for the next code.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div className='w-full max-w-6xl mx-auto'></div>
     </div>
   );
 };
