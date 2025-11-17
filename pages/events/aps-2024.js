@@ -668,6 +668,9 @@ const EventPage = ({ event }) => {
                   dayTwo={dayTwo}
                   dayThree={dayThree}
                   enabled={true}
+                  date1='Monday, October 21, 2024'
+                  date2='Tuesday, October 22, 2024'
+                  date3='Wednesday, October 23, 2024'
                 />
               </div>
             </div>

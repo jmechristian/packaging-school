@@ -23,7 +23,7 @@ const APSImageGallery = ({
         <div className='w-full bg-neutral-800 rounded-t-lg'>
           <div className='w-full flex flex-col gap-2 lg:flex-row lg:justify-between lg:items-center px-5 py-4'>
             <div className='font-oswald uppercase text-white text-xl md:text-2xl tracking-wide'>
-              <span className='text-ap-yellow'>Photos</span> / 2025
+              <span className='text-ap-yellow'>Photos</span>
             </div>
             <div className='flex gap-3 items-center h-full -mr-3 md:mr-0 bg-white/10 py-3 px-4 rounded-lg'>
               <div className='flex flex-col gap-0'>

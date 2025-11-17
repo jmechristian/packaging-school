@@ -1,10 +1,10 @@
 import React from 'react';
-import { DarkGridHero } from '../components/cybermonday/DarkGridHero';
-import LogoGrid from '../components/cybermonday/LogoGrid';
-import Features from '../components/cybermonday/Features';
-import CyberTestimonials from '../components/cybermonday/CyberTestimonials';
-import CyberCta from '../components/cybermonday/CyberCta';
-import Meta from '../components/shared/Meta';
+import { DarkGridHero } from '../../components/cybermonday/DarkGridHero';
+import LogoGrid from '../../components/cybermonday/LogoGrid';
+import Features from '../../components/cybermonday/Features';
+import CyberTestimonials from '../../components/cybermonday/CyberTestimonials';
+import CyberCta from '../../components/cybermonday/CyberCta';
+import Meta from '../../components/shared/Meta';
 
 const Page = () => {
   return (

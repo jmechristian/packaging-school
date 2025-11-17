@@ -34,7 +34,7 @@ import APSPresentations from '../../components/shared/APSPresentations';
 import APSImageGallery from '../../components/shared/APSImageGallery';
 import APSAgenda from '../../components/shared/APSAgenda';
 import Meta from '../../components/shared/Meta';
-import { presentations } from '../../data/presentations';
+import { presentations25 } from '../../data/presentations-25';
 import { sessionData25 } from '../../data/sessionData25';
 import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -274,19 +274,6 @@ const EventPage = ({ event }) => {
   const handleEmailChange = async (e) => {
     const email = e.target.value;
     setIsEmail(email);
-    if (validateEmail(email)) {
-      setIsCheckingEmail(true);
-      const attendee = await checkLocalAttendee(email);
-      if (attendee || email.toLowerCase().includes('@packagingschool.com')) {
-        setIsUser(email);
-        setIsEmailError(false);
-        setIsEmailConfirmed(true);
-      } else {
-        setIsEmailConfirmed(false);
-        setIsEmailError(true);
-      }
-      setIsCheckingEmail(false);
-    }
   };
 
   const photoAddHandler = () => {
@@ -775,7 +762,7 @@ const EventPage = ({ event }) => {
               <div id='presentations' className='scroll-mt-20'>
                 <div className='flex flex-col gap-8 md:gap-10'>
                   <APSPresentations
-                    presentations={presentations}
+                    presentations={presentations25}
                     isLocked={isLocked}
                     unlockHandler={unlockHandler}
                     validatePasswordHandler={validatePasswordHandler}
@@ -835,6 +822,9 @@ const EventPage = ({ event }) => {
                   dayTwo={dayTwo}
                   dayThree={dayThree}
                   enabled={true}
+                  date1='Wednesday, October 15, 2025'
+                  date2='Thursday, October 16, 2025'
+                  date3='Friday, October 17, 2025'
                 />
               </div>
               {/* AGENDA */}

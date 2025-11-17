@@ -3,7 +3,15 @@ import { motion } from 'framer-motion';
 import NewAgendaItem from './NewAgendaItem';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
-const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
+const APSAgenda = ({
+  dayOne,
+  dayTwo,
+  dayThree,
+  enabled,
+  date1,
+  date2,
+  date3,
+}) => {
   const [expanded, setExpanded] = useState(true);
   return (
     <div className='w-full max-w-7xl mx-auto lg:px-0 pb-12'>
@@ -36,8 +44,7 @@ const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
         >
           <motion.div className='bg-black w-full px-6 py-4 flex'>
             <motion.div className='text-ap-yellow font-medium text-lg lg:text-xl font-oswald uppercase'>
-              <span className='text-white'>Day One</span> Wednesday, October 15,
-              2025
+              <span className='text-white'>Day One</span> {date1}
             </motion.div>
           </motion.div>
           {dayOne &&
@@ -57,8 +64,7 @@ const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
             ))}
           <motion.div className='bg-black w-full px-6 py-4 flex'>
             <motion.div className='text-ap-yellow font-medium text-lg lg:text-xl font-oswald uppercase'>
-              <span className='text-white'>Day Two</span> Thursday, October 16,
-              2025
+              <span className='text-white'>Day Two</span> {date2}
             </motion.div>
           </motion.div>
           {dayTwo &&
@@ -78,8 +84,7 @@ const APSAgenda = ({ dayOne, dayTwo, dayThree, enabled }) => {
             ))}
           <motion.div className='bg-black w-full px-6 py-4 flex'>
             <motion.div className='text-ap-yellow font-medium text-lg lg:text-xl font-oswald uppercase'>
-              <span className='text-white'>Day Three</span> Friday, October 17,
-              2025
+              <span className='text-white'>Day Three</span> {date3}
             </motion.div>
           </motion.div>
           {dayThree &&
