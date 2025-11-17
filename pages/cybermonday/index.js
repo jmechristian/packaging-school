@@ -70,7 +70,7 @@ const Page = () => {
   }, [isClaimed]);
 
   return (
-    <div className='w-full flex flex-col gap-16 py-16'>
+    <div className='w-full flex flex-col gap-16 py-20'>
       <div className='w-full max-w-6xl mx-auto'>
         <div className='flex flex-col gap-10'>
           <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-12'>
@@ -106,8 +106,16 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-6xl mx-auto bg-zinc-900 rounded-[2.5rem] p-16'>
-        <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center'>
+      <div className='w-full max-w-6xl mx-auto bg-zinc-900 rounded-[2.5rem] p-16 relative overflow-hidden'>
+        {/* Spotlight gradient overlay */}
+        <div
+          className='absolute inset-0 pointer-events-none rounded-[2.5rem]'
+          style={{
+            background:
+              'radial-gradient(ellipse 120% 80% at 50% 75%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.05) 40%, transparent 70%)',
+          }}
+        />
+        <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center relative z-10'>
           <div className='flex flex-col gap-8 items-center'>
             <div className='h2-base text-white'>
               1 Code. <span className='text-clemson'>50% Off.</span>
