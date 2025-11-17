@@ -123,8 +123,8 @@ const Page = () => {
             </div>
             <div className='text-white text-xl font-medium max-w-2xl'>
               Once per day, we release a 50% off code good for any certificate
-              or course. The first person to complete their purchase claims
-              it—after that, it’s gone until tomorrow.
+              <sup>*</sup> or course. The first person to complete their
+              purchase claims it—after that, it’s gone until tomorrow.
             </div>
           </div>
           <MarqueeButton>Claim Your Code</MarqueeButton>
@@ -191,6 +191,11 @@ const Page = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className=' text-white text-center mt-8 px-6'>
+          *If you’re applying to the Certificate of Packaging Science, be sure
+          to email us at info@packagingschool.com after you apply to claim your
+          coupon.
         </div>
       </div>
       <div className='w-full max-w-6xl mx-auto'></div>
