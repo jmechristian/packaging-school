@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import MarqueeButton from '../../components/shared/MarqueeButton';
+import dynamic from 'next/dynamic';
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import celebrateAnimation from '/public/confetti.json';
+import booksAnimation from '/public/books.json';
 
 const Page = () => {
   const [isClaimed, setIsClaimed] = useState(false);
@@ -66,13 +70,48 @@ const Page = () => {
   }, [isClaimed]);
 
   return (
-    <div className='w-full flex flex-col gap-10 py-16'>
-      <div className='w-full max-w-7xl mx-auto bg-black rounded-[2.5rem] p-20'>
-        <div className='w-full flex flex-col gap-10 px-4 xl:px-0 items-center text-center'>
+    <div className='w-full flex flex-col gap-16 py-16'>
+      <div className='w-full max-w-6xl mx-auto'>
+        <div className='flex flex-col gap-10'>
+          <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-12'>
+            <div className='w-48 h-48 absolute top-1 -left-16'>
+              <Lottie
+                animationData={celebrateAnimation}
+                loop={true}
+                className='w-full h-full'
+              />
+            </div>
+            <div className='w-48 h-48 absolute bottom-[35%] -right-20'>
+              <Lottie
+                animationData={booksAnimation}
+                loop={true}
+                className='w-full h-full'
+              />
+            </div>
+            <div className='flex flex-wrap items-center justify-center relative font-oswald uppercase text-7xl tracking-[-0.03em] gap-2 text-center font-base leading-[0.95em]'>
+              Celebrating{' '}
+              <span className='text-white bg-clemson px-4 pb-3 rounded-md font-medium mt-2'>
+                10 Years
+              </span>{' '}
+              With{' '}
+              <span className='text-clemson font-medium'>10 Days of Deals</span>{' '}
+              at The Packaging School!
+            </div>
+            <div className='text-xl text-zinc-800'>
+              Give yourself the gift of education this season! To celebrate our
+              10-year anniversary, we’re launching 10 days of limited,
+              first-come-first-serve coupons—a new one released every day. Will
+              you be the first to snag it?
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='w-full max-w-6xl mx-auto bg-black rounded-[2.5rem] p-16'>
+        <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center'>
           <div className='flex flex-col gap-8 items-center'>
-            <div className='h1-base text-white'>
-              One Code. <span className='text-clemson'>One Chance.</span>
-              <span className='text-base-brand'> Seven Days.</span>
+            <div className='h2-base text-white'>
+              1 Code. <span className='text-clemson'>50% Off.</span>
+              <span className='text-base-brand'> 10 Days.</span>
             </div>
             <div className='text-white text-xl font-medium max-w-2xl'>
               Once per day, we release a 50% off code good for any certificate
