@@ -118,7 +118,7 @@ const Page = () => {
         <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center relative z-10'>
           <div className='flex flex-col gap-8 items-center'>
             <div className='h2-base text-white'>
-              1 Code. <span className='text-clemson'>50% Off.</span>
+              10 Codes. <span className='text-clemson'>50% Off.</span>
               <span className='text-base-brand'> 10 Days.</span>
             </div>
             <div className='text-white text-xl font-medium max-w-2xl'>
@@ -130,28 +130,28 @@ const Page = () => {
           <MarqueeButton>Claim Your Code</MarqueeButton>
           <div className='w-full h-px bg-gray-600'></div>
           <div className='flex flex-col gap-2 items-center'>
-            <div className='text-gray-400 text-sm font-medium mt-2'>
-              Code Status
+            <div className='text-gray-400  font-medium mt-4'>
+              Today&apos;s Code Status
             </div>
             <div
-              className={`text-2xl font-bold flex items-center gap-2 ${
+              className={`text-4xl font-bold flex items-center gap-2 ${
                 isClaimed ? 'text-red-500' : 'text-green-500'
               }`}
             >
               <div
-                className={`w-5 h-5 rounded-full ${
+                className={`w-5 h-5 rounded-full animate-pulse ${
                   isClaimed ? 'bg-red-500' : 'bg-green-500'
                 }`}
               ></div>{' '}
               {isClaimed ? 'Claimed' : 'Available'}
             </div>
-            <div className='text-gray-400 text-sm font-medium mt-2'>
+            <div className='text-gray-400  font-medium mt-4'>
               Time Until Next Code
             </div>
             <div className='text-white text-2xl font-bold'>{remainingTime}</div>
           </div>
           <div className='w-full h-px bg-gray-600'></div>
-          <div className='grid lg:grid-cols-3 gap-8 w-full'>
+          <div className='grid lg:grid-cols-3 gap-8 w-full mt-4'>
             <div className='w-full h-full bg-gray-200 flex flex-col gap-4 p-6 rounded-2xl items-center text-center'>
               <div className='w-16 h-16 bg-clemson rounded-full flex items-center justify-center text-2xl font-bold text-white'>
                 1
