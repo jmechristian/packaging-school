@@ -164,6 +164,25 @@ const EventPage = ({ event }) => {
   const dayTwo = sessionData.filter((s) => s.date === '2024-10-22');
   const dayThree = sessionData.filter((s) => s.date === '2024-10-23');
 
+  const keynote = {
+    title: 'Containers Integration into Automated Material Ecosystem',
+    backgroundImage:
+      'https://packschool.s3.us-east-1.amazonaws.com/gm-cover.png',
+    video:
+      'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+    speakers: [
+      {
+        name: 'Katie Bonnette',
+        title:
+          'Director of Customer Care, Aftersales Logistics, and Specialized Containers, GM Motors',
+      },
+      {
+        name: 'Nathan Klamerus',
+        title: 'Manager Container Program Management, GM Motors',
+      },
+    ],
+  };
+
   useEffect(() => {
     const mappedImages =
       event &&
@@ -654,6 +673,7 @@ const EventPage = ({ event }) => {
                     unlockHandler={unlockHandler}
                     validatePasswordHandler={validatePasswordHandler}
                     user={isUser}
+                    keynote={keynote}
                   />
                 </div>
               </div>

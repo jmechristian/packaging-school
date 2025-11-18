@@ -9,7 +9,13 @@ import {
 import { handleAPSPresentationClick, getDeviceType } from '../../helpers/api';
 import { useSelector } from 'react-redux';
 
-const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
+const APSPresentations = ({
+  presentations,
+  isLocked,
+  unlockHandler,
+  user,
+  keynote,
+}) => {
   const [toHover, setToHover] = useState(false);
   const [isPassword, setIsPassword] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
@@ -84,12 +90,7 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
 
         <div
           className='w-full rounded-b-xl relative bg-neutral-900 flex flex-col lg:flex-row items-center cursor-pointer'
-          onClick={() =>
-            clickHandler(
-              'https://player.vimeo.com/video/1028831799?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
-              'Keynote'
-            )
-          }
+          onClick={() => clickHandler(keynote.video, 'Keynote')}
         >
           <div className='max-w-5xl flex flex-col mx-auto gap-4 w-full h-full justify-end lg:justify-center p-6 md:py-12 lg:py-10 relative'>
             <div className='flex items-center gap-1 py-2 px-3 bg-ap-yellow w-fit rounded'>
@@ -101,32 +102,25 @@ const APSPresentations = ({ presentations, isLocked, unlockHandler, user }) => {
               </div>
             </div>
             <div className='text-white max-w-xl text-4xl font-oswald font-bold lg:first-letter:leading-tight'>
-              Containers Integration into Automated Material Ecosystem
+              {keynote.title}
             </div>
             <div className='grid md:grid-cols-2 gap-5'>
               <div className='flex flex-col'>
-                <div className='font-bold text-lg text-ap-blue'>
-                  Katie Bonnette
-                </div>
-                <div className=' text-white italic'>
-                  Director of Customer Care, Aftersales Logistics, and
-                  Specialized Containers, GM Motors
-                </div>
-              </div>
-              <div className='flex flex-col'>
-                <div className='font-bold text-lg text-ap-blue'>
-                  Nathan Klamerus
-                </div>
-                <div className=' text-white italic'>
-                  Manager Container Program Management, GM Motors
-                </div>
+                {keynote.speakers.map((speaker) => (
+                  <div key={speaker.name}>
+                    <div className='font-bold text-lg text-ap-blue'>
+                      {speaker.name}
+                    </div>
+                    <div className=' text-white italic'>{speaker.title}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           <div
             className='aspect-square bg-no-repeat w-full lg:aspect-auto lg:h-[400px] lg:w-[400px] rounded-xl bg-white bg-cover bg-top'
             style={{
-              backgroundImage: `url('https://packschool.s3.us-east-1.amazonaws.com/gm-cover.png')`,
+              backgroundImage: `url('${keynote.backgroundImage}')`,
             }}
           ></div>
         </div>

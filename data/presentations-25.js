@@ -5,7 +5,7 @@ export const presentations25 = [
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/01.png',
     title: 'BMW Keynote: Sheer Driving Pleasure – Electrified',
     video:
-      'https://player.vimeo.com/video/1028971641?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1136197020?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Dan Belbey',
@@ -28,7 +28,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/2.png',
     video:
-      'https://player.vimeo.com/video/1029273988?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137808717?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Mike Pagel',
@@ -46,7 +46,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/3.png',
     video:
-      'https://player.vimeo.com/video/1029291078?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1136253628?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Chris Elias',
@@ -69,7 +69,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/4.png',
     video:
-      'https://player.vimeo.com/video/1029767569?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137908509?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Rick Potter',
@@ -91,7 +91,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/5.png',
     video:
-      'https://player.vimeo.com/video/1029806365?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137018564?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Stephanie Aiello',
@@ -113,7 +113,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/6.png',
     video:
-      'https://player.vimeo.com/video/1030085462?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137687796?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Ben Hesskamp',
@@ -146,7 +146,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/7.png',
     video:
-      'https://player.vimeo.com/video/1030161092?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1136904254?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Jonathan Brekan, Ph.D.',
@@ -164,7 +164,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/8.png',
     video:
-      'https://player.vimeo.com/video/1030913395?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137746604?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Ben Hesskamp',
@@ -187,7 +187,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/9.png',
     video:
-      'https://player.vimeo.com/video/1031205741?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137775728?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'James Sternberg',
@@ -205,7 +205,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/10.png',
     video:
-      'https://player.vimeo.com/video/1031205741?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1136914729?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Rick Potter',
@@ -243,12 +243,17 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/11.png',
     video:
-      'https://player.vimeo.com/video/1031205741?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1136959181?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Blake Watkins',
         company: 'Packaging Engineer',
         title: 'Bosch',
+      },
+      {
+        name: 'John Onaga',
+        company: 'Packaging Sales Rep',
+        title: 'G2 Supply LLC',
       },
     ],
     description:
@@ -260,7 +265,7 @@ export const presentations25 = [
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/2025/12.png',
     video:
-      'https://player.vimeo.com/video/1031205741?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1137867606?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Nate Franck',
