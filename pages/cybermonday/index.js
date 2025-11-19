@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MarqueeButton from '../../components/shared/MarqueeButton';
 import dynamic from 'next/dynamic';
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
@@ -24,37 +24,40 @@ const Page = () => {
   const [todayCoupon, setTodayCoupon] = useState(null);
   const [showCopied, setShowCopied] = useState(false);
 
-  useEffect(() => {
-    const fetchCoupons = async () => {
-      const coupons = await getCoupons();
-      // console.log(coupons);
-      setCoupons(coupons);
+  // Function to fetch and set today's coupon based on UTC date
+  const fetchAndSetTodayCoupon = useCallback(async () => {
+    const coupons = await getCoupons();
+    setCoupons(coupons);
 
-      // Get today's date in Eastern timezone in MM/DD/YYYY format
-      const now = new Date();
-      const easternFormatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
+    // Get today's date in UTC timezone in MM/DD/YYYY format
+    const now = new Date();
+    const utcFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
 
-      const parts = easternFormatter.formatToParts(now);
-      const month = parts.find((p) => p.type === 'month').value;
-      const day = parts.find((p) => p.type === 'day').value;
-      const year = parts.find((p) => p.type === 'year').value;
-      const formattedDate = `${month}/${day}/${year}`;
+    const parts = utcFormatter.formatToParts(now);
+    const month = parts.find((p) => p.type === 'month').value;
+    const day = parts.find((p) => p.type === 'day').value;
+    const year = parts.find((p) => p.type === 'year').value;
+    const formattedDate = `${month}/${day}/${year}`;
 
-      // Find coupon that matches today's date
-      const today = coupons.find((coupon) => coupon.dayValid === formattedDate);
-      setTodayCoupon(today);
-      console.log('Today:', formattedDate, 'Coupon:', today);
-      if (today && today.isUsed) {
-        setIsClaimed(true);
-      }
-    };
-    fetchCoupons();
+    // Find coupon that matches today's date
+    const today = coupons.find((coupon) => coupon.dayValid === formattedDate);
+    setTodayCoupon(today);
+    console.log('Today (UTC):', formattedDate, 'Coupon:', today);
+    if (today && today.isUsed) {
+      setIsClaimed(true);
+    } else {
+      setIsClaimed(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchAndSetTodayCoupon();
+  }, [fetchAndSetTodayCoupon]);
 
   // Set up subscription for coupon updates
   useEffect(() => {
@@ -98,25 +101,26 @@ const Page = () => {
     const getNextResetTime = () => {
       const now = new Date();
 
-      // Get current time in Eastern timezone
-      const easternTime = new Date(
-        now.toLocaleString('en-US', { timeZone: 'America/New_York' })
-      );
+      // Get current time in UTC
+      const nowUTC = new Date(now.toISOString());
 
-      // Create target time for 9 AM Eastern today
-      const targetTime = new Date(easternTime);
-      targetTime.setHours(9, 0, 0, 0);
-
-      // If it's already past 9 AM today, set target to 9 AM tomorrow
-      if (easternTime >= targetTime) {
-        targetTime.setDate(targetTime.getDate() + 1);
-      }
-
-      // Convert back to UTC for calculation
+      // Create target time for 11:59 PM UTC today
       const targetUTC = new Date(
-        targetTime.toLocaleString('en-US', { timeZone: 'UTC' })
+        Date.UTC(
+          nowUTC.getUTCFullYear(),
+          nowUTC.getUTCMonth(),
+          nowUTC.getUTCDate(),
+          23, // 11 PM
+          59, // 59 minutes
+          59, // 59 seconds
+          999 // 999 milliseconds
+        )
       );
-      const nowUTC = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+
+      // If it's already past 11:59 PM UTC today, set target to 11:59 PM UTC tomorrow
+      if (nowUTC >= targetUTC) {
+        targetUTC.setUTCDate(targetUTC.getUTCDate() + 1);
+      }
 
       return targetUTC.getTime() - nowUTC.getTime();
     };
@@ -125,8 +129,8 @@ const Page = () => {
       const timeRemaining = getNextResetTime();
 
       if (timeRemaining <= 0) {
-        // Reset the coupon
-        setIsClaimed(false);
+        // Day has reset - refetch coupons for the new day
+        fetchAndSetTodayCoupon();
         setRemainingTime('00:00:00');
         return;
       }
@@ -152,7 +156,7 @@ const Page = () => {
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  }, [isClaimed]);
+  }, [isClaimed, fetchAndSetTodayCoupon]);
 
   return (
     <>
