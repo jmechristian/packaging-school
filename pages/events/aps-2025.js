@@ -180,7 +180,7 @@ const EventPage = ({ event }) => {
     backgroundImage:
       'https://packmedia54032-staging.s3.us-east-1.amazonaws.com/todd-bw.png',
     video:
-      'https://player.vimeo.com/video/1138093639?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
+      'https://player.vimeo.com/video/1138093639?h=62b17503f9&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479',
     speakers: [
       {
         name: 'Todd Chesna',
