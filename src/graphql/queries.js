@@ -9512,6 +9512,7 @@ export const getEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -9729,6 +9730,7 @@ export const getEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -9762,6 +9764,7 @@ export const listEventPhotos = /* GraphQL */ `
           updatedAt
           eventTemplateAgendaId
         }
+        order
         createdAt
         updatedAt
         eventTemplatePhotosId
@@ -12015,6 +12018,45 @@ export const listLibrarySurveys = /* GraphQL */ `
         id
         company
         options
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCyberMondayCode = /* GraphQL */ `
+  query GetCyberMondayCode($id: ID!) {
+    getCyberMondayCode(id: $id) {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCyberMondayCodes = /* GraphQL */ `
+  query ListCyberMondayCodes(
+    $filter: ModelCyberMondayCodeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCyberMondayCodes(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        code
+        usedBy
+        dayValid
+        dayUsed
+        isUsed
         createdAt
         updatedAt
       }

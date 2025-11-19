@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const MarqueeButton = ({ children }) => {
+const MarqueeButton = ({ children, onClick }) => {
   return (
     <motion.button
+      onClick={onClick}
       whileHover={{
         scale: 1.05,
       }}

@@ -5,10 +5,94 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import celebrateAnimation from '/public/confetti.json';
 import booksAnimation from '/public/books.json';
 import Meta from '../../components/shared/Meta';
+import { getCoupons } from '../../helpers/api';
+import { API, graphqlOperation } from 'aws-amplify';
+
+const onUpdateCyberMondayCodeSubscription = /* GraphQL */ `
+  subscription OnUpdateCyberMondayCode {
+    onUpdateCyberMondayCode {
+      id
+      isUsed
+    }
+  }
+`;
 
 const Page = () => {
   const [isClaimed, setIsClaimed] = useState(false);
   const [remainingTime, setRemainingTime] = useState('00:00:00');
+  const [coupons, setCoupons] = useState([]);
+  const [todayCoupon, setTodayCoupon] = useState(null);
+  const [showCopied, setShowCopied] = useState(false);
+
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      const coupons = await getCoupons();
+      // console.log(coupons);
+      setCoupons(coupons);
+
+      // Get today's date in Eastern timezone in MM/DD/YYYY format
+      const now = new Date();
+      const easternFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+
+      const parts = easternFormatter.formatToParts(now);
+      const month = parts.find((p) => p.type === 'month').value;
+      const day = parts.find((p) => p.type === 'day').value;
+      const year = parts.find((p) => p.type === 'year').value;
+      const formattedDate = `${month}/${day}/${year}`;
+
+      // Find coupon that matches today's date
+      const today = coupons.find((coupon) => coupon.dayValid === formattedDate);
+      setTodayCoupon(today);
+      console.log('Today:', formattedDate, 'Coupon:', today);
+      if (today && today.isUsed) {
+        setIsClaimed(true);
+      }
+    };
+    fetchCoupons();
+  }, []);
+
+  // Set up subscription for coupon updates
+  useEffect(() => {
+    if (!todayCoupon) return;
+
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateCyberMondayCodeSubscription)
+    ).subscribe({
+      next: ({ value }) => {
+        const update = value.data.onUpdateCyberMondayCode;
+
+        // Check if this update is for today's coupon
+        if (update.id === todayCoupon.id) {
+          // Update the coupon in the coupons array (merge with existing data)
+          setCoupons((prevCoupons) =>
+            prevCoupons.map((coupon) =>
+              coupon.id === update.id
+                ? { ...coupon, isUsed: update.isUsed }
+                : coupon
+            )
+          );
+
+          // Update today's coupon (merge with existing data)
+          setTodayCoupon((prev) => ({ ...prev, isUsed: update.isUsed }));
+
+          // Update isClaimed status
+          setIsClaimed(update.isUsed || false);
+        }
+      },
+      error: (err) => {
+        console.error('Subscription error:', err);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [todayCoupon]);
 
   useEffect(() => {
     const getNextResetTime = () => {
@@ -73,10 +157,10 @@ const Page = () => {
   return (
     <>
       <Meta title='10 Days of Deals' description='10 Days of Deals' />
-      <div className='w-full flex flex-col gap-16 py-20'>
+      <div className='w-full flex flex-col gap-12 py-12'>
         <div className='w-full max-w-6xl mx-auto'>
-          <div className='flex flex-col gap-10'>
-            <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-12'>
+          <div className='flex flex-col gap-8'>
+            <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-10'>
               <div className='w-48 h-48 absolute top-1 -left-16'>
                 <Lottie
                   animationData={celebrateAnimation}
@@ -117,7 +201,7 @@ const Page = () => {
             className='absolute inset-0 pointer-events-none rounded-[2.5rem]'
             style={{
               background:
-                'radial-gradient(ellipse 120% 80% at 50% 75%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.05) 40%, transparent 70%)',
+                'radial-gradient(ellipse 120% 80% at 50% 75%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.05) 42%, transparent 70%)',
             }}
           />
           <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center relative z-10'>
@@ -132,10 +216,31 @@ const Page = () => {
                 purchase claims it—after that, it’s gone until tomorrow.
               </div>
             </div>
-            <MarqueeButton>Claim Your Code</MarqueeButton>
+            <div className='w-full flex flex-col items-center justify-center gap-2'>
+              <MarqueeButton
+                onClick={() => {
+                  if (!isClaimed && todayCoupon && todayCoupon.code) {
+                    navigator.clipboard.writeText(todayCoupon.code);
+                    setShowCopied(true);
+                    setTimeout(() => {
+                      setShowCopied(false);
+                    }, 2000);
+                  }
+                }}
+              >
+                {isClaimed || !todayCoupon
+                  ? 'No Code Remains'
+                  : 'Claim Your Code'}
+              </MarqueeButton>
+              {showCopied && (
+                <div className='text-green-500 text-sm font-medium animate-fade-in'>
+                  Code copied!
+                </div>
+              )}
+            </div>
             <div className='w-full h-px bg-gray-600'></div>
             <div className='flex flex-col gap-2 items-center'>
-              <div className='text-gray-400  font-medium mt-4'>
+              <div className='text-gray-400  font-medium'>
                 Today&apos;s Code Status
               </div>
               <div

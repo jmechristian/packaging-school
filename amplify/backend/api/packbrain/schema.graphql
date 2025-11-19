@@ -1251,6 +1251,7 @@ type EventPhoto @model @auth(rules: [{ allow: public }]) {
   caption: String
   uploadedBy: String
   event: EventTemplate @belongsTo
+  order: Int
 }
 
 type UserEventPhoto @model @auth(rules: [{ allow: public }]) {
@@ -1498,4 +1499,13 @@ type LibrarySurvey @model @auth(rules: [{ allow: public }]) {
   id: ID!
   company: String
   options: [String]
+}
+
+type CyberMondayCode @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  code: String
+  usedBy: String
+  dayValid: String
+  dayUsed: String
+  isUsed: Boolean @default(value: "false")
 }

@@ -12957,6 +12957,7 @@ export const createEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -13058,6 +13059,7 @@ export const updateEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -13159,6 +13161,7 @@ export const deleteEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -13283,6 +13286,7 @@ export const createEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -13332,6 +13336,7 @@ export const updateEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -13381,6 +13386,7 @@ export const deleteEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -16676,6 +16682,57 @@ export const deleteLibrarySurvey = /* GraphQL */ `
       id
       company
       options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCyberMondayCode = /* GraphQL */ `
+  mutation CreateCyberMondayCode(
+    $input: CreateCyberMondayCodeInput!
+    $condition: ModelCyberMondayCodeConditionInput
+  ) {
+    createCyberMondayCode(input: $input, condition: $condition) {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCyberMondayCode = /* GraphQL */ `
+  mutation UpdateCyberMondayCode(
+    $input: UpdateCyberMondayCodeInput!
+    $condition: ModelCyberMondayCodeConditionInput
+  ) {
+    updateCyberMondayCode(input: $input, condition: $condition) {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCyberMondayCode = /* GraphQL */ `
+  mutation DeleteCyberMondayCode(
+    $input: DeleteCyberMondayCodeInput!
+    $condition: ModelCyberMondayCodeConditionInput
+  ) {
+    deleteCyberMondayCode(input: $input, condition: $condition) {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
       createdAt
       updatedAt
     }

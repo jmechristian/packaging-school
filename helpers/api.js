@@ -1,5 +1,6 @@
 import { Amplify, API, Storage, graphqlOperation } from 'aws-amplify';
 import {
+  listCyberMondayCodes,
   getAuthor,
   getLesson,
   listSalesBars,
@@ -2403,4 +2404,11 @@ export const createNewLibrarySurvey = async (data) => {
     variables: { input: data },
   });
   return res.data.createLibrarySurvey;
+};
+
+export const getCoupons = async () => {
+  const res = await API.graphql({
+    query: listCyberMondayCodes,
+  });
+  return res.data.listCyberMondayCodes.items;
 };

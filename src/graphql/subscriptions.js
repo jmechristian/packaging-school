@@ -12189,6 +12189,7 @@ export const onCreateEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -12287,6 +12288,7 @@ export const onUpdateEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -12385,6 +12387,7 @@ export const onDeleteEventTemplate = /* GraphQL */ `
           photo
           caption
           uploadedBy
+          order
           createdAt
           updatedAt
           eventTemplatePhotosId
@@ -12506,6 +12509,7 @@ export const onCreateEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -12552,6 +12556,7 @@ export const onUpdateEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -12598,6 +12603,7 @@ export const onDeleteEventPhoto = /* GraphQL */ `
         updatedAt
         eventTemplateAgendaId
       }
+      order
       createdAt
       updatedAt
       eventTemplatePhotosId
@@ -15704,6 +15710,48 @@ export const onDeleteLibrarySurvey = /* GraphQL */ `
       id
       company
       options
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCyberMondayCode = /* GraphQL */ `
+  subscription OnCreateCyberMondayCode {
+    onCreateCyberMondayCode {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCyberMondayCode = /* GraphQL */ `
+  subscription OnUpdateCyberMondayCode {
+    onUpdateCyberMondayCode {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCyberMondayCode = /* GraphQL */ `
+  subscription OnDeleteCyberMondayCode {
+    onDeleteCyberMondayCode {
+      id
+      code
+      usedBy
+      dayValid
+      dayUsed
+      isUsed
       createdAt
       updatedAt
     }
