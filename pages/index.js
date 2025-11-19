@@ -16,6 +16,7 @@ import WhyPschool from '../components/shared/WhyPschool';
 import NewHomeTestimonials from '../components/home/NewHomeTestimonials';
 import HomeCorporate from '../components/home/HomeCorporate';
 import SelfPacedAccess from '../components/home/SelfPacedAccess';
+import CyberMonday from '../components/shared/CyberMonday';
 const App = () => {
   const [courses, setCourses] = useState([]);
   const router = useRouter();
@@ -151,7 +152,7 @@ const App = () => {
       />
       <div className='w-full flex flex-col gap-16 lg:gap-20 relative pb-16'>
         {/* INTRO */}
-        <div className='w-full bg-slate-800 flex items-center justify-center relative'>
+        {/* <div className='w-full bg-slate-800 flex items-center justify-center relative'>
           <div className='w-full h-screen lg:!h-[calc(100vh-110px)]'>
             <Canvas className='w-full h-full' shadows>
               <PerspectiveCamera
@@ -162,7 +163,7 @@ const App = () => {
               />
               <color attach='background' args={['black']} />
               <ambientLight intensity={0.06} color='#1f97bf' />
-              {/* <spotLight
+              <spotLight
                 decay={0}
                 position={[-2, 0, 1]}
                 rotation={[0, 0, 0]}
@@ -172,7 +173,7 @@ const App = () => {
                 castShadow
                 distance={-15}
                 shadow-mapSize={1024}
-              /> */}
+              />
               <OrbitControls
                 maxPolarAngle={Math.PI / 2}
                 minPolarAngle={Math.PI / 2}
@@ -276,52 +277,10 @@ const App = () => {
                   height={400}
                 />
               </div>
-              {/* <div className='max-w-prose mx-auto'>
-                  <div className='text-center text-xl font-bold text-gray-900 font-greycliff mt-24'>
-                    Honored to be{' '}
-                    <span className='text-base-brand tracking-normal'>
-                      nominated and awarded in two categories for learning
-                      advancements{' '}
-                    </span>
-                    by our multi-year client,{' '}
-                    <a
-                      href='https://www.colgatepalmolive.com/en-us'
-                      target='_blank'
-                      rel='noreferrer'
-                    >
-                      Colgate.
-                    </a>
-                  </div>
-                </div> */}
-              {/* <div className='mx-auto mt-12 grid grid-cols-2 items-center gap-x-4 gap-y-10  sm:grid-cols-2 lg:mx-0'>
-                  <div className='flex flex-col items-center justify-center gap-4'>
-                    <img
-                      className='col-span-2 max-h-40 w-full object-contain lg:col-span-1'
-                      src='https://packschool.s3.amazonaws.com/2023_L%26D+Silver.png'
-                      alt='Silver Brandon Hall Group Excellence Award'
-                      width={400}
-                      height={400}
-                    />
-                    <div className='text-sm text-center font-semibold'>
-                      Best Advance in Custom Content
-                    </div>
-                  </div>
-                  <div className='flex flex-col items-center gap-4'>
-                    <img
-                      className='col-span-2 max-h-40 w-full object-contain lg:col-span-1'
-                      src='https://packschool.s3.amazonaws.com/2023_L%26D+Bronze.png'
-                      alt='Bronze Brandon Hall Group Excellence Award'
-                      width={400}
-                      height={400}
-                    />
-                    <div className='text-sm font-semibold text-center'>
-                      Best Advance in Competencies and Skill Development
-                    </div>
-                  </div>
-                </div> */}
             </div>
           </div>
-        </div>
+        </div> */}
+        <CyberMonday />
         {/* HOW IT WORKS */}
         {/* <SubscriptionWhat /> */}
         <SelfPacedAccess />
