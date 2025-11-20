@@ -158,7 +158,7 @@ const CyberMonday = () => {
   }, [isClaimed, fetchAndSetTodayCoupon]);
 
   return (
-    <div className='w-full flex flex-col gap-10 pt-12 overflow-hidden'>
+    <div className='w-full flex flex-col gap-10 pt-16 overflow-hidden'>
       <div className='w-full max-w-6xl mx-auto'>
         <div className='flex flex-col gap-8'>
           <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-10'>
