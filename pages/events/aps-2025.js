@@ -37,7 +37,6 @@ import APSAgenda from '../../components/shared/APSAgenda';
 import Meta from '../../components/shared/Meta';
 import { presentations25 } from '../../data/presentations-25';
 import { sessionData25 } from '../../data/sessionData25';
-import { apsAttendees } from '../../data/aps24';
 import { motion, AnimatePresence } from 'framer-motion';
 import Cookies from 'js-cookie';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
@@ -289,8 +288,9 @@ const EventPage = ({ event }) => {
   };
 
   const checkLocalAttendee = async (email) => {
-    return apsAttendees.find(
-      (attendee) => attendee.email.toLowerCase() === email.toLowerCase()
+    // Check against mediaUsers (ApprovedAPS25MediaPage)
+    return mediaUsers.find(
+      (user) => user.email && user.email.toLowerCase() === email.toLowerCase()
     );
   };
 
