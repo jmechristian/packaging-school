@@ -487,7 +487,7 @@ const EventPage = ({ event }) => {
                     </h2>
                     <p className='mb-4 font-medium'>
                       {isRecoverMode
-                        ? 'Please enter the email you used to register to receive password recovery instructions. For questions, please contact bianca@packagingschool.com.'
+                        ? 'Please enter the email you used to register to receive password recovery instructions. For questions, please contact bianca@packagingschool.com. Allow 24 hours for approval.'
                         : 'Please enter the email used for registration and the password sent in the post-event email to access event media. For questions, please contact bianca@packagingschool.com.'}
                     </p>
                   </div>
