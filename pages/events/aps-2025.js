@@ -301,6 +301,14 @@ const EventPage = ({ event }) => {
     setIsEmailConfirmed(false);
 
     if (validateEmail(email)) {
+      // In recovery mode, skip the attendee list check
+      if (isRecoverMode) {
+        setIsUser(email);
+        setIsEmailError(false);
+        setIsEmailConfirmed(true);
+        return;
+      }
+
       setIsCheckingEmail(true);
       const attendee = await checkLocalAttendee(email);
       if (attendee || email.toLowerCase().includes('@packagingschool.com')) {
@@ -474,7 +482,7 @@ const EventPage = ({ event }) => {
                   <div className='flex flex-col gap-2'>
                     <h2 className='text-2xl font-bold text-brand-indigo'>
                       {isRecoverMode
-                        ? 'Recover Password'
+                        ? 'Request Access'
                         : 'Registered Attendee?'}
                     </h2>
                     <p className='mb-4 font-medium'>
