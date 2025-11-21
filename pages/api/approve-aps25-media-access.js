@@ -1,0 +1,132 @@
+import { API } from 'aws-amplify';
+import { createApprovedAPS25MediaPage } from '../../src/graphql/mutations';
+
+export default async function handler(req, res) {
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    return res.status(405).send('Method not allowed');
+  }
+
+  // Get email from query params (GET) or body (POST)
+  const email = req.method === 'GET' ? req.query.email : req.body.email;
+
+  if (!email) {
+    return res.status(400).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Error - APS Media Access</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            .error { color: #d32f2f; }
+          </style>
+        </head>
+        <body>
+          <h1 class="error">Error</h1>
+          <p>Email is required.</p>
+        </body>
+      </html>
+    `);
+  }
+
+  try {
+    // Check if user already exists
+    const { listApprovedAPS25MediaPages } = await import(
+      '../../src/graphql/queries'
+    );
+    const existing = await API.graphql({
+      query: listApprovedAPS25MediaPages,
+      variables: {
+        filter: {
+          email: {
+            eq: email,
+          },
+        },
+      },
+    });
+
+    const isAlreadyApproved =
+      existing.data.listApprovedAPS25MediaPages.items.length > 0;
+
+    if (!isAlreadyApproved) {
+      // Create new approved user
+      await API.graphql({
+        query: createApprovedAPS25MediaPage,
+        variables: {
+          input: {
+            email: email,
+          },
+        },
+      });
+    }
+
+    // Return success HTML page
+    return res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Access Approved - APS Media</title>
+          <style>
+            body {
+              font-family: 'HelveticaNeue', Helvetica, Arial, sans-serif;
+              text-align: center;
+              padding: 50px;
+              background-color: #f5f5f5;
+            }
+            .container {
+              max-width: 500px;
+              margin: 0 auto;
+              background: white;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .success {
+              color: #0a85ea;
+              font-size: 24px;
+              margin-bottom: 20px;
+            }
+            .message {
+              color: #444;
+              font-size: 16px;
+              line-height: 1.6;
+            }
+            .email {
+              font-weight: bold;
+              color: #0a85ea;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1 class="success">✓ Access Approved</h1>
+            <p class="message">
+              ${
+                isAlreadyApproved
+                  ? `The email <span class="email">${email}</span> already has access to the APS 2025 media page.`
+                  : `Access has been successfully approved for <span class="email">${email}</span>. They can now access the APS 2025 media page.`
+              }
+            </p>
+          </div>
+        </body>
+      </html>
+    `);
+  } catch (error) {
+    console.error('Error approving APS25 media access:', error);
+    return res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Error - APS Media Access</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            .error { color: #d32f2f; }
+          </style>
+        </head>
+        <body>
+          <h1 class="error">Error</h1>
+          <p>Failed to approve access. Please try again later.</p>
+        </body>
+      </html>
+    `);
+  }
+}

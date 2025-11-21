@@ -14,7 +14,10 @@ export { sesClient };
 export default async function handler(req, res) {
   const body = req.body;
   const emailHtml = render(
-    <PlaidVerifyIdentityEmail validationCode={'AUTOPACK2025'} />
+    <PlaidVerifyIdentityEmail
+      validationCode={'AUTOPACK2025'}
+      email={body.email}
+    />
   );
 
   const createSendEmailCommand = (toAddress, fromAddress) => {
@@ -41,7 +44,7 @@ export default async function handler(req, res) {
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: `APS Password Requestfor ${body.email}`,
+          Data: `APS Access Requestfor ${body.email}`,
         },
       },
       Source: fromAddress,

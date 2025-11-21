@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -13,6 +14,7 @@ import * as React from 'react';
 
 interface PlaidVerifyIdentityEmailProps {
   validationCode?: string;
+  email?: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -21,6 +23,7 @@ const baseUrl = process.env.VERCEL_URL
 
 export const PlaidVerifyIdentityEmail = ({
   validationCode,
+  email,
 }: PlaidVerifyIdentityEmailProps) => (
   <Html>
     <Head />
@@ -33,12 +36,24 @@ export const PlaidVerifyIdentityEmail = ({
           alt='Plaid'
           style={logo}
         />
-        <Text style={tertiary}>YOUR PASSWORD</Text>
+        <Text style={tertiary}>ACCESS REQUEST from {email}</Text>
         <Heading style={secondary}>
           Enter the password below to access event media.
         </Heading>
         <Section style={codeContainer}>
           <Text style={code}>{validationCode}</Text>
+        </Section>
+        <Section style={buttonContainer}>
+          <Button
+            href={`${
+              baseUrl || 'https://packagingschool.com'
+            }/api/approve-aps25-media-access?email=${encodeURIComponent(
+              email || ''
+            )}`}
+            style={button}
+          >
+            Approve Access
+          </Button>
         </Section>
         <Text style={paragraph}>Issue logging in?</Text>
         <Text style={paragraph}>
@@ -153,4 +168,22 @@ const footer = {
   fontFamily: 'HelveticaNeue,Helvetica,Arial,sans-serif',
   textAlign: 'center' as const,
   textTransform: 'uppercase' as const,
+};
+
+const buttonContainer = {
+  margin: '24px auto',
+  textAlign: 'center' as const,
+};
+
+const button = {
+  backgroundColor: '#0a85ea',
+  borderRadius: '4px',
+  color: '#fff',
+  fontFamily: 'HelveticaNeue,Helvetica,Arial,sans-serif',
+  fontSize: '16px',
+  fontWeight: 500,
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'inline-block',
+  padding: '12px 24px',
 };
