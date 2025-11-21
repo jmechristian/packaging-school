@@ -17,9 +17,7 @@ interface PlaidVerifyIdentityEmailProps {
   email?: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
+const baseUrl = 'https://packagingschool.com';
 
 export const PlaidVerifyIdentityEmail = ({
   validationCode,
@@ -40,9 +38,7 @@ export const PlaidVerifyIdentityEmail = ({
 
         <Section style={buttonContainer}>
           <Button
-            href={`${
-              baseUrl || 'https://packagingschool.com'
-            }/api/approve-aps25-media-access?email=${encodeURIComponent(
+            href={`${baseUrl}/api/approve-aps25-media-access?email=${encodeURIComponent(
               email || ''
             )}`}
             style={button}

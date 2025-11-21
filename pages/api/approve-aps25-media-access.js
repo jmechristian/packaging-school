@@ -1,5 +1,11 @@
-import { API } from 'aws-amplify';
+import { Amplify, API } from 'aws-amplify';
 import { createApprovedAPS25MediaPage } from '../../src/graphql/mutations';
+import awsExports from '../../src/aws-exports';
+
+// Configure Amplify for server-side usage
+if (typeof window === 'undefined') {
+  Amplify.configure(awsExports);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
@@ -30,8 +36,11 @@ export default async function handler(req, res) {
 
   try {
     // Create new approved user (no need to check existing list for recovery)
+    let createResult = null;
+    let createError = null;
+
     try {
-      await API.graphql({
+      createResult = await API.graphql({
         query: createApprovedAPS25MediaPage,
         variables: {
           input: {
@@ -39,13 +48,30 @@ export default async function handler(req, res) {
           },
         },
       });
-    } catch (createError) {
-      // If it's a duplicate or other error, still show success since the goal is access
-      // Log the error but don't fail the request
-      console.log(
-        'Note: User may already exist or other non-critical error:',
-        createError
-      );
+      console.log('Successfully created approved user:', createResult);
+    } catch (error) {
+      createError = error;
+      // Log the full error details
+      console.error('Error creating approved user:', {
+        message: error.message,
+        errors: error.errors,
+        data: error.data,
+        errorInfo: error.errorInfo,
+        fullError: JSON.stringify(error, null, 2),
+      });
+
+      // If it's a duplicate, that's okay - user already has access
+      // But log it so we know what happened
+      if (
+        error.errors &&
+        error.errors.some(
+          (e) => e.errorType === 'DynamoDB:ConditionalCheckFailedException'
+        )
+      ) {
+        console.log(
+          'User already exists (duplicate), which is fine for recovery flow'
+        );
+      }
     }
 
     // Return success HTML page (always show success for recovery flow)
