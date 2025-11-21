@@ -37,12 +37,7 @@ export const PlaidVerifyIdentityEmail = ({
           style={logo}
         />
         <Text style={tertiary}>ACCESS REQUEST from {email}</Text>
-        <Heading style={secondary}>
-          Enter the password below to access event media.
-        </Heading>
-        <Section style={codeContainer}>
-          <Text style={code}>{validationCode}</Text>
-        </Section>
+
         <Section style={buttonContainer}>
           <Button
             href={`${
