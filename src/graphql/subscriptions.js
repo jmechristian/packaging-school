@@ -15757,6 +15757,36 @@ export const onDeleteCyberMondayCode = /* GraphQL */ `
     }
   }
 `;
+export const onCreateApprovedAPS25MediaPage = /* GraphQL */ `
+  subscription OnCreateApprovedAPS25MediaPage {
+    onCreateApprovedAPS25MediaPage {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateApprovedAPS25MediaPage = /* GraphQL */ `
+  subscription OnUpdateApprovedAPS25MediaPage {
+    onUpdateApprovedAPS25MediaPage {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteApprovedAPS25MediaPage = /* GraphQL */ `
+  subscription OnDeleteApprovedAPS25MediaPage {
+    onDeleteApprovedAPS25MediaPage {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags {
     onCreateLessonTags {

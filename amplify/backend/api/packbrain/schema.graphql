@@ -1509,3 +1509,8 @@ type CyberMondayCode @model @auth(rules: [{ allow: public }]) {
   dayUsed: String
   isUsed: Boolean @default(value: "false")
 }
+
+type ApprovedAPS25MediaPage @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String
+}

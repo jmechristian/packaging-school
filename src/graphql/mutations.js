@@ -16738,6 +16738,45 @@ export const deleteCyberMondayCode = /* GraphQL */ `
     }
   }
 `;
+export const createApprovedAPS25MediaPage = /* GraphQL */ `
+  mutation CreateApprovedAPS25MediaPage(
+    $input: CreateApprovedAPS25MediaPageInput!
+    $condition: ModelApprovedAPS25MediaPageConditionInput
+  ) {
+    createApprovedAPS25MediaPage(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateApprovedAPS25MediaPage = /* GraphQL */ `
+  mutation UpdateApprovedAPS25MediaPage(
+    $input: UpdateApprovedAPS25MediaPageInput!
+    $condition: ModelApprovedAPS25MediaPageConditionInput
+  ) {
+    updateApprovedAPS25MediaPage(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteApprovedAPS25MediaPage = /* GraphQL */ `
+  mutation DeleteApprovedAPS25MediaPage(
+    $input: DeleteApprovedAPS25MediaPageInput!
+    $condition: ModelApprovedAPS25MediaPageConditionInput
+  ) {
+    deleteApprovedAPS25MediaPage(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!

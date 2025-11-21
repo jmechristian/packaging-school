@@ -27,6 +27,7 @@ import {
   getPartner,
   listCourseClicks,
   listTestimonials,
+  listApprovedAPS25MediaPages,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -2411,4 +2412,20 @@ export const getCoupons = async () => {
     query: listCyberMondayCodes,
   });
   return res.data.listCyberMondayCodes.items;
+};
+
+export const getApprovedAPS25MediaUsers = async () => {
+  let allItems = [];
+  let nextToken = null;
+
+  do {
+    const res = await API.graphql({
+      query: listApprovedAPS25MediaPages,
+      variables: { limit: 1000, nextToken: nextToken },
+    });
+    const items = res.data.listApprovedAPS25MediaPages.items || [];
+    allItems = allItems.concat(items);
+    nextToken = res.data.listApprovedAPS25MediaPages.nextToken;
+  } while (nextToken);
+  return allItems;
 };

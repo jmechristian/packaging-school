@@ -16,6 +16,7 @@ import {
   registerCertificateClick,
   createNewOrder,
   getDeviceType,
+  getApprovedAPS25MediaUsers,
 } from '../../helpers/api';
 import {
   MdCalendarMonth,
@@ -166,13 +167,21 @@ const EventPage = ({ event }) => {
   const [isPasswordSending, setIsPasswordSending] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [certificates, setCertificates] = useState([]);
-
+  const [mediaUsers, setMediaUsers] = useState([]);
   useEffect(() => {
     const fetchCertificates = async () => {
       const certificates = await getAllCertificates();
       setCertificates(certificates);
     };
+
+    const fetchMediaUsers = async () => {
+      const mediaUsers = await getApprovedAPS25MediaUsers();
+      setMediaUsers(mediaUsers);
+      console.log(mediaUsers);
+    };
+
     fetchCertificates();
+    fetchMediaUsers();
   }, []);
 
   const keynote = {
@@ -288,6 +297,22 @@ const EventPage = ({ event }) => {
   const handleEmailChange = async (e) => {
     const email = e.target.value;
     setIsEmail(email);
+    setIsEmailError(false);
+    setIsEmailConfirmed(false);
+
+    if (validateEmail(email)) {
+      setIsCheckingEmail(true);
+      const attendee = await checkLocalAttendee(email);
+      if (attendee || email.toLowerCase().includes('@packagingschool.com')) {
+        setIsUser(email);
+        setIsEmailError(false);
+        setIsEmailConfirmed(true);
+      } else {
+        setIsEmailConfirmed(false);
+        setIsEmailError(true);
+      }
+      setIsCheckingEmail(false);
+    }
   };
 
   const photoAddHandler = () => {
@@ -476,11 +501,17 @@ const EventPage = ({ event }) => {
                           placeholder='Enter your email'
                         />
                         {isEmailError && !isCheckingEmail && (
-                          <div className='absolute right-3 top-1/2 -translate-y-1/2'>
-                            <div className='w-5 h-5 flex items-center justify-center'>
-                              <MdDoNotDisturb color='black' size={24} />
+                          <>
+                            <div className='absolute right-3 top-1/2 -translate-y-1/2'>
+                              <div className='w-5 h-5 flex items-center justify-center mt-7'>
+                                <MdDoNotDisturb color='black' size={24} />
+                              </div>
                             </div>
-                          </div>
+                            <p className='text-red-500 text-sm mt-1'>
+                              This email is not registered for this event.
+                              Please click below to request access.
+                            </p>
+                          </>
                         )}
                         {isCheckingEmail && (
                           <div className='absolute right-3 top-1/2 -translate-y-1/2'>
@@ -550,9 +581,7 @@ const EventPage = ({ event }) => {
                       }}
                       className='underline text-sm flex w-full justify-center'
                     >
-                      {isRecoverMode
-                        ? 'Back to Login'
-                        : 'I did not receive a password'}
+                      {isRecoverMode ? 'Back to Login' : 'Request Access'}
                     </button>
                     {isError && (
                       <p className='text-red-500 flex w-full justify-center'>

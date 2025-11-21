@@ -12064,6 +12064,37 @@ export const listCyberMondayCodes = /* GraphQL */ `
     }
   }
 `;
+export const getApprovedAPS25MediaPage = /* GraphQL */ `
+  query GetApprovedAPS25MediaPage($id: ID!) {
+    getApprovedAPS25MediaPage(id: $id) {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listApprovedAPS25MediaPages = /* GraphQL */ `
+  query ListApprovedAPS25MediaPages(
+    $filter: ModelApprovedAPS25MediaPageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listApprovedAPS25MediaPages(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {
