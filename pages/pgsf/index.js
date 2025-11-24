@@ -289,7 +289,7 @@ const PGSF = () => {
             <div className='overflow-x-auto'>
               <table className='w-full border-collapse border border-gray-300'>
                 <thead>
-                  <tr className='bg-icpf-light'>
+                  <tr className='bg-[#da5742]/30'>
                     <th className='border border-gray-300 p-3 text-left font-bold'>
                       Criteria
                     </th>
