@@ -211,9 +211,9 @@ const PGSF = () => {
           <div className='flex flex-col gap-4'>
             <div className='h3-base'>Scholarship Criteria & Award Process</div>
             <div className='text-lg'>
-              TPS and ICPF will collect and review applications for the CMPM
-              FALL 2 scholarship opportunity. It is important to note the
-              following key ethical considerations for the scholarship:
+              TPS and PGSF will collect and review applications for scholarship
+              opportunities to The Packaging School. Please note the following
+              key ethical considerations for the scholarship:
             </div>
             <div className=''>
               <ul className='list-disc list-outside text-lg flex flex-col gap-4 pl-4'>
