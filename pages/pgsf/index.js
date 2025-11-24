@@ -54,7 +54,7 @@ const PGSF = () => {
         title='Packaging School Certificate Scholarships Powered by PGSF'
         description='Industry-led scholarships to help you build your packaging career. Powered by PGSF.'
       />
-      <div className='w-full grid grid-cols-1 md:grid-cols-6 gap-10 md:!gap-24 py-10 lg:py-20 px-4 xl:px-0 max-w-7xl mx-auto'>
+      <div className='w-full grid grid-cols-1 md:grid-cols-6 gap-10 md:!gap-20 py-10 lg:py-20 px-4 xl:px-0 max-w-7xl mx-auto'>
         <div className='md:col-span-4 flex flex-col gap-12 w-full'>
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'></div>
@@ -94,14 +94,20 @@ const PGSF = () => {
           </div>
         </div>
         <div className='md:col-span-2'>
-          <div className='flex flex-col gap-7'>
-            <div className='w-full h-full mx-auto'>
+          <div className='flex flex-col gap-16 border border-gray-300 rounded-lg p-6'>
+            <div className='w-full h-full mx-auto relative'>
+              <div className='absolute top-0 left-0 w-full h-full flex justify-center items-start'></div>
               <Image
-                src='https://packschool.s3.us-east-1.amazonaws.com/pgsf-tall.png'
+                src='https://packschool.s3.us-east-1.amazonaws.com/logo-gpsfsd.png'
                 alt='ICPF Logo'
-                width={354}
-                height={512}
+                width={364}
+                height={143}
               />
+            </div>
+            <div className='text-center text-lg font-bold bg-[#da5742] text-white p-6 rounded-lg'>
+              <Link href={'/pgsf/apply'} className='text-white'>
+                Apply Now
+              </Link>
             </div>
           </div>
         </div>
@@ -168,10 +174,18 @@ const PGSF = () => {
           </div>
         </div>
         <div className='md:col-span-6'>
-          {' '}
           <div className='h3-base w-full border-b border-gray-300 pb-4'>
             What You&apos;ll Gain
           </div>
+        </div>
+        <div className='md:col-span-2'>
+          <div
+            className='w-full h-full flex items-center justify-center bg-cover bg-center bg-no-repeat'
+            style={{
+              backgroundImage:
+                "url('https://packschool.s3.us-east-1.amazonaws.com/Unbox-potential-02.png')",
+            }}
+          ></div>
         </div>
         <div className='md:col-span-4'>
           <div className='flex flex-col gap-6'>
@@ -194,9 +208,9 @@ const PGSF = () => {
           </div>
         </div>
 
-        <div className='md:col-span-2 flex flex-col gap-4'>
-          <div className='w-full bg-icpf-dark text-white py-5 px-7 rounded-lg flex flex-col gap-2 justify-end'>
-            <div className='h4-base'>
+        <div className='md:col-span-6 flex flex-col gap-4'>
+          <div className='w-full bg-[#da5742]/30 text-black py-5 px-7 rounded-lg flex flex-col gap-2 justify-end'>
+            <div className='text-xl font-semibold'>
               Certificate of Mastery in Packaging Management Deadline
             </div>
             <div className='leading-snug'>
@@ -225,25 +239,19 @@ const PGSF = () => {
                 <li>
                   The review committee will exercise fairness and objectivity in
                   evaluating applications based on the transparent criteria
-                  listed below— removing all bias or favoritism from the
-                  process.
+                  listed below—removing all bias or favoritism from the process.
                 </li>
                 <li>
-                  The goal for ICPF in awarding these scholarships is to attract
-                  and support promising students who are interested in
-                  packaging, supply chain, and manufacturing, ultimately
-                  building a stronger, more diverse talent pipeline for the
-                  corrugated packaging industry.
+                  The goal for PGSF / TPS in awarding these scholarships is to
+                  attract and support promising students who are passionate
+                  about packaging, graphics, and related technologies—ultimately
+                  building a stronger, more innovative, and diverse talent
+                  pipeline for the packaging and printing industry.
                 </li>
                 <li>
                   The inaugural process will be managed and evaluated for
                   outcomes against the stated goal and adjusted in the future as
                   needed.
-                </li>
-                <li>
-                  The review committee will avoid conflicts of interest, whereas
-                  no individuals involved in the selection process may benefit
-                  financially or personally based on these awards.
                 </li>
               </ul>
             </div>
@@ -255,25 +263,21 @@ const PGSF = () => {
             <div className=''>
               <ul className='list-disc list-outside text-lg flex flex-col gap-4 pl-4'>
                 <li>
-                  Must be a current undergraduate student enrolled in a U.S. or
-                  Canadian college, university, technical school, or community
-                  college or be a current intern or apprentice at a corrugated
-                  packaging facility.
+                  Must be a current undergraduate student enrolled in a US
+                  college, university, technical school, or community college,
+                  or be a current intern at a packaging company.
                 </li>
                 <li>
-                  Must be majoring in business, supply chain management,
-                  industrial/graphic design, engineering, environmental science,
-                  or packaging.
+                  Major in packaging, printing, or graphics-related disciplines.
                 </li>
                 <li>
-                  Must have completed at least one year of undergraduate
-                  coursework or between six months to one year of a successful
-                  internship with a corrugated packaging manufacturer.
+                  Must have completed at least one semester (12 credits or more)
+                  of undergraduate coursework.
                 </li>
                 <li>
-                  Must have demonstrated interest in the packaging, corrugated,
-                  or paperboard industry (via coursework, internships, projects,
-                  student organizations, etc.).
+                  Demonstrated interest in the printing, graphic communications,
+                  or packaging industries (through coursework, internships,
+                  projects, student organizations, or related experiences).
                 </li>
               </ul>
             </div>
@@ -313,7 +317,8 @@ const PGSF = () => {
                     </td>
                     <td className='border border-gray-300 p-3'>20%</td>
                     <td className='border border-gray-300 p-3'>
-                      Demonstrated interest in packaging/supply chain
+                      Demonstrated interest in packaging, printing, and / or
+                      graphics
                     </td>
                   </tr>
                   <tr className='bg-white'>
@@ -341,8 +346,8 @@ const PGSF = () => {
                     </td>
                     <td className='border border-gray-300 p-3'>40%</td>
                     <td className='border border-gray-300 p-3'>
-                      Motivation for pursuing CMPM, industry impact, and career
-                      goals
+                      Motivation for pursuing Packagingschool.com courses,
+                      industry impact, and career goals
                     </td>
                   </tr>
                 </tbody>
