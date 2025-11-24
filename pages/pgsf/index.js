@@ -95,7 +95,7 @@ const PGSF = () => {
         </div>
         <div className='md:col-span-2'>
           <div className='flex flex-col gap-16 border border-gray-300 rounded-lg p-6'>
-            <div className='w-full h-full mx-auto relative'>
+            <div className='w-full h-full mx-auto relative mt-4'>
               <div className='absolute top-0 left-0 w-full h-full flex justify-center items-start'></div>
               <Image
                 src='https://packschool.s3.us-east-1.amazonaws.com/logo-gpsfsd.png'
@@ -180,10 +180,10 @@ const PGSF = () => {
         </div>
         <div className='md:col-span-2'>
           <div
-            className='w-full h-full flex items-center justify-center bg-cover bg-center bg-no-repeat'
+            className='w-full aspect-[4/4] flex items-center justify-center bg-cover bg-bottom bg-no-repeat'
             style={{
               backgroundImage:
-                "url('https://packschool.s3.us-east-1.amazonaws.com/Unbox-potential-02.png')",
+                "url('https://packschool.s3.us-east-1.amazonaws.com/pgsf-tall.png')",
             }}
           ></div>
         </div>

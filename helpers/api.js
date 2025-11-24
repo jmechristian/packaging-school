@@ -2222,6 +2222,14 @@ export const createCMPMFormICPF = async (data) => {
   return res.data.createIcpfCmpmForm;
 };
 
+export const createCMPMFormPGSF = async (data) => {
+  const res = await API.graphql({
+    query: createPGSFForm,
+    variables: { input: { ...data } },
+  });
+  return res.data.createPGSFForm;
+};
+
 export const getAuth0User = async (email) => {
   const res = await fetch(`/api/get-auth0-user-email`, {
     method: 'POST',
