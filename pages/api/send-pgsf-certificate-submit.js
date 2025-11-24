@@ -190,7 +190,14 @@ export default async function handler(req, res) {
         CcAddresses: [
           /* more items */
         ],
-        ToAddresses: [toAddress, 'info@packagingschool.com'],
+        ToAddresses: [
+          toAddress,
+          'info@packagingschool.com',
+          'tluman@interprint.com',
+          'dianne.bullas@pgsf.org',
+          'jeff.white@pgsf.org',
+          'MO'Brien@interprint.com'
+        ],
       },
       Message: {
         /* required */
