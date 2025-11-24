@@ -558,7 +558,6 @@ type User @model @auth(rules: [{ allow: public }]) {
   interests: String
   goals: String
   cell: String
-
   picture: String
   linkedin: String
   location: String
@@ -595,6 +594,8 @@ type User @model @auth(rules: [{ allow: public }]) {
   orders: [Order] @hasMany(indexName: "orderByUserId")
   icpfCmpmFormID: ID
   icpfCmpmForm: IcpfCmpmForm @hasOne(fields: ["icpfCmpmFormID"])
+  pgsfFormID: ID
+  pgsfForm: PgsfForm @hasOne(fields: ["pgsfFormID"])
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -751,6 +752,55 @@ type IcpfCmpmForm
   optOut: Boolean
   birthYear: String
   paymentConfirmation: String
+  status: String @default(value: "DRAFT")
+}
+
+type PgsfForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  age: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  certApplying: String
+  r2rconsent: Boolean
+  referral: String
+  payment: String
+  yearGoals: String
+  careerGoals: String
+  openToInternships: Boolean
+  school: String
+  schoolType: String
+  studying: String
+  credential: String
+  credentialProgress: String
+  credentialYear: String
+  fullTime: Boolean
+  organizations: String
+  transcript: String
+  resume: String
+  corrugatedImpact: String
+  opportunities: Boolean
+  moreAboutYou: String
+  whyinterested: String
+  optOut: Boolean
+  birthYear: String
+  paymentConfirmation: String
+  impact: String
   status: String @default(value: "DRAFT")
 }
 

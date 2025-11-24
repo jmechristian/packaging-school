@@ -62,6 +62,8 @@ import {
   createIcpfCmpmForm,
   updateIcpfCmpmForm,
   createLibrarySurvey,
+  createPgsfForm,
+  updatePgsfForm,
 } from '../src/graphql/mutations';
 
 export const cpsCourses = [
@@ -2121,6 +2123,14 @@ export const saveCpsForm = async (data) => {
   return res.data.updateCPSForm;
 };
 
+export const savePgsfForm = async (data) => {
+  const res = await API.graphql({
+    query: updatePgsfForm,
+    variables: { input: { ...data } },
+  });
+  return res.data.updatePgsfForm;
+};
+
 export const createFreeCpsForm = async () => {
   const res = await API.graphql({
     query: createCPSForm,
@@ -2222,12 +2232,12 @@ export const createCMPMFormICPF = async (data) => {
   return res.data.createIcpfCmpmForm;
 };
 
-export const createCMPMFormPGSF = async (data) => {
+export const createNewPgsfForm = async (data) => {
   const res = await API.graphql({
-    query: createPGSFForm,
+    query: createPgsfForm,
     variables: { input: { ...data } },
   });
-  return res.data.createPGSFForm;
+  return res.data.createPgsfForm;
 };
 
 export const getAuth0User = async (email) => {

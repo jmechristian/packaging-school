@@ -10,7 +10,7 @@ import {
   BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { createCMPMFormICPF } from '../../helpers/api';
+import { createNewPgsfForm } from '../../helpers/api';
 import { useRouter } from 'next/router';
 import Meta from '../../components/shared/Meta';
 import Link from 'next/link';
@@ -105,9 +105,61 @@ const PGSF = () => {
               />
             </div>
             <div className='text-center text-lg font-bold bg-[#da5742] text-white p-6 rounded-lg'>
-              <Link href={'/pgsf/apply'} className='text-white'>
-                Apply Now
-              </Link>
+              <div
+                className='text-white cursor-pointer'
+                onClick={async (e) => {
+                  e.preventDefault();
+                  setIsLoading(true);
+                  const form = await createNewPgsfForm({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    age: '',
+                    phone: '',
+                    streetAddress: '',
+                    addressExtra: '',
+                    city: '',
+                    state: '',
+                    country: '',
+                    companyName: '',
+                    companyTitle: '',
+                    linkedin: '',
+                    background: '',
+                    whyPackaging: '',
+                    areaOfInterest: '',
+                    certApplying: '',
+                    r2rconsent: false,
+                    referral: '',
+                    payment: '',
+                    yearGoals: '',
+                    careerGoals: '',
+                    openToInternships: false,
+                    school: '',
+                    schoolType: '',
+                    studying: '',
+                    credential: '',
+                    credentialProgress: '',
+                    credentialYear: '',
+                    fullTime: false,
+                    organizations: '',
+                    transcript: '',
+                    resume: '',
+                    corrugatedImpact: '',
+                    opportunities: false,
+                    moreAboutYou: '',
+                    whyinterested: '',
+                    optOut: false,
+                    birthYear: '',
+                    paymentConfirmation: 'WAIVED',
+                    impact: '',
+                    status: 'DRAFT',
+                  });
+                  setIsLoading(false);
+                  router.push(`/forms/pgsf/${form.id}`);
+                }}
+              >
+                {isLoading ? 'Preparing Application...' : 'Apply Now'}
+              </div>
             </div>
           </div>
         </div>
