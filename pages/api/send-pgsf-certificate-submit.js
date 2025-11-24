@@ -196,6 +196,7 @@ export default async function handler(req, res) {
           'tluman@interprint.com',
           'dianne.bullas@pgsf.org',
           'jeff.white@pgsf.org',
+          'mobrien@interprint.com',
         ],
       },
       Message: {
