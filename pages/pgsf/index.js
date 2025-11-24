@@ -266,9 +266,9 @@ const PGSF = () => {
               Certificate of Mastery in Packaging Management Deadline
             </div>
             <div className='leading-snug'>
-              Apply by April 17 to be considered for a scholarship toward our
-              Certificate of Mastery in Packaging Management or Certificate of
-              Packaging Science programs.
+              Apply by April 17 to be considered for a scholarship toward any of
+              our certificate programs, including the Certificate of Mastery in
+              Packaging Management and the Certificate of Packaging Science.
             </div>
           </div>
         </div>
