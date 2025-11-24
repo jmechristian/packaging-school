@@ -130,7 +130,7 @@ export default async function handler(req, res) {
       body.yearGoals || ''
     }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
-    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Describe how our certificate program aligns with your academic or career goals and how it will help you advance toward them</p>' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Describe how our certificate program aligns with your academic or career goals and how it will help you advance toward them.</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
       body.careerGoals || ''
     }</p>` +
