@@ -6,6 +6,7 @@ import celebrateAnimation from '/public/confetti.json';
 import booksAnimation from '/public/books.json';
 import { getCoupons } from '../../helpers/api';
 import { API, graphqlOperation } from 'aws-amplify';
+import VideoPlayer from '../VideoPlayer';
 
 const onUpdateCyberMondayCodeSubscription = /* GraphQL */ `
   subscription OnUpdateCyberMondayCode {
@@ -305,7 +306,7 @@ const CyberMonday = () => {
                 3
               </div>
               <div className='text-gray-800 text-lg font-medium leading-relaxed'>
-                If day&apos;s coupon has been claimed, celebrate with us and
+                If the day&apos;s coupon has been claimed, celebrate with us and
                 watch our new 10-Year Anniversary video. Be sure to{' '}
                 <span className='text-clemson font-bold'>
                   check back tomorrow
@@ -315,11 +316,15 @@ const CyberMonday = () => {
             </div>
           </div>
         </div>
-        <div className=' text-white text-center mt-8 px-6'>
+        <div className=' text-white mt-6 mb-12 px-6'>
           *If you&apos;re applying to the Certificate of Packaging Science, be
           sure to email us at info@packagingschool.com after you apply to claim
           your coupon.
         </div>
+        <VideoPlayer
+          videoEmbedLink='https://youtu.be/IG8CPI5EM_4?si=848YCPfTPrnEDUwX'
+          light={true}
+        />
       </div>
       <div className='w-full max-w-6xl mx-auto'></div>
     </div>
