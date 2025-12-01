@@ -44,8 +44,18 @@ const CyberMonday = () => {
     const year = parts.find((p) => p.type === 'year').value;
     const formattedDate = `${month}/${day}/${year}`;
 
-    // Find coupon that matches today's date
-    const today = coupons.find((coupon) => coupon.dayValid === formattedDate);
+    // Also create a version without leading zeros for comparison
+    const formattedDateNoPad = `${parseInt(month, 10)}/${parseInt(
+      day,
+      10
+    )}/${year}`;
+
+    // Find coupon that matches today's date (check both padded and non-padded formats)
+    const today = coupons.find(
+      (coupon) =>
+        coupon.dayValid === formattedDate ||
+        coupon.dayValid === formattedDateNoPad
+    );
     setTodayCoupon(today);
     console.log('Today (UTC):', formattedDate, 'Coupon:', today);
     if (today && today.isUsed) {
