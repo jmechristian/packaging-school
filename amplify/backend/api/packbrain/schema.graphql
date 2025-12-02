@@ -230,30 +230,69 @@ type APSBoard @model @auth(rules: [{ allow: public }]) {
 
 type APS @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  Registrants: [User] @manyToMany(relationName: "APSUser")
-  Sponsors: [Company] @manyToMany(relationName: "APSSponsor")
+  Registrants: [ApsRegistrant]
+    @hasMany(indexName: "apsRegistrantByAps", fields: ["id"])
+  Sponsors: [APSCompany] @hasMany
   Speakers: [APSSpeaker] @hasMany
-  year: Int!
-  codes: [RegistrationCode]
+  year: String!
+  codes: [String]
 }
 
-type APSRegistrant @model @auth(rules: [{ allow: public }]) {
-  year: String @default(value: "2024")
+type ApsRegistrant @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  name: String!
+  apsID: ID @index(name: "apsRegistrantByAps")
+  aps: APS @belongsTo(fields: ["apsID"])
+  firstName: String
+  lastName: String
   email: String! @index(name: "apsRegistrantByEmail")
-  company: String!
-  title: String!
-  phone: String!
-  code: String
-  worksWith: String
-  speedNetworking: String
-  innovationWorkshop: String
-  plantTour: String
-  codeRequested: Boolean
-  codeSent: Boolean
-  registrationReceived: Boolean
+  phone: String
+  company: APSCompany @belongsTo
+  jobTitle: String
+  attendeeType: String
+  termsAccepted: Boolean
+  interests: [String]
+  otherInterest: String
+  speedNetworking: Boolean
+  speedNetworkingStatus: String
+  billingAddressFirstName: String
+  billingAddressLastName: String
+  billingAddressEmail: String
+  billingAddressPhone: String
+  billingAddressStreet: String
+  billingAddressCity: String
+  billingAddressState: String
+  billingAddressZip: String
+  sameAsAttendee: Boolean
+  speakerTopic: String
+  learningObjectives: String
+  totalAmount: Int
+  discountCode: String
+  status: String @default(value: "PENDING")
+  addOns: [ApsAddOn] @manyToMany(relationName: "apsRegistrantAddOns")
+  morrisetteTransportation: String
+  morrisetteStatus: String
+  paymentConfirmation: String
+  registrationEmailSent: Boolean
+  registrationEmailSentDate: String
+  registrationEmailReceived: Boolean
+  registrationEmailReceivedDate: String
   welcomeEmailSent: Boolean
+  welcomeEmailSentDate: String
+  welcomeEmailReceived: Boolean
+  welcomeEmailReceivedDate: String
+  paymentMethod: String
+  paymentLast4: String
+  approvedAt: String
+  headshot: String
+  presentation: String
+  presentationTitle: String
+  presentationSummary: String
+  magnaStatus: String
+  magnaTransportation: String
+  aristoStatus: String
+  aristoTransportation: String
+  bio: String
+  seatingChartRegistrant: ApsSeatingChartRegistrant @hasOne
 }
 
 type APSTicketRegistrant @model @auth(rules: [{ allow: public }]) {
@@ -292,9 +331,10 @@ type APSSpeaker2024 @model @auth(rules: [{ allow: public }]) {
 type APSCompany @model @auth(rules: [{ allow: public }]) {
   name: String!
   email: String! @index(name: "apsCompanyByEmail")
-  apsRegistrants: [APSRegistrant2025] @hasMany
+  apsRegistrants: [ApsRegistrant] @hasMany
+  aps25Registrants: [APSRegistrant2025] @hasMany
   type: CompanyType
-  registrants: [APSRegistrant2025] @hasMany
+  registrants: [ApsRegistrant] @hasMany
 }
 
 type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
@@ -308,6 +348,21 @@ type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
   altLink: String
   apsRegistrants: [APSRegistrant2025]
     @manyToMany(relationName: "apsRegistrantAddOns25")
+  type: String
+  limit: Int
+}
+
+type ApsAddOn @model @auth(rules: [{ allow: public }]) {
+  title: String!
+  description: String!
+  subheadline: String
+  location: String!
+  date: String!
+  time: String!
+  company: String!
+  altLink: String
+  apsRegistrants: [ApsRegistrant]
+    @manyToMany(relationName: "apsRegistrantAddOns")
   type: String
   limit: Int
 }
@@ -392,6 +447,28 @@ type APS2025SeatingChartRegistrant @model @auth(rules: [{ allow: public }]) {
   registrant: APSRegistrant2025 @belongsTo(fields: ["registrantID"])
 }
 
+type ApsSeatingChartRegistrant @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  category: String
+  firstName: String
+  lastName: String
+  company: String
+  email: String @index(name: "seatByEmail")
+  role: String
+  tableNumber: Int
+  notes: String
+  seatingChartID: ID @index(name: "seatByChart")
+  seatingChart: ApsSeatingChart @belongsTo(fields: ["seatingChartID"])
+  registrantID: ID @index(name: "seatByRegistrant")
+  registrant: ApsRegistrant @belongsTo(fields: ["registrantID"])
+}
+
+type ApsSeatingChart @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  registrants: [ApsSeatingChartRegistrant]
+    @hasMany(indexName: "seatByChart", fields: ["id"])
+}
+
 type APS2025SeatingChart @model @auth(rules: [{ allow: public }]) {
   id: ID!
   registrants: [APS2025SeatingChartRegistrant]
@@ -463,7 +540,6 @@ type Company @model @auth(rules: [{ allow: public }]) {
   city: String
   state: String
   zip: String
-  apsID: [APS] @manyToMany(relationName: "APSSponsor")
 }
 
 type APSSpeaker @model @auth(rules: [{ allow: public }]) {
@@ -562,7 +638,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   linkedin: String
   location: String
   companyID: ID @index(name: "userByCompany")
-  apss: [APS] @manyToMany(relationName: "APSUser")
+  apss: [APS] @hasMany
   cmpmFormID: ID
   cmpmForm: CMPMForm @hasOne(fields: ["cmpmFormID"])
   cpsFormID: ID
