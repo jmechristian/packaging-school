@@ -53,14 +53,8 @@ const Fpas = () => {
         }
 
         const result = await response.json();
-        console.log('API Response:', {
-          headers: result.headers,
-          rawHeaders: result.rawHeaders,
-          debug: result.debug,
-          firstDataRow: result.data?.[0],
-        });
 
-        // Use rawHeaders if available (for debugging), otherwise use processed headers
+        // Use rawHeaders if available, otherwise use processed headers
         const headersToProcess = result.rawHeaders || result.headers || [];
 
         // Create display names for headers (shorten long location names)
@@ -102,7 +96,6 @@ const Fpas = () => {
         setData(result.data || []);
         setHeaders(displayHeaders);
       } catch (err) {
-        console.error('Error fetching sheet data:', err);
         setError(err.message);
       } finally {
         setIsLoading(false);

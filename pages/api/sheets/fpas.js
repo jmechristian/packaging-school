@@ -86,11 +86,6 @@ export default async function handler(req, res) {
     
     // Get headers from the appropriate row
     const rawHeaders = rows[headerRowIndex] || [];
-    
-    // Log the first few rows to debug header structure
-    console.log('Header row index:', headerRowIndex);
-    console.log('First 3 rows from sheet:', rows.slice(0, 3));
-    console.log('Raw headers:', rawHeaders);
 
     // Build a list of unique, non-empty header keys for the JSON structure.
     // This avoids collapsing data when headers are duplicated or blank.
@@ -112,8 +107,6 @@ export default async function handler(req, res) {
 
       return `${base} (${count})`;
     });
-    
-    console.log('Processed headers:', headers);
 
     // Map each row to an object using the unique headers, starting from after the header row
     const data = rows.slice(dataStartIndex).map((row) => {
@@ -124,24 +117,12 @@ export default async function handler(req, res) {
       return rowData;
     });
 
-    // Return both raw and processed headers for debugging
     res.status(200).json({ 
       data, 
       headers,
-      rawHeaders: rawHeaders, // Include original headers for debugging
-      debug: {
-        headerRowIndex,
-        dataStartIndex,
-        firstRow: rows[0],
-        secondRow: rows[1],
-        thirdRow: rows[2],
-        totalRows: rows.length,
-        totalColumns: rawHeaders.length
-      }
+      rawHeaders: rawHeaders
     });
   } catch (error) {
-    console.error('Google Sheets API Error:', error);
-
     if (error.code === 403) {
       return res.status(403).json({
         error:
