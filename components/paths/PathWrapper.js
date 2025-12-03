@@ -137,7 +137,7 @@ const PathWrapper = ({ path }) => {
     return (
       awsUser &&
       currentPath?.userProgress?.items?.find(
-        (user) => user.user.id === awsUser.id
+        (user) => user.user?.id === awsUser.id
       )
     );
   }, [currentPath?.userProgress?.items, awsUser]);
@@ -149,6 +149,7 @@ const PathWrapper = ({ path }) => {
 
   useEffect(() => {
     const createNewCredential = async () => {
+      if (!currentUser?.user) return;
       const credential = await createCredential(
         currentUser.user.name,
         currentUser.user.email,
