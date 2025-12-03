@@ -68,20 +68,77 @@ export default async function handler(req, res) {
     const rows = response.data.values;
 
     if (!rows || rows.length === 0) {
-      return res.status(200).json({ data: [], message: 'No data found' });
+      return res.status(200).json({ data: [], headers: [], message: 'No data found' });
     }
 
-    // Convert rows to objects (first row as headers)
-    const headers = rows[0];
-    const data = rows.slice(1).map((row) => {
+    // Check if row 1 (index 0) has meaningful headers or if they're in row 2 (index 1)
+    // If row 1 is mostly empty, use row 2 as headers
+    const row1 = rows[0] || [];
+    const row2 = rows[1] || [];
+    
+    // Count non-empty cells in each row
+    const row1NonEmpty = row1.filter(cell => cell && cell.toString().trim() !== '').length;
+    const row2NonEmpty = row2.filter(cell => cell && cell.toString().trim() !== '').length;
+    
+    // Use row 2 as headers if it has significantly more content than row 1
+    const headerRowIndex = row2NonEmpty > row1NonEmpty * 2 ? 1 : 0;
+    const dataStartIndex = headerRowIndex + 1;
+    
+    // Get headers from the appropriate row
+    const rawHeaders = rows[headerRowIndex] || [];
+    
+    // Log the first few rows to debug header structure
+    console.log('Header row index:', headerRowIndex);
+    console.log('First 3 rows from sheet:', rows.slice(0, 3));
+    console.log('Raw headers:', rawHeaders);
+
+    // Build a list of unique, non-empty header keys for the JSON structure.
+    // This avoids collapsing data when headers are duplicated or blank.
+    const headerCounts = {};
+    const headers = rawHeaders.map((header, index) => {
+      // Preserve the original header value, even if empty
+      const originalHeader = header ? header.toString().trim() : '';
+      
+      // For the key, use original if it exists, otherwise create a unique column name
+      const base = originalHeader !== '' ? originalHeader : `Column ${index + 1}`;
+
+      headerCounts[base] = (headerCounts[base] || 0) + 1;
+      const count = headerCounts[base];
+
+      // First occurrence uses the base name, subsequent ones get a suffix
+      if (count === 1) {
+        return base;
+      }
+
+      return `${base} (${count})`;
+    });
+    
+    console.log('Processed headers:', headers);
+
+    // Map each row to an object using the unique headers, starting from after the header row
+    const data = rows.slice(dataStartIndex).map((row) => {
       const rowData = {};
       headers.forEach((header, index) => {
-        rowData[header] = row[index] || '';
+        rowData[header] = row[index] ?? '';
       });
       return rowData;
     });
 
-    res.status(200).json({ data, headers });
+    // Return both raw and processed headers for debugging
+    res.status(200).json({ 
+      data, 
+      headers,
+      rawHeaders: rawHeaders, // Include original headers for debugging
+      debug: {
+        headerRowIndex,
+        dataStartIndex,
+        firstRow: rows[0],
+        secondRow: rows[1],
+        thirdRow: rows[2],
+        totalRows: rows.length,
+        totalColumns: rawHeaders.length
+      }
+    });
   } catch (error) {
     console.error('Google Sheets API Error:', error);
 

@@ -24,7 +24,8 @@ const Fpas = () => {
   // Get sheetId from query params or use environment variable
   const sheetId =
     router.query.sheetId || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID;
-  const range = router.query.range || 'CA In-Store Audit';
+  const range =
+    router.query.range || 'Database (excl. unavail./incorrect prods)';
 
   useEffect(() => {
     if (!sheetId) {
@@ -52,33 +53,50 @@ const Fpas = () => {
         }
 
         const result = await response.json();
+        console.log('API Response:', {
+          headers: result.headers,
+          rawHeaders: result.rawHeaders,
+          debug: result.debug,
+          firstDataRow: result.data?.[0],
+        });
 
-        // Process headers - keep ALL headers (even empty ones) since data is keyed by them
-        const rawHeaders = result.headers || [];
+        // Use rawHeaders if available (for debugging), otherwise use processed headers
+        const headersToProcess = result.rawHeaders || result.headers || [];
 
         // Create display names for headers (shorten long location names)
-        const displayHeaders = rawHeaders.map((header, index) => {
+        const displayHeaders = headersToProcess.map((header, index) => {
+          // Use the header as-is if it exists and is meaningful
           let displayName = header;
 
-          // If header is empty, give it a placeholder
-          if (!header || header.trim() === '') {
-            displayName = `Column ${index + 1}`;
-          } else {
-            // Shorten very long location names for display
-            if (
-              header.includes('Urban Food Desert') ||
-              header.includes('Rural Food Desert') ||
-              header.includes('Tribal Grocery Store') ||
-              header.includes('High-Density')
-            ) {
-              const match = header.match(/(CA\d+):\s*(.+?)(?:,\s*|$)/);
-              if (match) {
-                displayName = `${match[1]}: ${match[2].split(',')[0]}`;
-              }
+          // If header is empty or just a placeholder, try to find a better name
+          if (!header || header.trim() === '' || header.startsWith('Column ')) {
+            // Check if we have a processed header that might be better
+            const processedHeader = result.headers?.[index];
+            if (processedHeader && !processedHeader.startsWith('Column ')) {
+              displayName = processedHeader;
+            } else {
+              displayName = `Column ${index + 1}`;
             }
           }
 
-          return { original: header || '', display: displayName };
+          // Shorten very long location names for display
+          if (
+            displayName.includes('Urban Food Desert') ||
+            displayName.includes('Rural Food Desert') ||
+            displayName.includes('Tribal Grocery Store') ||
+            displayName.includes('High-Density')
+          ) {
+            const match = displayName.match(/(CA\d+):\s*(.+?)(?:,\s*|$)/);
+            if (match) {
+              displayName = `${match[1]}: ${match[2].split(',')[0]}`;
+            }
+          }
+
+          // Use the processed header as the key for data access
+          const dataKey =
+            result.headers?.[index] || header || `Column ${index + 1}`;
+
+          return { original: dataKey, display: displayName };
         });
 
         setData(result.data || []);
@@ -384,11 +402,16 @@ const Fpas = () => {
                       className={colClass}
                       onClick={() => requestSort(headerObj)}
                     >
-                      <div className='flex items-center space-x-1'>
-                        <span className='truncate' title={originalHeader}>
+                      <div className='flex items-start space-x-1'>
+                        <span
+                          className='break-words leading-tight'
+                          title={originalHeader}
+                        >
                           {header || `Column ${index + 1}`}
                         </span>
-                        {getSortIcon(headerObj)}
+                        <span className='flex-shrink-0 mt-0.5'>
+                          {getSortIcon(headerObj)}
+                        </span>
                       </div>
                     </th>
                   );
