@@ -324,7 +324,7 @@ const Fpas = () => {
     <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[1900px]'>
       <div className='mb-4 sm:mb-6'>
         <h1 className='text-2xl sm:text-3xl font-bold mb-2'>
-          PA - WIC - CA - 2025
+          FPA - WIC - CA - 2025
         </h1>
         <p className='text-sm sm:text-base text-gray-600'>
           Showing {sortedData.length} of {data.length} records
