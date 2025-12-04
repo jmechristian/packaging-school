@@ -34,6 +34,8 @@ const APSPresentations = ({
         object: title,
         email: user,
       });
+    } else {
+      unlockHandler();
     }
   };
 
