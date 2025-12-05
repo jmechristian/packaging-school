@@ -169,7 +169,7 @@ const CyberMonday = () => {
   }, [isClaimed, fetchAndSetTodayCoupon]);
 
   return (
-    <div className='w-full flex flex-col gap-10 pt-16 overflow-hidden'>
+    <div className='w-full flex flex-col gap-10 pt-20 overflow-hidden'>
       <div className='w-full max-w-6xl mx-auto'>
         <div className='flex flex-col gap-8'>
           <div className='flex flex-col justify-center items-center relative text-center max-w-4xl mx-auto gap-10'>
@@ -188,26 +188,25 @@ const CyberMonday = () => {
               />
             </div>
             <div className='flex flex-wrap items-center justify-center relative font-oswald uppercase text-6xl lg:!text-7xl tracking-[-0.03em] gap-2 text-center font-base leading-[1em] px-4 lg:px-0'>
-              Celebrating{' '}
+              10 Years of
               <span className='text-white bg-clemson px-4 pb-3 rounded-md font-medium mt-2'>
-                10 Years
+                Packaging Education
               </span>{' '}
-              With{' '}
+              And{' '}
               <span className='text-clemson font-medium'>
-                Limited Daily Deals
+                We&apos;re Just Getting Started
               </span>{' '}
-              at The Packaging School!
             </div>
-            <div className='text-xl lg:!text-2xl text-zinc-800 px-4 lg:!px-0'>
-              Give yourself the gift of education this season! To celebrate our
-              10-year anniversary, we&apos;re launching 10 days of limited,
-              first-come-first-serve coupons—a new one released every day. Will
-              you be the first to snag it?
+            <div className='text-xl lg:!text-3xl text-zinc-800 px-4 lg:!px-0 lg:!leading-[1.3em] mt-1'>
+              For ten years, The Packaging School has empowered learners,
+              creators, and industry leaders with accessible, world-class
+              education. Join us and the 15,000+ learners as we shape the next
+              decade of innovation, skills, and opportunity in packaging.
             </div>
           </div>
         </div>
       </div>
-      <div className='w-full max-w-6xl mx-auto bg-zinc-900 rounded-[2.5rem] lg:!p-16 p-9 relative overflow-hidden'>
+      <div className='w-full max-w-6xl mx-auto bg-zinc-900 rounded-[2.5rem] lg:!p-16 p-0 relative overflow-hidden lg:!mt-10'>
         {/* Spotlight gradient overlay */}
         <div
           className='absolute inset-0 pointer-events-none rounded-[2.5rem]'
@@ -216,7 +215,7 @@ const CyberMonday = () => {
               'radial-gradient(ellipse 120% 80% at 50% 75%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.05) 42%, transparent 70%)',
           }}
         />
-        <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center relative z-10'>
+        {/* <div className='w-full flex flex-col gap-8 px-4 xl:px-0 items-center text-center relative z-10'>
           <div className='flex flex-col gap-8 items-center'>
             <div className='h2-base text-white'>
               1 code. <span className='text-clemson'>50% Off.</span>
@@ -325,12 +324,12 @@ const CyberMonday = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className=' text-white mt-6 mb-12 px-6'>
+        </div> */}
+        {/* <div className=' text-white mt-6 mb-12 px-6'>
           *If you&apos;re applying to the Certificate of Packaging Science, be
           sure to email us at info@packagingschool.com after you apply to claim
           your coupon.
-        </div>
+        </div> */}
         <VideoPlayer
           videoEmbedLink='https://youtu.be/IG8CPI5EM_4?si=848YCPfTPrnEDUwX'
           light={true}
