@@ -430,11 +430,11 @@ export default function HeaderNew() {
           <Suspense>
             <SalesBar user={user} />
           </Suspense>
-          <div className='w-full bg-red-700 h-12 flex gap-4 items-center justify-center p-4'>
+          {/* <div className='w-full bg-red-700 h-12 flex gap-4 items-center justify-center p-4'>
             <div>
               <WrenchScrewdriverIcon className='w-6 h-6 text-white' />
             </div>
-            {/* <div className='text-white text-lg font-semibold'>
+            <div className='text-white text-lg font-semibold'>
               We are currently performing scheduled maintenance on the site.
               Please{' '}
               <a
@@ -445,8 +445,8 @@ export default function HeaderNew() {
                 CLICK HERE
               </a>{' '}
               to access your dashboard
-            </div> */}
-          </div>
+            </div>
+          </div> */}
         </nav>
       </header>
     </div>
