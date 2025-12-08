@@ -90,13 +90,13 @@ class AuthService {
         console.log('AuthService: Found existing AWS user');
         // Update last login and level
         const level = getUserLevel(awsUser.userXp?.totalXp || 0, awsUser);
-        const updatedUserXp = await updateLastLogin(
-          awsUser.userUserXpId,
-          parseInt(level.level, 10),
-          parseInt(level.xpNeeded, 10),
-          parseFloat(level.progress.toFixed(1))
-        );
-        awsUser.userXp = updatedUserXp;
+        // const updatedUserXp = await updateLastLogin(
+        //   awsUser.userUserXpId,
+        //   parseInt(level.level, 10),
+        //   parseInt(level.xpNeeded, 10),
+        //   parseFloat(level.progress.toFixed(1))
+        // );
+        // awsUser.userXp = updatedUserXp;
       }
 
       return awsUser;
