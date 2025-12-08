@@ -5,6 +5,7 @@ import {
   MagnifyingGlassIcon,
   UserIcon,
   XMarkIcon,
+  WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 import { MdLogin, MdAccountCircle } from 'react-icons/md';
 import { initializeAutocomplete } from '../../../components/search/NewAutoComplete';
@@ -429,6 +430,23 @@ export default function HeaderNew() {
           <Suspense>
             <SalesBar user={user} />
           </Suspense>
+          <div className='w-full bg-red-700 h-12 flex gap-4 items-center justify-center p-4'>
+            <div>
+              <WrenchScrewdriverIcon className='w-6 h-6 text-white' />
+            </div>
+            <div className='text-white text-lg font-semibold'>
+              We are currently performing scheduled maintenance on the site.
+              Please{' '}
+              <a
+                href='https://learn.packagingschool.com?role=classic'
+                target='_blank'
+                rel='noreferrer'
+              >
+                CLICK HERE
+              </a>{' '}
+              to access your dashboard
+            </div>
+          </div>
         </nav>
       </header>
     </div>
