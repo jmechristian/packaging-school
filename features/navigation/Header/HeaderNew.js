@@ -434,7 +434,7 @@ export default function HeaderNew() {
             <div>
               <WrenchScrewdriverIcon className='w-6 h-6 text-white' />
             </div>
-            <div className='text-white text-lg font-semibold'>
+            {/* <div className='text-white text-lg font-semibold'>
               We are currently performing scheduled maintenance on the site.
               Please{' '}
               <a
@@ -445,7 +445,7 @@ export default function HeaderNew() {
                 CLICK HERE
               </a>{' '}
               to access your dashboard
-            </div>
+            </div> */}
           </div>
         </nav>
       </header>
