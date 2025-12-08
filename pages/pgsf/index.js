@@ -91,17 +91,31 @@ const PGSF = () => {
               have the financial support and opportunities needed to launch
               successful careers.
             </div>
+            <div className='text-xl leading-relaxed'>
+              Through the support of PGSF and the Gravure Education Fund
+              endowment, students may apply for funding to pursue the
+              certificate programs offered through The Packaging School.
+              Students may choose from the following programs:
+            </div>
           </div>
         </div>
         <div className='md:col-span-2'>
-          <div className='flex flex-col gap-16 border border-gray-300 rounded-lg p-6'>
-            <div className='w-full h-full mx-auto relative mt-4'>
+          <div className='flex flex-col gap-16 border border-gray-300 rounded-lg p-5'>
+            <div className='w-full h-full mx-auto relative mt-4 flex flex-col gap-6'>
               <div className='absolute top-0 left-0 w-full h-full flex justify-center items-start'></div>
+              <div className='w-full h-full max-w-[80%] mx-auto'>
+                <Image
+                  src='https://packschool.s3.us-east-1.amazonaws.com/logo-gpsfsd.png'
+                  alt='ICPF Logo'
+                  width={364}
+                  height={143}
+                />
+              </div>
               <Image
-                src='https://packschool.s3.us-east-1.amazonaws.com/logo-gpsfsd.png'
+                src='https://packschool.s3.us-east-1.amazonaws.com/arrc.png'
                 alt='ICPF Logo'
-                width={364}
-                height={143}
+                width={1226}
+                height={444}
               />
             </div>
             <div className='text-center text-lg font-bold bg-[#da5742] text-white p-6 rounded-lg'>
@@ -164,6 +178,9 @@ const PGSF = () => {
           </div>
         </div>
 
+        {/* CERTIFICATIONS CARDS */}
+
+        {/* CERTIFICATIONS CARDS */}
         <div className='md:!col-span-6 bg-gray-100 p-10 rounded-lg'>
           <div className='!grid !grid-cols-2 md:!grid-cols-3 lg:!grid-cols-5 w-full gap-10 lg:gap-16 px-6 xl:px-0 max-w-7xl mx-auto'>
             <div className='flex justify-center items-center hover:bg-black transition-all ease-in group cursor-pointer flex-1 p-3'>
@@ -317,7 +334,8 @@ const PGSF = () => {
                 <li>
                   Must be a current undergraduate student enrolled in a US
                   college, university, technical school, or community college,
-                  or be a current intern at a packaging company.
+                  or be a current intern at a packaging company and still
+                  enrolled in a secondary school program.
                 </li>
                 <li>
                   Major in packaging, printing, or graphics-related disciplines.
