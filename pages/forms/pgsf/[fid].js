@@ -16,7 +16,7 @@ const Page = ({ pageData }) => {
         <CenteredTextHeader
           headline='Packaging School | PGSF Form'
           heading='Sponsored by PGSF'
-          subhead='Whether you’re a packaging major or exploring new fields, this program introduces you to the corrugated industry and equips you with practical skills that set you apart and prepare you for success in the exciting, fast-growing world of packaging. Fill out the form below to get started. You will receive a confirmation email within 1–3 business days of your complete application submission. We are looking forward to getting to know you better and cannot wait to share our perspective with you on how packaging is an awesome industry full of opportunity.'
+          subhead='Whether you’re a packaging, printing, or graphics-related major, this program introduces you to the world of packaging and equips you with practical skills that set you apart and prepare you for success in this exciting, fast-growing industry. Fill out the form below to get started. You will receive a confirmation email within 1–3 business days of your complete application submission. We are looking forward to getting to know you better and cannot wait to share our perspective with you on how packaging is an awesome industry full of opportunity.'
         />
         <PGSFWrapper params={pageData.getPgsfForm} />
       </div>

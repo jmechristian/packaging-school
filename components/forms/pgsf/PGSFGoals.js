@@ -33,6 +33,7 @@ const PGSFGoals = () => {
               <option value='CPS'>Certificate of Packaging Science</option>
               <option value='APS'>Automotive Packaging Certificate</option>
               <option value='CSP'>Certificate of Sustainable Packaging</option>
+              <option value='FPC'>Food Packaging Certificate</option>
             </select>
           </div>
           {formState.errors.hasOwnProperty('certApplying') && (
