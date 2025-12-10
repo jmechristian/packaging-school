@@ -1,5 +1,6 @@
 import React from 'react';
 import TextArea from '../TextArea';
+import TextInput from '../TextInput';
 import { useFormContext } from 'react-hook-form';
 
 const PGSFGoals = () => {
@@ -26,10 +27,12 @@ const PGSFGoals = () => {
               className='w-full rounded-md border-0 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm md:text-base sm:leading-6'
             >
               <option value=''>Select Certificate</option>
-              <option value='CMPM'>CMPM</option>
-              <option value='CPS'>CPS</option>
-              <option value='APS'>APS</option>
-              <option value='CSP'>CSP</option>
+              <option value='CMPM'>
+                Certificate of Mastery in Packaging Management
+              </option>
+              <option value='CPS'>Certificate of Packaging Science</option>
+              <option value='APS'>Automotive Packaging Certificate</option>
+              <option value='CSP'>Certificate of Sustainable Packaging</option>
             </select>
           </div>
           {formState.errors.hasOwnProperty('certApplying') && (
@@ -39,6 +42,11 @@ const PGSFGoals = () => {
           )}
         </div>
       </fieldset>
+      <TextInput
+        name={'funding'}
+        placeholder={'Enter Funding'}
+        label={'Funding Request Amount (up to $7,000)'}
+      />
       <TextArea
         name={'yearGoals'}
         label={

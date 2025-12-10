@@ -125,6 +125,11 @@ export default async function handler(req, res) {
       body.certApplying || ''
     }</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Funding Request Amount (up to $7,000)</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
+      body.funding || ''
+    }</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Explain why you are interested in a career in the printing, graphic communications, or packaging industry. How do you see our certificate programs helping you achieve your goals and what impact do you hope to make in the graphics and packaging sectors?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${
       body.yearGoals || ''
@@ -192,11 +197,11 @@ export default async function handler(req, res) {
         ],
         ToAddresses: [
           toAddress,
-          'info@packagingschool.com',
-          'tluman@interprint.com',
-          'dianne.bullas@pgsf.org',
-          'jeff.white@pgsf.org',
-          'mobrien@interprint.com',
+          // 'info@packagingschool.com',
+          // 'tluman@interprint.com',
+          // 'dianne.bullas@pgsf.org',
+          // 'jeff.white@pgsf.org',
+          // 'mobrien@interprint.com',
         ],
       },
       Message: {
