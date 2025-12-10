@@ -197,11 +197,11 @@ export default async function handler(req, res) {
         ],
         ToAddresses: [
           toAddress,
-          // 'info@packagingschool.com',
-          // 'tluman@interprint.com',
-          // 'dianne.bullas@pgsf.org',
-          // 'jeff.white@pgsf.org',
-          // 'mobrien@interprint.com',
+          'info@packagingschool.com',
+          'tluman@interprint.com',
+          'dianne.bullas@pgsf.org',
+          'jeff.white@pgsf.org',
+          'mobrien@interprint.com',
         ],
       },
       Message: {
