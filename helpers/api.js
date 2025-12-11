@@ -1725,8 +1725,28 @@ export const updateStudentPathProgress = async (id, data) => {
 // };
 
 export const createNewUserXp = async (userId, lastLogin) => {
+  // Minimal selection to avoid heavy relationships (e.g., apss GSI) that
+  // break in environments without those indexes.
+  const minimalCreateUserXp = /* GraphQL */ `
+    mutation CreateUserXpMinimal($input: CreateUserXpInput!) {
+      createUserXp(input: $input) {
+        id
+        userXpUserId
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        lastLogin
+        dailyStreak
+        progress
+        updatedAt
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: createUserXp,
+    query: minimalCreateUserXp,
     variables: {
       input: {
         userXpUserId: userId,

@@ -12,7 +12,7 @@ import { useAuth } from '../../hooks/useAuth';
 export default withPageAuthRequired(function Page() {
   const dispatch = useDispatch();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
-  const { isReady, needsOnboarding } = useAuth();
+  const { isReady, needsOnboarding, error } = useAuth();
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
   const { navigateToThinkific } = useThinkificLink();
@@ -99,7 +99,25 @@ export default withPageAuthRequired(function Page() {
         <meta name='robots' content='noindex, nofollow' />
         <meta name='googlebot' content='noindex, nofollow' />
       </Head>
-      {!isReady ? (
+      {error ? (
+        <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
+          <div className='flex flex-col items-center gap-4 max-w-lg text-center px-4'>
+            <div className='w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin'></div>
+            <div className='text-red-600 font-semibold'>
+              We could not load your profile right now.
+            </div>
+            <div className='text-gray-600 text-sm'>
+              {error}
+            </div>
+            <button
+              className='px-4 py-2 bg-clemson text-white rounded'
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      ) : !isReady ? (
         <div className='flex items-center justify-center w-full min-h-screen bg-gray-100'>
           <div className='flex flex-col items-center gap-4'>
             <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>

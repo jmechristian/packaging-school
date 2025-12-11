@@ -68,10 +68,10 @@ export const useAuth = () => {
 
   // Setup user when Auth0 user changes
   useEffect(() => {
-    if (user && !userIsLoading && !setupComplete && !isLoading) {
+    if (user && !userIsLoading && !setupComplete && !isLoading && !error) {
       setupUser();
     }
-  }, [user, userIsLoading, setupComplete, isLoading, setupUser]);
+  }, [user, userIsLoading, setupComplete, isLoading, error, setupUser]);
 
   // Reset auth service on logout
   useEffect(() => {
