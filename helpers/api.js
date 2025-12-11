@@ -1441,16 +1441,65 @@ export const getAWSUser = async (email) => {
 };
 
 export const createAWSUser = async (data) => {
+  // Minimal selection to avoid heavy relationships (e.g., apss GSI) that
+  // break in environments without those indexes.
+  const minimalCreateUser = /* GraphQL */ `
+    mutation CreateUserMinimal($input: CreateUserInput!) {
+      createUser(input: $input) {
+        id
+        email
+        name
+        thinkificId
+        userUserXpId
+        lastLogin
+        dailyStreak
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        onboardingComplete
+        tourCompleted
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: createUser,
+    query: minimalCreateUser,
     variables: { input: data },
   });
   return res.data.createUser;
 };
 
 export const updateAWSUser = async (data) => {
+  // Minimal selection to avoid heavy relationships (e.g., apss GSI) that
+  // break in environments without those indexes.
+  const minimalUpdateUser = /* GraphQL */ `
+    mutation UpdateUserMinimal($input: UpdateUserInput!) {
+      updateUser(input: $input) {
+        id
+        email
+        name
+        thinkificId
+        userUserXpId
+        lastLogin
+        dailyStreak
+        totalXp
+        thinkificXp
+        psXp
+        level
+        xpToNextLevel
+        onboardingComplete
+        tourCompleted
+        updatedAt
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: updateUser,
+    query: minimalUpdateUser,
     variables: { input: data },
   });
   return res.data.updateUser;

@@ -12,16 +12,22 @@ export default handleAuth({
   async callback(req, res) {
     console.log('Auth0 callback endpoint hit');
 
-    // Decode the state parameter to get returnTo
+    // Decode the state parameter to get returnTo, firstName, and lastName
     let returnTo = null;
+    let firstNameFromState = null;
+    let lastNameFromState = null;
     if (req.query.state) {
       try {
         const decodedState = JSON.parse(
           Buffer.from(req.query.state, 'base64').toString()
         );
         returnTo = decodedState.returnTo;
+        firstNameFromState = decodedState.firstName;
+        lastNameFromState = decodedState.lastName;
         console.log('Decoded state:', decodedState);
         console.log('returnTo from state:', returnTo);
+        console.log('firstName from state:', firstNameFromState);
+        console.log('lastName from state:', lastNameFromState);
       } catch (error) {
         console.error('Error decoding state:', error);
       }
@@ -33,13 +39,43 @@ export default handleAuth({
       console.log('returnTo from query params:', returnTo);
     }
 
-    // Always run SSO - remove external URL check
-    const isExternalUrl = returnTo && returnTo.startsWith('http');
+    // Also check for state data in returnTo URL (from magic-link flow)
+    if (returnTo && returnTo.includes('__state=')) {
+      try {
+        const url = new URL(returnTo, 'http://localhost'); // Base URL for parsing
+        const stateParam = url.searchParams.get('__state');
+        if (stateParam) {
+          const decodedState = JSON.parse(
+            Buffer.from(decodeURIComponent(stateParam), 'base64').toString()
+          );
+          if (decodedState.returnTo) returnTo = decodedState.returnTo;
+          if (decodedState.firstName && !firstNameFromState)
+            firstNameFromState = decodedState.firstName;
+          if (decodedState.lastName && !lastNameFromState)
+            lastNameFromState = decodedState.lastName;
+          console.log('Extracted state from returnTo URL');
+        }
+      } catch (error) {
+        console.error('Error extracting state from returnTo:', error);
+      }
+    }
+
+    // Check if returnTo is external (needs SSO redirect)
+    const isExternalUrl =
+      returnTo &&
+      (returnTo.startsWith('http') ||
+        returnTo.includes('learn.packagingschool.com'));
+
+    // If we have an external returnTo, redirect to external-redirect handler
+    // which will handle SSO and redirect to the external URL
+    const callbackReturnTo = isExternalUrl
+      ? `/api/auth/external-redirect?returnTo=${encodeURIComponent(returnTo)}`
+      : '/profile';
 
     try {
       await handleCallback(req, res, {
-        // Always redirect to profile first so our callback runs
-        returnTo: '/profile',
+        // Redirect to external-redirect handler for external URLs, profile for internal
+        returnTo: callbackReturnTo,
         afterCallback: async (req, res, session) => {
           console.log('afterCallback called for', session?.user?.email);
 
@@ -75,15 +111,32 @@ export default handleAuth({
               return str && str.includes('@');
             }
 
-            // Use Auth0 user fields, or fallback to AWS user name
+            // Use Auth0 user fields, or fallback to state/AWS user name
             const nameParts =
               (awsUser && awsUser.name && awsUser.name.trim().split(' ')) ||
               (!isEmail(session.user.name) && session.user.name?.split(' ')) ||
               [];
 
-            const firstName = session.user.given_name || nameParts[0] || '';
+            // Priority: state > Auth0 session > AWS user > empty
+            const firstName =
+              firstNameFromState ||
+              session.user.given_name ||
+              nameParts[0] ||
+              '';
             const lastName =
-              session.user.family_name || nameParts.slice(1).join(' ') || '';
+              lastNameFromState ||
+              session.user.family_name ||
+              nameParts.slice(1).join(' ') ||
+              '';
+
+            // If we have names from state but not in Auth0 session, store them in session
+            // so external-redirect handler can use them
+            if (firstNameFromState && !session.user.given_name) {
+              session.user.given_name = firstNameFromState;
+            }
+            if (lastNameFromState && !session.user.family_name) {
+              session.user.family_name = lastNameFromState;
+            }
 
             // Only run SSO if both first and last name are present
             if (!firstName || !lastName) {
@@ -120,7 +173,7 @@ export default handleAuth({
             // Always provide a returnTo to avoid timeout issues
             const finalDestination = returnTo || `${baseUrl}/profile`;
 
-            // Always generate SSO URL to test functionality
+            // Always generate SSO URL
             try {
               const ssoUrl = await handleSSO({
                 email: session.user.email,
@@ -131,23 +184,14 @@ export default handleAuth({
               });
               console.log('SSO redirect URL generated:', ssoUrl);
 
-              // Only attach to session in production
-              if (process.env.NODE_ENV === 'production') {
-                session.user.ssoRedirectUrl = ssoUrl;
-              } else {
-                console.log(
-                  'Development mode: SSO URL generated but not attached to session'
-                );
-              }
+              // Attach SSO URL to session for Layout component or external-redirect handler
+              session.user.ssoRedirectUrl = ssoUrl;
             } catch (ssoError) {
               console.warn(
                 'SSO failed, using fallback redirect:',
                 ssoError.message
               );
-              // Only set fallback in production
-              if (process.env.NODE_ENV === 'production') {
-                session.user.ssoRedirectUrl = finalDestination;
-              }
+              session.user.ssoRedirectUrl = finalDestination;
             }
 
             return session;

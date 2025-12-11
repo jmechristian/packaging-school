@@ -8,6 +8,8 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
     ? `${order.courseLink}?coupon=${coupon}`
     : order.courseLink;
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [message, setMessage] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const { user, isLoading: userIsLoading } = useUser();
@@ -59,13 +61,20 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
   }, [user, userIsLoading, router, returnTo]);
 
   const handleMagicLink = () => {
-    if (!email) return;
+    if (!email || !firstName || !lastName) {
+      setMessage(
+        'Please fill in all fields (email, first name, and last name)'
+      );
+      return;
+    }
 
     const returnToUrl = getReturnTo();
-    // Redirect directly to the magic link endpoint
-    const magicLinkUrl = `/api/magic-link?email=${encodeURIComponent(email)}${
-      returnToUrl ? `&returnTo=${encodeURIComponent(returnToUrl)}` : ''
-    }`;
+    // Redirect directly to the magic link endpoint with name fields
+    const magicLinkUrl = `/api/magic-link?email=${encodeURIComponent(
+      email
+    )}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(
+      lastName
+    )}${returnToUrl ? `&returnTo=${encodeURIComponent(returnToUrl)}` : ''}`;
     window.location.href = magicLinkUrl;
   };
 
@@ -176,6 +185,22 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
           placeholder='Enter your email'
           className='w-full border border-gray-300 rounded-md px-3 py-2'
         />
+        <input
+          type='text'
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+          placeholder='First Name'
+          className='w-full border border-gray-300 rounded-md px-3 py-2'
+        />
+        <input
+          type='text'
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+          placeholder='Last Name'
+          className='w-full border border-gray-300 rounded-md px-3 py-2'
+        />
 
         <div className='space-y-3'>
           <Link
@@ -195,7 +220,7 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
 
           <button
             onClick={handleMagicLink}
-            disabled={!email}
+            disabled={!email || !firstName || !lastName}
             className='block w-full bg-base-brand text-white py-3 px-4 rounded-md hover:bg-base-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed font-medium'
           >
             Send One-Time Code
