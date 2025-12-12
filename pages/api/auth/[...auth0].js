@@ -89,6 +89,16 @@ export default handleAuth({
             // We do NOT auto-run Thinkific SSO here anymore.
             console.log('Processing user after callback:', session.user.email);
 
+            // Dynamically determine baseUrl for internal API calls
+            let baseUrl;
+            if (process.env.NODE_ENV === 'development') {
+              baseUrl = 'http://localhost:3001';
+            } else {
+              const protocol = req.headers['x-forwarded-proto'] || 'http';
+              const host = req.headers.host;
+              baseUrl = `${protocol}://${host}`;
+            }
+
             // Fetch AWS user by email for fallback name
             let awsUser = null;
             try {
@@ -128,6 +138,46 @@ export default handleAuth({
             }
             if (lastNameFromState && !session.user.family_name) {
               session.user.family_name = lastNameFromState;
+            }
+
+            // Ensure Thinkific user exists (create if needed).
+            // NOTE: This is NOT SSO. It's just provisioning so later dashboard/purchase flows work.
+            // We do it at most once per session.
+            if (!session.user.thinkificEnsured) {
+              session.user.thinkificEnsured = true;
+
+              if (firstName && lastName) {
+                try {
+                  const thinkificUserRes = await fetch(
+                    `${baseUrl}/api/thinkific/get-user?email=${encodeURIComponent(
+                      session.user.email
+                    )}`
+                  );
+                  const thinkificData = await thinkificUserRes.json();
+
+                  if (!thinkificData?.data?.data?.userByEmail) {
+                    await fetch(`${baseUrl}/api/thinkific/create-user`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        email: session.user.email,
+                        first_name: firstName,
+                        last_name: lastName,
+                      }),
+                    });
+                    console.log('Thinkific user created during callback');
+                  } else {
+                    console.log('Thinkific user already exists');
+                  }
+                } catch (err) {
+                  console.warn('Thinkific ensure failed (non-fatal):', err);
+                }
+              } else {
+                console.log(
+                  'Skipping Thinkific ensure: missing first/last name',
+                  { firstName, lastName }
+                );
+              }
             }
 
             return session;
