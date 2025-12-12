@@ -8,17 +8,22 @@ import { lMSCoursesBySlug, listLMSCourses } from '../../src/graphql/queries';
 import { API } from 'aws-amplify';
 import Head from 'next/head';
 import Meta from '../../components/shared/Meta';
+import { buildCourseJsonLd } from '../../libs/seo/courseJsonLd';
 
 const Page = ({ course }) => {
+  console.log(course);
   const dispatch = useDispatch();
   const { preview } = useSelector((state) => state.course_filter);
   const { location } = useSelector((state) => state.auth);
+  const courseJsonLd = buildCourseJsonLd(course, 'https://packagingschool.com');
   return (
     <>
       <Meta
         title={course && `Packaging School | ${course.title}`}
         description={course && course.subheadline}
         image={course && course.seoImage}
+        course={courseJsonLd.course}
+        breadcrumb={courseJsonLd.breadcrumb}
       />
       <div className='relative py-16'>
         <CourseMain
