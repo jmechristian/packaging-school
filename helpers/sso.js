@@ -6,14 +6,23 @@ export const runThinkificSSO = async (user, returnTo) => {
     return;
   }
 
+  const nameParts = user.name.trim().split(' ').filter(Boolean);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  if (!firstName || !lastName) {
+    console.error('❌ SSO failed: Missing first/last name');
+    return;
+  }
+
   try {
     const res = await fetch('/api/generateJWT', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: user.email,
-        first_name: user.name.split(' ')[0],
-        last_name: user.name.split(' ')[1],
+        first_name: firstName,
+        last_name: lastName,
         return_to: returnTo, // This will now be the final destination directly
       }),
     });

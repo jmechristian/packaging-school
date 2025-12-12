@@ -1,5 +1,4 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
-import { handleSSO } from '../../../helpers/api';
 import { getAWSUser } from '../../../helpers/api';
 
 console.log('Auth0 API route initialized');
@@ -85,18 +84,10 @@ export default handleAuth({
             return session;
           }
 
-          // Dynamically determine the base URL
-          let baseUrl;
-          if (process.env.NODE_ENV === 'development') {
-            baseUrl = 'http://localhost:3001';
-          } else {
-            const protocol = req.headers['x-forwarded-proto'] || 'http';
-            const host = req.headers.host;
-            baseUrl = `${protocol}://${host}`;
-          }
-
           try {
-            console.log('Processing user for SSO:', session.user.email);
+            // Goal: keep callback simple and deterministic.
+            // We do NOT auto-run Thinkific SSO here anymore.
+            console.log('Processing user after callback:', session.user.email);
 
             // Fetch AWS user by email for fallback name
             let awsUser = null;
@@ -139,82 +130,9 @@ export default handleAuth({
               session.user.family_name = lastNameFromState;
             }
 
-            // Only run SSO if both first and last name are present
-            if (!firstName || !lastName) {
-              console.warn('Skipping SSO: missing first or last name', {
-                firstName,
-                lastName,
-                email: session.user.email,
-              });
-              return session;
-            }
-
-            // Ensure Thinkific user exists (create if needed)
-            const thinkificUser = await fetch(
-              `${baseUrl}/api/thinkific/get-user?email=${session.user.email}`
-            );
-            const data = await thinkificUser.json();
-
-            if (!data?.data?.data?.userByEmail && firstName && lastName) {
-              await fetch(`${baseUrl}/api/thinkific/create-user`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  email: session.user.email,
-                  first_name: firstName,
-                  last_name: lastName,
-                }),
-              });
-              console.log('User created in Thinkific');
-            }
-
-            // Only generate SSO URL if returnTo is external (needs Thinkific SSO)
-            // For internal URLs, skip SSO generation to avoid expired token issues
-            const finalDestination = returnTo || `${baseUrl}/profile`;
-            const needsSSO =
-              finalDestination.startsWith('http') ||
-              finalDestination.includes('learn.packagingschool.com');
-
-            // Store returnTo in cookie for expired token recovery (both internal and external)
-            if (finalDestination) {
-              res.setHeader(
-                'Set-Cookie',
-                `pendingReturnTo=${encodeURIComponent(
-                  finalDestination
-                )}; Path=/; Max-Age=900; SameSite=Lax`
-              );
-            }
-
-            if (needsSSO) {
-              console.log('Generating SSO URL for external destination');
-              try {
-                const ssoUrl = await handleSSO({
-                  email: session.user.email,
-                  first_name: firstName,
-                  last_name: lastName,
-                  returnTo: finalDestination,
-                  baseUrl,
-                });
-                console.log('SSO redirect URL generated:', ssoUrl);
-
-                // Attach SSO URL to session for Layout component or external-redirect handler
-                session.user.ssoRedirectUrl = ssoUrl;
-              } catch (ssoError) {
-                console.warn(
-                  'SSO failed, using fallback redirect:',
-                  ssoError.message
-                );
-                session.user.ssoRedirectUrl = finalDestination;
-              }
-            } else {
-              console.log('Internal URL detected, skipping SSO generation');
-              // For internal URLs, don't set ssoRedirectUrl - let them go directly to the page
-            }
-
             return session;
           } catch (ssoError) {
-            console.error('SSO handling error:', ssoError);
-            // Still return session even if SSO fails
+            console.error('afterCallback error:', ssoError);
             return session;
           }
         },

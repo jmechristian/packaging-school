@@ -38,65 +38,6 @@ const Layout = ({ children }) => {
       .catch((error) => console.log(error));
   }, [dispatch]);
 
-  // Check for returnTo in URL when user is already logged in
-  // This handles cases where logged-in users click email links
-  useEffect(() => {
-    if (user && router.isReady) {
-      const { returnTo } = router.query;
-
-      // If we have a returnTo in the URL and user is logged in, preserve it
-      if (returnTo && typeof returnTo === 'string') {
-        // Store it in cookie for recovery if needed
-        if (typeof document !== 'undefined') {
-          document.cookie = `pendingReturnTo=${encodeURIComponent(
-            returnTo
-          )}; Path=/; Max-Age=900; SameSite=Lax`;
-        }
-
-        // If we're on homepage, redirect immediately
-        if (router.pathname === '/') {
-          const isExternalUrl =
-            returnTo.startsWith('http') ||
-            returnTo.includes('learn.packagingschool.com');
-
-          if (isExternalUrl) {
-            window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
-              returnTo
-            )}`;
-          } else {
-            router.replace(returnTo);
-          }
-        }
-      }
-    }
-  }, [user, router.isReady, router.query, router.pathname]);
-
-  // Handle SSO redirect
-  useEffect(() => {
-    if (user) {
-      // Clear SSO flag if user doesn't have a redirect URL (normal login)
-      if (!user.ssoRedirectUrl && sessionStorage.getItem('ssoComplete')) {
-        sessionStorage.removeItem('ssoComplete');
-        sessionStorage.removeItem('ssoRedirectAttempted');
-      }
-
-      // Only redirect if user has SSO redirect URL, hasn't completed SSO
-      if (
-        user.ssoRedirectUrl &&
-        !sessionStorage.getItem('ssoComplete') &&
-        !sessionStorage.getItem('ssoRedirectAttempted')
-      ) {
-        console.log('SSO redirect detected:', user.ssoRedirectUrl);
-        sessionStorage.setItem('ssoComplete', 'true');
-        sessionStorage.setItem('ssoRedirectAttempted', 'true');
-
-        setTimeout(() => {
-          window.location.href = user.ssoRedirectUrl;
-        }, 100);
-      }
-    }
-  }, [user, router.pathname]);
-
   // Redirect to profile for onboarding if needed
   useEffect(() => {
     if (isReady && needsOnboarding && router.pathname !== '/profile') {

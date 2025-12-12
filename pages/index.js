@@ -23,59 +23,9 @@ const App = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  // Check for returnTo destination when user lands on homepage after auth
-  // This handles cases where users click email links and end up on homepage
-  useEffect(() => {
-    // Check for returnTo in multiple sources (even if user isn't loaded yet)
-    let returnTo = null;
-
-    // 1. Check URL query parameter
-    const { returnTo: returnToParam } = router.query;
-    if (returnToParam && typeof returnToParam === 'string') {
-      returnTo = returnToParam;
-    }
-
-    // 2. Check cookie (set by auth callback)
-    if (!returnTo && typeof document !== 'undefined') {
-      const cookies = document.cookie.split(';');
-      const returnToCookie = cookies.find((c) =>
-        c.trim().startsWith('pendingReturnTo=')
-      );
-      if (returnToCookie) {
-        returnTo = decodeURIComponent(returnToCookie.split('=')[1]);
-        // Clear the cookie after reading
-        document.cookie = 'pendingReturnTo=; Path=/; Max-Age=0';
-      }
-    }
-
-    // 3. Check sessionStorage
-    if (!returnTo && typeof window !== 'undefined') {
-      returnTo = sessionStorage.getItem('externalReturnTo');
-      if (returnTo) {
-        sessionStorage.removeItem('externalReturnTo');
-      }
-    }
-
-    // If we found a returnTo, redirect to it
-    // Only redirect if user is logged in (to avoid redirect loops)
-    if (returnTo && user) {
-      const isExternalUrl =
-        returnTo.startsWith('http') ||
-        returnTo.includes('learn.packagingschool.com');
-
-      if (isExternalUrl) {
-        // External URL - use external-redirect handler
-        window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
-          returnTo
-        )}`;
-      } else {
-        // Internal URL - redirect directly
-        router.replace(returnTo);
-      }
-    }
-  }, [user, router.query, router]);
-
   // Handle expired token error from Thinkific SSO
+  // IMPORTANT: do NOT hijack normal navigation. We only handle this if we have a
+  // stored Thinkific destination (cookie) from a prior SSO attempt.
   useEffect(() => {
     const { kind, message, return_to } = router.query;
 
@@ -83,75 +33,41 @@ const App = () => {
       // Token expired, regenerate SSO and redirect back to the original link
       const handleExpiredToken = async () => {
         try {
-          if (user?.email) {
-            // Get user's name from Auth0 user object
-            const firstName = user.given_name || user.name?.split(' ')[0] || '';
-            const lastName =
-              user.family_name ||
-              user.name?.split(' ').slice(1).join(' ') ||
-              '';
+          // Prefer the original Thinkific destination from query, but fall back to cookie.
+          let originalReturnTo =
+            typeof return_to === 'string' ? return_to : null;
 
-            // Try to get the original returnTo from multiple sources:
-            // 1. return_to query parameter (from Thinkific redirect)
-            // 2. Cookie set by external-redirect handler
-            // 3. sessionStorage
-            // 4. Default
-            let originalReturnTo = return_to;
-
-            if (!originalReturnTo && typeof document !== 'undefined') {
-              // Try to get from cookie
-              const cookies = document.cookie.split(';');
-              const returnToCookie = cookies.find((c) =>
-                c.trim().startsWith('pendingReturnTo=')
+          if (!originalReturnTo && typeof document !== 'undefined') {
+            const cookies = document.cookie.split(';');
+            const returnToCookie = cookies.find((c) =>
+              c.trim().startsWith('pendingReturnTo=')
+            );
+            if (returnToCookie) {
+              originalReturnTo = decodeURIComponent(
+                returnToCookie.split('=')[1]
               );
-              if (returnToCookie) {
-                originalReturnTo = decodeURIComponent(
-                  returnToCookie.split('=')[1]
-                );
-              }
-            }
-
-            if (!originalReturnTo && typeof window !== 'undefined') {
-              originalReturnTo = sessionStorage.getItem('externalReturnTo');
-            }
-
-            // Check if it's an internal URL (doesn't need SSO)
-            const isInternalUrl =
-              originalReturnTo &&
-              !originalReturnTo.startsWith('http') &&
-              !originalReturnTo.includes('learn.packagingschool.com');
-
-            if (isInternalUrl) {
-              // For internal URLs, just redirect directly - no SSO needed
-              router.replace(originalReturnTo);
-              return;
-            }
-
-            // For external URLs, regenerate SSO token
-            if (firstName && lastName) {
-              originalReturnTo =
-                originalReturnTo || 'https://learn.packagingschool.com';
-
-              // Regenerate SSO token with the original destination
-              const ssoRes = await fetch('/api/generateJWT', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  email: user.email,
-                  first_name: firstName,
-                  last_name: lastName,
-                  return_to: originalReturnTo,
-                }),
-              });
-
-              const ssoData = await ssoRes.json();
-              if (ssoData.url) {
-                // Immediately redirect to new SSO URL to get them back to their link
-                window.location.href = ssoData.url;
-                return;
-              }
             }
           }
+
+          // If we don't know where to go, do nothing (don't hijack homepage).
+          if (!originalReturnTo) return;
+
+          const isExternalUrl =
+            originalReturnTo.startsWith('http') ||
+            originalReturnTo.includes('learn.packagingschool.com');
+
+          if (!isExternalUrl) {
+            router.replace(originalReturnTo);
+            return;
+          }
+
+          // Only retry SSO if user is logged in.
+          if (!user) return;
+
+          // Retry via the server handler (keeps SSO logic centralized).
+          window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+            originalReturnTo
+          )}`;
         } catch (error) {
           console.error('Error handling expired token:', error);
         }
@@ -165,7 +81,7 @@ const App = () => {
 
       handleExpiredToken();
     }
-  }, [router.query, user]);
+  }, [router.query, user, router]);
   const Scene = () => {
     const cardsGroup = useRef();
     const cardsRefs = useRef([]);

@@ -9,6 +9,13 @@ export default async function externalRedirectHandler(req, res) {
       return res.redirect('/login');
     }
 
+    // If returnTo is internal (relative path), do NOT run Thinkific SSO.
+    // This keeps internal links (like /schwarzpartners) from ever bouncing to the LMS.
+    const requestedReturnTo = req.query.returnTo?.toString();
+    if (requestedReturnTo && requestedReturnTo.startsWith('/')) {
+      return res.redirect(requestedReturnTo);
+    }
+
     // Dynamically determine the base URL based on the request
     let baseUrl;
     if (process.env.NODE_ENV === 'development') {
@@ -53,6 +60,15 @@ export default async function externalRedirectHandler(req, res) {
       // Get the actual returnTo URL from query parameter
       const actualReturnTo =
         req.query.returnTo || 'https://learn.packagingschool.com';
+
+      // If someone calls this endpoint with a non-Thinkific external URL,
+      // just send them there (no SSO).
+      const isThinkificDestination =
+        typeof actualReturnTo === 'string' &&
+        actualReturnTo.includes('learn.packagingschool.com');
+      if (!isThinkificDestination) {
+        return res.redirect(actualReturnTo);
+      }
 
       // Store the returnTo in a cookie or pass it through so we can recover it if token expires
       // The returnTo will be included in the SSO URL's return_to parameter, but we'll also
@@ -102,6 +118,13 @@ export default async function externalRedirectHandler(req, res) {
         // Handle SSO after user creation
         const actualReturnTo =
           req.query.returnTo || 'https://learn.packagingschool.com';
+
+        const isThinkificDestination =
+          typeof actualReturnTo === 'string' &&
+          actualReturnTo.includes('learn.packagingschool.com');
+        if (!isThinkificDestination) {
+          return res.redirect(actualReturnTo);
+        }
 
         // Store the returnTo in a cookie so we can recover it if token expires
         res.setHeader(
