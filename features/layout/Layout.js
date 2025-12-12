@@ -38,6 +38,39 @@ const Layout = ({ children }) => {
       .catch((error) => console.log(error));
   }, [dispatch]);
 
+  // Check for returnTo in URL when user is already logged in
+  // This handles cases where logged-in users click email links
+  useEffect(() => {
+    if (user && router.isReady) {
+      const { returnTo } = router.query;
+
+      // If we have a returnTo in the URL and user is logged in, preserve it
+      if (returnTo && typeof returnTo === 'string') {
+        // Store it in cookie for recovery if needed
+        if (typeof document !== 'undefined') {
+          document.cookie = `pendingReturnTo=${encodeURIComponent(
+            returnTo
+          )}; Path=/; Max-Age=900; SameSite=Lax`;
+        }
+
+        // If we're on homepage, redirect immediately
+        if (router.pathname === '/') {
+          const isExternalUrl =
+            returnTo.startsWith('http') ||
+            returnTo.includes('learn.packagingschool.com');
+
+          if (isExternalUrl) {
+            window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+              returnTo
+            )}`;
+          } else {
+            router.replace(returnTo);
+          }
+        }
+      }
+    }
+  }, [user, router.isReady, router.query, router.pathname]);
+
   // Handle SSO redirect
   useEffect(() => {
     if (user) {

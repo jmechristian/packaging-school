@@ -23,6 +23,58 @@ const App = () => {
   const router = useRouter();
   const { user } = useUser();
 
+  // Check for returnTo destination when user lands on homepage after auth
+  // This handles cases where users click email links and end up on homepage
+  useEffect(() => {
+    // Check for returnTo in multiple sources (even if user isn't loaded yet)
+    let returnTo = null;
+
+    // 1. Check URL query parameter
+    const { returnTo: returnToParam } = router.query;
+    if (returnToParam && typeof returnToParam === 'string') {
+      returnTo = returnToParam;
+    }
+
+    // 2. Check cookie (set by auth callback)
+    if (!returnTo && typeof document !== 'undefined') {
+      const cookies = document.cookie.split(';');
+      const returnToCookie = cookies.find((c) =>
+        c.trim().startsWith('pendingReturnTo=')
+      );
+      if (returnToCookie) {
+        returnTo = decodeURIComponent(returnToCookie.split('=')[1]);
+        // Clear the cookie after reading
+        document.cookie = 'pendingReturnTo=; Path=/; Max-Age=0';
+      }
+    }
+
+    // 3. Check sessionStorage
+    if (!returnTo && typeof window !== 'undefined') {
+      returnTo = sessionStorage.getItem('externalReturnTo');
+      if (returnTo) {
+        sessionStorage.removeItem('externalReturnTo');
+      }
+    }
+
+    // If we found a returnTo, redirect to it
+    // Only redirect if user is logged in (to avoid redirect loops)
+    if (returnTo && user) {
+      const isExternalUrl =
+        returnTo.startsWith('http') ||
+        returnTo.includes('learn.packagingschool.com');
+
+      if (isExternalUrl) {
+        // External URL - use external-redirect handler
+        window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+          returnTo
+        )}`;
+      } else {
+        // Internal URL - redirect directly
+        router.replace(returnTo);
+      }
+    }
+  }, [user, router.query, router]);
+
   // Handle expired token error from Thinkific SSO
   useEffect(() => {
     const { kind, message, return_to } = router.query;
