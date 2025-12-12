@@ -68,13 +68,14 @@ export default handleAuth({
 
     // If we have an external returnTo, redirect to external-redirect handler
     // which will handle SSO and redirect to the external URL
+    // For internal URLs, redirect to profile so afterCallback can run
     const callbackReturnTo = isExternalUrl
       ? `/api/auth/external-redirect?returnTo=${encodeURIComponent(returnTo)}`
-      : '/profile';
+      : returnTo || '/profile';
 
     try {
       await handleCallback(req, res, {
-        // Redirect to external-redirect handler for external URLs, profile for internal
+        // Redirect to external-redirect handler for external URLs, returnTo or profile for internal
         returnTo: callbackReturnTo,
         afterCallback: async (req, res, session) => {
           console.log('afterCallback called for', session?.user?.email);
@@ -167,31 +168,47 @@ export default handleAuth({
               console.log('User created in Thinkific');
             }
 
-            // Always generate SSO URL for password logins
-            console.log('Generating SSO URL for password login');
-            // Use the final destination directly instead of intermediate after-sso page
-            // Always provide a returnTo to avoid timeout issues
+            // Only generate SSO URL if returnTo is external (needs Thinkific SSO)
+            // For internal URLs, skip SSO generation to avoid expired token issues
             const finalDestination = returnTo || `${baseUrl}/profile`;
+            const needsSSO =
+              finalDestination.startsWith('http') ||
+              finalDestination.includes('learn.packagingschool.com');
 
-            // Always generate SSO URL
-            try {
-              const ssoUrl = await handleSSO({
-                email: session.user.email,
-                first_name: firstName,
-                last_name: lastName,
-                returnTo: finalDestination,
-                baseUrl,
-              });
-              console.log('SSO redirect URL generated:', ssoUrl);
-
-              // Attach SSO URL to session for Layout component or external-redirect handler
-              session.user.ssoRedirectUrl = ssoUrl;
-            } catch (ssoError) {
-              console.warn(
-                'SSO failed, using fallback redirect:',
-                ssoError.message
+            // Store returnTo in cookie for expired token recovery (both internal and external)
+            if (finalDestination) {
+              res.setHeader(
+                'Set-Cookie',
+                `pendingReturnTo=${encodeURIComponent(
+                  finalDestination
+                )}; Path=/; Max-Age=900; SameSite=Lax`
               );
-              session.user.ssoRedirectUrl = finalDestination;
+            }
+
+            if (needsSSO) {
+              console.log('Generating SSO URL for external destination');
+              try {
+                const ssoUrl = await handleSSO({
+                  email: session.user.email,
+                  first_name: firstName,
+                  last_name: lastName,
+                  returnTo: finalDestination,
+                  baseUrl,
+                });
+                console.log('SSO redirect URL generated:', ssoUrl);
+
+                // Attach SSO URL to session for Layout component or external-redirect handler
+                session.user.ssoRedirectUrl = ssoUrl;
+              } catch (ssoError) {
+                console.warn(
+                  'SSO failed, using fallback redirect:',
+                  ssoError.message
+                );
+                session.user.ssoRedirectUrl = finalDestination;
+              }
+            } else {
+              console.log('Internal URL detected, skipping SSO generation');
+              // For internal URLs, don't set ssoRedirectUrl - let them go directly to the page
             }
 
             return session;

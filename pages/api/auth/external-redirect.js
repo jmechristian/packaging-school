@@ -54,6 +54,16 @@ export default async function externalRedirectHandler(req, res) {
       const actualReturnTo =
         req.query.returnTo || 'https://learn.packagingschool.com';
 
+      // Store the returnTo in a cookie or pass it through so we can recover it if token expires
+      // The returnTo will be included in the SSO URL's return_to parameter, but we'll also
+      // store it in case Thinkific redirects back with an error
+      res.setHeader(
+        'Set-Cookie',
+        `pendingReturnTo=${encodeURIComponent(
+          actualReturnTo
+        )}; Path=/; Max-Age=900; SameSite=Lax`
+      );
+
       const redirectUrl = await handleSSO({
         email: session.user.email,
         first_name: firstName,
@@ -92,6 +102,14 @@ export default async function externalRedirectHandler(req, res) {
         // Handle SSO after user creation
         const actualReturnTo =
           req.query.returnTo || 'https://learn.packagingschool.com';
+
+        // Store the returnTo in a cookie so we can recover it if token expires
+        res.setHeader(
+          'Set-Cookie',
+          `pendingReturnTo=${encodeURIComponent(
+            actualReturnTo
+          )}; Path=/; Max-Age=900; SameSite=Lax`
+        );
 
         const redirectUrl = await handleSSO({
           email: session.user.email,

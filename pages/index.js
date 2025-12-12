@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import {
@@ -20,6 +21,99 @@ import CyberMonday from '../components/shared/CyberMonday';
 const App = () => {
   const [courses, setCourses] = useState([]);
   const router = useRouter();
+  const { user } = useUser();
+
+  // Handle expired token error from Thinkific SSO
+  useEffect(() => {
+    const { kind, message, return_to } = router.query;
+
+    if (kind === 'expired_token' || message?.includes('expired')) {
+      // Token expired, regenerate SSO and redirect back to the original link
+      const handleExpiredToken = async () => {
+        try {
+          if (user?.email) {
+            // Get user's name from Auth0 user object
+            const firstName = user.given_name || user.name?.split(' ')[0] || '';
+            const lastName =
+              user.family_name ||
+              user.name?.split(' ').slice(1).join(' ') ||
+              '';
+
+            // Try to get the original returnTo from multiple sources:
+            // 1. return_to query parameter (from Thinkific redirect)
+            // 2. Cookie set by external-redirect handler
+            // 3. sessionStorage
+            // 4. Default
+            let originalReturnTo = return_to;
+
+            if (!originalReturnTo && typeof document !== 'undefined') {
+              // Try to get from cookie
+              const cookies = document.cookie.split(';');
+              const returnToCookie = cookies.find((c) =>
+                c.trim().startsWith('pendingReturnTo=')
+              );
+              if (returnToCookie) {
+                originalReturnTo = decodeURIComponent(
+                  returnToCookie.split('=')[1]
+                );
+              }
+            }
+
+            if (!originalReturnTo && typeof window !== 'undefined') {
+              originalReturnTo = sessionStorage.getItem('externalReturnTo');
+            }
+
+            // Check if it's an internal URL (doesn't need SSO)
+            const isInternalUrl =
+              originalReturnTo &&
+              !originalReturnTo.startsWith('http') &&
+              !originalReturnTo.includes('learn.packagingschool.com');
+
+            if (isInternalUrl) {
+              // For internal URLs, just redirect directly - no SSO needed
+              router.replace(originalReturnTo);
+              return;
+            }
+
+            // For external URLs, regenerate SSO token
+            if (firstName && lastName) {
+              originalReturnTo =
+                originalReturnTo || 'https://learn.packagingschool.com';
+
+              // Regenerate SSO token with the original destination
+              const ssoRes = await fetch('/api/generateJWT', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: user.email,
+                  first_name: firstName,
+                  last_name: lastName,
+                  return_to: originalReturnTo,
+                }),
+              });
+
+              const ssoData = await ssoRes.json();
+              if (ssoData.url) {
+                // Immediately redirect to new SSO URL to get them back to their link
+                window.location.href = ssoData.url;
+                return;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error handling expired token:', error);
+        }
+
+        // Only fallback to profile if we can't regenerate SSO
+        // Don't redirect away from their intended destination
+        console.warn(
+          'Could not regenerate SSO token, user may need to try again'
+        );
+      };
+
+      handleExpiredToken();
+    }
+  }, [router.query, user]);
   const Scene = () => {
     const cardsGroup = useRef();
     const cardsRefs = useRef([]);

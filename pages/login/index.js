@@ -31,9 +31,14 @@ export default function LoginPage() {
         // User is already authenticated, redirect them
         const targetUrl = returnTo || '/profile';
 
-        if (targetUrl.startsWith('http')) {
-          // External URL - redirect directly
-          window.location.href = targetUrl;
+        if (
+          targetUrl.startsWith('http') ||
+          targetUrl.includes('learn.packagingschool.com')
+        ) {
+          // External URL - use external-redirect handler to handle SSO
+          window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+            targetUrl
+          )}`;
         } else {
           // Internal URL - use router
           router.push(targetUrl);

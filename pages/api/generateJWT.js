@@ -20,7 +20,7 @@ export default function handler(req, res) {
     first_name,
     last_name,
     iat: Math.floor(Date.now() / 1000), // Issued at
-    exp: Math.floor(Date.now() / 1000) + 300, // Expires in 5 minutes
+    exp: Math.floor(Date.now() / 1000) + 900, // Expires in 15 minutes (increased from 5 to reduce expiration issues)
   };
 
   try {
