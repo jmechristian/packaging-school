@@ -209,6 +209,7 @@ const LOTMCard = ({ lesson }) => {
 
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
@@ -221,6 +222,7 @@ const CourseCard = ({ course }) => {
   }, [course]);
 
   const orderHandler = async () => {
+    setIsProcessing(true);
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
       courseDiscount: 100,
@@ -282,7 +284,14 @@ const CourseCard = ({ course }) => {
             className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#37528a] transition-all duration-300'
             onClick={orderHandler}
           >
-            Begin Course
+            {isProcessing ? (
+              <div className='flex items-center gap-2'>
+                <MdOutlineTimer className='animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent' />
+                Processing...
+              </div>
+            ) : (
+              'Begin Course'
+            )}
           </div>
         </div>
       </div>
