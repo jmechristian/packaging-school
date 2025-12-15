@@ -139,14 +139,10 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
           <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
           <button
             onClick={() => {
-              user.sub.includes('email')
-                ? navigateToThinkific(
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`
-                  )
-                : router.push(
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`
-                  );
+              navigateToThinkific(
+                `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                `https://learn.packagingschool.com/courses/take/${course.slug}`
+              );
             }}
             className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'
           >
@@ -158,14 +154,10 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
             <div
               className='font-semibold text-gray-900 tracking-tight leading-tight cursor-pointer'
               onClick={() => {
-                user.sub.includes('email')
-                  ? navigateToThinkific(
-                      `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                      `https://learn.packagingschool.com/courses/take/${course.slug}`
-                    )
-                  : router.push(
-                      `https://learn.packagingschool.com/courses/take/${course.slug}`
-                    );
+                navigateToThinkific(
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`
+                );
               }}
             >
               {course.title}
@@ -210,14 +202,10 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
           <div
             className='w-full flex items-center justify-center gap-1 p-2 bg-base-brand text-white font-semibold rounded-md hover:bg-base-dark transition-all duration-300 cursor-pointer mt-2'
             onClick={() => {
-              user.sub.includes('email')
-                ? navigateToThinkific(
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`
-                  )
-                : router.push(
-                    `https://learn.packagingschool.com/courses/take/${course.slug}`
-                  );
+              navigateToThinkific(
+                `https://learn.packagingschool.com/courses/take/${course.slug}`,
+                `https://learn.packagingschool.com/courses/take/${course.slug}`
+              );
             }}
           >
             <div>Continue Course</div>

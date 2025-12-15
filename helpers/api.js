@@ -2260,16 +2260,64 @@ export const getAllCourses = async () => {
 };
 
 export const getOrderByID = async (oid) => {
+  // Minimal selection to avoid nested User relationships (e.g. apss) that can
+  // break in environments without certain GSIs.
+  const minimalGetOrder = /* GraphQL */ `
+    query GetOrderMinimal($id: ID!) {
+      getOrder(id: $id) {
+        id
+        email
+        name
+        userID
+        total
+        status
+        courseName
+        courseLink
+        courseImage
+        courseDiscount
+        courseDescription
+        type
+        paymentPlan
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: getOrder,
+    query: minimalGetOrder,
     variables: { id: oid },
   });
   return res.data.getOrder;
 };
 
 export const createNewOrder = async (data) => {
+  // Minimal selection to avoid nested User relationships (e.g. apss) that can
+  // break in environments without certain GSIs.
+  const minimalCreateOrder = /* GraphQL */ `
+    mutation CreateOrderMinimal($input: CreateOrderInput!) {
+      createOrder(input: $input) {
+        id
+        email
+        name
+        userID
+        total
+        status
+        courseName
+        courseLink
+        courseImage
+        courseDiscount
+        courseDescription
+        type
+        paymentPlan
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
   const res = await API.graphql({
-    query: createOrder,
+    query: minimalCreateOrder,
     variables: { input: data },
   });
   return res.data.createOrder;
