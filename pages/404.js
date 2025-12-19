@@ -66,7 +66,7 @@ export function ProductItem({ hit, components }) {
     <div className='flex justify-between items-center w-full pl-6'>
       <a
         href={`https://library.packagingschool.com/blog/${hit.slug}`}
-        className='aa-ItemLink hover:bg-gray-100 cursor-pointer w-full'
+        className='aa-ItemLink hover:bg-gray-200 cursor-pointer w-full'
         target='_blank'
         rel='noReferrer'
       >
