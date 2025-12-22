@@ -1,0 +1,1641 @@
+type LessonSource @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  link: String
+  position: Int!
+}
+
+type LessonLink @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  link: String
+}
+
+type Tags @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  tag: String! @index(name: "tagByTag")
+  lesson: [Lesson] @manyToMany(relationName: "LessonTags")
+}
+
+enum ModuleType {
+  LESSON
+  LOTM
+  MICROLESSON
+  REGULATORY
+  ARTICLE
+}
+
+enum CompanyType {
+  OEMTIER1
+  SOLUTIONPROVIDER
+  SPONSOR
+}
+
+enum CategoryType {
+  MATERIALS
+  INDUSTRY
+  FOODANDBEVERAGE
+  BUSINESS
+  SUPPLYCHAIN
+  DESIGN
+  AUTO
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+  SLIDES
+}
+
+type Category @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  value: String! @index(name: "categoryByValue")
+  certificates: [CertificateObject]
+    @manyToMany(relationName: "CertificateByCategory")
+}
+
+type Certificate @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "certificateByTitle")
+  title: String!
+  title_callout_1: String
+  title_callout_2: String
+  title_text: String
+  title_button_1_text: String
+  title_button_1_link: String
+  title_button_2_text: String
+  title_button_2_link: String
+  title_image: String
+  courses: [Course] @manyToMany(relationName: "CertificateCourses")
+  whoText: String
+  courses_total: Int
+  hours_total: Int
+  ceus_total: Int
+  brochure_link: String
+  video: String
+  price_full: Int
+  price_monthly: Int
+  price_features: [String]
+  lmsLink: String
+  demoLink: String
+}
+
+type CertificateObject @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String
+  title: String
+  description: String
+  seoImage: String
+  hours: Int
+  courses: Int
+  video: String
+  price: Int
+  link: String
+  applicationLink: String
+  callout: String
+  purchaseLink: String
+  categoryArray: [String]
+  abbreviation: String
+  category: [Category] @manyToMany(relationName: "CertificateByCategory")
+  whereText: String
+  whatText: String
+  howText: String
+  deadline: String
+  sessions: [CMPMSession] @hasMany
+  status: String @default(value: "DRAFT")
+  displayOrder: Int
+}
+
+type Course @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "courseBySlug")
+  category: CategoryType!
+  title: String!
+  subhead: String
+  media: String
+  video: String
+  hour: Int
+  lessons: Int
+  videos: Int
+  price: Int
+  articles: [Article] @manyToMany(relationName: "ArticleRelatedCourses")
+  certificate: [Certificate] @manyToMany(relationName: "CertificateCourses")
+}
+
+type Lesson @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "lessonsByTitle")
+  title: String!
+  subhead: String
+  type: ModuleType
+  media: String
+  mediaType: MediaType
+  slides: [String]
+  seoImage: String
+  content: String
+  sources: [LessonSource] @hasMany
+  links: [LessonLink] @hasMany
+  tags: [Tags] @manyToMany(relationName: "LessonTags")
+  objectives: [String]
+  actionCTA: String
+  actionSubhead: String
+  actionLink: String
+  actionLinkTitle: String
+  actionExample: String
+  author: [String]
+  status: String @default(value: "DRAFT")
+  related: [String]
+  featured: String
+  backdate: String
+  createdBy: String
+  lastEditedBy: String
+  videoLink: String
+  screengrab: String
+  analysis: Analysis @hasOne
+  usersCompleted: [User] @manyToMany(relationName: "userCompletedLessons")
+  learningPaths: [LearningPathLesson] @hasMany
+}
+
+type Author @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  headshot: String
+  linkedIn: String
+  title: String
+  company: String
+  templates: [IndexTemplate] @manyToMany(relationName: "AuthorTemplates")
+  # lessons: [Lesson] @manyToMany(relationName: "AuthorLessons")
+}
+
+type Blog @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "blogBySlug")
+  title: String!
+  media: String
+  content: String!
+  author: String
+  tags: [String]
+  date: String
+}
+
+type Article @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "aticlesByTitle")
+  title: String!
+  subhead: String
+  media: String
+  seoImage: String
+  content: String
+  tags: [String]
+  relatedCourses: [Course] @manyToMany(relationName: "ArticleRelatedCourses")
+}
+
+type DayInLifeItem @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  desc: String!
+  icon: String
+}
+
+type Career @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "careerByTitle")
+  title: String!
+  altName: String
+  subhead: String
+  media: String
+  dayInLife: [DayInLifeItem] @hasMany
+  cmpmCopy: String
+  cpsCopy: String
+  apcCopy: String
+  coreCopy: String
+  electiveCopy: String
+  freeCopy: String
+  beverageCopy: String
+}
+
+# Autopack Summit
+
+type APSBoard @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  title: String
+  bio: String
+  company: String!
+  email: String!
+  linkedin: String
+  profilePic: String
+}
+
+type APS @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  # Registrants: [ApsRegistrant]
+  # @hasMany(indexName: "apsRegistrantByAps", fields: ["id"])
+  Sponsors: [APSCompany] @hasMany
+  Speakers: [APSSpeaker] @hasMany
+  year: String!
+  codes: [String]
+}
+
+# type ApsRegistrant @model @auth(rules: [{ allow: public }]) {
+#   id: ID!
+#   apsID: ID @index(name: "apsRegistrantByAps")
+#   aps: APS @belongsTo(fields: ["apsID"])
+#   firstName: String
+#   lastName: String
+#   email: String! @index(name: "apsRegistrantByEmail")
+#   phone: String
+#   company: APSCompany @belongsTo
+#   jobTitle: String
+#   attendeeType: String
+#   termsAccepted: Boolean
+#   interests: [String]
+#   otherInterest: String
+#   speedNetworking: Boolean
+#   speedNetworkingStatus: String
+#   billingAddressFirstName: String
+#   billingAddressLastName: String
+#   billingAddressEmail: String
+#   billingAddressPhone: String
+#   billingAddressStreet: String
+#   billingAddressCity: String
+#   billingAddressState: String
+#   billingAddressZip: String
+#   sameAsAttendee: Boolean
+#   speakerTopic: String
+#   learningObjectives: String
+#   totalAmount: Int
+#   discountCode: String
+#   status: String @default(value: "PENDING")
+#   addOns: [ApsAddOn] @manyToMany(relationName: "apsRegistrantAddOns")
+#   morrisetteTransportation: String
+#   morrisetteStatus: String
+#   paymentConfirmation: String
+#   registrationEmailSent: Boolean
+#   registrationEmailSentDate: String
+#   registrationEmailReceived: Boolean
+#   registrationEmailReceivedDate: String
+#   welcomeEmailSent: Boolean
+#   welcomeEmailSentDate: String
+#   welcomeEmailReceived: Boolean
+#   welcomeEmailReceivedDate: String
+#   paymentMethod: String
+#   paymentLast4: String
+#   approvedAt: String
+#   headshot: String
+#   presentation: String
+#   presentationTitle: String
+#   presentationSummary: String
+#   magnaStatus: String
+#   magnaTransportation: String
+#   aristoStatus: String
+#   aristoTransportation: String
+#   bio: String
+#   seatingChartRegistrant: ApsSeatingChartRegistrant @hasOne
+# }
+
+# type APSTicketRegistrant @model @auth(rules: [{ allow: public }]) {
+#   year: String @default(value: "2024")
+#   id: ID!
+#   name: String!
+#   email: String! @index(name: "apsTicketRegistrantByEmail")
+#   company: String!
+#   title: String!
+#   phone: String!
+#   worksWith: String
+#   speedNetworking: String
+#   innovationWorkshop: String
+#   plantTour: String
+#   registrationReceived: Boolean
+#   welcomeEmailSent: Boolean
+#   code: String @default(value: "TICKET")
+# }
+
+# type APSSpeaker2024 @model @auth(rules: [{ allow: public }]) {
+#   firstName: String!
+#   lastName: String!
+#   email: String!
+#   company: String!
+#   title: String!
+#   phone: String
+#   linkedin: String
+#   bio: String!
+#   presentationTitle: String
+#   presentationSummary: String
+#   headshot: String!
+#   mediaConsent: Boolean
+#   privacyConsent: Boolean
+# }
+
+type APSCompany @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String! @index(name: "apsCompanyByEmail")
+  aps25Registrants: [APSRegistrant2025] @hasMany
+  type: CompanyType
+  # registrants: [ApsRegistrant] @hasMany
+}
+
+type APSAddOn2025 @model @auth(rules: [{ allow: public }]) {
+  title: String!
+  description: String!
+  subheadline: String
+  location: String!
+  date: String!
+  time: String!
+  company: String!
+  altLink: String
+  apsRegistrants: [APSRegistrant2025]
+    @manyToMany(relationName: "apsRegistrantAddOns25")
+  type: String
+  limit: Int
+}
+
+# type ApsAddOn @model @auth(rules: [{ allow: public }]) {
+#   title: String!
+#   description: String!
+#   subheadline: String
+#   location: String!
+#   date: String!
+#   time: String!
+#   company: String!
+#   altLink: String
+#   apsRegistrants: [ApsRegistrant]
+#     @manyToMany(relationName: "apsRegistrantAddOns")
+#   type: String
+#   limit: Int
+# }
+
+type APSCodeRequest25 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "apsCodeRequestByEmail")
+  company: String
+  status: String @default(value: "PENDING")
+  firstName: String
+  lastName: String
+}
+
+type APSRegistrant2025 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String! @index(name: "apsRegistrantByEmail25")
+  phone: String
+  company: APSCompany @belongsTo
+  jobTitle: String
+  attendeeType: String
+  termsAccepted: Boolean
+  interests: [String]
+  otherInterest: String
+  speedNetworking: Boolean
+  speedNetworkingStatus: String
+  billingAddressFirstName: String
+  billingAddressLastName: String
+  billingAddressEmail: String
+  billingAddressPhone: String
+  billingAddressStreet: String
+  billingAddressCity: String
+  billingAddressState: String
+  billingAddressZip: String
+  sameAsAttendee: Boolean
+  speakerTopic: String
+  learningObjectives: String
+  totalAmount: Int
+  discountCode: String
+  status: String @default(value: "PENDING")
+  addOns: [APSAddOn2025] @manyToMany(relationName: "apsRegistrantAddOns25")
+  morrisetteTransportation: String
+  morrisetteStatus: String
+  paymentConfirmation: String
+  registrationEmailSent: Boolean
+  registrationEmailSentDate: String
+  registrationEmailReceived: Boolean
+  registrationEmailReceivedDate: String
+  welcomeEmailSent: Boolean
+  welcomeEmailSentDate: String
+  welcomeEmailReceived: Boolean
+  welcomeEmailReceivedDate: String
+  paymentMethod: String
+  paymentLast4: String
+  approvedAt: String
+  headshot: String
+  presentation: String
+  presentationTitle: String
+  presentationSummary: String
+  magnaStatus: String
+  magnaTransportation: String
+  aristoStatus: String
+  aristoTransportation: String
+  bio: String
+  seatingChartRegistrant: APS2025SeatingChartRegistrant @hasOne
+}
+
+type APS2025SeatingChartRegistrant @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  category: String
+  firstName: String
+  lastName: String
+  company: String
+  email: String @index(name: "seatByEmail")
+  role: String
+  tableNumber: Int
+  notes: String
+  seatingChartID: ID @index(name: "seatByChart")
+  seatingChart: APS2025SeatingChart @belongsTo(fields: ["seatingChartID"])
+  registrantID: ID @index(name: "seatByRegistrant")
+  registrant: APSRegistrant2025 @belongsTo(fields: ["registrantID"])
+}
+
+# type ApsSeatingChartRegistrant @model @auth(rules: [{ allow: public }]) {
+#   id: ID!
+#   category: String
+#   firstName: String
+#   lastName: String
+#   company: String
+#   email: String @index(name: "seatByEmail")
+#   role: String
+#   tableNumber: Int
+#   notes: String
+#   seatingChartID: ID @index(name: "seatByChart")
+#   seatingChart: ApsSeatingChart @belongsTo(fields: ["seatingChartID"])
+#   registrantID: ID @index(name: "seatByRegistrant")
+#   registrant: ApsRegistrant @belongsTo(fields: ["registrantID"])
+# }
+
+# type ApsSeatingChart @model @auth(rules: [{ allow: public }]) {
+#   id: ID!
+#   registrants: [ApsSeatingChartRegistrant]
+#     @hasMany(indexName: "seatByChart", fields: ["id"])
+# }
+
+type APS2025SeatingChart @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  registrants: [APS2025SeatingChartRegistrant]
+    @hasMany(indexName: "seatByChart", fields: ["id"])
+}
+
+type APS2025MediaItem @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  url: String!
+  type: String!
+  caption: String
+  uploadedBy: String
+}
+
+type APSCode2025 @model @auth(rules: [{ allow: public }]) {
+  code: String! @index(name: "apsCode2025ByCode")
+  limit: Int!
+  used: Int!
+  discount: Int!
+  type: String
+}
+
+type APSActivity2025 @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  type: String!
+  activity: String!
+}
+
+type APSTicket @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  phone: String!
+  paymentConfirmation: String
+}
+
+type RegistrationCode {
+  code: String
+}
+
+type Tourist @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  fullName: String!
+  email: String! @index(name: "touristByEmail")
+  phone: String!
+  tour: String!
+  company: String!
+}
+
+type AddOnRegistrant @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  fullName: String!
+  email: String! @index(name: "addOnRegistrantByEmail")
+  tour: String!
+  company: String!
+}
+
+type Company @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  Employees: [User] @hasMany(indexName: "userByCompany", fields: ["id"])
+  website: String
+  email: String
+  phone: String
+  street_1: String
+  street_2: String
+  city: String
+  state: String
+  zip: String
+}
+
+type APSSpeaker @model @auth(rules: [{ allow: public }]) {
+  firstName: String!
+  lastName: String!
+  email: String!
+  company: String!
+  title: String!
+  phone: String
+  linkedin: String
+  bio: String!
+  presentationTitle: String
+  presentationSummary: String
+  headshot: String!
+  mediaConsent: Boolean
+  privacyConsent: Boolean
+  apsHistory: APS @belongsTo
+}
+
+type MorrisetteForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  preference: String!
+  approved: Boolean!
+}
+
+type AristosForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  approved: Boolean!
+}
+
+type GuardianForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  approved: Boolean!
+}
+
+type ClemsonForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  approved: Boolean!
+}
+
+type SurgereForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  approved: Boolean!
+}
+
+type BoschForm @model @auth(rules: [{ allow: public }]) {
+  name: String!
+  email: String!
+  company: String!
+  title: String!
+  topicOne: Boolean
+  topicTwo: Boolean
+  topicThree: Boolean
+  topicFour: Boolean
+  approved: Boolean!
+}
+
+type EmailTracking @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "emailTrackingByEmail")
+  sent: String
+  opened: Boolean!
+  openedDate: String
+}
+
+# User //////////
+
+type User @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  thinkificId: String
+  name: String! @index(name: "userByName")
+  title: String
+  company: String
+  email: String! @index(name: "userByEmail")
+  office: String
+  bio: String
+  interests: String
+  goals: String
+  cell: String
+  picture: String
+  linkedin: String
+  location: String
+  companyID: ID @index(name: "userByCompany")
+  apss: [APS] @hasMany
+  cmpmFormID: ID
+  cmpmForm: CMPMForm @hasOne(fields: ["cmpmFormID"])
+  cpsFormID: ID
+  cpsForm: CPSForm @hasOne(fields: ["cpsFormID"])
+  savedCourses: [String]
+  savedLessons: [String]
+  savedArticles: [String]
+  source: String
+  achievements: [Achievement] @manyToMany(relationName: "AchievementUsers")
+  onboardingComplete: Boolean @default(value: "false")
+  onboardingCompleteDate: String
+  totalXp: Int
+  thinkificXp: Int
+  psXp: Int
+  level: Int
+  xpToNextLevel: Int
+  lastLogin: String
+  dailyStreak: Int
+  cohorts: [Cohort] @manyToMany(relationName: "CohortUsers")
+  allAccess: Boolean @default(value: "false")
+  allAccessStartDate: String
+  allAccessEndDate: String
+  lessonsCompleted: [Lesson] @manyToMany(relationName: "userCompletedLessons")
+  learningPathProgress: [LearningPathProgress] @hasMany
+  userXp: UserXp @hasOne
+  wishlist: [LMSCourse] @manyToMany(relationName: "UserWishlist")
+  reviews: [CourseReview] @hasMany
+  tourCompleted: Boolean @default(value: "false")
+  orders: [Order] @hasMany(indexName: "orderByUserId")
+  icpfCmpmFormID: ID
+  icpfCmpmForm: IcpfCmpmForm @hasOne(fields: ["icpfCmpmFormID"])
+  pgsfFormID: ID
+  pgsfForm: PgsfForm @hasOne(fields: ["pgsfFormID"])
+}
+
+type UserXp @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  totalXp: Int
+  thinkificXp: Int
+  psXp: Int
+  level: Int
+  xpToNextLevel: Int
+  lastLogin: String
+  dailyStreak: Int
+  progress: Float
+}
+
+type Cohort @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  startDate: String!
+  endDate: String!
+  deadline: String!
+  users: [User] @manyToMany(relationName: "CohortUsers")
+  type: String!
+  instructor: Instructor @hasOne
+  description: String
+  link: String
+}
+
+type LearningPath @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  description: String
+  courses: [LearningPathCourse] @hasMany
+  lessons: [LearningPathLesson] @hasMany
+  userProgress: [LearningPathProgress] @hasMany
+  displayOrder: Int
+  hours: Int
+  slug: String! @index(name: "learningPathBySlug")
+  status: String @default(value: "DRAFT")
+  icon: String
+  accredibleId: String
+}
+
+type LearningPathProgress @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  learningPath: LearningPath @belongsTo
+  progress: Float @default(value: "0")
+  completedCourses: [String]
+  completedLessons: [String]
+  lastAccessedDate: String
+  startDate: String
+  completionDate: String
+  status: String @default(value: "IN_PROGRESS")
+  credential: String
+  credentialDate: String
+}
+
+type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String
+  course: LMSCourse @belongsTo
+  learningPath: LearningPath @belongsTo
+  order: Int
+  thinkificId: String
+}
+
+type LearningPathLesson @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  lessonId: String
+  lesson: Lesson @belongsTo
+  learningPath: LearningPath @belongsTo
+  order: Int
+}
+
+type CMPMSession @model @auth(rules: [{ allow: public }]) {
+  startDate: String!
+  endDate: String! @index(name: "cmpmSessionByEndDate")
+  deadline: String! @index(name: "cmpmSessionByDeadline")
+  title: String!
+}
+
+type CMPMForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  sessionApplying: String
+  referral: String
+  payment: String
+  yearGoals: String
+  cmpmGoals: String
+  moreAboutYou: String
+  birthYear: String
+  optOut: Boolean
+  paymentConfirmation: String
+  status: String @default(value: "DRAFT")
+}
+
+type IcpfCmpmForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  age: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  sessionApplying: String
+  referral: String
+  payment: String
+  yearGoals: String
+  cmpmGoals: String
+  school: String
+  schoolType: String
+  studying: String
+  credential: String
+  credentialProgress: String
+  credentialYear: String
+  fullTime: Boolean
+  organizations: String
+  transcript: String
+  resume: String
+  corrugatedImpact: String
+  opportunities: Boolean
+  moreAboutYou: String
+  optOut: Boolean
+  birthYear: String
+  paymentConfirmation: String
+  status: String @default(value: "DRAFT")
+}
+
+type PgsfForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  age: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  certApplying: String
+  r2rconsent: Boolean
+  referral: String
+  payment: String
+  yearGoals: String
+  careerGoals: String
+  openToInternships: Boolean
+  school: String
+  schoolType: String
+  studying: String
+  credential: String
+  credentialProgress: String
+  credentialYear: String
+  fullTime: Boolean
+  organizations: String
+  transcript: String
+  resume: String
+  corrugatedImpact: String
+  opportunities: Boolean
+  moreAboutYou: String
+  whyinterested: String
+  optOut: Boolean
+  birthYear: String
+  paymentConfirmation: String
+  impact: String
+  status: String @default(value: "DRAFT")
+}
+
+type CPSForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  user: User @belongsTo
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  streetAddress: String
+  addressExtra: String
+  city: String
+  state: String
+  country: String
+  birthYear: String
+  companyName: String
+  companyTitle: String
+  linkedin: String
+  background: String
+  whyPackaging: String
+  areaOfInterest: String
+  sessionApplying: String
+  referral: String
+  payment: String
+  yearGoals: String
+  cpsGoals: String
+  paymentType: String
+  moreAboutYou: String
+  elective: String
+  optOut: Boolean
+  paymentConfirmation: String
+  status: String @default(value: "DRAFT")
+}
+
+type AppStart
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  firstName: String!
+  lastName: String!
+  email: String! @index(name: "appStartByEmail")
+  phone: String
+  source: String
+  sourceUrl: String
+}
+
+type ApplicationStart @model @auth(rules: [{ allow: public }]) {
+  id: ID! @primaryKey(sortKeyFields: ["createdAt"])
+  createdAt: String!
+  firstName: String!
+  lastName: String!
+  email: String! @index(name: "applicationStartByEmail")
+  phone: String
+  source: String
+  sourceUrl: String
+}
+
+type CertAppStart @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  type: String!
+    @index(name: "certAppStartByType", sortKeyFields: ["createdAt"])
+    @default(value: "APP_START")
+  createdAt: String!
+  firstName: String!
+  lastName: String!
+  email: String! @index(name: "certAppStartByEmail")
+  phone: String
+  source: String
+  sourceUrl: String
+  country: String
+  ipAddress: String
+}
+
+######### LMS #########
+
+type LMSCollection @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  description: String
+  title: String!
+  subtitle: String
+  instructor: String
+  instructorImage: String
+  instructorDescription: String
+  instructorLink: String
+  courses: [String]
+  hours: String
+  price: Int
+  slug: String! @index(name: "LMScollectionBySlug")
+  category: CategoryType @default(value: "INDUSTRY")
+  collectionId: String
+  lmsLink: String
+}
+
+type LMSCirriculum @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  shorthand: String
+  title: String
+  slug: String
+  description: String
+  Courses: [LMSCourse] @manyToMany(relationName: "CirriculumCourses")
+}
+
+type LMSCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  thinkificId: String! @index(name: "LMSCourseByThinkificId")
+  learningPaths: [LearningPathCourse] @hasMany
+  courseId: String
+  category: CategoryType @default(value: "MATERIALS")
+  categoryArray: [String]
+  type: String
+  cirriculum: [LMSCirriculum] @manyToMany(relationName: "CirriculumCourses")
+  lmsLessons: [LMSLesson] @manyToMany(relationName: "CourseLessons")
+  instructors: [Instructor] @manyToMany(relationName: "CourseInstructors")
+  price: String
+  hours: String
+  lessons: String
+  videos: String
+  preview: String
+  seoImage: String
+  infoSheet: String
+  title: String
+  subheadline: String
+  what_learned: String
+  objectives: [String]
+  link: String
+  trial_link: String
+  percentComplete: Int
+  slug: String! @index(name: "LMScourseBySlug")
+  collection: [String]
+  demo: Boolean @default(value: "false")
+  partOf: [String]
+  altLink: String
+  shortDescription: String
+  subscriptionLink: String
+  subscriptionPrice: String
+  stripeLink: String
+  callout: String
+  achievements: [Achievement] @manyToMany(relationName: "AchievementCourses")
+  wishlist: [User] @manyToMany(relationName: "UserWishlist")
+  reviews: [CourseReview] @hasMany
+  partner: [Partner] @manyToMany(relationName: "PartnerCourses")
+}
+
+type LMSLesson @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  course: [LMSCourse] @manyToMany(relationName: "CourseLessons")
+  modules: [LMSModule] @hasMany
+  subheadline: String
+  objectives: [String]
+  media: String
+  percentComplete: Int
+  content: String
+  slug: String! @index(name: "LMSLessonBySlug")
+}
+
+type LMSModule @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  lesson: LMSLesson @belongsTo
+  subheadline: String
+  objectives: [String]
+  mediaType: MediaType
+  slides: [Slide] @hasMany
+  media: String
+  quiz: LMSQuiz @hasOne
+  content: String
+  slug: String! @index(name: "LMSModuleBySlug")
+}
+
+type LMSQuiz @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  module: LMSModule @belongsTo
+  prompt: String
+  answer1: String
+  answer2: String
+  answer3: String
+  answer4: String
+  correctAnswer: String
+}
+
+type Instructor @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userId: ID
+  name: String
+  image: String
+  bio: String
+  linkedIn: String
+  company: String
+  title: String
+  coursesTaught: [LMSCourse] @manyToMany(relationName: "CourseInstructors")
+  cohorts: [Cohort] @hasMany
+}
+
+type Objective @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  objective: String!
+  completed: Boolean
+}
+
+type Slide @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slideSource: String!
+  description: String
+}
+
+# type LessonVideo @model @auth(rules: [{ allow: public }]) {
+#   id: ID!
+#   timestamps: [Timestamp] @hasMany
+#   lessonId: ID
+#   lesson: LMSLesson @belongsTo(fields: ["lessonId"])
+# }
+
+type Timestamp @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  time: String!
+  description: String
+}
+
+######### Staff #########
+
+type Staff @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  fullName: String!
+  title: String!
+  image: String!
+  linkedIn: String
+}
+
+######### Library #########
+
+######### Customer #########
+
+type TrackedCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String!
+  clicks: Int!
+  customer: Customer @belongsTo(fields: ["customerId"])
+  customerId: ID! @index(name: "trackedByCustomer", sortKeyFields: ["clicks"])
+}
+
+type IncludedCourse @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseId: String!
+  customer: Customer @belongsTo(fields: ["customerId"])
+  customerId: ID! @index(name: "includedCourseByCustomer")
+}
+
+type Customer @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  displayName: String!
+  link: String
+  logo: String
+  email: String
+  primaryColor: String
+  highlightColor: String
+  pdf: String
+  slide: String
+  video: String
+  offered: [String]
+  pscourses: [IncludedCourse]
+    @hasMany(indexName: "includedCourseByCustomer", fields: ["id"])
+  courses: [TrackedCourse]
+    @hasMany(indexName: "trackedByCustomer", fields: ["id"])
+  offerings: [String]
+  status: String @default(value: "DRAFT")
+}
+
+type CustomerLibary @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  displayName: String!
+  slug: String! @index(name: "libraryBySlug")
+  description: String
+  link: String
+  logo: String
+  email: String
+  primaryColor: String
+  highlightColor: String
+  pdf: String
+  slide: String
+  video: String
+  clientCourses: [String]
+  pschoolCourses: [String]
+  addOns: [String]
+  status: String @default(value: "DRAFT")
+}
+
+######### Salesbar #########
+
+type SalesBar @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  text: String!
+  link: String!
+  icon: String @default(value: "BoltIcon")
+  type: String
+}
+
+######### Testimonials #########
+
+type Testimonial @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  content: String!
+  author: String
+  company: String
+  affiliation: String
+  title: String
+  tags: [String]
+  linkedin: String
+  headshot: String
+  featured: Boolean @default(value: "false")
+  date: String
+  video: String
+}
+
+######### Forms #########
+
+type WorkshopForm
+  @model(timestamps: { createdAt: "createdOn", updatedAt: "updatedOn" })
+  @auth(rules: [{ allow: public }]) {
+  firstName: String!
+  lastName: String!
+  email: String! @index(name: "workshopFormByEmail")
+  phone: String
+  companyName: String
+  eventDate: String
+  audienceSize: String
+  eventLocation: String
+  eventDescription: String
+}
+
+######### Tracking #########
+
+type CourseClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseID: String! @index(name: "clicksByCourse")
+  page: String
+  ipAddress: String
+  country: String
+  lat: String
+  long: String
+  referrer: String
+  nextPath: String
+  format: String
+}
+
+type SalesbarClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  page: String
+  ipAddress: String
+  country: String
+  link: String
+}
+
+type LessonClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  LessonID: String! @index(name: "clicksByLesson")
+  page: String
+  ipAddress: String
+  country: String
+  lat: String
+  long: String
+  referrer: String
+  format: String
+}
+
+type CourseSearch @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  term: String! @index(name: "courseSearchByTerm")
+  ipAddress: String
+  country: String
+}
+
+type CyberMondayClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  object: String
+  ipAddress: String
+  country: String
+  device: String
+}
+
+type APSPresentationClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  object: String
+  ipAddress: String
+  country: String
+  device: String
+  email: String
+}
+
+type CategoryClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  category: String
+  ipAddress: String
+  country: String
+  device: String
+  email: String
+  page: String
+}
+
+######### INDIA #########
+
+type Click @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  ref: String
+  path: String
+  type: String
+  identifier: String
+  nextPath: String
+  ipAddress: String
+  location: String
+}
+
+type IndiaClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  courseID: String! @index(name: "indiaClicksByCourse")
+  page: String
+  ipAddress: String
+  country: String
+  lat: String
+  long: String
+  referrer: String
+  nextPath: String
+  format: String
+}
+
+type IndiaCourseSearch @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  term: String! @index(name: "indiaCourseSearchByTerm")
+  ipAddress: String
+  country: String
+}
+
+######### INDEX TEMPLATES #########
+
+type IndexTemplate @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String! @index(name: "indexBySlug")
+  title: String!
+  subhead: String
+  authors: [Author] @manyToMany(relationName: "AuthorTemplates")
+  rows: [IndexRow] @manyToMany(relationName: "IndexTemplateRows")
+}
+
+type IndexRow @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  headline: String
+  subhead: String
+  type: String
+  content: [String]
+  templates: [IndexTemplate] @manyToMany(relationName: "IndexTemplateRows")
+}
+
+type IndexPage @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  content: String
+  seoImage: String
+  slug: String! @index(name: "indexPageBySlug")
+  discount: Int
+  status: String @default(value: "DRAFT")
+  type: String @default(value: "INDEX")
+}
+
+######### FAQs #########
+
+type Faq @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  question: String
+  answer: String
+  type: String
+  order: Int! @default(value: "0")
+}
+
+######### EVENT TEMPLATES #########
+
+type EventTemplate @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String!
+  startDate: String!
+  endDate: String!
+  description: String
+  location: String
+  hero: String
+  link: String
+  photos: [EventPhoto] @hasMany
+  presentations: [EventPresentation] @hasMany
+  agenda: EventAgenda @hasOne
+  speakers: [EventSpeaker] @hasMany
+  slug: String! @index(name: "eventBySlug")
+  logo: String
+  clicks: [EventClick] @hasMany
+}
+
+type EventPhoto @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  photo: String
+  caption: String
+  uploadedBy: String
+  event: EventTemplate @belongsTo
+  order: Int
+}
+
+type UserEventPhoto @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  photo: String
+  caption: String
+  uploadedBy: String
+  eventID: String
+  event: String
+  approved: Boolean @default(value: "false")
+  approvedId: String
+}
+
+type EventPresentation @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  presentation: String
+  hero: String
+  event: EventTemplate @belongsTo
+}
+
+type EventAgenda @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  items: [EventAgendaItem] @hasMany
+  event: EventTemplate @belongsTo
+}
+
+type EventAgendaItem @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  description: String
+  location: String
+  type: String
+  start: String
+  end: String
+  speakers: [EventSpeaker] @hasMany
+  agenda: EventAgenda @belongsTo
+}
+
+type EventSpeaker @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  title: String
+  company: String
+  email: String
+  image: String
+  logo: String
+  event: EventTemplate @belongsTo
+  agendaItems: [EventAgendaItem] @hasMany
+}
+
+type EventClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  event: EventTemplate @belongsTo
+  page: String
+  ipAddress: String
+  country: String
+  email: String
+  type: String
+  object: String
+  objectId: String
+}
+
+type CertificateClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  page: String
+  ipAddress: String
+  country: String
+  type: String
+  object: String
+  device: String
+}
+
+type IndexClick @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  page: String
+  ipAddress: String
+  country: String
+  type: String
+  device: String
+}
+
+type EmailSubscription @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "emailSubscriptionByEmail")
+  ipAddress: String
+  country: String
+  device: String
+  page: String
+}
+
+######### IMAGES #########
+
+type ImageObject @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  url: String
+  caption: String
+  uploadedBy: String
+  alt: String
+}
+
+type Purchase @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String! @index(name: "purchaseByEmail")
+  name: String
+  company: String
+  title: String
+  phone: String
+  address: String
+  zip: String
+  state: String
+  city: String
+  country: String
+  code: String
+  status: String @default(value: "DRAFT")
+  total: String
+  subtotal: String
+  shippingMethod: String
+  shipping: String
+  tax: String
+  items: [String]
+  paymentConfirmation: String
+  paymentMethod: String
+  paymentLast4: String
+  printfulConfirmed: Boolean @default(value: "false")
+  printfulOrderId: String
+}
+
+type Analysis @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  wordCount: Int
+  readingTime: String
+  quizQuestion: String
+  quizOptions: [String]
+  quizCorrectAnswer: String
+  lessonId: String
+}
+
+type Achievement @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  courses: [LMSCourse] @manyToMany(relationName: "AchievementCourses")
+  coursesRequired: Int
+  users: [User] @manyToMany(relationName: "AchievementUsers")
+}
+
+######### TESTING #########
+
+type Test @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  email: String! @index(name: "testByEmail")
+  totalTasks: Int
+  tasks: [TestTask] @hasMany
+}
+
+type TestTask @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  test: Test @belongsTo
+  task: String
+  completed: Boolean @default(value: "false")
+  completedDate: String
+}
+
+######### COURSE REVIEWS #########
+
+type CourseReview @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  course: LMSCourse @belongsTo
+  review: String
+  rating: Int
+  createdAt: String
+  user: User @belongsTo(fields: ["userID"])
+  userID: ID @index(name: "courseReviewByUserId")
+  thinkificId: String @index(name: "courseReviewByThinkificId")
+}
+
+######### ORDERS #########
+
+type Order @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String @index(name: "orderByEmail")
+  name: String
+  user: User @belongsTo(fields: ["userID"])
+  userID: ID @index(name: "orderByUserId")
+  total: Int
+  status: String @default(value: "PENDING")
+  courseName: String
+  courseLink: String
+  courseImage: String
+  courseDiscount: Float
+  courseDescription: String
+  type: String
+  paymentPlan: String
+}
+
+######### SEARCH LOGS #########
+
+type SearchLog @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  timestamp: String! @index(name: "searchLogByTimestamp", sortKeyFields: ["id"])
+  query: String!
+  results_count: Int!
+  results: [SearchResult]
+  answer: String!
+  model: String!
+  collection: String!
+  response_time_ms: Int!
+  user_rating: Int # 1-5 star rating
+  rating_comment: String # Optional user feedback
+  rating_timestamp: String # When rating was given
+  helpful: Boolean # Was the result helpful?
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type SearchResult {
+  id: String!
+  score: Float!
+  title: String!
+  link: String!
+}
+
+######### Partners #########
+
+type Partner @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  image: String
+  link: String
+  courses: [LMSCourse] @manyToMany(relationName: "PartnerCourses")
+  admins: [PartnerAdmin] @manyToMany(relationName: "PartnerAdminUsers")
+}
+
+type PartnerAdmin @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  email: String
+  password: String
+  partner: [Partner] @manyToMany(relationName: "PartnerAdminUsers")
+}
+
+type LibrarySurvey @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  company: String
+  options: [String]
+}
+
+type CyberMondayCode @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  code: String
+  usedBy: String
+  dayValid: String
+  dayUsed: String
+  isUsed: Boolean @default(value: "false")
+}
+
+type ApprovedAPS25MediaPage @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String
+}

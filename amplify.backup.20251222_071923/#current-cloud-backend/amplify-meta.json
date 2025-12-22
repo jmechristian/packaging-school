@@ -1,0 +1,378 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-packbrain-staging-54032-authRole",
+			"UnauthRoleArn": "arn:aws:iam::552673436980:role/amplify-packbrain-staging-54032-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::552673436980:role/amplify-packbrain-staging-54032-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "amplify-packbrain-staging-54032-deployment",
+			"UnauthRoleName": "amplify-packbrain-staging-54032-unauthRole",
+			"StackName": "amplify-packbrain-staging-54032",
+			"StackId": "arn:aws:cloudformation:us-east-1:552673436980:stack/amplify-packbrain-staging-54032/789e59d0-8cbb-11ed-bf96-0eb7113ca72d",
+			"AmplifyAppId": "d3erwqq9qelccz"
+		}
+	},
+	"analytics": {},
+	"api": {
+		"packbrain": {
+			"dependsOn": [],
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [
+						{
+							"authenticationType": "AWS_IAM"
+						}
+					],
+					"defaultAuthentication": {
+						"authenticationType": "API_KEY",
+						"apiKeyConfig": {
+							"apiKeyExpirationDays": 365,
+							"apiKeyExpirationDate": "2025-08-16T13:57:24.415Z",
+							"description": "newish one"
+						}
+					}
+				},
+				"GraphQLAPIIdOutput": "ucvkf5mrsjfollix2ifq4zksw4",
+				"GraphQLAPIEndpointOutput": "https://c6pkoby5rbgtxcum5slz7hgem4.appsync-api.us-east-1.amazonaws.com/graphql",
+				"GraphQLAPIKeyOutput": "da2-j6b7wrlbzfghtjaxq7t75fv4hm"
+			},
+			"providerPlugin": "awscloudformation",
+			"service": "AppSync",
+			"lastPushTimeStamp": "2025-12-03T13:35:56.274Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apipackbrain"
+			},
+			"lastPushDirHash": "0wfikqtTj5r0waZnracKkbHTmX0="
+		}
+	},
+	"auth": {
+		"packbrain": {
+			"customAuth": false,
+			"dependsOn": [],
+			"frontendAuthConfig": {
+				"mfaConfiguration": "OFF",
+				"mfaTypes": [
+					"SMS"
+				],
+				"passwordProtectionSettings": {
+					"passwordPolicyMinLength": 8,
+					"passwordPolicyCharacters": [
+						"REQUIRES_LOWERCASE",
+						"REQUIRES_NUMBERS",
+						"REQUIRES_SYMBOLS",
+						"REQUIRES_UPPERCASE"
+					]
+				},
+				"signupAttributes": [
+					"EMAIL"
+				],
+				"socialProviders": [],
+				"usernameAttributes": [
+					"EMAIL"
+				],
+				"verificationMechanisms": [
+					"EMAIL"
+				]
+			},
+			"providerPlugin": "awscloudformation",
+			"service": "Cognito",
+			"output": {
+				"UserPoolId": "us-east-1_2JouwovYC",
+				"AppClientIDWeb": "6dirb4th1nnb152msm75l7d7ok",
+				"AppClientID": "4ipq2lssmensm4e18eua00limb",
+				"IdentityPoolId": "us-east-1:df713456-0ca5-4b8b-87dd-1f2a8c1faa99",
+				"UserPoolArn": "arn:aws:cognito-idp:us-east-1:552673436980:userpool/us-east-1_2JouwovYC",
+				"IdentityPoolName": "testAuthIdentityPool__staging",
+				"UserPoolName": "packbrain"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:35:26.691Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/auth/packbrain-cloudformation-template.json",
+				"logicalId": "authpackbrain"
+			},
+			"lastPushDirHash": "ZS1wpVebZc9aFbSX6sN7sFi4zqg="
+		}
+	},
+	"function": {
+		"sendEmailFn": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"output": {
+				"LambdaExecutionRoleArn": "arn:aws:iam::552673436980:role/packbrainLambdaRole7cb1b88f-staging",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:552673436980:function:sendEmailFn-staging",
+				"Name": "sendEmailFn-staging",
+				"LambdaExecutionRole": "packbrainLambdaRole7cb1b88f-staging"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:35:26.693Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/function/sendEmailFn-cloudformation-template.json",
+				"logicalId": "functionsendEmailFn"
+			},
+			"s3Bucket": {
+				"deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
+				"s3Key": "amplify-builds/sendEmailFn-6849775634395a6a3756-build.zip"
+			},
+			"lastBuildTimeStamp": "2025-04-14T13:42:10.715Z",
+			"lastBuildType": "PROD",
+			"lastPackageTimeStamp": "2025-04-14T13:42:10.953Z",
+			"distZipFilename": "sendEmailFn-6849775634395a6a3756-build.zip",
+			"lastPushDirHash": "+qCpLcQ3e+V9ndmUi152qrqiN5Q="
+		},
+		"sendRegCode": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"output": {
+				"LambdaExecutionRoleArn": "arn:aws:iam::552673436980:role/packbrainLambdaRolee86c11ca-staging",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:552673436980:function:sendRegCode-staging",
+				"Name": "sendRegCode-staging",
+				"LambdaExecutionRole": "packbrainLambdaRolee86c11ca-staging"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:35:26.695Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/function/sendRegCode-cloudformation-template.json",
+				"logicalId": "functionsendRegCode"
+			},
+			"s3Bucket": {
+				"deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
+				"s3Key": "amplify-builds/sendRegCode-754d417776374d464667-build.zip"
+			},
+			"lastBuildTimeStamp": "2025-04-14T13:42:10.717Z",
+			"lastBuildType": "PROD",
+			"lastPackageTimeStamp": "2025-04-14T13:42:10.803Z",
+			"distZipFilename": "sendRegCode-754d417776374d464667-build.zip",
+			"lastPushDirHash": "v0qM0aYj3J0j2VsVyGnRclHwdkc="
+		},
+		"sendSponsorForm": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"output": {
+				"LambdaExecutionRoleArn": "arn:aws:iam::552673436980:role/packbrainLambdaRole3fedb20a-staging",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:552673436980:function:sendSponsorForm-staging",
+				"Name": "sendSponsorForm-staging",
+				"LambdaExecutionRole": "packbrainLambdaRole3fedb20a-staging"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:35:26.700Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/function/sendSponsorForm-cloudformation-template.json",
+				"logicalId": "functionsendSponsorForm"
+			},
+			"s3Bucket": {
+				"deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
+				"s3Key": "amplify-builds/sendSponsorForm-56515139577977636935-build.zip"
+			},
+			"lastBuildTimeStamp": "2025-04-14T13:42:10.718Z",
+			"lastBuildType": "PROD",
+			"lastPackageTimeStamp": "2025-04-14T13:42:10.823Z",
+			"distZipFilename": "sendSponsorForm-56515139577977636935-build.zip",
+			"lastPushDirHash": "SPmWO35EsJajN95Iz/HmthRcp7s="
+		},
+		"sendWelcomeEmail": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"output": {
+				"LambdaExecutionRoleArn": "arn:aws:iam::552673436980:role/packbrainLambdaRoleeaf0cd7b-staging",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:552673436980:function:sendWelcomeEmail-staging",
+				"Name": "sendWelcomeEmail-staging",
+				"LambdaExecutionRole": "packbrainLambdaRoleeaf0cd7b-staging"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:35:26.702Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/function/sendWelcomeEmail-cloudformation-template.json",
+				"logicalId": "functionsendWelcomeEmail"
+			},
+			"s3Bucket": {
+				"deploymentBucketName": "amplify-packbrain-staging-54032-deployment",
+				"s3Key": "amplify-builds/sendWelcomeEmail-496e456b2f396f646f51-build.zip"
+			},
+			"lastBuildTimeStamp": "2025-04-14T13:42:10.719Z",
+			"lastBuildType": "PROD",
+			"lastPackageTimeStamp": "2025-04-14T13:42:10.830Z",
+			"distZipFilename": "sendWelcomeEmail-496e456b2f396f646f51-build.zip",
+			"lastPushDirHash": "MaQAOaCXSo7S7/DbXidh2hHMVCQ="
+		}
+	},
+	"hosting": {},
+	"notifications": {
+		"unileverAnalytics": {
+			"service": "Pinpoint",
+			"output": {
+				"Name": "unileverAnalytics-staging",
+				"Id": "1459fffb37a9496a83cda7db5b2e2370",
+				"Region": "us-east-1"
+			},
+			"lastPushTimeStamp": "2025-12-03T13:39:12.670Z"
+		}
+	},
+	"parameters": {
+		"AMPLIFY_analytics_Pinpoint_Id": {
+			"usedBy": [
+				{
+					"category": "analytics",
+					"resourceName": "Pinpoint"
+				}
+			]
+		},
+		"AMPLIFY_analytics_Pinpoint_Name": {
+			"usedBy": [
+				{
+					"category": "analytics",
+					"resourceName": "Pinpoint"
+				}
+			]
+		},
+		"AMPLIFY_analytics_Pinpoint_Region": {
+			"usedBy": [
+				{
+					"category": "analytics",
+					"resourceName": "Pinpoint"
+				}
+			]
+		},
+		"AMPLIFY_function_addAPSToUser_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "addAPSToUser"
+				}
+			]
+		},
+		"AMPLIFY_function_addAPSToUser_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "addAPSToUser"
+				}
+			]
+		},
+		"AMPLIFY_function_addNewUser_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "addNewUser"
+				}
+			]
+		},
+		"AMPLIFY_function_addNewUser_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "addNewUser"
+				}
+			]
+		},
+		"AMPLIFY_function_sendEmailFn_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendEmailFn"
+				}
+			]
+		},
+		"AMPLIFY_function_sendEmailFn_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendEmailFn"
+				}
+			]
+		},
+		"AMPLIFY_function_sendRegCode_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendRegCode"
+				}
+			]
+		},
+		"AMPLIFY_function_sendRegCode_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendRegCode"
+				}
+			]
+		},
+		"AMPLIFY_function_sendSponsorForm_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendSponsorForm"
+				}
+			]
+		},
+		"AMPLIFY_function_sendSponsorForm_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendSponsorForm"
+				}
+			]
+		},
+		"AMPLIFY_function_sendWelcomeEmail_deploymentBucketName": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendWelcomeEmail"
+				}
+			]
+		},
+		"AMPLIFY_function_sendWelcomeEmail_s3Key": {
+			"usedBy": [
+				{
+					"category": "function",
+					"resourceName": "sendWelcomeEmail"
+				}
+			]
+		},
+		"AMPLIFY_notifications_Pinpoint_Id": {
+			"usedBy": [
+				{
+					"category": "notifications",
+					"resourceName": "Pinpoint"
+				}
+			]
+		},
+		"AMPLIFY_notifications_Pinpoint_Name": {
+			"usedBy": [
+				{
+					"category": "notifications",
+					"resourceName": "Pinpoint"
+				}
+			]
+		},
+		"AMPLIFY_notifications_Pinpoint_Region": {
+			"usedBy": [
+				{
+					"category": "notifications",
+					"resourceName": "Pinpoint"
+				}
+			]
+		}
+	},
+	"storage": {
+		"packmedia": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"lastPushTimeStamp": "2025-12-03T13:35:26.704Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-packbrain-staging-54032-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+				"logicalId": "storagepackmedia"
+			},
+			"output": {
+				"BucketName": "packmedia54032-staging",
+				"Region": "us-east-1"
+			},
+			"lastPushDirHash": "1GMEpm8y1LHjxGHNlSLdPBOay1k="
+		}
+	}
+}
