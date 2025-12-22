@@ -63,7 +63,7 @@ const ICPF = () => {
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'>
               <div className='text-icpf-dark font-oswald uppercase text-lg'>
-                Oct 27, 2025 - Jan 19, 2026
+                Apr 13, 2026 - Jun 03, 2026
               </div>
             </div>
             <div className='h1-base'>
@@ -308,7 +308,7 @@ const ICPF = () => {
             <div className='h3-base'>Scholarship Criteria & Award Process</div>
             <div className='text-lg'>
               TPS and ICPF will collect and review applications for the CMPM
-              FALL 2 scholarship opportunity. It is important to note the
+              SPRING 1 scholarship opportunity. It is important to note the
               following key ethical considerations for the scholarship:
             </div>
             <div className=''>
