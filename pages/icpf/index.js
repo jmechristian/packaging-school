@@ -100,18 +100,18 @@ const ICPF = () => {
             <div className='bg-icpf-light p-5 rounded-lg flex flex-col gap-4 md:col-span-2'>
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-0.5'>
-                  <div className='text-lg font-bold'>CMPM Fall 2</div>
+                  <div className='text-lg font-bold'>CMPM Spring 1</div>
                   <div>ICPF Sponsored Cohort</div>
                 </div>
                 <div className='flex items-center gap-1 py-3 border-y border-y-icpf-dark'>
                   <div className='text-xl'>
                     <MdCalendarMonth />
                   </div>
-                  <div className='font-bold'>Oct 27, 2025 - Jan 19, 2026</div>
+                  <div className='font-bold'>Apr 13, 2026 - Jun 03, 2026</div>
                 </div>
                 <div className='flex flex-col gap-0'>
                   <div className='text-lg font-bold'>Deadline</div>
-                  <div>Oct 10, 2025</div>
+                  <div>Apr 1, 2025</div>
                 </div>
               </div>
               <div>
