@@ -157,9 +157,9 @@ const FlashSaleBanner = ({ isOpen = true, onRequestClose, onClosed }) => {
             ×
           </span>
         </button>
-        <div className='container mx-auto max-w-7xl w-full px-4 md:px-8 xl:px-0'>
-          <div className='grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
-            <div className='flex flex-col gap-0 leading-snug'>
+        <div className='container mx-auto max-w-7xl w-full px-4 md:!px-8 xl:!px-0'>
+          <div className='grid grid-cols-1 md:!grid-cols-3 items-center gap-4 text-center md:!text-left'>
+            <div className='flex flex-col gap-0 leading-snug items-center md:!items-start order-1 md:!order-1'>
               <div className='text-xl font-bold leading-tight'>
                 Ring in the New Year with new skills!
               </div>
@@ -168,7 +168,7 @@ const FlashSaleBanner = ({ isOpen = true, onRequestClose, onClosed }) => {
                 certificates.<sup>*</sup>
               </div>
             </div>
-            <div className='flex flex-col items-start justify-center leading-snug text-left md:items-center md:text-center px-0 md:px-4 md:justify-self-center'>
+            <div className='flex flex-col items-center justify-center leading-snug px-0 md:!px-4 md:!justify-self-center order-3 md:!order-2'>
               <div className='text-sm font-medium'>
                 {status === 'ended'
                   ? 'No more codes'
@@ -176,7 +176,7 @@ const FlashSaleBanner = ({ isOpen = true, onRequestClose, onClosed }) => {
                   ? 'Code unlocks at 00:00 UTC'
                   : null}
               </div>
-              <div className='flex flex-col items-start md:!items-center gap-0.5 text-center'>
+              <div className='flex flex-col items-center gap-0.5 text-center'>
                 <div className='font-mono font-bold text-lg'>
                   {status === 'active' && today ? today.code : '—'}
                 </div>
@@ -201,7 +201,7 @@ const FlashSaleBanner = ({ isOpen = true, onRequestClose, onClosed }) => {
                 </div>
               ) : null}
             </div>
-            <div className='flex flex-col items-start justify-center leading-snug text-left md:!items-end md:!text-right md:!justify-self-end'>
+            <div className='flex flex-col items-center justify-center leading-snug md:!items-end md:!text-right md:!justify-self-end order-2 md:!order-3'>
               <div className='text-sm font-medium'>
                 {status === 'upcoming'
                   ? 'Sale starts in (UTC)'
