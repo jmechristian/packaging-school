@@ -10,6 +10,7 @@ import HeaderNew from '../navigation/Header/HeaderNew';
 import CookieConsent from '../../components/shared/CookieConsent';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
+import FlashSaleBanner from '../../components/nav/FlashSaleBanner';
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -19,6 +20,9 @@ const Layout = ({ children }) => {
   const { user, isLoading: userIsLoading } = useUser();
   const { isReady, isLoading, needsOnboarding } = useAuth();
   const router = useRouter();
+  const [isFlashSaleBannerOpen, setIsFlashSaleBannerOpen] = useState(true);
+  const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
+    useState(true);
 
   // Get location data
   useEffect(() => {
@@ -86,6 +90,13 @@ const Layout = ({ children }) => {
         <div className='flex flex-col justify-between'>
           <div className='sticky top-0 z-50'>
             <HeaderNew />
+            {isFlashSaleBannerMounted ? (
+              <FlashSaleBanner
+                isOpen={isFlashSaleBannerOpen}
+                onRequestClose={() => setIsFlashSaleBannerOpen(false)}
+                onClosed={() => setIsFlashSaleBannerMounted(false)}
+              />
+            ) : null}
           </div>
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import PurchaseLogin from '../../../components/login/PurchaseLogin';
 import { getOrderByID, getCouponInfo } from '../../../helpers/api';
+import FlashSaleBanner from '../../../components/nav/FlashSaleBanner';
 
 // Loading Skeleton Component
 const OrderSkeleton = () => {
@@ -89,6 +90,9 @@ const Order = (props) => {
   const [couponEntered, setCouponEntered] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [isFlashSaleBannerOpen, setIsFlashSaleBannerOpen] = useState(true);
+  const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
+    useState(true);
   const handleCouponSubmit = async () => {
     // Extract course ID from the courseLink URL
     const courseID = order.courseLink
@@ -160,6 +164,15 @@ const Order = (props) => {
                 height={491}
               />
             </div>
+          </div>
+          <div className='w-full relative'>
+            {isFlashSaleBannerMounted ? (
+              <FlashSaleBanner
+                isOpen={isFlashSaleBannerOpen}
+                onRequestClose={() => setIsFlashSaleBannerOpen(false)}
+                onClosed={() => setIsFlashSaleBannerMounted(false)}
+              />
+            ) : null}
           </div>
           <div className='w-full grid lg:!grid-cols-2 '>
             <div className='w-full lg:!pr-[5.4%] flex justify-end pt-10 lg:!pt-[80px]'>
