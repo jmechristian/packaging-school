@@ -35,7 +35,13 @@ const Meta = ({
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
   const canonicalUrl = toAbsoluteUrl(url, siteUrl);
-  const ogImageUrl = toAbsoluteUrl(image, siteUrl);
+  const metaTitle = title || siteName;
+  const metaDescription = description || '';
+
+  // Always provide a concrete OG image so crawlers don't "infer" from random page images.
+  // Replace with a proper share-sized PNG/JPG via the `image` prop when possible.
+  const fallbackImage = '/favicon.png';
+  const ogImageUrl = toAbsoluteUrl(image || fallbackImage, siteUrl);
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
 
   return (
@@ -52,37 +58,56 @@ const Meta = ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(course) }}
         />
       )}
-      <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-      <title>{title}</title>
-      {description && <meta name='description' content={description} />}
-      {keywords && <meta name='keywords' content={keywords} />}
-      <meta name='robots' content='index, follow' />
       <meta
+        key='viewport'
+        name='viewport'
+        content='width=device-width, initial-scale=1.0'
+      />
+      <title key='title'>{metaTitle}</title>
+      {metaDescription && (
+        <meta key='description' name='description' content={metaDescription} />
+      )}
+      {keywords && <meta name='keywords' content={keywords} />}
+      <meta key='robots' name='robots' content='index, follow' />
+      <meta
+        key='google-site-verification'
         name='google-site-verification'
         content='0J1SRWS-xIM_nHRIochuPhFVG-Yfa3lPy3Y7qoAsx8Y'
       />
 
-      {canonicalUrl && <link rel='canonical' href={canonicalUrl} />}
-
-      {/* <!-- Open Graph / Facebook --> */}
-      <meta property='og:type' content={type} />
-      <meta property='og:title' content={title} />
-      {description && <meta property='og:description' content={description} />}
-      {canonicalUrl && <meta property='og:url' content={canonicalUrl} />}
-      <meta property='og:site_name' content={siteName} />
-      {ogImageUrl && (
-        <>
-          <meta property='og:image' content={ogImageUrl} />
-          <meta property='og:image:secure_url' content={ogImageUrl} />
-          <meta property='og:image:alt' content={title} />
-        </>
+      {canonicalUrl && (
+        <link key='canonical' rel='canonical' href={canonicalUrl} />
       )}
 
+      {/* <!-- Open Graph / Facebook --> */}
+      <meta key='og:type' property='og:type' content={type} />
+      <meta key='og:title' property='og:title' content={metaTitle} />
+      <meta
+        key='og:description'
+        property='og:description'
+        content={metaDescription}
+      />
+      {canonicalUrl && (
+        <meta key='og:url' property='og:url' content={canonicalUrl} />
+      )}
+      <meta key='og:site_name' property='og:site_name' content={siteName} />
+      <meta key='og:image' property='og:image' content={ogImageUrl} />
+      <meta
+        key='og:image:secure_url'
+        property='og:image:secure_url'
+        content={ogImageUrl}
+      />
+      <meta key='og:image:alt' property='og:image:alt' content={metaTitle} />
+
       {/* Twitter */}
-      <meta name='twitter:card' content={twitterCard} />
-      <meta name='twitter:title' content={title} />
-      {description && <meta name='twitter:description' content={description} />}
-      {ogImageUrl && <meta name='twitter:image' content={ogImageUrl} />}
+      <meta key='twitter:card' name='twitter:card' content={twitterCard} />
+      <meta key='twitter:title' name='twitter:title' content={metaTitle} />
+      <meta
+        key='twitter:description'
+        name='twitter:description'
+        content={metaDescription}
+      />
+      <meta key='twitter:image' name='twitter:image' content={ogImageUrl} />
     </Head>
   );
 };

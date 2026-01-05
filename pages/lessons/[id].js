@@ -233,8 +233,8 @@ const Page = ({ lesson }) => {
       <>
         <Meta
           title={lesson.title}
-          description={lesson.subhead}
-          image={lesson.seoImage}
+          description={lesson.subhead || ''}
+          image={lesson.seoImage || '/favicon.png'}
           url={`/lessons/${lesson.slug}`}
           type='article'
         />
