@@ -17,6 +17,9 @@ const compact = (obj) =>
   );
 
 export function buildCourseJsonLd(course, siteUrl) {
+  if (!course) {
+    return { course: null, breadcrumb: null };
+  }
   const url = `${siteUrl}/courses/${course.slug || course.id}`;
   const image = course.seoImage ? [course.seoImage] : undefined;
 

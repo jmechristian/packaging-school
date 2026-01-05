@@ -6,24 +6,40 @@ import { setPreviewClosed } from '../../features/all_courses/courseFilterSlice';
 import CourseContentMenu from '../../components/courses/CourseContentMenu';
 import { lMSCoursesBySlug, listLMSCourses } from '../../src/graphql/queries';
 import { API } from 'aws-amplify';
-import Head from 'next/head';
 import Meta from '../../components/shared/Meta';
 import { buildCourseJsonLd } from '../../libs/seo/courseJsonLd';
 
 const Page = ({ course }) => {
-  console.log(course);
   const dispatch = useDispatch();
   const { preview } = useSelector((state) => state.course_filter);
   const { location } = useSelector((state) => state.auth);
-  const courseJsonLd = buildCourseJsonLd(course, 'https://packagingschool.com');
+
+  // Use a stable base URL during SSR/SSG so OG tags are absolute and consistent.
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+
+  const courseJsonLd = course ? buildCourseJsonLd(course, siteUrl) : null;
+  const courseUrl = course?.slug ? `/courses/${course.slug}` : null;
+
+  // Safety guard: should be rare once fallback is 'blocking', but prevents prerender/runtime crashes.
+  if (!course) {
+    return (
+      <>
+        <Meta title='Packaging School' url='/courses' />
+        <div className='relative py-16' />
+      </>
+    );
+  }
   return (
     <>
       <Meta
-        title={course && `Packaging School | ${course.title}`}
-        description={course && course.subheadline}
-        image={course && course.seoImage}
-        course={courseJsonLd.course}
-        breadcrumb={courseJsonLd.breadcrumb}
+        title={`Packaging School | ${course.title}`}
+        description={course.subheadline}
+        image={course.seoImage}
+        url={courseUrl}
+        type='website'
+        course={courseJsonLd?.course}
+        breadcrumb={courseJsonLd?.breadcrumb}
       />
       <div className='relative py-16'>
         <CourseMain
@@ -61,7 +77,9 @@ export async function getStaticPaths() {
     params: { uid: course.slug },
   }));
 
-  return { paths, fallback: true };
+  // Important for social scrapers + SSG stability: don't serve a "fallback shell"
+  // that lacks meta tags and can cause runtime errors during prerender.
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {
@@ -71,6 +89,10 @@ export async function getStaticProps({ params }) {
     variables: { slug: slug },
   });
   const course = res.data.lMSCoursesBySlug.items[0];
+
+  if (!course) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   return {
     props: { course },
