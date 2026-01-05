@@ -40,7 +40,7 @@ const Meta = ({
 
   // Always provide a concrete OG image so crawlers don't "infer" from random page images.
   // Replace with a proper share-sized PNG/JPG via the `image` prop when possible.
-  const fallbackImage = '/favicon.png';
+  const fallbackImage = '/test-card.png';
   const ogImageUrl = toAbsoluteUrl(image || fallbackImage, siteUrl);
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
 
