@@ -20,9 +20,9 @@ const Layout = ({ children }) => {
   const { user, isLoading: userIsLoading } = useUser();
   const { isReady, isLoading, needsOnboarding } = useAuth();
   const router = useRouter();
-  const [isFlashSaleBannerOpen, setIsFlashSaleBannerOpen] = useState(true);
-  const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
-    useState(true);
+  // const [isFlashSaleBannerOpen, setIsFlashSaleBannerOpen] = useState(true);
+  // const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
+  //   useState(true);
 
   // Get location data
   useEffect(() => {
@@ -90,13 +90,13 @@ const Layout = ({ children }) => {
         <div className='flex flex-col justify-between'>
           <div className='sticky top-0 z-50'>
             <HeaderNew />
-            {isFlashSaleBannerMounted ? (
+            {/* {isFlashSaleBannerMounted ? (
               <FlashSaleBanner
                 isOpen={isFlashSaleBannerOpen}
                 onRequestClose={() => setIsFlashSaleBannerOpen(false)}
                 onClosed={() => setIsFlashSaleBannerMounted(false)}
               />
-            ) : null}
+            ) : null} */}
           </div>
           {cart.items.length > 0 && <CartToggle items={cart.items} />}
           <ScrollTop />

@@ -166,13 +166,13 @@ const Order = (props) => {
             </div>
           </div>
           <div className='w-full relative'>
-            {isFlashSaleBannerMounted ? (
+            {/* {isFlashSaleBannerMounted ? (
               <FlashSaleBanner
                 isOpen={isFlashSaleBannerOpen}
                 onRequestClose={() => setIsFlashSaleBannerOpen(false)}
                 onClosed={() => setIsFlashSaleBannerMounted(false)}
               />
-            ) : null}
+            ) : null} */}
           </div>
           <div className='w-full grid lg:!grid-cols-2 '>
             <div className='w-full lg:!pr-[5.4%] flex justify-end pt-10 lg:!pt-[80px]'>

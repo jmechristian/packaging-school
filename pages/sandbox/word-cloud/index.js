@@ -206,12 +206,12 @@ const Page = () => {
     for (let i = 0; i < rowCount; i++) {
       const direction = rng() > 0.5 ? 'ltr' : 'rtl';
       // ~75% slower than before (duration ~1.75x)
-      const duration = rand(32, 60); // seconds
+      const duration = rand(60, 90); // seconds
 
       const words = Array.from({ length: wordsPerRow }).map(() => {
         const text = pick(titles);
         // Bring back pronounced depth variation (while keeping layout-safe sizing).
-        const scale = rand(0.6, 3.2);
+        const scale = rand(0.6, 3.3);
         const opacity = rand(0.22, 0.95);
         return { text, scale, opacity };
       });
