@@ -43,6 +43,11 @@ import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
 const Page = ({ lesson }) => {
   const router = useRouter();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const shareUrl = lesson?.slug
+    ? `${siteUrl}/lessons/${lesson.slug}`
+    : `${siteUrl}${router.asPath}`;
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
   const newDate =
@@ -230,6 +235,8 @@ const Page = ({ lesson }) => {
           title={lesson.title}
           description={lesson.subhead}
           image={lesson.seoImage}
+          url={`/lessons/${lesson.slug}`}
+          type='article'
         />
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col px-4 lg:px-0'>
           <div className='w-full grid grid-cols-12 gap-4 lg:gap-10 relative'>
@@ -265,7 +272,7 @@ const Page = ({ lesson }) => {
                   </div>
                 )}
                 <FacebookShareButton
-                  url={router.asPath}
+                  url={shareUrl}
                   quote={lesson.subhead}
                   // onClick={() => socialShareClickHandler('facebook')}
                   data-click-target='social_share'
@@ -274,7 +281,7 @@ const Page = ({ lesson }) => {
                   <FacebookIcon round size={40} />
                 </FacebookShareButton>
                 <LinkedinShareButton
-                  url={router.asPath}
+                  url={shareUrl}
                   title={lesson.title}
                   source='PackagingSchool.com'
                   summary={lesson.subhead}
@@ -363,7 +370,7 @@ const Page = ({ lesson }) => {
                       </div>
                     )}
                     <FacebookShareButton
-                      url={router.asPath}
+                      url={shareUrl}
                       quote={lesson.subhead}
                       // onClick={() => socialShareClickHandler('facebook')}
                       data-click-target='social_share'
@@ -372,7 +379,7 @@ const Page = ({ lesson }) => {
                       <FacebookIcon round size={32} />
                     </FacebookShareButton>
                     <LinkedinShareButton
-                      url={router.asPath}
+                      url={shareUrl}
                       title={lesson.title}
                       source='PackagingSchool.com'
                       summary={lesson.subhead}
@@ -560,7 +567,9 @@ export async function getStaticPaths() {
       params: { id: lesson.slug },
     }));
 
-  return { paths, fallback: true };
+  // Important for social scrapers (LinkedIn, etc): ensure the first request
+  // returns fully-rendered HTML with OG tags, not a JS-driven fallback.
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {
