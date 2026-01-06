@@ -47,7 +47,7 @@ const CPSWhat = () => {
                 stat={
                   <DocumentPlusIcon className='w-12 h-12 stroke-white dark:stroke-clemson' />
                 }
-                title='Application Required'
+                title='Choose Your Own Elective'
               />
               <StatCard
                 stat={
