@@ -43,10 +43,10 @@ const CPSHero = () => {
               <button
                 className='w-full md:w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff text-xl'
                 onClick={() =>
-                  router.push('/certificate-of-packaging-science-application')
+                  router.push('https://learn.packagingschool.com/enroll/39015')
                 }
               >
-                Apply Now
+                Enroll Now
               </button>
               <div
                 className='flex gap-1.5 items-center cursor-pointer'

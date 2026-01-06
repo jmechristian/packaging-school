@@ -252,7 +252,7 @@ const Index = ({ certificates }) => {
                         applicationLink
                       )
                     }
-                    purchaseText='Apply Now'
+                    purchaseText='Enroll Now'
                   />
                 </div>
               </div>
@@ -335,8 +335,8 @@ const Index = ({ certificates }) => {
                   designed to empower industry professionals to master the
                   complexities of sustainable design. This initiative prepares
                   companies with internal champions knowledgeable about the dos
-                  and don&apos;ts of sustainable packaging, creating a positive
-                  force for change within organizations.
+                  and don&apos;ts of sustainApplyable packaging, creating a
+                  positive force for change within organizations.
                 </div>
                 <Link passHref href={'/certifications/get-to-know-csp'}>
                   <div className='lg:hidden font-semibold text-brand-indigo'>

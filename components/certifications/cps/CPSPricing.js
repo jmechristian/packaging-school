@@ -107,6 +107,12 @@ const CPSPricing = () => {
                   USD
                 </span>
               </p>
+              <Link
+                href='https://learn.packagingschool.com/enroll/39015'
+                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
+              >
+                Enroll Now
+              </Link>
               <p className='my-3 text-sm font-semibold leading-6 tracking-wide text-gray-600'>
                 or
               </p>
@@ -116,10 +122,10 @@ const CPSPricing = () => {
                 </span>
               </p>
               <Link
-                href='/certificate-of-packaging-science-application'
+                href='https://learn.packagingschool.com/enroll/418340'
                 className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
               >
-                Apply Now
+                Enroll Now
               </Link>
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
