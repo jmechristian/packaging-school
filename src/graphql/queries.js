@@ -241,6 +241,8 @@ export const getCertificateObject = /* GraphQL */ `
       whatText
       howText
       deadline
+      subscriptionLink
+      subscriptionPrice
       sessions {
         nextToken
         __typename
@@ -284,6 +286,8 @@ export const listCertificateObjects = /* GraphQL */ `
         whatText
         howText
         deadline
+        subscriptionLink
+        subscriptionPrice
         status
         displayOrder
         createdAt
@@ -5220,6 +5224,8 @@ export const getCertificateByCategory = /* GraphQL */ `
         whatText
         howText
         deadline
+        subscriptionLink
+        subscriptionPrice
         status
         displayOrder
         createdAt

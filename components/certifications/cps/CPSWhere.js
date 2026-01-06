@@ -3,7 +3,7 @@ import FadeIn from '../../../helpers/FadeIn';
 import { SectionHeading } from '../../shared/SectionHeading';
 import CPSPricing from './CPSPricing';
 
-const CPSWhere = () => {
+const CPSWhere = ({ cert }) => {
   return (
     <section id='where'>
       <div className='container-7xl py-32 flex flex-col gap-9'>
@@ -11,7 +11,7 @@ const CPSWhere = () => {
           <SectionHeading number='3'>Where do I start?</SectionHeading>
         </FadeIn>
         <FadeIn>
-          <CPSPricing />
+          <CPSPricing cert={cert} />
         </FadeIn>
       </div>
     </section>

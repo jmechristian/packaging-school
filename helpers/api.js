@@ -978,6 +978,8 @@ export const getCertificates = async () => {
           link
           price
           purchaseLink
+          subscriptionLink
+          subscriptionPrice
           seoImage
           title
           video

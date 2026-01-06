@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import {
   RocketLaunchIcon,
@@ -7,26 +7,46 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import StatCard from '../../shared/StatCard';
+import { useSelector } from 'react-redux';
+import { useThinkificLink } from '../../../hooks/useThinkificLink';
+import { useRouter } from 'next/router';
+import { createNewOrder } from '../../../helpers/api';
 
-const schedule = [
-  {
-    session: 'Fall Session 1',
-    dates: `Aug. 7, 2023 - \nOct. 27, 2023`,
-    deadline: 'July 28, 2023',
-  },
-  {
-    session: 'Fall Session 2',
-    dates: `Sept. 25, 2023 - \nDec. 15, 2023`,
-    deadline: 'Sept 15, 2023',
-  },
-  {
-    session: 'Winter Session',
-    dates: 'Dec. 4, 2023 - Feb. 23, 2024',
-    deadline: 'Nov 24, 2023',
-  },
-];
+const CPSPricing = ({ cert, type }) => {
+  const router = useRouter();
+  const { navigateToThinkific } = useThinkificLink();
+  const { awsUser } = useSelector((state) => state.auth);
 
-const CPSPricing = () => {
+  const orderHandler = async (cert, type) => {
+    const orderId = await createNewOrder({
+      courseDescription: cert.description,
+      courseDiscount: 0,
+      courseImage: cert.seoImage,
+      courseName: cert.title,
+      courseLink:
+        type === 'SUBSCRIPTION'
+          ? `${cert.subscriptionLink}`
+          : `${cert.purchaseLink}`,
+      total: type === 'SUBSCRIPTION' ? cert.subscriptionPrice : cert.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+      type: type === 'SUBSCRIPTION' ? 'SUBSCRIPTION' : 'BUY',
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(
+        type === 'SUBSCRIPTION'
+          ? `${cert.subscriptionLink}`
+          : `${cert.purchaseLink}`,
+        type === 'SUBSCRIPTION'
+          ? `${cert.subscriptionLink}`
+          : `${cert.purchaseLink}`
+      );
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
   return (
     <div>
       <div className='mx-auto'>
@@ -107,12 +127,12 @@ const CPSPricing = () => {
                   USD
                 </span>
               </p>
-              <Link
-                href='https://learn.packagingschool.com/enroll/39015'
+              <button
+                onClick={() => orderHandler(cert)}
                 className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
               >
                 Enroll Now
-              </Link>
+              </button>
               <p className='my-3 text-sm font-semibold leading-6 tracking-wide text-gray-600'>
                 or
               </p>
@@ -121,12 +141,13 @@ const CPSPricing = () => {
                   6 Monthly Payments of $415
                 </span>
               </p>
-              <Link
-                href='https://learn.packagingschool.com/enroll/418340'
+              <button
+                onClick={() => orderHandler(cert, 'SUBSCRIPTION')}
                 className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
               >
                 Enroll Now
-              </Link>
+              </button>
+
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
               </p>

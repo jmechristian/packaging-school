@@ -354,6 +354,8 @@ export const createCertificateObject = /* GraphQL */ `
       whatText
       howText
       deadline
+      subscriptionLink
+      subscriptionPrice
       sessions {
         nextToken
         __typename
@@ -395,6 +397,8 @@ export const updateCertificateObject = /* GraphQL */ `
       whatText
       howText
       deadline
+      subscriptionLink
+      subscriptionPrice
       sessions {
         nextToken
         __typename
@@ -436,6 +440,8 @@ export const deleteCertificateObject = /* GraphQL */ `
       whatText
       howText
       deadline
+      subscriptionLink
+      subscriptionPrice
       sessions {
         nextToken
         __typename
@@ -9158,6 +9164,8 @@ export const createCertificateByCategory = /* GraphQL */ `
         whatText
         howText
         deadline
+        subscriptionLink
+        subscriptionPrice
         status
         displayOrder
         createdAt
@@ -9207,6 +9215,8 @@ export const updateCertificateByCategory = /* GraphQL */ `
         whatText
         howText
         deadline
+        subscriptionLink
+        subscriptionPrice
         status
         displayOrder
         createdAt
@@ -9256,6 +9266,8 @@ export const deleteCertificateByCategory = /* GraphQL */ `
         whatText
         howText
         deadline
+        subscriptionLink
+        subscriptionPrice
         status
         displayOrder
         createdAt

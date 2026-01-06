@@ -4,9 +4,32 @@ import FadeIn from '../../../helpers/FadeIn';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
-
-const CPSHero = () => {
+import { createNewOrder } from '../../../helpers/api';
+import { useSelector } from 'react-redux';
+import { useThinkificLink } from '../../../hooks/useThinkificLink';
+const CPSHero = ({ cert }) => {
   const router = useRouter();
+  const { awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const orderHandler = async (cert) => {
+    const orderId = await createNewOrder({
+      courseDescription: cert.description,
+      courseDiscount: 0,
+      courseImage: cert.seoImage,
+      courseName: cert.title,
+      courseLink: `${cert.purchaseLink}`,
+      total: cert.price,
+      userID: awsUser ? awsUser.id : null,
+      email: awsUser ? awsUser.email : null,
+      name: awsUser ? awsUser.name : null,
+    });
+
+    if (awsUser && awsUser.name.includes(' ')) {
+      navigateToThinkific(`${cert.purchaseLink}`, `${cert.purchaseLink}`);
+    } else {
+      router.push(`/order/${orderId.id}`);
+    }
+  };
   return (
     <div className='grid lg:grid-cols-2 items-center gap-6 overflow-hidden py-12 md:py-24 container-7xl'>
       <div>
@@ -42,9 +65,7 @@ const CPSHero = () => {
             <div className='flex flex-col md:flex-row items-center gap-6 mt-4'>
               <button
                 className='w-full md:w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff text-xl'
-                onClick={() =>
-                  router.push('https://learn.packagingschool.com/enroll/39015')
-                }
+                onClick={() => orderHandler(cert)}
               >
                 Enroll Now
               </button>

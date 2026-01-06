@@ -1,18 +1,6 @@
-import {
-  BoltIcon,
-  CalendarDaysIcon,
-  UsersIcon,
-} from '@heroicons/react/24/outline';
-import { useSelector } from 'react-redux';
-import CertificationsFeatureStats from '../../components/certifications/CertificationsFeatureStats';
-import CertificationsHero from '../../components/certifications/CertificationsHero';
-import CertificationsLogos from '../../components/certifications/CertificationsLogos';
-import CertificationsPricing from '../../components/certifications/CertificationsPricing';
-import CertificationsSecondFeature from '../../components/certifications/CertificationsSecondFeature';
-import GradientCTA from '../../components/GradientCTA';
-import { Amplify, API, graphqlOperation } from 'aws-amplify';
+import React, { useState, useEffect } from 'react';
+import { Amplify } from 'aws-amplify';
 import awsExports from '../../src/aws-exports';
-import DoubleTestimonial from '../../components/DoubleTestimonial';
 import CPSHero from '../../components/certifications/cps/CPSHero';
 import CPSNav from '../../components/certifications/cps/CPSNav';
 import CPSWhat from '../../components/certifications/cps/CPSWhat';
@@ -21,73 +9,19 @@ import CPSHow from '../../components/certifications/cps/CPSHow';
 import CPSWhere from '../../components/certifications/cps/CPSWhere';
 import Testimonial from '../../components/shared/Testimonial';
 import CPSReviews from '../../components/certifications/cps/CPSReviews';
-import Head from 'next/head';
 import Meta from '../../components/shared/Meta';
+import { getCertificates } from '../../helpers/api';
 Amplify.configure(awsExports);
 
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-const GRAPHQL_API_KEY = process.env.GRAPHQL_API_KEY;
-
-const primaryFeatures = [
-  {
-    name: 'Advance Your Career',
-    description:
-      "This Certificate will show your employers that you're dedicated and possess a hard work ethic.",
-    href: '#',
-    icon: BoltIcon,
-  },
-  {
-    name: 'Keep Up With Innovation',
-    description:
-      "Packaging is a field of science, which means materials, processes, and technologies are constantly evolving. We'll keep you informed.",
-    href: '#',
-    icon: UsersIcon,
-  },
-  {
-    name: 'Find Insights & Inspiration',
-    description:
-      'Expanding your knowledge base is an excellent way to discover new ideas in packaging and make yourself stand out.',
-    href: '#',
-    icon: CalendarDaysIcon,
-  },
-  {
-    name: 'Learn The Market',
-    description:
-      'We exist in a rapidly-changing marketplace where company ownership, business cultures, and packaging responsibilities vary.',
-    href: '#',
-    icon: BoltIcon,
-  },
-  {
-    name: 'Differentiate Yourself',
-    description:
-      'Apply your learning right away while you enhance your resume with a specialization in packaging.',
-    href: '#',
-    icon: UsersIcon,
-  },
-  {
-    name: 'Grow Your Network',
-    description:
-      'Throughout the program, you will have the opportunity to ask questions, share experiences, and learn from people who have the experience and expertise to help your business flourish.',
-    href: '#',
-    icon: CalendarDaysIcon,
-  },
-];
-
-const features = [
-  '6-Months Access',
-  'Choose Your Own Electives',
-  '12 Expert-led Courses',
-  'Instructor Email Access',
-];
-
-const stats = [
-  { id: 1, name: 'Course Hours', value: '60' },
-  { id: 2, name: 'Courses Included', value: '12', link: true },
-  { id: 3, name: 'CEUs Earned', value: '6' },
-  { id: 4, name: 'Flexibility to Complete', value: '12 months' },
-];
-
 export const Page = () => {
+  const [cert, setCert] = useState(null);
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      const certificates = await getCertificates();
+      setCert(certificates.find((cert) => cert.abbreviation === 'CPS'));
+    };
+    fetchCertificates();
+  }, []);
   return (
     <>
       {/* <Head>
@@ -109,7 +43,7 @@ export const Page = () => {
         }
       />
       <div className='flex flex-col dark:bg-dark-dark'>
-        <CPSHero />
+        <CPSHero cert={cert} />
         <CPSNav />
         <CPSWhat />
         <CPSAbout />
@@ -132,7 +66,7 @@ export const Page = () => {
             designed! Cheers!”
           </p>
         </Testimonial>
-        <CPSWhere />
+        <CPSWhere cert={cert} />
         <CPSReviews />
       </div>
     </>

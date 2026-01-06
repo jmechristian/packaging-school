@@ -102,6 +102,8 @@ type CertificateObject @model @auth(rules: [{ allow: public }]) {
   whatText: String
   howText: String
   deadline: String
+  subscriptionLink: String
+  subscriptionPrice: Int
   sessions: [CMPMSession] @hasMany
   status: String @default(value: "DRAFT")
   displayOrder: Int
