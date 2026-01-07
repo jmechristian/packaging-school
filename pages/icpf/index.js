@@ -352,10 +352,9 @@ const ICPF = () => {
             <div className=''>
               <ul className='list-disc list-outside text-lg flex flex-col gap-4 pl-4'>
                 <li>
-                  Must be a current undergraduate student enrolled in a U.S. or
-                  Canadian college, university, technical school, or community
-                  college or be a current intern or apprentice at a corrugated
-                  packaging facility.
+                  Must be majoring in business, supply chain management, graphic
+                  communications/design, engineering, environmental science,
+                  chemistry, or another STEAM-related field.
                 </li>
                 <li>
                   Must be majoring in business, supply chain management,
