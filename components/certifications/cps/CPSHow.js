@@ -60,6 +60,16 @@ const CPSHow = () => {
                   application. If you’re not sure yet, you can choose to add
                   your elective at a later date.
                 </div>
+                <div className='text-xl text-gray-700 dark:text-gray-500 max-w-prose'>
+                  A <strong>final exam</strong> is required to complete the
+                  certificate. The exam consists of 150 questions and requires a
+                  minimum passing score of 80%. You are allowed two attempts to
+                  achieve the required score. If any issues arise after that
+                  (which we don’t anticipate), we’re happy to work with you. We
+                  recommend starting and finishing the exam in one sitting to
+                  avoid browser timeout issues. Please plan to block off
+                  approximately 1.5–2 hours.
+                </div>
               </div>
             </FadeIn>
           </div>
@@ -105,6 +115,15 @@ const CPSHow = () => {
                       />
                     </div>
                   ))}
+              <CourseCard
+                courseId='cps-elective'
+                title='CPS Final Exam'
+                desc='The exam consists of 150 questions and requires a minimum passing score of 80%. You are allowed two attempts to achieve the required score. '
+                video=''
+                hours={2}
+                lessons={0}
+                price={0}
+              />
             </div>
           </FadeIn>
         </div>
