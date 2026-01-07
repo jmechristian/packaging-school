@@ -128,6 +128,9 @@ export default async function handler(req, res) {
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Are you open to internship or job opportunities with ICPF partner companies after completing your program?</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.opportunities}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
+    '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">I understand that I may be contacted for an informational interview during the review period.</p>' +
+    `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.contactConsent}</p>` +
+    '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
     '                           <p style="font-size:14px;line-height:24px;margin:16px 0;font-weight:700">Session Applying</p>' +
     `                           <p style="font-size:14px;line-height:24px;margin:16px 0">${body.sessionApplying}</p>` +
     '                           <hr style="width:100%;border:none;border-top:1px solid #eaeaea" />' +
@@ -159,9 +162,9 @@ export default async function handler(req, res) {
         ToAddresses: [
           toAddress,
           'info@packagingschool.com',
-          'csalaverria@icpfbox.org',
-          'vmiksis@icpfbox.org',
-          'alemoine@icpfbox.org',
+          // 'csalaverria@icpfbox.org',
+          // 'vmiksis@icpfbox.org',
+          // 'alemoine@icpfbox.org',
         ],
       },
       Message: {

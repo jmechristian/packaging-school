@@ -71,6 +71,50 @@ const CMPMGoals = () => {
           No
         </label>
       </div>
+      <div className='md:col-span-2'>
+        <div className='flex flex-row justify-between'>
+          <label
+            htmlFor='contactConsent'
+            className='block font-medium font-greycliff leading-6 text-slate-900'
+          >
+            I understand that I may be contacted for an informational interview
+            during the review period.
+          </label>
+          <span className='text-sm leading-6 text-red-500' id='email-optional'>
+            Required
+          </span>
+        </div>
+      </div>
+      <div className='flex items-center gap-x-3'>
+        <input
+          {...register('contactConsent', { required: true })}
+          id='yes'
+          name='contactConsent'
+          type='radio'
+          value='true'
+          className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+        />
+        <label
+          htmlFor='yes'
+          className='block font-medium font-greycliff leading-6 text-slate-900'
+        >
+          Yes
+        </label>
+        <input
+          {...register('contactConsent', { required: true })}
+          id='no'
+          name='contactConsent'
+          type='radio'
+          value='false'
+          className='h-4 w-4 border-slate-300 text-base-brand focus:ring-base-brand'
+        />
+        <label
+          htmlFor='no'
+          className='block font-medium font-greycliff leading-6 text-slate-900'
+        >
+          No
+        </label>
+      </div>
     </div>
   );
 };

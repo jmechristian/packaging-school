@@ -78,12 +78,12 @@ const ICPF = () => {
               value each.
             </div>
             <div className='text-xl leading-relaxed'>
-              Open to current students (age 18–25) who are studying business,
-              supply chain, design, engineering, environmental science, or
-              packaging at a college, university, trade/technical school, or
-              community college. Interns at corrugated and other packaging
-              companies are also eligible—email ICPF for details
-              (csalaverria@icpfbox.org).
+              Open to current students (age 18-25) who are studying business,
+              supply chain, graphic communications, design, engineering,
+              environmental science, chemistry, or a STEAM-related field at a
+              college, university, trade/technical school, or community college.
+              Interns at corrugated and other packaging companies are also
+              eligible—email ICPF for details (csalaverria@icpfbox.org).
             </div>
           </div>
         </div>
@@ -158,6 +158,7 @@ const ICPF = () => {
                       transcript: '',
                       whyPackaging: '',
                       yearGoals: '',
+                      contactConsent: false,
                     });
 
                     router.push(`/forms/cmpm/icpf/${form.id}`);

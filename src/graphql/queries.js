@@ -965,6 +965,7 @@ export const getUser = /* GraphQL */ `
         optOut
         birthYear
         paymentConfirmation
+        contactConsent
         status
         createdOn
         updatedOn
@@ -1819,6 +1820,7 @@ export const getIcpfCmpmForm = /* GraphQL */ `
       optOut
       birthYear
       paymentConfirmation
+      contactConsent
       status
       createdOn
       updatedOn
@@ -1873,6 +1875,7 @@ export const listIcpfCmpmForms = /* GraphQL */ `
         optOut
         birthYear
         paymentConfirmation
+        contactConsent
         status
         createdOn
         updatedOn

@@ -447,6 +447,7 @@ type IcpfCmpmForm
   optOut: Boolean
   birthYear: String
   paymentConfirmation: String
+  contactConsent: Boolean
   status: String @default(value: "DRAFT")
 }
 

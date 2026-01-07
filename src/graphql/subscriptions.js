@@ -1312,6 +1312,7 @@ export const onCreateUser = /* GraphQL */ `
         optOut
         birthYear
         paymentConfirmation
+        contactConsent
         status
         createdOn
         updatedOn
@@ -1562,6 +1563,7 @@ export const onUpdateUser = /* GraphQL */ `
         optOut
         birthYear
         paymentConfirmation
+        contactConsent
         status
         createdOn
         updatedOn
@@ -1812,6 +1814,7 @@ export const onDeleteUser = /* GraphQL */ `
         optOut
         birthYear
         paymentConfirmation
+        contactConsent
         status
         createdOn
         updatedOn
@@ -3251,6 +3254,7 @@ export const onCreateIcpfCmpmForm = /* GraphQL */ `
       optOut
       birthYear
       paymentConfirmation
+      contactConsent
       status
       createdOn
       updatedOn
@@ -3344,6 +3348,7 @@ export const onUpdateIcpfCmpmForm = /* GraphQL */ `
       optOut
       birthYear
       paymentConfirmation
+      contactConsent
       status
       createdOn
       updatedOn
@@ -3437,6 +3442,7 @@ export const onDeleteIcpfCmpmForm = /* GraphQL */ `
       optOut
       birthYear
       paymentConfirmation
+      contactConsent
       status
       createdOn
       updatedOn
