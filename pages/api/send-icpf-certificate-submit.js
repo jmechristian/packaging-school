@@ -162,9 +162,9 @@ export default async function handler(req, res) {
         ToAddresses: [
           toAddress,
           'info@packagingschool.com',
-          // 'csalaverria@icpfbox.org',
-          // 'vmiksis@icpfbox.org',
-          // 'alemoine@icpfbox.org',
+          'csalaverria@icpfbox.org',
+          'vmiksis@icpfbox.org',
+          'alemoine@icpfbox.org',
         ],
       },
       Message: {
