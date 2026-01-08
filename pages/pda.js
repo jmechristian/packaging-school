@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { API } from 'aws-amplify';
-import { getCustomer } from '../src/graphql/queries';
+import { getCustomer, listTrackedCourses } from '../src/graphql/queries';
 import {
   BoltIcon,
   MinusIcon,
@@ -182,7 +182,24 @@ const Page = ({ customer }) => {
   const [isSent, setIsSent] = useState(false);
   const [isForm, setIsForm] = useState('');
   const [isError, setError] = useState(false);
+  const [pdaCourses, setPdaCourses] = useState([]);
 
+  useEffect(() => {
+    const fetchPdaCourses = async () => {
+      const courses = await API.graphql({
+        query: listTrackedCourses,
+        variables: {
+          filter: {
+            customerId: {
+              eq: 'adfe67f0-81b2-46b7-93b0-7e10cc9c5160',
+            },
+          },
+        },
+      });
+      setPdaCourses(courses.data.listTrackedCourses.items);
+    };
+    fetchPdaCourses();
+  }, []);
   const submitHandler = async () => {};
 
   return (
@@ -228,7 +245,7 @@ const Page = ({ customer }) => {
             bgdark='bg-base-dark'
             content={
               <LibraryCourseGrid
-                courses={customer && customer.courses.items}
+                courses={pdaCourses}
                 coupon={'coupon=pscpspda2024'}
                 discount={81.2}
                 isPDA={true}
