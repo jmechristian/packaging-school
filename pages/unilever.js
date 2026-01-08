@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import WiredCourseCard from '../components/shared/WiredCourseCard';
-import dynamic from 'next/dynamic';
+import React, { useState, useMemo, useEffect } from 'react';
+
 import {
   MinusSmallIcon,
   PlusSmallIcon,
@@ -31,14 +30,17 @@ import {
 import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import { useSelector } from 'react-redux';
-import { motion, AnimatePresence } from 'framer-motion';
 
 import Unilever from '../components/icons/Unilever';
 import FullWidthDropDown from '../components/shared/FullWidthDropDown';
 import NewCouseCard from '../components/shared/NewCouseCard';
 import UnileverCourses from '../components/unilever/UnileverCourses';
 import UnileverLessons from '../components/unilever/UnileverLessons';
-import { getCustomer, listUnilevers } from '../src/graphql/queries';
+import {
+  getCustomer,
+  listUnilevers,
+  listTrackedCourses,
+} from '../src/graphql/queries';
 import SPCLibraryModule from '../components/library/SPCLibraryModule';
 import CustomerSearchLOTMContainer from '../components/customers/CustomerSearchLOTMContainer';
 import CustomerSearchContainer from '../components/customers/CustomerSearchContainer';
@@ -216,15 +218,26 @@ const Page = ({ customer }) => {
   const [isSent, setIsSent] = useState(false);
   const [isForm, setIsForm] = useState('');
   const [isError, setError] = useState(false);
+  const [unileverCourses, setUnileverCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchUnileverCourses = async () => {
+      const courses = await API.graphql({
+        query: listTrackedCourses,
+        variables: {
+          filter: {
+            customerId: {
+              eq: customer.id,
+            },
+          },
+        },
+      });
+      setUnileverCourses(courses.data.listTrackedCourses.items);
+    };
+    fetchUnileverCourses(customer.id);
+  }, [customer]);
 
   const router = useRouter();
-  const createDate = (date) => {
-    const newDate = new Date(date);
-    return newDate.toLocaleDateString('en-US', {
-      month: 'long',
-      year: 'numeric',
-    });
-  };
 
   const submitHandler = async () => {
     setIsSending(true);
@@ -409,7 +422,7 @@ const Page = ({ customer }) => {
           content={
             <CustomerSearchContainer
               reference={'coupon=ultps'}
-              courses={customer && customer.courses.items}
+              courses={unileverCourses}
               link_text='Select Course'
             />
           }
