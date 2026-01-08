@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { API } from 'aws-amplify';
-import { getCustomer } from '../src/graphql/queries';
+import { getCustomer, listTrackedCourses } from '../src/graphql/queries';
 import {
   BoltIcon,
   MinusSmallIcon,
@@ -100,6 +100,25 @@ const Page = () => {
     video: null,
   };
 
+  const [greenblueCourses, setGreenblueCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchGreenblueCourses = async () => {
+      const courses = await API.graphql({
+        query: listTrackedCourses,
+        variables: {
+          filter: {
+            customerId: {
+              eq: 'fec13ccf-8b5c-497a-bccd-adb6d06820ea',
+            },
+          },
+        },
+      });
+      setGreenblueCourses(courses.data.listTrackedCourses.items);
+    };
+    fetchGreenblueCourses();
+  }, []);
+
   return (
     <>
       <Head>
@@ -139,7 +158,7 @@ const Page = () => {
           content={
             <CustomerSearchContainer
               reference={'ref=ac65d9'}
-              courses={customer && customer.courses.items}
+              courses={greenblueCourses}
               link_text={'Purchase Course'}
             />
           }
