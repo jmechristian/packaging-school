@@ -45,9 +45,9 @@ const CMPMSessionInfo = ({ email, free }) => {
               >
                 Spring 1 - ICPF Sponsored <br />
                 <span className='text-sm text-slate-700'>
-                  Apr 13, 2026 - Jun 03, 2026
+                  Apr 13, 2026 - July 06, 2026
                   <br />
-                  Deadline: Apr 1, 2025
+                  Deadline: Apr 1, 2026
                 </span>
               </label>
             </div>
