@@ -63,7 +63,7 @@ const ICPF = () => {
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'>
               <div className='text-icpf-dark font-oswald uppercase text-lg'>
-                Apr 13, 2026 - Jun 03, 2026
+                Apr 13, 2026 - July 06, 2026
               </div>
             </div>
             <div className='h1-base'>
@@ -107,11 +107,11 @@ const ICPF = () => {
                   <div className='text-xl'>
                     <MdCalendarMonth />
                   </div>
-                  <div className='font-bold'>Apr 13, 2026 - Jun 03, 2026</div>
+                  <div className='font-bold'>Apr 13, 2026 - July 6, 2026</div>
                 </div>
                 <div className='flex flex-col gap-0'>
                   <div className='text-lg font-bold'>Deadline</div>
-                  <div>Apr 1, 2025</div>
+                  <div>Apr 1, 2026</div>
                 </div>
               </div>
               <div>
