@@ -1,4 +1,4 @@
-Route,File,Render,Fallback,Uses Meta,Meta has url,In sitemap-1,In sitemap-2
+Route,File,Render,Fallback,Uses Meta,Meta passes url prop,In sitemap-1,In sitemap-2
 /,pages/index.js,CSR/Static,,Yes,No,Yes,No
 /[iid],pages/[iid]/index.js,SSG/ISR,'blocking',Yes,Yes,No,No
 /404,pages/404.js,CSR/Static,,Yes,No,Yes,No

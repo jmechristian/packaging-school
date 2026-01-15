@@ -1,27 +1,13 @@
 # SEO Inventory (auto-generated)
 
-Generated: 2026-01-15T10:24:17.732Z
+Generated: 2026-01-15T13:06:04.903Z
 
 ## Executive summary (for SEO agency)
 - **Framework**: Next.js (pages router) with shared SEO helper `components/shared/Meta.js` controlling `<title>`, meta description, OpenGraph, Twitter, and JSON-LD.
 - **Critical crawler behavior**: Social bots + Google need meta tags in the **initial HTML** (not client-side hydration). Key dynamic templates were updated to use **`fallback: 'blocking'`** to avoid serving a JS-only fallback shell.
-- **Canonical hostname is inconsistent today**:
-  - `robots.txt` + `/api/sitemap-index` advertise **`https://www.packagingschool.com/...`**
-  - sitemap generators (`pages/sitemap-1.xml.js`, `pages/sitemap-2.xml.js`) emit URLs using **`https://packagingschool.com`** (non-www)
-  - `Meta` defaults to **`https://packagingschool.com`** unless `NEXT_PUBLIC_SITE_URL` is set
-  - **Action**: pick ONE canonical host (www vs non-www), enforce with redirects, and align `robots.txt`, sitemap index, sitemap locs, and canonical tags.
-- **Canonical + `og:url` only exist on pages that pass `url` to `<Meta />`**:
-  - Many pages use `<Meta />` but do **not** provide `url`, so they emit no canonical link and no `og:url`.
-  - **Action**: for all indexable templates (marketing pages, `/articles/*`, `/careers/*`, `/courses/*`, `/lessons/*`, `/collections/*`, `/<iid>`), pass `url` into `<Meta />`.
-- **Sitemap coverage is partial by design**:
-  - `sitemap-1.xml` includes: a fixed list of “marketing” pages + **PUBLISHED lessons** + **LMS courses (non-collections)** + **careers**.
-  - It does **not** include `/<iid>` pages or `/collections/[uid]` (and articles look disabled/commented).
-  - `sitemap-2.xml` is a **video sitemap** for video lessons and courses with previews.
-  - **Action**: confirm which route families you *want indexed*; expand sitemap coverage accordingly.
-- **Sitemap generation model**:
-  - `sitemap-1.xml` and `sitemap-2.xml` are generated via **`getServerSideProps`** (computed on request).
-  - `/api/sitemap-index` sets `<lastmod>` to “now” on every request.
-  - **Action**: ensure caching/headers are sensible and avoid “always changing” signals unless intentional.
+- **Canonical hostname**: the sitemap + robots are configured for **non-www** (`https://packagingschool.com`). Ensure redirects and canonicals follow the same standard.
+- **Canonical + `og:url` behavior**: `Meta` emits canonical + `og:url` based on `url` prop, and falls back to the current path when `url` is omitted.
+- **Sitemap split**: `sitemap-1.xml` (general) + `sitemap-2.xml` (video sitemap).
 
 ## Key SEO routes
 - **Robots**: `public/robots.txt`
@@ -30,9 +16,8 @@ Generated: 2026-01-15T10:24:17.732Z
 - **Course JSON-LD**: `libs/seo/courseJsonLd.js` (used by `pages/courses/[uid].js`)
 
 ## Sitemap architecture
-- robots.txt points to `https://www.packagingschool.com/api/sitemap-index`
+- robots.txt points to `https://packagingschool.com/api/sitemap-index`
 - `/api/sitemap-index` returns 2 sitemap parts: `sitemap-1.xml` (general) + `sitemap-2.xml` (video)
-- Note: sitemap index uses **www**, while sitemap generators use `https://packagingschool.com` (non-www). Aligning canonical host is recommended.
 
 ## How pages are made crawlable
 - Page metadata is primarily set via `components/shared/Meta.js` (title/description/OG/Twitter/canonical/JSON-LD).
@@ -190,8 +175,3 @@ Columns: render mode, `Meta` usage, whether `Meta` is given a `url` prop (canoni
 - `sitemap-2.xml` is generated at request time via `getServerSideProps` and includes video entries for:
   - Video courses (preview exists): Yes
   - Video lessons (mediaType=VIDEO): Yes
-
-## Suggested follow-ups for SEO agency
-- Confirm canonical hostname (www vs non-www) and ensure redirects + canonical tags + sitemaps are consistent.
-- Ensure key indexable templates pass `url` to `Meta` (so canonical + og:url are present).
-- Consider adding missing route families to sitemaps if you want them indexed (e.g., `/collections/[uid]`, `/<iid>` index pages, articles if applicable).
