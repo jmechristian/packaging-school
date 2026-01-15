@@ -39,7 +39,7 @@ function generateSiteMap(lessons, courses) {
                     <video:description>${subheadline
                       .toString()
                       .replace(/&/g, 'and')}</video:description>
-                    <video:uploader info="http://www.packagingschool.com">Packaging School</video:uploader>
+                    <video:uploader info="https://packagingschool.com">Packaging School</video:uploader>
                     <video:family_friendly>yes</video:family_friendly>
                     </video:video>
                </url>
@@ -60,7 +60,7 @@ function generateSiteMap(lessons, courses) {
                      <video:description>${subhead
                        .toString()
                        .replace(/&/g, 'and')}</video:description>
-                     <video:uploader info="http://www.packagingschool.com">Packaging School</video:uploader>
+                     <video:uploader info="https://packagingschool.com">Packaging School</video:uploader>
                      <video:family_friendly>yes</video:family_friendly>
                      </video:video>
                 </url>

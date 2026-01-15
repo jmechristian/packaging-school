@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 function toAbsoluteUrl(inputUrl, siteUrl) {
   if (!inputUrl) return null;
@@ -32,9 +33,14 @@ const Meta = ({
   type = 'website',
   siteName = 'PackagingSchool.com',
 }) => {
+  const router = useRouter();
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
-  const canonicalUrl = toAbsoluteUrl(url, siteUrl);
+  const resolvedPath = url || router?.asPath || null;
+  const canonicalPath = resolvedPath
+    ? resolvedPath.split('?')[0].split('#')[0]
+    : null;
+  const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
   const metaTitle = title || siteName;
   const metaDescription = description || '';
 
