@@ -17,12 +17,14 @@ import Meta from '../../components/shared/Meta';
 
 const Page = ({ collection, courses }) => {
   const router = useRouter();
-  console.log('collection', collection);
   return (
     <>
       <Meta
         title={`Packaging School | ${collection && collection.title}`}
         description={collection && collection.description}
+        image={collection && collection.seoImage}
+        url={collection?.slug ? `/collections/${collection.slug}` : router.asPath}
+        type='website'
       />
       <div className='relative dark:bg-dark-dark py-24'>
         <div className='flex flex-col gap-24  container-7xl'>
@@ -112,7 +114,8 @@ export async function getStaticPaths() {
     params: { uid: collection.slug },
   }));
 
-  return { paths, fallback: true };
+  // Important for social scrapers: ensure first request returns full HTML + meta tags.
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {
@@ -122,6 +125,10 @@ export async function getStaticProps({ params }) {
     variables: { slug: slug },
   });
   const collection = res.data.lMSCollectionsBySlug.items[0];
+
+  if (!collection) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   const collectionId = collection.id;
 

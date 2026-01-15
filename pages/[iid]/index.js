@@ -30,7 +30,6 @@ import VideoPlayer from '../../components/VideoPlayer';
 
 const Page = ({ indexPage }) => {
   const index = indexPage && JSON.parse(indexPage.content);
-  console.log(index);
   const router = useRouter();
   const { location } = useSelector((state) => state.auth);
 
@@ -261,6 +260,8 @@ const Page = ({ indexPage }) => {
             ? index.hero.hero
             : 'https://packmedia54032-staging.s3.amazonaws.com/public/all-courses-seoimagewebp'
         }
+        url={indexPage?.slug ? `/${indexPage.slug}` : router.asPath}
+        type='website'
       />
       {index ? (
         <motion.div
@@ -318,7 +319,9 @@ export async function getStaticPaths() {
     params: { iid: lesson.slug },
   }));
 
-  return { paths, fallback: true };
+  // Important for social scrapers: ensure first request returns full HTML + meta tags,
+  // not a JS-driven fallback shell that gets cached by crawlers.
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {

@@ -98,6 +98,8 @@ const Page = ({ lesson }) => {
           title={lesson.title}
           description={lesson.subhead}
           image={lesson.seoImage}
+          url={`/alt/lessons/${lesson.slug}`}
+          type='article'
         />
         <div className='w-full lg:pt-6 pb-12 relative dark:bg-dark-dark'>
           <div className='w-full flex flex-col gap-6 lg:gap-9 max-w-6xl mx-auto'>
@@ -363,7 +365,8 @@ export async function getStaticPaths() {
     params: { id: lesson.slug },
   }));
 
-  return { paths, fallback: true };
+  // Important for social scrapers: ensure the first request returns full HTML + OG tags.
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {
@@ -424,6 +427,10 @@ export async function getStaticProps({ params }) {
 
   const res = await API.graphql({ query: getLesson, variables: variables });
   const lesson = res.data.lessonsBySlug.items[0];
+
+  if (!lesson) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   return { props: { lesson }, revalidate: 10 };
 }
