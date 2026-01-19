@@ -20,6 +20,7 @@ import {
   registerIndexClick,
   getDeviceType,
 } from '../../helpers/api';
+import Meta from '../../components/shared/Meta';
 
 const Page = () => {
   const { location } = useSelector((state) => state.auth);
@@ -221,6 +222,8 @@ const Page = () => {
   }, [lessonsToShow, isCurrentPage]);
 
   return (
+    <>
+<Meta title='Lessons | Packaging School' description='Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.' />
     <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>
       <div className='flex flex-col gap-10 lg:!gap-16'>
         <div className='block lg:hidden'>
@@ -389,6 +392,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
