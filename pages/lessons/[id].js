@@ -41,6 +41,7 @@ import {
 import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
+import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
 const Page = ({ lesson }) => {
   const router = useRouter();
   const siteUrl =
@@ -61,6 +62,8 @@ const Page = ({ lesson }) => {
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
+
+  const lessonJsonLd = lesson ? buildLessonJsonLd(lesson, siteUrl) : null;
 
   useEffect(() => {
     if (awsUser?.savedLessons && lesson?.id) {
@@ -173,16 +176,7 @@ const Page = ({ lesson }) => {
         );
   };
 
-  const handleCoursePurchase = async (id, link) => {
-    await registgerCourseClick(
-      id,
-      router.asPath,
-      location,
-      link,
-      'COURSE-PURCHASE'
-    );
-    router.push(link);
-  };
+
 
   const refreshUser = async () => {
     const dbUser = await getAWSUser(user.email);
@@ -237,6 +231,10 @@ const Page = ({ lesson }) => {
           image={lesson.seoImage}
           url={`/lessons/${lesson.slug}`}
           type='article'
+          structuredData={[
+            lessonJsonLd?.breadcrumb,
+            lessonJsonLd?.article,
+          ].filter(Boolean)}
         />
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col px-4 lg:px-0'>
           <div className='w-full grid grid-cols-12 gap-4 lg:gap-10 relative'>

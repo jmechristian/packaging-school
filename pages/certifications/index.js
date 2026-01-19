@@ -18,6 +18,7 @@ import Meta from '../../components/shared/Meta';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { CertCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
+import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 
 export const RiveDemo = () => {
   const { RiveComponent } = useRive({
@@ -38,6 +39,31 @@ const Index = ({ certificates }) => {
   const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+
+  const certificationSchemas = (certificates || [])
+    .map((cert) => buildCertificationJsonLd(cert, siteUrl))
+    .filter(Boolean);
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Certifications',
+          item: `${siteUrl}/certifications`,
+        },
+      ],
+    },
+    ...certificationSchemas
+      .map((entry) => [entry.breadcrumb, entry.credential])
+      .flat()
+      .filter(Boolean),
+  ];
 
   const orderHandler = async (cert) => {
     const orderId = await createNewOrder({
@@ -105,6 +131,7 @@ const Index = ({ certificates }) => {
         image={
           'https://packschool.s3.amazonaws.com/certifications-seoImage.webp'
         }
+        structuredData={structuredData}
       />
       <div className='w-full pb-40 md:pb-48 border-b-2 border-b-black pt-5 lg:pt-10'>
         <div className='flex flex-col gap-28 md:gap-48 lg:gap-32 '>

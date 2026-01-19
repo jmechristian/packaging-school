@@ -29,6 +29,7 @@ const Meta = ({
   keywords,
   course,
   breadcrumb,
+  structuredData,
   url,
   type = 'website',
   siteName = 'PackagingSchool.com',
@@ -50,6 +51,12 @@ const Meta = ({
   const ogImageUrl = toAbsoluteUrl(image || fallbackImage, siteUrl);
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
 
+  const additionalSchemas = Array.isArray(structuredData)
+    ? structuredData.filter(Boolean)
+    : structuredData
+      ? [structuredData]
+      : [];
+
   return (
     <Head>
       {breadcrumb && (
@@ -64,6 +71,14 @@ const Meta = ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(course) }}
         />
       )}
+      {additionalSchemas.map((schema, idx) => (
+        <script
+          // eslint-disable-next-line react/no-array-index-key
+          key={`structured-data-${idx}`}
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <meta
         key='viewport'
         name='viewport'
