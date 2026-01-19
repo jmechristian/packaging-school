@@ -200,15 +200,15 @@ const timeline = [
     date: '2025',
   },
   {
-    name: 'Partner Educators',
+    name: 'B2B Services',
     description:
-      'First published courses as an education partner for Church & Dwight.',
+      'Packaging School Library debut with Church & Dwight.',
     date: '2025',
   },
   {
-    name: 'Partner Educators',
+    name: 'B2B Services',
     description:
-      'First published courses as an education partner for Schwarz Partners.',
+      'Packaging School Library debut with Schwarz Partners.',
     date: '2025',
   },
 ];
