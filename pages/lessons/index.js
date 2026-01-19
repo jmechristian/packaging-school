@@ -22,10 +22,57 @@ import {
 } from '../../helpers/api';
 import Meta from '../../components/shared/Meta';
 
+const getLessonsQuery = /* GraphQL */ `
+  query MyQuery {
+    listLessons(limit: 1500, filter: { status: { eq: "PUBLISHED" } }) {
+      items {
+        author
+        backdate
+        content
+        createdAt
+        id
+        objectives
+        screengrab
+        seoImage
+        slug
+        tags {
+          items {
+            tags {
+              id
+              tag
+            }
+          }
+        }
+        title
+        type
+        subhead
+      }
+    }
+  }
+`;
+
+const getTagQuery = /* GraphQL */ `
+  query MyQuery {
+    listTags {
+      items {
+        tag
+        lesson {
+          items {
+            id
+          }
+        }
+        id
+      }
+    }
+  }
+`;
+
 const Page = () => {
   const { location } = useSelector((state) => state.auth);
   const router = useRouter();
   const deviceType = getDeviceType();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
@@ -40,51 +87,8 @@ const Page = () => {
 
   const lessonTop = useRef();
 
-  const getLessonsQuery = /* GraphQL */ `
-    query MyQuery {
-      listLessons(limit: 1500, filter: { status: { eq: "PUBLISHED" } }) {
-        items {
-          author
-          backdate
-          content
-          createdAt
-          id
-          objectives
-          screengrab
-          seoImage
-          slug
-          tags {
-            items {
-              tags {
-                id
-                tag
-              }
-            }
-          }
-          title
-          type
-          subhead
-        }
-      }
-    }
-  `;
-
-  const getTagQuery = /* GraphQL */ `
-    query MyQuery {
-      listTags {
-        items {
-          tag
-          lesson {
-            items {
-              id
-            }
-          }
-          id
-        }
-      }
-    }
-  `;
-
+  // The GraphQL query strings are static; ignore lint asking for deps.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const getLessons = async () => {
       const lessons = await getAllPublishedLessons();
@@ -221,9 +225,51 @@ const Page = () => {
     }
   }, [lessonsToShow, isCurrentPage]);
 
+  const structuredData = useMemo(() => {
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Lessons',
+          item: `${siteUrl}/lessons`,
+        },
+      ],
+    };
+
+    const items =
+      isLessons && isLessons.length
+        ? isLessons.slice(0, 100).map((lesson, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            name: lesson.title,
+            url: `${siteUrl}/lessons/${lesson.slug || lesson.id}`,
+          }))
+        : [];
+
+    const itemList =
+      items.length > 0
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            itemListOrder: 'https://schema.org/ItemListOrderDescending',
+            itemListElement: items,
+          }
+        : null;
+
+    return [breadcrumb, itemList].filter(Boolean);
+  }, [isLessons, siteUrl]);
+
   return (
     <>
-<Meta title='Lessons | Packaging School' description='Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.' />
+      <Meta
+        title='Lessons | Packaging School'
+        description='Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.'
+        structuredData={structuredData}
+      />
     <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>
       <div className='flex flex-col gap-10 lg:!gap-16'>
         <div className='block lg:hidden'>
