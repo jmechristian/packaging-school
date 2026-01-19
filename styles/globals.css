@@ -334,7 +334,7 @@ h4 {
 }
 
 .tiptap img {
-  @apply py-6;
+  @apply my-6 rounded-lg;
 }
 
 .tiptap a > * {
