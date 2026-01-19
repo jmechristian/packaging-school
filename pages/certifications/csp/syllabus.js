@@ -1,8 +1,31 @@
 import React from 'react';
+import Meta from '../../../components/shared/Meta';
+import { buildCertificationJsonLd } from '../../../libs/seo/certificationJsonLd';
 
 const Page = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const cspCert = {
+    title: 'Certificate of Sustainable Packaging (CSP)',
+    description:
+      '40-hour workshop to redesign packaging for sustainability through terminology, UN targets, system design, carbon footprinting, offsets, and LCA tools.',
+    seoImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+    link: `${siteUrl}/certifications/csp/syllabus`,
+  };
+  const cspJsonLd = buildCertificationJsonLd(cspCert, siteUrl);
   return (
-    <div className='w-full max-w-5xl mx-auto md:border-2 border-neutral-900 md:my-12 rounded-xl pb-6'>
+    <>
+      <Meta
+        title={'Certificate of Sustainable Packaging (CSP) Syllabus'}
+        description={
+          '40-hour workshop to redesign a package for sustainability, covering terminology, UN targets, system design, carbon footprinting, offsets, and LCA tools.'
+        }
+        image={'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png'}
+        structuredData={[cspJsonLd?.breadcrumb, cspJsonLd?.credential].filter(
+          Boolean
+        )}
+      />
+      <div className='w-full max-w-5xl mx-auto md:border-2 border-neutral-900 md:my-12 rounded-xl pb-6'>
       <div className='flex flex-col'>
         <div className='md:px-10 px-6 md:pb-8 pb-4 pt-10 md:pt-16'>
           <div className='flex flex-col-reverse gap-3 md:flex-row justify-between'>
@@ -953,6 +976,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

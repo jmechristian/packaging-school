@@ -12,18 +12,29 @@ import APCHow from '../../components/certifications/aps/APCHow';
 import APSExperts from '../../components/certifications/APSExperts';
 import APCStart from '../../components/certifications/aps/APCStart';
 import APCAPS from '../../components/certifications/aps/APCAPS';
-import Head from 'next/head';
 import TestimonialSlider from '../../components/shared/TestimonialSlider';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Meta from '../../components/shared/Meta';
 import { createNewOrder } from '../../helpers/api';
+import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 
 const Page = ({ testimonials }) => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const apcCert = {
+    title: 'Automotive Packaging Certificate (APC)',
+    description:
+      'Elevate your career with our unique online program tailored for automotive packaging pros. Ideal for suppliers, OEMs, engineers, and sales teams.',
+    seoImage: 'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp',
+    price: 2400,
+    link: 'https://learn.packagingschool.com/enroll/735516',
+  };
+  const apcJsonLd = buildCertificationJsonLd(apcCert, siteUrl);
   const orderHandler = async (cert) => {
     const orderId = await createNewOrder({
       courseDescription:
@@ -59,6 +70,9 @@ const Page = ({ testimonials }) => {
         keywords={
           'Automotive Packaging, Returnable Packaging Systems, Expendable Case Studies, Applications, Supplier Databases, Transportation, SME Feedback, certification'
         }
+        structuredData={[apcJsonLd?.breadcrumb, apcJsonLd?.credential].filter(
+          Boolean
+        )}
       />
       <div className='flex flex-col dark:bg-dark-dark gap-12'>
         <APCHero orderHandler={orderHandler} />

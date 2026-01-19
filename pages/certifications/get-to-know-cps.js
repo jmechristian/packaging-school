@@ -11,10 +11,20 @@ import Testimonial from '../../components/shared/Testimonial';
 import CPSReviews from '../../components/certifications/cps/CPSReviews';
 import Meta from '../../components/shared/Meta';
 import { getCertificates } from '../../helpers/api';
+import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 Amplify.configure(awsExports);
 
 export const Page = () => {
   const [cert, setCert] = useState(null);
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const fallbackCert = {
+    title: 'Certificate of Packaging Science (CPS)',
+    description:
+      'Ideal for professionals in the packaging or related industries seeking a comprehensive understanding of the packaging industry. With the flexibility of 6-month access, this is an excellent choice for salespeople, packaging engineers, marketing leads, operations personnel, and procurement professionals looking to gain valuable insights.',
+    seoImage: 'https://packschool.s3.amazonaws.com/cps-1-seoImage.webp',
+    link: `${siteUrl}/certifications/get-to-know-cps`,
+  };
   useEffect(() => {
     const fetchCertificates = async () => {
       const certificates = await getCertificates();
@@ -22,6 +32,7 @@ export const Page = () => {
     };
     fetchCertificates();
   }, []);
+  const cpsJsonLd = buildCertificationJsonLd(cert || fallbackCert, siteUrl);
   return (
     <>
       {/* <Head>
@@ -41,6 +52,9 @@ export const Page = () => {
         keywords={
           'certification, packaging design, packaging materials, corrugated containers, polymers, machinery, packaging regulations'
         }
+        structuredData={[cpsJsonLd?.breadcrumb, cpsJsonLd?.credential].filter(
+          Boolean
+        )}
       />
       <div className='flex flex-col dark:bg-dark-dark'>
         <CPSHero cert={cert} />

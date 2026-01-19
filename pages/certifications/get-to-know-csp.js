@@ -12,11 +12,23 @@ import { createNewOrder } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 
 const Page = () => {
   const { awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const cspCert = {
+    title: 'Certificate of Sustainable Packaging (CSP)',
+    description:
+      'Master sustainable packaging with our certificate program: learn sustainability terms, UN goals, system creation, carbon footprint, neutrality via offsets, and LCA software usage for design.',
+    seoImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+    price: 2400,
+    link: 'https://learn.packagingschool.com/enroll/2772370?price_id=3600658',
+  };
+  const cspJsonLd = buildCertificationJsonLd(cspCert, siteUrl);
   const orderHandler = async (cert) => {
     const orderId = await createNewOrder({
       courseDescription:
@@ -52,6 +64,9 @@ const Page = () => {
           'sustainability terms, UN goals, system creation, carbon footprint, neutrality via offsets, LCA software'
         }
         image={'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png'}
+        structuredData={[cspJsonLd?.breadcrumb, cspJsonLd?.credential].filter(
+          Boolean
+        )}
       />
       <div className='w-full h-full flex flex-col gap-12 lg:!gap-36 pt-6 md:!pt-20 pb-20 dark:bg-dark-dark'>
         <CSPHero orderHandler={orderHandler} />
