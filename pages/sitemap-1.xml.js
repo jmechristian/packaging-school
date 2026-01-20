@@ -74,6 +74,10 @@ function generateSiteMap(lessons, courses, careers, certs) {
            <lastmod>${formatDate(new Date())}</lastmod>
          </url>
          <url>
+           <loc>${URL}/glossary</loc>
+           <lastmod>${formatDate(new Date())}</lastmod>
+         </url>
+         <url>
            <loc>${URL}/isbt</loc>
            <lastmod>${formatDate(new Date())}</lastmod>
          </url>
