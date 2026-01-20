@@ -47,6 +47,14 @@ enum MediaType {
   SLIDES
 }
 
+enum SeoContentType {
+  COURSE
+  LESSON
+  CERTIFICATION
+  LANDING
+  OTHER
+}
+
 type Category @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String!
@@ -157,6 +165,28 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   analysis: Analysis @hasOne
   usersCompleted: [User] @manyToMany(relationName: "userCompletedLessons")
   learningPaths: [LearningPathLesson] @hasMany
+  seoDescription: String
+  seoKeywords: [String]
+  seoTitle: String
+  seoUrl: String
+  seoRobots: String
+  seoFollow: String
+}
+
+type SeoDocument
+  @model
+  @auth(
+    rules: [
+      { allow: public }
+    ]
+  ) {
+  id: ID!
+  contentType: SeoContentType!
+  slugOrPath: String! @index(name: "byContent", queryField: "seoByContent")
+  metaJson: AWSJSON
+  jsonLd: AWSJSON
+  updatedBy: String
+  updatedAt: AWSDateTime
 }
 
 type Author @model @auth(rules: [{ allow: public }]) {

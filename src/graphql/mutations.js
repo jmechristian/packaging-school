@@ -610,6 +610,12 @@ export const createLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      seoDescription
+      seoKeywords
+      seoTitle
+      seoUrl
+      seoRobots
+      seoFollow
       createdAt
       updatedAt
       lessonAnalysisId
@@ -680,6 +686,12 @@ export const updateLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      seoDescription
+      seoKeywords
+      seoTitle
+      seoUrl
+      seoRobots
+      seoFollow
       createdAt
       updatedAt
       lessonAnalysisId
@@ -750,9 +762,69 @@ export const deleteLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      seoDescription
+      seoKeywords
+      seoTitle
+      seoUrl
+      seoRobots
+      seoFollow
       createdAt
       updatedAt
       lessonAnalysisId
+      __typename
+    }
+  }
+`;
+export const createSeoDocument = /* GraphQL */ `
+  mutation CreateSeoDocument(
+    $input: CreateSeoDocumentInput!
+    $condition: ModelSeoDocumentConditionInput
+  ) {
+    createSeoDocument(input: $input, condition: $condition) {
+      id
+      contentType
+      slugOrPath
+      metaJson
+      jsonLd
+      updatedBy
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const updateSeoDocument = /* GraphQL */ `
+  mutation UpdateSeoDocument(
+    $input: UpdateSeoDocumentInput!
+    $condition: ModelSeoDocumentConditionInput
+  ) {
+    updateSeoDocument(input: $input, condition: $condition) {
+      id
+      contentType
+      slugOrPath
+      metaJson
+      jsonLd
+      updatedBy
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const deleteSeoDocument = /* GraphQL */ `
+  mutation DeleteSeoDocument(
+    $input: DeleteSeoDocumentInput!
+    $condition: ModelSeoDocumentConditionInput
+  ) {
+    deleteSeoDocument(input: $input, condition: $condition) {
+      id
+      contentType
+      slugOrPath
+      metaJson
+      jsonLd
+      updatedBy
+      updatedAt
+      createdAt
       __typename
     }
   }
@@ -2870,6 +2942,12 @@ export const createLearningPathLesson = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -2932,6 +3010,12 @@ export const updateLearningPathLesson = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -2994,6 +3078,12 @@ export const deleteLearningPathLesson = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9016,6 +9106,12 @@ export const createLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9069,6 +9165,12 @@ export const updateLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9122,6 +9224,12 @@ export const deleteLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9627,6 +9735,12 @@ export const createUserCompletedLessons = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9715,6 +9829,12 @@ export const updateUserCompletedLessons = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9803,6 +9923,12 @@ export const deleteUserCompletedLessons = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId

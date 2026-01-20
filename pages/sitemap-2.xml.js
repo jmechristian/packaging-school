@@ -1,27 +1,19 @@
-import { Amplify, API, graphqlOperation } from 'aws-amplify';
-import {
-  listLessons,
-  listCourses,
-  listLMSCourses,
-  listBlogs,
-  listCareers,
-} from '../src/graphql/queries';
+import { API } from 'aws-amplify';
+import { listLessons, listLMSCourses } from '../src/graphql/queries';
 
 const URL = 'https://packagingschool.com';
 
+function formatDate(date) {
+  if (!date) return new Date().toISOString().split('T')[0];
+  const convertedDate = new Date(date);
+  const year = convertedDate.getFullYear();
+  // getMonth() returns 0 for January, 11 for December, so we need to add 1
+  const month = ('0' + (convertedDate.getMonth() + 1)).slice(-2);
+  const day = ('0' + convertedDate.getDate()).slice(-2);
+  return `${year}-${month}-${day}`;
+}
+
 function generateSiteMap(lessons, courses) {
-  function formatDate(date) {
-    const convertedDate = new Date(date);
-    const year = convertedDate.getFullYear();
-    // getMonth() returns 0 for January, 11 for December, so we need to add 1
-    const month = ('0' + (convertedDate.getMonth() + 1)).slice(-2);
-    const day = ('0' + convertedDate.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
-  }
-
-  const today = new Date();
-  console.log(formatDate(today));
-
   return `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
@@ -72,29 +64,41 @@ function generateSiteMap(lessons, courses) {
 }
 
 export async function getServerSideProps({ res }) {
-  const lessons = await API.graphql({
-    query: listLessons,
-    variables: {
-      filter: { mediaType: { eq: 'VIDEO' }, status: { eq: 'PUBLISHED' } },
-      limit: 500,
-    },
-  });
+  const fetchAll = async (query, variables, path) => {
+    let items = [];
+    let nextToken = null;
+    do {
+      const resp = await API.graphql({ query, variables: { ...variables, nextToken } });
+      let page = resp.data;
+      for (const key of path) page = page?.[key];
+      items = items.concat(page?.items || []);
+      nextToken = page?.nextToken || null;
+    } while (nextToken);
+    return items;
+  };
 
-  const courses = await API.graphql({
-    query: listLMSCourses,
-    variables: {
+  const lessons = await fetchAll(
+    listLessons,
+    { filter: { mediaType: { eq: 'VIDEO' }, status: { eq: 'PUBLISHED' } }, limit: 200 },
+    ['listLessons']
+  );
+
+  const courses = await fetchAll(
+    listLMSCourses,
+    {
       filter: {
         preview: { attributeExists: true },
         collection: { contains: 'null' },
       },
-      limit: 500,
+      limit: 200,
     },
-  });
+    ['listLMSCourses']
+  );
 
   // Generate the XML sitemap with the blog data
   const sitemap = generateSiteMap(
-    lessons.data.listLessons.items,
-    courses.data.listLMSCourses.items
+    lessons,
+    courses
   );
 
   res.setHeader('Content-Type', 'text/xml');

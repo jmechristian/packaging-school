@@ -415,6 +415,12 @@ export const getLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      seoDescription
+      seoKeywords
+      seoTitle
+      seoUrl
+      seoRobots
+      seoFollow
       createdAt
       updatedAt
       lessonAnalysisId
@@ -455,9 +461,53 @@ export const listLessons = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getSeoDocument = /* GraphQL */ `
+  query GetSeoDocument($id: ID!) {
+    getSeoDocument(id: $id) {
+      id
+      contentType
+      slugOrPath
+      metaJson
+      jsonLd
+      updatedBy
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const listSeoDocuments = /* GraphQL */ `
+  query ListSeoDocuments(
+    $filter: ModelSeoDocumentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSeoDocuments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        contentType
+        slugOrPath
+        metaJson
+        jsonLd
+        updatedBy
+        updatedAt
+        createdAt
         __typename
       }
       nextToken
@@ -1523,6 +1573,12 @@ export const getLearningPathLesson = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -5162,6 +5218,12 @@ export const getLessonTags = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -5441,6 +5503,12 @@ export const getUserCompletedLessons = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
@@ -6546,9 +6614,46 @@ export const lessonsBySlug = /* GraphQL */ `
         lastEditedBy
         videoLink
         screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
         createdAt
         updatedAt
         lessonAnalysisId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const seoByContent = /* GraphQL */ `
+  query SeoByContent(
+    $slugOrPath: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelSeoDocumentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    seoByContent(
+      slugOrPath: $slugOrPath
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        contentType
+        slugOrPath
+        metaJson
+        jsonLd
+        updatedBy
+        updatedAt
+        createdAt
         __typename
       }
       nextToken
