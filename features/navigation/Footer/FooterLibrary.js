@@ -8,21 +8,20 @@ const FooterLibrary = () => {
         Lessons
       </div>
       <div className='grid grid-cols-2 gap-y-1 gap-x-8 lg:gap-x-4 justify-between'>
-        <div className='flex flex-col gap-1'>
+        
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
-            <Link href={'/lessons'}>Learning of the Month</Link>
+            <Link href={'/lessons'}>Lessons</Link>
           </p>
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
-            <Link href={'/lessons'}>Regulation of the Month</Link>
+            <Link href={'/glossary'}>Glossary</Link>
           </p>
-        </div>
-        <div className='flex flex-col gap-1'>
+        <div className='flex flex-col gap-1 col-span-2'>
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
-            <Link href={'/lessons'}>Articles</Link>
+            <Link href={'/learning-of-the-month'}>Learning of the Month</Link>
           </p>
-          <p className='text-gray-600 dark:text-gray-500 w-fit'>
-            <Link href={'/lessons'}>Glossary</Link>
-          </p>
+          {/* <p className='text-gray-600 dark:text-gray-500 w-fit'>
+            <Link href={'/regulation-of-the-month'}>Regulation of the Month</Link>
+          </p> */}
         </div>
       </div>
     </div>
