@@ -6784,6 +6784,60 @@ export const deleteFaq = /* GraphQL */ `
     }
   }
 `;
+export const createGlossaryTerm = /* GraphQL */ `
+  mutation CreateGlossaryTerm(
+    $input: CreateGlossaryTermInput!
+    $condition: ModelGlossaryTermConditionInput
+  ) {
+    createGlossaryTerm(input: $input, condition: $condition) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateGlossaryTerm = /* GraphQL */ `
+  mutation UpdateGlossaryTerm(
+    $input: UpdateGlossaryTermInput!
+    $condition: ModelGlossaryTermConditionInput
+  ) {
+    updateGlossaryTerm(input: $input, condition: $condition) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteGlossaryTerm = /* GraphQL */ `
+  mutation DeleteGlossaryTerm(
+    $input: DeleteGlossaryTermInput!
+    $condition: ModelGlossaryTermConditionInput
+  ) {
+    deleteGlossaryTerm(input: $input, condition: $condition) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createEventTemplate = /* GraphQL */ `
   mutation CreateEventTemplate(
     $input: CreateEventTemplateInput!

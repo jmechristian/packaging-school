@@ -6451,6 +6451,57 @@ export const onDeleteFaq = /* GraphQL */ `
     }
   }
 `;
+export const onCreateGlossaryTerm = /* GraphQL */ `
+  subscription OnCreateGlossaryTerm(
+    $filter: ModelSubscriptionGlossaryTermFilterInput
+  ) {
+    onCreateGlossaryTerm(filter: $filter) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateGlossaryTerm = /* GraphQL */ `
+  subscription OnUpdateGlossaryTerm(
+    $filter: ModelSubscriptionGlossaryTermFilterInput
+  ) {
+    onUpdateGlossaryTerm(filter: $filter) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteGlossaryTerm = /* GraphQL */ `
+  subscription OnDeleteGlossaryTerm(
+    $filter: ModelSubscriptionGlossaryTermFilterInput
+  ) {
+    onDeleteGlossaryTerm(filter: $filter) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateEventTemplate = /* GraphQL */ `
   subscription OnCreateEventTemplate(
     $filter: ModelSubscriptionEventTemplateFilterInput

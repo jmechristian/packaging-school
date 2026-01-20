@@ -1002,6 +1002,15 @@ type Faq @model @auth(rules: [{ allow: public }]) {
   order: Int! @default(value: "0")
 }
 
+type GlossaryTerm @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  term: String! @index(name: "glossaryTermByTerm")
+  letter: String! @index(name: "glossaryTermByLetter", sortKeyFields: ["term"])
+  definition: String!
+  order: Int
+  status: String @default(value: "DRAFT")
+}
+
 ######### EVENT TEMPLATES #########
 
 type EventTemplate @model @auth(rules: [{ allow: public }]) {

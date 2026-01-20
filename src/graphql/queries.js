@@ -3866,6 +3866,44 @@ export const listFaqs = /* GraphQL */ `
     }
   }
 `;
+export const getGlossaryTerm = /* GraphQL */ `
+  query GetGlossaryTerm($id: ID!) {
+    getGlossaryTerm(id: $id) {
+      id
+      term
+      letter
+      definition
+      order
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listGlossaryTerms = /* GraphQL */ `
+  query ListGlossaryTerms(
+    $filter: ModelGlossaryTermFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGlossaryTerms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getEventTemplate = /* GraphQL */ `
   query GetEventTemplate($id: ID!) {
     getEventTemplate(id: $id) {
@@ -7750,6 +7788,70 @@ export const indexPagesBySlug = /* GraphQL */ `
         discount
         status
         type
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const glossaryTermsByTerm = /* GraphQL */ `
+  query GlossaryTermsByTerm(
+    $term: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGlossaryTermFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    glossaryTermsByTerm(
+      term: $term
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const glossaryTermsByLetterAndTerm = /* GraphQL */ `
+  query GlossaryTermsByLetterAndTerm(
+    $letter: String!
+    $term: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelGlossaryTermFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    glossaryTermsByLetterAndTerm(
+      letter: $letter
+      term: $term
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        term
+        letter
+        definition
+        order
+        status
         createdAt
         updatedAt
         __typename
