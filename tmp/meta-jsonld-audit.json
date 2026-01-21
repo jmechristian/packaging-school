@@ -6,7 +6,22 @@
     "metaJson": {
       "title": "Packaging School Certifications",
       "description": "Expert-led, comprehensive certificate programs designed to elevate your expertise in packaging management and packaging design, automotive packaging, and food packaging.",
-      "image": "https://packschool.s3.amazonaws.com/certifications-seoImage.webp"
+      "image": "https://packschool.s3.amazonaws.com/certifications-seoImage.webp",
+      "canonical": "https://packagingschool.com/certifications",
+      "og": {
+        "title": "Packaging School Certifications",
+        "description": "Expert-led, comprehensive certificate programs designed to elevate your expertise in packaging management and packaging design, automotive packaging, and food packaging.",
+        "image": "https://packschool.s3.amazonaws.com/certifications-seoImage.webp",
+        "url": "https://packagingschool.com/certifications",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Packaging School Certifications",
+        "description": "Expert-led, comprehensive certificate programs designed to elevate your expertise in packaging management and packaging design, automotive packaging, and food packaging.",
+        "image": "https://packschool.s3.amazonaws.com/certifications-seoImage.webp"
+      }
     },
     "jsonLd": {
       "breadcrumb": {
@@ -36,7 +51,22 @@
     "metaJson": {
       "title": "Certificate of Mastery in Packaging Management",
       "description": "A 12-week, PhD-led certificate program ideal for ambitious professionals seeking to advance their career in the packaging industry and for companies actively seeking future leaders and rising stars to lead their teams.",
-      "image": "https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp"
+      "image": "https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp",
+      "canonical": "https://packagingschool.com/certifications/cmpm",
+      "og": {
+        "title": "Certificate of Mastery in Packaging Management",
+        "description": "A 12-week, PhD-led certificate program ideal for ambitious professionals seeking to advance their career in the packaging industry and for companies actively seeking future leaders and rising stars to lead their teams.",
+        "image": "https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp",
+        "url": "https://packagingschool.com/certifications/cmpm",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Certificate of Mastery in Packaging Management",
+        "description": "A 12-week, PhD-led certificate program ideal for ambitious professionals seeking to advance their career in the packaging industry and for companies actively seeking future leaders and rising stars to lead their teams.",
+        "image": "https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp"
+      }
     },
     "jsonLd": {
       "credential": {
@@ -106,7 +136,22 @@
     "metaJson": {
       "title": "Automotive Packaging Certificate",
       "description": "Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.",
-      "image": "https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp"
+      "image": "https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp",
+      "canonical": "https://packagingschool.com/certifications/apc",
+      "og": {
+        "title": "Automotive Packaging Certificate",
+        "description": "Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.",
+        "image": "https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp",
+        "url": "https://packagingschool.com/certifications/apc",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Automotive Packaging Certificate",
+        "description": "Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.",
+        "image": "https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp"
+      }
     },
     "jsonLd": {
       "credential": {
@@ -176,7 +221,22 @@
     "metaJson": {
       "title": "Certificate of Packaging Science",
       "description": "\nPerfect for packaging professionals or related fields seeking deep industry insights. With one-year access, it's ideal for sales, marketing, engineering, operations, and procurement experts looking to expand their expertise.",
-      "image": "https://packmedia54032-staging.s3.amazonaws.com/public/cert-seoimagewebp"
+      "image": "https://packmedia54032-staging.s3.amazonaws.com/public/cert-seoimagewebp",
+      "canonical": "https://packagingschool.com/certifications/cps",
+      "og": {
+        "title": "Certificate of Packaging Science",
+        "description": "\nPerfect for packaging professionals or related fields seeking deep industry insights. With one-year access, it's ideal for sales, marketing, engineering, operations, and procurement experts looking to expand their expertise.",
+        "image": "https://packmedia54032-staging.s3.amazonaws.com/public/cert-seoimagewebp",
+        "url": "https://packagingschool.com/certifications/cps",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Certificate of Packaging Science",
+        "description": "\nPerfect for packaging professionals or related fields seeking deep industry insights. With one-year access, it's ideal for sales, marketing, engineering, operations, and procurement experts looking to expand their expertise.",
+        "image": "https://packmedia54032-staging.s3.amazonaws.com/public/cert-seoimagewebp"
+      }
     },
     "jsonLd": {
       "credential": {
@@ -244,7 +304,22 @@
     "metaJson": {
       "title": "Food Packaging Certificate",
       "description": "Promote your brand and educate the world. Sponsorship supports hundreds of food packaging professionals in understanding the industry and your value. Your company takes the spotlight, with your leaders as the experts.",
-      "image": "https://packschool.s3.amazonaws.com/fpc-seoImage.webp"
+      "image": "https://packschool.s3.amazonaws.com/fpc-seoImage.webp",
+      "canonical": "https://packagingschool.com/certifications/fpc",
+      "og": {
+        "title": "Food Packaging Certificate",
+        "description": "Promote your brand and educate the world. Sponsorship supports hundreds of food packaging professionals in understanding the industry and your value. Your company takes the spotlight, with your leaders as the experts.",
+        "image": "https://packschool.s3.amazonaws.com/fpc-seoImage.webp",
+        "url": "https://packagingschool.com/certifications/fpc",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Food Packaging Certificate",
+        "description": "Promote your brand and educate the world. Sponsorship supports hundreds of food packaging professionals in understanding the industry and your value. Your company takes the spotlight, with your leaders as the experts.",
+        "image": "https://packschool.s3.amazonaws.com/fpc-seoImage.webp"
+      }
     },
     "jsonLd": {
       "credential": {
@@ -304,7 +379,22 @@
     "metaJson": {
       "title": "Certificate of Sustainable Packaging ",
       "description": "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
-      "image": "https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png"
+      "image": "https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png",
+      "canonical": "https://packagingschool.com/certifications/csp",
+      "og": {
+        "title": "Certificate of Sustainable Packaging ",
+        "description": "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
+        "image": "https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png",
+        "url": "https://packagingschool.com/certifications/csp",
+        "type": "website",
+        "site_name": "Packaging School"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Certificate of Sustainable Packaging ",
+        "description": "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
+        "image": "https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png"
+      }
     },
     "jsonLd": {
       "credential": {

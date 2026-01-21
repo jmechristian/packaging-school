@@ -11,7 +11,9 @@ import {
   MdCellTower,
 } from 'react-icons/md';
 import CohortItem from '../../components/shared/CohortItem';
+import { useRouter } from 'next/router';
 const Page = () => {
+  const router = useRouter();
   const [cohorts, setCohorts] = useState([]);
 
   const content = [
@@ -78,7 +80,7 @@ const Page = () => {
             <CohortItem
               key={cohort.id}
               cohort={cohort}
-              onSelectCohort={() => {}}
+              onSelectCohort={() => {router.push(`${cohort.link}`)}}
             />
           ))}
         </div>
