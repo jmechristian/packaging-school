@@ -12,6 +12,11 @@ import {
 } from 'react-icons/md';
 import CohortItem from '../../components/shared/CohortItem';
 import { useRouter } from 'next/router';
+import Meta from '../../components/shared/Meta';
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+
 const Page = () => {
   const router = useRouter();
   const [cohorts, setCohorts] = useState([]);
@@ -70,47 +75,58 @@ const Page = () => {
   }, []);
 
   return (
-    <div className='w-full max-w-7xl mx-auto flex flex-col gap-6 py-16'>
-      <div className='flex flex-col justify-center gap-5'>
-        <h3 className='h3-base'>View Our Upcoming Cohorts</h3>
-      </div>
-      <div className='w-full grid grid-cols-12 gap-5'>
-        <div className='col-span-8 border p-5 flex flex-col gap-3'>
-          {cohorts.map((cohort) => (
-            <CohortItem
-              key={cohort.id}
-              cohort={cohort}
-              onSelectCohort={() => {router.push(`${cohort.link}`)}}
-            />
-          ))}
+    <>
+      <Meta
+        title='Packaging School Cohorts | Upcoming Sessions'
+        description='Explore upcoming Packaging School certificate cohorts, timelines, and why cohort-based learning accelerates your progress.'
+        image='https://packschool.s3.amazonaws.com/certifications-seoImage.webp'
+        url='/cohorts'
+        structuredData={[breadcrumbJsonLd, cohortListJsonLd].filter(Boolean)}
+      />
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-6 py-16'>
+        <div className='flex flex-col justify-center gap-5'>
+          <h3 className='h3-base'>View Our Upcoming Cohorts</h3>
         </div>
-        <div className='col-span-4 border p-5 bg-gray-100 flex flex-col gap-3'>
-          <div className='h4-base'>Why Learn in a Cohort?</div>
-          <div className='grid gap-3'>
-            {content.map((it) => (
-              <div
-                className='w-full border-white bg-white border flex flex-col gap-2 p-4'
-                key={it.id}
-              >
-                <div className='flex items-center gap-3'>
-                  <div>
-                    <div className='w-9 h-9 bg-clemson rounded-full flex items-center justify-center'>
-                      {it.icon}
+        <div className='w-full grid grid-cols-12 gap-5'>
+          <div className='col-span-8 border p-5 flex flex-col gap-3'>
+            {cohorts.map((cohort) => (
+              <CohortItem
+                key={cohort.id}
+                cohort={cohort}
+                onSelectCohort={() => {
+                  router.push(`${cohort.link}`);
+                }}
+              />
+            ))}
+          </div>
+          <div className='col-span-4 border p-5 bg-gray-100 flex flex-col gap-3'>
+            <div className='h4-base'>Why Learn in a Cohort?</div>
+            <div className='grid gap-3'>
+              {content.map((it) => (
+                <div
+                  className='w-full border-white bg-white border flex flex-col gap-2 p-4'
+                  key={it.id}
+                >
+                  <div className='flex items-center gap-3'>
+                    <div>
+                      <div className='w-9 h-9 bg-clemson rounded-full flex items-center justify-center'>
+                        {it.icon}
+                      </div>
+                    </div>
+                    <div className='font-bold text-lg leading-tight text-base-brand'>
+                      {it.title}
                     </div>
                   </div>
-                  <div className='font-bold text-lg leading-tight text-base-brand'>
-                    {it.title}
+                  <div className='text-sm leading-snug tracking-normal dark:text-neutral-700'>
+                    {it.content}
                   </div>
                 </div>
-                <div className='text-sm leading-snug tracking-normal dark:text-neutral-700'>
-                  {it.content}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
