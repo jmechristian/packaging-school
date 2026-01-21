@@ -74,6 +74,55 @@ const Page = () => {
     fetchCohorts();
   }, []);
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Cohorts',
+        item: `${siteUrl}/cohorts`,
+      },
+    ],
+  };
+
+  const cohortListJsonLd =
+    cohorts && cohorts.length
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: 'Packaging School Cohorts',
+          itemListElement: cohorts.map((cohort, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            item: {
+              '@type': 'Event',
+              name: cohort.name,
+              description: cohort.description,
+              startDate: cohort.startDate,
+              endDate: cohort.endDate,
+              eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+              eventStatus: 'https://schema.org/EventScheduled',
+              url: `${siteUrl}${cohort.link}`,
+              location: {
+                '@type': 'VirtualLocation',
+                url: `${siteUrl}${cohort.link}`,
+              },
+              offers: cohort.deadline
+                ? {
+                    '@type': 'Offer',
+                    url: `${siteUrl}${cohort.link}`,
+                    availability: 'https://schema.org/InStock',
+                    validThrough: cohort.deadline,
+                  }
+                : undefined,
+            },
+          })),
+        }
+      : null;
+
   return (
     <>
       <Meta
