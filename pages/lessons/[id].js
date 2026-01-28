@@ -410,7 +410,6 @@ const Page = ({ lesson }) => {
                               className='bg-gray-900 text-white px-1.5 py-0.5 rounded'
                             >
                               {tag.tags.tag}
-                              {tag.tags.tag}
                             </div>
                           ))}
                         </div>
