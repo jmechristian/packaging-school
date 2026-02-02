@@ -1,11 +1,11 @@
-import React, { useId, useState, useEffect } from 'react';
+import React, { useId, useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/solid';
 import Image from "next/legacy/image";
 import FadeIn from '../../helpers/FadeIn';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const delay = 7000;
+const delay = 5000;
 
 export function GridPattern(props) {
   let patternId = useId();
@@ -31,9 +31,16 @@ export function GridPattern(props) {
 const TestimonialSlider = ({ testimonials, type }) => {
   const timeoutRef = React.useRef(null);
 
-  const [items, setItems] = useState(testimonials);
+  const items = useMemo(() => {
+    if (!testimonials?.length) return [];
+    return [...testimonials].sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA; // newest first
+    });
+  }, [testimonials]);
+
   const [isActive, setIsActive] = useState(0);
-  const [number, setNumber] = useState(0);
 
   function resetTimeout() {
     if (timeoutRef.current) {
@@ -42,21 +49,19 @@ const TestimonialSlider = ({ testimonials, type }) => {
   }
 
   useEffect(() => {
-    if (items.length > 0) {
-      resetTimeout();
-      timeoutRef.current = setTimeout(
-        () =>
-          setIsActive((prevIndex) =>
-            prevIndex === items.length - 1 ? 0 : prevIndex + 1
-          ),
-        delay
-      );
-    }
+    if (items.length <= 0) return;
 
-    return () => {
-      resetTimeout();
-    };
-  }, [isActive, items.length, testimonials]);
+    resetTimeout();
+    timeoutRef.current = setTimeout(
+      () =>
+        setIsActive((prevIndex) =>
+          prevIndex === items.length - 1 ? 0 : prevIndex + 1
+        ),
+      delay
+    );
+
+    return () => resetTimeout();
+  }, [isActive, items.length]);
 
   return (
     <div className='relative mx-auto w-full max-w-2xl lg:max-w-7xl rounded-3xl gap-9 flex flex-col lg:flex-row px-6 xl:px-0'>
