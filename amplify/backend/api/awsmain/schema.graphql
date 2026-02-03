@@ -671,6 +671,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   wishlist: [User] @manyToMany(relationName: "UserWishlist")
   reviews: [CourseReview] @hasMany
   partner: [Partner] @manyToMany(relationName: "PartnerCourses")
+  libraries: [CustomerLibary] @manyToMany(relationName: "LibraryCourses")
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -811,9 +812,11 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
   pdf: String
   slide: String
   video: String
-  clientCourses: [String]
-  pschoolCourses: [String]
+  clientCourses: [LMSCourse] @hasMany
+  pschoolCourses: [LMSCourse] @hasMany
+  courses: [LMSCourse] @manyToMany(relationName: "LibraryCourses")
   addOns: [String]
+  backgroundImage: String
   status: String @default(value: "DRAFT")
 }
 

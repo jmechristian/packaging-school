@@ -8,6 +8,7 @@ import {
   LinkedinShareButton,
 } from 'react-share';
 import { API } from 'aws-amplify';
+import Head from 'next/head';
 import LessonQuiz from '../../../components/lessons/LessonQuiz';
 import VideoPlayer from '../../../components/VideoPlayer';
 import '@jmechristian/ps-component-library/dist/style.css';
@@ -226,11 +227,10 @@ const Page = ({ lesson }) => {
   return (
     lesson && (
       <>
-        <Meta
-          title={lesson.title}
-          description={lesson.subhead}
-          image={lesson.seoImage}
-        />
+        <Head>
+        <title>{lesson.title} | The Packaging School</title>
+        <meta name='robots' content='noindex,nofollow' />
+      </Head>
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col'>
           <div className='w-full grid grid-cols-12 gap-10 relative'>
             <div className='absolute top-0 -left-16 !hidden lg:!flex h-full w-fit'>
@@ -402,7 +402,6 @@ const Page = ({ lesson }) => {
                               key={tag.tags.tag}
                               className='bg-gray-900 text-white px-1.5 py-0.5 rounded'
                             >
-                              {tag.tags.tag}
                               {tag.tags.tag}
                             </div>
                           ))}
@@ -627,8 +626,6 @@ export async function getStaticProps({ params }) {
     }
   `;
 
-  const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-  const GRAPHQL_API_KEY = process.env.GRAPHQL_API_KEY;
 
   const variables = {
     slug: id, // key is "input" based on the mutation above

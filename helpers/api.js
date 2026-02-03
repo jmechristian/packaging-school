@@ -28,6 +28,7 @@ import {
   listCourseClicks,
   listTestimonials,
   listApprovedAPS25MediaPages,
+  customerLibariesBySlug,
 } from '../src/graphql/queries';
 import {
   createClick,
@@ -1852,10 +1853,11 @@ export const getCoursesForHomePageFilter = async (category) => {
 };
 
 export const getAllLearningOfTheMonths = async () => {
+  const PAGE_SIZE = 100; // AppSync often caps list at 100 per request
   const getLOTMQuery = /* GraphQL */ `
-    query MyQuery($nextToken: String) {
+    query MyQuery($limit: Int, $nextToken: String) {
       listLessons(
-        limit: 1000
+        limit: $limit
         filter: { status: { eq: "PUBLISHED" }, type: { eq: LOTM } }
         nextToken: $nextToken
       ) {
@@ -1892,15 +1894,14 @@ export const getAllLearningOfTheMonths = async () => {
   do {
     const result = await API.graphql({
       query: getLOTMQuery,
-      variables: { nextToken },
+      variables: { limit: PAGE_SIZE, nextToken },
     });
 
-    // Append the items from this batch to the overall array
-    allItems = allItems.concat(result.data.listLessons.items);
-
-    // Update nextToken for the next iteration
-    nextToken = result.data.listLessons.nextToken;
-  } while (nextToken); // Keep fetching until there's no nextToken
+    const list = result?.data?.listLessons;
+    const items = list?.items ?? [];
+    allItems = allItems.concat(items);
+    nextToken = list?.nextToken ?? null;
+  } while (nextToken);
 
   return allItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
@@ -2565,4 +2566,62 @@ export const getApprovedAPS25MediaUsers = async () => {
     nextToken = res.data.listApprovedAPS25MediaPages.nextToken;
   } while (nextToken);
   return allItems;
+};
+
+export const getPipelineLibrary = async () => {
+  const getPipelineLibraryQuery = /* GraphQL */ `
+    query MyQuery {
+    customerLibariesBySlug(slug: "pipeline-packaging") {
+      items {
+        email
+        displayName
+        description
+        addOns
+        backgroundImage
+        highlightColor
+        id
+        link
+        logo
+        pdf
+        primaryColor
+        pschoolCourses {
+          items {
+            altLink
+            callout
+            category
+            categoryArray
+            courseId
+            demo
+            hours
+            id
+            lessons
+            link
+            objectives
+            preview
+            price
+            seoImage
+            shortDescription
+            slug
+            stripeLink
+            subheadline
+            thinkificId
+            title
+            type
+            videos
+            what_learned
+          }
+        }
+        slide
+        slug
+        status
+        video
+      }
+    }
+  }
+  `;
+  const res = await API.graphql({
+    query: getPipelineLibraryQuery,
+    variables: { slug: 'pipeline' },
+  });
+  return res.data.customerLibariesBySlug.items[0];
 };

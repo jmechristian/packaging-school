@@ -2748,6 +2748,8 @@ export const createLearningPathCourse = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       learningPath {
@@ -2815,6 +2817,8 @@ export const updateLearningPathCourse = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       learningPath {
@@ -2882,6 +2886,8 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       learningPath {
@@ -4632,8 +4638,14 @@ export const createLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      libraries {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      customerLibaryClientCoursesId
+      customerLibaryPschoolCoursesId
       __typename
     }
   }
@@ -4706,8 +4718,14 @@ export const updateLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      libraries {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      customerLibaryClientCoursesId
+      customerLibaryPschoolCoursesId
       __typename
     }
   }
@@ -4780,8 +4798,14 @@ export const deleteLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      libraries {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      customerLibaryClientCoursesId
+      customerLibaryPschoolCoursesId
       __typename
     }
   }
@@ -5722,9 +5746,20 @@ export const createCustomerLibary = /* GraphQL */ `
       pdf
       slide
       video
-      clientCourses
-      pschoolCourses
+      clientCourses {
+        nextToken
+        __typename
+      }
+      pschoolCourses {
+        nextToken
+        __typename
+      }
+      courses {
+        nextToken
+        __typename
+      }
       addOns
+      backgroundImage
       status
       createdAt
       updatedAt
@@ -5750,9 +5785,20 @@ export const updateCustomerLibary = /* GraphQL */ `
       pdf
       slide
       video
-      clientCourses
-      pschoolCourses
+      clientCourses {
+        nextToken
+        __typename
+      }
+      pschoolCourses {
+        nextToken
+        __typename
+      }
+      courses {
+        nextToken
+        __typename
+      }
       addOns
+      backgroundImage
       status
       createdAt
       updatedAt
@@ -5778,9 +5824,20 @@ export const deleteCustomerLibary = /* GraphQL */ `
       pdf
       slide
       video
-      clientCourses
-      pschoolCourses
+      clientCourses {
+        nextToken
+        __typename
+      }
+      pschoolCourses {
+        nextToken
+        __typename
+      }
+      courses {
+        nextToken
+        __typename
+      }
       addOns
+      backgroundImage
       status
       createdAt
       updatedAt
@@ -8300,6 +8357,8 @@ export const createCourseReview = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       review
@@ -8396,6 +8455,8 @@ export const updateCourseReview = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       review
@@ -8492,6 +8553,8 @@ export const deleteCourseReview = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       review
@@ -10642,6 +10705,8 @@ export const createUserWishlist = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -10734,6 +10799,8 @@ export const updateUserWishlist = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -10826,6 +10893,8 @@ export const deleteUserWishlist = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -10886,6 +10955,8 @@ export const createCirriculumCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -10946,6 +11017,8 @@ export const updateCirriculumCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -11006,6 +11079,8 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -11056,6 +11131,8 @@ export const createCourseLessons = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       lMSLesson {
@@ -11119,6 +11196,8 @@ export const updateCourseLessons = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       lMSLesson {
@@ -11182,6 +11261,8 @@ export const deleteCourseLessons = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       lMSLesson {
@@ -11245,6 +11326,8 @@ export const createCourseInstructors = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       instructor {
@@ -11308,6 +11391,8 @@ export const updateCourseInstructors = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       instructor {
@@ -11371,6 +11456,8 @@ export const deleteCourseInstructors = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       instructor {
@@ -11434,6 +11521,8 @@ export const createAchievementCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       achievement {
@@ -11494,6 +11583,8 @@ export const updateAchievementCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       achievement {
@@ -11554,6 +11645,8 @@ export const deleteAchievementCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       achievement {
@@ -11614,6 +11707,8 @@ export const createPartnerCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       partner {
@@ -11673,6 +11768,8 @@ export const updatePartnerCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       partner {
@@ -11732,6 +11829,8 @@ export const deletePartnerCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       partner {
@@ -11739,6 +11838,222 @@ export const deletePartnerCourses = /* GraphQL */ `
         name
         image
         link
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createLibraryCourses = /* GraphQL */ `
+  mutation CreateLibraryCourses(
+    $input: CreateLibraryCoursesInput!
+    $condition: ModelLibraryCoursesConditionInput
+  ) {
+    createLibraryCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      customerLibaryId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      customerLibary {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateLibraryCourses = /* GraphQL */ `
+  mutation UpdateLibraryCourses(
+    $input: UpdateLibraryCoursesInput!
+    $condition: ModelLibraryCoursesConditionInput
+  ) {
+    updateLibraryCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      customerLibaryId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      customerLibary {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteLibraryCourses = /* GraphQL */ `
+  mutation DeleteLibraryCourses(
+    $input: DeleteLibraryCoursesInput!
+    $condition: ModelLibraryCoursesConditionInput
+  ) {
+    deleteLibraryCourses(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      customerLibaryId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      customerLibary {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        status
         createdAt
         updatedAt
         __typename

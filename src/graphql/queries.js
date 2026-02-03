@@ -1489,6 +1489,8 @@ export const getLearningPathCourse = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       learningPath {
@@ -2524,8 +2526,14 @@ export const getLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      libraries {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      customerLibaryClientCoursesId
+      customerLibaryPschoolCoursesId
       __typename
     }
   }
@@ -2570,6 +2578,8 @@ export const listLMSCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       nextToken
@@ -3121,9 +3131,20 @@ export const getCustomerLibary = /* GraphQL */ `
       pdf
       slide
       video
-      clientCourses
-      pschoolCourses
+      clientCourses {
+        nextToken
+        __typename
+      }
+      pschoolCourses {
+        nextToken
+        __typename
+      }
+      courses {
+        nextToken
+        __typename
+      }
       addOns
+      backgroundImage
       status
       createdAt
       updatedAt
@@ -3155,9 +3176,8 @@ export const listCustomerLibaries = /* GraphQL */ `
         pdf
         slide
         video
-        clientCourses
-        pschoolCourses
         addOns
+        backgroundImage
         status
         createdAt
         updatedAt
@@ -4796,6 +4816,8 @@ export const getCourseReview = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       review
@@ -5934,6 +5956,8 @@ export const getUserWishlist = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -6011,6 +6035,8 @@ export const getCirriculumCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       createdAt
@@ -6082,6 +6108,8 @@ export const getCourseLessons = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       lMSLesson {
@@ -6162,6 +6190,8 @@ export const getCourseInstructors = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       instructor {
@@ -6246,6 +6276,8 @@ export const getAchievementCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       achievement {
@@ -6327,6 +6359,8 @@ export const getPartnerCourses = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       partner {
@@ -6355,6 +6389,95 @@ export const listPartnerCourses = /* GraphQL */ `
         id
         lMSCourseId
         partnerId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getLibraryCourses = /* GraphQL */ `
+  query GetLibraryCourses($id: ID!) {
+    getLibraryCourses(id: $id) {
+      id
+      lMSCourseId
+      customerLibaryId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      customerLibary {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listLibraryCourses = /* GraphQL */ `
+  query ListLibraryCourses(
+    $filter: ModelLibraryCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLibraryCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        lMSCourseId
+        customerLibaryId
         createdAt
         updatedAt
         __typename
@@ -7309,6 +7432,8 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       nextToken
@@ -7364,6 +7489,8 @@ export const lMSCoursesBySlug = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
         __typename
       }
       nextToken
@@ -7526,9 +7653,8 @@ export const customerLibariesBySlug = /* GraphQL */ `
         pdf
         slide
         video
-        clientCourses
-        pschoolCourses
         addOns
+        backgroundImage
         status
         createdAt
         updatedAt
@@ -8962,6 +9088,62 @@ export const partnerCoursesByPartnerId = /* GraphQL */ `
         id
         lMSCourseId
         partnerId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const libraryCoursesByLMSCourseId = /* GraphQL */ `
+  query LibraryCoursesByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    libraryCoursesByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        customerLibaryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const libraryCoursesByCustomerLibaryId = /* GraphQL */ `
+  query LibraryCoursesByCustomerLibaryId(
+    $customerLibaryId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    libraryCoursesByCustomerLibaryId(
+      customerLibaryId: $customerLibaryId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        customerLibaryId
         createdAt
         updatedAt
         __typename
