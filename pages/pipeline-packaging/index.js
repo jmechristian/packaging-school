@@ -412,7 +412,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
                 <h2 className='text-2xl font-semibold tracking-tight text-[#0063BE] mt-3'>
                   {quarter.title}
                 </h2>
-                <p className='text-gray-600 max-w-4xl text-lg'>
+                <p className='text-gray-600 max-w-3xl text-lg'>
                   {quarter.description}
                 </p>
               </div>
