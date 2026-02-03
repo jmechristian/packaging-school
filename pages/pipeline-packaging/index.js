@@ -294,9 +294,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
         'Refer to the slide deck / PDF at the top of the page or email info@packagingschool.com.',
     },
   ];
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchQuery2, setSearchQuery2] = useState('');
-  const [searchQuery3, setSearchQuery3] = useState('');
+
   const [learningOfTheMonthQuery, setLearningOfTheMonthQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
@@ -380,20 +378,18 @@ const Page = ({ lib, learningOfTheMonths }) => {
         <div className='w-full flex flex-col gap-5 mt-10 lg:mt-0'>
           <div className='max-w-xl w-full text-gray-700 flex flex-col gap-2' dangerouslySetInnerHTML={{ __html: lib.description }} />
         </div>
-        <div className='flex flex-col gap-4'>
-          <div className='w-full flex items-center justify-center max-w-7xl mx-auto bg-red-100 px-3'>
-            <div className='text-gray-700 text-sm py-1.5 rounded'>
-              Company funds have enabled this course access —you may not enroll
-              anonymously or with private email addresses
-            </div>
-          </div>
-        </div>
+        
       </div>
-      <div className='w-full max-w-7xl mx-auto px-4 lg:px-10 pt-6 pb-2'>
-        <p className='max-w-3xl text-gray-600 leading-relaxed'>
-          Each quarter a selection of courses will be unlocked and accessible.
-          Q1 runs now through March 30, 2026; Q2 starts April 1, 2026; Q3
-          starts July 1, 2026; Q4 starts October 1, 2026.
+      <div className='w-full max-w-7xl mx-auto px-4 py-10 flex flex-col gap-4'>
+        <div className='flex flex-col gap-1'>
+        <h3 className={`text-2xl font-semibold  text-[#D3382C] uppercase tracking-widest`}>Learn. Grow. Advance.</h3>
+        <h2 className={`text-5xl font-semibold tracking-tight text-[#0063BE]`}>One Quarter at a Time</h2>
+        </div>
+        <p className='max-w-5xl text-gray-600 text-lg'>
+        Each quarter, team members will have access to 4–5 carefully selected courses from our curriculum, giving them the opportunity to complete all 18 courses over the year.
+        </p>
+        <p className='max-w-5xl text-gray-600 text-lg'>
+        The courses are organized into four progressive groups, each designed to build skills step by step—from foundational knowledge to advanced expertise. 
         </p>
       </div>
       {(() => {
@@ -413,7 +409,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               className='w-full max-w-7xl mx-auto flex flex-col gap-6 p-5 border-b bg-gray-200 rounded-lg mb-10'
             >
               <div className='flex flex-col gap-2 px-2'>
-                <h2 className='text-2xl font-bold tracking-tight text-gray-900 mt-3'>
+                <h2 className='text-2xl font-semibold tracking-tight text-[#0063BE] mt-3'>
                   {quarter.title}
                 </h2>
                 <p className='text-gray-600 max-w-4xl text-lg'>
