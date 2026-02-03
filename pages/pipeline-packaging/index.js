@@ -410,18 +410,18 @@ const Page = ({ lib, learningOfTheMonths }) => {
           return (
             <div
               key={quarter.key}
-              className='w-full max-w-7xl mx-auto flex flex-col gap-6 px-4 lg:px-10 pt-10 pb-10 border-b border-gray-200'
+              className='w-full max-w-7xl mx-auto flex flex-col gap-6 p-5 border-b bg-gray-200 rounded-lg mb-10'
             >
-              <div className='flex flex-col gap-2'>
-                <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
+              <div className='flex flex-col gap-2 px-2'>
+                <h2 className='text-2xl font-bold tracking-tight text-gray-900 mt-3'>
                   {quarter.title}
                 </h2>
-                <p className='text-gray-600 max-w-3xl leading-relaxed'>
+                <p className='text-gray-600 max-w-4xl text-lg'>
                   {quarter.description}
                 </p>
               </div>
               <div className='relative'>
-                <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+                <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8 p-4'>
                   {courseIdsToShow.map((courseId) => {
                     const fromLib = findCourse(courseId);
                     const idForFetch =
@@ -437,7 +437,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
                 </div>
                 {!unlocked && quarter.opensLabel && (
                   <div
-                    className='absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-gray-900/50'
+                    className='absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-gray-900/50'
                     aria-hidden
                   >
                     <div className='rounded-2xl border border-white/20 bg-white/90 px-8 py-5 text-center shadow-lg'>
@@ -456,7 +456,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
         });
       })()}
 
-        <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-5 pb-5 border-b border-gray-300'>
+        <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-4 border-y border-gray-300'>
           <div className='w-full flex items-center justify-between'>
             <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
               Your Learning of the Month
@@ -473,14 +473,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
             </div>
           </div>
         </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 px-10 pt-8 pb-8 border-b border-gray-300'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-5 border-y border-gray-300'>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {currentItems.map((lesson) => (
             <LOTMCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
         {totalPages > 1 && (
-          <div className='flex justify-center items-center gap-4 mt-8'>
+          <div className='flex justify-center items-center gap-4 mt-5'>
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
