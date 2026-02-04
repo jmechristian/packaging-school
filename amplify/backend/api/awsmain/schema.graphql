@@ -817,6 +817,7 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
   courses: [LMSCourse] @manyToMany(relationName: "LibraryCourses")
   addOns: [String]
   backgroundImage: String
+  code: String
   status: String @default(value: "DRAFT")
 }
 

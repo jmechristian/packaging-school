@@ -3145,6 +3145,7 @@ export const getCustomerLibary = /* GraphQL */ `
       }
       addOns
       backgroundImage
+      code
       status
       createdAt
       updatedAt
@@ -3178,6 +3179,7 @@ export const listCustomerLibaries = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt
@@ -6456,6 +6458,7 @@ export const getLibraryCourses = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt
@@ -7655,6 +7658,7 @@ export const customerLibariesBySlug = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt

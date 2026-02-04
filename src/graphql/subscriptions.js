@@ -5504,6 +5504,7 @@ export const onCreateCustomerLibary = /* GraphQL */ `
       }
       addOns
       backgroundImage
+      code
       status
       createdAt
       updatedAt
@@ -5542,6 +5543,7 @@ export const onUpdateCustomerLibary = /* GraphQL */ `
       }
       addOns
       backgroundImage
+      code
       status
       createdAt
       updatedAt
@@ -5580,6 +5582,7 @@ export const onDeleteCustomerLibary = /* GraphQL */ `
       }
       addOns
       backgroundImage
+      code
       status
       createdAt
       updatedAt
@@ -11419,6 +11422,7 @@ export const onCreateLibraryCourses = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt
@@ -11490,6 +11494,7 @@ export const onUpdateLibraryCourses = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt
@@ -11561,6 +11566,7 @@ export const onDeleteLibraryCourses = /* GraphQL */ `
         video
         addOns
         backgroundImage
+        code
         status
         createdAt
         updatedAt
