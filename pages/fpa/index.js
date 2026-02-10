@@ -5,6 +5,7 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/20/solid';
+import Image from 'next/legacy/image';
 
 const Fpas = () => {
   const router = useRouter();
@@ -123,11 +124,9 @@ const Fpas = () => {
             parsed
               .filter(
                 (v) =>
-                  v &&
-                  typeof v.name === 'string' &&
-                  Array.isArray(v.columns)
+                  v && typeof v.name === 'string' && Array.isArray(v.columns),
               )
-              .slice(0, 3)
+              .slice(0, 3),
           );
         }
       }
@@ -258,36 +257,38 @@ const Fpas = () => {
 
     setNewViewName(trimmedName);
 
-    saveCustomViewsToStorage((prev => {
-      const currentViews = Array.isArray(prev) ? prev : [];
-      const existingIndex = currentViews.findIndex(
-        (v) => v.name.toLowerCase() === trimmedName.toLowerCase()
-      );
+    saveCustomViewsToStorage(
+      ((prev) => {
+        const currentViews = Array.isArray(prev) ? prev : [];
+        const existingIndex = currentViews.findIndex(
+          (v) => v.name.toLowerCase() === trimmedName.toLowerCase(),
+        );
 
-      const newView = {
-        name: trimmedName,
-        columns: visibleColumns,
-      };
+        const newView = {
+          name: trimmedName,
+          columns: visibleColumns,
+        };
 
-      if (existingIndex !== -1) {
-        const updated = [...currentViews];
-        updated[existingIndex] = newView;
-        return updated;
-      }
+        if (existingIndex !== -1) {
+          const updated = [...currentViews];
+          updated[existingIndex] = newView;
+          return updated;
+        }
 
-      if (currentViews.length >= 3) {
-        // Prevent creating more than 3 uniquely named views
-        return currentViews;
-      }
+        if (currentViews.length >= 3) {
+          // Prevent creating more than 3 uniquely named views
+          return currentViews;
+        }
 
-      return [...currentViews, newView];
-    })(customViews));
+        return [...currentViews, newView];
+      })(customViews),
+    );
   };
 
   const applyCustomView = (viewName) => {
     if (!viewName) return;
     const view = customViews.find(
-      (v) => v.name.toLowerCase() === viewName.toLowerCase()
+      (v) => v.name.toLowerCase() === viewName.toLowerCase(),
     );
     if (view && Array.isArray(view.columns) && view.columns.length > 0) {
       setVisibleColumns(view.columns);
@@ -455,13 +456,21 @@ const Fpas = () => {
 
   return (
     <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[96vw]'>
-      <div className='mb-4 sm:mb-6'>
-        <h1 className='text-2xl sm:text-3xl font-bold mb-2'>
-          FPA - WIC - CA - 2025
-        </h1>
-        <p className='text-sm sm:text-base text-gray-600'>
-          Showing {sortedData.length} of {data.length} records
-        </p>
+      <div className='mb-4 sm:mb-6 flex items-end justify-between gap-6'>
+        <div>
+          <Image
+            src='https://packschool.s3.us-east-1.amazonaws.com/fpa-350x233-1.png'
+            alt='FPA Logo'
+            width={350}
+            height={100}
+          />
+        </div>
+        <div className='flex flex-col gap-1'>
+          <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
+          <p className='text-sm sm:text-base text-gray-600'>
+            Showing {sortedData.length} of {data.length} records
+          </p>
+        </div>
       </div>
 
       {/* Search + Column Controls */}
@@ -750,7 +759,7 @@ const Fpas = () => {
                         !customViews.some(
                           (v) =>
                             v.name.toLowerCase() ===
-                            newViewName.trim().toLowerCase()
+                            newViewName.trim().toLowerCase(),
                         ))
                     }
                     className={`text-xs sm:text-sm px-3 py-1.5 rounded border ${
@@ -761,7 +770,7 @@ const Fpas = () => {
                         !customViews.some(
                           (v) =>
                             v.name.toLowerCase() ===
-                            newViewName.trim().toLowerCase()
+                            newViewName.trim().toLowerCase(),
                         ))
                         ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
                         : 'border-blue-600 text-blue-600 bg-white hover:bg-blue-50'
