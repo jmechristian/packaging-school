@@ -18,10 +18,7 @@ import {
   createNewOrder,
   getPipelineLibrary,
 } from '../../helpers/api';
-import {
-  MinusIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
 const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
@@ -97,6 +94,68 @@ function isQuarterUnlocked(quarter, asOf = new Date()) {
   if (!quarter.unlockDate) return true; // Q1
   return asOf >= quarter.unlockDate;
 }
+
+function getTimeRemaining(targetDate) {
+  const now = new Date();
+  const diff = targetDate.getTime() - now.getTime();
+  if (diff <= 0)
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true };
+  const totalSeconds = Math.floor(diff / 1000);
+  const seconds = totalSeconds % 60;
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const minutes = totalMinutes % 60;
+  const totalHours = Math.floor(totalMinutes / 60);
+  const hours = totalHours % 24;
+  const days = Math.floor(totalHours / 24);
+  return { days, hours, minutes, seconds, isPast: false };
+}
+
+const CountdownTimer = ({ targetDate }) => {
+  const [mounted, setMounted] = useState(false);
+  const [remaining, setRemaining] = useState({
+    isPast: false,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const targetTime = targetDate.getTime();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const tick = () => setRemaining(getTimeRemaining(new Date(targetTime)));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [mounted, targetTime]);
+
+  if (!mounted) {
+    return (
+      <p className='mt-2 text-sm font-medium text-[#0063BE] tabular-nums min-h-[1.25rem]'>
+        —
+      </p>
+    );
+  }
+
+  if (remaining.isPast) return null;
+
+  const parts = [];
+  if (remaining.days > 0)
+    parts.push(`${remaining.days} day${remaining.days !== 1 ? 's' : ''}`);
+  parts.push(`${String(remaining.hours).padStart(2, '0')}h`);
+  parts.push(`${String(remaining.minutes).padStart(2, '0')}m`);
+  parts.push(`${String(remaining.seconds).padStart(2, '0')}s`);
+
+  return (
+    <p className='mt-2 text-sm font-medium text-[#0063BE] tabular-nums'>
+      {parts.join(' ')}
+    </p>
+  );
+};
 
 const LOTMCard = ({ lesson }) => {
   const formatDate = (dateString) => {
@@ -191,7 +250,7 @@ const CourseCard = ({ course, searchQuery }) => {
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `${courseData.link}?coupon=pipelinepackaging`,
-        `${courseData.link}?coupon=pipelinepackaging`
+        `${courseData.link}?coupon=pipelinepackaging`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -328,12 +387,13 @@ const Page = ({ lib, learningOfTheMonths }) => {
     }
 
     // Chrome, Safari, modern Edge: no JS API; show keyboard shortcut
-    const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const isMac =
+      typeof navigator !== 'undefined' &&
+      /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const shortcut = isMac ? 'Cmd+D' : 'Ctrl+D';
     setBookmarkHint(shortcut);
     setTimeout(() => setBookmarkHint(null), 4000);
   };
-
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -346,10 +406,8 @@ const Page = ({ lib, learningOfTheMonths }) => {
         .includes(learningOfTheMonthQuery.toLowerCase()) ||
       lesson.subhead
         .toLowerCase()
-        .includes(learningOfTheMonthQuery.toLowerCase())
+        .includes(learningOfTheMonthQuery.toLowerCase()),
   );
-
-
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -377,23 +435,24 @@ const Page = ({ lib, learningOfTheMonths }) => {
             role='status'
             aria-live='polite'
           >
-            Press <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>{bookmarkHint}</kbd> to bookmark
+            Press{' '}
+            <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>
+              {bookmarkHint}
+            </kbd>{' '}
+            to bookmark
           </div>
         )}
         <div
           className='rounded-lg h-[180px] lg:h-[240px] row-span-full col-start-1 col-span-9 lg:self-center flex items-center relative'
           style={{
             backgroundImage: `url(${lib.backgroundImage})`,
-
           }}
         >
           <div className='absolute inset-0 opacity-90'></div>
           <div className='w-full lg:w-1/2 flex justify-center items-center gap-5 px-10 relative z-10'>
             <div className='w-[300px] lg:w-[350px]'>
               <Image
-                src={
-                  `${lib.logo}`
-                }
+                src={`${lib.logo}`}
                 alt='pipeline-logo'
                 width={500}
                 height={192}
@@ -406,9 +465,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             <ReactGoogleSlides
               width={'100%'}
               height={'100%'}
-              slidesLink={
-                `${lib.slide}`
-              }
+              slidesLink={`${lib.slide}`}
               position={1}
               showControls
               loop
@@ -416,10 +473,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             <div
               className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
               onClick={() => {
-                window.open(
-                  `${lib.pdf}`,
-                  '_blank'
-                );
+                window.open(`${lib.pdf}`, '_blank');
               }}
             >
               <div className='text-gray-700'>Download as PDF</div>
@@ -430,26 +484,42 @@ const Page = ({ lib, learningOfTheMonths }) => {
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-8 border-b border-gray-300'>
         <div className='w-full flex flex-col gap-5 mt-10 lg:mt-0'>
-          <div className='max-w-xl w-full text-gray-700 flex flex-col gap-2' dangerouslySetInnerHTML={{ __html: lib.description }} />
+          <div
+            className='max-w-xl w-full text-gray-700 flex flex-col gap-2'
+            dangerouslySetInnerHTML={{ __html: lib.description }}
+          />
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto px-4 py-10 flex flex-col gap-4'>
         <div className='flex flex-col gap-1'>
-        <h3 className={`text-2xl font-semibold  text-[#D3382C] uppercase tracking-widest`}>Learn. Grow. Advance.</h3>
-        <h2 className={`text-5xl font-semibold tracking-tight text-[#0063BE]`}>One Quarter at a Time</h2>
+          <h3
+            className={`text-2xl font-semibold  text-[#D3382C] uppercase tracking-widest`}
+          >
+            Learn. Grow. Advance.
+          </h3>
+          <h2
+            className={`text-5xl font-semibold tracking-tight text-[#0063BE]`}
+          >
+            One Quarter at a Time
+          </h2>
         </div>
         <p className='max-w-5xl text-gray-600 text-lg'>
-        Each quarter, team members will have access to 4–5 carefully selected courses from our curriculum, giving them the opportunity to complete all 18 courses over the year.
+          Each quarter, team members will have access to carefully selected
+          courses from our curriculum, giving them the opportunity to complete
+          all 18 courses over the year.
         </p>
         <p className='max-w-5xl text-gray-600 text-lg'>
-        The courses are organized into four progressive groups, each designed to build skills step by step—from foundational knowledge to advanced expertise. 
+          The courses are organized into four progressive groups, each designed
+          to build skills step by step—from foundational knowledge to advanced
+          expertise.
         </p>
       </div>
       {(() => {
-        const psCourses = lib?.pschoolCourses?.items ?? lib?.pschoolCourses ?? [];
+        const psCourses =
+          lib?.pschoolCourses?.items ?? lib?.pschoolCourses ?? [];
         const findCourse = (courseId) =>
           psCourses.find(
-            (c) => c?.id === courseId || c?.thinkificId === courseId
+            (c) => c?.id === courseId || c?.thinkificId === courseId,
           );
         return PIPELINE_QUARTERS.map((quarter) => {
           const unlocked = isQuarterUnlocked(quarter);
@@ -496,6 +566,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
                       <p className='mt-1 text-sm text-gray-600'>
                         Enrollment opens {quarter.opensLabel}
                       </p>
+                      <CountdownTimer targetDate={quarter.unlockDate} />
                     </div>
                   </div>
                 )}
@@ -505,23 +576,23 @@ const Page = ({ lib, learningOfTheMonths }) => {
         });
       })()}
 
-        <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-4 border-y border-gray-300'>
-          <div className='w-full flex items-center justify-between'>
-            <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
-              Your Learning of the Month
-            </div>
-            <div className='relative flex items-center'>
-              <input
-                type='text'
-                value={learningOfTheMonthQuery}
-                onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
-                placeholder='Search courses...'
-                className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:border-transparent'
-              />
-              <MdSearch className='absolute left-3 text-gray-400 text-xl' />
-            </div>
+      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-4 border-y border-gray-300'>
+        <div className='w-full flex items-center justify-between'>
+          <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
+            Your Learning of the Month
+          </div>
+          <div className='relative flex items-center'>
+            <input
+              type='text'
+              value={learningOfTheMonthQuery}
+              onChange={(e) => setLearningOfTheMonthQuery(e.target.value)}
+              placeholder='Search courses...'
+              className='pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:border-transparent'
+            />
+            <MdSearch className='absolute left-3 text-gray-400 text-xl' />
           </div>
         </div>
+      </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-5 border-y border-gray-300'>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {currentItems.map((lesson) => (
