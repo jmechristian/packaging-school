@@ -12,6 +12,8 @@ const Fpas = () => {
   const [headers, setHeaders] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
+  const [customViews, setCustomViews] = useState([]);
+  const [newViewName, setNewViewName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +28,7 @@ const Fpas = () => {
   const range =
     router.query.range || 'Database (excl. unavail./incorrect prods)';
 
+  // Load sheet data
   useEffect(() => {
     if (!sheetId) {
       setError(
@@ -107,6 +110,31 @@ const Fpas = () => {
 
     fetchSheetData();
   }, [sheetId, range]);
+
+  // Load saved custom column views from localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = window.localStorage.getItem('fpaCustomViews');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setCustomViews(
+            parsed
+              .filter(
+                (v) =>
+                  v &&
+                  typeof v.name === 'string' &&
+                  Array.isArray(v.columns)
+              )
+              .slice(0, 3)
+          );
+        }
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }, []);
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -208,6 +236,61 @@ const Fpas = () => {
       );
     if (compactKeys.length > 0) {
       setVisibleColumns(compactKeys);
+    }
+  };
+
+  const saveCustomViewsToStorage = (views) => {
+    setCustomViews(views);
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.setItem('fpaCustomViews', JSON.stringify(views));
+      } catch {
+        // ignore storage errors
+      }
+    }
+  };
+
+  const handleSaveCurrentView = () => {
+    const trimmedName = newViewName.trim();
+    if (!trimmedName || !visibleColumns || visibleColumns.length === 0) {
+      return;
+    }
+
+    setNewViewName(trimmedName);
+
+    saveCustomViewsToStorage((prev => {
+      const currentViews = Array.isArray(prev) ? prev : [];
+      const existingIndex = currentViews.findIndex(
+        (v) => v.name.toLowerCase() === trimmedName.toLowerCase()
+      );
+
+      const newView = {
+        name: trimmedName,
+        columns: visibleColumns,
+      };
+
+      if (existingIndex !== -1) {
+        const updated = [...currentViews];
+        updated[existingIndex] = newView;
+        return updated;
+      }
+
+      if (currentViews.length >= 3) {
+        // Prevent creating more than 3 uniquely named views
+        return currentViews;
+      }
+
+      return [...currentViews, newView];
+    })(customViews));
+  };
+
+  const applyCustomView = (viewName) => {
+    if (!viewName) return;
+    const view = customViews.find(
+      (v) => v.name.toLowerCase() === viewName.toLowerCase()
+    );
+    if (view && Array.isArray(view.columns) && view.columns.length > 0) {
+      setVisibleColumns(view.columns);
     }
   };
 
@@ -399,7 +482,7 @@ const Fpas = () => {
               />
             </div>
 
-            {/* Quick View Buttons + Open Modal */}
+            {/* Quick View Buttons + Custom Views + Open Modal */}
             <div className='flex flex-wrap items-center gap-2'>
               <button
                 type='button'
@@ -415,6 +498,27 @@ const Fpas = () => {
               >
                 Compact view
               </button>
+
+              {customViews.length > 0 && (
+                <select
+                  className='text-xs sm:text-sm px-3 pr-6 py-1 rounded border border-gray-300 bg-white hover:bg-gray-50 min-w-[130px]'
+                  defaultValue=''
+                  onChange={(e) => {
+                    applyCustomView(e.target.value);
+                    e.target.value = '';
+                  }}
+                >
+                  <option value='' disabled>
+                    Custom
+                  </option>
+                  {customViews.map((view) => (
+                    <option key={view.name} value={view.name}>
+                      {view.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+
               <button
                 type='button'
                 onClick={() => setIsColumnModalOpen(true)}
@@ -603,25 +707,74 @@ const Fpas = () => {
               </button>
             </div>
 
-            <div className='px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-2'>
-              <button
-                type='button'
-                onClick={showAllColumns}
-                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-              >
-                Show all
-              </button>
-              <button
-                type='button'
-                onClick={hideAllNonKeyColumns}
-                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-              >
-                Compact view
-              </button>
-              <span className='text-xs text-gray-500'>
-                ({visibleColumns?.length || headers.length} visible of{' '}
-                {headers.length})
-              </span>
+            <div className='px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-3 sm:gap-4'>
+              <div className='flex flex-wrap items-center gap-2'>
+                <button
+                  type='button'
+                  onClick={showAllColumns}
+                  className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+                >
+                  Show all
+                </button>
+                <button
+                  type='button'
+                  onClick={hideAllNonKeyColumns}
+                  className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+                >
+                  Compact view
+                </button>
+                <span className='text-xs text-gray-500'>
+                  ({visibleColumns?.length || headers.length} visible of{' '}
+                  {headers.length})
+                </span>
+              </div>
+
+              <div className='flex-1 flex flex-col items-start sm:items-end gap-1'>
+                <div className='flex flex-wrap items-center gap-2'>
+                  <input
+                    type='text'
+                    value={newViewName}
+                    onChange={(e) => setNewViewName(e.target.value)}
+                    maxLength={40}
+                    placeholder='Name this layout…'
+                    className='flex-shrink min-w-[140px] max-w-[220px] text-xs sm:text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500'
+                  />
+                  <button
+                    type='button'
+                    onClick={handleSaveCurrentView}
+                    disabled={
+                      !newViewName.trim() ||
+                      !visibleColumns ||
+                      visibleColumns.length === 0 ||
+                      (customViews.length >= 3 &&
+                        !customViews.some(
+                          (v) =>
+                            v.name.toLowerCase() ===
+                            newViewName.trim().toLowerCase()
+                        ))
+                    }
+                    className={`text-xs sm:text-sm px-3 py-1.5 rounded border ${
+                      !newViewName.trim() ||
+                      !visibleColumns ||
+                      visibleColumns.length === 0 ||
+                      (customViews.length >= 3 &&
+                        !customViews.some(
+                          (v) =>
+                            v.name.toLowerCase() ===
+                            newViewName.trim().toLowerCase()
+                        ))
+                        ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
+                        : 'border-blue-600 text-blue-600 bg-white hover:bg-blue-50'
+                    }`}
+                  >
+                    Save layout
+                  </button>
+                </div>
+                <span className='text-[10px] text-gray-400'>
+                  You can save up to 3 custom layouts. Reuse a name to update an
+                  existing one.
+                </span>
+              </div>
             </div>
 
             <div className='px-4 py-3 overflow-y-auto flex-1'>
