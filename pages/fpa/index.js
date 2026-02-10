@@ -5,12 +5,13 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/20/solid';
-import Pagination from '../../components/shared/Pagination';
 
 const Fpas = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [headers, setHeaders] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState([]);
+  const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,8 +19,6 @@ const Fpas = () => {
     key: null,
     direction: 'asc',
   });
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 50;
 
   // Get sheetId from query params or use environment variable
   const sheetId =
@@ -30,7 +29,7 @@ const Fpas = () => {
   useEffect(() => {
     if (!sheetId) {
       setError(
-        'Sheet ID is required. Please provide it as a query parameter or set NEXT_PUBLIC_GOOGLE_SHEET_ID.'
+        'Sheet ID is required. Please provide it as a query parameter or set NEXT_PUBLIC_GOOGLE_SHEET_ID.',
       );
       setIsLoading(false);
       return;
@@ -43,8 +42,8 @@ const Fpas = () => {
 
         const response = await fetch(
           `/api/sheets/fpas?sheetId=${sheetId}&range=${encodeURIComponent(
-            range
-          )}`
+            range,
+          )}`,
         );
 
         if (!response.ok) {
@@ -95,6 +94,10 @@ const Fpas = () => {
 
         setData(result.data || []);
         setHeaders(displayHeaders);
+        // Initialize visible columns to all headers when data loads
+        setVisibleColumns(
+          displayHeaders.map((h) => (typeof h === 'string' ? h : h.original)),
+        );
       } catch (err) {
         setError(err.message);
       } finally {
@@ -113,7 +116,7 @@ const Fpas = () => {
       headers.some((headerObj) => {
         const value = String(row[headerObj.original] || '').toLowerCase();
         return value.includes(searchTerm.toLowerCase());
-      })
+      }),
     );
   }, [data, headers, searchTerm]);
 
@@ -150,16 +153,63 @@ const Fpas = () => {
     });
   }, [filteredData, sortConfig]);
 
-  // Pagination
-  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = sortedData.slice(startIndex, endIndex);
+  // Show all sorted results without pagination
+  const paginatedData = sortedData;
 
-  // Reset to first page when search or sort changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, sortConfig]);
+  // Column visibility helpers
+  const isColumnVisible = (headerObj) => {
+    const key = typeof headerObj === 'string' ? headerObj : headerObj.original;
+    // If no visibility state yet, default to visible
+    if (!visibleColumns || visibleColumns.length === 0) return true;
+    return visibleColumns.includes(key);
+  };
+
+  const toggleColumnVisibility = (headerKey) => {
+    setVisibleColumns((prev) => {
+      if (!prev || prev.length === 0) {
+        // If uninitialized, start from all current headers
+        const allKeys = headers.map((h) =>
+          typeof h === 'string' ? h : h.original,
+        );
+        return allKeys.filter((key) => key !== headerKey);
+      }
+
+      if (prev.includes(headerKey)) {
+        // Prevent hiding all columns
+        if (prev.length === 1) return prev;
+        return prev.filter((key) => key !== headerKey);
+      }
+      return [...prev, headerKey];
+    });
+  };
+
+  const showAllColumns = () => {
+    setVisibleColumns(
+      headers.map((h) => (typeof h === 'string' ? h : h.original)),
+    );
+  };
+
+  const hideAllNonKeyColumns = () => {
+    // Example "compact" view: keep a small set of important columns
+    const importantKeywords = [
+      'UPC',
+      'Product',
+      'Brand',
+      'Store',
+      'Shopping Day',
+      'Shelf life remaining (days)',
+    ];
+    const compactKeys = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .filter((key) =>
+        importantKeywords.some((k) =>
+          String(key).toLowerCase().includes(k.toLowerCase()),
+        ),
+      );
+    if (compactKeys.length > 0) {
+      setVisibleColumns(compactKeys);
+    }
+  };
 
   const requestSort = (headerObj) => {
     const key = typeof headerObj === 'string' ? headerObj : headerObj.original;
@@ -321,7 +371,7 @@ const Fpas = () => {
   }
 
   return (
-    <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[1900px]'>
+    <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[96vw]'>
       <div className='mb-4 sm:mb-6'>
         <h1 className='text-2xl sm:text-3xl font-bold mb-2'>
           FPA - WIC - CA - 2025
@@ -331,86 +381,122 @@ const Fpas = () => {
         </p>
       </div>
 
-      {/* Search Controls */}
-      <div className='bg-white border border-gray-300 rounded-lg p-3 sm:p-4 mb-4 shadow-sm'>
-        <div className='relative w-full'>
-          <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-            <MagnifyingGlassIcon className='h-5 w-5 text-gray-400' />
+      {/* Search + Column Controls */}
+      <div className='space-y-3 sm:space-y-4 mb-4'>
+        {/* Search Controls */}
+        <div className='bg-white border border-gray-300 rounded-lg p-3 sm:p-4 shadow-sm'>
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+            <div className='relative flex-1'>
+              <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                <MagnifyingGlassIcon className='h-5 w-5 text-gray-400' />
+              </div>
+              <input
+                type='text'
+                placeholder='Search across all columns...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className='block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base'
+              />
+            </div>
+
+            {/* Quick View Buttons + Open Modal */}
+            <div className='flex flex-wrap items-center gap-2'>
+              <button
+                type='button'
+                onClick={showAllColumns}
+                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+              >
+                Show all
+              </button>
+              <button
+                type='button'
+                onClick={hideAllNonKeyColumns}
+                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+              >
+                Compact view
+              </button>
+              <button
+                type='button'
+                onClick={() => setIsColumnModalOpen(true)}
+                className='text-xs sm:text-sm px-2.5 py-1.5 rounded border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 font-medium'
+              >
+                Columns…
+              </button>
+              <span className='text-xs text-gray-500'>
+                ({visibleColumns?.length || headers.length} visible)
+              </span>
+            </div>
           </div>
-          <input
-            type='text'
-            placeholder='Search across all columns...'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className='block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base'
-          />
         </div>
       </div>
 
       {/* Table Container */}
       <div className='bg-white border border-gray-300 rounded-lg shadow-sm'>
-        <div className='overflow-x-auto overflow-y-auto max-h-[calc(100vh-250px)] sm:max-h-[calc(100vh-300px)]'>
+        <div className='overflow-x-auto'>
           <table
             className='divide-y divide-gray-200'
-            style={{ minWidth: `${Math.max(headers.length * 120, 1200)}px` }}
+            style={{ minWidth: `${Math.max(headers.length * 180, 1600)}px` }}
           >
             <thead className='bg-gray-50 sticky top-0 z-10'>
               <tr>
-                {headers.map((headerObj, index) => {
-                  const header =
-                    typeof headerObj === 'string'
-                      ? headerObj
-                      : headerObj.display || headerObj.original;
-                  const originalHeader =
-                    typeof headerObj === 'string'
-                      ? headerObj
-                      : headerObj.original;
-                  // Determine column width based on header
-                  const isLongHeader = header && header.length > 30;
-                  const isLocationHeader =
-                    header &&
-                    (header.includes('CA') ||
-                      header.includes('Urban') ||
-                      header.includes('Rural'));
-                  const isPriceHeader = header === 'Shopping Day';
-                  const isNumericHeader =
-                    header &&
-                    (header.includes('Shelf life') || header.includes('USDA'));
+                {headers
+                  .filter((headerObj) => isColumnVisible(headerObj))
+                  .map((headerObj, index) => {
+                    const header =
+                      typeof headerObj === 'string'
+                        ? headerObj
+                        : headerObj.display || headerObj.original;
+                    const originalHeader =
+                      typeof headerObj === 'string'
+                        ? headerObj
+                        : headerObj.original;
+                    // Determine column width based on header
+                    const isLongHeader = header && header.length > 24;
+                    const isLocationHeader =
+                      header &&
+                      (header.includes('CA') ||
+                        header.includes('Urban') ||
+                        header.includes('Rural'));
+                    const isPriceHeader = header === 'Shopping Day';
+                    const isNumericHeader =
+                      header &&
+                      (header.includes('Shelf life') ||
+                        header.includes('USDA'));
 
-                  let colClass =
-                    'px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors';
+                    let colClass =
+                      'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors';
 
-                  if (isLocationHeader) {
-                    colClass += ' min-w-[200px] sm:min-w-[250px]';
-                  } else if (isPriceHeader) {
-                    colClass += ' min-w-[100px]';
-                  } else if (isNumericHeader) {
-                    colClass += ' min-w-[120px]';
-                  } else if (isLongHeader) {
-                    colClass += ' min-w-[150px]';
-                  }
+                    if (isLocationHeader) {
+                      colClass += ' min-w-[260px] sm:min-w-[320px]';
+                    } else if (isPriceHeader) {
+                      colClass += ' min-w-[140px]';
+                    } else if (isNumericHeader) {
+                      colClass += ' min-w-[140px]';
+                    } else if (isLongHeader) {
+                      colClass += ' min-w-[200px]';
+                    }
 
-                  return (
-                    <th
-                      key={index}
-                      scope='col'
-                      className={colClass}
-                      onClick={() => requestSort(headerObj)}
-                    >
-                      <div className='flex items-start space-x-1'>
-                        <span
-                          className='break-words leading-tight'
-                          title={originalHeader}
-                        >
-                          {header || `Column ${index + 1}`}
-                        </span>
-                        <span className='flex-shrink-0 mt-0.5'>
-                          {getSortIcon(headerObj)}
-                        </span>
-                      </div>
-                    </th>
-                  );
-                })}
+                    return (
+                      <th
+                        key={originalHeader || index}
+                        scope='col'
+                        className={colClass}
+                        onClick={() => requestSort(headerObj)}
+                      >
+                        <div className='flex items-start space-x-1'>
+                          <span
+                            className='break-words leading-tight'
+                            title={originalHeader}
+                          >
+                            {header || `Column ${index + 1}`}
+                          </span>
+                          <span className='flex-shrink-0 mt-0.5'>
+                            {getSortIcon(headerObj)}
+                          </span>
+                        </div>
+                      </th>
+                    );
+                  })}
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
@@ -429,89 +515,158 @@ const Fpas = () => {
 
                 return (
                   <tr key={rowIndex} className={rowClass}>
-                    {headers.map((headerObj, colIndex) => {
-                      const originalHeader =
-                        typeof headerObj === 'string'
-                          ? headerObj
-                          : headerObj.original;
-                      const displayHeader =
-                        typeof headerObj === 'string'
-                          ? headerObj
-                          : headerObj.display || headerObj.original;
-                      const value = row[originalHeader];
-                      const isLocationCol =
-                        displayHeader &&
-                        (displayHeader.includes('CA') ||
-                          displayHeader.includes('Urban') ||
-                          displayHeader.includes('Rural'));
-                      const isPriceCol = displayHeader === 'Shopping Day';
-                      const isNumericCol =
-                        displayHeader &&
-                        (displayHeader.includes('Shelf life') ||
-                          displayHeader.includes('USDA'));
+                    {headers
+                      .filter((headerObj) => isColumnVisible(headerObj))
+                      .map((headerObj, colIndex) => {
+                        const originalHeader =
+                          typeof headerObj === 'string'
+                            ? headerObj
+                            : headerObj.original;
+                        const displayHeader =
+                          typeof headerObj === 'string'
+                            ? headerObj
+                            : headerObj.display || headerObj.original;
+                        const value = row[originalHeader];
+                        const isLocationCol =
+                          displayHeader &&
+                          (displayHeader.includes('CA') ||
+                            displayHeader.includes('Urban') ||
+                            displayHeader.includes('Rural'));
+                        const isPriceCol = displayHeader === 'Shopping Day';
+                        const isNumericCol =
+                          displayHeader &&
+                          (displayHeader.includes('Shelf life') ||
+                            displayHeader.includes('USDA'));
 
-                      let cellClass =
-                        'px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-xs sm:text-sm border-b border-gray-100';
+                        let cellClass =
+                          'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-xs sm:text-sm border-b border-gray-100';
 
-                      if (isHeader) {
-                        cellClass += ' text-blue-900';
-                      } else if (isSummary) {
-                        cellClass += ' text-yellow-900 font-medium';
-                      } else {
-                        cellClass += ' text-gray-900';
-                      }
+                        if (isHeader) {
+                          cellClass += ' text-blue-900';
+                        } else if (isSummary) {
+                          cellClass += ' text-yellow-900 font-medium';
+                        } else {
+                          cellClass += ' text-gray-900';
+                        }
 
-                      if (isLocationCol) {
-                        cellClass += ' max-w-[250px]';
-                      } else if (isPriceCol) {
-                        cellClass += ' text-right';
-                      } else if (isNumericCol) {
-                        cellClass += ' text-right';
-                      }
+                        if (isLocationCol) {
+                          cellClass += ' max-w-[320px]';
+                        } else if (isPriceCol) {
+                          cellClass += ' text-right';
+                        } else if (isNumericCol) {
+                          cellClass += ' text-right';
+                        }
 
-                      return (
-                        <td key={colIndex} className={cellClass}>
-                          <div
-                            className={isLocationCol ? 'truncate' : ''}
-                            title={value ? String(value) : ''}
+                        return (
+                          <td
+                            key={originalHeader || colIndex}
+                            className={cellClass}
                           >
-                            {formatCellValue(value, displayHeader)}
-                          </div>
-                        </td>
-                      );
-                    })}
+                            <div
+                              className={isLocationCol ? 'truncate' : ''}
+                              title={value ? String(value) : ''}
+                            >
+                              {formatCellValue(value, displayHeader)}
+                            </div>
+                          </td>
+                        );
+                      })}
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className='bg-gray-50 px-3 sm:px-4 py-3 border-t border-gray-200'>
-            <div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0'>
-              <div className='text-xs sm:text-sm text-gray-700 text-center sm:text-left'>
-                Showing{' '}
-                <span className='font-medium'>
-                  {startIndex + 1} to {Math.min(endIndex, sortedData.length)}
-                </span>{' '}
-                of <span className='font-medium'>{sortedData.length}</span>{' '}
-                results
+      {/* Column Selector Modal */}
+      {isColumnModalOpen && (
+        <div className='fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40'>
+          <div className='bg-white rounded-lg shadow-xl max-w-5xl w-full mx-4 max-h-[80vh] flex flex-col'>
+            <div className='flex items-start justify-between px-4 py-3 border-b border-gray-200'>
+              <div>
+                <h2 className='text-sm sm:text-base font-semibold text-gray-900'>
+                  Configure columns
+                </h2>
+                <p className='mt-0.5 text-xs text-gray-500'>
+                  Choose which columns to show. You can refine these into saved
+                  views later.
+                </p>
               </div>
-              <Pagination
-                totalItems={sortedData.length}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-              />
+              <button
+                type='button'
+                onClick={() => setIsColumnModalOpen(false)}
+                className='text-gray-400 hover:text-gray-600 text-xl leading-none px-1'
+                aria-label='Close'
+              >
+                ×
+              </button>
+            </div>
+
+            <div className='px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-2'>
+              <button
+                type='button'
+                onClick={showAllColumns}
+                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+              >
+                Show all
+              </button>
+              <button
+                type='button'
+                onClick={hideAllNonKeyColumns}
+                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+              >
+                Compact view
+              </button>
+              <span className='text-xs text-gray-500'>
+                ({visibleColumns?.length || headers.length} visible of{' '}
+                {headers.length})
+              </span>
+            </div>
+
+            <div className='px-4 py-3 overflow-y-auto flex-1'>
+              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs sm:text-sm'>
+                {headers.map((headerObj, index) => {
+                  const originalKey =
+                    typeof headerObj === 'string'
+                      ? headerObj
+                      : headerObj.original;
+                  const displayName =
+                    typeof headerObj === 'string'
+                      ? headerObj
+                      : headerObj.display || headerObj.original;
+
+                  return (
+                    <label
+                      key={originalKey || index}
+                      className='inline-flex items-center gap-1 cursor-pointer'
+                      title={originalKey}
+                    >
+                      <input
+                        type='checkbox'
+                        className='h-3 w-3 sm:h-4 sm:w-4 text-blue-600 border-gray-300 rounded'
+                        checked={isColumnVisible(headerObj)}
+                        onChange={() => toggleColumnVisibility(originalKey)}
+                      />
+                      <span className='truncate'>{displayName}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className='px-4 py-3 border-t border-gray-200 flex justify-end gap-2'>
+              <button
+                type='button'
+                className='text-xs sm:text-sm px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50'
+                onClick={() => setIsColumnModalOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

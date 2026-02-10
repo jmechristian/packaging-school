@@ -16,8 +16,6 @@ import {
   BoltIcon,
   MinusIcon,
   PlusIcon,
-  AcademicCapIcon,
-  BookmarkSquareIcon,
 } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
 const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
