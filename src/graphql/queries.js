@@ -3147,6 +3147,9 @@ export const getCustomerLibary = /* GraphQL */ `
       backgroundImage
       code
       status
+      availableCodes
+      usedCodes
+      promotionId
       createdAt
       updatedAt
       __typename
@@ -3181,6 +3184,9 @@ export const listCustomerLibaries = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename
@@ -4958,6 +4964,10 @@ export const getOrder = /* GraphQL */ `
       courseDescription
       type
       paymentPlan
+      ipAddress
+      country
+      device
+      page
       createdAt
       updatedAt
       userOrdersId
@@ -4986,6 +4996,10 @@ export const listOrders = /* GraphQL */ `
         courseDescription
         type
         paymentPlan
+        ipAddress
+        country
+        device
+        page
         createdAt
         updatedAt
         userOrdersId
@@ -6460,6 +6474,9 @@ export const getLibraryCourses = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename
@@ -7660,6 +7677,9 @@ export const customerLibariesBySlug = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename
@@ -8229,6 +8249,10 @@ export const ordersByEmail = /* GraphQL */ `
         courseDescription
         type
         paymentPlan
+        ipAddress
+        country
+        device
+        page
         createdAt
         updatedAt
         userOrdersId
@@ -8268,6 +8292,10 @@ export const ordersByUserID = /* GraphQL */ `
         courseDescription
         type
         paymentPlan
+        ipAddress
+        country
+        device
+        page
         createdAt
         updatedAt
         userOrdersId

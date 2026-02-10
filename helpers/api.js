@@ -463,7 +463,7 @@ export const registerClick = async (
   ref,
   type,
   ip,
-  location
+  location,
 ) => {
   const res = await API.graphql({
     query: createClick,
@@ -520,7 +520,7 @@ export const registgerCourseClick = async (
   page,
   location,
   next,
-  format
+  format,
 ) => {
   // const ip = await fetch('https://api.ipify.org/?format=json').then((res) =>
   //   res.json()
@@ -549,7 +549,7 @@ export const registgerIndiaCourseClick = async (
   page,
   location,
   next,
-  format
+  format,
 ) => {
   // const ip = await fetch('https://api.ipify.org/?format=json').then((res) =>
   //   res.json()
@@ -732,7 +732,7 @@ export const uploadUserEventPhoto = async (
   event,
   eventID,
   photo,
-  uploadedBy
+  uploadedBy,
 ) => {
   const res = await API.graphql({
     query: createUserEventPhoto,
@@ -846,7 +846,7 @@ export const getDeviceType = () => {
     return 'tablet';
   } else if (
     /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-      ua
+      ua,
     )
   ) {
     return 'mobile';
@@ -1151,7 +1151,7 @@ export async function fetchAllIndexes() {
 
   do {
     const result = await API.graphql(
-      graphqlOperation(listIndexPages, { nextToken }) // Pass the nextToken if it exists
+      graphqlOperation(listIndexPages, { nextToken }), // Pass the nextToken if it exists
     );
 
     // Append the items from this batch to the overall array
@@ -1515,11 +1515,11 @@ export const getCohorts = async () => {
 
   const now = new Date();
   const currentAndFutureCohorts = res.data.listCohorts.items.filter(
-    (cohort) => new Date(cohort.deadline) >= now
+    (cohort) => new Date(cohort.deadline) >= now,
   );
 
   return currentAndFutureCohorts.sort(
-    (a, b) => new Date(a.deadline) - new Date(b.deadline)
+    (a, b) => new Date(a.deadline) - new Date(b.deadline),
   );
 };
 
@@ -1653,7 +1653,7 @@ export const getPaths = async () => {
 
 export const getAllPathCourses = async (courseIds) => {
   const courses = await Promise.all(
-    courseIds.map((id) => getPathCourseById(id.thinkificId))
+    courseIds.map((id) => getPathCourseById(id.thinkificId)),
   );
   return courses;
 };
@@ -1820,7 +1820,7 @@ export const updateLastLogin = async (
   level,
   xpToNextLevel,
   progress,
-  totalXp
+  totalXp,
 ) => {
   const res = await API.graphql({
     query: updateUserXp,
@@ -1910,7 +1910,7 @@ export const createNewEmailSubscription = async (
   email,
   location,
   device,
-  page
+  page,
 ) => {
   const res = await API.graphql({
     query: createEmailSubscription,
@@ -2281,6 +2281,10 @@ export const getOrderByID = async (oid) => {
         courseDescription
         type
         paymentPlan
+        ipAddress
+        country
+        device
+        page
         createdAt
         updatedAt
       }
@@ -2313,6 +2317,10 @@ export const createNewOrder = async (data) => {
         courseDescription
         type
         paymentPlan
+        ipAddress
+        country
+        device
+        page
         createdAt
         updatedAt
       }
@@ -2390,7 +2398,7 @@ export const getThinkificUser = async (email) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   );
   return res.json();
 };
@@ -2480,7 +2488,7 @@ export const calculateClickStats = (courseClicks) => {
   const now = new Date();
   const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
   const oneHundredEightyDaysAgo = new Date(
-    now.getTime() - 180 * 24 * 60 * 60 * 1000
+    now.getTime() - 180 * 24 * 60 * 60 * 1000,
   );
 
   // Helper function to calculate stats for a filtered set of clicks
@@ -2506,8 +2514,8 @@ export const calculateClickStats = (courseClicks) => {
         percentageChange > 0
           ? 'increase'
           : percentageChange < 0
-          ? 'decrease'
-          : 'no-change';
+            ? 'decrease'
+            : 'no-change';
     } else if (currentPeriodClicks > 0) {
       percentageChange = 100;
       changeType = 'increase';
@@ -2523,11 +2531,11 @@ export const calculateClickStats = (courseClicks) => {
 
   // Filter clicks by type
   const addToCartClicks = courseClicks.filter((click) =>
-    click.nextPath?.includes('learn.packagingschool.com')
+    click.nextPath?.includes('learn.packagingschool.com'),
   );
 
   const courseViewClicks = courseClicks.filter(
-    (click) => !click.nextPath?.includes('learn.packagingschool.com')
+    (click) => !click.nextPath?.includes('learn.packagingschool.com'),
   );
 
   return {
@@ -2571,53 +2579,53 @@ export const getApprovedAPS25MediaUsers = async () => {
 export const getPipelineLibrary = async () => {
   const getPipelineLibraryQuery = /* GraphQL */ `
     query MyQuery {
-    customerLibariesBySlug(slug: "pipeline-packaging") {
-      items {
-        email
-        displayName
-        description
-        addOns
-        backgroundImage
-        highlightColor
-        id
-        link
-        logo
-        pdf
-        primaryColor
-        pschoolCourses {
-          items {
-            altLink
-            callout
-            category
-            categoryArray
-            courseId
-            demo
-            hours
-            id
-            lessons
-            link
-            objectives
-            preview
-            price
-            seoImage
-            shortDescription
-            slug
-            stripeLink
-            subheadline
-            thinkificId
-            title
-            type
-            videos
-            what_learned
+      customerLibariesBySlug(slug: "pipeline-packaging") {
+        items {
+          email
+          displayName
+          description
+          addOns
+          backgroundImage
+          highlightColor
+          id
+          link
+          logo
+          pdf
+          primaryColor
+          pschoolCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
           }
+          slide
+          slug
+          status
+          video
         }
-        slide
-        slug
-        status
-        video
       }
     }
-  }
   `;
   const res = await API.graphql({
     query: getPipelineLibraryQuery,

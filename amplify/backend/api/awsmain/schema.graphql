@@ -173,13 +173,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   seoFollow: String
 }
 
-type SeoDocument
-  @model
-  @auth(
-    rules: [
-      { allow: public }
-    ]
-  ) {
+type SeoDocument @model @auth(rules: [{ allow: public }]) {
   id: ID!
   contentType: SeoContentType!
   slugOrPath: String! @index(name: "byContent", queryField: "seoByContent")
@@ -819,6 +813,9 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
   backgroundImage: String
   code: String
   status: String @default(value: "DRAFT")
+  availableCodes: Int
+  usedCodes: Int
+  promotionId: Int
 }
 
 ######### Salesbar #########
@@ -1237,6 +1234,10 @@ type Order @model @auth(rules: [{ allow: public }]) {
   courseDescription: String
   type: String
   paymentPlan: String
+  ipAddress: String
+  country: String
+  device: String
+  page: String
 }
 
 ######### SEARCH LOGS #########

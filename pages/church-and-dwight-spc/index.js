@@ -21,7 +21,7 @@ const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
 });
 import VideoPlayer from '../../components/VideoPlayer';
-import { spcCourses, createNewOrder } from '../../helpers/api';
+import { spcCourses, createNewOrder, getDeviceType } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -85,7 +85,8 @@ const LOTMCard = ({ lesson }) => {
 
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
   useEffect(() => {
@@ -107,12 +108,16 @@ const CourseCard = ({ course }) => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/church-and-dwight-spc',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `${courseData.link}?coupon=cdspc`,
-        `${courseData.link}?coupon=cdspc`
+        `${courseData.link}?coupon=cdspc`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -219,7 +224,7 @@ const Page = () => {
         .includes(learningOfTheMonthQuery.toLowerCase()) ||
       lesson.subhead
         .toLowerCase()
-        .includes(learningOfTheMonthQuery.toLowerCase())
+        .includes(learningOfTheMonthQuery.toLowerCase()),
   );
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
@@ -273,7 +278,7 @@ const Page = () => {
               onClick={() => {
                 window.open(
                   'https://packschool.s3.us-east-1.amazonaws.com/SPC-Library_C%26D.pdf',
-                  '_blank'
+                  '_blank',
                 );
               }}
             >

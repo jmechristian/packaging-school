@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import PurchaseLogin from '../../../components/login/PurchaseLogin';
 import { getOrderByID, getCouponInfo } from '../../../helpers/api';
-import FlashSaleBanner from '../../../components/nav/FlashSaleBanner';
 
 // Loading Skeleton Component
 const OrderSkeleton = () => {
@@ -83,16 +82,13 @@ const OrderSkeleton = () => {
 
 const Order = (props) => {
   const { order } = props;
-  console.log(order);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [couponEntered, setCouponEntered] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
   const [error, setError] = useState(null);
-  const [isFlashSaleBannerOpen, setIsFlashSaleBannerOpen] = useState(true);
-  const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
-    useState(true);
+
   const handleCouponSubmit = async () => {
     // Extract course ID from the courseLink URL
     const courseID = order.courseLink
@@ -219,7 +215,7 @@ const Order = (props) => {
                           <div className='font-raleway text-lg font-[600] text-[#36394d] leading-[1.5]'>
                             -$
                             {parseInt(
-                              (order.total * order.courseDiscount) / 100
+                              (order.total * order.courseDiscount) / 100,
                             ).toFixed(2)}
                           </div>
                         </div>

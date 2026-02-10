@@ -8,7 +8,11 @@ import {
   MdOutlineBook,
   MdDownloadForOffline,
 } from 'react-icons/md';
-import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
+import {
+  getCourseByID,
+  getAllLearningOfTheMonths,
+  getDeviceType,
+} from '../../helpers/api';
 import {
   BoltIcon,
   MinusIcon,
@@ -85,7 +89,8 @@ const LOTMCard = ({ lesson }) => {
 
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
   useEffect(() => {
@@ -107,6 +112,10 @@ const CourseCard = ({ course }) => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/dvi',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {
@@ -209,7 +218,7 @@ const Page = () => {
         .includes(learningOfTheMonthQuery.toLowerCase()) ||
       lesson.subhead
         .toLowerCase()
-        .includes(learningOfTheMonthQuery.toLowerCase())
+        .includes(learningOfTheMonthQuery.toLowerCase()),
   );
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
@@ -262,7 +271,7 @@ const Page = () => {
               onClick={() => {
                 window.open(
                   'https://packschool.s3.us-east-1.amazonaws.com/4_9_25-DVI-Instructions-for-Library.pdf',
-                  '_blank'
+                  '_blank',
                 );
               }}
             >
@@ -355,7 +364,7 @@ const Page = () => {
                   onClick={() => {
                     window.open(
                       'https://learn.packagingschool.com/enroll/235882?price_id=242074',
-                      '_blank'
+                      '_blank',
                     );
                   }}
                 >

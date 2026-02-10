@@ -17,6 +17,7 @@ import {
   getAllLearningOfTheMonths,
   createNewOrder,
   getPipelineLibrary,
+  getDeviceType,
 } from '../../helpers/api';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
@@ -207,7 +208,8 @@ const LOTMCard = ({ lesson }) => {
 
 const CourseCard = ({ course, searchQuery }) => {
   const router = useRouter();
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const [courseData, setCourseData] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -245,6 +247,10 @@ const CourseCard = ({ course, searchQuery }) => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/pipeline-packaging',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {

@@ -109,7 +109,7 @@ export async function getServerSideProps(context) {
       Array.isArray(product.product_prices)
     ) {
       const selectedPrice = product.product_prices.find(
-        (price) => price.id === parseInt(price_id)
+        (price) => price.id === parseInt(price_id),
       );
       total = selectedPrice?.price;
     } else {

@@ -5762,6 +5762,9 @@ export const createCustomerLibary = /* GraphQL */ `
       backgroundImage
       code
       status
+      availableCodes
+      usedCodes
+      promotionId
       createdAt
       updatedAt
       __typename
@@ -5802,6 +5805,9 @@ export const updateCustomerLibary = /* GraphQL */ `
       backgroundImage
       code
       status
+      availableCodes
+      usedCodes
+      promotionId
       createdAt
       updatedAt
       __typename
@@ -5842,6 +5848,9 @@ export const deleteCustomerLibary = /* GraphQL */ `
       backgroundImage
       code
       status
+      availableCodes
+      usedCodes
+      promotionId
       createdAt
       updatedAt
       __typename
@@ -8675,6 +8684,10 @@ export const createOrder = /* GraphQL */ `
       courseDescription
       type
       paymentPlan
+      ipAddress
+      country
+      device
+      page
       createdAt
       updatedAt
       userOrdersId
@@ -8743,6 +8756,10 @@ export const updateOrder = /* GraphQL */ `
       courseDescription
       type
       paymentPlan
+      ipAddress
+      country
+      device
+      page
       createdAt
       updatedAt
       userOrdersId
@@ -8811,6 +8828,10 @@ export const deleteOrder = /* GraphQL */ `
       courseDescription
       type
       paymentPlan
+      ipAddress
+      country
+      device
+      page
       createdAt
       updatedAt
       userOrdersId
@@ -11914,6 +11935,9 @@ export const createLibraryCourses = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename
@@ -11987,6 +12011,9 @@ export const updateLibraryCourses = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename
@@ -12060,6 +12087,9 @@ export const deleteLibraryCourses = /* GraphQL */ `
         backgroundImage
         code
         status
+        availableCodes
+        usedCodes
+        promotionId
         createdAt
         updatedAt
         __typename

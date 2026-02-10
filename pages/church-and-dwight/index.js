@@ -25,6 +25,7 @@ import {
   cpsCourses,
   createNewOrder,
   churchAndDwightElectives,
+  getDeviceType,
 } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
@@ -90,7 +91,8 @@ const LOTMCard = ({ lesson }) => {
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
   useEffect(() => {
@@ -113,12 +115,16 @@ const CourseCard = ({ course }) => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/church-and-dwight',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `${courseData.link}?coupon=churchanddwight2025`,
-        `${courseData.link}?coupon=churchanddwight2025`
+        `${courseData.link}?coupon=churchanddwight2025`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -234,7 +240,7 @@ const Page = () => {
         .includes(learningOfTheMonthQuery.toLowerCase()) ||
       lesson.subhead
         .toLowerCase()
-        .includes(learningOfTheMonthQuery.toLowerCase())
+        .includes(learningOfTheMonthQuery.toLowerCase()),
   );
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
@@ -288,7 +294,7 @@ const Page = () => {
               onClick={() => {
                 window.open(
                   'https://packschool.s3.us-east-1.amazonaws.com/C%26D+Library+Instructions.pdf',
-                  '_blank'
+                  '_blank',
                 );
               }}
             >
@@ -382,7 +388,7 @@ const Page = () => {
                   onClick={() => {
                     window.open(
                       'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=churchanddwight2025',
-                      '_blank'
+                      '_blank',
                     );
                   }}
                 >

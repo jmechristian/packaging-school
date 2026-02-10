@@ -11,12 +11,12 @@ import {
   MdCheck,
   MdError,
 } from 'react-icons/md';
-import { getCourseByID, getAllLearningOfTheMonths } from '../../helpers/api';
 import {
-  BoltIcon,
-  MinusIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
+  getCourseByID,
+  getAllLearningOfTheMonths,
+  getDeviceType,
+} from '../../helpers/api';
+import { BoltIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
 const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
   ssr: false,
@@ -208,7 +208,8 @@ const LOTMCard = ({ lesson }) => {
 const CourseCard = ({ course }) => {
   const [courseData, setCourseData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { awsUser } = useSelector((state) => state.auth);
+  const { awsUser, location } = useSelector((state) => state.auth);
+  const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
   useEffect(() => {
@@ -231,12 +232,16 @@ const CourseCard = ({ course }) => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/schwarzpartners',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `${courseData.link}?coupon=schwarzpartners2025`,
-        `${courseData.link}?coupon=schwarzpartners2025`
+        `${courseData.link}?coupon=schwarzpartners2025`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -397,7 +402,7 @@ const Page = () => {
         .includes(learningOfTheMonthQuery.toLowerCase()) ||
       lesson.subhead
         .toLowerCase()
-        .includes(learningOfTheMonthQuery.toLowerCase())
+        .includes(learningOfTheMonthQuery.toLowerCase()),
   );
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
@@ -493,7 +498,7 @@ const Page = () => {
                   onClick={() => {
                     window.open(
                       'https://packschool.s3.us-east-1.amazonaws.com/Schwarz-Partners-Library-Instructions.pdf',
-                      '_blank'
+                      '_blank',
                     );
                   }}
                 >
@@ -599,7 +604,7 @@ const Page = () => {
                       onClick={() => {
                         window.open(
                           'https://learn.packagingschool.com/enroll/235882?price_id=242074&coupon=schwarzpartners2025',
-                          '_blank'
+                          '_blank',
                         );
                       }}
                     >

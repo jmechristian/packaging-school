@@ -72,7 +72,7 @@ const Page = () => {
       setIsCourses(courses.data.listLMSCourses.items);
       filter &&
         setIsFilters(
-          filter === 'ALL' ? [] : (prevState) => [...prevState, filter]
+          filter === 'ALL' ? [] : (prevState) => [...prevState, filter],
         );
       setIsLoading(false);
     };
@@ -116,8 +116,8 @@ const Page = () => {
       return isCourses.filter(
         (course) =>
           course.categoryArray.some((category) =>
-            isFilters.includes(category)
-          ) || isFilters.includes(course.type)
+            isFilters.includes(category),
+          ) || isFilters.includes(course.type),
       );
     }
   }, [isCourses, isFilters]);
@@ -139,7 +139,7 @@ const Page = () => {
       return (
         filtered &&
         [...filtered].sort((a, b) =>
-          a.categoryArray[0].localeCompare(b.categoryArray[0])
+          a.categoryArray[0].localeCompare(b.categoryArray[0]),
         )
       );
     }
@@ -148,7 +148,7 @@ const Page = () => {
       return (
         filtered &&
         [...filtered].sort((a, b) =>
-          b.categoryArray[0].localeCompare(a.categoryArray[0])
+          b.categoryArray[0].localeCompare(a.categoryArray[0]),
         )
       );
     }
@@ -218,7 +218,7 @@ const Page = () => {
           (cour.what_learned &&
             cour.what_learned
               .toLowerCase()
-              .includes(isSearchTerm.toLowerCase()))
+              .includes(isSearchTerm.toLowerCase())),
       );
     }
   }, [isSearchTerm, sortedCourses]);
@@ -228,7 +228,7 @@ const Page = () => {
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.description.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-        cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase())
+        cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()),
     );
   }, [isCertificates, isSearchTerm]);
 
@@ -259,7 +259,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort((a, b) =>
-          a.courseId.localeCompare(b.courseId)
+          a.courseId.localeCompare(b.courseId),
         )
       );
     }
@@ -268,7 +268,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort((a, b) =>
-          b.courseId.localeCompare(a.courseId)
+          b.courseId.localeCompare(a.courseId),
         )
       );
     }
@@ -291,7 +291,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort(
-          (a, b) => parseFloat(a.hours) - parseFloat(b.hours)
+          (a, b) => parseFloat(a.hours) - parseFloat(b.hours),
         )
       );
     }
@@ -300,7 +300,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort(
-          (a, b) => parseFloat(b.hours) - parseFloat(a.hours)
+          (a, b) => parseFloat(b.hours) - parseFloat(a.hours),
         )
       );
     }
@@ -309,7 +309,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort(
-          (a, b) => parseInt(a.price) - parseInt(b.price)
+          (a, b) => parseInt(a.price) - parseInt(b.price),
         )
       );
     }
@@ -318,7 +318,7 @@ const Page = () => {
       return (
         searchCertificates &&
         [...searchCertificates].sort(
-          (a, b) => parseInt(b.price) - parseInt(a.price)
+          (a, b) => parseInt(b.price) - parseInt(a.price),
         )
       );
     }
@@ -365,6 +365,10 @@ const Page = () => {
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
+      ipAddress: location.ip,
+      country: location.country,
+      device: deviceType,
+      page: '/all_courses',
     });
 
     if (awsUser && awsUser.name.includes(' ')) {
@@ -382,7 +386,7 @@ const Page = () => {
       : router.push(
           `/${
             type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`
+          }/${slug}`,
         );
   };
 
@@ -401,7 +405,7 @@ const Page = () => {
     abbreviation,
     type,
     link,
-    applicationLink
+    applicationLink,
   ) => {
     await registerCertificateClick({
       country: location.country,
@@ -440,14 +444,14 @@ const Page = () => {
         const res = await removeCourseFromWishlist(
           awsUser.wishlist.items.find((item) => item.lMSCourse.id === courseId)
             .id,
-          awsUser.email
+          awsUser.email,
         );
         dispatch(setAWSUser(res));
       } else {
         const res = await addCourseToWishlist(
           courseId,
           awsUser.id,
-          awsUser.email
+          awsUser.email,
         );
         dispatch(setAWSUser(res));
       }
@@ -598,7 +602,7 @@ const Page = () => {
                             onClick={() => {
                               window.open(
                                 'https://packagingschool.com/isbt',
-                                '_blank'
+                                '_blank',
                               );
                               setIsFilter(false);
                             }}
@@ -836,14 +840,14 @@ const Page = () => {
                           abbreviation,
                           type,
                           link,
-                          applicationLink
+                          applicationLink,
                         ) =>
                           handleCertCardClick(
                             cert,
                             abbreviation,
                             type,
                             link,
-                            applicationLink
+                            applicationLink,
                           )
                         }
                       />
@@ -866,7 +870,7 @@ const Page = () => {
                             course.id,
                             course.slug,
                             course.altLink,
-                            course.type
+                            course.type,
                           )
                         }
                         cardPurchaseHandler={() => orderHandler(course)}
@@ -874,7 +878,7 @@ const Page = () => {
                           handleAddToWishlist(course.id)
                         }
                         isFavorite={awsUser?.wishlist?.items.some(
-                          (item) => item.lMSCourse.id === course.id
+                          (item) => item.lMSCourse.id === course.id,
                         )}
                       />
                     </motion.div>
