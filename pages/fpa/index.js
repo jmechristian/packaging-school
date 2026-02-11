@@ -156,7 +156,11 @@ const Fpas = () => {
     if (activePreset !== 'only-audited' || !headers.length) return data;
     const colKey = headers[6]?.original;
     if (!colKey) return data;
-    const exclude = ['wrong product audited', 'product not available'];
+    const exclude = [
+      'wrong product audited',
+      'product not available',
+      'not a valid alternative',
+    ];
     return data.filter((row) => {
       const v = String(row[colKey] ?? '').trim().toLowerCase();
       return !exclude.includes(v);
