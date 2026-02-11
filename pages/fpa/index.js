@@ -23,6 +23,7 @@ const Fpas = () => {
     key: null,
     direction: 'asc',
   });
+  const [activePreset, setActivePreset] = useState('');
 
   // Get sheetId from query params or use environment variable
   const sheetId =
@@ -135,17 +136,29 @@ const Fpas = () => {
     }
   }, []);
 
+  // Apply preset row filter first (e.g. Only Audited Products hides certain column [6] values)
+  const dataAfterPreset = useMemo(() => {
+    if (activePreset !== 'only-audited' || !headers.length) return data;
+    const colKey = headers[6]?.original;
+    if (!colKey) return data;
+    const exclude = ['wrong product audited', 'product not available'];
+    return data.filter((row) => {
+      const v = String(row[colKey] ?? '').trim().toLowerCase();
+      return !exclude.includes(v);
+    });
+  }, [data, headers, activePreset]);
+
   // Filter data based on search term
   const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
+    if (!searchTerm) return dataAfterPreset;
 
-    return data.filter((row) =>
+    return dataAfterPreset.filter((row) =>
       headers.some((headerObj) => {
         const value = String(row[headerObj.original] || '').toLowerCase();
         return value.includes(searchTerm.toLowerCase());
       }),
     );
-  }, [data, headers, searchTerm]);
+  }, [dataAfterPreset, headers, searchTerm]);
 
   // Sort data
   const sortedData = useMemo(() => {
@@ -513,22 +526,28 @@ const Fpas = () => {
                 />
               </div>
 
-              {/* Quick View Buttons + Custom Views + Open Modal */}
-              <div className='flex flex-wrap items-center gap-2'>
-                <button
-                  type='button'
-                  onClick={showAllColumns}
-                  className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+              {/* Presets + Custom Views + Open Modal */}
+              <div className='flex flex-wrap items-center gap-3'>
+                <select
+                  className='text-xs sm:text-sm px-3 pr-6 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 min-w-[220px]'
+                  value={activePreset}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setActivePreset(value);
+                    if (value === 'show-all') {
+                      showAllColumns();
+                    } else if (value === 'compact') {
+                      hideAllNonKeyColumns();
+                    } else if (value === 'only-audited') {
+                      showAllColumns();
+                    }
+                  }}
                 >
-                  Show all
-                </button>
-                <button
-                  type='button'
-                  onClick={hideAllNonKeyColumns}
-                  className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-                >
-                  Compact view
-                </button>
+                  <option value=''>Presets</option>
+                  <option value='show-all'>Show all</option>
+                  <option value='compact'>Compact</option>
+                  <option value='only-audited'>Only Audited Products</option>
+                </select>
 
                 {customViews.length > 0 && (
                   <select
