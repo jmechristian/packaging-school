@@ -306,6 +306,38 @@ const Fpas = () => {
     }
   };
 
+  // Case Study 1 preset: show only these columns (matched by title)
+  const CASE_STUDY_1_COLUMN_TITLES = [
+    'Community Type',
+    'Store ID',
+    'Item #',
+    'Photo Names',
+    'WIC Category',
+    'Product to be audited',
+    'Selected Product',
+    'Brand',
+    'Note the alternative',
+    'Packaged in Flexible Plastic? (consumer-facing material, not including labels or shrink bands)',
+    'Packaging system likely includes independent flexible plastic packaging',
+    'Predominant Packaging Material',
+    'Packaging Format',
+  ];
+
+  const applyCaseStudy1Columns = () => {
+    const normalize = (s) => String(s ?? '').trim().toLowerCase();
+    const matchTitles = CASE_STUDY_1_COLUMN_TITLES.map(normalize);
+    const keys = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .filter((key) =>
+        matchTitles.some(
+          (t) => normalize(key) === t || normalize(key).includes(t),
+        ),
+      );
+    if (keys.length > 0) {
+      setVisibleColumns(keys);
+    }
+  };
+
   const saveCustomViewsToStorage = (views) => {
     setCustomViews(views);
     if (typeof window !== 'undefined') {
@@ -621,6 +653,8 @@ const Fpas = () => {
                       hideAllNonKeyColumns();
                     } else if (value === 'only-audited') {
                       showAllColumns();
+                    } else if (value === 'case-study-1') {
+                      applyCaseStudy1Columns();
                     }
                   }}
                 >
@@ -628,6 +662,7 @@ const Fpas = () => {
                   <option value='show-all'>Show all</option>
                   <option value='compact'>Compact</option>
                   <option value='only-audited'>Only Audited Products</option>
+                  <option value='case-study-1'>Case Study 1</option>
                 </select>
 
                 {customViews.length > 0 && (
@@ -670,7 +705,12 @@ const Fpas = () => {
           <div className='overflow-x-auto'>
             <table
               className='divide-y divide-gray-200'
-              style={{ minWidth: `${Math.max(headers.length * 220, 2000)}px` }}
+              style={{
+                minWidth: `${Math.max(
+                  headers.filter((h) => isColumnVisible(h)).length * 220,
+                  1200,
+                )}px`,
+              }}
             >
               <thead className='bg-gray-50 sticky top-0 z-10'>
                 <tr>
