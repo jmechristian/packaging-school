@@ -15,6 +15,7 @@ import {
   MdFilterList,
 } from 'react-icons/md';
 import Meta from '../components/shared/Meta';
+import { generateMetadata } from '../libs/seo/generateMetadata';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
 import {
@@ -458,14 +459,21 @@ const Page = () => {
     }
   };
 
+  const metadata = generateMetadata({
+    pageType: 'STATIC',
+    pathname: '/all_courses',
+    title: 'Packaging School Courses',
+    description:
+      'Browse the extensive catalog of Packaging School courses covering Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.',
+  });
+
   return (
     <>
       <Meta
-        title={'Packaging School Courses'}
-        description={
-          'Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.'
-        }
-        image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
+        title={metadata.title}
+        description={metadata.description}
+        url='/all_courses'
+        image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
       />
       {/*  */}
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-12'>

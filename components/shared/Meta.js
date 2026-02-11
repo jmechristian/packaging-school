@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { truncateTitle, truncateDescription } from '../../libs/seo/generateMetadata';
 
 function toAbsoluteUrl(inputUrl, siteUrl) {
   if (!inputUrl) return null;
@@ -33,6 +34,7 @@ const Meta = ({
   url,
   type = 'website',
   siteName = 'PackagingSchool.com',
+  robots = 'index, follow',
 }) => {
   const router = useRouter();
   const siteUrl =
@@ -42,8 +44,8 @@ const Meta = ({
     ? resolvedPath.split('?')[0].split('#')[0]
     : null;
   const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
-  const metaTitle = title || siteName;
-  const metaDescription = description || '';
+  const metaTitle = truncateTitle(title || siteName) || siteName;
+  const metaDescription = truncateDescription(description || '');
 
   // Always provide a concrete OG image so crawlers don't "infer" from random page images.
   // Replace with a proper share-sized PNG/JPG via the `image` prop when possible.
@@ -89,7 +91,7 @@ const Meta = ({
         <meta key='description' name='description' content={metaDescription} />
       )}
       {keywords && <meta name='keywords' content={keywords} />}
-      <meta key='robots' name='robots' content='index, follow' />
+      <meta key='robots' name='robots' content={robots} />
       <meta
         key='google-site-verification'
         name='google-site-verification'

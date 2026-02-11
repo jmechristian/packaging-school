@@ -42,6 +42,8 @@ import { MdExpandMore } from 'react-icons/md';
 import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
 import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
+
 const Page = ({ lesson }) => {
   const router = useRouter();
   const siteUrl =
@@ -222,12 +224,20 @@ const Page = ({ lesson }) => {
     }
   };
 
+  const metadata = lesson
+    ? generateMetadata({
+        pageType: 'LESSON',
+        data: lesson,
+        pathname: `/lessons/${lesson.slug}`,
+      })
+    : null;
+
   return (
     lesson && (
       <>
         <Meta
-          title={lesson.title}
-          description={lesson.subhead || ''}
+          title={metadata.title}
+          description={metadata.description}
           image={lesson.seoImage}
           url={`/lessons/${lesson.slug}`}
           type='article'
@@ -646,6 +656,10 @@ export async function getStaticProps({ params }) {
 
   const res = await API.graphql({ query: getLesson, variables: variables });
   const lesson = res.data.lessonsBySlug.items[0];
+
+  if (!lesson) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   return { props: { lesson }, revalidate: 10 };
 }

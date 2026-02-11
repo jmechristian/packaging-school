@@ -10,19 +10,27 @@ import { useRouter } from 'next/router';
 import FadeIn from '../../helpers/FadeIn';
 import ShortCourseCard from '../../components/shared/ShortCourseCard';
 import { UserIcon } from '@heroicons/react/24/outline';
-import Head from 'next/head';
 import CTAButtonLarge from '../../components/CTAButtonLarge';
 import CTAButtonTrial from '../../components/CTAButtonTrial';
 import Meta from '../../components/shared/Meta';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
 
 const Page = ({ collection, courses }) => {
   const router = useRouter();
+  const metadata = collection
+    ? generateMetadata({
+        pageType: 'COLLECTION',
+        data: collection,
+        pathname: `/collections/${collection.slug}`,
+      })
+    : generateMetadata({ pageType: 'STATIC', pathname: router?.asPath });
+
   return (
     <>
       <Meta
-        title={`Packaging School | ${collection && collection.title}`}
-        description={collection && collection.description}
-        image={collection && collection.seoImage}
+        title={metadata.title}
+        description={metadata.description}
+        image={collection?.seoImage}
         url={collection?.slug ? `/collections/${collection.slug}` : router.asPath}
         type='website'
       />

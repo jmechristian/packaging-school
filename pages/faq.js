@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { MdOutlineSearch } from 'react-icons/md';
 import FAQItem from '../components/shared/FAQItem';
 import Meta from '../components/shared/Meta';
+import { generateMetadata } from '../libs/seo/generateMetadata';
 import { getAllFaqs } from '../helpers/api';
 import FaqSection from '../components/shared/FaqSection';
 
@@ -317,14 +318,17 @@ const Page = ({ faqs }) => {
     );
   }, [faqs, isSearchTerm]);
 
+  const metadata = generateMetadata({
+    pageType: 'STATIC',
+    pathname: '/faq',
+    title: 'Packaging School FAQs',
+    description:
+      'Find answers to packaging education questions. Get quick insights on courses, certifications, and support from the Packaging School.',
+  });
+
   return (
     <>
-      <Meta
-        title={'Packaging School FAQs'}
-        description={
-          'Find answers to all your queries on our FAQ page. Get quick insights on services, support, and more to enhance your experience with us. Visit now!'
-        }
-      />
+      <Meta title={metadata.title} description={metadata.description} url='/faq' />
       <div className='w-full flex flex-col gap-10 max-w-7xl mx-auto py-10 lg:py-20'>
         <div className='w-full flex flex-col gap-5 lg:flex-row justify-between items-center px-4 lg:px-0'>
           <div className='h2-base'>Frequently Asked Questions</div>

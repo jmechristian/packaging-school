@@ -11,6 +11,7 @@ import {
 import { TextureLoader } from 'three';
 import { GiJourney, GiThreeFriends } from 'react-icons/gi';
 import Meta from '../components/shared/Meta';
+import { generateMetadata } from '../libs/seo/generateMetadata';
 import LearningPath from '../components/home/LearningPath';
 import CardFilter from '../components/home/CardFilter';
 import WhyPschool from '../components/shared/WhyPschool';
@@ -203,14 +204,21 @@ const App = () => {
     );
   };
 
+  const metadata = generateMetadata({
+    pageType: 'STATIC',
+    pathname: '/',
+    title: 'Packaging School',
+    description:
+      'The Packaging School brings together the business, art, and science of packaging so you can lead projects, optimize supply chains, increase margins, and develop sustainable solutions.',
+  });
+
   return (
     <>
       <Meta
-        title={'Packaging School'}
-        description={
-          'The Packaging School brings together the business, art, and science of packaging so you can lead projects, optimize supply chains, increase margins, and develop sustainable solutions.'
-        }
-        image={'https://packschool.s3.amazonaws.com/firework-box-3.webp'}
+        title={metadata.title}
+        description={metadata.description}
+        url='/'
+        image='https://packschool.s3.amazonaws.com/firework-box-3.webp'
       />
       <div className='w-full flex flex-col gap-16 lg:gap-20 relative pb-16'>
         {/* INTRO */}

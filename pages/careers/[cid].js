@@ -2,28 +2,30 @@ import CareerFeature from '../../components/careers/CareerFeature';
 import CareerHero from '../../components/careers/CareerHero';
 import CareerAction from '../../components/careers/CareerAction';
 import CareerCTA from '../../components/careers/CareerCTA';
-import Head from 'next/head';
+import Meta from '../../components/shared/Meta';
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
 import awsExports from '../../src/aws-exports';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
+
 Amplify.configure(awsExports);
 
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-const GRAPHQL_API_KEY = process.env.GRAPHQL_API_KEY;
-
 const Page = ({ career }) => {
+  const metadata = career
+    ? generateMetadata({
+        pageType: 'CAREER',
+        data: career,
+        pathname: `/careers/${career.slug}`,
+      })
+    : generateMetadata({ pageType: 'STATIC', pathname: '/careers' });
+
   return (
     <>
-      <Head>
-        <title>{career.title}</title>
-        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-        <meta name='title' content={career.title} />
-        <meta name='description' content={career.subhead} />
-        <meta
-          name='keywords'
-          content='packaging, careers, careers in packaging'
-        />
-        <meta name='robots' content='index, follow' />
-      </Head>
+      <Meta
+        title={metadata.title}
+        description={metadata.description}
+        url={career?.slug ? `/careers/${career.slug}` : '/careers'}
+        keywords='packaging, careers, careers in packaging'
+      />
       <div className='w-full h-full relative flex flex-col mt-8'>
         <CareerHero
           title={career.title}

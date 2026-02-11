@@ -16,6 +16,7 @@ import { updateCategoryMenu } from '../../../data/CategoryMenu';
 import { MdOutlineSearch, MdCached } from 'react-icons/md';
 import { EyeIcon } from '@heroicons/react/24/solid';
 import Meta from '../../../components/shared/Meta';
+import { generateMetadata } from '../../../libs/seo/generateMetadata';
 
 import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
@@ -280,10 +281,21 @@ const Page = () => {
     cat && fetchCertificates();
   }, [cat]);
 
-  const categoryNameHandler = (cat) => {
-    const category = updateCategoryMenu.find((c) => c.value === cat);
-    return category ? category.name : cat;
+  const categoryNameHandler = (c) => {
+    const category = updateCategoryMenu.find((item) => item.value === c);
+    return category ? category.name : c;
   };
+
+  const categoryName = cat ? categoryNameHandler(cat) : 'Courses';
+  const metadata = generateMetadata({
+    pageType: 'CATEGORY',
+    data: {
+      name: categoryName,
+      description:
+        'Browse the extensive catalog of Packaging School courses covering Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.',
+    },
+    pathname: cat ? `/courses/categories/${cat}` : '/courses/categories',
+  });
   const orderHandler = async (courseData) => {
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
@@ -380,11 +392,10 @@ const Page = () => {
   return (
     <>
       <Meta
-        title={`Packaging School Courses | ${categoryNameHandler(cat)}`}
-        description={
-          'Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.'
-        }
-        image={'https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'}
+        title={metadata.title}
+        description={metadata.description}
+        url={cat ? `/courses/categories/${cat}` : undefined}
+        image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
       />
       {sortedAndSearchedCourses.length > 0 ? (
         <div className='max-w-7xl mx-auto py-12 flex flex-col px-3 lg:!px-0'>

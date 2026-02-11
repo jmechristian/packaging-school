@@ -1,11 +1,28 @@
-import { getPaths, getPathBySlug } from '../../../helpers/api';
+import { getPathBySlug } from '../../../helpers/api';
 import PathWrapper from '../../../components/paths/PathWrapper';
+import Meta from '../../../components/shared/Meta';
+import { generateMetadata } from '../../../libs/seo/generateMetadata';
 
 const Page = ({ path }) => {
+  const metadata = path
+    ? generateMetadata({
+        pageType: 'PATH',
+        data: path,
+        pathname: `/paths/${path.slug}`,
+      })
+    : generateMetadata({ pageType: 'STATIC', pathname: '/paths' });
+
   return (
-    <div>
-      <PathWrapper path={path} />
-    </div>
+    <>
+      <Meta
+        title={metadata.title}
+        description={metadata.description}
+        url={path?.slug ? `/paths/${path.slug}` : '/paths'}
+      />
+      <div>
+        <PathWrapper path={path} />
+      </div>
+    </>
   );
 };
 

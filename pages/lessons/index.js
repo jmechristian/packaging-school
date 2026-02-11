@@ -21,6 +21,7 @@ import {
   getDeviceType,
 } from '../../helpers/api';
 import Meta from '../../components/shared/Meta';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
 
 const getLessonsQuery = /* GraphQL */ `
   query MyQuery {
@@ -263,11 +264,14 @@ const Page = () => {
     return [breadcrumb, itemList].filter(Boolean);
   }, [isLessons, siteUrl]);
 
+  const metadata = generateMetadata({ pageType: 'LESSONS_INDEX' });
+
   return (
     <>
       <Meta
-        title='Lessons | Packaging School'
-        description='Browse the extensive catalog of Packaging School course covering subjects from Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.'
+        title={metadata.title}
+        description={metadata.description}
+        url='/lessons'
         structuredData={structuredData}
       />
     <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>

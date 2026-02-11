@@ -1,9 +1,17 @@
-# *
 User-agent: *
 Allow: /
+Allow: /api/sitemap-index
+Allow: /api/sitemap-index*
+Allow: /api/sitemap*
 
-# Host
+Disallow: /_next/data/
+Disallow: /api/
+Disallow: /drafts/
+
+Disallow: /*?returnTo=
+Disallow: /*&returnTo=
+Disallow: /*?price_id=
+Disallow: /*&price_id=
+
 Host: https://packagingschool.com
-
-# Sitemaps
 Sitemap: https://packagingschool.com/api/sitemap-index

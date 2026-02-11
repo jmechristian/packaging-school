@@ -8,6 +8,7 @@ import { lMSCoursesBySlug, listLMSCourses } from '../../src/graphql/queries';
 import { API } from 'aws-amplify';
 import Meta from '../../components/shared/Meta';
 import { buildCourseJsonLd } from '../../libs/seo/courseJsonLd';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
 
 const Page = ({ course }) => {
   const dispatch = useDispatch();
@@ -21,11 +22,18 @@ const Page = ({ course }) => {
   const courseJsonLd = course ? buildCourseJsonLd(course, siteUrl) : null;
   const courseUrl = course?.slug ? `/courses/${course.slug}` : null;
 
-  // Safety guard: should be rare once fallback is 'blocking', but prevents prerender/runtime crashes.
+  const metadata = course
+    ? generateMetadata({
+        pageType: 'COURSE',
+        data: course,
+        pathname: courseUrl,
+      })
+    : generateMetadata({ pageType: 'STATIC', pathname: '/courses' });
+
   if (!course) {
     return (
       <>
-        <Meta title='Packaging School' url='/courses' />
+        <Meta title={metadata.title} description={metadata.description} url='/courses' />
         <div className='relative py-16' />
       </>
     );
@@ -33,8 +41,8 @@ const Page = ({ course }) => {
   return (
     <>
       <Meta
-        title={`Packaging School | ${course.title}`}
-        description={course.subheadline}
+        title={metadata.title}
+        description={metadata.description}
         image={course.seoImage}
         url={courseUrl}
         type='website'
