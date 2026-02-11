@@ -695,7 +695,7 @@ const Fpas = () => {
       {/* Column Selector Modal */}
       {isColumnModalOpen && (
         <div className='fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40'>
-          <div className='bg-white rounded-lg shadow-xl max-w-5xl w-full mx-4 max-h-[80vh] flex flex-col'>
+          <div className='bg-white rounded-lg shadow-xl max-w-[90vw] w-full mx-4 max-h-[90vh] flex flex-col'>
             <div className='flex items-start justify-between px-4 py-3 border-b border-gray-200'>
               <div>
                 <h2 className='text-sm sm:text-base font-semibold text-gray-900'>
@@ -787,7 +787,7 @@ const Fpas = () => {
             </div>
 
             <div className='px-4 py-3 overflow-y-auto flex-1'>
-              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs sm:text-sm'>
+              <div className='grid grid-cols-3 gap-2 text-xs sm:text-sm'>
                 {headers.map((headerObj, index) => {
                   const originalKey =
                     typeof headerObj === 'string'
