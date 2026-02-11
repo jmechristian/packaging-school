@@ -44,7 +44,7 @@ export default function Custom404() {
             />
           </div>
         </div>
-        <div className='w-full lg:w-1/2 flex flex-col justify-center py-12 pl-6 lg:pl-12 lg:pr-16'>
+        <div className='w-full lg:w-1/2 flex flex-col justify-center py-12 px-6 lg:pl-12 lg:pr-16'>
           <div className='flex flex-col gap-6'>
             <div>
               <p className='uppercase tracking-widest text-sm font-semibold text-gray-500 dark:text-gray-400'>
