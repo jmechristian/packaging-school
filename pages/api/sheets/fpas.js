@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     if (missingVars.length > 0) {
       return res.status(500).json({
         error: `Missing required environment variables: ${missingVars.join(
-          ', '
+          ', ',
         )}`,
       });
     }
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       token_uri: 'https://oauth2.googleapis.com/token',
       auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
       client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(
-        process.env.GOOGLE_CLIENT_EMAIL
+        process.env.GOOGLE_CLIENT_EMAIL,
       )}`,
       universe_domain: 'googleapis.com',
     };
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     const sheets = google.sheets({ version: 'v4', auth });
 
     // Default range to get all data if not specified
-    const sheetRange = range || 'Sheet1';
+    const sheetRange = range || 'with photo names';
 
     // Fetch data from the sheet
     const response = await sheets.spreadsheets.values.get({
@@ -68,22 +68,28 @@ export default async function handler(req, res) {
     const rows = response.data.values;
 
     if (!rows || rows.length === 0) {
-      return res.status(200).json({ data: [], headers: [], message: 'No data found' });
+      return res
+        .status(200)
+        .json({ data: [], headers: [], message: 'No data found' });
     }
 
     // Check if row 1 (index 0) has meaningful headers or if they're in row 2 (index 1)
     // If row 1 is mostly empty, use row 2 as headers
     const row1 = rows[0] || [];
     const row2 = rows[1] || [];
-    
+
     // Count non-empty cells in each row
-    const row1NonEmpty = row1.filter(cell => cell && cell.toString().trim() !== '').length;
-    const row2NonEmpty = row2.filter(cell => cell && cell.toString().trim() !== '').length;
-    
+    const row1NonEmpty = row1.filter(
+      (cell) => cell && cell.toString().trim() !== '',
+    ).length;
+    const row2NonEmpty = row2.filter(
+      (cell) => cell && cell.toString().trim() !== '',
+    ).length;
+
     // Use row 2 as headers if it has significantly more content than row 1
     const headerRowIndex = row2NonEmpty > row1NonEmpty * 2 ? 1 : 0;
     const dataStartIndex = headerRowIndex + 1;
-    
+
     // Get headers from the appropriate row
     const rawHeaders = rows[headerRowIndex] || [];
 
@@ -93,9 +99,10 @@ export default async function handler(req, res) {
     const headers = rawHeaders.map((header, index) => {
       // Preserve the original header value, even if empty
       const originalHeader = header ? header.toString().trim() : '';
-      
+
       // For the key, use original if it exists, otherwise create a unique column name
-      const base = originalHeader !== '' ? originalHeader : `Column ${index + 1}`;
+      const base =
+        originalHeader !== '' ? originalHeader : `Column ${index + 1}`;
 
       headerCounts[base] = (headerCounts[base] || 0) + 1;
       const count = headerCounts[base];
@@ -117,10 +124,10 @@ export default async function handler(req, res) {
       return rowData;
     });
 
-    res.status(200).json({ 
-      data, 
+    res.status(200).json({
+      data,
       headers,
-      rawHeaders: rawHeaders
+      rawHeaders: rawHeaders,
     });
   } catch (error) {
     if (error.code === 403) {
@@ -142,4 +149,3 @@ export default async function handler(req, res) {
     });
   }
 }
-

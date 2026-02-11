@@ -27,7 +27,7 @@ const Fpas = () => {
   const sheetId =
     router.query.sheetId || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID;
   const range =
-    router.query.range || 'Database (excl. unavail./incorrect prods)';
+    router.query.range || 'with photo names';
 
   // Load sheet data
   useEffect(() => {
@@ -391,10 +391,21 @@ const Fpas = () => {
     return strValue;
   };
 
-  // Check if row is a section header
+  // Check if row is a section header (location divider row), not just any row
+  // with a location phrase (e.g. "Community type" column values).
   const isSectionHeader = (row) => {
     return headers.some((headerObj) => {
+      const headerName =
+        typeof headerObj === 'string'
+          ? headerObj
+          : (headerObj.display || headerObj.original || '');
       const value = String(row[headerObj.original] || '').trim();
+      const isLocationColumn =
+        headerName.includes('CA') ||
+        (headerName.includes('Urban') && headerName.includes('Rural')) ||
+        headerName.includes('Location') ||
+        headerName.includes('Store');
+      if (!isLocationColumn) return false;
       return (
         value.includes('Urban Food Desert') ||
         value.includes('Rural Food Desert') ||
@@ -469,6 +480,9 @@ const Fpas = () => {
           <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
           <p className='text-sm sm:text-base text-gray-600'>
             Showing {sortedData.length} of {data.length} records
+          </p>
+          <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
+            Range: {range}
           </p>
         </div>
       </div>
