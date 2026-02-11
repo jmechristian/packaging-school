@@ -90,7 +90,7 @@ const Index = ({ certificates }) => {
     abbreviation,
     type,
     link,
-    applicationLink
+    applicationLink,
   ) => {
     await registerCertificateClick({
       country: location.country,
@@ -140,11 +140,11 @@ const Index = ({ certificates }) => {
             <div className='w-full max-w-[800px] aspect-[4/3]'>
               <RiveDemo />
             </div>
-            <div className='flex flex-col gap-5 px-5 xl:px-0 '>
-              <div className='w-full text-center h1-base'>
+            <div className='flex flex-col gap-5 px-5 xl:!px-0 '>
+              <h1 className='w-full text-center lg:!text-left h1-base'>
                 Boost Your Packaging Career with Our Exclusive Certificates
-              </div>
-              <div className='w-full text-center lg:text-left text-xl'>
+              </h1>
+              <div className='w-full text-center lg:!text-left text-xl lg:!text-2xl'>
                 Expert-led curriculum designed to elevate your expertise in
                 packaging management and design, automotive packaging, and food
                 packaging.
@@ -237,22 +237,22 @@ const Index = ({ certificates }) => {
                 <div className='items-center'>
                   <CertCard
                     cert={certificates.find(
-                      (cert) => cert.abbreviation === 'CMPM'
+                      (cert) => cert.abbreviation === 'CMPM',
                     )}
                     cardClickHandler={(
                       abbreviation,
                       type,
                       link,
-                      applicationLink
+                      applicationLink,
                     ) =>
                       handleCardClick(
                         certificates.find(
-                          (cert) => cert.abbreviation === 'CMPM'
+                          (cert) => cert.abbreviation === 'CMPM',
                         ),
                         abbreviation,
                         type,
                         link,
-                        applicationLink
+                        applicationLink,
                       )
                     }
                     purchaseText='Apply Now'
@@ -261,22 +261,22 @@ const Index = ({ certificates }) => {
                 <div className='items-center'>
                   <CertCard
                     cert={certificates.find(
-                      (cert) => cert.abbreviation === 'CPS'
+                      (cert) => cert.abbreviation === 'CPS',
                     )}
                     cardClickHandler={(
                       abbreviation,
                       type,
                       link,
-                      applicationLink
+                      applicationLink,
                     ) =>
                       handleCardClick(
                         certificates.find(
-                          (cert) => cert.abbreviation === 'CPS'
+                          (cert) => cert.abbreviation === 'CPS',
                         ),
                         abbreviation,
                         type,
                         link,
-                        applicationLink
+                        applicationLink,
                       )
                     }
                     purchaseText='Enroll Now'
@@ -321,22 +321,22 @@ const Index = ({ certificates }) => {
                 <div className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'>
                   <CertCard
                     cert={certificates.find(
-                      (cert) => cert.abbreviation === 'APC'
+                      (cert) => cert.abbreviation === 'APC',
                     )}
                     cardClickHandler={(
                       abbreviation,
                       type,
                       link,
-                      applicationLink
+                      applicationLink,
                     ) =>
                       handleCardClick(
                         certificates.find(
-                          (cert) => cert.abbreviation === 'APC'
+                          (cert) => cert.abbreviation === 'APC',
                         ),
                         abbreviation,
                         type,
                         link,
-                        applicationLink
+                        applicationLink,
                       )
                     }
                     purchaseText='Enroll Now'
@@ -375,22 +375,22 @@ const Index = ({ certificates }) => {
                 <div className='w-full max-w-[360px] md:max-w-[400px] h-[520px] cursor-pointer'>
                   <CertCard
                     cert={certificates.find(
-                      (cert) => cert.abbreviation === 'CSP'
+                      (cert) => cert.abbreviation === 'CSP',
                     )}
                     cardClickHandler={(
                       abbreviation,
                       type,
                       link,
-                      applicationLink
+                      applicationLink,
                     ) =>
                       handleCardClick(
                         certificates.find(
-                          (cert) => cert.abbreviation === 'CSP'
+                          (cert) => cert.abbreviation === 'CSP',
                         ),
                         abbreviation,
                         type,
                         link,
-                        applicationLink
+                        applicationLink,
                       )
                     }
                     purchaseText='Enroll Now'
@@ -444,22 +444,22 @@ const Index = ({ certificates }) => {
                 <div className='w-full'>
                   <CertCard
                     cert={certificates.find(
-                      (cert) => cert.abbreviation === 'FPC'
+                      (cert) => cert.abbreviation === 'FPC',
                     )}
                     cardClickHandler={(
                       abbreviation,
                       type,
                       link,
-                      applicationLink
+                      applicationLink,
                     ) =>
                       handleCardClick(
                         certificates.find(
-                          (cert) => cert.abbreviation === 'FPC'
+                          (cert) => cert.abbreviation === 'FPC',
                         ),
                         abbreviation,
                         type,
                         link,
-                        applicationLink
+                        applicationLink,
                       )
                     }
                     purchaseText='Get Involved'

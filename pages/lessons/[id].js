@@ -56,7 +56,7 @@ const Page = ({ lesson }) => {
   const newDate =
     lesson &&
     new Date(
-      lesson.backdate ? lesson.backdate : lesson.updatedAt
+      lesson.backdate ? lesson.backdate : lesson.updatedAt,
     ).toLocaleDateString('en-US');
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -167,18 +167,16 @@ const Page = ({ lesson }) => {
       router.asPath,
       location,
       slug,
-      'COURSE-VIEW'
+      'COURSE-VIEW',
     );
     altLink
       ? router.push(altLink)
       : router.push(
           `/${
             type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`
+          }/${slug}`,
         );
   };
-
-
 
   const refreshUser = async () => {
     const dbUser = await getAWSUser(user.email);
@@ -303,9 +301,9 @@ const Page = ({ lesson }) => {
             </div>
             <div className='col-span-12 lg:!col-span-9 flex flex-col gap-6 lg:gap-10'>
               <div className='w-full flex flex-col gap-5 lg:!gap-9 max-w-4xl'>
-                <div className='text-4xl lg:text-5xl font-medium font-oswald'>
+                <h1 className='text-4xl lg:!text-5xl font-medium font-oswald dark:text-white'>
                   {lesson.title}
-                </div>
+                </h1>
                 <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
               </div>
               {lesson.mediaType === 'VIDEO' && (
@@ -460,7 +458,7 @@ const Page = ({ lesson }) => {
                             isFeaturedCard.obj.id,
                             isFeaturedCard.obj.slug,
                             isFeaturedCard.obj.altLink,
-                            isFeaturedCard.obj.type
+                            isFeaturedCard.obj.type,
                           );
                         }}
                       >
@@ -486,7 +484,7 @@ const Page = ({ lesson }) => {
                         onClick={() => {
                           handleCertClick(
                             isFeaturedCard.obj.abbreviation,
-                            isFeaturedCard.obj.link
+                            isFeaturedCard.obj.link,
                           );
                         }}
                       >

@@ -480,6 +480,7 @@ const Page = () => {
         <div className='grid lg:!grid-cols-12 w-full gap-5'>
           <div className='lg:!col-span-3 lg:!relative'>
             <div className='flex flex-col gap-4 w-full lg:!sticky lg:!top-40 lg:!h-fit'>
+              <h1 className='text-2xl font-bold hidden'>Browse Full Catalog</h1>
               <div className='h4-base'>Browse Full Catalog</div>
               <div className='w-full h-px bg-slate-400'></div>
               <div className='w-full border border-slate-400 p-1 rounded-md'>
