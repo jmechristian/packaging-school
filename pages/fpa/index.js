@@ -5,6 +5,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
+  FunnelIcon,
 } from '@heroicons/react/20/solid';
 import Image from 'next/legacy/image';
 
@@ -24,6 +25,8 @@ const Fpas = () => {
     direction: 'asc',
   });
   const [activePreset, setActivePreset] = useState('');
+  const [columnFilters, setColumnFilters] = useState({});
+  const [openFilterColumn, setOpenFilterColumn] = useState(null);
 
   // Get sheetId from query params or use environment variable
   const sheetId =
@@ -113,6 +116,18 @@ const Fpas = () => {
     fetchSheetData();
   }, [sheetId, range]);
 
+  // Close column filter dropdown when clicking outside
+  useEffect(() => {
+    if (!openFilterColumn) return;
+    const close = (e) => {
+      if (e.target.closest?.('[data-filter-column]') == null) {
+        setOpenFilterColumn(null);
+      }
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [openFilterColumn]);
+
   // Load saved custom column views from localStorage
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -148,17 +163,57 @@ const Fpas = () => {
     });
   }, [data, headers, activePreset]);
 
+  // Unique values per column (from data after preset) for filter dropdowns
+  const columnUniqueValues = useMemo(() => {
+    const out = {};
+    headers.forEach((headerObj) => {
+      const key =
+        typeof headerObj === 'string' ? headerObj : headerObj.original;
+      const values = new Set(
+        dataAfterPreset.map((row) => {
+          const v = row[key];
+          return v === null || v === undefined || String(v).trim() === ''
+            ? '(Blank)'
+            : String(v).trim();
+        }),
+      );
+      out[key] = [...values].sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' }),
+      );
+    });
+    return out;
+  }, [headers, dataAfterPreset]);
+
+  // Apply per-column filters
+  const dataAfterColumnFilters = useMemo(() => {
+    const keys = Object.keys(columnFilters).filter(
+      (k) => columnFilters[k] && columnFilters[k].length > 0,
+    );
+    if (keys.length === 0) return dataAfterPreset;
+    return dataAfterPreset.filter((row) => {
+      return keys.every((colKey) => {
+        const allowed = columnFilters[colKey];
+        if (!allowed || allowed.length === 0) return true;
+        const cell =
+          row[colKey] === null || row[colKey] === undefined
+            ? '(Blank)'
+            : String(row[colKey]).trim();
+        return allowed.includes(cell);
+      });
+    });
+  }, [dataAfterPreset, columnFilters]);
+
   // Filter data based on search term
   const filteredData = useMemo(() => {
-    if (!searchTerm) return dataAfterPreset;
+    if (!searchTerm) return dataAfterColumnFilters;
 
-    return dataAfterPreset.filter((row) =>
+    return dataAfterColumnFilters.filter((row) =>
       headers.some((headerObj) => {
         const value = String(row[headerObj.original] || '').toLowerCase();
         return value.includes(searchTerm.toLowerCase());
       }),
     );
-  }, [dataAfterPreset, headers, searchTerm]);
+  }, [dataAfterColumnFilters, headers, searchTerm]);
 
   // Sort data
   const sortedData = useMemo(() => {
@@ -315,6 +370,32 @@ const Fpas = () => {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
+  };
+
+  const toggleColumnFilterValue = (colKey, value) => {
+    const all = columnUniqueValues[colKey] || [];
+    setColumnFilters((prev) => {
+      const current = prev[colKey] || [];
+      const isCurrentlyIncluded =
+        current.length === 0 || current.includes(value);
+      if (isCurrentlyIncluded) {
+        if (current.length === 0) {
+          return { ...prev, [colKey]: all.filter((v) => v !== value) };
+        }
+        return { ...prev, [colKey]: current.filter((v) => v !== value) };
+      }
+      return { ...prev, [colKey]: [...current, value] };
+    });
+  };
+
+  const clearColumnFilter = (colKey) => {
+    setColumnFilters((prev) => ({ ...prev, [colKey]: [] }));
+    setOpenFilterColumn(null);
+  };
+
+  const isColumnFilterActive = (colKey) => {
+    const selected = columnFilters[colKey];
+    return !!(selected && selected.length > 0);
   };
 
   const getSortIcon = (headerObj) => {
@@ -589,7 +670,7 @@ const Fpas = () => {
           <div className='overflow-x-auto'>
             <table
               className='divide-y divide-gray-200'
-              style={{ minWidth: `${Math.max(headers.length * 180, 1600)}px` }}
+              style={{ minWidth: `${Math.max(headers.length * 220, 2000)}px` }}
             >
               <thead className='bg-gray-50 sticky top-0 z-10'>
                 <tr>
@@ -618,17 +699,22 @@ const Fpas = () => {
                           header.includes('USDA'));
 
                       let colClass =
-                        'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors';
+                        'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors relative';
 
                       if (isLocationHeader) {
-                        colClass += ' min-w-[260px] sm:min-w-[320px]';
+                        colClass += ' min-w-[320px] sm:min-w-[400px]';
                       } else if (isPriceHeader) {
-                        colClass += ' min-w-[140px]';
+                        colClass += ' min-w-[180px]';
                       } else if (isNumericHeader) {
-                        colClass += ' min-w-[140px]';
+                        colClass += ' min-w-[180px]';
                       } else if (isLongHeader) {
-                        colClass += ' min-w-[200px]';
+                        colClass += ' min-w-[260px]';
                       }
+
+                      const uniqueVals = columnUniqueValues[originalHeader] || [];
+                      const selectedVals = columnFilters[originalHeader] || [];
+                      const filterOpen = openFilterColumn === originalHeader;
+                      const hasActiveFilter = isColumnFilterActive(originalHeader);
 
                       return (
                         <th
@@ -636,6 +722,7 @@ const Fpas = () => {
                           scope='col'
                           className={colClass}
                           onClick={() => requestSort(headerObj)}
+                          data-filter-column
                         >
                           <div className='flex items-start space-x-1'>
                             <span
@@ -647,7 +734,88 @@ const Fpas = () => {
                             <span className='flex-shrink-0 mt-0.5'>
                               {getSortIcon(headerObj)}
                             </span>
+                            <span
+                              className='flex-shrink-0 mt-0.5'
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenFilterColumn((c) =>
+                                  c === originalHeader ? null : originalHeader,
+                                );
+                              }}
+                              role='button'
+                              tabIndex={0}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  setOpenFilterColumn((c) =>
+                                    c === originalHeader
+                                      ? null
+                                      : originalHeader,
+                                  );
+                                }
+                              }}
+                              aria-label='Filter column'
+                              title='Filter column'
+                            >
+                              <FunnelIcon
+                                className={`w-4 h-4 ${
+                                  hasActiveFilter
+                                    ? 'text-blue-600'
+                                    : 'text-gray-400 opacity-70'
+                                }`}
+                              />
+                            </span>
                           </div>
+                          {filterOpen && (
+                            <div
+                              className='absolute left-0 top-full mt-0.5 z-20 min-w-[180px] max-h-[280px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg py-1'
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className='px-2 py-1 border-b border-gray-100 flex justify-between gap-2 text-xs'>
+                                <span className='text-gray-500'>
+                                  Filter by value
+                                </span>
+                                <button
+                                  type='button'
+                                  className='text-blue-600 hover:underline'
+                                  onClick={() =>
+                                    clearColumnFilter(originalHeader)
+                                  }
+                                >
+                                  Clear filter
+                                </button>
+                              </div>
+                              <div className='py-1 max-h-[240px] overflow-y-auto'>
+                                {uniqueVals.map((val) => {
+                                  const checked =
+                                    selectedVals.length === 0 ||
+                                    selectedVals.includes(val);
+                                  return (
+                                    <label
+                                      key={val}
+                                      className='flex items-center gap-2 px-2 py-1 hover:bg-gray-50 cursor-pointer text-xs'
+                                    >
+                                      <input
+                                        type='checkbox'
+                                        className='rounded border-gray-300 text-blue-600'
+                                        checked={checked}
+                                        onChange={() =>
+                                          toggleColumnFilterValue(
+                                            originalHeader,
+                                            val,
+                                          )
+                                        }
+                                      />
+                                      <span className='truncate' title={val}>
+                                        {val}
+                                      </span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
                         </th>
                       );
                     })}
@@ -704,7 +872,7 @@ const Fpas = () => {
                           }
 
                           if (isLocationCol) {
-                            cellClass += ' max-w-[320px]';
+                            cellClass += ' max-w-[400px]';
                           } else if (isPriceCol) {
                             cellClass += ' text-right';
                           } else if (isNumericCol) {
