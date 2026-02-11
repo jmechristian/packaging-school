@@ -367,14 +367,18 @@ const Fpas = () => {
       }
     }
 
-    // Check if it's a section header (new store location)
+    // Style like a section header only when column is a location header (e.g. CA1: ...), not "Community type"
+    const isLocationHeader =
+      header &&
+      (header.includes('CA') ||
+        header.includes('Location') ||
+        header.includes('Store'));
     if (
-      (header &&
-        header.includes('CA') &&
-        strValue.includes('Urban Food Desert')) ||
-      strValue.includes('Rural Food Desert') ||
-      strValue.includes('Tribal Grocery Store') ||
-      strValue.includes('High-Density')
+      isLocationHeader &&
+      (strValue.includes('Urban Food Desert') ||
+        strValue.includes('Rural Food Desert') ||
+        strValue.includes('Tribal Grocery Store') ||
+        strValue.includes('High-Density'))
     ) {
       return <span className='font-bold text-blue-800'>{strValue}</span>;
     }
