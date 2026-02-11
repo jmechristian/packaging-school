@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import {
   ChevronUpIcon,
   ChevronDownIcon,
@@ -26,8 +27,7 @@ const Fpas = () => {
   // Get sheetId from query params or use environment variable
   const sheetId =
     router.query.sheetId || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID;
-  const range =
-    router.query.range || 'with photo names';
+  const range = router.query.range || 'with photo names';
 
   // Load sheet data
   useEffect(() => {
@@ -402,7 +402,7 @@ const Fpas = () => {
       const headerName =
         typeof headerObj === 'string'
           ? headerObj
-          : (headerObj.display || headerObj.original || '');
+          : headerObj.display || headerObj.original || '';
       const value = String(row[headerObj.original] || '').trim();
       const isLocationColumn =
         headerName.includes('CA') ||
@@ -470,271 +470,50 @@ const Fpas = () => {
   }
 
   return (
-    <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[96vw]'>
-      <div className='mb-4 sm:mb-6 flex items-end justify-between gap-6'>
-        <div>
-          <Image
-            src='https://packschool.s3.us-east-1.amazonaws.com/fpa-350x233-1.png'
-            alt='FPA Logo'
-            width={350}
-            height={100}
-          />
-        </div>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
-          <p className='text-sm sm:text-base text-gray-600'>
-            Showing {sortedData.length} of {data.length} records
-          </p>
-          <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
-            Range: {range}
-          </p>
-        </div>
-      </div>
-
-      {/* Search + Column Controls */}
-      <div className='space-y-3 sm:space-y-4 mb-4'>
-        {/* Search Controls */}
-        <div className='bg-white border border-gray-300 rounded-lg p-3 sm:p-4 shadow-sm'>
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
-            <div className='relative flex-1'>
-              <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-                <MagnifyingGlassIcon className='h-5 w-5 text-gray-400' />
-              </div>
-              <input
-                type='text'
-                placeholder='Search across all columns...'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className='block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base'
-              />
-            </div>
-
-            {/* Quick View Buttons + Custom Views + Open Modal */}
-            <div className='flex flex-wrap items-center gap-2'>
-              <button
-                type='button'
-                onClick={showAllColumns}
-                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-              >
-                Show all
-              </button>
-              <button
-                type='button'
-                onClick={hideAllNonKeyColumns}
-                className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-              >
-                Compact view
-              </button>
-
-              {customViews.length > 0 && (
-                <select
-                  className='text-xs sm:text-sm px-3 pr-6 py-1 rounded border border-gray-300 bg-white hover:bg-gray-50 min-w-[130px]'
-                  defaultValue=''
-                  onChange={(e) => {
-                    applyCustomView(e.target.value);
-                    e.target.value = '';
-                  }}
-                >
-                  <option value='' disabled>
-                    Custom
-                  </option>
-                  {customViews.map((view) => (
-                    <option key={view.name} value={view.name}>
-                      {view.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-              <button
-                type='button'
-                onClick={() => setIsColumnModalOpen(true)}
-                className='text-xs sm:text-sm px-2.5 py-1.5 rounded border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 font-medium'
-              >
-                Columns…
-              </button>
-              <span className='text-xs text-gray-500'>
-                ({visibleColumns?.length || headers.length} visible)
-              </span>
-            </div>
+    <>
+      <Head>
+        <title>FPA | The Packaging School</title>
+      </Head>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-[96vw]'>
+        <div className='mb-4 sm:mb-6 flex items-end justify-between gap-6'>
+          <div>
+            <Image
+              src='https://packschool.s3.us-east-1.amazonaws.com/fpa-350x233-1.png'
+              alt='FPA Logo'
+              width={350}
+              height={100}
+            />
+          </div>
+          <div className='flex flex-col gap-1'>
+            <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
+            <p className='text-sm sm:text-base text-gray-600'>
+              Showing {sortedData.length} of {data.length} records
+            </p>
+            <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
+              Range: {range}
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Table Container */}
-      <div className='bg-white border border-gray-300 rounded-lg shadow-sm'>
-        <div className='overflow-x-auto'>
-          <table
-            className='divide-y divide-gray-200'
-            style={{ minWidth: `${Math.max(headers.length * 180, 1600)}px` }}
-          >
-            <thead className='bg-gray-50 sticky top-0 z-10'>
-              <tr>
-                {headers
-                  .filter((headerObj) => isColumnVisible(headerObj))
-                  .map((headerObj, index) => {
-                    const header =
-                      typeof headerObj === 'string'
-                        ? headerObj
-                        : headerObj.display || headerObj.original;
-                    const originalHeader =
-                      typeof headerObj === 'string'
-                        ? headerObj
-                        : headerObj.original;
-                    // Determine column width based on header
-                    const isLongHeader = header && header.length > 24;
-                    const isLocationHeader =
-                      header &&
-                      (header.includes('CA') ||
-                        header.includes('Urban') ||
-                        header.includes('Rural'));
-                    const isPriceHeader = header === 'Shopping Day';
-                    const isNumericHeader =
-                      header &&
-                      (header.includes('Shelf life') ||
-                        header.includes('USDA'));
-
-                    let colClass =
-                      'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors';
-
-                    if (isLocationHeader) {
-                      colClass += ' min-w-[260px] sm:min-w-[320px]';
-                    } else if (isPriceHeader) {
-                      colClass += ' min-w-[140px]';
-                    } else if (isNumericHeader) {
-                      colClass += ' min-w-[140px]';
-                    } else if (isLongHeader) {
-                      colClass += ' min-w-[200px]';
-                    }
-
-                    return (
-                      <th
-                        key={originalHeader || index}
-                        scope='col'
-                        className={colClass}
-                        onClick={() => requestSort(headerObj)}
-                      >
-                        <div className='flex items-start space-x-1'>
-                          <span
-                            className='break-words leading-tight'
-                            title={originalHeader}
-                          >
-                            {header || `Column ${index + 1}`}
-                          </span>
-                          <span className='flex-shrink-0 mt-0.5'>
-                            {getSortIcon(headerObj)}
-                          </span>
-                        </div>
-                      </th>
-                    );
-                  })}
-              </tr>
-            </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
-              {paginatedData.map((row, rowIndex) => {
-                const isHeader = isSectionHeader(row);
-                const isSummary = isSummaryRow(row);
-
-                let rowClass = 'hover:bg-gray-50 transition-colors';
-                if (isHeader) {
-                  rowClass =
-                    'bg-blue-50 hover:bg-blue-100 font-semibold border-t-2 border-blue-300';
-                } else if (isSummary) {
-                  rowClass =
-                    'bg-yellow-50 hover:bg-yellow-100 border-t border-yellow-300';
-                }
-
-                return (
-                  <tr key={rowIndex} className={rowClass}>
-                    {headers
-                      .filter((headerObj) => isColumnVisible(headerObj))
-                      .map((headerObj, colIndex) => {
-                        const originalHeader =
-                          typeof headerObj === 'string'
-                            ? headerObj
-                            : headerObj.original;
-                        const displayHeader =
-                          typeof headerObj === 'string'
-                            ? headerObj
-                            : headerObj.display || headerObj.original;
-                        const value = row[originalHeader];
-                        const isLocationCol =
-                          displayHeader &&
-                          (displayHeader.includes('CA') ||
-                            displayHeader.includes('Urban') ||
-                            displayHeader.includes('Rural'));
-                        const isPriceCol = displayHeader === 'Shopping Day';
-                        const isNumericCol =
-                          displayHeader &&
-                          (displayHeader.includes('Shelf life') ||
-                            displayHeader.includes('USDA'));
-
-                        let cellClass =
-                          'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-xs sm:text-sm border-b border-gray-100';
-
-                        if (isHeader) {
-                          cellClass += ' text-blue-900';
-                        } else if (isSummary) {
-                          cellClass += ' text-yellow-900 font-medium';
-                        } else {
-                          cellClass += ' text-gray-900';
-                        }
-
-                        if (isLocationCol) {
-                          cellClass += ' max-w-[320px]';
-                        } else if (isPriceCol) {
-                          cellClass += ' text-right';
-                        } else if (isNumericCol) {
-                          cellClass += ' text-right';
-                        }
-
-                        return (
-                          <td
-                            key={originalHeader || colIndex}
-                            className={cellClass}
-                          >
-                            <div
-                              className={isLocationCol ? 'truncate' : ''}
-                              title={value ? String(value) : ''}
-                            >
-                              {formatCellValue(value, displayHeader)}
-                            </div>
-                          </td>
-                        );
-                      })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Column Selector Modal */}
-      {isColumnModalOpen && (
-        <div className='fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40'>
-          <div className='bg-white rounded-lg shadow-xl max-w-[90vw] w-full mx-4 max-h-[90vh] flex flex-col'>
-            <div className='flex items-start justify-between px-4 py-3 border-b border-gray-200'>
-              <div>
-                <h2 className='text-sm sm:text-base font-semibold text-gray-900'>
-                  Configure columns
-                </h2>
-                <p className='mt-0.5 text-xs text-gray-500'>
-                  Choose which columns to show. You can refine these into saved
-                  views later.
-                </p>
+        {/* Search + Column Controls */}
+        <div className='space-y-3 sm:space-y-4 mb-4'>
+          {/* Search Controls */}
+          <div className='bg-white border border-gray-300 rounded-lg p-3 sm:p-4 shadow-sm'>
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+              <div className='relative flex-1'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <MagnifyingGlassIcon className='h-5 w-5 text-gray-400' />
+                </div>
+                <input
+                  type='text'
+                  placeholder='Search across all columns...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base'
+                />
               </div>
-              <button
-                type='button'
-                onClick={() => setIsColumnModalOpen(false)}
-                className='text-gray-400 hover:text-gray-600 text-xl leading-none px-1'
-                aria-label='Close'
-              >
-                ×
-              </button>
-            </div>
 
-            <div className='px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-3 sm:gap-4'>
+              {/* Quick View Buttons + Custom Views + Open Modal */}
               <div className='flex flex-wrap items-center gap-2'>
                 <button
                   type='button'
@@ -750,104 +529,330 @@ const Fpas = () => {
                 >
                   Compact view
                 </button>
-                <span className='text-xs text-gray-500'>
-                  ({visibleColumns?.length || headers.length} visible of{' '}
-                  {headers.length})
-                </span>
-              </div>
 
-              <div className='flex-1 flex flex-col items-start sm:items-end gap-1'>
-                <div className='flex flex-wrap items-center gap-2'>
-                  <input
-                    type='text'
-                    value={newViewName}
-                    onChange={(e) => setNewViewName(e.target.value)}
-                    maxLength={40}
-                    placeholder='Name this layout…'
-                    className='flex-shrink min-w-[140px] max-w-[220px] text-xs sm:text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500'
-                  />
-                  <button
-                    type='button'
-                    onClick={handleSaveCurrentView}
-                    disabled={
-                      !newViewName.trim() ||
-                      !visibleColumns ||
-                      visibleColumns.length === 0 ||
-                      (customViews.length >= 3 &&
-                        !customViews.some(
-                          (v) =>
-                            v.name.toLowerCase() ===
-                            newViewName.trim().toLowerCase(),
-                        ))
-                    }
-                    className={`text-xs sm:text-sm px-3 py-1.5 rounded border ${
-                      !newViewName.trim() ||
-                      !visibleColumns ||
-                      visibleColumns.length === 0 ||
-                      (customViews.length >= 3 &&
-                        !customViews.some(
-                          (v) =>
-                            v.name.toLowerCase() ===
-                            newViewName.trim().toLowerCase(),
-                        ))
-                        ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
-                        : 'border-blue-600 text-blue-600 bg-white hover:bg-blue-50'
-                    }`}
+                {customViews.length > 0 && (
+                  <select
+                    className='text-xs sm:text-sm px-3 pr-6 py-1 rounded border border-gray-300 bg-white hover:bg-gray-50 min-w-[130px]'
+                    defaultValue=''
+                    onChange={(e) => {
+                      applyCustomView(e.target.value);
+                      e.target.value = '';
+                    }}
                   >
-                    Save layout
-                  </button>
-                </div>
-                <span className='text-[10px] text-gray-400'>
-                  You can save up to 3 custom layouts. Reuse a name to update an
-                  existing one.
+                    <option value='' disabled>
+                      Custom
+                    </option>
+                    {customViews.map((view) => (
+                      <option key={view.name} value={view.name}>
+                        {view.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                <button
+                  type='button'
+                  onClick={() => setIsColumnModalOpen(true)}
+                  className='text-xs sm:text-sm px-2.5 py-1.5 rounded border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 font-medium'
+                >
+                  Columns…
+                </button>
+                <span className='text-xs text-gray-500'>
+                  ({visibleColumns?.length || headers.length} visible)
                 </span>
               </div>
-            </div>
-
-            <div className='px-4 py-3 overflow-y-auto flex-1'>
-              <div className='grid grid-cols-3 gap-2 text-xs sm:text-sm'>
-                {headers.map((headerObj, index) => {
-                  const originalKey =
-                    typeof headerObj === 'string'
-                      ? headerObj
-                      : headerObj.original;
-                  const displayName =
-                    typeof headerObj === 'string'
-                      ? headerObj
-                      : headerObj.display || headerObj.original;
-
-                  return (
-                    <label
-                      key={originalKey || index}
-                      className='inline-flex items-center gap-1 cursor-pointer'
-                      title={originalKey}
-                    >
-                      <input
-                        type='checkbox'
-                        className='h-3 w-3 sm:h-4 sm:w-4 text-blue-600 border-gray-300 rounded'
-                        checked={isColumnVisible(headerObj)}
-                        onChange={() => toggleColumnVisibility(originalKey)}
-                      />
-                      <span className='truncate'>{displayName}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className='px-4 py-3 border-t border-gray-200 flex justify-end gap-2'>
-              <button
-                type='button'
-                className='text-xs sm:text-sm px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50'
-                onClick={() => setIsColumnModalOpen(false)}
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Table Container */}
+        <div className='bg-white border border-gray-300 rounded-lg shadow-sm'>
+          <div className='overflow-x-auto'>
+            <table
+              className='divide-y divide-gray-200'
+              style={{ minWidth: `${Math.max(headers.length * 180, 1600)}px` }}
+            >
+              <thead className='bg-gray-50 sticky top-0 z-10'>
+                <tr>
+                  {headers
+                    .filter((headerObj) => isColumnVisible(headerObj))
+                    .map((headerObj, index) => {
+                      const header =
+                        typeof headerObj === 'string'
+                          ? headerObj
+                          : headerObj.display || headerObj.original;
+                      const originalHeader =
+                        typeof headerObj === 'string'
+                          ? headerObj
+                          : headerObj.original;
+                      // Determine column width based on header
+                      const isLongHeader = header && header.length > 24;
+                      const isLocationHeader =
+                        header &&
+                        (header.includes('CA') ||
+                          header.includes('Urban') ||
+                          header.includes('Rural'));
+                      const isPriceHeader = header === 'Shopping Day';
+                      const isNumericHeader =
+                        header &&
+                        (header.includes('Shelf life') ||
+                          header.includes('USDA'));
+
+                      let colClass =
+                        'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors';
+
+                      if (isLocationHeader) {
+                        colClass += ' min-w-[260px] sm:min-w-[320px]';
+                      } else if (isPriceHeader) {
+                        colClass += ' min-w-[140px]';
+                      } else if (isNumericHeader) {
+                        colClass += ' min-w-[140px]';
+                      } else if (isLongHeader) {
+                        colClass += ' min-w-[200px]';
+                      }
+
+                      return (
+                        <th
+                          key={originalHeader || index}
+                          scope='col'
+                          className={colClass}
+                          onClick={() => requestSort(headerObj)}
+                        >
+                          <div className='flex items-start space-x-1'>
+                            <span
+                              className='break-words leading-tight'
+                              title={originalHeader}
+                            >
+                              {header || `Column ${index + 1}`}
+                            </span>
+                            <span className='flex-shrink-0 mt-0.5'>
+                              {getSortIcon(headerObj)}
+                            </span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                </tr>
+              </thead>
+              <tbody className='bg-white divide-y divide-gray-200'>
+                {paginatedData.map((row, rowIndex) => {
+                  const isHeader = isSectionHeader(row);
+                  const isSummary = isSummaryRow(row);
+
+                  let rowClass = 'hover:bg-gray-50 transition-colors';
+                  if (isHeader) {
+                    rowClass =
+                      'bg-blue-50 hover:bg-blue-100 font-semibold border-t-2 border-blue-300';
+                  } else if (isSummary) {
+                    rowClass =
+                      'bg-yellow-50 hover:bg-yellow-100 border-t border-yellow-300';
+                  }
+
+                  return (
+                    <tr key={rowIndex} className={rowClass}>
+                      {headers
+                        .filter((headerObj) => isColumnVisible(headerObj))
+                        .map((headerObj, colIndex) => {
+                          const originalHeader =
+                            typeof headerObj === 'string'
+                              ? headerObj
+                              : headerObj.original;
+                          const displayHeader =
+                            typeof headerObj === 'string'
+                              ? headerObj
+                              : headerObj.display || headerObj.original;
+                          const value = row[originalHeader];
+                          const isLocationCol =
+                            displayHeader &&
+                            (displayHeader.includes('CA') ||
+                              displayHeader.includes('Urban') ||
+                              displayHeader.includes('Rural'));
+                          const isPriceCol = displayHeader === 'Shopping Day';
+                          const isNumericCol =
+                            displayHeader &&
+                            (displayHeader.includes('Shelf life') ||
+                              displayHeader.includes('USDA'));
+
+                          let cellClass =
+                            'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-xs sm:text-sm border-b border-gray-100';
+
+                          if (isHeader) {
+                            cellClass += ' text-blue-900';
+                          } else if (isSummary) {
+                            cellClass += ' text-yellow-900 font-medium';
+                          } else {
+                            cellClass += ' text-gray-900';
+                          }
+
+                          if (isLocationCol) {
+                            cellClass += ' max-w-[320px]';
+                          } else if (isPriceCol) {
+                            cellClass += ' text-right';
+                          } else if (isNumericCol) {
+                            cellClass += ' text-right';
+                          }
+
+                          return (
+                            <td
+                              key={originalHeader || colIndex}
+                              className={cellClass}
+                            >
+                              <div
+                                className={isLocationCol ? 'truncate' : ''}
+                                title={value ? String(value) : ''}
+                              >
+                                {formatCellValue(value, displayHeader)}
+                              </div>
+                            </td>
+                          );
+                        })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Column Selector Modal */}
+        {isColumnModalOpen && (
+          <div className='fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40'>
+            <div className='bg-white rounded-lg shadow-xl max-w-[90vw] w-full mx-4 max-h-[90vh] flex flex-col'>
+              <div className='flex items-start justify-between px-4 py-3 border-b border-gray-200'>
+                <div>
+                  <h2 className='text-sm sm:text-base font-semibold text-gray-900'>
+                    Configure columns
+                  </h2>
+                  <p className='mt-0.5 text-xs text-gray-500'>
+                    Choose which columns to show. You can refine these into
+                    saved views later.
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => setIsColumnModalOpen(false)}
+                  className='text-gray-400 hover:text-gray-600 text-xl leading-none px-1'
+                  aria-label='Close'
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className='px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-3 sm:gap-4'>
+                <div className='flex flex-wrap items-center gap-2'>
+                  <button
+                    type='button'
+                    onClick={showAllColumns}
+                    className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+                  >
+                    Show all
+                  </button>
+                  <button
+                    type='button'
+                    onClick={hideAllNonKeyColumns}
+                    className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
+                  >
+                    Compact view
+                  </button>
+                  <span className='text-xs text-gray-500'>
+                    ({visibleColumns?.length || headers.length} visible of{' '}
+                    {headers.length})
+                  </span>
+                </div>
+
+                <div className='flex-1 flex flex-col items-start sm:items-end gap-1'>
+                  <div className='flex flex-wrap items-center gap-2'>
+                    <input
+                      type='text'
+                      value={newViewName}
+                      onChange={(e) => setNewViewName(e.target.value)}
+                      maxLength={40}
+                      placeholder='Name this layout…'
+                      className='flex-shrink min-w-[140px] max-w-[220px] text-xs sm:text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500'
+                    />
+                    <button
+                      type='button'
+                      onClick={handleSaveCurrentView}
+                      disabled={
+                        !newViewName.trim() ||
+                        !visibleColumns ||
+                        visibleColumns.length === 0 ||
+                        (customViews.length >= 3 &&
+                          !customViews.some(
+                            (v) =>
+                              v.name.toLowerCase() ===
+                              newViewName.trim().toLowerCase(),
+                          ))
+                      }
+                      className={`text-xs sm:text-sm px-3 py-1.5 rounded border ${
+                        !newViewName.trim() ||
+                        !visibleColumns ||
+                        visibleColumns.length === 0 ||
+                        (customViews.length >= 3 &&
+                          !customViews.some(
+                            (v) =>
+                              v.name.toLowerCase() ===
+                              newViewName.trim().toLowerCase(),
+                          ))
+                          ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
+                          : 'border-blue-600 text-blue-600 bg-white hover:bg-blue-50'
+                      }`}
+                    >
+                      Save layout
+                    </button>
+                  </div>
+                  <span className='text-[10px] text-gray-400'>
+                    You can save up to 3 custom layouts. Reuse a name to update
+                    an existing one.
+                  </span>
+                </div>
+              </div>
+
+              <div className='px-4 py-3 overflow-y-auto flex-1'>
+                <div className='grid grid-cols-3 gap-2 text-xs sm:text-sm'>
+                  {headers.map((headerObj, index) => {
+                    const originalKey =
+                      typeof headerObj === 'string'
+                        ? headerObj
+                        : headerObj.original;
+                    const displayName =
+                      typeof headerObj === 'string'
+                        ? headerObj
+                        : headerObj.display || headerObj.original;
+
+                    return (
+                      <label
+                        key={originalKey || index}
+                        className='inline-flex items-center gap-1 cursor-pointer'
+                        title={originalKey}
+                      >
+                        <input
+                          type='checkbox'
+                          className='h-3 w-3 sm:h-4 sm:w-4 text-blue-600 border-gray-300 rounded'
+                          checked={isColumnVisible(headerObj)}
+                          onChange={() => toggleColumnVisibility(originalKey)}
+                        />
+                        <span className='truncate'>{displayName}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className='px-4 py-3 border-t border-gray-200 flex justify-end gap-2'>
+                <button
+                  type='button'
+                  className='text-xs sm:text-sm px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50'
+                  onClick={() => setIsColumnModalOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
