@@ -291,28 +291,6 @@ const Fpas = () => {
     );
   };
 
-  const hideAllNonKeyColumns = () => {
-    // Example "compact" view: keep a small set of important columns
-    const importantKeywords = [
-      'UPC',
-      'Product',
-      'Brand',
-      'Store',
-      'Shopping Day',
-      'Shelf life remaining (days)',
-    ];
-    const compactKeys = headers
-      .map((h) => (typeof h === 'string' ? h : h.original))
-      .filter((key) =>
-        importantKeywords.some((k) =>
-          String(key).toLowerCase().includes(k.toLowerCase()),
-        ),
-      );
-    if (compactKeys.length > 0) {
-      setVisibleColumns(compactKeys);
-    }
-  };
-
   // Case Study 1 preset: show only these columns (matched by title)
   const CASE_STUDY_1_COLUMN_TITLES = [
     'Community Type',
@@ -1081,13 +1059,6 @@ const Fpas = () => {
                     className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
                   >
                     Show all
-                  </button>
-                  <button
-                    type='button'
-                    onClick={hideAllNonKeyColumns}
-                    className='text-xs sm:text-sm px-2 py-1 rounded border border-gray-300 bg-gray-50 hover:bg-gray-100'
-                  >
-                    Compact view
                   </button>
                   <span className='text-xs text-gray-500'>
                     ({visibleColumns?.length || headers.length} visible of{' '}
