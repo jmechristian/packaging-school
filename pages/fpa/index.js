@@ -25,6 +25,7 @@ const Fpas = () => {
     direction: 'asc',
   });
   const [activePreset, setActivePreset] = useState('');
+  const [onlyAuditedFilterOn, setOnlyAuditedFilterOn] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
   const [openFilterColumn, setOpenFilterColumn] = useState(null);
 
@@ -151,9 +152,9 @@ const Fpas = () => {
     }
   }, []);
 
-  // Apply preset row filter first (e.g. Only Audited Products hides certain column [6] values)
+  // Apply audited row filter first when toggle is on (hides certain column [6] values)
   const dataAfterPreset = useMemo(() => {
-    if (activePreset !== 'only-audited' || !headers.length) return data;
+    if (!onlyAuditedFilterOn || !headers.length) return data;
     const colKey = headers[6]?.original;
     if (!colKey) return data;
     const exclude = [
@@ -162,10 +163,12 @@ const Fpas = () => {
       'not a valid alternative',
     ];
     return data.filter((row) => {
-      const v = String(row[colKey] ?? '').trim().toLowerCase();
+      const v = String(row[colKey] ?? '')
+        .trim()
+        .toLowerCase();
       return !exclude.includes(v);
     });
-  }, [data, headers, activePreset]);
+  }, [data, headers, onlyAuditedFilterOn]);
 
   // Unique values per column (from data after preset) for filter dropdowns
   const columnUniqueValues = useMemo(() => {
@@ -328,7 +331,10 @@ const Fpas = () => {
   ];
 
   const applyCaseStudy1Columns = () => {
-    const normalize = (s) => String(s ?? '').trim().toLowerCase();
+    const normalize = (s) =>
+      String(s ?? '')
+        .trim()
+        .toLowerCase();
     const matchTitles = CASE_STUDY_1_COLUMN_TITLES.map(normalize);
     const keys = headers
       .map((h) => (typeof h === 'string' ? h : h.original))
@@ -614,14 +620,14 @@ const Fpas = () => {
               height={100}
             />
           </div>
-          <div className='flex flex-col gap-1'>
+          <div className='flex flex-col gap-0'>
             <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
-            <p className='text-sm sm:text-base text-gray-600'>
+            <p className='text-sm  text-gray-600'>
               Showing {sortedData.length} of {data.length} records
             </p>
-            <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
+            {/* <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
               Range: {range}
-            </p>
+            </p> */}
           </div>
         </div>
 
@@ -655,8 +661,6 @@ const Fpas = () => {
                       showAllColumns();
                     } else if (value === 'compact') {
                       hideAllNonKeyColumns();
-                    } else if (value === 'only-audited') {
-                      showAllColumns();
                     } else if (value === 'case-study-1') {
                       applyCaseStudy1Columns();
                     }
@@ -665,9 +669,20 @@ const Fpas = () => {
                   <option value=''>Presets</option>
                   <option value='show-all'>Show all</option>
                   <option value='compact'>Compact</option>
-                  <option value='only-audited'>Only Audited Products</option>
                   <option value='case-study-1'>Case Study 1</option>
                 </select>
+
+                <label className='inline-flex items-center gap-2 cursor-pointer'>
+                  <input
+                    type='checkbox'
+                    checked={onlyAuditedFilterOn}
+                    onChange={(e) => setOnlyAuditedFilterOn(e.target.checked)}
+                    className='rounded border-gray-300 text-blue-600'
+                  />
+                  <span className='text-xs sm:text-sm text-gray-700'>
+                    Only audited products
+                  </span>
+                </label>
 
                 {customViews.length > 0 && (
                   <select
@@ -755,10 +770,12 @@ const Fpas = () => {
                         colClass += ' min-w-[260px]';
                       }
 
-                      const uniqueVals = columnUniqueValues[originalHeader] || [];
+                      const uniqueVals =
+                        columnUniqueValues[originalHeader] || [];
                       const selectedVals = columnFilters[originalHeader] || [];
                       const filterOpen = openFilterColumn === originalHeader;
-                      const hasActiveFilter = isColumnFilterActive(originalHeader);
+                      const hasActiveFilter =
+                        isColumnFilterActive(originalHeader);
 
                       return (
                         <th
