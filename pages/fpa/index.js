@@ -326,7 +326,6 @@ const Fpas = () => {
     'Note the alternative',
     'Packaged in Flexible Plastic? (consumer-facing material, not including labels or shrink bands)',
     'Packaging system likely includes independent flexible plastic packaging',
-    'Predominant Packaging Material',
     'Packaging Format',
   ];
 
@@ -336,6 +335,91 @@ const Fpas = () => {
         .trim()
         .toLowerCase();
     const matchTitles = CASE_STUDY_1_COLUMN_TITLES.map(normalize);
+    const keys = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .filter((key) =>
+        matchTitles.some(
+          (t) => normalize(key) === t || normalize(key).includes(t),
+        ),
+      );
+    if (keys.length > 0) {
+      setVisibleColumns(keys);
+    }
+  };
+
+  // Case Study 2 preset: show only these columns (matched by title)
+  const CASE_STUDY_2_COLUMN_TITLES = [
+    'Community Type',
+    'Store ID',
+    'Item #',
+    'Photo Names',
+    'WIC Category',
+    'Product to be audited',
+    'Selected Product',
+    'Brand',
+    'Note the alternative',
+    'Shelf life listed on package',
+    'Date of Audit',
+    'Calculated shelf life remaining in pantry (days)',
+    'Calculated shelf life remaining if refrigerated (days)',
+    'Calculated shelf life remaining if frozen (days)',
+    'Calculated shelf life remaining (days) regardless of storage method',
+    'Cited typical shelf life in pantry (days)',
+    'Cited typical shelf life if refrigerated (days)',
+    'Cited typical shelf life if frozen (days)',
+    'Cited typical shelf life (days) regardless of storage method',
+    'Packaging Material Relevant for Shelf Life',
+    'Remaining-to-typical shelf life ratio',
+    'Percentage above (+) or below (-) cited typical shelf life (%)',
+  ];
+
+  const applyCaseStudy2Columns = () => {
+    const normalize = (s) =>
+      String(s ?? '')
+        .trim()
+        .toLowerCase();
+    const matchTitles = CASE_STUDY_2_COLUMN_TITLES.map(normalize);
+    const keys = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .filter((key) =>
+        matchTitles.some(
+          (t) => normalize(key) === t || normalize(key).includes(t),
+        ),
+      );
+    if (keys.length > 0) {
+      setVisibleColumns(keys);
+    }
+  };
+
+  // Case Study 3 preset: show only these columns (matched by title)
+  const CASE_STUDY_3_COLUMN_TITLES = [
+    'Community Type',
+    'Store ID',
+    'Item #',
+    'Photo Names',
+    'WIC Category',
+    'Product to be audited',
+    'Selected Product',
+    'Brand',
+    'Is there a WIC-approved alternative package?',
+    'Note the alternative',
+    'Unit (each, oz, etc.)',
+    'Unit Quantity',
+    'Price ($)',
+    'Price per unit ($/unit)',
+    'More than 1 WIC-approved option?',
+    'Packaged in Flexible Plastic? (consumer-facing material, not including labels or shrink bands)',
+    'Packaging system likely includes independent flexible plastic packaging',
+    'Predominant Packaging Material',
+    'Packaging Format',
+  ];
+
+  const applyCaseStudy3Columns = () => {
+    const normalize = (s) =>
+      String(s ?? '')
+        .trim()
+        .toLowerCase();
+    const matchTitles = CASE_STUDY_3_COLUMN_TITLES.map(normalize);
     const keys = headers
       .map((h) => (typeof h === 'string' ? h : h.original))
       .filter((key) =>
@@ -659,17 +743,20 @@ const Fpas = () => {
                     setActivePreset(value);
                     if (value === 'show-all') {
                       showAllColumns();
-                    } else if (value === 'compact') {
-                      hideAllNonKeyColumns();
                     } else if (value === 'case-study-1') {
                       applyCaseStudy1Columns();
+                    } else if (value === 'case-study-2') {
+                      applyCaseStudy2Columns();
+                    } else if (value === 'case-study-3') {
+                      applyCaseStudy3Columns();
                     }
                   }}
                 >
                   <option value=''>Presets</option>
                   <option value='show-all'>Show all</option>
-                  <option value='compact'>Compact</option>
                   <option value='case-study-1'>Case Study 1</option>
+                  <option value='case-study-2'>Case Study 2</option>
+                  <option value='case-study-3'>Case Study 3</option>
                 </select>
 
                 <label className='inline-flex items-center gap-2 cursor-pointer'>
@@ -719,9 +806,9 @@ const Fpas = () => {
           </div>
         </div>
 
-        {/* Table Container */}
+        {/* Table Container - vertical scroll so sticky header sticks to top of this box */}
         <div className='bg-white border border-gray-300 rounded-lg shadow-sm'>
-          <div className='overflow-x-auto'>
+          <div className='overflow-auto max-h-[calc(100vh-16rem)]'>
             <table
               className='divide-y divide-gray-200'
               style={{
@@ -731,7 +818,7 @@ const Fpas = () => {
                 )}px`,
               }}
             >
-              <thead className='bg-gray-50 sticky top-0 z-10'>
+              <thead className='bg-gray-50 sticky top-0 z-20 shadow-[0_1px_3px_0_rgba(0,0,0,0.1)]'>
                 <tr>
                   {headers
                     .filter((headerObj) => isColumnVisible(headerObj))
@@ -758,7 +845,7 @@ const Fpas = () => {
                           header.includes('USDA'));
 
                       let colClass =
-                        'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors relative';
+                        'px-3 sm:px-4 lg:px-5 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors relative bg-gray-50';
 
                       if (isLocationHeader) {
                         colClass += ' min-w-[320px] sm:min-w-[400px]';
