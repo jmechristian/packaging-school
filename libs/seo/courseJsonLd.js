@@ -50,6 +50,33 @@ export function buildCourseJsonLd(course, siteUrl) {
     });
   }
 
+  // Syllabus sections from course outline (chapters + lessons)
+  const syllabusSections = (() => {
+    const edges = course.courseOutline?.chapters?.edges;
+    if (!edges || !Array.isArray(edges)) return undefined;
+    const sorted = [...edges].sort(
+      (a, b) => (a.node?.position ?? 0) - (b.node?.position ?? 0)
+    );
+    return sorted
+      .map(({ node: chapter }, idx) => {
+        const lessons = (chapter.lessons?.edges ?? []).map(
+          ({ node: lesson }) =>
+            compact({
+              '@type': 'LearningResource',
+              name: lesson.title,
+              learningResourceType: lesson.lessonType || undefined,
+            })
+        );
+        return compact({
+          '@type': 'Syllabus',
+          name: chapter.title,
+          position: idx + 1,
+          ...(lessons.length ? { hasPart: lessons } : {}),
+        });
+      })
+      .filter((s) => s.name);
+  })();
+
   // Optional preview video
   const video =
     typeof course.preview === 'string' && course.preview.includes('youtube.com')
@@ -91,6 +118,9 @@ export function buildCourseJsonLd(course, siteUrl) {
       ? { timeRequired: `PT${asNumber(course.hours) || course.hours}H` }
       : {}),
     ...(video ? { hasPart: video } : {}),
+    ...(syllabusSections?.length
+      ? { syllabusSections }
+      : {}),
   });
 
   const breadcrumbJsonLd = {
