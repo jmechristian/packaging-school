@@ -8758,6 +8758,60 @@ export const onDeleteApprovedAPS25MediaPage = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCourseOutlineRequest = /* GraphQL */ `
+  subscription OnCreateCourseOutlineRequest(
+    $filter: ModelSubscriptionCourseOutlineRequestFilterInput
+  ) {
+    onCreateCourseOutlineRequest(filter: $filter) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCourseOutlineRequest = /* GraphQL */ `
+  subscription OnUpdateCourseOutlineRequest(
+    $filter: ModelSubscriptionCourseOutlineRequestFilterInput
+  ) {
+    onUpdateCourseOutlineRequest(filter: $filter) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCourseOutlineRequest = /* GraphQL */ `
+  subscription OnDeleteCourseOutlineRequest(
+    $filter: ModelSubscriptionCourseOutlineRequestFilterInput
+  ) {
+    onDeleteCourseOutlineRequest(filter: $filter) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateLessonTags = /* GraphQL */ `
   subscription OnCreateLessonTags(
     $filter: ModelSubscriptionLessonTagsFilterInput

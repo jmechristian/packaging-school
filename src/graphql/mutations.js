@@ -9205,6 +9205,63 @@ export const deleteApprovedAPS25MediaPage = /* GraphQL */ `
     }
   }
 `;
+export const createCourseOutlineRequest = /* GraphQL */ `
+  mutation CreateCourseOutlineRequest(
+    $input: CreateCourseOutlineRequestInput!
+    $condition: ModelCourseOutlineRequestConditionInput
+  ) {
+    createCourseOutlineRequest(input: $input, condition: $condition) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCourseOutlineRequest = /* GraphQL */ `
+  mutation UpdateCourseOutlineRequest(
+    $input: UpdateCourseOutlineRequestInput!
+    $condition: ModelCourseOutlineRequestConditionInput
+  ) {
+    updateCourseOutlineRequest(input: $input, condition: $condition) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCourseOutlineRequest = /* GraphQL */ `
+  mutation DeleteCourseOutlineRequest(
+    $input: DeleteCourseOutlineRequestInput!
+    $condition: ModelCourseOutlineRequestConditionInput
+  ) {
+    deleteCourseOutlineRequest(input: $input, condition: $condition) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createLessonTags = /* GraphQL */ `
   mutation CreateLessonTags(
     $input: CreateLessonTagsInput!

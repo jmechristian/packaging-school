@@ -1305,3 +1305,13 @@ type ApprovedAPS25MediaPage @model @auth(rules: [{ allow: public }]) {
   id: ID!
   email: String
 }
+
+type CourseOutlineRequest @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String
+  name: String
+  ipAddress: String
+  country: String
+  device: String
+  page: String
+}

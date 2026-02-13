@@ -44,14 +44,14 @@ const CourseInfo = ({
         type === 'SUBSCRIPTION'
           ? subscriptionLink
           : type === 'TRIAL'
-          ? `${link}?et=free_trial`
-          : link,
+            ? `${link}?et=free_trial`
+            : link,
       total:
         type === 'SUBSCRIPTION'
           ? subscriptionPrice
           : type === 'TRIAL'
-          ? 0
-          : price,
+            ? 0
+            : price,
       userID: awsUser ? awsUser.id : null,
       email: awsUser ? awsUser.email : null,
       name: awsUser ? awsUser.name : null,
@@ -61,7 +61,7 @@ const CourseInfo = ({
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         type === 'SUBSCRIPTION' ? subscriptionLink : link,
-        type === 'SUBSCRIPTION' ? subscriptionLink : link
+        type === 'SUBSCRIPTION' ? subscriptionLink : link,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -153,10 +153,10 @@ const CourseInfo = ({
             )}
           </div>
         </div>
-        <div className='flex flex-col gap-4 p-4 xl:p-8'>
+        <div className='flex flex-col gap-4'>
           {partOf && partOf.includes('APC') && (
             <HoverCard
-              title={'Your Journey Starts Here'}
+              title={'Automotive Packaging Certificate (APC)'}
               href={'/certifications/get-to-know-apc'}
               subtitle={`This course as part of the  Autmotive Packaging Certificate. Exploring distinctive aspects of automotive packaging, with exclusive content unmatched by any other.`}
               Icon={LuRocket}
@@ -164,7 +164,7 @@ const CourseInfo = ({
           )}
           {partOf && partOf.includes('CPS') && (
             <HoverCard
-              title={'Your Journey Starts Here'}
+              title={'Certificate of Packaging Science (CPS)'}
               href={'/certifications/get-to-know-cps'}
               subtitle={`This course as part of the  Certificate of Packaging Science, a comprehensive program covering all major aspects of packaging materials, processes, and design.`}
               Icon={LuRocket}

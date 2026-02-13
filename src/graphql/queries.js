@@ -5255,6 +5255,50 @@ export const listApprovedAPS25MediaPages = /* GraphQL */ `
     }
   }
 `;
+export const getCourseOutlineRequest = /* GraphQL */ `
+  query GetCourseOutlineRequest($id: ID!) {
+    getCourseOutlineRequest(id: $id) {
+      id
+      email
+      name
+      ipAddress
+      country
+      device
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listCourseOutlineRequests = /* GraphQL */ `
+  query ListCourseOutlineRequests(
+    $filter: ModelCourseOutlineRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCourseOutlineRequests(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        ipAddress
+        country
+        device
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {
