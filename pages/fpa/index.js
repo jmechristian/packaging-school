@@ -304,6 +304,7 @@ const Fpas = () => {
     'Note the alternative',
     'Packaged in Flexible Plastic? (consumer-facing material, not including labels or shrink bands)',
     'Packaging system likely includes independent flexible plastic packaging',
+    'Predominant Packaging Material',
     'Packaging Format',
   ];
 
