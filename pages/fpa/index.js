@@ -25,7 +25,7 @@ const Fpas = () => {
     direction: 'asc',
   });
   const [activePreset, setActivePreset] = useState('');
-  const [onlyAuditedFilterOn, setOnlyAuditedFilterOn] = useState(false);
+  const [onlyAuditedFilterOn, setOnlyAuditedFilterOn] = useState(true);
   const [columnFilters, setColumnFilters] = useState({});
   const [openFilterColumn, setOpenFilterColumn] = useState(null);
 
