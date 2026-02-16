@@ -3,6 +3,21 @@ import { listLessons, listLMSCourses } from '../src/graphql/queries';
 
 const URL = 'https://packagingschool.com';
 
+function isValidSlug(slug) {
+  return (
+    typeof slug === 'string' &&
+    slug.length > 0 &&
+    !slug.includes('[') &&
+    !slug.includes(']') &&
+    slug !== 'undefined' &&
+    slug !== 'null'
+  );
+}
+
+function isValidVideoUrl(url) {
+  return typeof url === 'string' && url.trim().length > 0 && url.startsWith('http');
+}
+
 function formatDate(date) {
   if (!date) return new Date().toISOString().split('T')[0];
   const convertedDate = new Date(date);
@@ -14,51 +29,58 @@ function formatDate(date) {
 }
 
 function generateSiteMap(lessons, courses) {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-         ${courses
-           .map(({ slug, updatedAt, preview, title, subheadline }) => {
-             return `
+  const validCourses = courses.filter(
+    (c) => isValidSlug(c.slug) && isValidVideoUrl(c.preview)
+  );
+  const validLessons = lessons.filter(
+    (l) => isValidSlug(l.slug) && isValidVideoUrl(l.media)
+  );
+
+  const courseEntries = validCourses
+    .map(({ slug, updatedAt, preview, title, subheadline }) => {
+      const safeTitle = (title || '').toString().replace(/&/g, 'and');
+      const safeDesc = (subheadline || '').toString().replace(/&/g, 'and');
+      return `
                <url>
-                   <loc>${`${URL}/courses/${slug}`}</loc>
+                   <loc>${URL}/courses/${slug}</loc>
                    <lastmod>${formatDate(updatedAt)}</lastmod>
                    <video:video>
                     <video:content_loc>${preview}</video:content_loc>
-                    <video:title>${title
-                      .toString()
-                      .replace(/&/g, 'and')}</video:title>
-                    <video:description>${subheadline
-                      .toString()
-                      .replace(/&/g, 'and')}</video:description>
+                    <video:title>${safeTitle}</video:title>
+                    <video:description>${safeDesc}</video:description>
                     <video:uploader info="https://packagingschool.com">Packaging School</video:uploader>
                     <video:family_friendly>yes</video:family_friendly>
                     </video:video>
                </url>
              `;
-           })
-           .join('')}
-           ${lessons
-             .map(({ slug, updatedAt, media, title, subhead }) => {
-               return `
+    })
+    .join('');
+
+  const lessonEntries = validLessons
+    .map(({ slug, updatedAt, media, title, subhead }) => {
+      const safeTitle = (title || '').toString().replace(/&/g, 'and');
+      const safeDesc = (subhead || '').toString().replace(/&/g, 'and');
+      return `
                 <url>
-                    <loc>${`${URL}/lessons/${slug}`}</loc>
+                    <loc>${URL}/lessons/${slug}</loc>
                     <lastmod>${formatDate(updatedAt)}</lastmod>
                     <video:video>
                      <video:content_loc>${media}</video:content_loc>
-                     <video:title>${title
-                       .toString()
-                       .replace(/&/g, 'and')}</video:title>
-                     <video:description>${subhead
-                       .toString()
-                       .replace(/&/g, 'and')}</video:description>
+                     <video:title>${safeTitle}</video:title>
+                     <video:description>${safeDesc}</video:description>
                      <video:uploader info="https://packagingschool.com">Packaging School</video:uploader>
                      <video:family_friendly>yes</video:family_friendly>
                      </video:video>
                 </url>
               `;
-             })
-             .join('')}
+    })
+    .join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+         ${courseEntries}
+         ${lessonEntries}
        </urlset>
      `;
 }

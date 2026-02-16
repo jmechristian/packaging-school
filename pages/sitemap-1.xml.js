@@ -1,12 +1,22 @@
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import {
   listLessons,
   listLMSCourses,
   listCareers,
-  listCertificateObjects,
 } from '../src/graphql/queries';
 
 const URL = 'https://packagingschool.com';
+
+function isValidSlug(slug) {
+  return (
+    typeof slug === 'string' &&
+    slug.length > 0 &&
+    !slug.includes('[') &&
+    !slug.includes(']') &&
+    slug !== 'undefined' &&
+    slug !== 'null'
+  );
+}
 
 function formatDate(date) {
   if (!date) return new Date().toISOString().split('T')[0];
@@ -18,172 +28,93 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-function generateSiteMap(lessons, courses, careers, certs) {
+function generateSiteMap(lessons, courses, careers) {
+  const today = formatDate(new Date());
+  const entries = [];
+
+  const staticUrls = [
+    '/',
+    '/about',
+    '/acccsa',
+    '/all_courses',
+    '/andrew',
+    '/automotive-courses',
+    '/automotive-faculty',
+    '/cmpm-vs-cps',
+    '/contact',
+    '/cybermonday',
+    '/edu',
+    '/faq',
+    '/food-packaging',
+    '/glossary',
+    '/isbt',
+    '/library',
+    '/pack-design-workshop-for-educators',
+    '/packaging-events',
+    '/packnotes',
+    '/partner-with-us',
+    '/sustainability-workshop',
+    '/testimonials',
+    '/your-company',
+    '/certifications/get-to-know-apc',
+    '/certifications/get-to-know-cmpm',
+    '/certifications/get-to-know-cps',
+    '/certifications/get-to-know-csp',
+    '/certifications/csp/syllabus',
+    '/certifications',
+  ];
+
+  const seen = new Set();
+
+  for (const path of staticUrls) {
+    const loc = path === '/' ? URL : `${URL}${path}`;
+    if (!seen.has(loc)) {
+      seen.add(loc);
+      entries.push({ loc, lastmod: today });
+    }
+  }
+
+  for (const { slug, updatedAt } of lessons) {
+    if (!isValidSlug(slug)) continue;
+    const loc = `${URL}/lessons/${slug}`;
+    if (!seen.has(loc)) {
+      seen.add(loc);
+      entries.push({ loc, lastmod: formatDate(updatedAt) });
+    }
+  }
+
+  for (const { slug, updatedAt } of courses) {
+    if (!isValidSlug(slug)) continue;
+    const loc = `${URL}/courses/${slug}`;
+    if (!seen.has(loc)) {
+      seen.add(loc);
+      entries.push({ loc, lastmod: formatDate(updatedAt) });
+    }
+  }
+
+  for (const { slug, updatedAt } of careers) {
+    if (!isValidSlug(slug)) continue;
+    const loc = `${URL}/careers/${slug}`;
+    if (!seen.has(loc)) {
+      seen.add(loc);
+      entries.push({ loc, lastmod: formatDate(updatedAt) });
+    }
+  }
+
+  const urlEntries = entries
+    .map(
+      ({ loc, lastmod }) => `
+       <url>
+           <loc>${loc}</loc>
+           <lastmod>${lastmod}</lastmod>
+       </url>
+     `
+    )
+    .join('');
+
   return `<?xml version="1.0" encoding="UTF-8"?>
        <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-         <url>
-           <loc>${URL}</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/about</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-          <url>
-           <loc>${URL}/acccsa</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-          <url>
-           <loc>${URL}/all_courses</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/andrew</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/automotive-courses</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/automotive-faculty</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/cmpm-vs-cps</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/contact</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/cybermonday</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/edu</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/faq</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/food-packaging</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/glossary</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/isbt</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/library</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/pack-design-workshop-for-educators</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/packaging-events</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/packnotes</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/partner-with-us</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/sustainability-workshop</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/testimonials</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/your-company</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications/get-to-know-apc</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications/get-to-know-cmpm</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications/get-to-know-cps</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications/get-to-know-csp</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications/csp/syllabus</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/certifications</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         <url>
-           <loc>${URL}/404</loc>
-           <lastmod>${formatDate(new Date())}</lastmod>
-         </url>
-         ${lessons
-           .map(({ slug, updatedAt }) => {
-             return `
-               <url>
-                   <loc>${`${URL}/lessons/${slug}`}</loc>
-                   <lastmod>${formatDate(updatedAt)}</lastmod>
-               </url>
-             `;
-           })
-           .join('')}
-         ${courses
-           .map(({ slug, updatedAt }) => {
-             return `
-               <url>
-                   <loc>${`${URL}/courses/${slug}`}</loc>
-                   <lastmod>${formatDate(updatedAt)}</lastmod>
-               </url>
-             `;
-           })
-           .join('')}
-           ${careers
-             .map(({ slug, updatedAt }) => {
-               return `
-                <url>
-                    <loc>${`${URL}/careers/${slug}`}</loc>
-                    <lastmod>${formatDate(updatedAt)}</lastmod>
-                </url>
-              `;
-             })
-             .join('')}
-         ${certs
-           .map(({ abbreviation, title, updatedAt }) => {
-             const slug = abbreviation
-               ? abbreviation.toLowerCase()
-               : (title || 'cert').toLowerCase().replace(/\s+/g, '-');
-             return `
-               <url>
-                   <loc>${`${URL}/certifications/${slug}`}</loc>
-                   <lastmod>${formatDate(updatedAt)}</lastmod>
-               </url>
-             `;
-           })
-           .join('')}
+         ${urlEntries}
        </urlset>
      `;
 }
@@ -215,13 +146,8 @@ export async function getServerSideProps({ res }) {
   );
 
   const careers = await fetchAll(listCareers, { limit: 200 }, ['listCareers']);
-  const certs = await fetchAll(
-    listCertificateObjects,
-    { filter: { status: { ne: 'DRAFT' } }, limit: 200 },
-    ['listCertificateObjects']
-  );
 
-  const sitemap = generateSiteMap(lessons, courses, careers, certs);
+  const sitemap = generateSiteMap(lessons, courses, careers);
 
   res.setHeader('Content-Type', 'text/xml');
   res.write(sitemap);

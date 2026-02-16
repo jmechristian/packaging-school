@@ -1,7 +1,7 @@
 Route,File,Render,Fallback,Uses Meta,Meta passes url prop,In sitemap-1,In sitemap-2
 /,pages/index.js,CSR/Static,,Yes,No,Yes,No
 /[iid],pages/[iid]/index.js,SSG/ISR,'blocking',Yes,Yes,No,No
-/404,pages/404.js,CSR/Static,,Yes,No,Yes,No
+/404,pages/404.js,CSR/Static,,Yes,No,No,No
 /about,pages/about.js,CSR/Static,,Yes,No,Yes,No
 /acccsa,pages/acccsa.js,CSR/Static,,Yes,No,Yes,No
 /acme,pages/acme.js,SSR,,No,No,No,No
@@ -41,7 +41,7 @@ Route,File,Render,Fallback,Uses Meta,Meta passes url prop,In sitemap-1,In sitema
 /continue-certificate-of-packaging-science,pages/continue-certificate-of-packaging-science.js,CSR/Static,,Yes,No,No,No
 /corporate-login,pages/corporate-login.js,CSR/Static,,No,No,No,No
 /courses/[uid],pages/courses/[uid].js,SSG/ISR,'blocking',Yes,Yes,Yes,Yes
-/courses/categories/[cat],pages/courses/categories/[cat].js,CSR/Static,,Yes,No,Yes,Yes
+/courses/categories/[cat],pages/courses/categories/[cat].js,CSR/Static,,Yes,No,No,No
 /courses/sustainable-packaging-with-cory-connors,pages/courses/sustainable-packaging-with-cory-connors.js,SSR,,Yes,No,Yes,Yes
 /cps-application-confirmation,pages/cps-application-confirmation.js,CSR/Static,,Yes,No,No,No
 /cps-student-apply,pages/cps-student-apply.js,CSR/Static,,Yes,No,No,No

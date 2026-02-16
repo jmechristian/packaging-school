@@ -30,7 +30,7 @@ Columns: render mode, `Meta` usage, whether `Meta` is given a `url` prop (canoni
 |---|---|---:|---:|---:|---:|---:|---:|
 | `/` | `pages/index.js` | CSR/Static |  | Yes | No | Yes | No |
 | `/[iid]` | `pages/[iid]/index.js` | SSG/ISR | 'blocking' | Yes | Yes | No | No |
-| `/404` | `pages/404.js` | CSR/Static |  | Yes | No | Yes | No |
+| `/404` | `pages/404.js` | CSR/Static |  | Yes | No | No | No |
 | `/about` | `pages/about.js` | CSR/Static |  | Yes | No | Yes | No |
 | `/acccsa` | `pages/acccsa.js` | CSR/Static |  | Yes | No | Yes | No |
 | `/acme` | `pages/acme.js` | SSR |  | No | No | No | No |
@@ -70,7 +70,7 @@ Columns: render mode, `Meta` usage, whether `Meta` is given a `url` prop (canoni
 | `/continue-certificate-of-packaging-science` | `pages/continue-certificate-of-packaging-science.js` | CSR/Static |  | Yes | No | No | No |
 | `/corporate-login` | `pages/corporate-login.js` | CSR/Static |  | No | No | No | No |
 | `/courses/[uid]` | `pages/courses/[uid].js` | SSG/ISR | 'blocking' | Yes | Yes | Yes | Yes |
-| `/courses/categories/[cat]` | `pages/courses/categories/[cat].js` | CSR/Static |  | Yes | No | Yes | Yes |
+| `/courses/categories/[cat]` | `pages/courses/categories/[cat].js` | CSR/Static |  | Yes | No | No | No |
 | `/courses/sustainable-packaging-with-cory-connors` | `pages/courses/sustainable-packaging-with-cory-connors.js` | SSR |  | Yes | No | Yes | Yes |
 | `/cps-application-confirmation` | `pages/cps-application-confirmation.js` | CSR/Static |  | Yes | No | No | No |
 | `/cps-student-apply` | `pages/cps-student-apply.js` | CSR/Static |  | Yes | No | No | No |
@@ -165,13 +165,15 @@ Columns: render mode, `Meta` usage, whether `Meta` is given a `url` prop (canoni
 
 ## Sitemap-1 contents (implementation notes)
 - `sitemap-1.xml` is generated at request time via `getServerSideProps` and includes:
-  - Static routes hard-coded in `pages/sitemap-1.xml.js` (28 entries)
-  - Lessons: Yes (PUBLISHED)
-  - Courses: Yes (LMS courses where collection contains "null")
-  - Careers: Yes
-  - Articles: No (looks currently disabled/commented)
+  - Static routes hard-coded in `pages/sitemap-1.xml.js` (28 entries; excludes `/404`—error pages are not indexed)
+  - Lessons: Yes (PUBLISHED, with slug validation)
+  - Courses: Yes (LMS courses where collection contains "null", with slug validation)
+  - Careers: Yes (with slug validation)
+  - Certifications: Only canonical get-to-know-* and csp/syllabus (no dynamic `/certifications/{abbreviation}`—those 404)
+  - Deduplication: URLs collected in a Set before emitting
+  - Note: `courses/categories/[cat]` is not in the sitemap; no category slugs are emitted.
 
 ## Sitemap-2 contents (video sitemap)
 - `sitemap-2.xml` is generated at request time via `getServerSideProps` and includes video entries for:
-  - Video courses (preview exists): Yes
-  - Video lessons (mediaType=VIDEO): Yes
+  - Video courses (preview exists, slug + preview URL validated): Yes
+  - Video lessons (mediaType=VIDEO, slug + media URL validated): Yes

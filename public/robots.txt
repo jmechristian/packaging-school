@@ -7,6 +7,8 @@ Allow: /api/sitemap*
 Disallow: /_next/data/
 Disallow: /api/
 Disallow: /drafts/
+Disallow: /enroll/
+Disallow: /order/
 
 Disallow: /*?returnTo=
 Disallow: /*&returnTo=

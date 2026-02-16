@@ -9,12 +9,12 @@ const compact = (obj) =>
   );
 
 export function buildLessonJsonLd(lesson, siteUrl) {
-  if (!lesson) {
+  if (!lesson || !lesson.slug) {
     return { article: null, breadcrumb: null };
   }
 
   const baseUrl = siteUrl || 'https://packagingschool.com';
-  const url = `${baseUrl}/lessons/${lesson.slug || lesson.id}`;
+  const url = `${baseUrl}/lessons/${lesson.slug}`;
   const image = lesson.seoImage ? [lesson.seoImage] : undefined;
   const published = lesson.backdate || lesson.updatedAt;
   const modified = lesson.updatedAt || lesson.backdate;
