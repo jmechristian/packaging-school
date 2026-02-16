@@ -1,0 +1,52 @@
+# Packaging School
+
+> Packaging School is an online education platform offering professional certificates,
+> courses, and lessons in packaging science, packaging management, and specialized
+> industry topics (materials, design, automotive, sustainability, food & beverage, industry, sales, sustainability).
+
+Content hierarchy (most to least important):
+
+- **Certificates**: Multi-course credential programs (CMPM, CPS, APC, CSP)
+- **Courses**: Standalone learning modules, often part of a certificate
+- **Lessons**: Individual video or text lessons within courses
+
+## Certifications (Certificates)
+
+- [Certifications hub](https://packagingschool.com/certifications): Overview of all certificate programs
+- [Certificate of Mastery in Packaging Management - CMPM](https://packagingschool.com/certifications/get-to-know-cmpm): Clemson-backed program for packaging development and management
+- [Certificate of Packaging Science - CPS](https://packagingschool.com/certifications/get-to-know-cps): One-year online program on materials, processes, and industry advancement
+- [Automotive Packaging Certificate - APC](https://packagingschool.com/certifications/get-to-know-apc): 100% online program for automotive packaging (Tier 1, OEM, suppliers)
+- [Certificate of Sustainable Packaging - CSP](https://packagingschool.com/certifications/get-to-know-csp): Sustainable design and packaging best practices
+- [CSP Syllabus](https://packagingschool.com/certifications/csp/syllabus): CSP curriculum details
+
+Dynamic: Individual certificate pages use `/certifications/{slug}` where slug is the abbreviation (e.g. apc, cmpm, cps, csp).
+
+## Courses
+
+- [All courses](https://packagingschool.com/all_courses): Browse all courses
+- [Course categories](https://packagingschool.com/courses/categories/materials): Courses by category (materials, industry, food & beverage, etc.)
+
+Dynamic: Individual course pages use `/courses/{slug}`.
+
+## Lessons
+
+- [Lessons index](https://packagingschool.com/lessons): Browse lessons
+
+Dynamic: Individual lesson pages use `/lessons/{slug}`.
+
+## Sitemaps
+
+- [Sitemap index](https://packagingschool.com/api/sitemap-index): General sitemap (sitemap-1) and video sitemap (sitemap-2)
+- [General sitemap](https://packagingschool.com/sitemap-1.xml): Static pages, lessons, courses, careers, certificates
+- [Video sitemap](https://packagingschool.com/sitemap-2.xml): Video courses and lessons
+
+## Optional
+
+- [About](https://packagingschool.com/about): Company overview
+- [FAQ](https://packagingschool.com/faq): Frequently asked questions
+- [Library](https://packagingschool.com/library): Learning resources
+- [Contact](https://packagingschool.com/contact): Contact information
+- [Glossary](https://packagingschool.com/glossary): Packaging terminology
+- [Food packaging](https://packagingschool.com/food-packaging): Food packaging certificate interest
+- [Automotive courses](https://packagingschool.com/automotive-courses): Automotive-focused programs
+- [Partner with us](https://packagingschool.com/partner-with-us): Corporate partnerships
