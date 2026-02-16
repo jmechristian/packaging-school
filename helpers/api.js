@@ -1200,6 +1200,19 @@ export const getCPSCourses = async () => {
   return res.data.listLMSCourses.items;
 };
 
+export const getAPCCourses = async () => {
+  const res = await API.graphql({
+    query: listLMSCourses,
+    variables: {
+      filter: {
+        courseId: { contains: 'APC' },
+      },
+      limit: 500,
+    },
+  });
+  return res.data.listLMSCourses.items;
+};
+
 export const handleSSO = async ({
   email,
   first_name,
@@ -2589,6 +2602,7 @@ export const getPipelineLibrary = async () => {
           highlightColor
           id
           link
+          code
           logo
           pdf
           primaryColor
@@ -2630,6 +2644,92 @@ export const getPipelineLibrary = async () => {
   const res = await API.graphql({
     query: getPipelineLibraryQuery,
     variables: { slug: 'pipeline' },
+  });
+  return res.data.customerLibariesBySlug.items[0];
+};
+
+export const getLucidMotorsLibrary = async () => {
+  const getLucidMotorsLibraryQuery = /* GraphQL */ `
+    query MyQuery {
+      customerLibariesBySlug(slug: "lucid-motors") {
+        items {
+          email
+          displayName
+          description
+          code
+          addOns
+          backgroundImage
+          highlightColor
+          id
+          link
+          logo
+          pdf
+          primaryColor
+          clientCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
+          }
+          pschoolCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
+          }
+          slide
+          slug
+          status
+          video
+        }
+      }
+    }
+  `;
+  const res = await API.graphql({
+    query: getLucidMotorsLibraryQuery,
+    variables: { slug: 'lucid-motors' },
   });
   return res.data.customerLibariesBySlug.items[0];
 };
