@@ -109,7 +109,7 @@ const Meta = ({
           rel='preload'
           as='image'
           href={toAbsoluteUrl(preloadImage, siteUrl)}
-          fetchPriority='high'
+          fetchpriority='high'
         />
       )}
 
