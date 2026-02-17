@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useRouter } from 'next/router';
@@ -21,10 +20,10 @@ import {
 } from '../../helpers/api';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
-const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
-  ssr: false,
-});
 import VideoPlayer from '../../components/VideoPlayer';
+
+const LUCID_LIBRARY_PPTX_URL =
+  'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pptx';
 
 const LOTMCard = ({ lesson }) => {
   const formatDate = (dateString) => {
@@ -360,24 +359,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
           </div>
         </div>
         <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 lg:self-end lg:absolute lg:top-[50%]'>
-          <div className='w-full aspect-[16/9]'>
-            <ReactGoogleSlides
-              width={'100%'}
-              height={'100%'}
-              slidesLink={`${lib.slide}`}
-              position={1}
-              showControls
-              loop
+          <div className='w-full aspect-[16/9] overflow-hidden rounded-lg'>
+            <iframe
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(LUCID_LIBRARY_PPTX_URL)}`}
+              className='w-full h-full min-h-[240px]'
+              frameBorder='0'
+              allowFullScreen
+              title='How to Access Your Library'
             />
-            <div
-              className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
-              onClick={() => {
-                window.open(`${lib.pdf}`, '_blank');
-              }}
-            >
-              <div className='text-gray-700'>Download as PDF</div>
-              <MdDownloadForOffline className='text-gray-700' size={20} />
-            </div>
           </div>
         </div>
       </div>
@@ -399,9 +388,38 @@ const Page = ({ lib, learningOfTheMonths }) => {
             built to meet evolving customer needs and industry innovation, on a
             timeline that works for you.
           </div>
+          <div className='grid lg:grid-cols-4 gap-2'>
+            <a
+              href='#track-1'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+            >
+              Track 1
+            </a>
+            <a
+              href='#track-2'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+            >
+              Track 2
+            </a>
+            <a
+              href='#track-3'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+            >
+              Track 3
+            </a>
+            <a
+              href='#lotm'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+            >
+              LOTM
+            </a>
+          </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12'>
+      <div
+        id='track-1'
+        className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12 scroll-mt-24'
+      >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
           <h4 className='h4-base text-black'>
             <span className='text-2xl font-extrabold text-white mr-1'>1.</span>{' '}
@@ -431,7 +449,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
           ))}
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12'>
+      <div
+        id='track-2'
+        className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12 scroll-mt-24'
+      >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
           <h4 className='h4-base text-black'>
             <span className='text-2xl font-extrabold text-white mr-1'>2.</span>{' '}
@@ -461,7 +482,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
           ))}
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12'>
+      <div
+        id='track-3'
+        className='w-full max-w-7xl mx-auto bg-[#d7be96] text-black p-12 scroll-mt-24'
+      >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
           <h4 className='h4-base text-black'>
             <span className='text-2xl font-extrabold text-white mr-1'>3.</span>{' '}
@@ -490,7 +514,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
         </div>
       </div>
       {/* LOTM */}
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-4 border-y border-gray-300 mt-12'>
+      <div
+        className='w-full max-w-7xl mx-auto flex flex-col gap-10 p-4 border-y border-gray-300 mt-12 scroll-mt-24'
+        id='lotm'
+      >
         <div className='w-full flex items-center justify-between'>
           <div className='leading-snug max-w-lg w-full text-xl font-bold text-gray-700'>
             Your Learning of the Month
