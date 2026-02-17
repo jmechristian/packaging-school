@@ -23,7 +23,7 @@ import { Disclosure } from '@headlessui/react';
 import VideoPlayer from '../../components/VideoPlayer';
 
 const LUCID_LIBRARY_PPTX_URL =
-  'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pptx';
+  'https://packschool.s3.us-east-1.amazonaws.com/Lucid+Motors_ppt.pptx';
 
 const LOTMCard = ({ lesson }) => {
   const formatDate = (dateString) => {
@@ -371,10 +371,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
           <div
             className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
             onClick={() => {
-              window.open(
-                'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pptx',
-                '_blank',
-              );
+              window.open(`${lib.pdf}`, '_blank');
             }}
           >
             <div>Download as PDF</div>

@@ -35,6 +35,7 @@ const Meta = ({
   type = 'website',
   siteName = 'PackagingSchool.com',
   robots = 'index, follow',
+  preloadImage,
 }) => {
   const router = useRouter();
   const siteUrl =
@@ -100,6 +101,16 @@ const Meta = ({
 
       {canonicalUrl && (
         <link key='canonical' rel='canonical' href={canonicalUrl} />
+      )}
+
+      {preloadImage && (
+        <link
+          key='preload-lcp'
+          rel='preload'
+          as='image'
+          href={toAbsoluteUrl(preloadImage, siteUrl)}
+          fetchPriority='high'
+        />
       )}
 
       {/* <!-- Open Graph / Facebook --> */}

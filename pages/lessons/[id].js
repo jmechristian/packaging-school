@@ -1,16 +1,18 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import React, { useMemo, useEffect, useState } from 'react';
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
-} from 'react-share';
 import { API } from 'aws-amplify';
+
+const LessonShareButtons = dynamic(
+  () => import('../../components/lessons/LessonShareButtons'),
+  { ssr: false },
+);
 import LessonQuiz from '../../components/lessons/LessonQuiz';
 import VideoPlayer from '../../components/VideoPlayer';
-import '@jmechristian/ps-component-library/dist/style.css';
+import LessonVideoHero from '../../components/lessons/LessonVideoHero';
+import VideoPlayerInView from '../../components/lessons/VideoPlayerInView';
 import {
   registerCertificateClick,
   getDeviceType,
@@ -140,6 +142,16 @@ const Page = ({ lesson }) => {
     } else return null;
   }, [lesson]);
 
+  const contentWithImagePriority = useMemo(() => {
+    if (!lesson?.content || typeof lesson.content !== 'string') return '';
+    let firstImg = true;
+    return lesson.content.replace(/<img(?=\s|>)/gi, () =>
+      firstImg
+        ? ((firstImg = false), '<img fetchpriority="high" loading="eager" ')
+        : '<img loading="lazy" ',
+    );
+  }, [lesson?.content]);
+
   const actionClickHandler = () => {
     if (user) {
       window.open(lesson.actionLink);
@@ -239,6 +251,12 @@ const Page = ({ lesson }) => {
           image={lesson.seoImage}
           url={`/lessons/${lesson.slug}`}
           type='article'
+          preloadImage={
+            (lesson.mediaType === 'VIDEO' || lesson.mediaType === 'IMAGE') &&
+            lesson.seoImage
+              ? lesson.seoImage
+              : undefined
+          }
           structuredData={[
             lessonJsonLd?.breadcrumb,
             lessonJsonLd?.article,
@@ -277,26 +295,11 @@ const Page = ({ lesson }) => {
                     <MdBookmarkAdd size={40} color='green' />
                   </div>
                 )}
-                <FacebookShareButton
-                  url={shareUrl}
-                  quote={lesson.subhead}
-                  // onClick={() => socialShareClickHandler('facebook')}
-                  data-click-target='social_share'
-                  data-click-name='Facebook'
-                >
-                  <FacebookIcon round size={40} />
-                </FacebookShareButton>
-                <LinkedinShareButton
-                  url={shareUrl}
-                  title={lesson.title}
-                  source='PackagingSchool.com'
-                  summary={lesson.subhead}
-                  // onClick={() => socialShareClickHandler('linkedin')}
-                  data-click-target='social_share'
-                  data-click-name='LinkedIn'
-                >
-                  <LinkedinIcon round size={40} />
-                </LinkedinShareButton>
+                <LessonShareButtons
+                  shareUrl={shareUrl}
+                  lesson={lesson}
+                  size={40}
+                />
               </div>
             </div>
             <div className='col-span-12 lg:!col-span-9 flex flex-col gap-6 lg:gap-10'>
@@ -306,45 +309,70 @@ const Page = ({ lesson }) => {
                 </h1>
                 <div className=' text-gray-500 text-xl'>{lesson.subhead}</div>
               </div>
-              {lesson.mediaType === 'VIDEO' && (
-                <div className='w-full object-cover border-b border-b-gray-400 mb-5'>
-                  <div className='w-full h-full'>
-                    <VideoPlayer light={false} videoEmbedLink={lesson.media} />
+              {lesson.mediaType === 'IMAGE' &&
+                (lesson.seoImage || lesson.media) && (
+                  <div className='w-full aspect-[16/9] relative border-b border-b-gray-400 mb-5 overflow-hidden'>
+                    <Image
+                      src={lesson.seoImage || lesson.media}
+                      alt=''
+                      fill
+                      sizes='(max-width: 1024px) 100vw, 1024px'
+                      className='object-cover'
+                      priority
+                      fetchPriority='high'
+                    />
                   </div>
-                  {lesson.videoLink && (
-                    <div className='w-full py-2 flex items-center justify-center bg-base-dark'>
-                      <div className='text-white font-semibold'>
-                        Trouble viewing video? Try{' '}
-                        <Link
-                          href={`/alt/lessons/${lesson.slug}`}
-                          className='text-brand-yellow underline'
-                        >
-                          Alt Link 1
-                        </Link>
-                        ,{' '}
-                        <a
-                          href={lesson.videoLink}
-                          className='text-brand-yellow underline'
-                        >
-                          Alt Link 2
-                        </a>
-                        .
-                      </div>
+                )}
+              {lesson.mediaType === 'VIDEO' &&
+                (lesson.seoImage ? (
+                  <LessonVideoHero
+                    posterUrl={lesson.seoImage}
+                    videoEmbedLink={lesson.media}
+                    slug={lesson.slug}
+                    videoLink={lesson.videoLink}
+                  />
+                ) : (
+                  <div className='w-full object-cover border-b border-b-gray-400 mb-5'>
+                    <div className='w-full h-full'>
+                      <VideoPlayer
+                        light={false}
+                        videoEmbedLink={lesson.media}
+                      />
                     </div>
-                  )}
-                </div>
-              )}
+                    {lesson.videoLink && (
+                      <div className='w-full py-2 flex items-center justify-center bg-base-dark'>
+                        <div className='text-white font-semibold'>
+                          Trouble viewing video? Try{' '}
+                          <Link
+                            href={`/alt/lessons/${lesson.slug}`}
+                            className='text-brand-yellow underline'
+                          >
+                            Alt Link 1
+                          </Link>
+                          ,{' '}
+                          <a
+                            href={lesson.videoLink}
+                            className='text-brand-yellow underline'
+                          >
+                            Alt Link 2
+                          </a>
+                          .
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
               <div
-                dangerouslySetInnerHTML={{ __html: lesson.content }}
+                dangerouslySetInnerHTML={{ __html: contentWithImagePriority }}
                 className='tiptap lg:text-lg'
-              ></div>
+              />
               {lesson.analysis && awsUser && (
                 <div className='w-full'>
                   <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
                 </div>
               )}
             </div>
-            <div className='col-span-12 lg:col-span-3 border-l-0 lg:border-l border-l-gray-400'>
+            <div className='col-span-12 lg:col-span-3 border-l-0 lg:border-l border-l-gray-400 lg:!pl-4'>
               <div className='w-full flex flex-col'>
                 <div className='flex flex-col gap-5 px-4 lg:px-0'>
                   <div className='text-sm text-gray-700'>{newDate}</div>
@@ -375,26 +403,11 @@ const Page = ({ lesson }) => {
                         <MdBookmarkAdd size={32} color='green' />
                       </div>
                     )}
-                    <FacebookShareButton
-                      url={shareUrl}
-                      quote={lesson.subhead}
-                      // onClick={() => socialShareClickHandler('facebook')}
-                      data-click-target='social_share'
-                      data-click-name='Facebook'
-                    >
-                      <FacebookIcon round size={32} />
-                    </FacebookShareButton>
-                    <LinkedinShareButton
-                      url={shareUrl}
-                      title={lesson.title}
-                      source='PackagingSchool.com'
-                      summary={lesson.subhead}
-                      // onClick={() => socialShareClickHandler('linkedin')}
-                      data-click-target='social_share'
-                      data-click-name='LinkedIn'
-                    >
-                      <LinkedinIcon round size={32} />
-                    </LinkedinShareButton>
+                    <LessonShareButtons
+                      shareUrl={shareUrl}
+                      lesson={lesson}
+                      size={32}
+                    />
                   </div>
                   {lesson.analysis && (
                     <div className='flex flex-col gap-0'>
@@ -438,13 +451,11 @@ const Page = ({ lesson }) => {
                   </div>
                   {isFeaturedCard && isFeaturedCard.type === 'COURSE' ? (
                     <div className='w-full flex flex-col gap-2'>
-                      <div className='w-full aspect-[16/9] bg-black'>
-                        <VideoPlayer
-                          videoEmbedLink={isFeaturedCard.obj.preview}
-                          light={false}
-                          playing={true}
-                        />
-                      </div>
+                      <VideoPlayerInView
+                        videoEmbedLink={isFeaturedCard.obj.preview}
+                        light={false}
+                        playing={true}
+                      />
                       <div className='font-bold text-sm'>
                         {isFeaturedCard.obj.title}
                       </div>
