@@ -372,7 +372,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
             onClick={() => {
               window.open(
-                'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pdf',
+                'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pptx',
                 '_blank',
               );
             }}
