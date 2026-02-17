@@ -368,6 +368,18 @@ const Page = ({ lib, learningOfTheMonths }) => {
               title='How to Access Your Library'
             />
           </div>
+          <div
+            className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
+            onClick={() => {
+              window.open(
+                'https://packschool.s3.us-east-1.amazonaws.com/Lucid-Motors_How-to-Access-Your-Library.pdf',
+                '_blank',
+              );
+            }}
+          >
+            <div>Download as PDF</div>
+            <MdDownloadForOffline className='text-gray-700' size={20} />
+          </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-8 border-b border-gray-300'>
