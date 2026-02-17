@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Footer from '../navigation/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLocation } from '../auth/authslice';
 import Toast from '../../components/shared/Toast';
-import CartToggle from './CartToggle';
-import ScrollTop from './ScrollTop';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import HeaderNew from '../navigation/Header/HeaderNew';
-import CookieConsent from '../../components/shared/CookieConsent';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
 import FlashSaleBanner from '../../components/nav/FlashSaleBanner';
+
+const CartToggle = dynamic(() => import('./CartToggle'), { ssr: false });
+const ScrollTop = dynamic(() => import('./ScrollTop'), { ssr: false });
+const CookieConsent = dynamic(
+  () => import('../../components/shared/CookieConsent'),
+  { ssr: false },
+);
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();

@@ -34,7 +34,7 @@ const LessonVideoHero = ({ posterUrl, videoEmbedLink, slug, videoLink }) => {
               src={posterUrl}
               alt=''
               fill
-              sizes='(max-width: 1024px) 100vw, 1024px'
+              sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 960px'
               className='object-cover'
               priority
               fetchPriority='high'

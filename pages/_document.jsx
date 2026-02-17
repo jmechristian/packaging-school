@@ -11,7 +11,15 @@ export default function Document() {
     >
       <Head>
         <link rel='icon' type='image/svg' href='/favicon.png' />
-        <link rel='stylesheet' href='https://use.typekit.net/qtr6hem.css' />
+        <link
+          rel='stylesheet'
+          href='https://use.typekit.net/qtr6hem.css'
+          media='print'
+          onLoad="this.media='all'"
+        />
+        <noscript>
+          <link rel='stylesheet' href='https://use.typekit.net/qtr6hem.css' />
+        </noscript>
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link
           rel='preconnect'
@@ -48,13 +56,27 @@ export default function Document() {
           }}
         />
         <link
+          rel='preload'
           href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
-          rel='stylesheet'
-        ></link>
+          as='style'
+          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
         <link
+          rel='preload'
           href='https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap'
-          rel='stylesheet'
-        ></link>
+          as='style'
+          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+          <link
+            href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+            rel='stylesheet'
+          />
+          <link
+            href='https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap'
+            rel='stylesheet'
+          />
+        </noscript>
         <meta
           name='google-site-verification'
           content='0J1SRWS-xIM_nHRIochuPhFVG-Yfa3lPy3Y7qoAsx8Y'

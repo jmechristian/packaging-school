@@ -17,6 +17,7 @@ import WiredLessonCard from '../../../components/shared/WiredLessonCard';
 import WiredCourseCard from '../../../components/shared/WiredCourseCard';
 
 import { listLessons } from '../../../src/graphql/queries';
+import { optimizeTiptapImages } from '../../../libs/tiptapContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSignInModal } from '../../../features/layout/layoutSlice';
 import AuthorBlock from '../../../components/shared/AuthorBlock';
@@ -48,6 +49,16 @@ const Page = ({ lesson }) => {
       return chunks;
     } else return null;
   }, [lesson]);
+
+  const optimizedContent = useMemo(
+    () =>
+      lesson?.content
+        ? optimizeTiptapImages(lesson.content, {
+            prioritizeFirstImage: lesson.mediaType !== 'IMAGE',
+          })
+        : '',
+    [lesson?.content, lesson?.mediaType],
+  );
 
   // const featured = useMemo(() => {
   //   const item =
@@ -196,7 +207,7 @@ const Page = ({ lesson }) => {
                     }`}
                   >
                     <div
-                      dangerouslySetInnerHTML={{ __html: lesson.content }}
+                      dangerouslySetInnerHTML={{ __html: optimizedContent }}
                       className='tiptap lg:text-lg'
                     ></div>
                     {/* <div className='tiptap flex flex-col'>

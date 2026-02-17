@@ -45,6 +45,7 @@ import WiredLessonCard from '../../components/shared/WiredLessonCard';
 import LessonSubscribe from '../../components/shared/LessonSubscribe';
 import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
+import { optimizeTiptapImages } from '../../libs/tiptapContent';
 
 const Page = ({ lesson }) => {
   const router = useRouter();
@@ -142,15 +143,10 @@ const Page = ({ lesson }) => {
     } else return null;
   }, [lesson]);
 
-  const contentWithImagePriority = useMemo(() => {
-    if (!lesson?.content || typeof lesson.content !== 'string') return '';
-    let firstImg = true;
-    return lesson.content.replace(/<img(?=\s|>)/gi, () =>
-      firstImg
-        ? ((firstImg = false), '<img fetchpriority="high" loading="eager" ')
-        : '<img loading="lazy" ',
-    );
-  }, [lesson?.content]);
+  const contentWithImagePriority = useMemo(
+    () => optimizeTiptapImages(lesson?.content, { prioritizeFirstImage: true }),
+    [lesson?.content],
+  );
 
   const actionClickHandler = () => {
     if (user) {
@@ -316,7 +312,7 @@ const Page = ({ lesson }) => {
                       src={lesson.seoImage || lesson.media}
                       alt=''
                       fill
-                      sizes='(max-width: 1024px) 100vw, 1024px'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 960px'
                       className='object-cover'
                       priority
                       fetchPriority='high'
