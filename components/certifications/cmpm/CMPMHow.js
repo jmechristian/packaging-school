@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import FadeIn from '../../../helpers/FadeIn';
 import { SectionHeading } from '../../shared/SectionHeading';
 import {
@@ -40,12 +41,15 @@ const CMPMHow = () => {
         </FadeIn>
         <div className='grid md:grid-cols-2  gap-6 lg:gap-16'>
           <div className='flex flex-col gap-3'>
-            <div
-              className='w-full aspect-[3/4] lg:aspect-[4/3] relative bg-center bg-cover rounded-lg max-w-md xl:max-w-xl mx-auto'
-              style={{
-                backgroundImage: `url('https://packschool.s3.amazonaws.com/JULIE-2018-sm.jpg')`,
-              }}
-            >
+            <div className='w-full aspect-[3/4] lg:aspect-[4/3] relative rounded-lg max-w-md xl:max-w-xl mx-auto overflow-hidden'>
+              <Image
+                src='https://packschool.s3.amazonaws.com/JULIE-2018-sm.jpg'
+                alt='Dr. Julie Suggs, Academic Director'
+                fill
+                sizes='(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 576px'
+                className='object-cover object-center'
+                loading='lazy'
+              />
               <div className='absolute inset-0 bg-gradient-to-tr from-base-brand/80 to-clemson/40 z-5 rounded-lg'></div>
               <div className='absolute bottom-0 left-0 right-0 p-2'>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-2 w-full h-full text-center'>

@@ -1,18 +1,39 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import CertificateHero from '../../components/certifications/cmpm/CertificateHero';
-import CertificateAbout from '../../components/certifications/cmpm/CertificateAbout';
-import CertificateWhat from '../../components/certifications/cmpm/CertificateWhat';
 import CertificateNavigation from '../../components/certifications/cmpm/CertificateNavigation';
-import CMPMHow from '../../components/certifications/cmpm/CMPMHow';
-import CMPMReviews from '../../components/certifications/cmpm/CMPMReviews';
-import CMPMWhere from '../../components/certifications/cmpm/CMPMWhere';
-import CMPMApply from '../../components/certifications/cmpm/CMPMApply';
-import CertificateCirriculum from '../../components/certifications/cmpm/CertificateCirriculum';
-import Testimonial from '../../components/shared/Testimonial';
-import GradientCTA from '../../components/GradientCTA';
-import CMPMPDP from '../../components/forms/cmpm/CMPMPDP';
+import CertificateAbout from '../../components/certifications/cmpm/CertificateAbout';
 import Meta from '../../components/shared/Meta';
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
+
+const CMPMHow = dynamic(
+  () => import('../../components/certifications/cmpm/CMPMHow'),
+  { ssr: false, loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+const CertificateCirriculum = dynamic(
+  () => import('../../components/certifications/cmpm/CertificateCirriculum'),
+  { ssr: false, loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+const Testimonial = dynamic(
+  () => import('../../components/shared/Testimonial'),
+  { ssr: false }
+);
+const CMPMWhere = dynamic(
+  () => import('../../components/certifications/cmpm/CMPMWhere'),
+  { ssr: false, loading: () => <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+const CMPMReviews = dynamic(
+  () => import('../../components/certifications/cmpm/CMPMReviews'),
+  { ssr: false, loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+const CMPMPDP = dynamic(
+  () => import('../../components/forms/cmpm/CMPMPDP'),
+  { ssr: false, loading: () => <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+const GradientCTA = dynamic(
+  () => import('../../components/GradientCTA'),
+  { ssr: false }
+);
 
 const Page = () => {
   const siteUrl =

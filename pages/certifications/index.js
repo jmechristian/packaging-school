@@ -12,10 +12,9 @@ import {
 } from '../../helpers/api';
 import BrutalTag from '../../components/shared/BrutalTag';
 import BrutalButton from '../../components/shared/BrutalButton';
-import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
-import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
+import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 import '@jmechristian/ps-component-library/dist/style.css';
 
 const CertCard = dynamic(
@@ -25,7 +24,16 @@ const CertCard = dynamic(
     })),
   { ssr: false },
 );
-import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
+
+const CmpmCpsCompare = dynamic(
+  () => import('../../components/shared/CmpmCpsCompare'),
+  { ssr: false, loading: () => <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' /> }
+);
+
+const ScrollingTestimonials = dynamic(
+  () => import('../../components/shared/ScrollingTestimonials'),
+  { ssr: false, loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' /> }
+);
 
 const RiveDemo = dynamic(
   () =>
