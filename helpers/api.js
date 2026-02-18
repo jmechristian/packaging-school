@@ -969,6 +969,7 @@ export const getAllLMSCourses = async () => {
           price
           hours
           lessons
+          preview
           seoImage
           title
           subheadline

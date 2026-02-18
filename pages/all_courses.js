@@ -74,7 +74,7 @@ import { useThinkificLink } from '../hooks/useThinkificLink';
 import '@jmechristian/ps-component-library/dist/style.css';
 import Loader from '../components/shared/Loader';
 
-const Page = ({ courses: initialCourses = [], certificates: initialCertificates = [] }) => {
+const Page = ({ courses: initialCourses = [], certificates: initialCertificates = [], firstCardImage }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
@@ -490,6 +490,7 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
         description={metadata.description}
         url='/all_courses'
         image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
+        preloadImage={firstCardImage}
       />
       {/*  */}
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-12'>
@@ -875,7 +876,7 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
                     sortedAndSearchedCourses.length > 0 &&
                     [...sortedAndSearchedCourses]
                       .slice(0, displayLimit)
-                      .map((course) => (
+                      .map((course, i) => (
                     <div key={course.id} className='animate-fadeIn'>
                       <CourseCard
                         course={course}
@@ -894,6 +895,11 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
                         isFavorite={awsUser?.wishlist?.items.some(
                           (item) => item.lMSCourse.id === course.id,
                         )}
+                        imageProps={
+                          i === 0 && sortedCertificates?.length === 0
+                            ? { fetchPriority: 'high', loading: 'eager' }
+                            : undefined
+                        }
                       />
                     </div>
                   ))}
@@ -952,10 +958,16 @@ export async function getStaticProps() {
       getCertificates(),
     ]);
 
+    const firstCardImage =
+      (certificates && certificates[0]?.seoImage) ||
+      (courses && courses[0]?.seoImage) ||
+      null;
+
     return {
       props: {
         courses: courses || [],
         certificates: certificates || [],
+        firstCardImage,
       },
       revalidate: 60 * 60 * 4, // revalidate every 4 hours
     };
