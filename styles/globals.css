@@ -358,7 +358,7 @@ h4 {
 }
 
 .tiptap img {
-  @apply my-6 rounded-lg;
+  @apply my-6 rounded-lg w-full max-w-full h-auto;
 }
 
 .tiptap a > * {
