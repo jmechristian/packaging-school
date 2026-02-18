@@ -400,27 +400,27 @@ const Page = ({ lib, learningOfTheMonths }) => {
           <div className='grid lg:grid-cols-4 gap-2'>
             <a
               href='#track-1'
-              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-md font-semibold text-center hover:opacity-90 transition-opacity'
             >
               Track 1
             </a>
             <a
               href='#track-2'
-              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-md font-semibold text-center hover:opacity-90 transition-opacity'
             >
               Track 2
             </a>
             <a
               href='#track-3'
-              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-md font-semibold text-center hover:opacity-90 transition-opacity'
             >
               Track 3
             </a>
             <a
               href='#lotm'
-              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-lg font-semibold text-center hover:opacity-90 transition-opacity'
+              className='bg-[#f4f4f5] text-black px-4 py-3 rounded-md font-semibold text-center hover:opacity-90 transition-opacity'
             >
-              LOTM
+              Learning of the Month
             </a>
           </div>
         </div>
