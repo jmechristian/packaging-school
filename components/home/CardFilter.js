@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAWSUser } from '../../features/auth/authslice';
 import {
@@ -11,11 +12,28 @@ import {
   getDeviceType,
   createNewOrder,
 } from '../../helpers/api';
-import {
-  CertCard,
-  CertPreview,
-  CourseCard,
-} from '@jmechristian/ps-component-library';
+
+const CertCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CertCard,
+    })),
+  { ssr: false },
+);
+const CertPreview = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CertPreview,
+    })),
+  { ssr: false },
+);
+const CourseCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CourseCard,
+    })),
+  { ssr: false },
+);
 import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/router';

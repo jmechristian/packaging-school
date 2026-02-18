@@ -13,7 +13,7 @@ import { generateMetadata } from '../../libs/seo/generateMetadata';
 import { updateCategoryMenu } from '../../data/CategoryMenu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import VideoPlayer from '../../components/VideoPlayer';
+import VideoPlayerInView from '../../components/lessons/VideoPlayerInView';
 import {
   createNewOrder,
   registgerCourseClick,
@@ -229,7 +229,7 @@ const Page = ({ course }) => {
             </div>
             {course.preview && (
               <div className='w-full rounded-md overflow-hidden'>
-                <VideoPlayer videoEmbedLink={course.preview} rounded />
+                <VideoPlayerInView videoEmbedLink={course.preview} rounded />
               </div>
             )}
             <div className='w-full flex flex-col gap-4'>

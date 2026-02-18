@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
   getCoursesByCategory,
@@ -18,7 +19,20 @@ import { EyeIcon } from '@heroicons/react/24/solid';
 import Meta from '../../../components/shared/Meta';
 import { generateMetadata } from '../../../libs/seo/generateMetadata';
 
-import { CourseCard, CertCard } from '@jmechristian/ps-component-library';
+const CourseCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CourseCard,
+    })),
+  { ssr: false },
+);
+const CertCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CertCard,
+    })),
+  { ssr: false },
+);
 import '@jmechristian/ps-component-library/dist/style.css';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 

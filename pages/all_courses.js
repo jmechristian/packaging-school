@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API } from 'aws-amplify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,11 +19,28 @@ import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
-import {
-  CourseCard,
-  CertCard,
-  ModernCourseCard,
-} from '@jmechristian/ps-component-library';
+
+const CourseCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CourseCard,
+    })),
+  { ssr: false },
+);
+const CertCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CertCard,
+    })),
+  { ssr: false },
+);
+const ModernCourseCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.ModernCourseCard,
+    })),
+  { ssr: false },
+);
 import {
   handleCategoryClick,
   getDeviceType,
@@ -56,6 +74,7 @@ const Page = () => {
   const [isFilters, setIsFilters] = useState([]);
   const [openSort, setOpenSort] = useState(false);
   const [isTable, setIsTable] = useState(false);
+  const [displayLimit, setDisplayLimit] = useState(48);
   const [isCourses, setIsCourses] = useState([]);
   const [isCertificates, setIsCertificates] = useState([]);
 
@@ -324,6 +343,10 @@ const Page = () => {
       );
     }
   }, [searchCertificates, isSort]);
+
+  useEffect(() => {
+    setDisplayLimit(48);
+  }, [isFilters, isSearchTerm]);
 
   useEffect(() => {
     const sendSearchTracking = async () => {
@@ -826,10 +849,11 @@ const Page = () => {
               </div>
             ) : sortedAndSearchedCourses &&
               sortedAndSearchedCourses.length > 0 ? (
-              <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0'>
-                {sortedCertificates &&
-                  sortedCertificates.length > 0 &&
-                  [...sortedCertificates].map((cert, i) => (
+              <div className='flex flex-col gap-6'>
+                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0'>
+                  {sortedCertificates &&
+                    sortedCertificates.length > 0 &&
+                    [...sortedCertificates].map((cert, i) => (
                     <motion.div
                       key={cert.id}
                       initial={{ opacity: 0 }}
@@ -862,9 +886,11 @@ const Page = () => {
                       />
                     </motion.div>
                   ))}
-                {sortedAndSearchedCourses &&
-                  sortedAndSearchedCourses.length > 0 &&
-                  [...sortedAndSearchedCourses].map((course, i) => (
+                  {sortedAndSearchedCourses &&
+                    sortedAndSearchedCourses.length > 0 &&
+                    [...sortedAndSearchedCourses]
+                      .slice(0, displayLimit)
+                      .map((course, i) => (
                     <motion.div
                       key={course.id}
                       initial={{ opacity: 0 }}
@@ -892,6 +918,18 @@ const Page = () => {
                       />
                     </motion.div>
                   ))}
+                </div>
+                {(sortedAndSearchedCourses?.length || 0) > displayLimit && (
+                  <div className='w-full flex justify-center pt-4'>
+                    <button
+                      type='button'
+                      onClick={() => setDisplayLimit((prev) => prev + 48)}
+                      className='px-6 py-3 bg-base-brand text-white font-semibold rounded hover:bg-base-brand/90 transition-colors'
+                    >
+                      Load more courses
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className='w-full h-full flex items-center justify-center'>

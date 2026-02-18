@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRive } from '@rive-app/react-canvas';
 import {
   getAllCertificates,
   registerCertificateClick,
@@ -16,23 +16,27 @@ import CmpmCpsCompare from '../../components/shared/CmpmCpsCompare';
 import ScrollingTestimonials from '../../components/shared/ScrollingTestimonials';
 import Meta from '../../components/shared/Meta';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { CertCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
+
+const CertCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CertCard,
+    })),
+  { ssr: false },
+);
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 
-export const RiveDemo = () => {
-  const { RiveComponent } = useRive({
-    // Load a local riv `clean_the_car.riv` or upload your own!
-    src: 'https://packschool.s3.amazonaws.com/cert_rocket.riv',
-    stateMachines: 'mainMachine',
-    // Be sure to specify the correct state machine (or animation) name
-    onLoadError: (err) => console.log(err),
-    // This is optional.Provides additional layout control.
-    autoplay: true,
-  });
-
-  return <RiveComponent />;
-};
+const RiveDemo = dynamic(
+  () =>
+    import('../../components/certifications/RiveHero').then((m) => m.RiveDemo),
+  {
+    ssr: false,
+    loading: () => (
+      <div className='w-full aspect-[4/3] bg-gray-200 animate-pulse rounded-lg' />
+    ),
+  },
+);
 
 const Index = ({ certificates }) => {
   const { location, awsUser } = useSelector((state) => state.auth);
