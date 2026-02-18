@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import Image from 'next/image';
 import {
   AcademicCapIcon,
   BoltIcon,
@@ -8,7 +9,6 @@ import {
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import { API } from 'aws-amplify';
-import { getCustomer } from '../src/graphql/queries';
 
 import NewCouseCard from '../components/shared/NewCouseCard';
 import ExpandSearch from '../components/shared/ExpandSearch';
@@ -16,7 +16,7 @@ import VideoPlayer from '../components/VideoPlayer';
 import CustomerCourses from '../components/shared/CustomerCourses';
 import Meta from '../components/shared/Meta';
 
-const Page = ({ isbt }) => {
+const Page = ({ isbt, isbtCourses }) => {
   return (
     <>
       <Meta
@@ -30,10 +30,13 @@ const Page = ({ isbt }) => {
         <div className='w-full h-full grid md:grid-cols-2 gap-x-24 py-16 max-w-7xl mx-auto px-3 md:px-6 xl:px-0'>
           <div className='flex flex-col gap-9'>
             <div className='w-full max-w-[60%]'>
-              <img
+              <Image
                 src='https://packschool.s3.amazonaws.com/logos/isbt-logo.png'
-                alt='isbt logo'
+                alt='ISBT logo'
+                width={400}
+                height={120}
                 className='w-full h-auto'
+                priority
               />
             </div>
             <div className='flex flex-col gap-6'>
@@ -141,7 +144,7 @@ const Page = ({ isbt }) => {
           </div>
         </div>
 
-        <CustomerCourses courses={isbt.courses.items} />
+        <CustomerCourses courses={isbtCourses} />
 
         {isbt && isbt.link && (
           <div className='w-full bg-gradient-to-tr from-base-brand via-base-mid to-clemson rounded-xl max-w-7xl mx-auto mt-2 mb-12'>
@@ -167,15 +170,74 @@ const Page = ({ isbt }) => {
   );
 };
 
-export async function getServerSideProps() {
-  const res = await API.graphql({
-    query: getCustomer,
-    variables: { id: '4c14edd3-d25d-4409-ac1c-0da8b609d99e' },
-  });
-  const isbt = res.data.getCustomer;
+const getISBTCustomer = /* GraphQL */ `
+  query MyQuery {
+    getCustomer(id: "4c14edd3-d25d-4409-ac1c-0da8b609d99e") {
+      displayName
+      highlightColor
+      email
+      id
+      link
+      logo
+      offered
+      offerings
+      pdf
+      primaryColor
+      slide
+      status
+      updatedAt
+      video
+    }
+  }
+`;
+
+const getISBTCourses = /* GraphQL */ `
+  query ListISBTCourses($filter: ModelLMSCourseFilterInput, $limit: Int) {
+    listLMSCourses(filter: $filter, limit: $limit) {
+      items {
+        id
+        courseId
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        preview
+        seoImage
+        title
+        subheadline
+        slug
+        altLink
+        callout
+        link
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+      }
+    }
+  }
+`;
+
+export async function getStaticProps() {
+  const [customerRes, coursesRes] = await Promise.all([
+    API.graphql({ query: getISBTCustomer }),
+    API.graphql({
+      query: getISBTCourses,
+      variables: {
+        filter: { courseId: { contains: 'ISBT' } },
+        limit: 100,
+      },
+    }),
+  ]);
+
+  const isbt = customerRes.data.getCustomer;
+  const isbtCourses = (coursesRes.data.listLMSCourses.items || []).sort((a, b) =>
+    a.courseId.localeCompare(b.courseId)
+  );
 
   return {
-    props: { isbt },
+    props: { isbt, isbtCourses },
+    revalidate: 60 * 60 * 4, // revalidate every 4 hours
   };
 }
 
