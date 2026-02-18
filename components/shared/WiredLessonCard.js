@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { API } from 'aws-amplify';
 import { getLesson } from '../../src/graphql/queries';
-import { PlayCircleIcon } from '@heroicons/react/24/solid';
-import {
-  BrowserView,
-  MobileView,
-  isBrowser,
-  isMobile,
-} from 'react-device-detect';
-import { updateTrackedCourse } from '../../src/graphql/mutations';
 import { registgerLessonClick } from '../../helpers/api';
-
-import VideoPlayer from '../VideoPlayer';
 
 const WiredLessonCard = ({
   id,
@@ -59,10 +50,18 @@ const WiredLessonCard = ({
       {isLesson ? (
         <>
           <div className='w-full flex flex-col'>
-            <div
-              className='w-full aspect-[16/9] bg-cover bg-center'
-              style={{ backgroundImage: `url(${isLesson.seoImage})` }}
-            ></div>
+            <div className='w-full aspect-[16/9] relative bg-gray-200 overflow-hidden'>
+              {isLesson.seoImage && (
+                <Image
+                  src={isLesson.seoImage}
+                  alt=''
+                  fill
+                  sizes='(max-width: 1024px) 100vw, 400px'
+                  className='object-cover'
+                  loading='lazy'
+                />
+              )}
+            </div>
             <div className='font-semibold mt-3   text-gray-900 leading-tight'>
               {isLesson.title}
             </div>

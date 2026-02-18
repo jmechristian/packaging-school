@@ -474,12 +474,18 @@ const Page = ({ lesson }) => {
                     </div>
                   ) : isFeaturedCard && isFeaturedCard.type === 'CERT' ? (
                     <div className='w-full flex flex-col gap-3'>
-                      <div
-                        className='w-full aspect-[4/3] bg-black bg-center bg-cover'
-                        style={{
-                          backgroundImage: `url(${isFeaturedCard.obj.seoImage})`,
-                        }}
-                      ></div>
+                      <div className='w-full aspect-[4/3] relative bg-black overflow-hidden'>
+                        {isFeaturedCard.obj.seoImage && (
+                          <Image
+                            src={isFeaturedCard.obj.seoImage}
+                            alt=''
+                            fill
+                            sizes='(max-width: 1024px) 100vw, 400px'
+                            className='object-cover'
+                            loading='lazy'
+                          />
+                        )}
+                      </div>
                       <div className='font-bold text-sm'>
                         {isFeaturedCard.obj.title}
                       </div>
