@@ -95,10 +95,6 @@
     @apply dark:border-2 dark:border-slate-700 bg-slate-300 dark:bg-slate-900 rounded text-slate-700 dark:text-base-brand font-medium uppercase text-sm;
   }
 
-  button {
-    @apply font-greycliff;
-  }
-
   #autocomplete-1-input {
     @apply text-xl h-16;
   }

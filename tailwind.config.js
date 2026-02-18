@@ -42,13 +42,7 @@ module.exports = {
       fontFamily: {
         roboto: 'Inter, sans-serif',
         greycliff: 'Inter, sans-serif',
-        nickel: 'nickel-gothic-variable, sans-serif',
-        etna: 'etna, sans-serif',
-        trans: 'transducer, sans-serif',
-        transLong: '"transducer-extended", sans-serif',
-        bit: 'bitcount-mono-single-square, sans-serif',
         oswald: 'oswald, sans-serif',
-        raleway: 'raleway, sans-serif',
       },
       colors: {
         'base-brand': '#1f97bf',
