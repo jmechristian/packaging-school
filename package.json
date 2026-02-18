@@ -99,6 +99,12 @@
     "three": "^0.172.0",
     "uuid": "^11.0.3"
   },
+  "browserslist": [
+    "chrome >= 89",
+    "firefox >= 89",
+    "safari >= 15",
+    "edge >= 89"
+  ],
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",

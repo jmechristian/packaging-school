@@ -20,30 +20,43 @@ import { generateMetadata } from '../libs/seo/generateMetadata';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import { setCategoryIcon } from '../helpers/utils';
 
+const CardSkeleton = () => (
+  <div className='flex flex-col gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow animate-pulse'>
+    <div className='w-full h-72 bg-gray-200 rounded-lg'></div>
+    <div className='h-6 w-3/4 bg-gray-200 rounded'></div>
+    <div className='space-y-2'>
+      <div className='h-4 w-full bg-gray-200 rounded'></div>
+      <div className='h-4 w-2/3 bg-gray-200 rounded'></div>
+    </div>
+    <div className='h-2 w-full bg-gray-200 rounded-full'></div>
+  </div>
+);
+
 const CourseCard = dynamic(
   () =>
     import('@jmechristian/ps-component-library').then((m) => ({
       default: m.CourseCard,
     })),
-  { ssr: false },
+  { ssr: false, loading: () => <CardSkeleton /> },
 );
 const CertCard = dynamic(
   () =>
     import('@jmechristian/ps-component-library').then((m) => ({
       default: m.CertCard,
     })),
-  { ssr: false },
+  { ssr: false, loading: () => <CardSkeleton /> },
 );
 const ModernCourseCard = dynamic(
   () =>
     import('@jmechristian/ps-component-library').then((m) => ({
       default: m.ModernCourseCard,
     })),
-  { ssr: false },
+  { ssr: false, loading: () => <CardSkeleton /> },
 );
 import {
   handleCategoryClick,
   getDeviceType,
+  getAllLMSCourses,
   getCertificates,
   registgerCourseClick,
   registerCertificateClick,
@@ -56,53 +69,33 @@ import CertificateTableItem from '../components/shared/CertificateTableItem';
 import SortToggleItem from '../components/shared/SortToggleItem';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
-import { listLMSCourses } from '../src/graphql/queries';
 import { setAWSUser } from '../features/auth/authslice';
 import { useThinkificLink } from '../hooks/useThinkificLink';
 import '@jmechristian/ps-component-library/dist/style.css';
 import Loader from '../components/shared/Loader';
 
-const Page = () => {
+const Page = ({ courses: initialCourses = [], certificates: initialCertificates = [] }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
   const [openSort, setOpenSort] = useState(false);
   const [isTable, setIsTable] = useState(false);
   const [displayLimit, setDisplayLimit] = useState(48);
-  const [isCourses, setIsCourses] = useState([]);
-  const [isCertificates, setIsCertificates] = useState([]);
+  const [isCourses, setIsCourses] = useState(initialCourses);
+  const [isCertificates, setIsCertificates] = useState(initialCertificates);
 
   useEffect(() => {
     const filter = router.query.category;
-
-    const getCourses = async () => {
-      setIsLoading(true);
-      const filter = router.query.category;
-      const courses = await API.graphql({
-        query: listLMSCourses,
-        variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
-      });
-
-      setIsCourses(courses.data.listLMSCourses.items);
-      filter &&
-        setIsFilters(
-          filter === 'ALL' ? [] : (prevState) => [...prevState, filter],
-        );
-      setIsLoading(false);
-    };
-
-    getCourses();
-    getCertificates().then((certs) => {
-      setIsCertificates(certs);
-      setIsLoading(false);
-    });
-  }, [router]);
+    if (filter) {
+      setIsFilters(filter === 'ALL' ? [] : [filter]);
+    }
+  }, [router.query.category]);
 
   const isInFilterArray = (value) => {
     return isFilters.includes(value);
@@ -829,23 +822,21 @@ const Page = () => {
           </div>
           <div className='grid lg:!col-span-9 w-full'>
             {isLoading ? (
-              <div className='w-full h-[400px] flex items-center justify-center'>
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
-                  {[...Array(9)].map((_, i) => (
-                    <div
-                      key={i}
-                      className='flex flex-col gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow animate-pulse'
-                    >
-                      <div className='w-full h-72 bg-gray-200 rounded-lg'></div>
-                      <div className='h-6 w-3/4 bg-gray-200 rounded'></div>
-                      <div className='space-y-2'>
-                        <div className='h-4 w-full bg-gray-200 rounded'></div>
-                        <div className='h-4 w-2/3 bg-gray-200 rounded'></div>
-                      </div>
-                      <div className='h-2 w-full bg-gray-200 rounded-full'></div>
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0 w-full'>
+                {[...Array(12)].map((_, i) => (
+                  <div
+                    key={i}
+                    className='flex flex-col gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow animate-pulse'
+                  >
+                    <div className='w-full h-72 bg-gray-200 rounded-lg'></div>
+                    <div className='h-6 w-3/4 bg-gray-200 rounded'></div>
+                    <div className='space-y-2'>
+                      <div className='h-4 w-full bg-gray-200 rounded'></div>
+                      <div className='h-4 w-2/3 bg-gray-200 rounded'></div>
                     </div>
-                  ))}
-                </div>
+                    <div className='h-2 w-full bg-gray-200 rounded-full'></div>
+                  </div>
+                ))}
               </div>
             ) : sortedAndSearchedCourses &&
               sortedAndSearchedCourses.length > 0 ? (
@@ -953,3 +944,26 @@ const Page = () => {
 };
 
 export default Page;
+
+export async function getStaticProps() {
+  try {
+    const [courses, certificates] = await Promise.all([
+      getAllLMSCourses(),
+      getCertificates(),
+    ]);
+
+    return {
+      props: {
+        courses: courses || [],
+        certificates: certificates || [],
+      },
+      revalidate: 60 * 60 * 4, // revalidate every 4 hours
+    };
+  } catch (err) {
+    console.error('getStaticProps /all_courses error:', err);
+    return {
+      props: { courses: [], certificates: [] },
+      revalidate: 60,
+    };
+  }
+}

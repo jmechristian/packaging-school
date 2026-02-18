@@ -954,6 +954,47 @@ export const getCourseByID = async (id) => {
   return res.data.getLMSCourse;
 };
 
+export const getAllLMSCourses = async () => {
+  const query = /* GraphQL */ `
+    query ListLMSCoursesForListing(
+      $filter: ModelLMSCourseFilterInput
+      $limit: Int
+    ) {
+      listLMSCourses(filter: $filter, limit: $limit) {
+        items {
+          id
+          courseId
+          categoryArray
+          type
+          price
+          hours
+          lessons
+          seoImage
+          title
+          subheadline
+          what_learned
+          slug
+          altLink
+          callout
+          link
+          trial_link
+          subscriptionLink
+          subscriptionPrice
+          stripeLink
+          collection
+          demo
+          partOf
+        }
+      }
+    }
+  `;
+  const res = await API.graphql({
+    query,
+    variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
+  });
+  return res.data.listLMSCourses.items;
+};
+
 export const getCertificates = async () => {
   const getAllCertificates = /* GraphQL */ `
     query MyQuery {
