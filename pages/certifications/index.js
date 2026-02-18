@@ -46,7 +46,7 @@ const RiveDemo = dynamic(
   },
 );
 
-const Index = ({ certificates }) => {
+const Index = ({ certificates, firstCertImage }) => {
   const { location, awsUser } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
@@ -144,13 +144,14 @@ const Index = ({ certificates }) => {
           'https://packschool.s3.amazonaws.com/certifications-seoImage.webp'
         }
         structuredData={structuredData}
+        preloadImage={firstCertImage}
       />
       <div className='w-full pb-40 md:pb-48 border-b-2 border-b-black pt-5 lg:pt-10'>
         <div className='flex flex-col gap-28 md:gap-48 lg:gap-32 '>
           {/* HERO */}
           <div className='w-full flex flex-col lg:flex-row lg:items-center gap-10 md:px-10 lg:px-0 max-w-7xl  mx-auto '>
             <div className='w-full max-w-[800px] aspect-[4/3]'>
-              <RiveDemo />
+              <RiveDemo poster={firstCertImage} />
             </div>
             <div className='flex flex-col gap-5 px-5 xl:!px-0 '>
               <h1 className='w-full text-center lg:!text-left h1-base'>
@@ -513,8 +514,9 @@ export default Index;
 
 export async function getStaticProps() {
   const certificates = await getAllCertificates();
+  const firstCertImage = certificates?.[0]?.seoImage || null;
   return {
-    props: { certificates },
-    revalidate: 10,
+    props: { certificates, firstCertImage },
+    revalidate: 60 * 60 * 4,
   };
 }
