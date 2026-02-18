@@ -10,9 +10,13 @@ const LessonShareButtons = dynamic(
   { ssr: false },
 );
 import LessonQuiz from '../../components/lessons/LessonQuiz';
-import VideoPlayer from '../../components/VideoPlayer';
 import LessonVideoHero from '../../components/lessons/LessonVideoHero';
 import VideoPlayerInView from '../../components/lessons/VideoPlayerInView';
+
+const VideoPlayer = dynamic(
+  () => import('../../components/VideoPlayer'),
+  { ssr: false }
+);
 import {
   registerCertificateClick,
   getDeviceType,
@@ -330,9 +334,9 @@ const Page = ({ lesson }) => {
                 ) : (
                   <div className='w-full object-cover border-b border-b-gray-400 mb-5'>
                     <div className='w-full h-full'>
-                      <VideoPlayer
-                        light={false}
+                      <VideoPlayerInView
                         videoEmbedLink={lesson.media}
+                        playing={false}
                       />
                     </div>
                     {lesson.videoLink && (

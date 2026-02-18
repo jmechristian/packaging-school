@@ -853,16 +853,10 @@ const Page = () => {
                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0'>
                   {sortedCertificates &&
                     sortedCertificates.length > 0 &&
-                    [...sortedCertificates].map((cert, i) => (
-                    <motion.div
-                      key={cert.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.4, delay: i * 0.1 }}
-                    >
+                    [...sortedCertificates].map((cert) => (
+                    <div key={cert.id} className='animate-fadeIn'>
                       <CertCard
                         cert={cert}
-                        key={cert.id}
                         purchaseText={
                           cert.abbreviation === 'CPS' ||
                           cert.abbreviation === 'CMPM'
@@ -884,22 +878,16 @@ const Page = () => {
                           )
                         }
                       />
-                    </motion.div>
+                    </div>
                   ))}
                   {sortedAndSearchedCourses &&
                     sortedAndSearchedCourses.length > 0 &&
                     [...sortedAndSearchedCourses]
                       .slice(0, displayLimit)
-                      .map((course, i) => (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.4, delay: i * 0.1 }}
-                    >
+                      .map((course) => (
+                    <div key={course.id} className='animate-fadeIn'>
                       <CourseCard
                         course={course}
-                        key={course.id}
                         cardClickHandler={() =>
                           cardClickHandler(
                             course.id,
@@ -916,7 +904,7 @@ const Page = () => {
                           (item) => item.lMSCourse.id === course.id,
                         )}
                       />
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
                 {(sortedAndSearchedCourses?.length || 0) > displayLimit && (
