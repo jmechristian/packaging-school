@@ -27,26 +27,25 @@ const CertCard = dynamic(
 
 const CmpmCpsCompare = dynamic(
   () => import('../../components/shared/CmpmCpsCompare'),
-  { ssr: false, loading: () => <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' /> }
-);
-
-const ScrollingTestimonials = dynamic(
-  () => import('../../components/shared/ScrollingTestimonials'),
-  { ssr: false, loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' /> }
-);
-
-const RiveDemo = dynamic(
-  () =>
-    import('../../components/certifications/RiveHero').then((m) => m.RiveDemo),
   {
     ssr: false,
     loading: () => (
-      <div className='w-full aspect-[4/3] bg-gray-200 animate-pulse rounded-lg' />
+      <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' />
     ),
   },
 );
 
-const Index = ({ certificates, firstCertImage }) => {
+const ScrollingTestimonials = dynamic(
+  () => import('../../components/shared/ScrollingTestimonials'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className='w-full h-64 bg-gray-100 animate-pulse rounded-lg' />
+    ),
+  },
+);
+
+const Index = ({ certificates }) => {
   const { location, awsUser } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
@@ -144,24 +143,18 @@ const Index = ({ certificates, firstCertImage }) => {
           'https://packschool.s3.amazonaws.com/certifications-seoImage.webp'
         }
         structuredData={structuredData}
-        preloadImage={firstCertImage}
       />
-      <div className='w-full pb-40 md:pb-48 border-b-2 border-b-black pt-5 lg:pt-10'>
-        <div className='flex flex-col gap-28 md:gap-48 lg:gap-32 '>
+      <div className='w-full pb-40 md:pb-48 border-b-2 border-b-black pt-5 lg:pt-24'>
+        <div className='flex flex-col gap-16'>
           {/* HERO */}
-          <div className='w-full flex flex-col lg:flex-row lg:items-center gap-10 md:px-10 lg:px-0 max-w-7xl  mx-auto '>
-            <div className='w-full max-w-[800px] aspect-[4/3]'>
-              <RiveDemo poster={firstCertImage} />
-            </div>
-            <div className='flex flex-col gap-5 px-5 xl:!px-0 '>
-              <h1 className='w-full text-center lg:!text-left h1-base'>
-                Boost Your Packaging Career with Our Exclusive Certificates
-              </h1>
-              <div className='w-full text-center lg:!text-left text-xl lg:!text-2xl'>
-                Expert-led curriculum designed to elevate your expertise in
-                packaging management and design, automotive packaging, and food
-                packaging.
-              </div>
+          <div className='w-full flex flex-col items-center gap-6 px-5 xl:px-0 max-w-4xl mx-auto text-center'>
+            <h1 className='h1-base'>
+              Boost Your Packaging Career with Our Exclusive Certificates
+            </h1>
+            <div className='text-xl lg:text-2xl'>
+              Expert-led curriculum designed to elevate your expertise in
+              packaging management and design, automotive packaging, and food
+              packaging.
             </div>
           </div>
 
@@ -233,7 +226,7 @@ const Index = ({ certificates, firstCertImage }) => {
           >
             <div className='flex flex-col gap-5 text-center justify-center max-w-xl mx-auto lg:max-w-4xl'>
               <div>
-                <h2 className='h2-base'>
+                <h2 className='h3-base'>
                   Comprehensive Packaging Certificate Programs Designed for
                   Those Who Want to Advance Their Careers.
                 </h2>
@@ -514,9 +507,8 @@ export default Index;
 
 export async function getStaticProps() {
   const certificates = await getAllCertificates();
-  const firstCertImage = certificates?.[0]?.seoImage || null;
   return {
-    props: { certificates, firstCertImage },
+    props: { certificates },
     revalidate: 60 * 60 * 4,
   };
 }
