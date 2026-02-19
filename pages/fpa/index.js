@@ -399,6 +399,35 @@ const Fpas = () => {
     }
   };
 
+  // "Lowest-cost–alternative pairs" preset: same columns as Case Study 3,
+  // but with the WIC-approved alternative column pre-filtered to exclude "No".
+  const applyLowestCostAlternativePairs = () => {
+    const normalize = (s) =>
+      String(s ?? '')
+        .trim()
+        .toLowerCase();
+    const matchTitles = CASE_STUDY_3_COLUMN_TITLES.map(normalize);
+    const keys = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .filter((key) => matchTitles.some((t) => normalize(key) === t));
+    if (keys.length > 0) {
+      setVisibleColumns(keys);
+    }
+
+    const altColTitle = normalize(
+      'Is there a WIC-approved alternative package?',
+    );
+    const altColKey = headers
+      .map((h) => (typeof h === 'string' ? h : h.original))
+      .find((key) => normalize(key) === altColTitle);
+
+    if (altColKey) {
+      const allVals = columnUniqueValues[altColKey] || [];
+      const allowedVals = allVals.filter((v) => v.toLowerCase() !== 'no');
+      setColumnFilters((prev) => ({ ...prev, [altColKey]: allowedVals }));
+    }
+  };
+
   const saveCustomViewsToStorage = (views) => {
     setCustomViews(views);
     if (typeof window !== 'undefined') {
@@ -716,6 +745,8 @@ const Fpas = () => {
                       applyCaseStudy2Columns();
                     } else if (value === 'case-study-3') {
                       applyCaseStudy3Columns();
+                    } else if (value === 'lowest-cost-alternative-pairs') {
+                      applyLowestCostAlternativePairs();
                     }
                   }}
                 >
@@ -724,6 +755,9 @@ const Fpas = () => {
                   <option value='case-study-1'>Case Study 1</option>
                   <option value='case-study-2'>Case Study 2</option>
                   <option value='case-study-3'>Case Study 3</option>
+                  <option value='lowest-cost-alternative-pairs'>
+                    Lowest-cost–alternative pairs
+                  </option>
                 </select>
 
                 <label className='inline-flex items-center gap-2 cursor-pointer'>
