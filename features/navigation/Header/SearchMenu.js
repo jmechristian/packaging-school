@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { XMarkIcon, ArrowRightCircleIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeSearch } from '../navigationSlice';
@@ -15,52 +14,27 @@ const SearchMenu = () => {
     dispatch(closeSearch());
   };
 
-  const variants = {
-    open: {
-      clipPath: 'circle(141% at 95% 5%)',
-      transition: {
-        duration: 0.2,
-        staggerChildren: 0.5,
-        ease: 'circIn',
-      },
-    },
-    closed: {
-      clipPath: 'circle(0% at 95% 5%)',
-      transition: {
-        ease: 'circIn',
-        duration: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        delay: 0.2,
-      },
-    },
-    closed: {
-      opacity: 0,
-    },
-  };
-
   return (
-    <motion.section
-      className='w-full h-screen fixed z-50 bg-base-dark top-0 left-0'
-      variants={variants}
-      initial={false}
-      animate={searchOpen ? 'open' : 'closed'}
+    <section
+      className={`w-full h-screen fixed z-50 bg-base-dark top-0 left-0 transition-all duration-300 ease-in-out ${
+        searchOpen
+          ? 'opacity-100 pointer-events-auto scale-100'
+          : 'opacity-0 pointer-events-none scale-95'
+      }`}
     >
-      <motion.div className='w-full h-full px-8 md:px-20 pt-20 flex flex-col'>
-        <motion.div
-          className='font-bold font-headline text-4xl text-white mb-8'
-          variants={itemVariants}
+      <div className='w-full h-full px-8 md:px-20 pt-20 flex flex-col'>
+        <div
+          className={`font-bold font-headline text-4xl text-white mb-8 transition-opacity duration-300 delay-100 ${
+            searchOpen ? 'opacity-100' : 'opacity-0'
+          }`}
         >
           What do you want to <span className='text-clemson'>learn today?</span>
-        </motion.div>
-        <motion.div className='relative' variants={itemVariants}>
+        </div>
+        <div
+          className={`relative transition-opacity duration-300 delay-150 ${
+            searchOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <form className='w-full'>
             <input
               type='text'
@@ -75,13 +49,13 @@ const SearchMenu = () => {
               </button>
             </div>
           </form>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
       <XMarkIcon
         className='w-7 h-7 stroke-zinc-900 absolute right-4 top-6'
         onClick={searchHandler}
       />
-    </motion.section>
+    </section>
   );
 };
 

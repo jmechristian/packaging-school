@@ -1,53 +1,20 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import MobileMenuContent from '../MobileMenu/MobileMenuContent';
 
 const MobileMenu = () => {
   const { mobileMenuOpen } = useSelector((state) => state.nav);
 
-  const variants = {
-    open: {
-      x: 0,
-      transition: {
-        duration: 0.3,
-        staggerChildren: 0.5,
-        ease: 'easeInOut',
-      },
-    },
-    closed: {
-      x: '-100%',
-      transition: {
-        ease: 'easeInOut',
-        duration: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        delay: 0.2,
-      },
-    },
-    closed: {
-      opacity: 0,
-    },
-  };
-
   return (
-    <motion.div
-      className='w-full h-full min-h-screen overflow-auto fixed z-50 bg-slate-200 top-0 left-0'
-      variants={variants}
-      initial={false}
-      animate={mobileMenuOpen ? 'open' : 'closed'}
+    <div
+      className={`w-full h-full min-h-screen overflow-auto fixed z-50 bg-slate-200 top-0 left-0 transform transition-transform duration-300 ease-in-out ${
+        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
     >
       <div className='relative'>
         <MobileMenuContent />
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useLayoutEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -13,9 +12,21 @@ import {
 import { useRouter } from 'next/router';
 import { getSalesBarItems } from '../../../helpers/api';
 import { API } from 'aws-amplify';
-import { listSalesBars } from '../../../src/graphql/queries';
 import SalesBarItem from './SalesBarItem';
 import { useSelector } from 'react-redux';
+
+const listSalesBars = /* GraphQL */ `
+  query ListSalesBars {
+    listSalesBars {
+      items {
+        id
+        text
+        link
+        type
+      }
+    }
+  }
+`;
 
 const delay = 7000;
 

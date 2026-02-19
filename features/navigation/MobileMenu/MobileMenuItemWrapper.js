@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
 import RotatingCaret from '../../../components/RotatingCaret';
-import { AnimatePresence, motion } from 'framer-motion';
 
 const MobileMenuItemWrapper = ({ component, title, dropdown }) => {
   const [isMobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-
-  const variants = {
-    enter: {
-      scaleY: '100%',
-      opacity: 1,
-    },
-    exit: {
-      opacity: 0,
-      scaleY: '0%',
-    },
-  };
 
   return (
     <div className='border-b border-b-slate-400/50'>
@@ -31,24 +19,17 @@ const MobileMenuItemWrapper = ({ component, title, dropdown }) => {
             />
           )}
         </div>
-        <AnimatePresence>
-          {isMobileDropdownOpen && (
-            <motion.div
-              initial='exit'
-              animate='enter'
-              exit='exit'
-              variants={variants}
-              transition={{
-                type: 'easeIn',
-                duration: 0.2,
-              }}
-              onClick={() => setMobileDropdownOpen(false)}
-              style={{ transformOrigin: 'top' }}
-            >
-              {component}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div
+          className={`overflow-hidden transition-all duration-200 ease-in-out ${
+            isMobileDropdownOpen
+              ? 'max-h-screen opacity-100'
+              : 'max-h-0 opacity-0'
+          }`}
+          style={{ transformOrigin: 'top' }}
+          onClick={() => setMobileDropdownOpen(false)}
+        >
+          {component}
+        </div>
       </div>
     </div>
   );
