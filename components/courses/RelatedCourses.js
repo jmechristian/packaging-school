@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
   createNewOrder,
@@ -7,8 +8,20 @@ import {
 } from '../../helpers/api';
 import { useSelector } from 'react-redux';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { CourseCard } from '@jmechristian/ps-component-library';
 import '@jmechristian/ps-component-library/dist/style.css';
+
+const CourseCard = dynamic(
+  () =>
+    import('@jmechristian/ps-component-library').then((m) => ({
+      default: m.CourseCard,
+    })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className='w-full h-72 bg-gray-200 rounded-lg animate-pulse' />
+    ),
+  }
+);
 
 const RelatedCourses = ({ category, id }) => {
   const router = useRouter();

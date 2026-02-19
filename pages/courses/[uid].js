@@ -1,8 +1,16 @@
 import { useMemo, useState } from 'react';
-import CourseBottom from '../../components/courses/CourseBottom';
+import dynamic from 'next/dynamic';
 import HoverCard from '../../components/shared/HoverCard';
-import { LuRocket } from 'react-icons/lu';
-import { useSelector, useDispatch } from 'react-redux';
+import { RocketLaunchIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
+
+const CourseBottom = dynamic(
+  () => import('../../components/courses/CourseBottom'),
+  {
+    ssr: false,
+    loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse' />,
+  }
+);
 import { lMSCoursesBySlug, listLMSCourses } from '../../src/graphql/queries';
 import { createCourseOutlineRequest } from '../../src/graphql/mutations';
 import { getCourseInstructorsWithDetails } from '../../libs/courseInstructorsQuery';
@@ -488,7 +496,7 @@ const Page = ({ course }) => {
                     title={'Automotive Packaging Certificate (APC)'}
                     href={'/certifications/get-to-know-apc'}
                     subtitle={`This course as part of the  Autmotive Packaging Certificate. Exploring distinctive aspects of automotive packaging, with exclusive content unmatched by any other.`}
-                    Icon={LuRocket}
+                    Icon={RocketLaunchIcon}
                   />
                 )}
                 {course.partOf.includes('CPS') && (
@@ -496,7 +504,7 @@ const Page = ({ course }) => {
                     title={'Certificate of Packaging Science (CPS)'}
                     href={'/certifications/get-to-know-cps'}
                     subtitle={`This course as part of the  Certificate of Packaging Science, a comprehensive program covering all major aspects of packaging materials, processes, and design.`}
-                    Icon={LuRocket}
+                    Icon={RocketLaunchIcon}
                   />
                 )}
               </div>
@@ -625,6 +633,6 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { course: { ...course, instructors, courseOutline } },
-    revalidate: 10,
+    revalidate: 60 * 60 * 4,
   };
 }

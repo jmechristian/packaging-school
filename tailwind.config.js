@@ -18,6 +18,10 @@ module.exports = {
         rotate: 'rotate 3s linear infinite both',
         fadeIn: 'fadeIn 0.3s ease-in-out',
         scaleIn: 'scaleIn 0.3s ease-in-out',
+        marquee: 'marquee 125s linear infinite',
+        'marquee-slow': 'marquee 75s linear infinite',
+        'marquee-reverse': 'marquee-reverse 125s linear infinite',
+        'marquee-reverse-slow': 'marquee-reverse 75s linear infinite',
       },
       keyframes: {
         flip: {
@@ -37,6 +41,14 @@ module.exports = {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0%)' },
         },
       },
       fontFamily: {
