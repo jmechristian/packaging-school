@@ -991,7 +991,10 @@ export const getAllLMSCourses = async () => {
   `;
   const res = await API.graphql({
     query,
-    variables: { filter: { type: { ne: 'CUSTOMER' } }, limit: 300 },
+    variables: {
+      filter: { and: [{ type: { ne: 'CUSTOMER' } }, { type: { ne: 'HIDDEN' } }] },
+      limit: 300,
+    },
   });
   return res.data.listLMSCourses.items;
 };
