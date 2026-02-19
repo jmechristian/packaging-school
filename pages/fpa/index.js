@@ -316,11 +316,7 @@ const Fpas = () => {
     const matchTitles = CASE_STUDY_1_COLUMN_TITLES.map(normalize);
     const keys = headers
       .map((h) => (typeof h === 'string' ? h : h.original))
-      .filter((key) =>
-        matchTitles.some(
-          (t) => normalize(key) === t || normalize(key).includes(t),
-        ),
-      );
+      .filter((key) => matchTitles.some((t) => normalize(key) === t));
     if (keys.length > 0) {
       setVisibleColumns(keys);
     }
@@ -360,11 +356,7 @@ const Fpas = () => {
     const matchTitles = CASE_STUDY_2_COLUMN_TITLES.map(normalize);
     const keys = headers
       .map((h) => (typeof h === 'string' ? h : h.original))
-      .filter((key) =>
-        matchTitles.some(
-          (t) => normalize(key) === t || normalize(key).includes(t),
-        ),
-      );
+      .filter((key) => matchTitles.some((t) => normalize(key) === t));
     if (keys.length > 0) {
       setVisibleColumns(keys);
     }
@@ -401,11 +393,7 @@ const Fpas = () => {
     const matchTitles = CASE_STUDY_3_COLUMN_TITLES.map(normalize);
     const keys = headers
       .map((h) => (typeof h === 'string' ? h : h.original))
-      .filter((key) =>
-        matchTitles.some(
-          (t) => normalize(key) === t || normalize(key).includes(t),
-        ),
-      );
+      .filter((key) => matchTitles.some((t) => normalize(key) === t));
     if (keys.length > 0) {
       setVisibleColumns(keys);
     }
