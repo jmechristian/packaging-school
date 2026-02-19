@@ -20,7 +20,7 @@ const CourseCard = dynamic(
     loading: () => (
       <div className='w-full h-72 bg-gray-200 rounded-lg animate-pulse' />
     ),
-  }
+  },
 );
 
 const RelatedCourses = ({ category, id }) => {
@@ -144,7 +144,7 @@ const RelatedCourses = ({ category, id }) => {
       : router.push(
           `/${
             type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`
+          }/${slug}`,
         );
   };
 
@@ -154,7 +154,7 @@ const RelatedCourses = ({ category, id }) => {
       router.asPath,
       location,
       course.link,
-      'RELATED'
+      'RELATED',
     );
 
     await orderHandler(course);
@@ -172,7 +172,7 @@ const RelatedCourses = ({ category, id }) => {
                   course.id,
                   course.slug,
                   course.altLink,
-                  course.type
+                  course.type,
                 )
               }
               cardPurchaseHandler={() => cardPurchaseHandler(course)}
