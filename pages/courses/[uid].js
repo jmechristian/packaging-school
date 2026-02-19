@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import HoverCard from '../../components/shared/HoverCard';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
+import { getCourseInstructorsWithDetails } from '../../libs/courseInstructorsQuery';
 
 const CourseBottom = dynamic(
   () => import('../../components/courses/CourseBottom'),
@@ -11,9 +12,67 @@ const CourseBottom = dynamic(
     loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse' />,
   }
 );
-import { lMSCoursesBySlug, listLMSCourses } from '../../src/graphql/queries';
-import { createCourseOutlineRequest } from '../../src/graphql/mutations';
-import { getCourseInstructorsWithDetails } from '../../libs/courseInstructorsQuery';
+
+// Inline queries to avoid pulling the entire auto-generated queries.js / mutations.js
+// into the client bundle.
+const listLMSCoursesSlugs = /* GraphQL */ `
+  query ListLMSCoursesSlugs {
+    listLMSCourses(filter: { collection: { contains: "null" } }, limit: 1000) {
+      items {
+        slug
+      }
+    }
+  }
+`;
+
+const lMSCoursesBySlug = /* GraphQL */ `
+  query LMSCoursesBySlug($slug: String!) {
+    lMSCoursesBySlug(slug: $slug) {
+      items {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+const createCourseOutlineRequest = /* GraphQL */ `
+  mutation CreateCourseOutlineRequest($input: CreateCourseOutlineRequestInput!) {
+    createCourseOutlineRequest(input: $input) {
+      id
+    }
+  }
+`;
 import { API } from 'aws-amplify';
 import Meta from '../../components/shared/Meta';
 import { buildCourseJsonLd } from '../../libs/seo/courseJsonLd';
@@ -542,10 +601,7 @@ const Page = ({ course }) => {
 export default Page;
 
 export async function getStaticPaths() {
-  const res = await API.graphql({
-    query: listLMSCourses,
-    variables: { filter: { collection: { contains: 'null' } } },
-  });
+  const res = await API.graphql({ query: listLMSCoursesSlugs });
   const paths = res.data.listLMSCourses.items.map((course) => ({
     params: { uid: course.slug },
   }));
