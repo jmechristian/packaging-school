@@ -463,7 +463,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               id: 'APC-00',
               title: 'Automotive Packaging Certificate Bundle',
               subheadline:
-                'Enroll in all 10 courses and pass the final exam to earn your certification. The fastest way to get your certification.',
+                'Enroll in all 9 courses and pass the final exam (enroll separately) to earn your certification—the fastest way to get certified.',
               link: 'https://packagingschool.com/enroll/623256?price_id=659662&coupon=lucidlibrary',
               hours: '29',
               lessons: '151',
@@ -515,7 +515,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               id: 'CSP-00',
               title: 'Certificate of Sustainable Packaging Bundle',
               subheadline:
-                'Enroll in all 6 courses and pass the final exam to earn your certification. The fastest way to get your certification.',
+                'Enroll in all four courses and pass the final pitch (enroll separately) to earn your certification—the fastest way to get certified.',
               link: 'https://packagingschool.com/enroll/3686568?price_id=4633347&coupon=lucidlibrary',
               hours: '10',
               lessons: '33',
@@ -565,7 +565,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               id: 'CPS-00',
               title: 'Certificate of Packaging Science Bundle',
               subheadline:
-                'Enroll in all 12 courses and pass the final exam to earn your certification. The fastest way to get your certification.',
+                'Enroll in all 11 courses and pass the final exam (enroll separately) to earn your certification—the fastest way to get certified.',
               link: 'https://packagingschool.com/enroll/3686568?price_id=4633347&coupon=lucidlibrary',
               hours: '70',
               lessons: '773',
