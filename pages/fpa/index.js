@@ -27,6 +27,7 @@ const Fpas = () => {
   const [activePreset, setActivePreset] = useState('');
   const [onlyAuditedFilterOn, setOnlyAuditedFilterOn] = useState(true);
   const [columnFilters, setColumnFilters] = useState({});
+  const [columnExcludedValues, setColumnExcludedValues] = useState({});
   const [openFilterColumn, setOpenFilterColumn] = useState(null);
 
   // Get sheetId from query params or use environment variable
@@ -191,24 +192,36 @@ const Fpas = () => {
     return out;
   }, [headers, dataAfterPreset]);
 
-  // Apply per-column filters
+  // Apply per-column filters (allowlist) and exclusions
   const dataAfterColumnFilters = useMemo(() => {
-    const keys = Object.keys(columnFilters).filter(
+    const includeKeys = Object.keys(columnFilters).filter(
       (k) => columnFilters[k] && columnFilters[k].length > 0,
     );
-    if (keys.length === 0) return dataAfterPreset;
+    const excludeKeys = Object.keys(columnExcludedValues).filter(
+      (k) => columnExcludedValues[k] && columnExcludedValues[k].length > 0,
+    );
+    if (includeKeys.length === 0 && excludeKeys.length === 0)
+      return dataAfterPreset;
     return dataAfterPreset.filter((row) => {
-      return keys.every((colKey) => {
+      const getCell = (colKey) =>
+        row[colKey] === null || row[colKey] === undefined
+          ? '(Blank)'
+          : String(row[colKey]).trim();
+      const passesInclude = includeKeys.every((colKey) => {
         const allowed = columnFilters[colKey];
         if (!allowed || allowed.length === 0) return true;
-        const cell =
-          row[colKey] === null || row[colKey] === undefined
-            ? '(Blank)'
-            : String(row[colKey]).trim();
-        return allowed.includes(cell);
+        return allowed.includes(getCell(colKey));
       });
+      const passesExclude = excludeKeys.every((colKey) => {
+        const excl = columnExcludedValues[colKey];
+        if (!excl || excl.length === 0) return true;
+        return !excl
+          .map((v) => v.toLowerCase())
+          .includes(getCell(colKey).toLowerCase());
+      });
+      return passesInclude && passesExclude;
     });
-  }, [dataAfterPreset, columnFilters]);
+  }, [dataAfterPreset, columnFilters, columnExcludedValues]);
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -422,9 +435,8 @@ const Fpas = () => {
       .find((key) => normalize(key) === altColTitle);
 
     if (altColKey) {
-      const allVals = columnUniqueValues[altColKey] || [];
-      const allowedVals = allVals.filter((v) => v.toLowerCase() !== 'no');
-      setColumnFilters((prev) => ({ ...prev, [altColKey]: allowedVals }));
+      setColumnFilters((prev) => ({ ...prev, [altColKey]: [] }));
+      setColumnExcludedValues((prev) => ({ ...prev, [altColKey]: ['No'] }));
     }
   };
 
@@ -496,6 +508,25 @@ const Fpas = () => {
 
   const toggleColumnFilterValue = (colKey, value) => {
     const all = columnUniqueValues[colKey] || [];
+    const excl = columnExcludedValues[colKey] || [];
+
+    // If this column uses exclusion-based filtering, convert to allowlist first
+    if (excl.length > 0) {
+      const baseInclude = all.filter(
+        (v) => !excl.map((e) => e.toLowerCase()).includes(v.toLowerCase()),
+      );
+      setColumnExcludedValues((prev) => ({ ...prev, [colKey]: [] }));
+      setColumnFilters((prev) => {
+        const isCurrentlyIncluded = baseInclude.includes(value);
+        if (isCurrentlyIncluded) {
+          if (baseInclude.length === 1) return prev;
+          return { ...prev, [colKey]: baseInclude.filter((v) => v !== value) };
+        }
+        return { ...prev, [colKey]: [...baseInclude, value] };
+      });
+      return;
+    }
+
     setColumnFilters((prev) => {
       const current = prev[colKey] || [];
       const isCurrentlyIncluded =
@@ -512,12 +543,16 @@ const Fpas = () => {
 
   const clearColumnFilter = (colKey) => {
     setColumnFilters((prev) => ({ ...prev, [colKey]: [] }));
+    setColumnExcludedValues((prev) => ({ ...prev, [colKey]: [] }));
     setOpenFilterColumn(null);
   };
 
   const isColumnFilterActive = (colKey) => {
     const selected = columnFilters[colKey];
-    return !!(selected && selected.length > 0);
+    const excluded = columnExcludedValues[colKey];
+    return (
+      !!(selected && selected.length > 0) || !!(excluded && excluded.length > 0)
+    );
   };
 
   const getSortIcon = (headerObj) => {
@@ -737,6 +772,7 @@ const Fpas = () => {
                   onChange={(e) => {
                     const value = e.target.value;
                     setActivePreset(value);
+                    setColumnExcludedValues({});
                     if (value === 'show-all') {
                       showAllColumns();
                     } else if (value === 'case-study-1') {
@@ -861,6 +897,8 @@ const Fpas = () => {
                       const uniqueVals =
                         columnUniqueValues[originalHeader] || [];
                       const selectedVals = columnFilters[originalHeader] || [];
+                      const excludedVals =
+                        columnExcludedValues[originalHeader] || [];
                       const filterOpen = openFilterColumn === originalHeader;
                       const hasActiveFilter =
                         isColumnFilterActive(originalHeader);
@@ -937,9 +975,13 @@ const Fpas = () => {
                               </div>
                               <div className='py-1 max-h-[240px] overflow-y-auto'>
                                 {uniqueVals.map((val) => {
+                                  const isExcluded = excludedVals
+                                    .map((v) => v.toLowerCase())
+                                    .includes(val.toLowerCase());
                                   const checked =
-                                    selectedVals.length === 0 ||
-                                    selectedVals.includes(val);
+                                    !isExcluded &&
+                                    (selectedVals.length === 0 ||
+                                      selectedVals.includes(val));
                                   return (
                                     <label
                                       key={val}
