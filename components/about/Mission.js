@@ -1,4 +1,8 @@
 import React from 'react';
+import Image from 'next/image';
+
+const MISSION_IMAGE =
+  'https://packschool.s3.amazonaws.com/partner-3.webp';
 
 const Mission = () => {
   return (
@@ -24,11 +28,16 @@ const Mission = () => {
             Contact Us
           </a>
         </div>
-        <img
-          src='https://packschool.s3.amazonaws.com/partner-3.webp'
-          alt=''
-          className='mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36'
-        />
+        <div className='relative mt-10 aspect-[6/5] w-full max-w-lg overflow-hidden rounded-2xl sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36'>
+          <Image
+            src={MISSION_IMAGE}
+            alt='Packaging School partners'
+            fill
+            sizes='(max-width: 1024px) 100vw, 512px'
+            className='object-cover'
+            priority
+          />
+        </div>
       </div>
     </div>
   );

@@ -2,14 +2,23 @@ import React from 'react';
 import Staff from '../components/about/Staff';
 import Mission from '../components/about/Mission';
 import GradientCTA from '../components/GradientCTA';
-import { Amplify, API } from 'aws-amplify';
-import { listStaff } from '../src/graphql/queries';
-import awsExports from '../src/aws-exports';
 import Timeline from '../components/about/Timeline';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
 
-Amplify.configure(awsExports);
+const listStaff = /* GraphQL */ `
+  query ListStaff {
+    listStaff {
+      items {
+        id
+        fullName
+        title
+        image
+        linkedIn
+      }
+    }
+  }
+`;
 
 const Page = ({ pageData }) => {
   const metadata = generateMetadata({
@@ -29,29 +38,37 @@ const Page = ({ pageData }) => {
         image='https://packschool.s3.amazonaws.com/about-seoImage.webp'
       />
       <Mission />
-      <Staff staff={pageData.listStaff.items} />
+      <Staff staff={pageData?.listStaff?.items ?? []} />
       <Timeline />
       <GradientCTA
         headline='Ready to Elevate Your Career?'
         subheadline='Try a demo, risk-free.'
         buttonText='Get Started For Free'
         secondaryButtonText='Need More Info?'
-        buttonLink={'/all_courses'}
+        buttonLink='/all_courses'
       />
     </>
   );
 };
 
-export const getServerSideProps = async () => {
-  const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-  const GRAPHQL_API_KEY = process.env.GRAPHQL_API_KEY;
-  const res = await API.graphql({
-    query: listStaff,
-  });
-  const pageData = res.data;
+export const getStaticProps = async () => {
+  const { Amplify, API } = await import('aws-amplify');
+  const awsExports = (await import('../src/aws-exports')).default;
+  Amplify.configure(awsExports);
 
-  // Pass data to the page via props
-  return { props: { pageData } };
+  try {
+    const res = await API.graphql({ query: listStaff });
+    return {
+      props: { pageData: res.data },
+      revalidate: 60 * 60 * 4, // ISR: revalidate every 4 hours
+    };
+  } catch (err) {
+    console.error('getStaticProps /about error:', err);
+    return {
+      props: { pageData: { listStaff: { items: [] } } },
+      revalidate: 60,
+    };
+  }
 };
 
 export default Page;
