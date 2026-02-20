@@ -10,7 +10,18 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: 'Inter',
+      sans: [
+        'Inter',
+        'ui-sans-serif',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+      ],
     },
     extend: {
       animation: {
@@ -52,9 +63,31 @@ module.exports = {
         },
       },
       fontFamily: {
-        roboto: 'Inter, sans-serif',
-        greycliff: 'Inter, sans-serif',
-        oswald: 'oswald, sans-serif',
+        roboto: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"Helvetica Neue"',
+          'Arial',
+          'sans-serif',
+        ],
+        greycliff: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"Helvetica Neue"',
+          'Arial',
+          'sans-serif',
+        ],
+        oswald: ['oswald', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
         'base-brand': '#1f97bf',
