@@ -1,22 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   listLMSCollections,
   listLMSCourses,
   lMSCollectionsBySlug,
 } from '../../src/graphql/queries';
 import { API } from 'aws-amplify';
-import CTAButton from '../../components/shared/CTAButton';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import FadeIn from '../../helpers/FadeIn';
 import ShortCourseCard from '../../components/shared/ShortCourseCard';
 import { UserIcon } from '@heroicons/react/24/outline';
 import CTAButtonLarge from '../../components/CTAButtonLarge';
-import CTAButtonTrial from '../../components/CTAButtonTrial';
 import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
+import {
+  createNewOrder,
+  registgerCourseClick,
+  getDeviceType,
+} from '../../helpers/api';
+import { useThinkificLink } from '../../hooks/useThinkificLink';
 
 const Page = ({ collection, courses }) => {
+  console.log(collection);
+  console.log(courses);
   const router = useRouter();
+  const { location, awsUser } = useSelector((state) => state.auth);
+  const { navigateToThinkific } = useThinkificLink();
+  const deviceType = getDeviceType();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const orderHandler = async () => {
+    if (!collection?.lmsLink) return;
+    setIsLoading(true);
+    try {
+      await registgerCourseClick(
+        collection.id,
+        router.asPath,
+        location || { ip: null, country: null, lat: null, long: null },
+        collection.lmsLink,
+        'COLLECTION',
+      );
+      const orderId = await createNewOrder({
+        courseDescription: collection.description || collection.subtitle,
+        courseDiscount: 0,
+        courseImage: courses?.[0]?.seoImage || null,
+        courseName: collection.title,
+        courseLink: collection.lmsLink,
+        total: collection.price,
+        userID: awsUser?.id ?? null,
+        email: awsUser?.email ?? null,
+        name: awsUser?.name ?? null,
+        ipAddress: location?.ip ?? null,
+        country: location?.country ?? null,
+        device: deviceType,
+        page: `/collections/${collection.slug}`,
+      });
+      if (awsUser?.name?.includes(' ')) {
+        navigateToThinkific(collection.lmsLink, collection.lmsLink);
+      } else {
+        router.push(`/order/${orderId.id}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const metadata = collection
     ? generateMetadata({
         pageType: 'COLLECTION',
@@ -31,7 +78,9 @@ const Page = ({ collection, courses }) => {
         title={metadata.title}
         description={metadata.description}
         image={collection?.seoImage}
-        url={collection?.slug ? `/collections/${collection.slug}` : router.asPath}
+        url={
+          collection?.slug ? `/collections/${collection.slug}` : router.asPath
+        }
         type='website'
       />
       <div className='relative dark:bg-dark-dark py-24'>
@@ -77,7 +126,11 @@ const Page = ({ collection, courses }) => {
                   </div>
                 </div>
                 <div className='flex flex-col gap-4'>
-                  <CTAButtonLarge link={collection && collection.lmsLink} />
+                  <CTAButtonLarge
+                    link={collection?.lmsLink}
+                    onClick={orderHandler}
+                    isLoading={isLoading}
+                  />
                 </div>
               </div>
             </div>
