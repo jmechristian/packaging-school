@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 const FooterCerts = () => {
   return (
-    (<div className='flex flex-col gap-1.5 lg:gap-2 text-sm cursor-pointer'>
+    <div className='flex flex-col gap-1.5 lg:gap-2 text-sm cursor-pointer'>
       <div className='font-extrabold text-sm uppercase tracking-widest dark:text-gray-200 font-greycliff'>
-        Certifications
+        Certificates
       </div>
       <Link href={'/certifications/get-to-know-cmpm'} legacyBehavior>
         <p className='text-gray-600 dark:text-gray-500 cursor-pointer'>
@@ -32,7 +32,7 @@ const FooterCerts = () => {
           Food Packaging Certificate
         </p>
       </Link>
-    </div>)
+    </div>
   );
 };
 

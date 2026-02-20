@@ -125,8 +125,8 @@ const Page = () => {
         }));
       setIsIndexes(
         publishedIndexes.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        ),
       );
     };
 
@@ -161,7 +161,7 @@ const Page = () => {
 
     if (isFilters.length > 0 && sortedLessons) {
       return sortedLessons.filter((less) =>
-        less.tags.items.some((t) => isFilters.includes(t.tags.tag))
+        less.tags.items.some((t) => isFilters.includes(t.tags.tag)),
       );
     }
   }, [sortedLessons, isFilters]);
@@ -177,14 +177,14 @@ const Page = () => {
           cour.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           cour.subhead.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
           (cour.content &&
-            cour.content.toLowerCase().includes(isSearchTerm.toLowerCase()))
+            cour.content.toLowerCase().includes(isSearchTerm.toLowerCase())),
       );
     }
   }, [isSearchTerm, filteredLessons]);
 
   const getItemLength = (tag) => {
     const items = sortedLessons.filter((less) =>
-      less.tags.items.some((t) => t.tags.tag === tag)
+      less.tags.items.some((t) => t.tags.tag === tag),
     );
 
     return items.length.toString();
@@ -274,33 +274,33 @@ const Page = () => {
         url='/lessons'
         structuredData={structuredData}
       />
-    <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>
-      <div className='flex flex-col gap-10 lg:!gap-16'>
-        <div className='block lg:hidden'>
-          <MobileSwipeableContent
-            headline='Content Indices'
-            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
-            content={isIndexes}
-            clickHandler={(item) => handleHeroButtonClick(item)}
-          />
+      <div className='container-base px-3 xl:px-0 flex flex-col gap-16'>
+        <div className='flex flex-col gap-10 lg:!gap-16'>
+          <div className='block lg:hidden'>
+            <MobileSwipeableContent
+              headline='Content Indexes'
+              subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+              content={isIndexes}
+              clickHandler={(item) => handleHeroButtonClick(item)}
+            />
+          </div>
+          <div className='hidden lg:block'>
+            <ContentScroller
+              headline='Content Indexes'
+              subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
+              content={isIndexes}
+              clickHandler={(item) => handleHeroButtonClick(item)}
+            />
+          </div>
         </div>
-        <div className='hidden lg:block'>
-          <ContentScroller
-            headline='Content Indices'
-            subheadline='Explore expertly curated collections of research and best practices, offering deep insights into key topics shaping the packaging industry—designed to inspire innovation and elevate your expertise.'
-            content={isIndexes}
-            clickHandler={(item) => handleHeroButtonClick(item)}
-          />
-        </div>
-      </div>
-      <div className='w-full flex flex-col gap-5'>
-        {/* HEADING */}
-        <div
-          className='w-full pb-5 border-b border-b-gray-300 flex justify-between items-center scroll-mt-6'
-          ref={lessonTop}
-        >
-          <div className='h3-base'>Browse Lesson Library</div>
-          {/* <div className='grid grid-cols-2 w-fit'>
+        <div className='w-full flex flex-col gap-5'>
+          {/* HEADING */}
+          <div
+            className='w-full pb-5 border-b border-b-gray-300 flex justify-between items-center scroll-mt-6'
+            ref={lessonTop}
+          >
+            <div className='h3-base'>Browse Lesson Library</div>
+            {/* <div className='grid grid-cols-2 w-fit'>
             <div
               className={`w-10 h-10 ${
                 isTable ? 'bg-black' : 'bg-neutral-300'
@@ -318,130 +318,130 @@ const Page = () => {
               <MdApps color={isTable ? 'gray' : 'white'} size={24} />
             </div>
           </div> */}
-        </div>
-        {/* SEARCH - FILTER */}
-        <div className='!grid !grid-cols-3 lg:mb-3 gap-2.5'>
-          {/* SEARCH */}
-          <div className='w-full !col-span-3 lg:!col-span-2 border border-black p-1'>
-            <div className='flex gap-2 items-center'>
-              <input
-                type='text'
-                className='w-full flex border-none ring-0 focus:ring-0'
-                placeholder='Search Lessons'
-                value={isSearchTerm}
-                onChange={(e) => setIsSearchTerm(e.target.value)}
-              />
-              <div>
-                <MdOutlineSearch size={28} />
+          </div>
+          {/* SEARCH - FILTER */}
+          <div className='!grid !grid-cols-3 lg:mb-3 gap-2.5'>
+            {/* SEARCH */}
+            <div className='w-full !col-span-3 lg:!col-span-2 border border-black p-1'>
+              <div className='flex gap-2 items-center'>
+                <input
+                  type='text'
+                  className='w-full flex border-none ring-0 focus:ring-0'
+                  placeholder='Search Lessons'
+                  value={isSearchTerm}
+                  onChange={(e) => setIsSearchTerm(e.target.value)}
+                />
+                <div>
+                  <MdOutlineSearch size={28} />
+                </div>
               </div>
             </div>
-          </div>
-          <div className='!col-span-3 lg:!col-span-1 flex justify-end gap-5 relative w-full'>
-            {/* FILTER */}
-            <AnimatePresence>
-              {isFilter && (
-                <motion.div className='w-[400px] absolute top-full right-0 mt-2.5 bg-black px-5 py-4 z-40'>
-                  <div className='flex flex-col gap-5'>
-                    <div className='flex flex-col gap-0.5'>
-                      <div className='flex justify-between items-center w-full  border-b border-b-white pb-3'>
-                        <div className='text-white  font-semibold'>
-                          Filter by Tag
+            <div className='!col-span-3 lg:!col-span-1 flex justify-end gap-5 relative w-full'>
+              {/* FILTER */}
+              <AnimatePresence>
+                {isFilter && (
+                  <motion.div className='w-[400px] absolute top-full right-0 mt-2.5 bg-black px-5 py-4 z-40'>
+                    <div className='flex flex-col gap-5'>
+                      <div className='flex flex-col gap-0.5'>
+                        <div className='flex justify-between items-center w-full  border-b border-b-white pb-3'>
+                          <div className='text-white  font-semibold'>
+                            Filter by Tag
+                          </div>
+                          <div
+                            className='bg-white px-2 py-1.5 text-xs font-medium cursor-pointer'
+                            onClick={() => {
+                              setIsFilter(false);
+                            }}
+                          >
+                            Close
+                          </div>
                         </div>
-                        <div
-                          className='bg-white px-2 py-1.5 text-xs font-medium cursor-pointer'
-                          onClick={() => {
-                            setIsFilter(false);
-                          }}
-                        >
-                          Close
+                        <div className='flex flex-wrap gap-1.5 mt-2'>
+                          {isTags &&
+                            isTags
+                              .sort(
+                                (a, b) =>
+                                  b.lesson.items.length - a.lesson.items.length,
+                              )
+                              .map((t) => (
+                                <div
+                                  key={t.id}
+                                  className={`text-xs uppercase font-semibold border ${
+                                    isInFilterArray(t.tag)
+                                      ? 'bg-white/50 border-amber-400 text-white'
+                                      : 'border-black bg-white'
+                                  } hover:bg-clemson transition-colors ease-in  px-1.5 py-1 cursor-pointer`}
+                                  onClick={() => tagFilterHandler(t.tag)}
+                                >
+                                  {t.tag} &#40;{getItemLength(t.tag)}&#41;
+                                </div>
+                              ))}
                         </div>
-                      </div>
-                      <div className='flex flex-wrap gap-1.5 mt-2'>
-                        {isTags &&
-                          isTags
-                            .sort(
-                              (a, b) =>
-                                b.lesson.items.length - a.lesson.items.length
-                            )
-                            .map((t) => (
-                              <div
-                                key={t.id}
-                                className={`text-xs uppercase font-semibold border ${
-                                  isInFilterArray(t.tag)
-                                    ? 'bg-white/50 border-amber-400 text-white'
-                                    : 'border-black bg-white'
-                                } hover:bg-clemson transition-colors ease-in  px-1.5 py-1 cursor-pointer`}
-                                onClick={() => tagFilterHandler(t.tag)}
-                              >
-                                {t.tag} &#40;{getItemLength(t.tag)}&#41;
-                              </div>
-                            ))}
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                )}
+                {/* SORT */}
+              </AnimatePresence>
+              {/* CLEAR */}
+              {isFilters.length > 0 ? (
+                <div
+                  className='h-full flex justify-center text-center leading-tight items-center px-4 text-red-600 cursor-pointer'
+                  onClick={() => setIsFilters([])}
+                >
+                  Clear Filters
+                </div>
+              ) : (
+                <></>
               )}
-              {/* SORT */}
-            </AnimatePresence>
-            {/* CLEAR */}
-            {isFilters.length > 0 ? (
+              {/* FILTER BUTTON */}
               <div
-                className='h-full flex justify-center text-center leading-tight items-center px-4 text-red-600 cursor-pointer'
-                onClick={() => setIsFilters([])}
+                className={`border-black border cursor-pointer h-full flex gap-1 px-5 py-2 w-full md:w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
+                  !isFilter && isFilters.length > 0
+                    ? 'bg-brand-indigo text-white'
+                    : 'bg-white'
+                }`}
+                onClick={() => {
+                  setOpenSort(false);
+                  setIsFilter(!isFilter);
+                }}
               >
-                Clear Filters
+                <IoMdPricetags size={24} />
+                <div className='font-semibold'>Tags</div>
               </div>
-            ) : (
-              <></>
-            )}
-            {/* FILTER BUTTON */}
-            <div
-              className={`border-black border cursor-pointer h-full flex gap-1 px-5 py-2 w-full md:w-48 justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
-                !isFilter && isFilters.length > 0
-                  ? 'bg-brand-indigo text-white'
-                  : 'bg-white'
-              }`}
-              onClick={() => {
-                setOpenSort(false);
-                setIsFilter(!isFilter);
-              }}
-            >
-              <IoMdPricetags size={24} />
-              <div className='font-semibold'>Tags</div>
             </div>
           </div>
-        </div>
-        {/* LESSONS */}
-        {paginatedItems && paginatedItems.length > 0 && isTable ? (
-          <div className='flex flex-col gap-2'>
-            {paginatedItems.map((less) => (
-              <LessonTableItem less={less} key={less.id} />
-            ))}
+          {/* LESSONS */}
+          {paginatedItems && paginatedItems.length > 0 && isTable ? (
+            <div className='flex flex-col gap-2'>
+              {paginatedItems.map((less) => (
+                <LessonTableItem less={less} key={less.id} />
+              ))}
+            </div>
+          ) : paginatedItems && paginatedItems.length > 0 && !isTable ? (
+            <div className='!grid md:!grid-cols-2 lg:!grid-cols-3 gap-2 lg:!gap-5'>
+              {paginatedItems.map((less) => (
+                <LessonCardItem less={less} key={less.id} />
+              ))}
+            </div>
+          ) : (
+            <div className='w-full text-center animate-pulse'>
+              Gathering Intel...
+            </div>
+          )}
+          <div className='w-full flex flex-wrap justify-center items-center gap-1 mt-3'>
+            <Pagination
+              totalItems={lessonsToShow && lessonsToShow.length}
+              itemsPerPage={pageSize}
+              currentPage={isCurrentPage}
+              onPageChange={(page) => {
+                setIsCurrentPage(page);
+                lessonTop.current?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
           </div>
-        ) : paginatedItems && paginatedItems.length > 0 && !isTable ? (
-          <div className='!grid md:!grid-cols-2 lg:!grid-cols-3 gap-2 lg:!gap-5'>
-            {paginatedItems.map((less) => (
-              <LessonCardItem less={less} key={less.id} />
-            ))}
-          </div>
-        ) : (
-          <div className='w-full text-center animate-pulse'>
-            Gathering Intel...
-          </div>
-        )}
-        <div className='w-full flex flex-wrap justify-center items-center gap-1 mt-3'>
-          <Pagination
-            totalItems={lessonsToShow && lessonsToShow.length}
-            itemsPerPage={pageSize}
-            currentPage={isCurrentPage}
-            onPageChange={(page) => {
-              setIsCurrentPage(page);
-              lessonTop.current?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          />
         </div>
       </div>
-    </div>
     </>
   );
 };

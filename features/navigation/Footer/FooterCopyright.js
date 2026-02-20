@@ -19,8 +19,8 @@ const FooterCopyright = () => {
             South Carolina Commission on Higher Education License #5400
           </div>
           <div className='text-gray-600 dark:text-gray-500 text-xs'>
-            Copyright © 2015-2022 The Packaging School, LLC. All Rights
-            Reserved.
+            Copyright © 2015–{new Date().getFullYear()} The Packaging School,
+            LLC. All Rights Reserved.
           </div>
         </div>
       </div>

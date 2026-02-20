@@ -15,6 +15,11 @@ const FooterNav = () => {
           <p className='text-gray-600 dark:text-gray-500 w-fit'>
             <Link href={'/certifications'}>Team Learning</Link>
           </p>
+          <p className='text-gray-600 dark:text-gray-500 w-fit'>
+            <Link href={'https://packagingschool.printful.me/'}>
+              Campus Store
+            </Link>
+          </p>
         </div>
         <div className='flex flex-col gap-1'>
           {/* <p className='text-gray-500 dark:text-gray-500 w-fit'>Campus Store</p> */}

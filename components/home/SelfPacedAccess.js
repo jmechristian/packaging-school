@@ -11,7 +11,6 @@ import { setSalesbarText } from '../../features/layout/layoutSlice';
 
 const SelfPacedAccess = () => {
   const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState(null);
   const [cohorts, setCohorts] = useState([]);
   const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
