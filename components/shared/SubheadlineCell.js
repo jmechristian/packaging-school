@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
 const LINE_HEIGHT = 20;
@@ -10,10 +10,10 @@ const SubheadlineCell = ({ content, className = '' }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const wrapperRef = useRef(null);
 
-  useEffect(() => {
+  // useLayoutEffect runs before paint so "Show more" button appears without CLS
+  useLayoutEffect(() => {
     if (!content || !wrapperRef.current) return;
     const el = wrapperRef.current;
-    // scrollHeight = full content height; when collapsed, we clip so scrollHeight > clientHeight = overflow
     setIsOverflowing(el.scrollHeight > COLLAPSED_HEIGHT);
   }, [content]);
 
