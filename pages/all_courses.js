@@ -1,58 +1,28 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API } from 'aws-amplify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import {
-  MdApps,
-  MdDehaze,
-  MdSort,
   MdOutlineSearch,
   MdAutorenew,
-  MdEmojiEvents,
-  MdAutoStories,
+  MdMenuBook,
+  MdSchool,
   MdScience,
-  MdFilterList,
+  MdExpandLess,
+  MdExpandMore,
+  MdWorkspacePremium,
+  MdVideocam,
 } from 'react-icons/md';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
-import { setCategoryIcon } from '../helpers/utils';
-
-const CardSkeleton = () => (
-  <div className='flex flex-col gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow animate-pulse'>
-    <div className='w-full h-72 bg-gray-200 rounded-lg'></div>
-    <div className='h-6 w-3/4 bg-gray-200 rounded'></div>
-    <div className='space-y-2'>
-      <div className='h-4 w-full bg-gray-200 rounded'></div>
-      <div className='h-4 w-2/3 bg-gray-200 rounded'></div>
-    </div>
-    <div className='h-2 w-full bg-gray-200 rounded-full'></div>
-  </div>
-);
-
-const CourseCard = dynamic(
-  () =>
-    import('@jmechristian/ps-component-library').then((m) => ({
-      default: m.CourseCard,
-    })),
-  { ssr: false, loading: () => <CardSkeleton /> },
-);
-const CertCard = dynamic(
-  () =>
-    import('@jmechristian/ps-component-library').then((m) => ({
-      default: m.CertCard,
-    })),
-  { ssr: false, loading: () => <CardSkeleton /> },
-);
-const ModernCourseCard = dynamic(
-  () =>
-    import('@jmechristian/ps-component-library').then((m) => ({
-      default: m.ModernCourseCard,
-    })),
-  { ssr: false, loading: () => <CardSkeleton /> },
-);
+import {
+  setCategoryIcon,
+  setColorByCategoryString,
+  setCategoryText,
+  getCategoryFilterIcon,
+} from '../helpers/utils';
 import {
   handleCategoryClick,
   getDeviceType,
@@ -60,21 +30,64 @@ import {
   getCertificates,
   registgerCourseClick,
   registerCertificateClick,
-  addCourseToWishlist,
-  removeCourseFromWishlist,
   createNewOrder,
 } from '../helpers/api';
-import LMCCourseTableItem from '../components/shared/LMCCourseTableItem';
-import CertificateTableItem from '../components/shared/CertificateTableItem';
-import SortToggleItem from '../components/shared/SortToggleItem';
+import SortableTableHeader from '../components/shared/SortableTableHeader';
+import FilterIconTooltip from '../components/shared/FilterIconTooltip';
+import CourseTableRow from '../components/shared/CourseTableRow';
+import CertificateTableRow from '../components/shared/CertificateTableRow';
+import CourseMobileCard from '../components/shared/CourseMobileCard';
+import CertificateMobileCard from '../components/shared/CertificateMobileCard';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { setAWSUser } from '../features/auth/authslice';
 import { useThinkificLink } from '../hooks/useThinkificLink';
-import '@jmechristian/ps-component-library/dist/style.css';
-import Loader from '../components/shared/Loader';
 
-const Page = ({ courses: initialCourses = [], certificates: initialCertificates = [], firstCardImage }) => {
+const CATEGORY_ORDER = [
+  'AUTO',
+  'BUSINESS',
+  'DESIGN',
+  'FOODANDBEVERAGE',
+  'INDUSTRY',
+  'MATERIALS',
+  'SUPPLYCHAIN',
+  'SUSTAINABILITY',
+  'PACKAGINGBASICS',
+  'PACKAGINGSCIENCE',
+  'PACKAGINGDESIGN',
+  'FREE',
+  'COLLECTIONS',
+  'ELECTIVE',
+  'COLLECTION',
+  'OTHER',
+];
+
+const getPrimaryCategory = (course, filters) => {
+  if (course.type === 'COLLECTION' || course.type === 'COLLECTIONS')
+    return 'COLLECTIONS';
+  if (course.type === 'ELECTIVE') return 'ELECTIVE';
+  if (filters?.length) {
+    const match = course.categoryArray?.find((c) => filters.includes(c));
+    return match || course.categoryArray?.[0] || 'OTHER';
+  }
+  return course.categoryArray?.[0] || 'OTHER';
+};
+
+const groupCoursesByCategory = (courses, filters) => {
+  const groups = {};
+  courses.forEach((course) => {
+    const cat = getPrimaryCategory(course, filters);
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(course);
+  });
+  return groups;
+};
+
+const Page = ({
+  courses: initialCourses = [],
+  certificates: initialCertificates = [],
+  firstCardImage,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
@@ -82,13 +95,29 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
   const { navigateToThinkific } = useThinkificLink();
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchTerm, setIsSearchTerm] = useState('');
-  const [isFilter, setIsFilter] = useState(false);
   const [isFilters, setIsFilters] = useState([]);
-  const [openSort, setOpenSort] = useState(false);
-  const [isTable, setIsTable] = useState(false);
-  const [displayLimit, setDisplayLimit] = useState(48);
   const [isCourses, setIsCourses] = useState(initialCourses);
   const [isCertificates, setIsCertificates] = useState(initialCertificates);
+  const [collapsedCategories, setCollapsedCategories] = useState(
+    () => new Set(),
+  );
+  const [navigatingId, setNavigatingId] = useState(null);
+
+  useEffect(() => {
+    const handleComplete = () => setNavigatingId(null);
+    router.events?.on('routeChangeComplete', handleComplete);
+    router.events?.on('routeChangeError', handleComplete);
+    return () => {
+      router.events?.off('routeChangeComplete', handleComplete);
+      router.events?.off('routeChangeError', handleComplete);
+    };
+  }, [router.events]);
+
+  useEffect(() => {
+    if (!navigatingId) return;
+    const fallback = setTimeout(() => setNavigatingId(null), 3000);
+    return () => clearTimeout(fallback);
+  }, [navigatingId]);
 
   useEffect(() => {
     const filter = router.query.category;
@@ -97,21 +126,15 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
     }
   }, [router.query.category]);
 
-  const isInFilterArray = (value) => {
-    return isFilters.includes(value);
-  };
+  const isInFilterArray = (value) => isFilters.includes(value);
 
   const filterClickHandler = (value) => {
     if (value === 'ALL') {
       setIsFilters([]);
-    }
-
-    if (value != 'ALL' && isFilters.includes(value)) {
-      setIsFilters([...isFilters].filter((val) => val != value));
-    }
-
-    if (value != 'ALL' && !isFilters.includes(value)) {
-      setIsFilters((prevState) => [...prevState, value]);
+    } else if (isFilters.includes(value)) {
+      setIsFilters([...isFilters].filter((val) => val !== value));
+    } else {
+      setIsFilters((prev) => [...prev, value]);
     }
   };
 
@@ -120,226 +143,100 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
     direction: 'ASC',
   });
 
-  const filtered = useMemo(() => {
-    if (isFilters.length === 0) {
-      return isCourses;
-    }
+  const setSort = (value) => {
+    setIsSort((prev) => ({
+      value,
+      direction:
+        prev.value === value && prev.direction === 'ASC' ? 'DSC' : 'ASC',
+    }));
+  };
 
-    if (isFilters.length > 0) {
-      return isCourses.filter(
-        (course) =>
-          course.categoryArray.some((category) =>
-            isFilters.includes(category),
-          ) || isFilters.includes(course.type),
+  const filtered = useMemo(() => {
+    if (isFilters.length === 0) return isCourses;
+    return isCourses.filter((course) => {
+      const matchCategory = course.categoryArray?.some((c) =>
+        isFilters.includes(c),
       );
-    }
+      const matchType = isFilters.includes(course.type);
+      const matchCollections =
+        isFilters.includes('COLLECTIONS') && course.type === 'COLLECTION';
+      return matchCategory || matchType || matchCollections;
+    });
   }, [isCourses, isFilters]);
 
   const sortedCourses = useMemo(() => {
-    if (isSort.value === 'title' && isSort.direction === 'ASC') {
-      return (
-        filtered && [...filtered].sort((a, b) => a.title.localeCompare(b.title))
-      );
-    }
-
-    if (isSort.value === 'title' && isSort.direction === 'DSC') {
-      return (
-        filtered && [...filtered].sort((a, b) => b.title.localeCompare(a.title))
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'ASC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) =>
-          a.categoryArray[0].localeCompare(b.categoryArray[0]),
-        )
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'DSC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) =>
-          b.categoryArray[0].localeCompare(a.categoryArray[0]),
-        )
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'ASC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => a.courseId.localeCompare(b.courseId))
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'DSC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => b.courseId.localeCompare(a.courseId))
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
-      return filtered && [...filtered].sort((a, b) => b.lessons - a.lessons);
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
-      return filtered && [...filtered].sort((a, b) => a.lessons - b.lessons);
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'ASC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => parseFloat(a.hours) - parseFloat(b.hours))
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'DSC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => parseFloat(b.hours) - parseFloat(a.hours))
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'ASC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => parseInt(a.price) - parseInt(b.price))
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'DSC') {
-      return (
-        filtered &&
-        [...filtered].sort((a, b) => parseInt(b.price) - parseInt(a.price))
-      );
-    }
+    if (!filtered) return [];
+    const { value, direction } = isSort;
+    const mult = direction === 'ASC' ? 1 : -1;
+    return [...filtered].sort((a, b) => {
+      if (value === 'title') return mult * a.title.localeCompare(b.title);
+      if (value === 'course id')
+        return mult * a.courseId.localeCompare(b.courseId);
+      if (value === 'category')
+        return (
+          mult *
+          (a.categoryArray?.[0] || '').localeCompare(b.categoryArray?.[0] || '')
+        );
+      if (value === 'lessons')
+        return mult * ((a.lessons || 0) - (b.lessons || 0));
+      if (value === 'hours')
+        return mult * (parseFloat(a.hours || 0) - parseFloat(b.hours || 0));
+      if (value === 'price')
+        return (
+          mult * ((parseInt(a.price, 10) || 0) - (parseInt(b.price, 10) || 0))
+        );
+      return 0;
+    });
   }, [filtered, isSort]);
 
   const sortedAndSearchedCourses = useMemo(() => {
-    if (!isSearchTerm && sortedCourses) {
-      return sortedCourses;
-    }
-
-    if (isSearchTerm && sortedCourses) {
-      return sortedCourses.filter(
-        (cour) =>
-          cour.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-          cour.subheadline.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-          cour.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-          (cour.what_learned &&
-            cour.what_learned
-              .toLowerCase()
-              .includes(isSearchTerm.toLowerCase())),
-      );
-    }
+    if (!isSearchTerm && sortedCourses) return sortedCourses;
+    return sortedCourses.filter(
+      (c) =>
+        c.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        c.subheadline?.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        c.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        c.what_learned?.toLowerCase().includes(isSearchTerm.toLowerCase()),
+    );
   }, [isSearchTerm, sortedCourses]);
 
   const searchCertificates = useMemo(() => {
     return isCertificates.filter(
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-        cert.description.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
+        cert.description?.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()),
     );
   }, [isCertificates, isSearchTerm]);
 
   const sortedCertificates = useMemo(() => {
-    if (isSort.value === 'title' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) => a.title.localeCompare(b.title))
-      );
-    }
-
-    if (isSort.value === 'title' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) => b.title.localeCompare(a.title))
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'ASC') {
-      return searchCertificates;
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'DSC') {
-      return searchCertificates;
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          a.courseId.localeCompare(b.courseId),
-        )
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          b.courseId.localeCompare(a.courseId),
-        )
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) => b.lessons - a.lessons)
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) => a.lessons - b.lessons)
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => parseFloat(a.hours) - parseFloat(b.hours),
-        )
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => parseFloat(b.hours) - parseFloat(a.hours),
-        )
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => parseInt(a.price) - parseInt(b.price),
-        )
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => parseInt(b.price) - parseInt(a.price),
-        )
-      );
-    }
+    const { value, direction } = isSort;
+    const mult = direction === 'ASC' ? 1 : -1;
+    return [...searchCertificates].sort((a, b) => {
+      if (value === 'title') return mult * a.title.localeCompare(b.title);
+      if (value === 'course id')
+        return mult * a.courseId.localeCompare(b.courseId);
+      if (value === 'lessons')
+        return mult * ((a.courses || 0) - (b.courses || 0));
+      if (value === 'hours')
+        return mult * (parseFloat(a.hours || 0) - parseFloat(b.hours || 0));
+      if (value === 'price')
+        return mult * (parseInt(a.price, 10) - parseInt(b.price, 10));
+      return 0;
+    });
   }, [searchCertificates, isSort]);
 
-  useEffect(() => {
-    setDisplayLimit(48);
-  }, [isFilters, isSearchTerm]);
+  const groupedByCategory = useMemo(() => {
+    const groups = groupCoursesByCategory(sortedAndSearchedCourses, isFilters);
+    return CATEGORY_ORDER.filter((cat) => groups[cat]?.length).map(
+      (category) => ({
+        category,
+        items: groups[category].sort((a, b) =>
+          a.courseId.localeCompare(b.courseId),
+        ),
+      }),
+    );
+  }, [sortedAndSearchedCourses, isFilters]);
 
   useEffect(() => {
     const sendSearchTracking = async () => {
@@ -354,10 +251,9 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
         },
       });
     };
-
-    isSearchTerm.length > 3 &&
-      sortedAndSearchedCourses.length === 0 &&
+    if (isSearchTerm.length > 3 && sortedAndSearchedCourses?.length === 0) {
       sendSearchTracking();
+    }
   }, [isSearchTerm, location, sortedAndSearchedCourses]);
 
   const handleCurrentCategoryClick = async (category) => {
@@ -371,6 +267,17 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
     router.push(`/courses/categories/${category}`);
   };
 
+  const toggleCategory = (cat) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  const isCategoryExpanded = (cat) => !collapsedCategories.has(cat);
+
   const orderHandler = async (courseData) => {
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
@@ -379,16 +286,15 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
       courseName: courseData.title,
       courseLink: `${courseData.link}`,
       total: courseData.price,
-      userID: awsUser ? awsUser.id : null,
-      email: awsUser ? awsUser.email : null,
-      name: awsUser ? awsUser.name : null,
+      userID: awsUser?.id ?? null,
+      email: awsUser?.email ?? null,
+      name: awsUser?.name ?? null,
       ipAddress: location.ip,
       country: location.country,
       device: deviceType,
       page: '/all_courses',
     });
-
-    if (awsUser && awsUser.name.includes(' ')) {
+    if (awsUser?.name?.includes(' ')) {
       navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
     } else {
       router.push(`/order/${orderId.id}`);
@@ -396,26 +302,15 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
   };
 
   const cardClickHandler = async (id, slug, altlink, type) => {
-    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
-
-    altlink
-      ? router.push(altlink)
-      : router.push(
-          `/${
-            type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`,
-        );
+    await registgerCourseClick(id, router.asPath, location, slug, 'TABLE');
+    if (altlink) {
+      window.open(altlink, '_blank');
+    } else {
+      router.push(
+        `/${type === 'COLLECTION' ? 'collections' : 'courses'}/${slug}`,
+      );
+    }
   };
-
-  // const cardPurchaseHandler = async (id, link) => {
-  //   await registgerCourseClick(id, router.asPath, location, link, 'GRID');
-
-  //   if (awsUser && awsUser.name.includes(' ')) {
-  //     navigateToThinkific(link, link);
-  //   } else {
-  //     router.push(`${link}`);
-  //   }
-  // };
 
   const handleCertCardClick = async (
     cert,
@@ -426,13 +321,12 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
   ) => {
     await registerCertificateClick({
       country: location.country,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       device: deviceType,
       object: abbreviation,
       page: '/all_courses',
-      type: type,
+      type,
     });
-
     if (type === 'CERTIFICATE-VIEW') {
       router.push(link);
     } else if (type === 'CERTIFICATE-APPLY') {
@@ -443,35 +337,13 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
           subheadline: cert.description,
           seoImage: cert.seoImage,
           title: cert.title,
-          link: `${cert.applicationLink}`,
+          link: cert.applicationLink,
           price: cert.price,
           total: cert.price,
         });
       }
     } else {
       router.push(link);
-    }
-  };
-
-  const handleAddToWishlist = async (courseId) => {
-    if (awsUser) {
-      if (
-        awsUser.wishlist.items.some((item) => item.lMSCourse.id === courseId)
-      ) {
-        const res = await removeCourseFromWishlist(
-          awsUser.wishlist.items.find((item) => item.lMSCourse.id === courseId)
-            .id,
-          awsUser.email,
-        );
-        dispatch(setAWSUser(res));
-      } else {
-        const res = await addCourseToWishlist(
-          courseId,
-          awsUser.id,
-          awsUser.email,
-        );
-        dispatch(setAWSUser(res));
-      }
     }
   };
 
@@ -483,6 +355,9 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
       'Browse the extensive catalog of Packaging School courses covering Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.',
   });
 
+  const hasResults =
+    sortedCertificates?.length > 0 || sortedAndSearchedCourses?.length > 0;
+
   return (
     <>
       <Meta
@@ -492,457 +367,428 @@ const Page = ({ courses: initialCourses = [], certificates: initialCertificates 
         image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
         preloadImage={firstCardImage}
       />
-      {/*  */}
-      <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-12'>
-        <div className='grid lg:!grid-cols-12 w-full gap-5'>
-          <div className='lg:!col-span-3 lg:!relative'>
-            <div className='flex flex-col gap-4 w-full lg:!sticky lg:!top-40 lg:!h-fit'>
-              <h1 className='text-2xl font-bold hidden'>Browse Full Catalog</h1>
-              <div className='h4-base'>Browse Full Catalog</div>
-              <div className='w-full h-px bg-slate-400'></div>
-              <div className='w-full border border-slate-400 p-1 rounded-md'>
-                <div className='flex gap-2 items-center'>
-                  <input
-                    type='text'
-                    className='w-full flex border-none ring-0 focus:ring-0'
-                    placeholder='Search Courses'
-                    value={isSearchTerm}
-                    onChange={(e) => setIsSearchTerm(e.target.value)}
-                  />
-                  <div>
-                    <MdOutlineSearch size={28} />
-                  </div>
-                </div>
+      <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-6 sm:py-12'>
+        <div className='flex flex-col gap-4 sm:gap-6'>
+          <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-slate-900'>
+            Browse All Courses
+          </h1>
+
+          {/* Search + Filter Icons */}
+          <div className='flex flex-col gap-3 sm:gap-4 w-full'>
+            <div className='flex flex-row flex-wrap items-center justify-start gap-3 w-full'>
+              <div className='flex-1 min-w-[180px] border border-slate-400 rounded-md px-2 py-0.5 flex gap-1.5 items-center'>
+                <input
+                  type='text'
+                  className='w-full border-none ring-0 focus:ring-0 bg-transparent text-sm'
+                  placeholder='Search Courses'
+                  value={isSearchTerm}
+                  onChange={(e) => setIsSearchTerm(e.target.value)}
+                />
+                <MdOutlineSearch size={20} className='flex-shrink-0 text-slate-500 sm:w-6 sm:h-6' />
               </div>
-              <div className='w-full h-px bg-slate-400'></div>
-              <div className='flex justify-center lg:justify-start gap-5 relative w-full'>
-                <div className='hidden lg:flex w-full lg:!flex-col gap-2 lg:!col-span-3'>
-                  {categoryMenu.slice(0, 8).map((cat) => (
-                    <div
-                      key={cat.value}
-                      className={` transition-all ease-in flex w-full items-center justify-between cursor-pointer ${
-                        isInFilterArray(cat.value) ? 'bg-slate-200' : ''
-                      }`}
-                      onClick={() => filterClickHandler(cat.value)}
-                    >
-                      <div className={`flex items-center gap-2 w-full `}>
-                        {setCategoryIcon(cat.value)}
-                        <div
-                          className={`${
-                            isInFilterArray(cat.value)
-                              ? 'text-black'
-                              : ' text-black'
-                          } font-medium`}
-                        >
-                          {cat.name}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {/* FILTER */}
-                <AnimatePresence>
-                  {isFilter && !openSort && (
-                    <motion.div className='w-[310px] absolute top-full right-0 mt-2 bg-black px-3 py-6 z-40'>
-                      <div className='flex flex-col gap-5'>
-                        <div className='flex flex-col gap-0.5'>
-                          <div className='flex justify-between items-center w-full  border-b-2 border-b-white pb-3'>
-                            <div className='text-white  font-semibold'>
-                              Categories
-                            </div>
-                            <div
-                              className='bg-white px-2 py-1.5 text-xs font-medium cursor-pointer'
-                              onClick={() => {
-                                setIsFilter(false);
-                              }}
-                            >
-                              Close
-                            </div>
-                          </div>
-
-                          {categoryMenu.slice(0, 8).map((cat) => (
-                            <div
-                              key={cat.value}
-                              className={` transition-all ease-in flex w-full items-center justify-between px-2 cursor-pointer ${
-                                isInFilterArray(cat.value) ? 'bg-white' : ''
-                              }`}
-                              onClick={() => filterClickHandler(cat.value)}
-                            >
-                              <div
-                                className={`flex items-center gap-2 py-2  w-full `}
-                              >
-                                {setCategoryIcon(cat.value)}
-                                <div
-                                  className={`${
-                                    isInFilterArray(cat.value)
-                                      ? 'text-black'
-                                      : ' text-white'
-                                  } font-medium`}
-                                >
-                                  {cat.name}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className='flex flex-col gap-0.5 w-full pt-5 border-t-2 border-y-white'>
-                          <div
-                            className={`flex w-full items-center justify-between px-2 py-2  ${
-                              isInFilterArray('COLLECTION')
-                                ? 'bg-brand-indigo'
-                                : ''
-                            }`}
-                            onClick={() => filterClickHandler('COLLECTION')}
-                          >
-                            <div className=' flex items-center gap-3 cursor-pointer'>
-                              <div>
-                                <MdAutoStories color='white' size={20} />
-                              </div>
-                              <div className='font-semibold text-white '>
-                                Collections
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className={`flex w-full items-center justify-between px-2 py-2  ${
-                              isInFilterArray('ELECTIVE')
-                                ? 'bg-brand-indigo'
-                                : ''
-                            }`}
-                            onClick={() => filterClickHandler('ELECTIVE')}
-                          >
-                            <div
-                              className='flex items-center gap-3 cursor-pointer'
-                              onClick={() => filterClickHandler('ELECTIVE')}
-                            >
-                              <div className='pl-1'>
-                                <MdEmojiEvents color='white' size={22} />
-                              </div>
-                              <div className='font-semibold text-white '>
-                                CPS Electives
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className='flex items-center gap-3 cursor-pointer py-2'
-                            onClick={() => {
-                              window.open(
-                                'https://packagingschool.com/isbt',
-                                '_blank',
-                              );
-                              setIsFilter(false);
-                            }}
-                          >
-                            <div className='pl-1'>
-                              <MdScience color='white' size={22} />
-                            </div>
-                            <div className='font-semibold text-white leading-tight'>
-                              Beverage Institute by ISBT®
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                  {/* SORT */}
-                </AnimatePresence>
-                {/* SORT */}
-                <AnimatePresence>
-                  {openSort && !isFilter && (
-                    <div className='w-[300px] right-0 absolute top-full  bg-black px-5 py-6 z-40'>
-                      <div className='flex flex-col gap-4 text-white font-medium'>
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'course id'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'course id',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'title'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'title',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'category'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'category',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'price'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'price',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'hours'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'hours',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-                        <SortToggleItem
-                          value={isSort.value}
-                          direction={isSort.direction}
-                          sort={'lessons'}
-                          fn={() =>
-                            setIsSort({
-                              value: 'lessons',
-                              direction:
-                                isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  )}
-                </AnimatePresence>
-
-                {/* FILTER BUTTON */}
-                <div
-                  className={`lg:!hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-fit justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black] ${
-                    !isFilter && isFilters.length > 0
-                      ? 'bg-base-brand text-white'
-                      : 'bg-white'
-                  }`}
-                  onClick={() => {
-                    setOpenSort(false);
-                    setIsFilter(!isFilter);
-                  }}
-                >
-                  <MdFilterList size={24} />
-                  <div className='font-semibold'>Filter</div>
-                </div>
-
-                {/* SORT BUTTON */}
-                <div
-                  className='lg:!hidden border-black border-2 cursor-pointer h-full flex gap-1 px-5 py-2 w-fit justify-center items-center transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
-                  onClick={() => {
-                    setIsFilter(false);
-                    setOpenSort(!openSort);
-                  }}
-                >
-                  <MdSort size={24} />
-                  <div className='font-semibold'>Sort</div>
-                </div>
-              </div>
-              <div className='w-full h-px bg-slate-400'></div>
-              <div className='flex flex-col  gap-2.5 w-full '>
-                <div
-                  className={`flex w-full items-center justify-between  ${
-                    isInFilterArray('COLLECTION') ? 'bg-brand-indigo' : ''
-                  }`}
-                  onClick={() => filterClickHandler('COLLECTION')}
-                >
-                  <div className=' flex items-center gap-3 cursor-pointer'>
-                    <div>
-                      <MdAutoStories color='black' size={20} />
-                    </div>
-                    <div className='font-semibold text-slate-900 '>
-                      Collections
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`flex w-full items-center justify-between py-0  ${
-                    isInFilterArray('ELECTIVE') ? 'bg-brand-indigo' : ''
-                  }`}
-                  onClick={() => filterClickHandler('ELECTIVE')}
-                >
-                  <div
-                    className='flex items-center gap-3 cursor-pointer'
-                    onClick={() => filterClickHandler('ELECTIVE')}
+              <div className='hidden sm:flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
+                {categoryMenu.map((cat) => {
+                  const { Icon, tooltip } = getCategoryFilterIcon(cat.value);
+                  const isActive =
+                    cat.value === 'ALL'
+                      ? isFilters.length === 0
+                      : isInFilterArray(cat.value);
+                  return (
+                    <FilterIconTooltip key={cat.value} tooltip={tooltip}>
+                      <button
+                        type='button'
+                        onClick={() => filterClickHandler(cat.value)}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          isActive
+                            ? 'bg-base-brand text-white'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        <Icon size={20} />
+                      </button>
+                    </FilterIconTooltip>
+                  );
+                })}
+                <FilterIconTooltip tooltip='Beverage Institute by ISBT®'>
+                  <a
+                    href='https://packagingschool.com/isbt'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='block p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex-shrink-0'
                   >
-                    <div>
-                      <MdEmojiEvents color='black' size={22} />
-                    </div>
-                    <div className='font-semibold text-slate-900 '>
-                      CPS Electives
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className='flex items-center gap-3 cursor-pointer'
-                  onClick={() => {
-                    window.open('https://packagingschool.com/isbt', '_blank');
-                    setIsFilter(false);
-                  }}
-                >
-                  <div>
-                    <MdScience color='black' size={22} />
-                  </div>
-                  <div className='font-semibold text-slate-900 leading-tight'>
-                    Beverage Institute by ISBT®
-                  </div>
-                </div>
+                    <MdScience size={20} />
+                  </a>
+                </FilterIconTooltip>
               </div>
-              <div className='w-full h-px bg-slate-400'></div>
-              <div className='flex flex-wrap lg:mb-5 border-b border-b-slate-900 pb-6 gap-2 md:mt-1'>
+            </div>
+            <div className='border-b border-slate-300 w-full pb-2'>
+              <div className='flex flex-wrap gap-2'>
                 {updateCategoryMenu.map((cat) => (
-                  <div
+                  <button
                     key={cat.value}
-                    className='flex items-center gap-2 border-slate-300 rounded border bg-neutral-200 hover:bg-base-light px-3 py-1 text-xs font-semibold cursor-pointer'
+                    type='button'
                     onClick={() => handleCurrentCategoryClick(cat.value)}
+                    className='flex items-center gap-2 border border-slate-300 rounded bg-neutral-200 hover:bg-neutral-300 px-3 py-2 text-xs font-semibold flex-shrink-0'
                   >
-                    <div>{cat.name}</div>
-                  </div>
+                    {cat.name}
+                  </button>
                 ))}
               </div>
             </div>
           </div>
-          <div className='grid lg:!col-span-9 w-full'>
-            {isLoading ? (
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0 w-full'>
-                {[...Array(12)].map((_, i) => (
-                  <div
-                    key={i}
-                    className='flex flex-col gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow animate-pulse'
-                  >
-                    <div className='w-full h-72 bg-gray-200 rounded-lg'></div>
-                    <div className='h-6 w-3/4 bg-gray-200 rounded'></div>
-                    <div className='space-y-2'>
-                      <div className='h-4 w-full bg-gray-200 rounded'></div>
-                      <div className='h-4 w-2/3 bg-gray-200 rounded'></div>
-                    </div>
-                    <div className='h-2 w-full bg-gray-200 rounded-full'></div>
+
+          {/* Content */}
+          {isLoading ? (
+            <div className='grid grid-cols-1 gap-4'>
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className='h-16 bg-slate-200 rounded animate-pulse'
+                />
+              ))}
+            </div>
+          ) : !hasResults ? (
+            <div className='w-full py-16 flex flex-col items-center justify-center gap-4'>
+              {isSearchTerm.length > 3 ? (
+                <>
+                  <div className='text-lg font-semibold'>
+                    No results returned
                   </div>
-                ))}
-              </div>
-            ) : sortedAndSearchedCourses &&
-              sortedAndSearchedCourses.length > 0 ? (
-              <div className='flex flex-col gap-6'>
-                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-0'>
-                  {sortedCertificates &&
-                    sortedCertificates.length > 0 &&
-                    [...sortedCertificates].map((cert) => (
-                    <div key={cert.id} className='animate-fadeIn'>
-                      <CertCard
-                        cert={cert}
-                        purchaseText={
-                          cert.abbreviation === 'CPS' ||
-                          cert.abbreviation === 'CMPM'
-                            ? 'Apply Now'
-                            : 'Enroll Now'
-                        }
-                        cardClickHandler={(
-                          abbreviation,
-                          type,
-                          link,
-                          applicationLink,
-                        ) =>
-                          handleCertCardClick(
-                            cert,
-                            abbreviation,
-                            type,
-                            link,
-                            applicationLink,
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
-                  {sortedAndSearchedCourses &&
-                    sortedAndSearchedCourses.length > 0 &&
-                    [...sortedAndSearchedCourses]
-                      .slice(0, displayLimit)
-                      .map((course, i) => (
-                    <div key={course.id} className='animate-fadeIn'>
-                      <CourseCard
-                        course={course}
-                        cardClickHandler={() =>
-                          cardClickHandler(
-                            course.id,
-                            course.slug,
-                            course.altLink,
-                            course.type,
-                          )
-                        }
-                        cardPurchaseHandler={() => orderHandler(course)}
-                        cardFavoriteHandler={() =>
-                          handleAddToWishlist(course.id)
-                        }
-                        isFavorite={awsUser?.wishlist?.items.some(
-                          (item) => item.lMSCourse.id === course.id,
-                        )}
-                        imageProps={
-                          i === 0 && sortedCertificates?.length === 0
-                            ? { fetchPriority: 'high', loading: 'eager' }
-                            : undefined
-                        }
-                      />
-                    </div>
-                  ))}
+                  <BrutalCircleIconTooltip
+                    tooltip='Reset'
+                    bgColor='bg-base-brand'
+                    fn={() => setIsSearchTerm('')}
+                  >
+                    <MdAutorenew color='white' size={40} />
+                  </BrutalCircleIconTooltip>
+                </>
+              ) : (
+                <div className='font-medium animate-pulse'>
+                  Gathering Intel...
                 </div>
-                {(sortedAndSearchedCourses?.length || 0) > displayLimit && (
-                  <div className='w-full flex justify-center pt-4'>
+              )}
+            </div>
+          ) : (
+            <div className='w-full'>
+              {/* Certificates Section */}
+              {sortedCertificates?.length > 0 && (
+                <div className='mb-6'>
+                  <button
+                    type='button'
+                    onClick={() => toggleCategory('CERTIFICATES')}
+                    className='w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg bg-clemson bg-opacity-80 hover:bg-opacity-100 transition-opacity'
+                  >
+                    <div className='flex items-center gap-2'>
+                      <div className='w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0'>
+                        <MdWorkspacePremium size={18} color='white' />
+                      </div>
+                      <span className='font-bold text-white text-base sm:text-lg'>
+                        Certificates
+                      </span>
+                      <span className='text-white/90 text-sm'>
+                        ({sortedCertificates.length})
+                      </span>
+                    </div>
+                    {isCategoryExpanded('CERTIFICATES') ? (
+                      <MdExpandLess size={24} color='white' />
+                    ) : (
+                      <MdExpandMore size={24} color='white' />
+                    )}
+                  </button>
+                  <AnimatePresence>
+                    {isCategoryExpanded('CERTIFICATES') && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className='overflow-hidden w-full'
+                      >
+                        {/* Mobile: card layout */}
+                        <div className='sm:hidden border border-slate-200 border-t-0'>
+                          {sortedCertificates.map((cert) => (
+                            <CertificateMobileCard
+                              key={cert.id}
+                              certificate={cert}
+                              isNavigating={navigatingId === cert.id}
+                              onRowClick={() => {
+                                setNavigatingId(cert.id);
+                                handleCertCardClick(
+                                  cert,
+                                  cert.abbreviation,
+                                  'CERTIFICATE-VIEW',
+                                  cert.link,
+                                  cert.applicationLink
+                                );
+                              }}
+                              onApplyClick={() => {
+                                setNavigatingId(cert.id);
+                                handleCertCardClick(
+                                  cert,
+                                  cert.abbreviation,
+                                  'CERTIFICATE-APPLY',
+                                  cert.link,
+                                  cert.applicationLink
+                                );
+                              }}
+                            />
+                          ))}
+                        </div>
+                        {/* Desktop: table */}
+                        <div className='hidden sm:block overflow-x-auto'>
+                        <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                          <colgroup>
+                            <col style={{ width: '8%' }} />
+                            <col style={{ width: '24%' }} />
+                            <col style={{ width: '44%' }} />
+                            <col style={{ width: '6%' }} />
+                            <col style={{ width: '6%' }} />
+                            <col style={{ width: '4%' }} />
+                            <col style={{ width: '8%' }} />
+                          </colgroup>
+                          <thead>
+                            <tr className='bg-slate-100'>
+                              <SortableTableHeader
+                                label='ID'
+                                className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                sortKey='course id'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('course id')}
+                              />
+                              <SortableTableHeader
+                                label='Title'
+                                sortKey='title'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('title')}
+                              />
+                                <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                  Subheadline
+                                </th>
+                                <SortableTableHeader
+                                  label='Hours'
+                                  sortKey='hours'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('hours')}
+                                  align='center'
+                                  className='collapse sm:visible'
+                                />
+                              <SortableTableHeader
+                                label='Lessons'
+                                sortKey='lessons'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('lessons')}
+                                align='center'
+                                className='collapse sm:visible'
+                              />
+                              <th className='px-1 py-2 text-center font-semibold text-xs sm:text-sm' aria-label='Preview'>
+                                <MdVideocam size={18} className='text-slate-600 inline-block' />
+                              </th>
+                              <SortableTableHeader
+                                label='Price'
+                                sortKey='price'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('price')}
+                                align='center'
+                              />
+                            </tr>
+                          </thead>
+                          <tbody className='bg-white'>
+                            {sortedCertificates.map((cert) => (
+                              <CertificateTableRow
+                                key={cert.id}
+                                certificate={cert}
+                                isNavigating={navigatingId === cert.id}
+                                onRowClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-VIEW',
+                                    cert.link,
+                                    cert.applicationLink
+                                  );
+                                }}
+                                onApplyClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-APPLY',
+                                    cert.link,
+                                    cert.applicationLink
+                                  );
+                                }}
+                              />
+                            ))}
+                          </tbody>
+                        </table>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {/* Course Categories */}
+              {groupedByCategory.map(({ category, items }) => {
+                const catLabel =
+                  category === 'COLLECTION' || category === 'COLLECTIONS'
+                    ? 'Collections'
+                    : category === 'ELECTIVE'
+                      ? 'CPS Electives'
+                      : setCategoryText(category) || category;
+                const isExpanded = isCategoryExpanded(category);
+
+                return (
+                  <div key={category} className='mb-6'>
                     <button
                       type='button'
-                      onClick={() => setDisplayLimit((prev) => prev + 48)}
-                      className='px-6 py-3 bg-base-brand text-white font-semibold rounded hover:bg-base-brand/90 transition-colors'
+                      onClick={() => toggleCategory(category)}
+                      className={`w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg ${setColorByCategoryString(
+                        category
+                      )} bg-opacity-80 hover:bg-opacity-100 transition-opacity`}
                     >
-                      Load more courses
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className='w-full h-full flex items-center justify-center'>
-                <div className='max-w-5xl py-10 w-full mx-auto justify-center items-center flex flex-col gap-3'>
-                  {isSearchTerm.length > 3 ? (
-                    <>
-                      <div className='text-lg font-semibold'>
-                        No results returned
+                      <div className='flex items-center gap-2'>
+                        {setCategoryIcon(category)}
+                        <span className='font-bold text-white text-base sm:text-lg'>
+                          {catLabel}
+                        </span>
+                        <span className='text-white/90 text-sm'>
+                          ({items.length})
+                        </span>
                       </div>
-                      <BrutalCircleIconTooltip
-                        tooltip={'Reset'}
-                        bgColor={'bg-base-brand'}
-                        fn={() => {
-                          setIsSearchTerm('');
-                        }}
-                      >
-                        <MdAutorenew color='white' size={40} />
-                      </BrutalCircleIconTooltip>
-                    </>
-                  ) : (
-                    <div className='font-medium animate-pulse'>
-                      Gathering Intel...
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+                      {isExpanded ? (
+                        <MdExpandLess size={24} color='white' />
+                      ) : (
+                        <MdExpandMore size={24} color='white' />
+                      )}
+                    </button>
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className='overflow-hidden w-full'
+                        >
+                          {/* Mobile: card layout */}
+                          <div className='sm:hidden border border-slate-200 border-t-0'>
+                            {items.map((course) => (
+                              <CourseMobileCard
+                                key={course.id}
+                                course={course}
+                                isNavigating={navigatingId === course.id}
+                                onRowClick={() => {
+                                  setNavigatingId(course.id);
+                                  cardClickHandler(
+                                    course.id,
+                                    course.slug,
+                                    course.altLink,
+                                    course.type,
+                                  );
+                                }}
+                                onPurchase={() => orderHandler(course)}
+                              />
+                            ))}
+                          </div>
+                          {/* Desktop: table */}
+                          <div className='hidden sm:block overflow-x-auto'>
+                          <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                            <colgroup>
+                              <col style={{ width: '8%' }} />
+                              <col style={{ width: '24%' }} />
+                              <col style={{ width: '44%' }} />
+                              <col style={{ width: '6%' }} />
+                              <col style={{ width: '6%' }} />
+                              <col style={{ width: '4%' }} />
+                              <col style={{ width: '8%' }} />
+                            </colgroup>
+                            <thead>
+                              <tr className='bg-slate-100'>
+                                <SortableTableHeader
+                                  label='ID'
+                                  className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                  sortKey='course id'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('course id')}
+                                />
+                                <SortableTableHeader
+                                  label='Title'
+                                  sortKey='title'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('title')}
+                                />
+                                <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                  Subheadline
+                                </th>
+                                <SortableTableHeader
+                                  label='Hours'
+                                  sortKey='hours'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('hours')}
+                                  align='center'
+                                  className='collapse sm:visible'
+                                />
+                                <SortableTableHeader
+                                  label='Lessons'
+                                  className='collapse sm:visible'
+                                  sortKey='lessons'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('lessons')}
+                                  align='center'
+                                />
+                                <th className='px-1 py-2 text-center font-semibold text-xs sm:text-sm' aria-label='Preview'>
+                                  <MdVideocam size={18} className='text-slate-600 inline-block' />
+                                </th>
+                                <SortableTableHeader
+                                  label='Price'
+                                  sortKey='price'
+                                  align='center'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('price')}
+                                />
+                              </tr>
+                            </thead>
+                            <tbody className='bg-white'>
+                              {items.map((course) => (
+                                <CourseTableRow
+                                  key={course.id}
+                                  course={course}
+                                  isNavigating={navigatingId === course.id}
+                                  onRowClick={() => {
+                                    setNavigatingId(course.id);
+                                    cardClickHandler(
+                                      course.id,
+                                      course.slug,
+                                      course.altLink,
+                                      course.type,
+                                    );
+                                  }}
+                                  onPurchase={() => orderHandler(course)}
+                                />
+                              ))}
+                            </tbody>
+                          </table>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -957,19 +803,15 @@ export async function getStaticProps() {
       getAllLMSCourses(),
       getCertificates(),
     ]);
-
     const firstCardImage =
-      (certificates && certificates[0]?.seoImage) ||
-      (courses && courses[0]?.seoImage) ||
-      null;
-
+      certificates?.[0]?.seoImage || courses?.[0]?.seoImage || null;
     return {
       props: {
         courses: courses || [],
         certificates: certificates || [],
         firstCardImage,
       },
-      revalidate: 60 * 60 * 4, // revalidate every 4 hours
+      revalidate: 60 * 60 * 4,
     };
   } catch (err) {
     console.error('getStaticProps /all_courses error:', err);

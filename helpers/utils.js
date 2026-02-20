@@ -1,14 +1,15 @@
 import {
-  MdExtension,
+  MdLayers,
   MdDirectionsCar,
-  MdAutoAwesome,
+  MdViewModule,
   MdBusinessCenter,
-  MdColorLens,
-  MdLunchDining,
+  MdPalette,
+  MdRestaurant,
   MdFactory,
-  MdMiscellaneousServices,
   MdLocalShipping,
-  MdAutoStories,
+  MdMenuBook,
+  MdSchool,
+  MdScience,
 } from 'react-icons/md';
 
 import { TiTree } from 'react-icons/ti';
@@ -76,6 +77,16 @@ export const setCategoryText = (cat) => {
       return 'Business';
     case 'AUTO':
       return 'Automotive';
+    case 'SUSTAINABILITY':
+      return 'Sustainability';
+    case 'PACKAGINGBASICS':
+      return 'Packaging Basics';
+    case 'PACKAGINGSCIENCE':
+      return 'Packaging Science';
+    case 'PACKAGINGDESIGN':
+      return 'Packaging Design';
+    case 'FREE':
+      return 'Free';
   }
 };
 
@@ -137,6 +148,11 @@ export const setColorByCategoryString = (cat) => {
       return 'bg-clemson-dark';
     case 'BUSINESS':
       return 'bg-green-600';
+    case 'COLLECTIONS':
+    case 'COLLECTION':
+      return 'bg-brand-indigo';
+    case 'ELECTIVE':
+      return 'bg-amber-500';
     default:
       return 'bg-clemson';
   }
@@ -147,7 +163,7 @@ export const setCategoryIcon = (cat) => {
     case 'MATERIALS':
       return (
         <div className='w-7 h-7 bg-base-brand rounded-full flex items-center justify-center'>
-          <MdExtension color='white' size={18} />
+          <MdLayers color='white' size={18} />
         </div>
       );
     case 'INDUSTRY':
@@ -159,13 +175,13 @@ export const setCategoryIcon = (cat) => {
     case 'DESIGN':
       return (
         <div className='w-7 h-7 bg-clemson rounded-full flex items-center justify-center'>
-          <MdColorLens color='white' size={18} />
+          <MdPalette color='white' size={18} />
         </div>
       );
     case 'FOODANDBEVERAGE':
       return (
         <div className='w-7 h-7 bg-brand-red rounded-full flex items-center justify-center'>
-          <MdLunchDining color='white' size={18} />
+          <MdRestaurant color='white' size={18} />
         </div>
       );
     case 'SUPPLYCHAIN':
@@ -183,22 +199,83 @@ export const setCategoryIcon = (cat) => {
     case 'AUTO':
       return (
         <div className='w-7 h-7 bg-indigo-500 rounded-full flex items-center justify-center'>
-          <MdMiscellaneousServices color='white' size={18} />
+          <MdDirectionsCar color='white' size={18} />
+        </div>
+      );
+    case 'COLLECTIONS':
+    case 'COLLECTION':
+      return (
+        <div className='w-7 h-7 bg-brand-indigo rounded-full flex items-center justify-center'>
+          <MdMenuBook color='white' size={18} />
+        </div>
+      );
+    case 'ELECTIVE':
+      return (
+        <div className='w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center'>
+          <MdSchool color='white' size={18} />
         </div>
       );
     case 'ALL':
       return (
         <div className='w-7 h-7 bg-black rounded-full flex items-center justify-center'>
-          <MdAutoAwesome color='white' size={18} />
+          <MdViewModule color='white' size={18} />
         </div>
       );
     default:
       return (
         <div className='w-7 h-7 bg-base-dark rounded-full flex items-center justify-center'>
-          <MdExtension color='white' size={18} />
+          <MdLayers color='white' size={18} />
         </div>
       );
   }
+};
+
+/** Returns { icon, tooltip } for filter bar icon-only display */
+export const getCategoryFilterIcon = (cat) => {
+  const IconWrapper = ({ size = 22 }) => {
+    switch (cat) {
+      case 'ALL':
+        return <MdViewModule size={size} />;
+      case 'MATERIALS':
+        return <MdLayers size={size} />;
+      case 'INDUSTRY':
+        return <MdFactory size={size} />;
+      case 'DESIGN':
+        return <MdPalette size={size} />;
+      case 'FOODANDBEVERAGE':
+        return <MdRestaurant size={size} />;
+      case 'SUPPLYCHAIN':
+        return <MdLocalShipping size={size} />;
+      case 'BUSINESS':
+        return <MdBusinessCenter size={size} />;
+      case 'AUTO':
+        return <MdDirectionsCar size={size} />;
+      case 'COLLECTION':
+      case 'COLLECTIONS':
+        return <MdMenuBook size={size} />;
+      case 'ELECTIVE':
+        return <MdSchool size={size} />;
+      case 'ISBT':
+        return <MdScience size={size} />;
+      default:
+        return <MdLayers size={size} />;
+    }
+  };
+  const tooltips = {
+    ALL: 'All categories',
+    MATERIALS: 'Materials',
+    INDUSTRY: 'Industry',
+    DESIGN: 'Design',
+    FOODANDBEVERAGE: 'Food & Beverage',
+    SUPPLYCHAIN: 'Supply Chain & Logistics',
+    BUSINESS: 'Business',
+    AUTO: 'Automotive',
+    COLLECTION: 'Collections',
+    COLLECTIONS: 'Collections',
+    ELECTIVE: 'CPS Electives',
+    ISBT: 'Beverage Institute by ISBT®',
+  };
+  return { Icon: IconWrapper, tooltip: tooltips[cat] || cat };
 };
 
 export const setCardIcon = (cat) => {
