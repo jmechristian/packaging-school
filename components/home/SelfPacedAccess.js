@@ -57,14 +57,14 @@ const SelfPacedAccess = () => {
     if (isInView) {
       dispatch(
         setSalesbarText(
-          'Not sure which Path is right for you? Book a free 15-minute call with an advisor.'
-        )
+          'Not sure which Path is right for you? Book a free 15-minute call with an advisor.',
+        ),
       );
     } else {
       dispatch(
         setSalesbarText(
-          'Questions? Book a free 15-minute call with an advisor.'
-        )
+          'Questions? Book a free 15-minute call with an advisor.',
+        ),
       );
     }
   }, [dispatch, isInView]);
@@ -94,7 +94,7 @@ const SelfPacedAccess = () => {
 
   return (
     <div
-      className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative px-5 xl:px-0'
+      className='w-full max-w-7xl mx-auto flex flex-col gap-12 relative px-5 xl:px-0 lg:!mt-2.5'
       ref={ref}
     >
       {isCohortModalOpen && (
@@ -112,14 +112,14 @@ const SelfPacedAccess = () => {
           certificates={certificates.filter(
             (certificate) =>
               certificate.abbreviation !== 'CMPM' &&
-              certificate.abbreviation !== 'FPC'
+              certificate.abbreviation !== 'FPC',
           )}
         />
       )}
       <div className='flex flex-col items-center justify-center gap-5 mx-auto max-w-5xl'>
-        <div className='h2-base text-center max-w-3xl mx-auto'>
+        <h1 className='h1-base text-center max-w-3xl mx-auto'>
           Stop Scrolling, Start Learning—Choose Your Path To Full Access Now.
-        </div>
+        </h1>
         <p className='text-xl max-w-4xl mx-auto text-center text-slate-600'>
           With hundreds of lessons and courses, choosing can feel overwhelming.
           That&apos;s why we&apos;ve made it easy—get full access with a
@@ -365,7 +365,7 @@ const SelfPacedAccess = () => {
           onClick={() =>
             window.open(
               'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-              '_blank'
+              '_blank',
             )
           }
         >
@@ -392,7 +392,7 @@ const SelfPacedAccess = () => {
             onClick={() =>
               window.open(
                 'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-                '_blank'
+                '_blank',
               )
             }
           >

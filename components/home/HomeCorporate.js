@@ -7,9 +7,9 @@ const HomeCorporate = () => {
             <div className=' text-lg tracking-wide font-oswald uppercase text-white font-medium bg-clemson px-3 py-1 rounded w-fit'>
               Reach Goals Faster
             </div>
-            <div className=' h2-base'>
+            <h2 className=' h2-base'>
               Accelerate Team Growth in a Branded Learning Hub
-            </div>
+            </h2>
             <div className='text-xl'>
               Give your team access to a curated library of courses, wrapped in
               your branding, with full tracking and reporting. Add features like
@@ -21,7 +21,7 @@ const HomeCorporate = () => {
               onClick={() =>
                 window.open(
                   'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-                  '_blank'
+                  '_blank',
                 )
               }
             >

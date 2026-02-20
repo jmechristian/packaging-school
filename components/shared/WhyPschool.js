@@ -81,13 +81,6 @@ const WhyPschool = () => {
             <div className='w-full flex flex-col gap-0 lg:col-span-8 bg-slate-100 p-5 rounded-md'>
               <div className='h4-base leading-none'>Dr. Andrew Hurley</div>
               <div className=' text-slate-800 text-xl'>Founder</div>
-              <div className='text-slate-600 text-sm mt-1'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                egestas, eros et accumsan scelerisque, orci ligula rhoncus
-                neque, at fermentum mauris purus sed purus. Etiam in nulla
-                purus. Curabitur viverra nec ipsum sed sagittis. Nulla ut
-                molestie felis. Vivamus sodales, metus lobortis fermentum
-              </div>
             </div>
             <div className='lg:col-span-4'>
               <div
@@ -108,14 +101,6 @@ const WhyPschool = () => {
             <div className='w-full flex flex-col gap-0 lg:col-span-8 bg-slate-100 p-5 rounded-md'>
               <div className='h4-base'>Dr. Julie Rice Suggs</div>
               <div className=' text-slate-800 text-xl'>Academic Director</div>
-              <div className='text-slate-600 text-sm mt-2'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                egestas, eros et accumsan scelerisque, orci ligula rhoncus
-                neque, at fermentum mauris purus sed purus. Etiam in nulla
-                purus. Curabitur viverra nec ipsum sed sagittis. Nulla ut
-                molestie felis. Vivamus sodales, metus lobortis fermentum
-                gravida, magna nisl luctus.
-              </div>
             </div>
           </div>
         </motion.div>
@@ -291,7 +276,7 @@ const WhyPschool = () => {
           onClick={() =>
             window.open(
               'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-              '_blank'
+              '_blank',
             )
           }
         >

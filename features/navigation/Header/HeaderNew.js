@@ -72,12 +72,12 @@ export default function HeaderNew() {
       },
     ],
     pages: [
-      { name: 'Certifications', href: '/certifications' },
-      { name: 'Catalog', href: '/all_courses' },
-      { name: 'Learning Paths', href: '/paths' },
-      { name: 'Lessons', href: '/lessons' },
-      { name: 'About', href: '/about' },
-      { name: 'Campus Store', href: 'https://packagingschool.printful.me/' },
+      { name: 'Certificates', href: '/certifications' },
+      { name: 'Courses', href: '/all_courses' },
+      { name: 'Teams', href: '/certifications' },
+      { name: 'Articles', href: '/lessons' },
+      // { name: 'About', href: '/about' },
+      // { name: 'Campus Store', href: 'https://packagingschool.printful.me/' },
     ],
   };
 
@@ -330,7 +330,7 @@ export default function HeaderNew() {
                                     onClick={() =>
                                       navigateToThinkific(
                                         'https://learn.packagingschool.com/enrollments?role=admin',
-                                        'https://learn.packagingschool.com/enrollments?role=admin'
+                                        'https://learn.packagingschool.com/enrollments?role=admin',
                                       )
                                     }
                                   >
@@ -351,7 +351,7 @@ export default function HeaderNew() {
                             onClick={() =>
                               navigateToThinkific(
                                 'https://learn.packagingschool.com/enrollments?role=admin',
-                                'https://learn.packagingschool.com/enrollments?role=admin'
+                                'https://learn.packagingschool.com/enrollments?role=admin',
                               )
                             }
                           >
