@@ -558,25 +558,6 @@ const Page = ({ lib, learningOfTheMonths }) => {
               searchQuery=''
             />
           ))}
-          <CourseCard
-            key='CPS-00'
-            course='CPS-00'
-            courseData={{
-              id: 'CPS-00',
-              title: 'Certificate of Packaging Science Bundle',
-              subheadline:
-                'Enroll in all 11 courses and pass the final exam (enroll separately) to earn your certification—the fastest way to get certified.',
-              link: 'https://packagingschool.com/enroll/3686568?price_id=4633347&coupon=lucidlibrary',
-              hours: '70',
-              lessons: '773',
-              videos: '10',
-              price: '2400',
-              seoImage:
-                'https://files.cdn.thinkific.com/bundles/bundle_card_image_000/003/803/1507034685.original.jpg',
-              slug: 'cps-00',
-            }}
-            searchQuery=''
-          />
         </div>
       </div>
       {/* LOTM */}
