@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { API } from 'aws-amplify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -82,23 +81,41 @@ const groupCoursesByCategory = (courses, filters) => {
   return groups;
 };
 
-const Page = ({
-  courses: initialCourses = [],
-  certificates: initialCertificates = [],
-  firstCardImage,
-}) => {
+const Page = ({ firstCardImage }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
   const { location, awsUser } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilters, setIsFilters] = useState([]);
+  const [isCourses, setIsCourses] = useState([]);
+  const [isCertificates, setIsCertificates] = useState([]);
   const [collapsedCategories, setCollapsedCategories] = useState(
     () => new Set(),
   );
   const [navigatingId, setNavigatingId] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // JS-based responsive detection — avoids sm: CSS breakpoint visibility bugs on back nav
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // Fetch data fresh every mount — works correctly on back navigation
+  useEffect(() => {
+    setIsLoading(true);
+    Promise.all([getAllLMSCourses(), getCertificates()])
+      .then(([courses, certs]) => {
+        if (courses?.length) setIsCourses(courses);
+        if (certs?.length) setIsCertificates(certs);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
   useEffect(() => {
     const handleComplete = () => setNavigatingId(null);
@@ -149,8 +166,8 @@ const Page = ({
   };
 
   const filtered = useMemo(() => {
-    if (isFilters.length === 0) return initialCourses;
-    return initialCourses.filter((course) => {
+    if (isFilters.length === 0) return isCourses;
+    return isCourses.filter((course) => {
       const matchCategory = course.categoryArray?.some((c) =>
         isFilters.includes(c),
       );
@@ -159,7 +176,7 @@ const Page = ({
         isFilters.includes('COLLECTIONS') && course.type === 'COLLECTION';
       return matchCategory || matchType || matchCollections;
     });
-  }, [initialCourses, isFilters]);
+  }, [isCourses, isFilters]);
 
   const sortedCourses = useMemo(() => {
     if (!filtered) return [];
@@ -198,13 +215,13 @@ const Page = ({
   }, [isSearchTerm, sortedCourses]);
 
   const searchCertificates = useMemo(() => {
-    return initialCertificates.filter(
+    return isCertificates.filter(
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.description?.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()),
     );
-  }, [initialCertificates, isSearchTerm]);
+  }, [isCertificates, isSearchTerm]);
 
   const sortedCertificates = useMemo(() => {
     const { value, direction } = isSort;
@@ -386,7 +403,7 @@ const Page = ({
                   className='flex-shrink-0 text-slate-500 sm:w-6 sm:h-6'
                 />
               </div>
-              <div className='hidden sm:flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
+              {!isMobile && <div className='flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
                 {categoryMenu.map((cat) => {
                   const { Icon, tooltip } = getCategoryFilterIcon(cat.value);
                   const isActive =
@@ -419,7 +436,7 @@ const Page = ({
                     <MdScience size={20} />
                   </a>
                 </FilterIconTooltip>
-              </div>
+              </div>}
             </div>
             <div className='border-b border-slate-300 w-full pb-2'>
               <div className='flex flex-wrap gap-2'>
@@ -495,47 +512,27 @@ const Page = ({
                       <MdExpandMore size={24} color='white' />
                     )}
                   </button>
-                  <AnimatePresence>
-                    {isCategoryExpanded('CERTIFICATES') && (
-                      <motion.div
-                        initial={false}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className='overflow-hidden w-full'
-                      >
-                        {/* Mobile: card layout */}
-                        <div className='sm:hidden border border-slate-200 border-t-0'>
-                          {sortedCertificates.map((cert) => (
-                            <CertificateMobileCard
-                              key={cert.id}
-                              certificate={cert}
-                              isNavigating={navigatingId === cert.id}
-                              onRowClick={() => {
-                                setNavigatingId(cert.id);
-                                handleCertCardClick(
-                                  cert,
-                                  cert.abbreviation,
-                                  'CERTIFICATE-VIEW',
-                                  cert.link,
-                                  cert.applicationLink,
-                                );
-                              }}
-                              onApplyClick={() => {
-                                setNavigatingId(cert.id);
-                                handleCertCardClick(
-                                  cert,
-                                  cert.abbreviation,
-                                  'CERTIFICATE-APPLY',
-                                  cert.link,
-                                  cert.applicationLink,
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                        {/* Desktop: table */}
-                        <div className='hidden sm:block overflow-x-auto'>
+                  {isCategoryExpanded('CERTIFICATES') && (
+                    isMobile ? (
+                      <div className='border border-slate-200 border-t-0'>
+                        {sortedCertificates.map((cert) => (
+                          <CertificateMobileCard
+                            key={cert.id}
+                            certificate={cert}
+                            isNavigating={navigatingId === cert.id}
+                            onRowClick={() => {
+                              setNavigatingId(cert.id);
+                              handleCertCardClick(cert, cert.abbreviation, 'CERTIFICATE-VIEW', cert.link, cert.applicationLink);
+                            }}
+                            onApplyClick={() => {
+                              setNavigatingId(cert.id);
+                              handleCertCardClick(cert, cert.abbreviation, 'CERTIFICATE-APPLY', cert.link, cert.applicationLink);
+                            }}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                    <div className='w-full overflow-x-auto'>
                           <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
                             <colgroup>
                               <col style={{ width: '8%' }} />
@@ -633,10 +630,9 @@ const Page = ({
                               ))}
                             </tbody>
                           </table>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    </div>
+                    )
+                  )}
                 </div>
               )}
 
@@ -674,37 +670,24 @@ const Page = ({
                         <MdExpandMore size={24} color='white' />
                       )}
                     </button>
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={false}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className='overflow-hidden w-full'
-                        >
-                          {/* Mobile: card layout */}
-                          <div className='sm:hidden border border-slate-200 border-t-0'>
-                            {items.map((course) => (
-                              <CourseMobileCard
-                                key={course.id}
-                                course={course}
-                                isNavigating={navigatingId === course.id}
-                                onRowClick={() => {
-                                  setNavigatingId(course.id);
-                                  cardClickHandler(
-                                    course.id,
-                                    course.slug,
-                                    course.altLink,
-                                    course.type,
-                                  );
-                                }}
-                                onPurchase={() => orderHandler(course)}
-                              />
-                            ))}
-                          </div>
-                          {/* Desktop: table */}
-                          <div className='hidden sm:block overflow-x-auto'>
+                    {isExpanded && (
+                      isMobile ? (
+                        <div className='border border-slate-200 border-t-0'>
+                          {items.map((course) => (
+                            <CourseMobileCard
+                              key={course.id}
+                              course={course}
+                              isNavigating={navigatingId === course.id}
+                              onRowClick={() => {
+                                setNavigatingId(course.id);
+                                cardClickHandler(course.id, course.slug, course.altLink, course.type);
+                              }}
+                              onPurchase={() => orderHandler(course)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                      <div className='w-full overflow-x-auto'>
                             <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
                               <colgroup>
                                 <col style={{ width: '8%' }} />
@@ -792,10 +775,9 @@ const Page = ({
                                 ))}
                               </tbody>
                             </table>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                      </div>
+                      )
+                    )}
                   </div>
                 );
               })}
@@ -811,24 +793,16 @@ export default Page;
 
 export async function getStaticProps() {
   try {
-    const [courses, certificates] = await Promise.all([
-      getAllLMSCourses(),
-      getCertificates(),
-    ]);
-    const firstCardImage =
-      certificates?.[0]?.seoImage || courses?.[0]?.seoImage || null;
+    const certificates = await getCertificates();
+    const firstCardImage = certificates?.[0]?.seoImage || null;
     return {
-      props: {
-        courses: courses || [],
-        certificates: certificates || [],
-        firstCardImage,
-      },
+      props: { firstCardImage: firstCardImage || null },
       revalidate: 60 * 60 * 4,
     };
   } catch (err) {
     console.error('getStaticProps /all_courses error:', err);
     return {
-      props: { courses: [], certificates: [] },
+      props: { firstCardImage: null },
       revalidate: 60,
     };
   }
