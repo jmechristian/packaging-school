@@ -86,8 +86,4 @@ export const updateCategoryMenu = [
     name: 'Packaging Design',
     value: 'PACKAGINGDESIGN',
   },
-  {
-    name: 'Free',
-    value: 'FREE',
-  },
 ];

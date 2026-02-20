@@ -55,7 +55,6 @@ const CATEGORY_ORDER = [
   'PACKAGINGBASICS',
   'PACKAGINGSCIENCE',
   'PACKAGINGDESIGN',
-  'FREE',
   'COLLECTIONS',
   'ELECTIVE',
   'COLLECTION',
@@ -384,7 +383,10 @@ const Page = ({
                   value={isSearchTerm}
                   onChange={(e) => setIsSearchTerm(e.target.value)}
                 />
-                <MdOutlineSearch size={20} className='flex-shrink-0 text-slate-500 sm:w-6 sm:h-6' />
+                <MdOutlineSearch
+                  size={20}
+                  className='flex-shrink-0 text-slate-500 sm:w-6 sm:h-6'
+                />
               </div>
               <div className='hidden sm:flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
                 {categoryMenu.map((cat) => {
@@ -518,7 +520,7 @@ const Page = ({
                                   cert.abbreviation,
                                   'CERTIFICATE-VIEW',
                                   cert.link,
-                                  cert.applicationLink
+                                  cert.applicationLink,
                                 );
                               }}
                               onApplyClick={() => {
@@ -528,7 +530,7 @@ const Page = ({
                                   cert.abbreviation,
                                   'CERTIFICATE-APPLY',
                                   cert.link,
-                                  cert.applicationLink
+                                  cert.applicationLink,
                                 );
                               }}
                             />
@@ -536,33 +538,33 @@ const Page = ({
                         </div>
                         {/* Desktop: table */}
                         <div className='hidden sm:block overflow-x-auto'>
-                        <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
-                          <colgroup>
-                            <col style={{ width: '8%' }} />
-                            <col style={{ width: '24%' }} />
-                            <col style={{ width: '44%' }} />
-                            <col style={{ width: '6%' }} />
-                            <col style={{ width: '6%' }} />
-                            <col style={{ width: '4%' }} />
-                            <col style={{ width: '8%' }} />
-                          </colgroup>
-                          <thead>
-                            <tr className='bg-slate-100'>
-                              <SortableTableHeader
-                                label='ID'
-                                className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
-                                sortKey='course id'
-                                currentSort={isSort.value}
-                                direction={isSort.direction}
-                                onClick={() => setSort('course id')}
-                              />
-                              <SortableTableHeader
-                                label='Title'
-                                sortKey='title'
-                                currentSort={isSort.value}
-                                direction={isSort.direction}
-                                onClick={() => setSort('title')}
-                              />
+                          <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                            <colgroup>
+                              <col style={{ width: '8%' }} />
+                              <col style={{ width: '24%' }} />
+                              <col style={{ width: '44%' }} />
+                              <col style={{ width: '6%' }} />
+                              <col style={{ width: '6%' }} />
+                              <col style={{ width: '4%' }} />
+                              <col style={{ width: '8%' }} />
+                            </colgroup>
+                            <thead>
+                              <tr className='bg-slate-100'>
+                                <SortableTableHeader
+                                  label='ID'
+                                  className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                  sortKey='course id'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('course id')}
+                                />
+                                <SortableTableHeader
+                                  label='Title'
+                                  sortKey='title'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('title')}
+                                />
                                 <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
                                   Subheadline
                                 </th>
@@ -575,58 +577,64 @@ const Page = ({
                                   align='center'
                                   className='collapse sm:visible'
                                 />
-                              <SortableTableHeader
-                                label='Lessons'
-                                sortKey='lessons'
-                                currentSort={isSort.value}
-                                direction={isSort.direction}
-                                onClick={() => setSort('lessons')}
-                                align='center'
-                                className='collapse sm:visible'
-                              />
-                              <th className='px-1 py-2 text-center font-semibold text-xs sm:text-sm' aria-label='Preview'>
-                                <MdVideocam size={18} className='text-slate-600 inline-block' />
-                              </th>
-                              <SortableTableHeader
-                                label='Price'
-                                sortKey='price'
-                                currentSort={isSort.value}
-                                direction={isSort.direction}
-                                onClick={() => setSort('price')}
-                                align='center'
-                              />
-                            </tr>
-                          </thead>
-                          <tbody className='bg-white'>
-                            {sortedCertificates.map((cert) => (
-                              <CertificateTableRow
-                                key={cert.id}
-                                certificate={cert}
-                                isNavigating={navigatingId === cert.id}
-                                onRowClick={() => {
-                                  setNavigatingId(cert.id);
-                                  handleCertCardClick(
-                                    cert,
-                                    cert.abbreviation,
-                                    'CERTIFICATE-VIEW',
-                                    cert.link,
-                                    cert.applicationLink
-                                  );
-                                }}
-                                onApplyClick={() => {
-                                  setNavigatingId(cert.id);
-                                  handleCertCardClick(
-                                    cert,
-                                    cert.abbreviation,
-                                    'CERTIFICATE-APPLY',
-                                    cert.link,
-                                    cert.applicationLink
-                                  );
-                                }}
-                              />
-                            ))}
-                          </tbody>
-                        </table>
+                                <SortableTableHeader
+                                  label='Lessons'
+                                  sortKey='lessons'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('lessons')}
+                                  align='center'
+                                  className='collapse sm:visible'
+                                />
+                                <th
+                                  className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
+                                  aria-label='Preview'
+                                >
+                                  <MdVideocam
+                                    size={18}
+                                    className='text-slate-600 inline-block'
+                                  />
+                                </th>
+                                <SortableTableHeader
+                                  label='Price'
+                                  sortKey='price'
+                                  currentSort={isSort.value}
+                                  direction={isSort.direction}
+                                  onClick={() => setSort('price')}
+                                  align='center'
+                                />
+                              </tr>
+                            </thead>
+                            <tbody className='bg-white'>
+                              {sortedCertificates.map((cert) => (
+                                <CertificateTableRow
+                                  key={cert.id}
+                                  certificate={cert}
+                                  isNavigating={navigatingId === cert.id}
+                                  onRowClick={() => {
+                                    setNavigatingId(cert.id);
+                                    handleCertCardClick(
+                                      cert,
+                                      cert.abbreviation,
+                                      'CERTIFICATE-VIEW',
+                                      cert.link,
+                                      cert.applicationLink,
+                                    );
+                                  }}
+                                  onApplyClick={() => {
+                                    setNavigatingId(cert.id);
+                                    handleCertCardClick(
+                                      cert,
+                                      cert.abbreviation,
+                                      'CERTIFICATE-APPLY',
+                                      cert.link,
+                                      cert.applicationLink,
+                                    );
+                                  }}
+                                />
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </motion.div>
                     )}
@@ -650,7 +658,7 @@ const Page = ({
                       type='button'
                       onClick={() => toggleCategory(category)}
                       className={`w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg ${setColorByCategoryString(
-                        category
+                        category,
                       )} bg-opacity-80 hover:bg-opacity-100 transition-opacity`}
                     >
                       <div className='flex items-center gap-2'>
@@ -699,87 +707,93 @@ const Page = ({
                           </div>
                           {/* Desktop: table */}
                           <div className='hidden sm:block overflow-x-auto'>
-                          <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
-                            <colgroup>
-                              <col style={{ width: '8%' }} />
-                              <col style={{ width: '24%' }} />
-                              <col style={{ width: '44%' }} />
-                              <col style={{ width: '6%' }} />
-                              <col style={{ width: '6%' }} />
-                              <col style={{ width: '4%' }} />
-                              <col style={{ width: '8%' }} />
-                            </colgroup>
-                            <thead>
-                              <tr className='bg-slate-100'>
-                                <SortableTableHeader
-                                  label='ID'
-                                  className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
-                                  sortKey='course id'
-                                  currentSort={isSort.value}
-                                  direction={isSort.direction}
-                                  onClick={() => setSort('course id')}
-                                />
-                                <SortableTableHeader
-                                  label='Title'
-                                  sortKey='title'
-                                  currentSort={isSort.value}
-                                  direction={isSort.direction}
-                                  onClick={() => setSort('title')}
-                                />
-                                <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
-                                  Subheadline
-                                </th>
-                                <SortableTableHeader
-                                  label='Hours'
-                                  sortKey='hours'
-                                  currentSort={isSort.value}
-                                  direction={isSort.direction}
-                                  onClick={() => setSort('hours')}
-                                  align='center'
-                                  className='collapse sm:visible'
-                                />
-                                <SortableTableHeader
-                                  label='Lessons'
-                                  className='collapse sm:visible'
-                                  sortKey='lessons'
-                                  currentSort={isSort.value}
-                                  direction={isSort.direction}
-                                  onClick={() => setSort('lessons')}
-                                  align='center'
-                                />
-                                <th className='px-1 py-2 text-center font-semibold text-xs sm:text-sm' aria-label='Preview'>
-                                  <MdVideocam size={18} className='text-slate-600 inline-block' />
-                                </th>
-                                <SortableTableHeader
-                                  label='Price'
-                                  sortKey='price'
-                                  align='center'
-                                  currentSort={isSort.value}
-                                  direction={isSort.direction}
-                                  onClick={() => setSort('price')}
-                                />
-                              </tr>
-                            </thead>
-                            <tbody className='bg-white'>
-                              {items.map((course) => (
-                                <CourseTableRow
-                                  key={course.id}
-                                  course={course}
-                                  isNavigating={navigatingId === course.id}
-                                  onRowClick={() => {
-                                    setNavigatingId(course.id);
-                                    cardClickHandler(
-                                      course.id,
-                                      course.slug,
-                                      course.altLink,
-                                      course.type,
-                                    );
-                                  }}
-                                  onPurchase={() => orderHandler(course)}
-                                />
-                              ))}
-                            </tbody>
-                          </table>
+                            <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                              <colgroup>
+                                <col style={{ width: '8%' }} />
+                                <col style={{ width: '24%' }} />
+                                <col style={{ width: '44%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '4%' }} />
+                                <col style={{ width: '8%' }} />
+                              </colgroup>
+                              <thead>
+                                <tr className='bg-slate-100'>
+                                  <SortableTableHeader
+                                    label='ID'
+                                    className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                    sortKey='course id'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('course id')}
+                                  />
+                                  <SortableTableHeader
+                                    label='Title'
+                                    sortKey='title'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('title')}
+                                  />
+                                  <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                    Subheadline
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Hours'
+                                    sortKey='hours'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('hours')}
+                                    align='center'
+                                    className='collapse sm:visible'
+                                  />
+                                  <SortableTableHeader
+                                    label='Lessons'
+                                    className='collapse sm:visible'
+                                    sortKey='lessons'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('lessons')}
+                                    align='center'
+                                  />
+                                  <th
+                                    className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
+                                    aria-label='Preview'
+                                  >
+                                    <MdVideocam
+                                      size={18}
+                                      className='text-slate-600 inline-block'
+                                    />
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Price'
+                                    sortKey='price'
+                                    align='center'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('price')}
+                                  />
+                                </tr>
+                              </thead>
+                              <tbody className='bg-white'>
+                                {items.map((course) => (
+                                  <CourseTableRow
+                                    key={course.id}
+                                    course={course}
+                                    isNavigating={navigatingId === course.id}
+                                    onRowClick={() => {
+                                      setNavigatingId(course.id);
+                                      cardClickHandler(
+                                        course.id,
+                                        course.slug,
+                                        course.altLink,
+                                        course.type,
+                                      );
+                                    }}
+                                    onPurchase={() => orderHandler(course)}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </motion.div>
                       )}
