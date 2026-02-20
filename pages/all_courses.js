@@ -95,8 +95,6 @@ const Page = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isFilters, setIsFilters] = useState([]);
-  const [isCourses, setIsCourses] = useState(initialCourses);
-  const [isCertificates, setIsCertificates] = useState(initialCertificates);
   const [collapsedCategories, setCollapsedCategories] = useState(
     () => new Set(),
   );
@@ -151,8 +149,8 @@ const Page = ({
   };
 
   const filtered = useMemo(() => {
-    if (isFilters.length === 0) return isCourses;
-    return isCourses.filter((course) => {
+    if (isFilters.length === 0) return initialCourses;
+    return initialCourses.filter((course) => {
       const matchCategory = course.categoryArray?.some((c) =>
         isFilters.includes(c),
       );
@@ -161,7 +159,7 @@ const Page = ({
         isFilters.includes('COLLECTIONS') && course.type === 'COLLECTION';
       return matchCategory || matchType || matchCollections;
     });
-  }, [isCourses, isFilters]);
+  }, [initialCourses, isFilters]);
 
   const sortedCourses = useMemo(() => {
     if (!filtered) return [];
@@ -200,13 +198,13 @@ const Page = ({
   }, [isSearchTerm, sortedCourses]);
 
   const searchCertificates = useMemo(() => {
-    return isCertificates.filter(
+    return initialCertificates.filter(
       (cert) =>
         cert.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.description?.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
         cert.courseId.toLowerCase().includes(isSearchTerm.toLowerCase()),
     );
-  }, [isCertificates, isSearchTerm]);
+  }, [initialCertificates, isSearchTerm]);
 
   const sortedCertificates = useMemo(() => {
     const { value, direction } = isSort;
