@@ -182,11 +182,7 @@ const Fpas = () => {
     const found = headers.find(
       (h) => normalize(typeof h === 'string' ? h : h.original) === target,
     );
-    return found
-      ? typeof found === 'string'
-        ? found
-        : found.original
-      : null;
+    return found ? (typeof found === 'string' ? found : found.original) : null;
   }, [headers]);
 
   const dataAfterBottleBill = useMemo(() => {
@@ -791,7 +787,7 @@ const Fpas = () => {
               </div>
 
               {/* Presets + Custom Views + Open Modal */}
-              <div className='flex flex-wrap items-center gap-3'>
+              <div className='flex flex-wrap items-center gap-5'>
                 <select
                   className='text-xs sm:text-sm px-3 pr-6 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 min-w-[220px]'
                   value={activePreset}
@@ -841,8 +837,13 @@ const Fpas = () => {
                     onChange={(e) => setBottleBillFilterOn(e.target.checked)}
                     className='rounded border-gray-300 text-blue-600'
                   />
-                  <span className='text-xs sm:text-sm text-gray-700'>
-                    Bottle Bill Products
+                  <span className='flex flex-col'>
+                    <span className='text-xs sm:text-sm text-gray-700 leading-tight'>
+                      Bottle Bill Products
+                    </span>
+                    <span className='text-[10px] sm:text-xs text-gray-500'>
+                      Excluded from EPR
+                    </span>
                   </span>
                 </label>
 
