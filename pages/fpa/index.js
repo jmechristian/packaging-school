@@ -193,7 +193,7 @@ const Fpas = () => {
     if (!bottleBillFilterOn || !productToBeAuditedKey) return dataAfterPreset;
     return dataAfterPreset.filter((row) => {
       const v = String(row[productToBeAuditedKey] ?? '').trim();
-      return v.toLowerCase() !== 'apple juice';
+      return v.toLowerCase() === 'apple juice';
     });
   }, [dataAfterPreset, bottleBillFilterOn, productToBeAuditedKey]);
 
