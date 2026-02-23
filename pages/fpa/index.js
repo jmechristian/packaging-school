@@ -26,6 +26,7 @@ const Fpas = () => {
   });
   const [activePreset, setActivePreset] = useState('');
   const [onlyAuditedFilterOn, setOnlyAuditedFilterOn] = useState(true);
+  const [bottleBillFilterOn, setBottleBillFilterOn] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
   const [columnExcludedValues, setColumnExcludedValues] = useState({});
   const [openFilterColumn, setOpenFilterColumn] = useState(null);
@@ -171,6 +172,31 @@ const Fpas = () => {
     });
   }, [data, headers, onlyAuditedFilterOn]);
 
+  // When "Bottle Bill Products" is on, exclude rows where Product To Be Audited is "Apple Juice"
+  const productToBeAuditedKey = useMemo(() => {
+    const normalize = (s) =>
+      String(s ?? '')
+        .trim()
+        .toLowerCase();
+    const target = normalize('Product to be audited');
+    const found = headers.find(
+      (h) => normalize(typeof h === 'string' ? h : h.original) === target,
+    );
+    return found
+      ? typeof found === 'string'
+        ? found
+        : found.original
+      : null;
+  }, [headers]);
+
+  const dataAfterBottleBill = useMemo(() => {
+    if (!bottleBillFilterOn || !productToBeAuditedKey) return dataAfterPreset;
+    return dataAfterPreset.filter((row) => {
+      const v = String(row[productToBeAuditedKey] ?? '').trim();
+      return v.toLowerCase() !== 'apple juice';
+    });
+  }, [dataAfterPreset, bottleBillFilterOn, productToBeAuditedKey]);
+
   // Unique values per column (from data after preset) for filter dropdowns
   const columnUniqueValues = useMemo(() => {
     const out = {};
@@ -178,7 +204,7 @@ const Fpas = () => {
       const key =
         typeof headerObj === 'string' ? headerObj : headerObj.original;
       const values = new Set(
-        dataAfterPreset.map((row) => {
+        dataAfterBottleBill.map((row) => {
           const v = row[key];
           return v === null || v === undefined || String(v).trim() === ''
             ? '(Blank)'
@@ -190,7 +216,7 @@ const Fpas = () => {
       );
     });
     return out;
-  }, [headers, dataAfterPreset]);
+  }, [headers, dataAfterBottleBill]);
 
   // Apply per-column filters (allowlist) and exclusions
   const dataAfterColumnFilters = useMemo(() => {
@@ -201,8 +227,8 @@ const Fpas = () => {
       (k) => columnExcludedValues[k] && columnExcludedValues[k].length > 0,
     );
     if (includeKeys.length === 0 && excludeKeys.length === 0)
-      return dataAfterPreset;
-    return dataAfterPreset.filter((row) => {
+      return dataAfterBottleBill;
+    return dataAfterBottleBill.filter((row) => {
       const getCell = (colKey) =>
         row[colKey] === null || row[colKey] === undefined
           ? '(Blank)'
@@ -221,7 +247,7 @@ const Fpas = () => {
       });
       return passesInclude && passesExclude;
     });
-  }, [dataAfterPreset, columnFilters, columnExcludedValues]);
+  }, [dataAfterBottleBill, columnFilters, columnExcludedValues]);
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -805,6 +831,18 @@ const Fpas = () => {
                   />
                   <span className='text-xs sm:text-sm text-gray-700'>
                     Only audited products
+                  </span>
+                </label>
+
+                <label className='inline-flex items-center gap-2 cursor-pointer'>
+                  <input
+                    type='checkbox'
+                    checked={bottleBillFilterOn}
+                    onChange={(e) => setBottleBillFilterOn(e.target.checked)}
+                    className='rounded border-gray-300 text-blue-600'
+                  />
+                  <span className='text-xs sm:text-sm text-gray-700'>
+                    Bottle Bill Products
                   </span>
                 </label>
 
