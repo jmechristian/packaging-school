@@ -1,39 +1,32 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   getCoursesByCategory,
   getCertificateByCategory,
   registgerCourseClick,
   registerCertificateClick,
   getDeviceType,
-  addCourseToWishlist,
-  removeCourseFromWishlist,
   createNewOrder,
 } from '../../../helpers/api';
 import { useSelector } from 'react-redux';
-import { H2, H4 } from '@jmechristian/ps-component-library';
 import { updateCategoryMenu } from '../../../data/CategoryMenu';
-import { MdOutlineSearch, MdCached } from 'react-icons/md';
-import { EyeIcon } from '@heroicons/react/24/solid';
+import {
+  MdOutlineSearch,
+  MdExpandLess,
+  MdExpandMore,
+  MdWorkspacePremium,
+  MdVideocam,
+} from 'react-icons/md';
 import Meta from '../../../components/shared/Meta';
 import { generateMetadata } from '../../../libs/seo/generateMetadata';
-
-const CourseCard = dynamic(
-  () =>
-    import('@jmechristian/ps-component-library').then((m) => ({
-      default: m.CourseCard,
-    })),
-  { ssr: false },
-);
-const CertCard = dynamic(
-  () =>
-    import('@jmechristian/ps-component-library').then((m) => ({
-      default: m.CertCard,
-    })),
-  { ssr: false },
-);
-import '@jmechristian/ps-component-library/dist/style.css';
+import SortableTableHeader from '../../../components/shared/SortableTableHeader';
+import CourseTableRow from '../../../components/shared/CourseTableRow';
+import CertificateTableRow from '../../../components/shared/CertificateTableRow';
+import CourseMobileCard from '../../../components/shared/CourseMobileCard';
+import CertificateMobileCard from '../../../components/shared/CertificateMobileCard';
+import { setColorByCategoryString, setCategoryIcon, setCategoryText } from '../../../helpers/utils';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 
 const Page = () => {
@@ -41,275 +34,139 @@ const Page = () => {
   const { cat } = router.query;
   const { location, awsUser } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
+  const { navigateToThinkific } = useThinkificLink();
   const [isSearchTerm, setIsSearchTerm] = useState('');
   const [isCourses, setIsCourses] = useState([]);
-  const [isSort, setIsSort] = useState({ value: 'title', direction: 'ASC' });
-  const [isCertificates, setIsCertificates] = useState([]);
-  const { navigateToThinkific } = useThinkificLink();
-  const sortedCourses = useMemo(() => {
-    if (isSort.value === 'title' && isSort.direction === 'ASC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => a.title.localeCompare(b.title))
-      );
-    }
-
-    if (isSort.value === 'title' && isSort.direction === 'DSC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => b.title.localeCompare(a.title))
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'ASC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) =>
-          a.categoryArray[0].localeCompare(b.categoryArray[0])
-        )
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'DSC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) =>
-          b.categoryArray[0].localeCompare(a.categoryArray[0])
-        )
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'ASC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => a.courseId.localeCompare(b.courseId))
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'DSC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => b.courseId.localeCompare(a.courseId))
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
-      return isCourses && [...isCourses].sort((a, b) => b.lessons - a.lessons);
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
-      return isCourses && [...isCourses].sort((a, b) => a.lessons - b.lessons);
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'ASC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => parseFloat(a.hours) - parseFloat(b.hours))
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'DSC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => parseFloat(b.hours) - parseFloat(a.hours))
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'ASC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => parseInt(a.price) - parseInt(b.price))
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'DSC') {
-      return (
-        isCourses &&
-        [...isCourses].sort((a, b) => parseInt(b.price) - parseInt(a.price))
-      );
-    }
-  }, [isCourses, isSort]);
-
-  const sortedAndSearchedCourses = useMemo(() => {
-    if (!isSearchTerm && sortedCourses) {
-      return sortedCourses;
-    }
-
-    if (isSearchTerm && sortedCourses) {
-      return sortedCourses.filter(
-        (cour) =>
-          cour.title.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-          cour.subheadline.toLowerCase().includes(isSearchTerm.toLowerCase()) ||
-          (cour.what_learned &&
-            cour.what_learned
-              .toLowerCase()
-              .includes(isSearchTerm.toLowerCase()))
-      );
-    }
-  }, [isSearchTerm, sortedCourses]);
-
-  const searchCertificates = useMemo(() => {
-    if (!isSearchTerm && isCertificates) {
-      return isCertificates;
-    }
-
-    if (isSearchTerm && isCertificates) {
-      return isCertificates.filter(
-        (cert) =>
-          cert.certificateObject.title
-            .toLowerCase()
-            .includes(isSearchTerm.toLowerCase()) ||
-          cert.certificateObject.description
-            .toLowerCase()
-            .includes(isSearchTerm.toLowerCase())
-      );
-    }
-  }, [isCertificates, isSearchTerm]);
-
-  const sortedCertificates = useMemo(() => {
-    if (isSort.value === 'title' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          a.certificateObject.title.localeCompare(b.certificateObject.title)
-        )
-      );
-    }
-
-    if (isSort.value === 'title' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          b.certificateObject.title.localeCompare(a.certificateObject.title)
-        )
-      );
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'ASC') {
-      return searchCertificates;
-    }
-
-    if (isSort.value === 'category' && isSort.direction === 'DSC') {
-      return searchCertificates;
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          a.certificateObject.courseId.localeCompare(
-            b.certificateObject.courseId
-          )
-        )
-      );
-    }
-
-    if (isSort.value === 'course id' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort((a, b) =>
-          b.certificateObject.courseId.localeCompare(
-            a.certificateObject.courseId
-          )
-        )
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => b.certificateObject.lessons - a.certificateObject.lessons
-        )
-      );
-    }
-
-    if (isSort.value === 'lessons' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) => a.certificateObject.lessons - b.certificateObject.lessons
-        )
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) =>
-            parseFloat(a.certificateObject.hours) -
-            parseFloat(b.certificateObject.hours)
-        )
-      );
-    }
-
-    if (isSort.value === 'hours' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) =>
-            parseFloat(b.certificateObject.hours) -
-            parseFloat(a.certificateObject.hours)
-        )
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'ASC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) =>
-            parseInt(a.certificateObject.price) -
-            parseInt(b.certificateObject.price)
-        )
-      );
-    }
-
-    if (isSort.value === 'price' && isSort.direction === 'DSC') {
-      return (
-        searchCertificates &&
-        [...searchCertificates].sort(
-          (a, b) =>
-            parseInt(b.certificateObject.price) -
-            parseInt(a.certificateObject.price)
-        )
-      );
-    }
-  }, [searchCertificates, isSort]);
+  const [isCertificatesRaw, setIsCertificatesRaw] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [collapsedCertificates, setCollapsedCertificates] = useState(false);
+  const [collapsedCourses, setCollapsedCourses] = useState(false);
+  const [navigatingId, setNavigatingId] = useState(null);
+  const [isSort, setIsSort] = useState({ value: 'course id', direction: 'ASC' });
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      const res = await getCoursesByCategory(cat.toUpperCase());
-      setIsCourses(res);
-    };
-    cat && fetchCourses();
-  }, [cat]);
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
-    const fetchCertificates = async () => {
-      const res = await getCertificateByCategory(cat.toUpperCase());
-      console.log(res);
-      setIsCertificates(res);
+    const handleComplete = () => setNavigatingId(null);
+    router.events?.on('routeChangeComplete', handleComplete);
+    router.events?.on('routeChangeError', handleComplete);
+    return () => {
+      router.events?.off('routeChangeComplete', handleComplete);
+      router.events?.off('routeChangeError', handleComplete);
     };
-    cat && fetchCertificates();
+  }, [router.events]);
+
+  useEffect(() => {
+    if (!navigatingId) return;
+    const fallback = setTimeout(() => setNavigatingId(null), 3000);
+    return () => clearTimeout(fallback);
+  }, [navigatingId]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (!cat) return;
+      setIsLoading(true);
+      try {
+        const [courses, certs] = await Promise.all([
+          getCoursesByCategory(cat.toUpperCase()),
+          getCertificateByCategory(cat.toUpperCase()).catch(() => []),
+        ]);
+        setIsCourses(courses || []);
+        setIsCertificatesRaw(certs || []);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetch();
   }, [cat]);
 
-  const categoryNameHandler = (c) => {
-    const category = updateCategoryMenu.find((item) => item.value === c);
-    return category ? category.name : c;
+  const setSort = (value) => {
+    setIsSort((prev) => ({
+      value,
+      direction: prev.value === value && prev.direction === 'ASC' ? 'DSC' : 'ASC',
+    }));
   };
 
-  const categoryName = cat ? categoryNameHandler(cat) : 'Courses';
+  const flatCertificates = useMemo(() => {
+    return (isCertificatesRaw || [])
+      .map((item) => item?.certificateObject)
+      .filter(Boolean);
+  }, [isCertificatesRaw]);
+
+  const searchCertificates = useMemo(() => {
+    if (!isSearchTerm.trim()) return flatCertificates;
+    const term = isSearchTerm.toLowerCase();
+    return flatCertificates.filter(
+      (cert) =>
+        cert.title?.toLowerCase().includes(term) ||
+        cert.description?.toLowerCase().includes(term) ||
+        cert.courseId?.toLowerCase().includes(term),
+    );
+  }, [flatCertificates, isSearchTerm]);
+
+  const sortedCertificates = useMemo(() => {
+    const { value, direction } = isSort;
+    const mult = direction === 'ASC' ? 1 : -1;
+    return [...searchCertificates].sort((a, b) => {
+      if (value === 'title') return mult * (a.title || '').localeCompare(b.title || '');
+      if (value === 'course id') return mult * (a.courseId || '').localeCompare(b.courseId || '');
+      if (value === 'lessons') return mult * ((a.courses || 0) - (b.courses || 0));
+      if (value === 'hours') return mult * (parseFloat(a.hours || 0) - parseFloat(b.hours || 0));
+      if (value === 'price')
+        return mult * ((parseInt(a.price, 10) || 0) - (parseInt(b.price, 10) || 0));
+      return 0;
+    });
+  }, [searchCertificates, isSort]);
+
+  const sortedAndSearchedCourses = useMemo(() => {
+    if (!isSearchTerm.trim()) return isCourses;
+    const term = isSearchTerm.toLowerCase();
+    return (isCourses || []).filter(
+      (c) =>
+        c.title?.toLowerCase().includes(term) ||
+        c.subheadline?.toLowerCase().includes(term) ||
+        c.courseId?.toLowerCase().includes(term) ||
+        c.what_learned?.toLowerCase().includes(term),
+    );
+  }, [isCourses, isSearchTerm]);
+
+  const sortedCourses = useMemo(() => {
+    const { value, direction } = isSort;
+    const mult = direction === 'ASC' ? 1 : -1;
+    return [...(sortedAndSearchedCourses || [])].sort((a, b) => {
+      if (value === 'title') return mult * (a.title || '').localeCompare(b.title || '');
+      if (value === 'course id') return mult * (a.courseId || '').localeCompare(b.courseId || '');
+      if (value === 'lessons') return mult * ((a.lessons || 0) - (b.lessons || 0));
+      if (value === 'hours') return mult * (parseFloat(a.hours || 0) - parseFloat(b.hours || 0));
+      if (value === 'price') return mult * ((parseInt(a.price, 10) || 0) - (parseInt(b.price, 10) || 0));
+      return 0;
+    });
+  }, [sortedAndSearchedCourses, isSort]);
+
+  const categoryNameHandler = (c) => {
+    const item = updateCategoryMenu.find((i) => i.value === c);
+    return item ? item.name : c;
+  };
+
+  const categoryName = cat ? categoryNameHandler(cat.toUpperCase()) : 'Courses';
+  const catLabel = setCategoryText(cat?.toUpperCase()) || categoryName;
   const metadata = generateMetadata({
     pageType: 'CATEGORY',
     data: {
       name: categoryName,
-      description:
-        'Browse the extensive catalog of Packaging School courses covering Business, Design, Materials, Food and Beverage, Supply Chain and Logistics, Automotive, and Industry.',
+      description: `Browse ${categoryName} courses from Packaging School.`,
     },
     pathname: cat ? `/courses/categories/${cat}` : '/courses/categories',
   });
+
   const orderHandler = async (courseData) => {
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
@@ -318,61 +175,39 @@ const Page = () => {
       courseName: courseData.title,
       courseLink: `${courseData.link}`,
       total: courseData.price,
-      userID: awsUser ? awsUser.id : null,
-      email: awsUser ? awsUser.email : null,
-      name: awsUser ? awsUser.name : null,
+      userID: awsUser?.id ?? null,
+      email: awsUser?.email ?? null,
+      name: awsUser?.name ?? null,
     });
-
-    if (awsUser && awsUser.name.includes(' ')) {
+    if (awsUser?.name?.includes(' ')) {
       navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
     } else {
       router.push(`/order/${orderId.id}`);
     }
   };
 
-  const handleCurrentCategoryClick = (cat) => {
-    router.push(`/courses/categories/${cat}`);
+  const handleCurrentCategoryClick = (c) => {
+    router.push(`/courses/categories/${c}`);
   };
 
   const cardClickHandler = async (id, slug, altlink, type) => {
-    await registgerCourseClick(id, router.asPath, location, slug, 'GRID');
-
-    altlink
-      ? router.push(altlink)
-      : router.push(
-          `/${
-            type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`
-        );
+    await registgerCourseClick(id, router.asPath, location, slug, 'TABLE');
+    if (altlink) {
+      window.open(altlink, '_blank');
+    } else {
+      router.push(`/${type === 'COLLECTION' ? 'collections' : 'courses'}/${slug}`);
+    }
   };
 
-  const cardPurchaseHandler = async (course) => {
-    await registgerCourseClick(
-      course.id,
-      router.asPath,
-      location,
-      course.link,
-      'GRID'
-    );
-    await orderHandler(course);
-  };
-
-  const handleCertCardClick = async (
-    cert,
-    abbreviation,
-    type,
-    link,
-    applicationLink
-  ) => {
+  const handleCertCardClick = async (cert, abbreviation, type, link, applicationLink) => {
     await registerCertificateClick({
       country: location.country,
-      ipAddress: location.ipAddress,
+      ipAddress: location.ip,
       device: deviceType,
       object: abbreviation,
-      page: '/all_courses',
-      type: type,
+      page: router.asPath,
+      type,
     });
-
     if (type === 'CERTIFICATE-VIEW') {
       router.push(link);
     } else if (type === 'CERTIFICATE-APPLY') {
@@ -383,7 +218,7 @@ const Page = () => {
           subheadline: cert.description,
           seoImage: cert.seoImage,
           title: cert.title,
-          link: `${cert.applicationLink}`,
+          link: cert.applicationLink,
           price: cert.price,
           total: cert.price,
         });
@@ -393,15 +228,7 @@ const Page = () => {
     }
   };
 
-  const handleAddToWishlist = async (courseId) => {
-    await addCourseToWishlist(courseId, awsUser.id);
-    // await refreshUser();
-  };
-
-  const handleRemoveFromWishlist = async (itemId) => {
-    await removeCourseFromWishlist(itemId);
-    // await refreshUser();
-  };
+  const hasResults = sortedCertificates?.length > 0 || sortedCourses?.length > 0;
 
   return (
     <>
@@ -411,219 +238,385 @@ const Page = () => {
         url={cat ? `/courses/categories/${cat}` : undefined}
         image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
       />
-      {sortedAndSearchedCourses.length > 0 ? (
-        <div className='max-w-7xl mx-auto py-12 flex flex-col px-3 lg:!px-0'>
-          <h2 className='mb-9 capitalize h2-base'>
-            {categoryNameHandler(cat)} Courses
-          </h2>
-          <div className='grid grid-cols-3 border-b-2 border-b-black pb-6 gap-2.5'>
-            {/* SEARCH */}
-            <div className='w-full col-span-3 lg:!col-span-2 border-2 border-black p-1'>
-              <div className='flex gap-2 items-center'>
+      <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-6 sm:py-12'>
+        <div className='flex flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+            <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-slate-900'>
+              {categoryName} Courses
+            </h1>
+            <Link
+              href='/all_courses'
+              className='flex items-center gap-2 text-sm font-semibold text-base-brand hover:underline w-fit'
+            >
+              View All Courses
+            </Link>
+          </div>
+
+          {/* Search + Categories */}
+          <div className='flex flex-col gap-3 sm:gap-4 w-full'>
+            <div className='flex flex-row flex-wrap items-center justify-start gap-3 w-full'>
+              <div className='flex-1 min-w-[180px] border border-slate-400 rounded-md px-2 py-0.5 flex gap-1.5 items-center'>
                 <input
                   type='text'
-                  className='w-full flex border-none ring-0 focus:ring-0'
+                  className='w-full border-none ring-0 focus:ring-0 bg-transparent text-sm'
                   placeholder='Search Courses'
                   value={isSearchTerm}
                   onChange={(e) => setIsSearchTerm(e.target.value)}
                 />
-                <div>
-                  <MdOutlineSearch size={28} />
-                </div>
+                <MdOutlineSearch size={20} className='flex-shrink-0 text-slate-500' />
               </div>
             </div>
-            <div className='w-full col-span-3 lg:!col-span-1 content-center'>
-              <div
-                className='flex gap-1 w-full items-center justify-end hover:underline'
-                onClick={() => router.push('/all_courses')}
-              >
-                <div>
-                  <EyeIcon className='w-5 h-5 cursor-pointer' />
-                </div>
-                <div className='text-sm font-semibold cursor-pointer hover:underline'>
-                  View All Courses
-                </div>
+            <div className='border-b border-slate-300 w-full pb-2'>
+              <div className='flex flex-wrap gap-2'>
+                {updateCategoryMenu.map((c) => (
+                  <button
+                    key={c.value}
+                    type='button'
+                    onClick={() => handleCurrentCategoryClick(c.value)}
+                    className={`flex items-center gap-2 border rounded px-3 py-2 text-xs font-semibold flex-shrink-0 ${
+                      cat?.toUpperCase() === c.value
+                        ? 'border-base-brand bg-base-brand/20 text-base-dark'
+                        : 'border-slate-300 bg-neutral-200 hover:bg-neutral-300'
+                    }`}
+                  >
+                    {c.name}
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
-          <div className='flex flex-wrap lg:!mb-5 border-b-2 border-b-black py-6 gap-2.5'>
-            {updateCategoryMenu.map((cat) => (
-              <div
-                key={cat.value}
-                className='flex items-center gap-2 border-black border bg-neutral-200 hover:bg-base-light px-2 py-1.5 text-sm font-semibold cursor-pointer'
-                onClick={() => handleCurrentCategoryClick(cat.value)}
-              >
-                <div>{cat.name}</div>
-              </div>
-            ))}
           </div>
 
-          <div className='flex flex-col gap-0'>
-            <div className='grid lg:hidden grid-cols-6 content-center gap-5 divide-x-black w-full px-2 py-2'>
-              <div
-                className={`${
-                  isSort.value === 'course id' ? 'underline' : ''
-                } cursor-pointer col-span-1 text-xs font-semibold`}
-                onClick={() =>
-                  setIsSort({
-                    value: 'course id',
-                    direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                  })
-                }
-              >
-                Id
-              </div>
-              <div className='text-xs font-semibold col-span-2'>
-                <span
-                  className={`${
-                    isSort.value === 'category' ? 'underline' : ''
-                  } cursor-pointer `}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'category',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Category
-                </span>{' '}
-                /{' '}
-                <span
-                  className={`${
-                    isSort.value === 'title' ? 'underline' : ''
-                  } cursor-pointer`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'title',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Title
-                </span>
-              </div>
-              <div className='col-span-3 w-full grid grid-cols-3 content-center text-right'>
-                <div
-                  className={`${
-                    isSort.value === 'hours' ? 'underline' : ''
-                  } cursor-pointer col-span-1 text-xs font-semibold`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'hours',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Hours
-                </div>
-                <div
-                  className={`${
-                    isSort.value === 'lessons' ? 'underline' : ''
-                  } cursor-pointer col-span-1 text-xs font-semibold`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'lessons',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Lessons
-                </div>
-                <div
-                  className={`${
-                    isSort.value === 'price' ? 'underline' : ''
-                  } cursor-pointer col-span-1 text-xs font-semibold`}
-                  onClick={() =>
-                    setIsSort({
-                      value: 'price',
-                      direction: isSort.direction === 'ASC' ? 'DSC' : 'ASC',
-                    })
-                  }
-                >
-                  Price
-                </div>
-              </div>
-            </div>
-            <div className='grid lg:!grid-cols-3 xl:!grid-cols-4 md:!grid-cols-2 gap-y-8 gap-x-7 mt-5'>
-              {sortedCertificates &&
-                sortedCertificates.length > 0 &&
-                sortedCertificates.map((cert) => (
-                  <CertCard
-                    cert={cert.certificateObject}
-                    key={cert.certificateObject.id}
-                    purchaseText={
-                      cert.certificateObject.abbreviation === 'CPS' ||
-                      cert.certificateObject.abbreviation === 'CMPM'
-                        ? 'Apply Now'
-                        : 'Enroll Now'
-                    }
-                    cardClickHandler={(
-                      abbreviation,
-                      type,
-                      link,
-                      applicationLink
-                    ) =>
-                      handleCertCardClick(
-                        cert.certificateObject,
-                        abbreviation,
-                        type,
-                        link,
-                        applicationLink
-                      )
-                    }
-                  />
-                ))}
-              {sortedAndSearchedCourses.map((course, i) => (
-                <CourseCard
-                  course={course}
-                  key={course.id}
-                  cardClickHandler={() =>
-                    cardClickHandler(
-                      course.id,
-                      course.slug,
-                      course.altLink,
-                      course.type
-                    )
-                  }
-                  cardPurchaseHandler={() => cardPurchaseHandler(course)}
-                  isFavorite={awsUser?.wishlist?.items.some(
-                    (item) => item.lMSCourse.id === course.id
-                  )}
-                  cardFavoriteHandler={() =>
-                    awsUser?.wishlist?.items.some(
-                      (item) => item.lMSCourse.id === course.id
-                    )
-                      ? handleRemoveFromWishlist(
-                          awsUser.wishlist.items.filter(
-                            (item) => item.lMSCourse.id === course.id
-                          )[0].id
-                        )
-                      : handleAddToWishlist(course.id)
-                  }
-                />
+          {/* Content */}
+          {isLoading ? (
+            <div className='grid grid-cols-1 gap-4'>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className='h-16 bg-slate-200 rounded animate-pulse' />
               ))}
             </div>
-          </div>
-        </div>
-      ) : (
-        <div className='max-w-7xl mx-auto py-16 flex flex-col gap-5'>
-          <h2 className='mb-9 capitalize h2-base'>
-            {categoryNameHandler(cat)} Courses
-          </h2>
-          <div className='flex flex-col gap-3 w-full max-w-5xl border-2 border-black p-10 items-center'>
-            <H4 textColor='text-black'>No courses found</H4>
-            <div
-              className='flex items-center font-semibold text-white hover:bg-clemson-dark w-fit gap-2 py-2 px-4 border-2 border-black bg-clemson cursor-pointer'
-              onClick={() => setIsSearchTerm('')}
-            >
-              <div>
-                <MdCached size={20} />
-              </div>
-              <div className='cursor-pointer'>Reset</div>
+          ) : !hasResults ? (
+            <div className='w-full py-16 flex flex-col gap-4 items-center'>
+              <div className='text-lg font-semibold'>No courses found</div>
+              <button
+                type='button'
+                onClick={() => setIsSearchTerm('')}
+                className='flex items-center gap-2 px-4 py-2 rounded bg-base-brand text-white font-medium hover:bg-base-dark transition-colors'
+              >
+                Clear search
+              </button>
             </div>
-          </div>
+          ) : (
+            <div className='w-full'>
+              {/* Certificates */}
+              {sortedCertificates?.length > 0 && (
+                <div className='mb-6'>
+                  <button
+                    type='button'
+                    onClick={() => setCollapsedCertificates((prev) => !prev)}
+                    className='w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg bg-clemson bg-opacity-80 hover:bg-opacity-100 transition-opacity'
+                  >
+                    <div className='flex items-center gap-2'>
+                      <div className='w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0'>
+                        <MdWorkspacePremium size={18} color='white' />
+                      </div>
+                      <span className='font-bold text-white text-base sm:text-lg'>Certificates</span>
+                      <span className='text-white/90 text-sm'>({sortedCertificates.length})</span>
+                    </div>
+                    {collapsedCertificates ? (
+                      <MdExpandMore size={24} color='white' />
+                    ) : (
+                      <MdExpandLess size={24} color='white' />
+                    )}
+                  </button>
+                  {!collapsedCertificates && (
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className='overflow-hidden w-full'
+                      >
+                        {isMobile ? (
+                          <div className='border border-slate-200 border-t-0'>
+                            {sortedCertificates.map((cert) => (
+                              <CertificateMobileCard
+                                key={cert.id}
+                                certificate={cert}
+                                isNavigating={navigatingId === cert.id}
+                                onRowClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-VIEW',
+                                    cert.link,
+                                    cert.applicationLink,
+                                  );
+                                }}
+                                onApplyClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-APPLY',
+                                    cert.link,
+                                    cert.applicationLink,
+                                  );
+                                }}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className='overflow-x-auto'>
+                            <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                              <colgroup>
+                                <col style={{ width: '8%' }} />
+                                <col style={{ width: '24%' }} />
+                                <col style={{ width: '44%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '4%' }} />
+                                <col style={{ width: '8%' }} />
+                              </colgroup>
+                              <thead>
+                                <tr className='bg-slate-100'>
+                                  <SortableTableHeader
+                                    label='ID'
+                                    className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                    sortKey='course id'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('course id')}
+                                  />
+                                  <SortableTableHeader
+                                    label='Title'
+                                    sortKey='title'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('title')}
+                                  />
+                                  <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                    Subheadline
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Hours'
+                                    sortKey='hours'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('hours')}
+                                    align='center'
+                                    className='collapse sm:visible'
+                                  />
+                                  <SortableTableHeader
+                                    label='Lessons'
+                                    sortKey='lessons'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('lessons')}
+                                    align='center'
+                                    className='collapse sm:visible'
+                                  />
+                                  <th
+                                    className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
+                                    aria-label='Preview'
+                                  >
+                                    <MdVideocam size={18} className='text-slate-600 inline-block' />
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Price'
+                                    sortKey='price'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('price')}
+                                    align='center'
+                                  />
+                                </tr>
+                              </thead>
+                              <tbody className='bg-white'>
+                                {sortedCertificates.map((cert) => (
+                                  <CertificateTableRow
+                                    key={cert.id}
+                                    certificate={cert}
+                                    isNavigating={navigatingId === cert.id}
+                                    onRowClick={() => {
+                                      setNavigatingId(cert.id);
+                                      handleCertCardClick(
+                                        cert,
+                                        cert.abbreviation,
+                                        'CERTIFICATE-VIEW',
+                                        cert.link,
+                                        cert.applicationLink,
+                                      );
+                                    }}
+                                    onApplyClick={() => {
+                                      setNavigatingId(cert.id);
+                                      handleCertCardClick(
+                                        cert,
+                                        cert.abbreviation,
+                                        'CERTIFICATE-APPLY',
+                                        cert.link,
+                                        cert.applicationLink,
+                                      );
+                                    }}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
+                </div>
+              )}
+
+              {/* Courses */}
+              {sortedCourses?.length > 0 && (
+                <div>
+                  <button
+                    type='button'
+                    onClick={() => setCollapsedCourses((prev) => !prev)}
+                    className={`w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg ${setColorByCategoryString(
+                      cat?.toUpperCase(),
+                    )} bg-opacity-80 hover:bg-opacity-100 transition-opacity`}
+                  >
+                    <div className='flex items-center gap-2'>
+                      {setCategoryIcon(cat?.toUpperCase())}
+                      <span className='font-bold text-white text-base sm:text-lg'>{catLabel}</span>
+                      <span className='text-white/90 text-sm'>({sortedCourses.length})</span>
+                    </div>
+                    {collapsedCourses ? (
+                      <MdExpandMore size={24} color='white' />
+                    ) : (
+                      <MdExpandLess size={24} color='white' />
+                    )}
+                  </button>
+                  {!collapsedCourses && (
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className='overflow-hidden w-full'
+                      >
+                        {isMobile ? (
+                          <div className='border border-slate-200 border-t-0'>
+                            {sortedCourses.map((course) => (
+                              <CourseMobileCard
+                                key={course.id}
+                                course={course}
+                                isNavigating={navigatingId === course.id}
+                                onRowClick={() => {
+                                  setNavigatingId(course.id);
+                                  cardClickHandler(
+                                    course.id,
+                                    course.slug,
+                                    course.altLink,
+                                    course.type,
+                                  );
+                                }}
+                                onPurchase={() => orderHandler(course)}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className='overflow-x-auto'>
+                            <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                              <colgroup>
+                                <col style={{ width: '8%' }} />
+                                <col style={{ width: '24%' }} />
+                                <col style={{ width: '44%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '6%' }} />
+                                <col style={{ width: '4%' }} />
+                                <col style={{ width: '8%' }} />
+                              </colgroup>
+                              <thead>
+                                <tr className='bg-slate-100'>
+                                  <SortableTableHeader
+                                    label='ID'
+                                    className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                    sortKey='course id'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('course id')}
+                                  />
+                                  <SortableTableHeader
+                                    label='Title'
+                                    sortKey='title'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('title')}
+                                  />
+                                  <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                    Subheadline
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Hours'
+                                    sortKey='hours'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('hours')}
+                                    align='center'
+                                    className='collapse sm:visible'
+                                  />
+                                  <SortableTableHeader
+                                    label='Lessons'
+                                    sortKey='lessons'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('lessons')}
+                                    align='center'
+                                    className='collapse sm:visible'
+                                  />
+                                  <th
+                                    className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
+                                    aria-label='Preview'
+                                  >
+                                    <MdVideocam size={18} className='text-slate-600 inline-block' />
+                                  </th>
+                                  <SortableTableHeader
+                                    label='Price'
+                                    sortKey='price'
+                                    currentSort={isSort.value}
+                                    direction={isSort.direction}
+                                    onClick={() => setSort('price')}
+                                    align='center'
+                                  />
+                                </tr>
+                              </thead>
+                              <tbody className='bg-white'>
+                                {sortedCourses.map((course) => (
+                                  <CourseTableRow
+                                    key={course.id}
+                                    course={course}
+                                    isNavigating={navigatingId === course.id}
+                                    onRowClick={() => {
+                                      setNavigatingId(course.id);
+                                      cardClickHandler(
+                                        course.id,
+                                        course.slug,
+                                        course.altLink,
+                                        course.type,
+                                      );
+                                    }}
+                                    onPurchase={() => orderHandler(course)}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };

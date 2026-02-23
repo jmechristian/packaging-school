@@ -1124,7 +1124,9 @@ export const getCertificateByCategory = async (category) => {
     query: getCertificatesByCat,
     variables: variables,
   });
-  return res.data.categoriesByValue.items[0].certificates.items;
+  const items = res.data?.categoriesByValue?.items ?? [];
+  const first = items[0];
+  return first?.certificates?.items ?? [];
 };
 
 export const getAllPublishedLessons = async () => {
