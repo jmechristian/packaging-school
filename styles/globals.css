@@ -349,11 +349,15 @@ h4 {
 }
 
 .tiptap ul li p {
-  @apply !mb-3.5;
+  @apply !mb-2.5;
 }
 
 .tiptap ol {
   @apply ml-12 list-decimal;
+}
+
+.tiptap ol li p {
+  @apply !mb-2.5;
 }
 
 .tiptap blockquote {
