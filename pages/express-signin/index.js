@@ -22,38 +22,37 @@ const Page = () => {
   const [userId, setUserId] = useState('');
   const [thinkificId, setThinkificId] = useState('');
 
-  // Set email from URL query parameter
+  // Set email from URL query parameter (wait for router to be ready so query is populated)
   React.useEffect(() => {
+    if (!router.isReady) return;
+    if (!router.query.email) {
+      setError('No email provided');
+      return;
+    }
+
+    const emailParam = router.query.email;
+    setEmail(emailParam);
+
     async function fetchUser() {
-      if (!router.query.email) {
-        setError('No email provided');
-        return;
-      }
-
-      setEmail(router.query.email);
-
       try {
         // Fetch user data from both Auth0 and Thinkific
         const [auth0Response, thinkificResponse] = await Promise.all([
-          getAuth0User(router.query.email),
-          getThinkificUser(router.query.email),
+          getAuth0User(emailParam),
+          getThinkificUser(emailParam),
         ]);
 
-        console.log(
-          'Thinkific Response:',
-          thinkificResponse.data.data.userByEmail.id
-        );
-
-        // Set Thinkific ID if available
-        if (thinkificResponse.data?.data?.userByEmail?.id) {
-          setThinkificId(thinkificResponse.data.data.userByEmail.id);
-          console.log('Thinkific ID:', thinkificResponse.data.id);
+        // Set Thinkific ID if available (userByEmail can be null if not in Thinkific)
+        const thinkificUser = thinkificResponse?.data?.data?.userByEmail;
+        if (thinkificUser?.id) {
+          setThinkificId(thinkificUser.id);
         }
 
-        // Check Auth0 user data
-        if (auth0Response.data && auth0Response.data.length > 0) {
-          // Find user with Username-Password-Authentication connection
-          const passwordUser = auth0Response.data.find(
+        // Auth0 API returns the array directly; some clients wrap it in .data
+        const auth0Users = Array.isArray(auth0Response)
+          ? auth0Response
+          : auth0Response?.data;
+        if (auth0Users && auth0Users.length > 0) {
+          const passwordUser = auth0Users.find(
             (user) =>
               user.identities &&
               user.identities.some(
@@ -64,22 +63,20 @@ const Page = () => {
 
           if (passwordUser) {
             setUserId(passwordUser.user_id);
-            console.log('User ID:', passwordUser.user_id);
-            setError(null); // Clear any existing error
+            setError(null);
             return;
           }
         }
 
-        // If we reach here, no valid Auth0 password user was found
         setError('No Email/Password authentication found');
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+      } catch (err) {
+        console.error('Error fetching user data:', err);
         setError('Error fetching user data');
       }
     }
 
     fetchUser();
-  }, [router.query.email]);
+  }, [router.isReady, router.query.email]);
 
   const validatePassword = (password) => {
     const minLength = password.length >= 8;
