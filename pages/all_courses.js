@@ -245,9 +245,7 @@ const Page = ({ firstCardImage }) => {
     return CATEGORY_ORDER.filter((cat) => groups[cat]?.length).map(
       (category) => ({
         category,
-        items: groups[category].sort((a, b) =>
-          a.courseId.localeCompare(b.courseId),
-        ),
+        items: groups[category],
       }),
     );
   }, [sortedAndSearchedCourses, isFilters]);
@@ -570,7 +568,6 @@ const Page = ({ firstCardImage }) => {
                                   direction={isSort.direction}
                                   onClick={() => setSort('hours')}
                                   align='center'
-                                  className='collapse sm:visible'
                                 />
                                 <SortableTableHeader
                                   label='Lessons'
@@ -579,7 +576,6 @@ const Page = ({ firstCardImage }) => {
                                   direction={isSort.direction}
                                   onClick={() => setSort('lessons')}
                                   align='center'
-                                  className='collapse sm:visible'
                                 />
                                 <th
                                   className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
@@ -725,11 +721,9 @@ const Page = ({ firstCardImage }) => {
                                     direction={isSort.direction}
                                     onClick={() => setSort('hours')}
                                     align='center'
-                                    className='collapse sm:visible'
                                   />
                                   <SortableTableHeader
                                     label='Lessons'
-                                    className='collapse sm:visible'
                                     sortKey='lessons'
                                     currentSort={isSort.value}
                                     direction={isSort.direction}
