@@ -41,11 +41,15 @@ const Page = () => {
           getThinkificUser(emailParam),
         ]);
 
-        // Set Thinkific ID if available (userByEmail can be null if not in Thinkific)
+        // We need a Thinkific user for this flow
         const thinkificUser = thinkificResponse?.data?.data?.userByEmail;
-        if (thinkificUser?.id) {
-          setThinkificId(thinkificUser.id);
+        if (!thinkificUser?.id) {
+          setError(
+            'Account not found in our learning platform. Please contact support if you believe this is an error.'
+          );
+          return;
         }
+        setThinkificId(thinkificUser.id);
 
         // Auth0 API returns the array directly; some clients wrap it in .data
         const auth0Users = Array.isArray(auth0Response)
@@ -143,12 +147,10 @@ const Page = () => {
     setIsLoading(true);
     try {
       const response = await updateAuth0UserPassword(userId, password);
-      const thinkificResponse = await updateThinkificUserPassword(
-        thinkificId,
-        password
-      );
+      if (thinkificId) {
+        await updateThinkificUserPassword(thinkificId, password);
+      }
       console.log('Response:', response);
-      console.log('Thinkific Response:', thinkificResponse);
       // Check if response has an error property (API returned error)
       if (response.error) {
         setError(response.error);
