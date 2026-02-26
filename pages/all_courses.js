@@ -74,9 +74,21 @@ const getPrimaryCategory = (course, filters) => {
 const groupCoursesByCategory = (courses, filters) => {
   const groups = {};
   courses.forEach((course) => {
-    const cat = getPrimaryCategory(course, filters);
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(course);
+    const isCollection =
+      course.type === 'COLLECTION' || course.type === 'COLLECTIONS';
+    if (isCollection) {
+      if (!groups['COLLECTIONS']) groups['COLLECTIONS'] = [];
+      groups['COLLECTIONS'].push(course);
+      (course.categoryArray || []).forEach((cat) => {
+        if (cat === 'COLLECTIONS') return;
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(course);
+      });
+    } else {
+      const cat = getPrimaryCategory(course, filters);
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(course);
+    }
   });
   return groups;
 };
