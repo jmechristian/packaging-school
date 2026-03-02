@@ -34,24 +34,6 @@ const collectionBySlugWithCourses = /* GraphQL */ `
         category
         collectionId
         lmsLink
-        courses {
-          items {
-            id
-            courseId
-            category
-            categoryArray
-            type
-            price
-            hours
-            lessons
-            preview
-            seoImage
-            title
-            subheadline
-            what_learned
-            slug
-          }
-        }
       }
     }
   }
@@ -230,7 +212,8 @@ export async function getStaticProps({ params }) {
       return { notFound: true, revalidate: 60 };
     }
 
-    const courses = collection.courses?.items ?? [];
+    // For now we skip querying LMS courses for collections; show only collection basics.
+    const courses = [];
 
     return {
       props: { collection, courses },
