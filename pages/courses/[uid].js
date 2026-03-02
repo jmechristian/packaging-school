@@ -17,7 +17,7 @@ const CourseBottom = dynamic(
 // into the client bundle.
 const listLMSCoursesSlugs = /* GraphQL */ `
   query ListLMSCoursesSlugs {
-    listLMSCourses(filter: { collection: { contains: "null" } }, limit: 1000) {
+    listLMSCourses(limit: 1000) {
       items {
         slug
       }
@@ -50,7 +50,6 @@ const lMSCoursesBySlug = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
