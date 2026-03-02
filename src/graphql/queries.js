@@ -1073,6 +1073,7 @@ export const getUser = /* GraphQL */ `
         pgsfFormUserId
         __typename
       }
+      initials
       createdAt
       updatedAt
       userUserXpId
@@ -1124,6 +1125,7 @@ export const listUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -1175,6 +1177,7 @@ export const getUserXp = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -1382,6 +1385,7 @@ export const getLearningPathProgress = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -1478,7 +1482,6 @@ export const getLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -1714,6 +1717,7 @@ export const getCMPMForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -1836,6 +1840,7 @@ export const getIcpfCmpmForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -1986,6 +1991,7 @@ export const getPgsfForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2144,6 +2150,7 @@ export const getCPSForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2376,7 +2383,10 @@ export const getLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses
+      courses {
+        nextToken
+        __typename
+      }
       hours
       price
       slug
@@ -2405,7 +2415,6 @@ export const listLMSCollections = /* GraphQL */ `
         instructorImage
         instructorDescription
         instructorLink
-        courses
         hours
         price
         slug
@@ -2501,7 +2510,10 @@ export const getLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collection
+      collections {
+        nextToken
+        __typename
+      }
       demo
       partOf
       altLink
@@ -2567,7 +2579,6 @@ export const listLMSCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -3903,6 +3914,7 @@ export const getGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      rand
       createdAt
       updatedAt
       __typename
@@ -3923,6 +3935,7 @@ export const listGlossaryTerms = /* GraphQL */ `
         definition
         order
         status
+        rand
         createdAt
         updatedAt
         __typename
@@ -4813,7 +4826,6 @@ export const getCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -4868,6 +4880,7 @@ export const getCourseReview = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -4949,6 +4962,7 @@ export const getOrder = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -5290,6 +5304,126 @@ export const listCourseOutlineRequests = /* GraphQL */ `
         country
         device
         page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getUserGameStats = /* GraphQL */ `
+  query GetUserGameStats($id: ID!) {
+    getUserGameStats(id: $id) {
+      id
+      userID
+      bestStreakAllTime
+      totalAttempts
+      totalCorrect
+      lastPlayedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listUserGameStats = /* GraphQL */ `
+  query ListUserGameStats(
+    $filter: ModelUserGameStatsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserGameStats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        bestStreakAllTime
+        totalAttempts
+        totalCorrect
+        lastPlayedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getLeaderboardEntry = /* GraphQL */ `
+  query GetLeaderboardEntry($id: ID!) {
+    getLeaderboardEntry(id: $id) {
+      id
+      period
+      key
+      sortKey
+      userID
+      displayName
+      avatarUrl
+      score
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const listLeaderboardEntries = /* GraphQL */ `
+  query ListLeaderboardEntries(
+    $filter: ModelLeaderboardEntryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLeaderboardEntries(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        period
+        key
+        sortKey
+        userID
+        displayName
+        avatarUrl
+        score
+        updatedAt
+        createdAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAnswerEvent = /* GraphQL */ `
+  query GetAnswerEvent($id: ID!) {
+    getAnswerEvent(id: $id) {
+      id
+      userID
+      termID
+      correct
+      latencyMs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAnswerEvents = /* GraphQL */ `
+  query ListAnswerEvents(
+    $filter: ModelAnswerEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAnswerEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        termID
+        correct
+        latencyMs
         createdAt
         updatedAt
         __typename
@@ -5671,6 +5805,7 @@ export const getUserCompletedLessons = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -5801,6 +5936,7 @@ export const getAchievementUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -5889,6 +6025,7 @@ export const getCohortUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -5978,6 +6115,7 @@ export const getUserWishlist = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -6005,7 +6143,6 @@ export const getUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6036,6 +6173,97 @@ export const listUserWishlists = /* GraphQL */ `
       items {
         id
         userId
+        lMSCourseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getCollectionCourses = /* GraphQL */ `
+  query GetCollectionCourses($id: ID!) {
+    getCollectionCourses(id: $id) {
+      id
+      lMSCollectionId
+      lMSCourseId
+      lMSCollection {
+        id
+        description
+        title
+        subtitle
+        instructor
+        instructorImage
+        instructorDescription
+        instructorLink
+        hours
+        price
+        slug
+        category
+        collectionId
+        lmsLink
+        createdAt
+        updatedAt
+        __typename
+      }
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listCollectionCourses = /* GraphQL */ `
+  query ListCollectionCourses(
+    $filter: ModelCollectionCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCollectionCourses(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCollectionId
         lMSCourseId
         createdAt
         updatedAt
@@ -6084,7 +6312,6 @@ export const getCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6157,7 +6384,6 @@ export const getCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6239,7 +6465,6 @@ export const getCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6325,7 +6550,6 @@ export const getAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6408,7 +6632,6 @@ export const getPartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -6486,7 +6709,6 @@ export const getLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -7042,6 +7264,7 @@ export const usersByName = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -7104,6 +7327,7 @@ export const usersByEmail = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -7166,6 +7390,7 @@ export const usersByCompanyID = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -7432,7 +7657,6 @@ export const lMSCollectionsBySlug = /* GraphQL */ `
         instructorImage
         instructorDescription
         instructorLink
-        courses
         hours
         price
         slug
@@ -7485,7 +7709,6 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -7542,7 +7765,6 @@ export const lMSCoursesBySlug = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -8013,6 +8235,7 @@ export const glossaryTermsByTerm = /* GraphQL */ `
         definition
         order
         status
+        rand
         createdAt
         updatedAt
         __typename
@@ -8046,6 +8269,41 @@ export const glossaryTermsByLetterAndTerm = /* GraphQL */ `
         definition
         order
         status
+        rand
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const glossaryTermsByRandAndTerm = /* GraphQL */ `
+  query GlossaryTermsByRandAndTerm(
+    $rand: Int!
+    $term: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelGlossaryTermFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    glossaryTermsByRandAndTerm(
+      rand: $rand
+      term: $term
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        rand
         createdAt
         updatedAt
         __typename
@@ -8380,6 +8638,171 @@ export const searchLogsByTimestampAndId = /* GraphQL */ `
         rating_comment
         rating_timestamp
         helpful
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userGameStatsByUserID = /* GraphQL */ `
+  query UserGameStatsByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserGameStatsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userGameStatsByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        bestStreakAllTime
+        totalAttempts
+        totalCorrect
+        lastPlayedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const leaderboardEntriesByKeyAndSortKey = /* GraphQL */ `
+  query LeaderboardEntriesByKeyAndSortKey(
+    $key: String!
+    $sortKey: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelLeaderboardEntryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    leaderboardEntriesByKeyAndSortKey(
+      key: $key
+      sortKey: $sortKey
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        period
+        key
+        sortKey
+        userID
+        displayName
+        avatarUrl
+        score
+        updatedAt
+        createdAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const leaderboardEntriesByUserIDAndPeriod = /* GraphQL */ `
+  query LeaderboardEntriesByUserIDAndPeriod(
+    $userID: ID!
+    $period: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelLeaderboardEntryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    leaderboardEntriesByUserIDAndPeriod(
+      userID: $userID
+      period: $period
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        period
+        key
+        sortKey
+        userID
+        displayName
+        avatarUrl
+        score
+        updatedAt
+        createdAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const answerEventsByUserIDAndCreatedAt = /* GraphQL */ `
+  query AnswerEventsByUserIDAndCreatedAt(
+    $userID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAnswerEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    answerEventsByUserIDAndCreatedAt(
+      userID: $userID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        termID
+        correct
+        latencyMs
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const answerEventsByTermIDAndCreatedAt = /* GraphQL */ `
+  query AnswerEventsByTermIDAndCreatedAt(
+    $termID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAnswerEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    answerEventsByTermIDAndCreatedAt(
+      termID: $termID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        termID
+        correct
+        latencyMs
         createdAt
         updatedAt
         __typename
@@ -8883,6 +9306,62 @@ export const userWishlistsByLMSCourseId = /* GraphQL */ `
       items {
         id
         userId
+        lMSCourseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const collectionCoursesByLMSCollectionId = /* GraphQL */ `
+  query CollectionCoursesByLMSCollectionId(
+    $lMSCollectionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCollectionCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    collectionCoursesByLMSCollectionId(
+      lMSCollectionId: $lMSCollectionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCollectionId
+        lMSCourseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const collectionCoursesByLMSCourseId = /* GraphQL */ `
+  query CollectionCoursesByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCollectionCoursesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    collectionCoursesByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCollectionId
         lMSCourseId
         createdAt
         updatedAt

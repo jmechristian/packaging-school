@@ -973,7 +973,6 @@ export const getAllLMSCourses = async () => {
           subscriptionLink
           subscriptionPrice
           stripeLink
-          collection
           demo
           partOf
         }

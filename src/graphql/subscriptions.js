@@ -1439,6 +1439,7 @@ export const onCreateUser = /* GraphQL */ `
         pgsfFormUserId
         __typename
       }
+      initials
       createdAt
       updatedAt
       userUserXpId
@@ -1690,6 +1691,7 @@ export const onUpdateUser = /* GraphQL */ `
         pgsfFormUserId
         __typename
       }
+      initials
       createdAt
       updatedAt
       userUserXpId
@@ -1941,6 +1943,7 @@ export const onDeleteUser = /* GraphQL */ `
         pgsfFormUserId
         __typename
       }
+      initials
       createdAt
       updatedAt
       userUserXpId
@@ -1989,6 +1992,7 @@ export const onCreateUserXp = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2050,6 +2054,7 @@ export const onUpdateUserXp = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2111,6 +2116,7 @@ export const onDeleteUserXp = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2378,6 +2384,7 @@ export const onCreateLearningPathProgress = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2457,6 +2464,7 @@ export const onUpdateLearningPathProgress = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2536,6 +2544,7 @@ export const onDeleteLearningPathProgress = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -2601,7 +2610,6 @@ export const onCreateLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -2669,7 +2677,6 @@ export const onUpdateLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -2737,7 +2744,6 @@ export const onDeleteLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -3069,6 +3075,7 @@ export const onCreateCMPMForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3147,6 +3154,7 @@ export const onUpdateCMPMForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3225,6 +3233,7 @@ export const onDeleteCMPMForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3305,6 +3314,7 @@ export const onCreateIcpfCmpmForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3399,6 +3409,7 @@ export const onUpdateIcpfCmpmForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3493,6 +3504,7 @@ export const onDeleteIcpfCmpmForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3585,6 +3597,7 @@ export const onCreatePgsfForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3681,6 +3694,7 @@ export const onUpdatePgsfForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3777,6 +3791,7 @@ export const onDeletePgsfForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3873,6 +3888,7 @@ export const onCreateCPSForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -3953,6 +3969,7 @@ export const onUpdateCPSForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -4033,6 +4050,7 @@ export const onDeleteCPSForm = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -4250,7 +4268,10 @@ export const onCreateLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses
+      courses {
+        nextToken
+        __typename
+      }
       hours
       price
       slug
@@ -4276,7 +4297,10 @@ export const onUpdateLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses
+      courses {
+        nextToken
+        __typename
+      }
       hours
       price
       slug
@@ -4302,7 +4326,10 @@ export const onDeleteLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses
+      courses {
+        nextToken
+        __typename
+      }
       hours
       price
       slug
@@ -4417,7 +4444,10 @@ export const onCreateLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collection
+      collections {
+        nextToken
+        __typename
+      }
       demo
       partOf
       altLink
@@ -4496,7 +4526,10 @@ export const onUpdateLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collection
+      collections {
+        nextToken
+        __typename
+      }
       demo
       partOf
       altLink
@@ -4575,7 +4608,10 @@ export const onDeleteLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collection
+      collections {
+        nextToken
+        __typename
+      }
       demo
       partOf
       altLink
@@ -6531,6 +6567,7 @@ export const onCreateGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      rand
       createdAt
       updatedAt
       __typename
@@ -6548,6 +6585,7 @@ export const onUpdateGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      rand
       createdAt
       updatedAt
       __typename
@@ -6565,6 +6603,7 @@ export const onDeleteGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      rand
       createdAt
       updatedAt
       __typename
@@ -7946,7 +7985,6 @@ export const onCreateCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -8001,6 +8039,7 @@ export const onCreateCourseReview = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8043,7 +8082,6 @@ export const onUpdateCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -8098,6 +8136,7 @@ export const onUpdateCourseReview = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8140,7 +8179,6 @@ export const onDeleteCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -8195,6 +8233,7 @@ export const onDeleteCourseReview = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8252,6 +8291,7 @@ export const onCreateOrder = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8321,6 +8361,7 @@ export const onUpdateOrder = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8390,6 +8431,7 @@ export const onDeleteOrder = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -8806,6 +8848,162 @@ export const onDeleteCourseOutlineRequest = /* GraphQL */ `
       country
       device
       page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateUserGameStats = /* GraphQL */ `
+  subscription OnCreateUserGameStats(
+    $filter: ModelSubscriptionUserGameStatsFilterInput
+  ) {
+    onCreateUserGameStats(filter: $filter) {
+      id
+      userID
+      bestStreakAllTime
+      totalAttempts
+      totalCorrect
+      lastPlayedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateUserGameStats = /* GraphQL */ `
+  subscription OnUpdateUserGameStats(
+    $filter: ModelSubscriptionUserGameStatsFilterInput
+  ) {
+    onUpdateUserGameStats(filter: $filter) {
+      id
+      userID
+      bestStreakAllTime
+      totalAttempts
+      totalCorrect
+      lastPlayedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteUserGameStats = /* GraphQL */ `
+  subscription OnDeleteUserGameStats(
+    $filter: ModelSubscriptionUserGameStatsFilterInput
+  ) {
+    onDeleteUserGameStats(filter: $filter) {
+      id
+      userID
+      bestStreakAllTime
+      totalAttempts
+      totalCorrect
+      lastPlayedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateLeaderboardEntry = /* GraphQL */ `
+  subscription OnCreateLeaderboardEntry(
+    $filter: ModelSubscriptionLeaderboardEntryFilterInput
+  ) {
+    onCreateLeaderboardEntry(filter: $filter) {
+      id
+      period
+      key
+      sortKey
+      userID
+      displayName
+      avatarUrl
+      score
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const onUpdateLeaderboardEntry = /* GraphQL */ `
+  subscription OnUpdateLeaderboardEntry(
+    $filter: ModelSubscriptionLeaderboardEntryFilterInput
+  ) {
+    onUpdateLeaderboardEntry(filter: $filter) {
+      id
+      period
+      key
+      sortKey
+      userID
+      displayName
+      avatarUrl
+      score
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const onDeleteLeaderboardEntry = /* GraphQL */ `
+  subscription OnDeleteLeaderboardEntry(
+    $filter: ModelSubscriptionLeaderboardEntryFilterInput
+  ) {
+    onDeleteLeaderboardEntry(filter: $filter) {
+      id
+      period
+      key
+      sortKey
+      userID
+      displayName
+      avatarUrl
+      score
+      updatedAt
+      createdAt
+      __typename
+    }
+  }
+`;
+export const onCreateAnswerEvent = /* GraphQL */ `
+  subscription OnCreateAnswerEvent(
+    $filter: ModelSubscriptionAnswerEventFilterInput
+  ) {
+    onCreateAnswerEvent(filter: $filter) {
+      id
+      userID
+      termID
+      correct
+      latencyMs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAnswerEvent = /* GraphQL */ `
+  subscription OnUpdateAnswerEvent(
+    $filter: ModelSubscriptionAnswerEventFilterInput
+  ) {
+    onUpdateAnswerEvent(filter: $filter) {
+      id
+      userID
+      termID
+      correct
+      latencyMs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAnswerEvent = /* GraphQL */ `
+  subscription OnDeleteAnswerEvent(
+    $filter: ModelSubscriptionAnswerEventFilterInput
+  ) {
+    onDeleteAnswerEvent(filter: $filter) {
+      id
+      userID
+      termID
+      correct
+      latencyMs
       createdAt
       updatedAt
       __typename
@@ -9518,6 +9716,7 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -9611,6 +9810,7 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -9704,6 +9904,7 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -9862,6 +10063,7 @@ export const onCreateAchievementUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -9928,6 +10130,7 @@ export const onUpdateAchievementUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -9994,6 +10197,7 @@ export const onDeleteAchievementUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10060,6 +10264,7 @@ export const onCreateCohortUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10131,6 +10336,7 @@ export const onUpdateCohortUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10202,6 +10408,7 @@ export const onDeleteCohortUsers = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10273,6 +10480,7 @@ export const onCreateUserWishlist = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10300,7 +10508,6 @@ export const onCreateUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10366,6 +10573,7 @@ export const onUpdateUserWishlist = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10393,7 +10601,6 @@ export const onUpdateUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10459,6 +10666,7 @@ export const onDeleteUserWishlist = /* GraphQL */ `
         tourCompleted
         icpfCmpmFormID
         pgsfFormID
+        initials
         createdAt
         updatedAt
         userUserXpId
@@ -10486,7 +10694,213 @@ export const onDeleteUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateCollectionCourses = /* GraphQL */ `
+  subscription OnCreateCollectionCourses(
+    $filter: ModelSubscriptionCollectionCoursesFilterInput
+  ) {
+    onCreateCollectionCourses(filter: $filter) {
+      id
+      lMSCollectionId
+      lMSCourseId
+      lMSCollection {
+        id
+        description
+        title
+        subtitle
+        instructor
+        instructorImage
+        instructorDescription
+        instructorLink
+        hours
+        price
+        slug
+        category
+        collectionId
+        lmsLink
+        createdAt
+        updatedAt
+        __typename
+      }
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCollectionCourses = /* GraphQL */ `
+  subscription OnUpdateCollectionCourses(
+    $filter: ModelSubscriptionCollectionCoursesFilterInput
+  ) {
+    onUpdateCollectionCourses(filter: $filter) {
+      id
+      lMSCollectionId
+      lMSCourseId
+      lMSCollection {
+        id
+        description
+        title
+        subtitle
+        instructor
+        instructorImage
+        instructorDescription
+        instructorLink
+        hours
+        price
+        slug
+        category
+        collectionId
+        lmsLink
+        createdAt
+        updatedAt
+        __typename
+      }
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCollectionCourses = /* GraphQL */ `
+  subscription OnDeleteCollectionCourses(
+    $filter: ModelSubscriptionCollectionCoursesFilterInput
+  ) {
+    onDeleteCollectionCourses(filter: $filter) {
+      id
+      lMSCollectionId
+      lMSCourseId
+      lMSCollection {
+        id
+        description
+        title
+        subtitle
+        instructor
+        instructorImage
+        instructorDescription
+        instructorLink
+        hours
+        price
+        slug
+        category
+        collectionId
+        lmsLink
+        createdAt
+        updatedAt
+        __typename
+      }
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
         demo
         partOf
         altLink
@@ -10547,7 +10961,6 @@ export const onCreateCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10608,7 +11021,6 @@ export const onUpdateCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10669,7 +11081,6 @@ export const onDeleteCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10720,7 +11131,6 @@ export const onCreateCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10784,7 +11194,6 @@ export const onUpdateCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10848,7 +11257,6 @@ export const onDeleteCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10912,7 +11320,6 @@ export const onCreateCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -10976,7 +11383,6 @@ export const onUpdateCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11040,7 +11446,6 @@ export const onDeleteCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11104,7 +11509,6 @@ export const onCreateAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11165,7 +11569,6 @@ export const onUpdateAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11226,7 +11629,6 @@ export const onDeleteAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11287,7 +11689,6 @@ export const onCreatePartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11347,7 +11748,6 @@ export const onUpdatePartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11407,7 +11807,6 @@ export const onDeletePartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11467,7 +11866,6 @@ export const onCreateLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11542,7 +11940,6 @@ export const onUpdateLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink
@@ -11617,7 +12014,6 @@ export const onDeleteLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        collection
         demo
         partOf
         altLink

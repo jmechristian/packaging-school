@@ -315,6 +315,7 @@ type User @model @auth(rules: [{ allow: public }]) {
   icpfCmpmForm: IcpfCmpmForm @hasOne(fields: ["icpfCmpmFormID"])
   pgsfFormID: ID
   pgsfForm: PgsfForm @hasOne(fields: ["pgsfFormID"])
+  initials: String
 }
 
 type UserXp @model @auth(rules: [{ allow: public }]) {
@@ -608,7 +609,7 @@ type LMSCollection @model @auth(rules: [{ allow: public }]) {
   instructorImage: String
   instructorDescription: String
   instructorLink: String
-  courses: [String]
+  courses: [LMSCourse] @manyToMany(relationName: "CollectionCourses")
   hours: String
   price: Int
   slug: String! @index(name: "LMScollectionBySlug")
@@ -652,7 +653,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   trial_link: String
   percentComplete: Int
   slug: String! @index(name: "LMScourseBySlug")
-  collection: [String]
+  collections: [LMSCollection] @manyToMany(relationName: "CollectionCourses")
   demo: Boolean @default(value: "false")
   partOf: [String]
   altLink: String
@@ -1010,6 +1011,7 @@ type GlossaryTerm @model @auth(rules: [{ allow: public }]) {
   definition: String!
   order: Int
   status: String @default(value: "DRAFT")
+  rand: Int @index(name: "glossaryTermByRand", sortKeyFields: ["term"])
 }
 
 ######### EVENT TEMPLATES #########
@@ -1314,4 +1316,43 @@ type CourseOutlineRequest @model @auth(rules: [{ allow: public }]) {
   country: String
   device: String
   page: String
+}
+
+######### GLOSSARY QUIZ GAME #########
+
+enum LeaderboardPeriod {
+  DAILY
+  WEEKLY
+  ALL
+}
+
+type UserGameStats @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userID: ID! @index(name: "statsByUser")
+  bestStreakAllTime: Int @default(value: "0")
+  totalAttempts: Int @default(value: "0")
+  totalCorrect: Int @default(value: "0")
+  lastPlayedAt: AWSDateTime
+}
+
+type LeaderboardEntry @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  period: LeaderboardPeriod!
+  key: String! @index(name: "lbByKey", sortKeyFields: ["sortKey"])
+  sortKey: String!
+  userID: ID! @index(name: "lbByUser", sortKeyFields: ["period"])
+  displayName: String
+  avatarUrl: String
+  score: Int!
+  updatedAt: AWSDateTime
+}
+
+# Optional: for analytics
+type AnswerEvent @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userID: ID! @index(name: "eventsByUser", sortKeyFields: ["createdAt"])
+  termID: ID! @index(name: "eventsByTerm", sortKeyFields: ["createdAt"])
+  correct: Boolean!
+  latencyMs: Int
+  createdAt: AWSDateTime
 }
