@@ -14,6 +14,7 @@ const CourseMobileCard = ({
   onRowClick,
   onPurchase,
   isNavigating,
+  hidePrice = false,
 }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const hasPreview = !!(course.preview || course.video);
@@ -61,25 +62,25 @@ const CourseMobileCard = ({
             >
               <MdVideocam size={20} className='text-slate-600' />
             </button>
-          ) : (
-            <span className='w-8 h-8 flex-shrink-0' aria-hidden='true' />
-          )}
-          <div className='text-right'>
-            <div className='font-semibold text-slate-900'>
-              {course.price === 'FREE' ? 'Free' : `$${course.price}`}
+          ) : null}
+          {!hidePrice && (
+            <div className='text-right'>
+              <div className='font-semibold text-slate-900'>
+                {course.price === 'FREE' ? 'Free' : `$${course.price}`}
+              </div>
+              {onPurchase && course.price !== 'FREE' && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPurchase();
+                  }}
+                  className='text-xs font-medium text-base-brand hover:underline'
+                >
+                  Enroll
+                </button>
+              )}
             </div>
-            {onPurchase && course.price !== 'FREE' && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPurchase();
-                }}
-                className='text-xs font-medium text-base-brand hover:underline'
-              >
-                Enroll
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
       {typeof document !== 'undefined' &&

@@ -15,6 +15,7 @@ const CourseTableRow = ({
   onRowClick,
   onPurchase,
   isNavigating,
+  hidePrice = false,
 }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const hasPreview = !!(course.preview || course.video);
@@ -57,9 +58,11 @@ const CourseTableRow = ({
         <td className='px-2 sm:px-3 py-2.5 sm:py-3 text-sm font-medium align-top text-center'>
           {course.lessons}
         </td>
-        <td className={`px-0 py-2.5 sm:py-3 align-middle text-center overflow-hidden ${
-          isNavigating ? 'bg-slate-100' : 'bg-white group-hover:bg-slate-50'
-        }`}>
+        <td
+          className={`px-0 py-2.5 sm:py-3 align-middle text-center overflow-hidden ${
+            isNavigating ? 'bg-slate-100' : 'bg-white group-hover:bg-slate-50'
+          }`}
+        >
           <div className='flex items-center justify-center w-full'>
             {isNavigating ? (
               <MdHourglassEmpty size={18} className='text-base-brand animate-pulse' />
@@ -74,29 +77,29 @@ const CourseTableRow = ({
               >
                 <MdVideocam size={18} className='text-slate-600' />
               </button>
-            ) : (
-              <span className='w-8 h-8 flex-shrink-0' aria-hidden='true' />
-            )}
+            ) : null}
           </div>
         </td>
-        <td className='pl-2 pr-2 sm:pl-3 sm:pr-3 py-2.5 sm:py-3 align-top text-center min-w-0 overflow-hidden'>
-          <div className='flex flex-col gap-0.5 items-center min-w-0'>
-            <span className='text-sm sm:text-base font-semibold truncate'>
-              {course.price === 'FREE' ? 'Free' : `$${course.price}`}
-            </span>
-            {onPurchase && course.price !== 'FREE' && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPurchase();
-                }}
-                className='text-xs font-medium text-base-brand hover:underline'
-              >
-                Enroll
-              </button>
-            )}
-          </div>
-        </td>
+        {!hidePrice && (
+          <td className='pl-2 pr-2 sm:pl-3 sm:pr-3 py-2.5 sm:py-3 align-top text-center min-w-0 overflow-hidden'>
+            <div className='flex flex-col gap-0.5 items-center min-w-0'>
+              <span className='text-sm sm:text-base font-semibold truncate'>
+                {course.price === 'FREE' ? 'Free' : `$${course.price}`}
+              </span>
+              {onPurchase && course.price !== 'FREE' && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPurchase();
+                  }}
+                  className='text-xs font-medium text-base-brand hover:underline'
+                >
+                  Enroll
+                </button>
+              )}
+            </div>
+          </td>
+        )}
       </tr>
       {typeof document !== 'undefined' &&
         createPortal(
