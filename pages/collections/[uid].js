@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-  listLMSCollections,
-  listLMSCourses,
-  lMSCollectionsBySlug,
-} from '../../src/graphql/queries';
+import { listLMSCollections } from '../../src/graphql/queries';
 import { API } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -19,6 +15,47 @@ import {
   getDeviceType,
 } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
+
+const collectionBySlugWithCourses = /* GraphQL */ `
+  query LMSCollectionsBySlugWithCourses($slug: String!) {
+    lMSCollectionsBySlug(slug: $slug) {
+      items {
+        id
+        description
+        title
+        subtitle
+        instructor
+        instructorImage
+        instructorDescription
+        instructorLink
+        hours
+        price
+        slug
+        category
+        collectionId
+        lmsLink
+        courses {
+          items {
+            id
+            courseId
+            category
+            categoryArray
+            type
+            price
+            hours
+            lessons
+            preview
+            seoImage
+            title
+            subheadline
+            what_learned
+            slug
+          }
+        }
+      }
+    }
+  }
+`;
 
 const Page = ({ collection, courses }) => {
   console.log(collection);
@@ -180,31 +217,28 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const slug = params.uid;
-  const res = await API.graphql({
-    query: lMSCollectionsBySlug,
-    variables: { slug: slug },
-  });
-  const collection = res.data.lMSCollectionsBySlug.items[0];
+  try {
+    const slug = params.uid;
+    const res = await API.graphql({
+      query: collectionBySlugWithCourses,
+      variables: { slug },
+    });
+    const items = res.data?.lMSCollectionsBySlug?.items ?? [];
+    const collection = items[0];
 
-  if (!collection) {
+    if (!collection) {
+      return { notFound: true, revalidate: 60 };
+    }
+
+    const courses = collection.courses?.items ?? [];
+
+    return {
+      props: { collection, courses },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps for collection', params?.uid, error);
+    // Fail safe for export: treat errored collections as not found
     return { notFound: true, revalidate: 60 };
   }
-
-  const collectionId = collection.id;
-
-  const collectionCourses = await API.graphql({
-    query: listLMSCourses,
-    variables: {
-      filter: {
-        collection: { eq: collectionId },
-      },
-    },
-  });
-  const courses = collectionCourses.data.listLMSCourses.items;
-
-  return {
-    props: { collection, courses },
-    revalidate: 10,
-  };
 }
