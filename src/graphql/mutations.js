@@ -2746,6 +2746,7 @@ export const createLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -2814,6 +2815,7 @@ export const updateLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -2882,6 +2884,7 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -4458,10 +4461,7 @@ export const createLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses {
-        nextToken
-        __typename
-      }
+      courses
       hours
       price
       slug
@@ -4488,10 +4488,7 @@ export const updateLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses {
-        nextToken
-        __typename
-      }
+      courses
       hours
       price
       slug
@@ -4518,10 +4515,7 @@ export const deleteLMSCollection = /* GraphQL */ `
       instructorImage
       instructorDescription
       instructorLink
-      courses {
-        nextToken
-        __typename
-      }
+      courses
       hours
       price
       slug
@@ -4640,10 +4634,7 @@ export const createLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collections {
-        nextToken
-        __typename
-      }
+      collection
       demo
       partOf
       altLink
@@ -4723,10 +4714,7 @@ export const updateLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collections {
-        nextToken
-        __typename
-      }
+      collection
       demo
       partOf
       altLink
@@ -4806,10 +4794,7 @@ export const deleteLMSCourse = /* GraphQL */ `
       trial_link
       percentComplete
       slug
-      collections {
-        nextToken
-        __typename
-      }
+      collection
       demo
       partOf
       altLink
@@ -8397,6 +8382,7 @@ export const createCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -8495,6 +8481,7 @@ export const updateCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -8593,6 +8580,7 @@ export const deleteCourseReview = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -10992,6 +10980,7 @@ export const createUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11086,6 +11075,7 @@ export const updateUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11180,216 +11170,7 @@ export const deleteUserWishlist = /* GraphQL */ `
         trial_link
         percentComplete
         slug
-        demo
-        partOf
-        altLink
-        shortDescription
-        subscriptionLink
-        subscriptionPrice
-        stripeLink
-        callout
-        createdAt
-        updatedAt
-        customerLibaryClientCoursesId
-        customerLibaryPschoolCoursesId
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createCollectionCourses = /* GraphQL */ `
-  mutation CreateCollectionCourses(
-    $input: CreateCollectionCoursesInput!
-    $condition: ModelCollectionCoursesConditionInput
-  ) {
-    createCollectionCourses(input: $input, condition: $condition) {
-      id
-      lMSCollectionId
-      lMSCourseId
-      lMSCollection {
-        id
-        description
-        title
-        subtitle
-        instructor
-        instructorImage
-        instructorDescription
-        instructorLink
-        hours
-        price
-        slug
-        category
-        collectionId
-        lmsLink
-        createdAt
-        updatedAt
-        __typename
-      }
-      lMSCourse {
-        id
-        thinkificId
-        courseId
-        category
-        categoryArray
-        type
-        price
-        hours
-        lessons
-        videos
-        preview
-        seoImage
-        infoSheet
-        title
-        subheadline
-        what_learned
-        objectives
-        link
-        trial_link
-        percentComplete
-        slug
-        demo
-        partOf
-        altLink
-        shortDescription
-        subscriptionLink
-        subscriptionPrice
-        stripeLink
-        callout
-        createdAt
-        updatedAt
-        customerLibaryClientCoursesId
-        customerLibaryPschoolCoursesId
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateCollectionCourses = /* GraphQL */ `
-  mutation UpdateCollectionCourses(
-    $input: UpdateCollectionCoursesInput!
-    $condition: ModelCollectionCoursesConditionInput
-  ) {
-    updateCollectionCourses(input: $input, condition: $condition) {
-      id
-      lMSCollectionId
-      lMSCourseId
-      lMSCollection {
-        id
-        description
-        title
-        subtitle
-        instructor
-        instructorImage
-        instructorDescription
-        instructorLink
-        hours
-        price
-        slug
-        category
-        collectionId
-        lmsLink
-        createdAt
-        updatedAt
-        __typename
-      }
-      lMSCourse {
-        id
-        thinkificId
-        courseId
-        category
-        categoryArray
-        type
-        price
-        hours
-        lessons
-        videos
-        preview
-        seoImage
-        infoSheet
-        title
-        subheadline
-        what_learned
-        objectives
-        link
-        trial_link
-        percentComplete
-        slug
-        demo
-        partOf
-        altLink
-        shortDescription
-        subscriptionLink
-        subscriptionPrice
-        stripeLink
-        callout
-        createdAt
-        updatedAt
-        customerLibaryClientCoursesId
-        customerLibaryPschoolCoursesId
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteCollectionCourses = /* GraphQL */ `
-  mutation DeleteCollectionCourses(
-    $input: DeleteCollectionCoursesInput!
-    $condition: ModelCollectionCoursesConditionInput
-  ) {
-    deleteCollectionCourses(input: $input, condition: $condition) {
-      id
-      lMSCollectionId
-      lMSCourseId
-      lMSCollection {
-        id
-        description
-        title
-        subtitle
-        instructor
-        instructorImage
-        instructorDescription
-        instructorLink
-        hours
-        price
-        slug
-        category
-        collectionId
-        lmsLink
-        createdAt
-        updatedAt
-        __typename
-      }
-      lMSCourse {
-        id
-        thinkificId
-        courseId
-        category
-        categoryArray
-        type
-        price
-        hours
-        lessons
-        videos
-        preview
-        seoImage
-        infoSheet
-        title
-        subheadline
-        what_learned
-        objectives
-        link
-        trial_link
-        percentComplete
-        slug
+        collection
         demo
         partOf
         altLink
@@ -11451,6 +11232,7 @@ export const createCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11512,6 +11294,7 @@ export const updateCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11573,6 +11356,7 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11624,6 +11408,7 @@ export const createCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11688,6 +11473,7 @@ export const updateCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11752,6 +11538,7 @@ export const deleteCourseLessons = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11816,6 +11603,7 @@ export const createCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11880,6 +11668,7 @@ export const updateCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -11944,6 +11733,7 @@ export const deleteCourseInstructors = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12008,6 +11798,7 @@ export const createAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12069,6 +11860,7 @@ export const updateAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12130,6 +11922,7 @@ export const deleteAchievementCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12191,6 +11984,7 @@ export const createPartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12251,6 +12045,7 @@ export const updatePartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12311,6 +12106,7 @@ export const deletePartnerCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12371,6 +12167,7 @@ export const createLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12446,6 +12243,7 @@ export const updateLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink
@@ -12521,6 +12319,7 @@ export const deleteLibraryCourses = /* GraphQL */ `
         trial_link
         percentComplete
         slug
+        collection
         demo
         partOf
         altLink

@@ -609,7 +609,7 @@ type LMSCollection @model @auth(rules: [{ allow: public }]) {
   instructorImage: String
   instructorDescription: String
   instructorLink: String
-  courses: [LMSCourse] @manyToMany(relationName: "CollectionCourses")
+  courses: [String]
   hours: String
   price: Int
   slug: String! @index(name: "LMScollectionBySlug")
@@ -653,7 +653,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   trial_link: String
   percentComplete: Int
   slug: String! @index(name: "LMScourseBySlug")
-  collections: [LMSCollection] @manyToMany(relationName: "CollectionCourses")
+  collection: [String]
   demo: Boolean @default(value: "false")
   partOf: [String]
   altLink: String
