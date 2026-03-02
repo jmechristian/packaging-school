@@ -15,9 +15,9 @@ const Teams = () => {
     <div className='flex flex-col mx-auto max-w-7xl py-16'>
       <div className='w-full grid lg:grid-cols-12 gap-24 px-4 xl:px-0'>
         <div className='lg:col-span-6 flex flex-col gap-3'>
-          <div className='tracking-wide font-oswald uppercase text-white font-medium bg-clemson px-3 py-1 rounded w-fit mb-1'>
+          <p className='inline-flex items-center rounded-full bg-clemson/10 px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-clemson uppercase w-fit'>
             Reach Goals Faster
-          </div>
+          </p>
           <h1 className='h2-base mb-1.5 max-w-lg'>
             Team Training with The Packaging School
           </h1>
@@ -65,7 +65,7 @@ const Teams = () => {
           <div className='flex flex-col gap-3'>
             <div className='flex flex-col gap-5'>
               <div className='w-full'>
-                <p className='text-lg font-semibold text-gray-700 mb-2 bg-gray-200 px-5 py-3 rounded w-full tracking-normal'>
+                <p className='inline-flex items-center rounded-lg bg-clemson/70 px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-gray-700 uppercase w-fit'>
                   Select individual courses from respected programs such as:
                 </p>
               </div>
