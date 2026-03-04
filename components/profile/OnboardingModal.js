@@ -14,9 +14,30 @@ export const OnboardingModal = ({ onClose }) => {
   const { user } = useUser();
   const { awsUser, thinkificUser } = useSelector((state) => state.auth);
   const router = useRouter();
+
+  const awsRawName = awsUser?.name || '';
+  const awsLooksLikeEmail = awsRawName.includes('@');
+  const awsNameParts = !awsLooksLikeEmail ? awsRawName.split(' ') : [];
+
+  const authRawName = user?.name || '';
+  const authLooksLikeEmail = authRawName.includes('@');
+  const authNameParts = !authLooksLikeEmail ? authRawName.split(' ') : [];
+
+  const initialFirstName =
+    user?.given_name ||
+    authNameParts[0] ||
+    awsNameParts[0] ||
+    '';
+
+  const initialLastName =
+    user?.family_name ||
+    (authNameParts.length > 1 ? authNameParts.slice(1).join(' ') : '') ||
+    (awsNameParts.length > 1 ? awsNameParts.slice(1).join(' ') : '') ||
+    '';
+
   const [formData, setFormData] = useState({
-    firstName: awsUser.name.split(' ')[0],
-    lastName: awsUser.name.split(' ')[1],
+    firstName: initialFirstName,
+    lastName: initialLastName,
     company: awsUser.company,
     title: awsUser.title,
     bio: awsUser.bio,

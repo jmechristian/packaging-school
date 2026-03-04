@@ -1,14 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { updateAWSUser, updateThinkificUser } from '../../helpers/api';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 const EditProfileForm = ({ awsUser, thinkificUser }) => {
   const { user } = useUser();
+
+  const awsRawName = awsUser?.name || '';
+  const awsLooksLikeEmail = awsRawName.includes('@');
+  const awsNameParts = !awsLooksLikeEmail ? awsRawName.split(' ') : [];
+
+  const authRawName = user?.name || '';
+  const authLooksLikeEmail = authRawName.includes('@');
+  const authNameParts = !authLooksLikeEmail ? authRawName.split(' ') : [];
+
+  const initialFirstName =
+    user?.given_name ||
+    authNameParts[0] ||
+    awsNameParts[0] ||
+    '';
+
+  const initialLastName =
+    user?.family_name ||
+    (authNameParts.length > 1 ? authNameParts.slice(1).join(' ') : '') ||
+    (awsNameParts.length > 1 ? awsNameParts.slice(1).join(' ') : '') ||
+    '';
+
+  const rawLinkedin = awsUser?.linkedin || '';
+  const linkedinBase = 'https://www.linkedin.com/in/';
+  const linkedinSlug = rawLinkedin.startsWith(linkedinBase)
+    ? rawLinkedin.replace(linkedinBase, '')
+    : '';
+
   const [formData, setFormData] = useState({
-    firstName: awsUser.name.split(' ')[0],
-    lastName: awsUser.name.split(' ')[1],
+    firstName: initialFirstName,
+    lastName: initialLastName,
     company: awsUser.company,
     title: awsUser.title,
+    location: awsUser.location || '',
+    linkedin: linkedinSlug,
     bio: awsUser.bio,
     interests: awsUser.interests,
     goals: awsUser.goals,
@@ -28,10 +57,21 @@ const EditProfileForm = ({ awsUser, thinkificUser }) => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setIsError(false);
+    setErrorMessage('');
+
     try {
-      const response = await updateAWSUser({
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+
+      await updateAWSUser({
         id: awsUser.id,
-        ...formData,
+        name: fullName || awsUser.name,
+        company: formData.company,
+        title: formData.title,
+        bio: formData.bio,
+        interests: formData.interests,
+        goals: formData.goals,
+        location: formData.location,
       });
 
       const thinkificResponse = await updateThinkificUser({
@@ -44,11 +84,28 @@ const EditProfileForm = ({ awsUser, thinkificUser }) => {
       if (!thinkificResponse.ok) {
         throw new Error('Failed to update Thinkific profile');
       }
+
+      // Keep Auth0 profile in sync with updated name
+      await fetch(`${baseUrl}/api/update-auth0-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.sub,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        }),
+      });
     } catch (error) {
       console.error('Error updating profile:', error);
+      setIsError(true);
+      setErrorMessage(
+        'There was an error updating your profile. Please try again.'
+      );
     } finally {
-      window.location.reload(); // Only here, not on mount
       setIsLoading(false);
+      window.location.reload(); // Only here, not on mount
     }
   };
 
@@ -59,6 +116,42 @@ const EditProfileForm = ({ awsUser, thinkificUser }) => {
       </div>
 
       <form onSubmit={handleEditSubmit} className='space-y-4'>
+        {isError && (
+          <div className='text-sm text-red-500 mb-2'>
+            {errorMessage}
+          </div>
+        )}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              First Name
+            </label>
+            <input
+              type='text'
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+              value={formData.firstName}
+              onChange={(e) =>
+                setFormData({ ...formData, firstName: e.target.value })
+              }
+              placeholder='Your first name'
+            />
+          </div>
+          <div>
+            <label className='block mb-2 text-sm font-medium text-slate-600'>
+              Last Name
+            </label>
+            <input
+              type='text'
+              className='w-full p-2.5 rounded-lg border border-gray-300 focus:border-clemson focus:ring-1 focus:ring-clemson'
+              value={formData.lastName}
+              onChange={(e) =>
+                setFormData({ ...formData, lastName: e.target.value })
+              }
+              placeholder='Your last name'
+            />
+          </div>
+        </div>
+
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
           <div>
             <label className='block mb-2 text-sm font-medium text-slate-600'>
