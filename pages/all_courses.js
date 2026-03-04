@@ -321,7 +321,7 @@ const Page = ({ firstCardImage }) => {
     if (awsUser?.name?.includes(' ')) {
       navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
     } else {
-      trackEvent('purchase', {
+      trackEvent('thinkific_purchase', {
         user_id: awsUser?.id,
         ecommerce: {
           transaction_id: orderId.id,
