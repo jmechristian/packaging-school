@@ -1,7 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { truncateTitle, truncateDescription } from '../../libs/seo/generateMetadata';
+import {
+  truncateTitle,
+  truncateDescription,
+} from '../../libs/seo/generateMetadata';
 
 function toAbsoluteUrl(inputUrl, siteUrl) {
   if (!inputUrl) return null;
@@ -48,10 +51,11 @@ const Meta = ({
   const metaTitle = truncateTitle(title || siteName) || siteName;
   const metaDescription = truncateDescription(description || '');
 
-  // Always provide a concrete OG image so crawlers don't "infer" from random page images.
-  // Replace with a proper share-sized PNG/JPG via the `image` prop when possible.
-  const fallbackImage = '/test-card.png';
-  const ogImageUrl = toAbsoluteUrl(image || fallbackImage, siteUrl);
+  // Default OG image for pages that don't pass `image`. Use a generic site image, not
+  // a course/certificate-specific card. Pass the `image` prop on each page for correct
+  // social previews (e.g. course/certificate/collection image).
+  const DEFAULT_OG_IMAGE = '/default-seo.jpg';
+  const ogImageUrl = toAbsoluteUrl(image || DEFAULT_OG_IMAGE, siteUrl);
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
 
   const additionalSchemas = Array.isArray(structuredData)
