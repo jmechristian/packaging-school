@@ -6,7 +6,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 export default function AfterSSO() {
   const router = useRouter();
   const { userSetupComplete, awsUser, thinkificUser } = useSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
   const { user, isLoading: userIsLoading } = useUser();
   const [redirectAttempted, setRedirectAttempted] = useState(false);
@@ -19,12 +19,11 @@ export default function AfterSSO() {
 
     // Check for SSO errors
     if (error) {
-      console.log('AfterSSO - SSO error detected:', error);
       setHasError(true);
       setErrorMessage(
         error === 'tunnel_connection_failed'
           ? 'Corporate network restrictions are preventing the login process. Please try accessing from a different network or contact your IT department.'
-          : 'An error occurred during login. Please try again.'
+          : 'An error occurred during login. Please try again.',
       );
       return;
     }
@@ -38,18 +37,15 @@ export default function AfterSSO() {
         awsUser &&
         thinkificUser !== undefined
       ) {
-        console.log('AfterSSO - All conditions met, redirecting');
         setIsFadingOut(true);
         setTimeout(() => {
           setRedirectAttempted(true);
           router.replace(returnTo);
         }, 300);
       } else if (!userIsLoading && user) {
-        console.log('AfterSSO - User loaded but setup incomplete, waiting...');
         // If user is loaded but setup isn't complete, wait a bit longer
         const timeout = setTimeout(() => {
           if (!redirectAttempted) {
-            console.log('AfterSSO - Fallback timeout, redirecting');
             setIsFadingOut(true);
             setTimeout(() => {
               setRedirectAttempted(true);
@@ -78,7 +74,6 @@ export default function AfterSSO() {
     if (typeof returnTo === 'string') {
       const forceTimeout = setTimeout(() => {
         if (!redirectAttempted) {
-          console.log('AfterSSO - Force redirect after 5 seconds');
           setIsFadingOut(true);
           setTimeout(() => {
             setRedirectAttempted(true);
@@ -106,7 +101,7 @@ export default function AfterSSO() {
             <button
               onClick={() =>
                 (window.location.href = `/corporate-login?returnTo=${encodeURIComponent(
-                  router.query.returnTo || '/'
+                  router.query.returnTo || '/',
                 )}`)
               }
               className='bg-clemson hover:bg-clemson/90 text-white px-6 py-3 rounded-lg font-medium transition-colors'

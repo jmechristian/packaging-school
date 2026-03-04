@@ -1,16 +1,12 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { getAWSUser } from '../../../helpers/api';
 
-console.log('Auth0 API route initialized');
-
 export default handleAuth({
   authorizationParams: {
     // This will be overridden by query parameters when provided
   },
 
   async callback(req, res) {
-    console.log('Auth0 callback endpoint hit');
-
     // Decode the state parameter to get returnTo, firstName, and lastName
     let returnTo = null;
     let firstNameFromState = null;
@@ -18,15 +14,11 @@ export default handleAuth({
     if (req.query.state) {
       try {
         const decodedState = JSON.parse(
-          Buffer.from(req.query.state, 'base64').toString()
+          Buffer.from(req.query.state, 'base64').toString(),
         );
         returnTo = decodedState.returnTo;
         firstNameFromState = decodedState.firstName;
         lastNameFromState = decodedState.lastName;
-        console.log('Decoded state:', decodedState);
-        console.log('returnTo from state:', returnTo);
-        console.log('firstName from state:', firstNameFromState);
-        console.log('lastName from state:', lastNameFromState);
       } catch (error) {
         console.error('Error decoding state:', error);
       }
@@ -35,7 +27,6 @@ export default handleAuth({
     // Also check for returnTo in query params (for external URLs)
     if (!returnTo && req.query.returnTo) {
       returnTo = req.query.returnTo;
-      console.log('returnTo from query params:', returnTo);
     }
 
     // Also check for state data in returnTo URL (from magic-link flow)
@@ -45,14 +36,13 @@ export default handleAuth({
         const stateParam = url.searchParams.get('__state');
         if (stateParam) {
           const decodedState = JSON.parse(
-            Buffer.from(decodeURIComponent(stateParam), 'base64').toString()
+            Buffer.from(decodeURIComponent(stateParam), 'base64').toString(),
           );
           if (decodedState.returnTo) returnTo = decodedState.returnTo;
           if (decodedState.firstName && !firstNameFromState)
             firstNameFromState = decodedState.firstName;
           if (decodedState.lastName && !lastNameFromState)
             lastNameFromState = decodedState.lastName;
-          console.log('Extracted state from returnTo URL');
         }
       } catch (error) {
         console.error('Error extracting state from returnTo:', error);
@@ -77,17 +67,13 @@ export default handleAuth({
         // Redirect to external-redirect handler for external URLs, returnTo or profile for internal
         returnTo: callbackReturnTo,
         afterCallback: async (req, res, session) => {
-          console.log('afterCallback called for', session?.user?.email);
-
           if (!session?.user) {
-            console.log('No user in session');
             return session;
           }
 
           try {
             // Goal: keep callback simple and deterministic.
             // We do NOT auto-run Thinkific SSO here anymore.
-            console.log('Processing user after callback:', session.user.email);
 
             // Dynamically determine baseUrl for internal API calls
             let baseUrl;
@@ -103,7 +89,6 @@ export default handleAuth({
             let awsUser = null;
             try {
               awsUser = await getAWSUser(session.user.email);
-              console.log('AWS user:', awsUser);
             } catch (err) {
               console.warn('Could not fetch AWS user for SSO fallback:', err);
             }
@@ -150,8 +135,8 @@ export default handleAuth({
                 try {
                   const thinkificUserRes = await fetch(
                     `${baseUrl}/api/thinkific/get-user?email=${encodeURIComponent(
-                      session.user.email
-                    )}`
+                      session.user.email,
+                    )}`,
                   );
                   const thinkificData = await thinkificUserRes.json();
 
@@ -165,7 +150,6 @@ export default handleAuth({
                         last_name: lastName,
                       }),
                     });
-                    console.log('Thinkific user created during callback');
                   } else {
                     console.log('Thinkific user already exists');
                   }
@@ -175,7 +159,7 @@ export default handleAuth({
               } else {
                 console.log(
                   'Skipping Thinkific ensure: missing first/last name',
-                  { firstName, lastName }
+                  { firstName, lastName },
                 );
               }
             }

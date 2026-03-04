@@ -25,9 +25,7 @@ export function useThinkificSSO(user) {
           iframe.style.display = 'none';
           iframe.width = '0';
           iframe.height = '0';
-          iframe.onload = () => {
-            console.log('✅ Thinkific SSO iframe loaded successfully');
-          };
+          iframe.onload = () => {};
           document.body.appendChild(iframe);
         }
       } catch (error) {

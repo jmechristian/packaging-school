@@ -20,8 +20,6 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
   const [userReview, setUserReview] = useState(null);
   const { awsUser, user } = useSelector((state) => state.auth);
 
-  console.log(user);
-
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -141,7 +139,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
             onClick={() => {
               navigateToThinkific(
                 `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                `https://learn.packagingschool.com/courses/take/${course.slug}`
+                `https://learn.packagingschool.com/courses/take/${course.slug}`,
               );
             }}
             className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'
@@ -156,7 +154,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
               onClick={() => {
                 navigateToThinkific(
                   `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                  `https://learn.packagingschool.com/courses/take/${course.slug}`
+                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
                 );
               }}
             >
@@ -204,7 +202,7 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
             onClick={() => {
               navigateToThinkific(
                 `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                `https://learn.packagingschool.com/courses/take/${course.slug}`
+                `https://learn.packagingschool.com/courses/take/${course.slug}`,
               );
             }}
           >

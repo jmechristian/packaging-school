@@ -39,8 +39,8 @@ import CourseMobileCard from '../components/shared/CourseMobileCard';
 import CertificateMobileCard from '../components/shared/CertificateMobileCard';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
-import { setAWSUser } from '../features/auth/authslice';
 import { useThinkificLink } from '../hooks/useThinkificLink';
+import { trackEvent } from '../libs/analytics';
 
 const CATEGORY_ORDER = [
   'AUTO',
@@ -321,6 +321,22 @@ const Page = ({ firstCardImage }) => {
     if (awsUser?.name?.includes(' ')) {
       navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
     } else {
+      trackEvent('purchase', {
+        user_id: awsUser?.id,
+        ecommerce: {
+          transaction_id: orderId.id,
+          value: courseData.price,
+          currency: 'USD',
+          items: [
+            {
+              item_id: courseData.id,
+              item_name: courseData.title,
+              price: courseData.price,
+              quantity: 1,
+            },
+          ],
+        },
+      });
       router.push(`/order/${orderId.id}`);
     }
   };
@@ -413,40 +429,42 @@ const Page = ({ firstCardImage }) => {
                   className='flex-shrink-0 text-slate-500 sm:w-6 sm:h-6'
                 />
               </div>
-              {!isMobile && <div className='flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
-                {categoryMenu.map((cat) => {
-                  const { Icon, tooltip } = getCategoryFilterIcon(cat.value);
-                  const isActive =
-                    cat.value === 'ALL'
-                      ? isFilters.length === 0
-                      : isInFilterArray(cat.value);
-                  return (
-                    <FilterIconTooltip key={cat.value} tooltip={tooltip}>
-                      <button
-                        type='button'
-                        onClick={() => filterClickHandler(cat.value)}
-                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                          isActive
-                            ? 'bg-base-brand text-white'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        <Icon size={20} />
-                      </button>
-                    </FilterIconTooltip>
-                  );
-                })}
-                <FilterIconTooltip tooltip='Beverage Institute by ISBT®'>
-                  <a
-                    href='https://packagingschool.com/isbt'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='block p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex-shrink-0'
-                  >
-                    <MdScience size={20} />
-                  </a>
-                </FilterIconTooltip>
-              </div>}
+              {!isMobile && (
+                <div className='flex overflow-x-auto overflow-y-hidden gap-1 scrollbar-hide flex-shrink-0'>
+                  {categoryMenu.map((cat) => {
+                    const { Icon, tooltip } = getCategoryFilterIcon(cat.value);
+                    const isActive =
+                      cat.value === 'ALL'
+                        ? isFilters.length === 0
+                        : isInFilterArray(cat.value);
+                    return (
+                      <FilterIconTooltip key={cat.value} tooltip={tooltip}>
+                        <button
+                          type='button'
+                          onClick={() => filterClickHandler(cat.value)}
+                          className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                            isActive
+                              ? 'bg-base-brand text-white'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                          }`}
+                        >
+                          <Icon size={20} />
+                        </button>
+                      </FilterIconTooltip>
+                    );
+                  })}
+                  <FilterIconTooltip tooltip='Beverage Institute by ISBT®'>
+                    <a
+                      href='https://packagingschool.com/isbt'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='block p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex-shrink-0'
+                    >
+                      <MdScience size={20} />
+                    </a>
+                  </FilterIconTooltip>
+                </div>
+              )}
             </div>
             <div className='border-b border-slate-300 w-full pb-2'>
               <div className='flex flex-wrap gap-2'>
@@ -522,8 +540,8 @@ const Page = ({ firstCardImage }) => {
                       <MdExpandMore size={24} color='white' />
                     )}
                   </button>
-                  {isCategoryExpanded('CERTIFICATES') && (
-                    isMobile ? (
+                  {isCategoryExpanded('CERTIFICATES') &&
+                    (isMobile ? (
                       <div className='border border-slate-200 border-t-0'>
                         {sortedCertificates.map((cert) => (
                           <CertificateMobileCard
@@ -532,17 +550,186 @@ const Page = ({ firstCardImage }) => {
                             isNavigating={navigatingId === cert.id}
                             onRowClick={() => {
                               setNavigatingId(cert.id);
-                              handleCertCardClick(cert, cert.abbreviation, 'CERTIFICATE-VIEW', cert.link, cert.applicationLink);
+                              handleCertCardClick(
+                                cert,
+                                cert.abbreviation,
+                                'CERTIFICATE-VIEW',
+                                cert.link,
+                                cert.applicationLink,
+                              );
                             }}
                             onApplyClick={() => {
                               setNavigatingId(cert.id);
-                              handleCertCardClick(cert, cert.abbreviation, 'CERTIFICATE-APPLY', cert.link, cert.applicationLink);
+                              handleCertCardClick(
+                                cert,
+                                cert.abbreviation,
+                                'CERTIFICATE-APPLY',
+                                cert.link,
+                                cert.applicationLink,
+                              );
                             }}
                           />
                         ))}
                       </div>
                     ) : (
-                    <div className='w-full overflow-x-auto'>
+                      <div className='w-full overflow-x-auto'>
+                        <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
+                          <colgroup>
+                            <col style={{ width: '8%' }} />
+                            <col style={{ width: '24%' }} />
+                            <col style={{ width: '44%' }} />
+                            <col style={{ width: '6%' }} />
+                            <col style={{ width: '6%' }} />
+                            <col style={{ width: '4%' }} />
+                            <col style={{ width: '8%' }} />
+                          </colgroup>
+                          <thead>
+                            <tr className='bg-slate-100'>
+                              <SortableTableHeader
+                                label='ID'
+                                className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                                sortKey='course id'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('course id')}
+                              />
+                              <SortableTableHeader
+                                label='Title'
+                                sortKey='title'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('title')}
+                              />
+                              <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
+                                Subheadline
+                              </th>
+                              <SortableTableHeader
+                                label='Hours'
+                                sortKey='hours'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('hours')}
+                                align='center'
+                              />
+                              <SortableTableHeader
+                                label='Lessons'
+                                sortKey='lessons'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('lessons')}
+                                align='center'
+                              />
+                              <th
+                                className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
+                                aria-label='Preview'
+                              >
+                                <MdVideocam
+                                  size={18}
+                                  className='text-slate-600 inline-block'
+                                />
+                              </th>
+                              <SortableTableHeader
+                                label='Price'
+                                sortKey='price'
+                                currentSort={isSort.value}
+                                direction={isSort.direction}
+                                onClick={() => setSort('price')}
+                                align='center'
+                              />
+                            </tr>
+                          </thead>
+                          <tbody className='bg-white'>
+                            {sortedCertificates.map((cert) => (
+                              <CertificateTableRow
+                                key={cert.id}
+                                certificate={cert}
+                                isNavigating={navigatingId === cert.id}
+                                onRowClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-VIEW',
+                                    cert.link,
+                                    cert.applicationLink,
+                                  );
+                                }}
+                                onApplyClick={() => {
+                                  setNavigatingId(cert.id);
+                                  handleCertCardClick(
+                                    cert,
+                                    cert.abbreviation,
+                                    'CERTIFICATE-APPLY',
+                                    cert.link,
+                                    cert.applicationLink,
+                                  );
+                                }}
+                              />
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Course Categories */}
+              {groupedByCategory.map(({ category, items }) => {
+                const catLabel =
+                  category === 'COLLECTION' || category === 'COLLECTIONS'
+                    ? 'Collections'
+                    : category === 'ELECTIVE'
+                      ? 'CPS Electives'
+                      : setCategoryText(category) || category;
+                const isExpanded = isCategoryExpanded(category);
+
+                return (
+                  <div key={category} className='mb-6'>
+                    <button
+                      type='button'
+                      onClick={() => toggleCategory(category)}
+                      className={`w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg ${setColorByCategoryString(
+                        category,
+                      )} bg-opacity-80 hover:bg-opacity-100 transition-opacity`}
+                    >
+                      <div className='flex items-center gap-2'>
+                        {setCategoryIcon(category)}
+                        <span className='font-bold text-white text-base sm:text-lg'>
+                          {catLabel}
+                        </span>
+                        <span className='text-white/90 text-sm'>
+                          ({items.length})
+                        </span>
+                      </div>
+                      {isExpanded ? (
+                        <MdExpandLess size={24} color='white' />
+                      ) : (
+                        <MdExpandMore size={24} color='white' />
+                      )}
+                    </button>
+                    {isExpanded &&
+                      (isMobile ? (
+                        <div className='border border-slate-200 border-t-0'>
+                          {items.map((course) => (
+                            <CourseMobileCard
+                              key={course.id}
+                              course={course}
+                              isNavigating={navigatingId === course.id}
+                              onRowClick={() => {
+                                setNavigatingId(course.id);
+                                cardClickHandler(
+                                  course.id,
+                                  course.slug,
+                                  course.altLink,
+                                  course.type,
+                                );
+                              }}
+                              onPurchase={() => orderHandler(course)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className='w-full overflow-x-auto'>
                           <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
                             <colgroup>
                               <col style={{ width: '8%' }} />
@@ -601,189 +788,35 @@ const Page = ({ firstCardImage }) => {
                                 <SortableTableHeader
                                   label='Price'
                                   sortKey='price'
+                                  align='center'
                                   currentSort={isSort.value}
                                   direction={isSort.direction}
                                   onClick={() => setSort('price')}
-                                  align='center'
                                 />
                               </tr>
                             </thead>
                             <tbody className='bg-white'>
-                              {sortedCertificates.map((cert) => (
-                                <CertificateTableRow
-                                  key={cert.id}
-                                  certificate={cert}
-                                  isNavigating={navigatingId === cert.id}
+                              {items.map((course) => (
+                                <CourseTableRow
+                                  key={course.id}
+                                  course={course}
+                                  isNavigating={navigatingId === course.id}
                                   onRowClick={() => {
-                                    setNavigatingId(cert.id);
-                                    handleCertCardClick(
-                                      cert,
-                                      cert.abbreviation,
-                                      'CERTIFICATE-VIEW',
-                                      cert.link,
-                                      cert.applicationLink,
+                                    setNavigatingId(course.id);
+                                    cardClickHandler(
+                                      course.id,
+                                      course.slug,
+                                      course.altLink,
+                                      course.type,
                                     );
                                   }}
-                                  onApplyClick={() => {
-                                    setNavigatingId(cert.id);
-                                    handleCertCardClick(
-                                      cert,
-                                      cert.abbreviation,
-                                      'CERTIFICATE-APPLY',
-                                      cert.link,
-                                      cert.applicationLink,
-                                    );
-                                  }}
+                                  onPurchase={() => orderHandler(course)}
                                 />
                               ))}
                             </tbody>
                           </table>
-                    </div>
-                    )
-                  )}
-                </div>
-              )}
-
-              {/* Course Categories */}
-              {groupedByCategory.map(({ category, items }) => {
-                const catLabel =
-                  category === 'COLLECTION' || category === 'COLLECTIONS'
-                    ? 'Collections'
-                    : category === 'ELECTIVE'
-                      ? 'CPS Electives'
-                      : setCategoryText(category) || category;
-                const isExpanded = isCategoryExpanded(category);
-
-                return (
-                  <div key={category} className='mb-6'>
-                    <button
-                      type='button'
-                      onClick={() => toggleCategory(category)}
-                      className={`w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-t-lg ${setColorByCategoryString(
-                        category,
-                      )} bg-opacity-80 hover:bg-opacity-100 transition-opacity`}
-                    >
-                      <div className='flex items-center gap-2'>
-                        {setCategoryIcon(category)}
-                        <span className='font-bold text-white text-base sm:text-lg'>
-                          {catLabel}
-                        </span>
-                        <span className='text-white/90 text-sm'>
-                          ({items.length})
-                        </span>
-                      </div>
-                      {isExpanded ? (
-                        <MdExpandLess size={24} color='white' />
-                      ) : (
-                        <MdExpandMore size={24} color='white' />
-                      )}
-                    </button>
-                    {isExpanded && (
-                      isMobile ? (
-                        <div className='border border-slate-200 border-t-0'>
-                          {items.map((course) => (
-                            <CourseMobileCard
-                              key={course.id}
-                              course={course}
-                              isNavigating={navigatingId === course.id}
-                              onRowClick={() => {
-                                setNavigatingId(course.id);
-                                cardClickHandler(course.id, course.slug, course.altLink, course.type);
-                              }}
-                              onPurchase={() => orderHandler(course)}
-                            />
-                          ))}
                         </div>
-                      ) : (
-                      <div className='w-full overflow-x-auto'>
-                            <table className='w-full table-fixed border-collapse border border-slate-200 border-t-0'>
-                              <colgroup>
-                                <col style={{ width: '8%' }} />
-                                <col style={{ width: '24%' }} />
-                                <col style={{ width: '44%' }} />
-                                <col style={{ width: '6%' }} />
-                                <col style={{ width: '6%' }} />
-                                <col style={{ width: '4%' }} />
-                                <col style={{ width: '8%' }} />
-                              </colgroup>
-                              <thead>
-                                <tr className='bg-slate-100'>
-                                  <SortableTableHeader
-                                    label='ID'
-                                    className='sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]'
-                                    sortKey='course id'
-                                    currentSort={isSort.value}
-                                    direction={isSort.direction}
-                                    onClick={() => setSort('course id')}
-                                  />
-                                  <SortableTableHeader
-                                    label='Title'
-                                    sortKey='title'
-                                    currentSort={isSort.value}
-                                    direction={isSort.direction}
-                                    onClick={() => setSort('title')}
-                                  />
-                                  <th className='collapse sm:visible px-2 sm:px-3 py-2 text-left font-semibold text-xs sm:text-sm'>
-                                    Subheadline
-                                  </th>
-                                  <SortableTableHeader
-                                    label='Hours'
-                                    sortKey='hours'
-                                    currentSort={isSort.value}
-                                    direction={isSort.direction}
-                                    onClick={() => setSort('hours')}
-                                    align='center'
-                                  />
-                                  <SortableTableHeader
-                                    label='Lessons'
-                                    sortKey='lessons'
-                                    currentSort={isSort.value}
-                                    direction={isSort.direction}
-                                    onClick={() => setSort('lessons')}
-                                    align='center'
-                                  />
-                                  <th
-                                    className='px-1 py-2 text-center font-semibold text-xs sm:text-sm'
-                                    aria-label='Preview'
-                                  >
-                                    <MdVideocam
-                                      size={18}
-                                      className='text-slate-600 inline-block'
-                                    />
-                                  </th>
-                                  <SortableTableHeader
-                                    label='Price'
-                                    sortKey='price'
-                                    align='center'
-                                    currentSort={isSort.value}
-                                    direction={isSort.direction}
-                                    onClick={() => setSort('price')}
-                                  />
-                                </tr>
-                              </thead>
-                              <tbody className='bg-white'>
-                                {items.map((course) => (
-                                  <CourseTableRow
-                                    key={course.id}
-                                    course={course}
-                                    isNavigating={navigatingId === course.id}
-                                    onRowClick={() => {
-                                      setNavigatingId(course.id);
-                                      cardClickHandler(
-                                        course.id,
-                                        course.slug,
-                                        course.altLink,
-                                        course.type,
-                                      );
-                                    }}
-                                    onPurchase={() => orderHandler(course)}
-                                  />
-                                ))}
-                              </tbody>
-                            </table>
-                      </div>
-                      )
-                    )}
+                      ))}
                   </div>
                 );
               })}
