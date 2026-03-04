@@ -318,25 +318,33 @@ const Page = ({ firstCardImage }) => {
       device: deviceType,
       page: '/all_courses',
     });
+
+    const numericValue =
+      courseData.price === 'FREE' ? 0 : Number(courseData.price || 0);
+
+    // Fire tracking BEFORE navigation so GTM sees it
+    trackEvent('thinkific_purchase', {
+      user_id: awsUser?.id,
+      value: numericValue, // <- map this to Meta 'value' in GTM
+      currency: 'USD', // <- map this to Meta 'currency'
+      ecommerce: {
+        transaction_id: orderId.id,
+        value: numericValue,
+        currency: 'USD',
+        items: [
+          {
+            item_id: courseData.id,
+            item_name: courseData.title,
+            price: numericValue,
+            quantity: 1,
+          },
+        ],
+      },
+    });
+
     if (awsUser?.name?.includes(' ')) {
       navigateToThinkific(`${courseData.link}`, `${courseData.link}`);
     } else {
-      trackEvent('thinkific_purchase', {
-        user_id: awsUser?.id,
-        ecommerce: {
-          transaction_id: orderId.id,
-          value: courseData.price,
-          currency: 'USD',
-          items: [
-            {
-              item_id: courseData.id,
-              item_name: courseData.title,
-              price: courseData.price,
-              quantity: 1,
-            },
-          ],
-        },
-      });
       router.push(`/order/${orderId.id}`);
     }
   };
