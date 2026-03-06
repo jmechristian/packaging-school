@@ -10,7 +10,7 @@ const CourseBottom = dynamic(
   {
     ssr: false,
     loading: () => <div className='w-full h-64 bg-gray-100 animate-pulse' />,
-  }
+  },
 );
 
 // Inline queries to avoid pulling the entire auto-generated queries.js / mutations.js
@@ -66,7 +66,9 @@ const lMSCoursesBySlug = /* GraphQL */ `
 `;
 
 const createCourseOutlineRequest = /* GraphQL */ `
-  mutation CreateCourseOutlineRequest($input: CreateCourseOutlineRequestInput!) {
+  mutation CreateCourseOutlineRequest(
+    $input: CreateCourseOutlineRequestInput!
+  ) {
     createCourseOutlineRequest(input: $input) {
       id
     }
@@ -688,6 +690,6 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { course: { ...course, instructors, courseOutline } },
-    revalidate: 60 * 60 * 4,
+    revalidate: 0,
   };
 }
