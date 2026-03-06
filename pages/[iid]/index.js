@@ -27,9 +27,10 @@ import '@jmechristian/ps-component-library/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import Meta from '../../components/shared/Meta';
 import VideoPlayer from '../../components/VideoPlayer';
+import { resolveIndexPayload } from '../../utils/indexPayload';
 
-const Page = ({ indexPage }) => {
-  const index = indexPage && JSON.parse(indexPage.content);
+const Page = ({ indexPage, indexPayload }) => {
+  const index = indexPayload;
   const router = useRouter();
   const { location } = useSelector((state) => state.auth);
 
@@ -339,7 +340,15 @@ export async function getStaticProps({ params }) {
     };
   }
 
-  return { props: { indexPage }, revalidate: 10 };
+  const indexPayload = await resolveIndexPayload(indexPage);
+
+  if (!indexPayload) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return { props: { indexPage, indexPayload }, revalidate: 10 };
 }
 
 export default Page;

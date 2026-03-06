@@ -574,6 +574,10 @@ export const onCreateLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -647,6 +651,10 @@ export const onUpdateLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -720,6 +728,10 @@ export const onDeleteLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -4476,6 +4488,10 @@ export const onCreateLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4558,6 +4574,10 @@ export const onUpdateLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4637,6 +4657,10 @@ export const onDeleteLMSCourse = /* GraphQL */ `
         __typename
       }
       libraries {
+        nextToken
+        __typename
+      }
+      glossaryTerms {
         nextToken
         __typename
       }
@@ -6467,6 +6491,9 @@ export const onCreateIndexPage = /* GraphQL */ `
     onCreateIndexPage(filter: $filter) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6485,6 +6512,9 @@ export const onUpdateIndexPage = /* GraphQL */ `
     onUpdateIndexPage(filter: $filter) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6503,6 +6533,9 @@ export const onDeleteIndexPage = /* GraphQL */ `
     onDeleteIndexPage(filter: $filter) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6567,7 +6600,17 @@ export const onCreateGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -6585,7 +6628,17 @@ export const onUpdateGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -6603,7 +6656,17 @@ export const onDeleteGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -9916,6 +9979,201 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLessonGlossaryTerms = /* GraphQL */ `
+  subscription OnCreateLessonGlossaryTerms(
+    $filter: ModelSubscriptionLessonGlossaryTermsFilterInput
+  ) {
+    onCreateLessonGlossaryTerms(filter: $filter) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateLessonGlossaryTerms = /* GraphQL */ `
+  subscription OnUpdateLessonGlossaryTerms(
+    $filter: ModelSubscriptionLessonGlossaryTermsFilterInput
+  ) {
+    onUpdateLessonGlossaryTerms(filter: $filter) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteLessonGlossaryTerms = /* GraphQL */ `
+  subscription OnDeleteLessonGlossaryTerms(
+    $filter: ModelSubscriptionLessonGlossaryTermsFilterInput
+  ) {
+    onDeleteLessonGlossaryTerms(filter: $filter) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateAuthorTemplates = /* GraphQL */ `
   subscription OnCreateAuthorTemplates(
     $filter: ModelSubscriptionAuthorTemplatesFilterInput
@@ -12048,6 +12306,198 @@ export const onDeleteLibraryCourses = /* GraphQL */ `
         availableCodes
         usedCodes
         promotionId
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateCourseGlossaryTerms = /* GraphQL */ `
+  subscription OnCreateCourseGlossaryTerms(
+    $filter: ModelSubscriptionCourseGlossaryTermsFilterInput
+  ) {
+    onCreateCourseGlossaryTerms(filter: $filter) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCourseGlossaryTerms = /* GraphQL */ `
+  subscription OnUpdateCourseGlossaryTerms(
+    $filter: ModelSubscriptionCourseGlossaryTermsFilterInput
+  ) {
+    onUpdateCourseGlossaryTerms(filter: $filter) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCourseGlossaryTerms = /* GraphQL */ `
+  subscription OnDeleteCourseGlossaryTerms(
+    $filter: ModelSubscriptionCourseGlossaryTermsFilterInput
+  ) {
+    onDeleteCourseGlossaryTerms(filter: $filter) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
         createdAt
         updatedAt
         __typename

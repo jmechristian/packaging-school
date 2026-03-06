@@ -171,6 +171,7 @@ type Lesson @model @auth(rules: [{ allow: public }]) {
   seoUrl: String
   seoRobots: String
   seoFollow: String
+  glossaryTerms: [GlossaryTerm] @manyToMany(relationName: "LessonGlossaryTerms")
 }
 
 type SeoDocument @model @auth(rules: [{ allow: public }]) {
@@ -667,6 +668,7 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   reviews: [CourseReview] @hasMany
   partner: [Partner] @manyToMany(relationName: "PartnerCourses")
   libraries: [CustomerLibary] @manyToMany(relationName: "LibraryCourses")
+  glossaryTerms: [GlossaryTerm] @manyToMany(relationName: "CourseGlossaryTerms")
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -987,6 +989,9 @@ type IndexRow @model @auth(rules: [{ allow: public }]) {
 type IndexPage @model @auth(rules: [{ allow: public }]) {
   id: ID!
   content: String
+  contentStorage: String
+  contentKey: String
+  contentBytes: Int
   seoImage: String
   slug: String! @index(name: "indexPageBySlug")
   discount: Int
@@ -1011,7 +1016,11 @@ type GlossaryTerm @model @auth(rules: [{ allow: public }]) {
   definition: String!
   order: Int
   status: String @default(value: "DRAFT")
+  difficulty: String @default(value: "MEDIUM")
+  courses: [LMSCourse] @manyToMany(relationName: "CourseGlossaryTerms")
+  lessons: [Lesson] @manyToMany(relationName: "LessonGlossaryTerms")
   rand: Int @index(name: "glossaryTermByRand", sortKeyFields: ["term"])
+  gameDefinition: String
 }
 
 ######### EVENT TEMPLATES #########

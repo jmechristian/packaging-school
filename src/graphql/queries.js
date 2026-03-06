@@ -421,6 +421,10 @@ export const getLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -2542,6 +2546,10 @@ export const getLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -3834,6 +3842,9 @@ export const getIndexPage = /* GraphQL */ `
     getIndexPage(id: $id) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -3855,6 +3866,9 @@ export const listIndexPages = /* GraphQL */ `
       items {
         id
         content
+        contentStorage
+        contentKey
+        contentBytes
         seoImage
         slug
         discount
@@ -3914,7 +3928,17 @@ export const getGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -3935,7 +3959,9 @@ export const listGlossaryTerms = /* GraphQL */ `
         definition
         order
         status
+        difficulty
         rand
+        gameDefinition
         createdAt
         updatedAt
         __typename
@@ -5841,6 +5867,93 @@ export const listUserCompletedLessons = /* GraphQL */ `
     }
   }
 `;
+export const getLessonGlossaryTerms = /* GraphQL */ `
+  query GetLessonGlossaryTerms($id: ID!) {
+    getLessonGlossaryTerms(id: $id) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listLessonGlossaryTerms = /* GraphQL */ `
+  query ListLessonGlossaryTerms(
+    $filter: ModelLessonGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLessonGlossaryTerms(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        glossaryTermId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getAuthorTemplates = /* GraphQL */ `
   query GetAuthorTemplates($id: ID!) {
     getAuthorTemplates(id: $id) {
@@ -6764,6 +6877,92 @@ export const listLibraryCourses = /* GraphQL */ `
         id
         lMSCourseId
         customerLibaryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getCourseGlossaryTerms = /* GraphQL */ `
+  query GetCourseGlossaryTerms($id: ID!) {
+    getCourseGlossaryTerms(id: $id) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listCourseGlossaryTerms = /* GraphQL */ `
+  query ListCourseGlossaryTerms(
+    $filter: ModelCourseGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCourseGlossaryTerms(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        glossaryTermId
         createdAt
         updatedAt
         __typename
@@ -8199,6 +8398,9 @@ export const indexPagesBySlug = /* GraphQL */ `
       items {
         id
         content
+        contentStorage
+        contentKey
+        contentBytes
         seoImage
         slug
         discount
@@ -8235,7 +8437,9 @@ export const glossaryTermsByTerm = /* GraphQL */ `
         definition
         order
         status
+        difficulty
         rand
+        gameDefinition
         createdAt
         updatedAt
         __typename
@@ -8269,7 +8473,9 @@ export const glossaryTermsByLetterAndTerm = /* GraphQL */ `
         definition
         order
         status
+        difficulty
         rand
+        gameDefinition
         createdAt
         updatedAt
         __typename
@@ -8303,7 +8509,9 @@ export const glossaryTermsByRandAndTerm = /* GraphQL */ `
         definition
         order
         status
+        difficulty
         rand
+        gameDefinition
         createdAt
         updatedAt
         __typename
@@ -9092,6 +9300,62 @@ export const userCompletedLessonsByUserId = /* GraphQL */ `
     }
   }
 `;
+export const lessonGlossaryTermsByLessonId = /* GraphQL */ `
+  query LessonGlossaryTermsByLessonId(
+    $lessonId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLessonGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    lessonGlossaryTermsByLessonId(
+      lessonId: $lessonId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        glossaryTermId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const lessonGlossaryTermsByGlossaryTermId = /* GraphQL */ `
+  query LessonGlossaryTermsByGlossaryTermId(
+    $glossaryTermId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLessonGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    lessonGlossaryTermsByGlossaryTermId(
+      glossaryTermId: $glossaryTermId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lessonId
+        glossaryTermId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const authorTemplatesByAuthorId = /* GraphQL */ `
   query AuthorTemplatesByAuthorId(
     $authorId: ID!
@@ -9699,6 +9963,62 @@ export const libraryCoursesByCustomerLibaryId = /* GraphQL */ `
         id
         lMSCourseId
         customerLibaryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const courseGlossaryTermsByLMSCourseId = /* GraphQL */ `
+  query CourseGlossaryTermsByLMSCourseId(
+    $lMSCourseId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCourseGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    courseGlossaryTermsByLMSCourseId(
+      lMSCourseId: $lMSCourseId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        glossaryTermId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const courseGlossaryTermsByGlossaryTermId = /* GraphQL */ `
+  query CourseGlossaryTermsByGlossaryTermId(
+    $glossaryTermId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCourseGlossaryTermsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    courseGlossaryTermsByGlossaryTermId(
+      glossaryTermId: $glossaryTermId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        lMSCourseId
+        glossaryTermId
         createdAt
         updatedAt
         __typename

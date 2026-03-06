@@ -20,6 +20,7 @@ import {
   registerIndexClick,
   getDeviceType,
 } from '../../helpers/api';
+import { resolveIndexPayload } from '../../utils/indexPayload';
 import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 
@@ -105,28 +106,39 @@ const Page = () => {
 
     const getIndexes = async () => {
       const indexes = await fetchAllIndexes();
-      const publishedIndexes = indexes
-        .filter((index) => index.status === 'PUBLISHED')
-        .map((index) => ({
-          id: index.id,
-          title: JSON.parse(index.content).title,
-          description: JSON.parse(index.content).description,
-          hero: index.seoImage,
-          link: `/${index.slug}`,
-          video: index.video || '',
-          authors: [
-            {
-              name: 'Mitch',
-              picture:
-                'https://packschool.s3.amazonaws.com/mitch-headshot-sm.png',
-            },
-          ],
-          createdAt: index.updatedAt ? index.updatedAt : index.createdAt,
-        }));
+      const publishedIndexes = indexes.filter(
+        (index) => index.status === 'PUBLISHED',
+      );
+      const hydratedIndexes = await Promise.all(
+        publishedIndexes.map(async (index) => {
+          const payload = await resolveIndexPayload(index);
+
+          if (!payload) return null;
+
+          return {
+            id: index.id,
+            title: payload.title || '',
+            description: payload.description || '',
+            hero: index.seoImage,
+            link: `/${index.slug}`,
+            video: payload.video || '',
+            authors: [
+              {
+                name: 'Mitch',
+                picture:
+                  'https://packschool.s3.amazonaws.com/mitch-headshot-sm.png',
+              },
+            ],
+            createdAt: index.updatedAt || index.createdAt,
+          };
+        }),
+      );
       setIsIndexes(
-        publishedIndexes.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-        ),
+        hydratedIndexes
+          .filter(Boolean)
+          .sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+          ),
       );
     };
 

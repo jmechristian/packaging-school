@@ -616,6 +616,10 @@ export const createLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -692,6 +696,10 @@ export const updateLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -768,6 +776,10 @@ export const deleteLesson = /* GraphQL */ `
       seoUrl
       seoRobots
       seoFollow
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       lessonAnalysisId
@@ -4672,6 +4684,10 @@ export const createLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4755,6 +4771,10 @@ export const updateLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      glossaryTerms {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4835,6 +4855,10 @@ export const deleteLMSCourse = /* GraphQL */ `
         __typename
       }
       libraries {
+        nextToken
+        __typename
+      }
+      glossaryTerms {
         nextToken
         __typename
       }
@@ -6789,6 +6813,9 @@ export const createIndexPage = /* GraphQL */ `
     createIndexPage(input: $input, condition: $condition) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6808,6 +6835,9 @@ export const updateIndexPage = /* GraphQL */ `
     updateIndexPage(input: $input, condition: $condition) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6827,6 +6857,9 @@ export const deleteIndexPage = /* GraphQL */ `
     deleteIndexPage(input: $input, condition: $condition) {
       id
       content
+      contentStorage
+      contentKey
+      contentBytes
       seoImage
       slug
       discount
@@ -6901,7 +6934,17 @@ export const createGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -6920,7 +6963,17 @@ export const updateGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -6939,7 +6992,17 @@ export const deleteGlossaryTerm = /* GraphQL */ `
       definition
       order
       status
+      difficulty
+      courses {
+        nextToken
+        __typename
+      }
+      lessons {
+        nextToken
+        __typename
+      }
       rand
+      gameDefinition
       createdAt
       updatedAt
       __typename
@@ -10390,6 +10453,204 @@ export const deleteUserCompletedLessons = /* GraphQL */ `
     }
   }
 `;
+export const createLessonGlossaryTerms = /* GraphQL */ `
+  mutation CreateLessonGlossaryTerms(
+    $input: CreateLessonGlossaryTermsInput!
+    $condition: ModelLessonGlossaryTermsConditionInput
+  ) {
+    createLessonGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateLessonGlossaryTerms = /* GraphQL */ `
+  mutation UpdateLessonGlossaryTerms(
+    $input: UpdateLessonGlossaryTermsInput!
+    $condition: ModelLessonGlossaryTermsConditionInput
+  ) {
+    updateLessonGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteLessonGlossaryTerms = /* GraphQL */ `
+  mutation DeleteLessonGlossaryTerms(
+    $input: DeleteLessonGlossaryTermsInput!
+    $condition: ModelLessonGlossaryTermsConditionInput
+  ) {
+    deleteLessonGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lessonId
+      glossaryTermId
+      lesson {
+        id
+        slug
+        title
+        subhead
+        type
+        media
+        mediaType
+        slides
+        seoImage
+        content
+        objectives
+        actionCTA
+        actionSubhead
+        actionLink
+        actionLinkTitle
+        actionExample
+        author
+        status
+        related
+        featured
+        backdate
+        createdBy
+        lastEditedBy
+        videoLink
+        screengrab
+        seoDescription
+        seoKeywords
+        seoTitle
+        seoUrl
+        seoRobots
+        seoFollow
+        createdAt
+        updatedAt
+        lessonAnalysisId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createAuthorTemplates = /* GraphQL */ `
   mutation CreateAuthorTemplates(
     $input: CreateAuthorTemplatesInput!
@@ -12555,6 +12816,201 @@ export const deleteLibraryCourses = /* GraphQL */ `
         availableCodes
         usedCodes
         promotionId
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createCourseGlossaryTerms = /* GraphQL */ `
+  mutation CreateCourseGlossaryTerms(
+    $input: CreateCourseGlossaryTermsInput!
+    $condition: ModelCourseGlossaryTermsConditionInput
+  ) {
+    createCourseGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCourseGlossaryTerms = /* GraphQL */ `
+  mutation UpdateCourseGlossaryTerms(
+    $input: UpdateCourseGlossaryTermsInput!
+    $condition: ModelCourseGlossaryTermsConditionInput
+  ) {
+    updateCourseGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCourseGlossaryTerms = /* GraphQL */ `
+  mutation DeleteCourseGlossaryTerms(
+    $input: DeleteCourseGlossaryTermsInput!
+    $condition: ModelCourseGlossaryTermsConditionInput
+  ) {
+    deleteCourseGlossaryTerms(input: $input, condition: $condition) {
+      id
+      lMSCourseId
+      glossaryTermId
+      lMSCourse {
+        id
+        thinkificId
+        courseId
+        category
+        categoryArray
+        type
+        price
+        hours
+        lessons
+        videos
+        preview
+        seoImage
+        infoSheet
+        title
+        subheadline
+        what_learned
+        objectives
+        link
+        trial_link
+        percentComplete
+        slug
+        demo
+        partOf
+        altLink
+        shortDescription
+        subscriptionLink
+        subscriptionPrice
+        stripeLink
+        callout
+        createdAt
+        updatedAt
+        customerLibaryClientCoursesId
+        customerLibaryPschoolCoursesId
+        __typename
+      }
+      glossaryTerm {
+        id
+        term
+        letter
+        definition
+        order
+        status
+        difficulty
+        rand
+        gameDefinition
         createdAt
         updatedAt
         __typename
