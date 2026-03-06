@@ -13,18 +13,6 @@ const CourseBottom = dynamic(
   },
 );
 
-// Inline queries to avoid pulling the entire auto-generated queries.js / mutations.js
-// into the client bundle.
-const listLMSCoursesSlugs = /* GraphQL */ `
-  query ListLMSCoursesSlugs {
-    listLMSCourses(limit: 1000) {
-      items {
-        slug
-      }
-    }
-  }
-`;
-
 const lMSCoursesBySlug = /* GraphQL */ `
   query LMSCoursesBySlug($slug: String!) {
     lMSCoursesBySlug(slug: $slug) {
@@ -601,19 +589,13 @@ const Page = ({ course }) => {
 
 export default Page;
 
-export async function getStaticPaths() {
-  const res = await API.graphql({ query: listLMSCoursesSlugs });
-  const paths = res.data.listLMSCourses.items.map((course) => ({
-    params: { uid: course.slug },
-  }));
+export async function getServerSideProps({ params }) {
+  const slug = params?.uid;
 
-  // Important for social scrapers + SSG stability: don't serve a "fallback shell"
-  // that lacks meta tags and can cause runtime errors during prerender.
-  return { paths, fallback: 'blocking' };
-}
+  if (!slug) {
+    return { notFound: true };
+  }
 
-export async function getStaticProps({ params }) {
-  const slug = params.uid;
   const res = await API.graphql({
     query: lMSCoursesBySlug,
     variables: { slug: slug },
@@ -621,7 +603,7 @@ export async function getStaticProps({ params }) {
   const course = res.data.lMSCoursesBySlug.items[0];
 
   if (!course) {
-    return { notFound: true, revalidate: 60 };
+    return { notFound: true };
   }
 
   const instructorsRes = await API.graphql({
@@ -690,6 +672,5 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { course: { ...course, instructors, courseOutline } },
-    revalidate: 0,
   };
 }
