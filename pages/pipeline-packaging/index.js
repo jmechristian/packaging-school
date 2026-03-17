@@ -269,8 +269,9 @@ const CourseCard = ({ course, searchQuery }) => {
         <div className='w-full aspect-[16/9] bg-black'>
           {courseData && courseData.preview ? (
             <VideoPlayer
-              videoEmbedLink={courseData && courseData.preview}
-              light
+              videoEmbedLink={courseData.preview}
+              light={courseData.seoImage || true}
+              playing={false}
             />
           ) : (
             <div

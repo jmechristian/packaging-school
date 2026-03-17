@@ -285,7 +285,11 @@ const Page = ({ course }) => {
             </div>
             {course.preview && (
               <div className='w-full rounded-md overflow-hidden'>
-                <VideoPlayerInView videoEmbedLink={course.preview} rounded />
+                <VideoPlayerInView
+                  videoEmbedLink={course.preview}
+                  rounded
+                  light={course.seoImage}
+                />
               </div>
             )}
             <div className='w-full flex flex-col gap-4'>
