@@ -83,19 +83,23 @@ const LOTMCard = ({ lesson }) => {
   );
 };
 
-const CourseCard = ({ course }) => {
-  const [courseData, setCourseData] = useState(null);
+const CourseCard = ({ course, initialCourseData }) => {
+  const [courseData, setCourseData] = useState(initialCourseData ?? null);
   const { awsUser, location } = useSelector((state) => state.auth);
   const deviceType = getDeviceType();
   const { navigateToThinkific } = useThinkificLink();
   const router = useRouter();
   useEffect(() => {
+    if (initialCourseData) {
+      setCourseData(initialCourseData);
+      return;
+    }
     const fetchCourseData = async () => {
       const data = await getCourseByID(course);
       setCourseData(data);
     };
     fetchCourseData();
-  }, [course]);
+  }, [course, initialCourseData]);
 
   const orderHandler = async () => {
     const orderId = await createNewOrder({
@@ -167,10 +171,12 @@ const CourseCard = ({ course }) => {
               : courseData && courseData.subheadline}
           </div>
           <div
-            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#bf0031] transition-all duration-300'
-            onClick={orderHandler}
+            className={`w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md transition-all duration-300 ${
+              courseData ? 'cursor-pointer hover:bg-[#bf0031]' : 'cursor-not-allowed opacity-70'
+            }`}
+            onClick={courseData ? orderHandler : undefined}
           >
-            Begin Course
+            {courseData ? 'Begin Course' : 'Loading...'}
           </div>
         </div>
       </div>
@@ -229,15 +235,44 @@ const Page = () => {
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const sortedSpcCourses = [...spcCourses].sort((a, b) => {
-    // Sort by courseId; supports either plain numeric ids or strings like "CPS-C13"
-    const aId = a?.courseId ?? '';
-    const bId = b?.courseId ?? '';
-    return String(aId).localeCompare(String(bId), undefined, {
-      numeric: true,
-      sensitivity: 'base',
-    });
-  });
+  const [spcCoursesData, setSpcCoursesData] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const extractNumericSuffix = (courseId) => {
+      const matches = String(courseId ?? '').match(/\d+/g);
+      if (!matches || matches.length === 0) return Number.MAX_SAFE_INTEGER;
+      return Number(matches[matches.length - 1]);
+    };
+
+    const fetchAll = async () => {
+      const results = await Promise.all(
+        spcCourses.map(async (courseId) => {
+          const data = await getCourseByID(courseId);
+          if (!data) return null;
+          return { courseId, data };
+        }),
+      );
+
+      if (cancelled) return;
+
+      const items = results.filter(Boolean);
+      items.sort((a, b) => {
+        const aNum = extractNumericSuffix(a.data?.courseId);
+        const bNum = extractNumericSuffix(b.data?.courseId);
+        return aNum - bNum;
+      });
+
+      setSpcCoursesData(items);
+    };
+
+    fetchAll();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className='w-full flex flex-col pt-10 pb-40'>
@@ -341,8 +376,12 @@ const Page = () => {
           </div>
         </div>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {sortedSpcCourses.map((course) => (
-            <CourseCard key={course} course={course} />
+          {spcCoursesData.map(({ courseId, data }) => (
+            <CourseCard
+              key={courseId}
+              course={courseId}
+              initialCourseData={data}
+            />
           ))}
         </div>
       </div>
