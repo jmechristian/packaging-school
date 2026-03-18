@@ -229,6 +229,15 @@ const Page = () => {
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const sortedSpcCourses = [...spcCourses].sort((a, b) => {
+    // Sort by courseId; supports either plain numeric ids or strings like "CPS-C13"
+    const aId = a?.courseId ?? '';
+    const bId = b?.courseId ?? '';
+    return String(aId).localeCompare(String(bId), undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    });
+  });
 
   return (
     <div className='w-full flex flex-col pt-10 pb-40'>
@@ -332,7 +341,7 @@ const Page = () => {
           </div>
         </div>
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
-          {spcCourses.map((course) => (
+          {sortedSpcCourses.map((course) => (
             <CourseCard key={course} course={course} />
           ))}
         </div>
