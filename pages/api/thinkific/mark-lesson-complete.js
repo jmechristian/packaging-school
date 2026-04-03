@@ -1,11 +1,12 @@
 /**
- * Thinkific support: lesson completion may require user-scoped auth ("secure token
- * generation for each user session"). We sign the same SSO JWT as generateJWT
- * (NEXT_PUBLIC_API_KEY) and try GraphQL with that Bearer token before the
- * public GraphQL API key (NEXT_THINKIFIC_PUBLIC_API_KEY).
+ * We try the SSO user JWT (same signing as generateJWT) first, then the GraphQL
+ * API key. Thinkific typically returns 401 for the SSO JWT on stable/graphql:
+ * that token is for the browser SSO redirect, not Authorization on this API.
+ * Learner-scoped mutations need whatever Thinkific documents (often API key +
+ * user id in variables, OAuth, or a future endpoint)—confirm with support.
  *
- * Order: user JWT → markLessonComplete, then API key → markLessonComplete,
- * then user JWT → viewLesson, then API key → viewLesson (first success wins).
+ * Order: user JWT → markLessonComplete, API key → markLessonComplete,
+ * user JWT → viewLesson, API key → viewLesson (first success wins).
  */
 import { signThinkificSsoUserToken } from '../../../helpers/thinkificUserJwt';
 
@@ -89,8 +90,24 @@ async function postGraphql(bearerToken, query, variables) {
     },
     body: JSON.stringify({ query, variables }),
   });
-  const json = await response.json();
+  const text = await response.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch {
+    json = { _parseError: true, _bodyPreview: String(text).slice(0, 500) };
+  }
   return { response, json };
+}
+
+function attemptRecord(step, authorization, r, mutationKey) {
+  return {
+    step,
+    authorization,
+    httpStatus: r.response.status,
+    summary: summarizePayload(r.json, mutationKey),
+    graphql: r.json,
+  };
 }
 
 function parseIdentity(body) {
@@ -139,16 +156,16 @@ export default async function handler(req, res) {
 
   const attempts = [];
   let skipMarkLessonCompleteApiKey = false;
+  /** True if any user_sso_jwt call got 401 — SSO JWT is not for this GraphQL API. */
+  let userJwtGot401 = false;
 
   try {
     if (userJwt) {
       const r = await postGraphql(userJwt, MUTATION_MARK_LESSON_COMPLETE, { lessonId });
-      attempts.push({
-        step: 'markLessonComplete',
-        authorization: 'user_sso_jwt',
-        httpStatus: r.response.status,
-        summary: summarizePayload(r.json, 'markLessonComplete'),
-      });
+      if (r.response.status === 401) userJwtGot401 = true;
+      attempts.push(
+        attemptRecord('markLessonComplete', 'user_sso_jwt', r, 'markLessonComplete')
+      );
       if (isMarkLessonCompleteNotInSchema(r.json)) {
         skipMarkLessonCompleteApiKey = true;
       } else if (isSuccessfulGraphql(r.response, r.json, 'markLessonComplete')) {
@@ -169,12 +186,9 @@ export default async function handler(req, res) {
 
     if (!skipMarkLessonCompleteApiKey) {
       const r = await postGraphql(apiKey, MUTATION_MARK_LESSON_COMPLETE, { lessonId });
-      attempts.push({
-        step: 'markLessonComplete',
-        authorization: 'api_key',
-        httpStatus: r.response.status,
-        summary: summarizePayload(r.json, 'markLessonComplete'),
-      });
+      attempts.push(
+        attemptRecord('markLessonComplete', 'api_key', r, 'markLessonComplete')
+      );
       if (isMarkLessonCompleteNotInSchema(r.json)) {
         skipMarkLessonCompleteApiKey = true;
       } else if (isSuccessfulGraphql(r.response, r.json, 'markLessonComplete')) {
@@ -197,12 +211,8 @@ export default async function handler(req, res) {
 
     if (userJwt) {
       const r = await postGraphql(userJwt, MUTATION_VIEW_LESSON, { lessonId });
-      attempts.push({
-        step: 'viewLesson',
-        authorization: 'user_sso_jwt',
-        httpStatus: r.response.status,
-        summary: summarizePayload(r.json, 'viewLesson'),
-      });
+      if (r.response.status === 401) userJwtGot401 = true;
+      attempts.push(attemptRecord('viewLesson', 'user_sso_jwt', r, 'viewLesson'));
       if (isSuccessfulGraphql(r.response, r.json, 'viewLesson')) {
         return res.status(200).json({
           httpStatus: 200,
@@ -220,17 +230,15 @@ export default async function handler(req, res) {
     }
 
     const r = await postGraphql(apiKey, MUTATION_VIEW_LESSON, { lessonId });
-    attempts.push({
-      step: 'viewLesson',
-      authorization: 'api_key',
-      httpStatus: r.response.status,
-      summary: summarizePayload(r.json, 'viewLesson'),
-    });
+    attempts.push(attemptRecord('viewLesson', 'api_key', r, 'viewLesson'));
 
     const { hasUserErrors, hasGraphqlErrors } = summarizePayload(r.json, 'viewLesson');
     const ok = isSuccessfulGraphql(r.response, r.json, 'viewLesson');
 
     if (r.response.ok && ok) {
+      const note = userJwtGot401
+        ? 'viewLesson succeeded with GraphQL API key (NEXT_THINKIFIC_PUBLIC_API_KEY). SSO user JWT returned 401: that token is for the browser SSO redirect, not Authorization on api.thinkific.com/stable/graphql. Learner-specific completion may need a different mechanism from Thinkific. markLessonComplete is not in this schema yet.'
+        : 'Fell back to viewLesson with API key.';
       return res.status(200).json({
         httpStatus: 200,
         email,
@@ -239,7 +247,7 @@ export default async function handler(req, res) {
         lessonId,
         usedMutation: 'viewLesson',
         authorization: 'api_key',
-        note: 'Fell back to viewLesson with API key. Provide full identity to test user JWT earlier in the chain.',
+        note,
         attempts,
         graphql: r.json,
       });
