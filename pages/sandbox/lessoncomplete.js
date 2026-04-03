@@ -31,8 +31,17 @@ const LessonComplete = () => {
 
   const handleMarkComplete = useCallback(async () => {
     const trimmedLesson = lessonId.trim();
+    const trimmedEmail = email.trim();
+    const fn = firstName.trim();
+    const ln = lastName.trim();
     if (!trimmedLesson) {
       window.alert('Enter a lesson ID.');
+      return;
+    }
+    if (!trimmedEmail || !fn || !ln) {
+      window.alert(
+        'Fill email, first name, and last name above so the API can sign a Thinkific user JWT and try GraphQL with it before the public API key.'
+      );
       return;
     }
 
@@ -44,9 +53,9 @@ const LessonComplete = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           lessonId: trimmedLesson,
-          email: email.trim() || undefined,
-          first_name: firstName.trim() || undefined,
-          last_name: lastName.trim() || undefined,
+          email: trimmedEmail,
+          first_name: fn,
+          last_name: ln,
         }),
       });
       const json = await res.json().catch(() => ({ parseError: true }));
@@ -205,6 +214,10 @@ const LessonComplete = () => {
               boxSizing: 'border-box',
             }}
           />
+          <p style={{ color: '#555', fontSize: '0.85rem', marginTop: 8, marginBottom: 0 }}>
+            Uses the email and name fields above (required) to sign the same user JWT as
+            SSO before calling GraphQL.
+          </p>
           <div style={{ marginTop: 10 }}>
             <button
               type="button"
