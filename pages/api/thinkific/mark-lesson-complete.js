@@ -1,13 +1,16 @@
 /**
- * Thinkific support provided `markLessonComplete` (not yet in public beta GraphQL).
- * We call it first; if the schema does not expose that field yet, we fall back to
- * `viewLesson`, which exists on stable/graphql today.
+ * Thinkific support: lesson completion may require user-scoped auth ("secure token
+ * generation for each user session"). We sign the same SSO JWT as generateJWT
+ * (NEXT_PUBLIC_API_KEY) and try GraphQL with that Bearer token before the
+ * public GraphQL API key (NEXT_THINKIFIC_PUBLIC_API_KEY).
  *
- * Email is not part of these mutations; we echo it in JSON for the test harness only.
+ * Order: user JWT → markLessonComplete, then API key → markLessonComplete,
+ * then user JWT → viewLesson, then API key → viewLesson (first success wins).
  */
+import { signThinkificSsoUserToken } from '../../../helpers/thinkificUserJwt';
+
 const GRAPHQL_URL = 'https://api.thinkific.com/stable/graphql';
 
-/** @see Thinkific support — public beta may not include this field yet */
 const MUTATION_MARK_LESSON_COMPLETE = `
   mutation MarkLessonComplete($lessonId: ID!) {
     markLessonComplete(input: { clientMutationId: "lessonUpdater", lessonId: $lessonId }) {
@@ -71,11 +74,17 @@ function summarizePayload(json, mutationKey) {
   return { payload, userErrors, graphqlErrors, hasUserErrors, hasGraphqlErrors };
 }
 
-async function postGraphql(apiKey, query, variables) {
+function isSuccessfulGraphql(response, json, mutationKey) {
+  if (!response.ok) return false;
+  const { hasUserErrors, hasGraphqlErrors } = summarizePayload(json, mutationKey);
+  return !hasUserErrors && !hasGraphqlErrors;
+}
+
+async function postGraphql(bearerToken, query, variables) {
   const response = await fetch(GRAPHQL_URL, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `Bearer ${bearerToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query, variables }),
@@ -84,18 +93,34 @@ async function postGraphql(apiKey, query, variables) {
   return { response, json };
 }
 
+function parseIdentity(body) {
+  const email = (body?.email ?? '').trim() || null;
+  const first_name = (
+    body?.first_name ??
+    body?.firstName ??
+    ''
+  )
+    .toString()
+    .trim();
+  const last_name = (body?.last_name ?? body?.lastName ?? '').toString().trim();
+  return { email, first_name, last_name };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { lessonId: rawLessonId, email } = req.body || {};
+  const body = req.body || {};
+  const { lessonId: rawLessonId } = body;
   const lessonId = normalizeLessonId(rawLessonId);
+  const { email, first_name, last_name } = parseIdentity(body);
 
   if (!lessonId) {
     return res.status(400).json({
       message: 'lessonId is required',
-      hint: 'Send JSON: { "lessonId": "<Thinkific lesson ID>", "email": "optional" }',
+      hint:
+        'Send JSON: { "lessonId": "...", "email": "...", "first_name": "...", "last_name": "..." } — identity fields enable per-session SSO JWT for GraphQL.',
     });
   }
 
@@ -107,64 +132,142 @@ export default async function handler(req, res) {
     });
   }
 
-  const emailOut = email?.trim() || null;
+  const userJwt =
+    email && first_name && last_name
+      ? signThinkificSsoUserToken({ email, first_name, last_name })
+      : null;
+
+  const attempts = [];
+  let skipMarkLessonCompleteApiKey = false;
 
   try {
-    let usedMutation = 'markLessonComplete';
-    let attemptNote =
-      'Called markLessonComplete (support); if missing from schema, fell back to viewLesson.';
+    if (userJwt) {
+      const r = await postGraphql(userJwt, MUTATION_MARK_LESSON_COMPLETE, { lessonId });
+      attempts.push({
+        step: 'markLessonComplete',
+        authorization: 'user_sso_jwt',
+        httpStatus: r.response.status,
+        summary: summarizePayload(r.json, 'markLessonComplete'),
+      });
+      if (isMarkLessonCompleteNotInSchema(r.json)) {
+        skipMarkLessonCompleteApiKey = true;
+      } else if (isSuccessfulGraphql(r.response, r.json, 'markLessonComplete')) {
+        return res.status(200).json({
+          httpStatus: 200,
+          email,
+          first_name,
+          last_name,
+          lessonId,
+          usedMutation: 'markLessonComplete',
+          authorization: 'user_sso_jwt',
+          note: 'GraphQL authorized with Thinkific SSO user JWT (same signing as generateJWT).',
+          attempts,
+          graphql: r.json,
+        });
+      }
+    }
 
-    let { response, json } = await postGraphql(apiKey, MUTATION_MARK_LESSON_COMPLETE, {
-      lessonId,
+    if (!skipMarkLessonCompleteApiKey) {
+      const r = await postGraphql(apiKey, MUTATION_MARK_LESSON_COMPLETE, { lessonId });
+      attempts.push({
+        step: 'markLessonComplete',
+        authorization: 'api_key',
+        httpStatus: r.response.status,
+        summary: summarizePayload(r.json, 'markLessonComplete'),
+      });
+      if (isMarkLessonCompleteNotInSchema(r.json)) {
+        skipMarkLessonCompleteApiKey = true;
+      } else if (isSuccessfulGraphql(r.response, r.json, 'markLessonComplete')) {
+        return res.status(200).json({
+          httpStatus: 200,
+          email,
+          first_name,
+          last_name,
+          lessonId,
+          usedMutation: 'markLessonComplete',
+          authorization: 'api_key',
+          note: userJwt
+            ? 'markLessonComplete succeeded with public API key (user JWT attempt did not succeed).'
+            : 'GraphQL authorized with public API key. Add email + first_name + last_name to try user SSO JWT first.',
+          attempts,
+          graphql: r.json,
+        });
+      }
+    }
+
+    if (userJwt) {
+      const r = await postGraphql(userJwt, MUTATION_VIEW_LESSON, { lessonId });
+      attempts.push({
+        step: 'viewLesson',
+        authorization: 'user_sso_jwt',
+        httpStatus: r.response.status,
+        summary: summarizePayload(r.json, 'viewLesson'),
+      });
+      if (isSuccessfulGraphql(r.response, r.json, 'viewLesson')) {
+        return res.status(200).json({
+          httpStatus: 200,
+          email,
+          first_name,
+          last_name,
+          lessonId,
+          usedMutation: 'viewLesson',
+          authorization: 'user_sso_jwt',
+          note: 'markLessonComplete not available or failed; viewLesson OK with user SSO JWT. Stable schema uses viewLesson until support mutation ships.',
+          attempts,
+          graphql: r.json,
+        });
+      }
+    }
+
+    const r = await postGraphql(apiKey, MUTATION_VIEW_LESSON, { lessonId });
+    attempts.push({
+      step: 'viewLesson',
+      authorization: 'api_key',
+      httpStatus: r.response.status,
+      summary: summarizePayload(r.json, 'viewLesson'),
     });
 
-    if (isMarkLessonCompleteNotInSchema(json)) {
-      usedMutation = 'viewLesson';
-      attemptNote =
-        'markLessonComplete is not on this GraphQL schema yet (per Thinkific: not in public beta); used viewLesson fallback.';
-      const second = await postGraphql(apiKey, MUTATION_VIEW_LESSON, { lessonId });
-      response = second.response;
-      json = second.json;
-    }
+    const { hasUserErrors, hasGraphqlErrors } = summarizePayload(r.json, 'viewLesson');
+    const ok = isSuccessfulGraphql(r.response, r.json, 'viewLesson');
 
-    const mutationKey = usedMutation === 'markLessonComplete' ? 'markLessonComplete' : 'viewLesson';
-    const { hasUserErrors, hasGraphqlErrors } = summarizePayload(json, mutationKey);
-
-    if (!response.ok) {
-      return res.status(response.status).json({
-        httpStatus: response.status,
-        email: emailOut,
+    if (r.response.ok && ok) {
+      return res.status(200).json({
+        httpStatus: 200,
+        email,
+        first_name,
+        last_name,
         lessonId,
-        usedMutation,
-        note: attemptNote,
-        graphql: json,
+        usedMutation: 'viewLesson',
+        authorization: 'api_key',
+        note: 'Fell back to viewLesson with API key. Provide full identity to test user JWT earlier in the chain.',
+        attempts,
+        graphql: r.json,
       });
     }
 
-    if (hasGraphqlErrors || hasUserErrors) {
-      return res.status(422).json({
-        httpStatus: 422,
-        email: emailOut,
-        lessonId,
-        usedMutation,
-        note: attemptNote,
-        graphql: json,
-      });
-    }
+    const status =
+      !r.response.ok ? r.response.status : hasGraphqlErrors || hasUserErrors ? 422 : 500;
 
-    return res.status(200).json({
-      httpStatus: 200,
-      email: emailOut,
+    return res.status(status).json({
+      httpStatus: status,
+      email,
+      first_name,
+      last_name,
       lessonId,
-      usedMutation,
-      note: attemptNote,
-      graphql: json,
+      usedMutation: 'viewLesson',
+      authorization: 'api_key',
+      note: 'All attempts failed or returned errors; see attempts and graphql.',
+      attempts,
+      graphql: r.json,
     });
   } catch (error) {
     return res.status(500).json({
       message: error.message || 'Request failed',
-      email: emailOut,
+      email,
+      first_name,
+      last_name,
       lessonId,
+      attempts,
     });
   }
 }

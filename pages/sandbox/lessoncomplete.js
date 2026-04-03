@@ -45,6 +45,8 @@ const LessonComplete = () => {
         body: JSON.stringify({
           lessonId: trimmedLesson,
           email: email.trim() || undefined,
+          first_name: firstName.trim() || undefined,
+          last_name: lastName.trim() || undefined,
         }),
       });
       const json = await res.json().catch(() => ({ parseError: true }));
@@ -60,7 +62,7 @@ const LessonComplete = () => {
     } finally {
       setLoading(false);
     }
-  }, [email, lessonId]);
+  }, [email, firstName, lastName, lessonId]);
 
   return (
     <>
@@ -83,11 +85,12 @@ const LessonComplete = () => {
           <strong>last name</strong> for <code>generateJWT</code>.
         </p>
         <p style={{ color: '#444', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          The API tries <code>markLessonComplete</code> first (as Thinkific support
-          documented; not in public beta yet). If that field is not on the schema,
-          it automatically falls back to <code>viewLesson</code>. Fill{' '}
-          <strong>Email</strong> for your notes in the JSON only—mutations use{' '}
-          <code>lessonId</code>.
+          The API signs the same <strong>SSO user JWT</strong> as{' '}
+          <code>generateJWT</code> when email + first + last are filled, and tries
+          GraphQL with that bearer token <em>before</em> the public API key—this is
+          the &quot;secure token per user session&quot; Thinkific describes. Then it
+          tries <code>markLessonComplete</code> (if present) and{' '}
+          <code>viewLesson</code> fallbacks; see <code>attempts</code> in the JSON.
         </p>
 
         <section style={{ marginBottom: '1.75rem' }}>

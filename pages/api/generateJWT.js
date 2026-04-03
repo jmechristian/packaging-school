@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import { signThinkificSsoUserToken } from '../../helpers/thinkificUserJwt';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
@@ -11,21 +11,11 @@ export default function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  // Your Thinkific API Key
-  const THINKIFIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Use an environment variable
-
-  // Payload for the JWT
-  const payload = {
-    email,
-    first_name,
-    last_name,
-    iat: Math.floor(Date.now() / 1000), // Issued at
-    exp: Math.floor(Date.now() / 1000) + 900, // Expires in 15 minutes (increased from 5 to reduce expiration issues)
-  };
-
   try {
-    // Generate the JWT
-    const token = jwt.sign(payload, THINKIFIC_API_KEY);
+    const token = signThinkificSsoUserToken({ email, first_name, last_name });
+    if (!token) {
+      return res.status(500).json({ error: 'Failed to sign JWT (check NEXT_PUBLIC_API_KEY)' });
+    }
 
     // Construct the redirect URL
     const thinkificUrl = `https://packagingschool.thinkific.com/api/sso/v2/sso/jwt?jwt=${token}${
