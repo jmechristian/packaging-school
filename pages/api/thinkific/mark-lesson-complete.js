@@ -27,6 +27,23 @@ const MUTATION_MARK_LESSON_COMPLETE = `
   }
 `;
 
+const MUTATION_MARK_LESSON_INCOMPLETE = `
+  mutation MarkLessonIncomplete($lessonId: ID!) {
+    markLessonIncomplete(input: { clientMutationId: "lessonResetter", lessonId: $lessonId }) {
+      clientMutationId
+      lesson {
+        id
+        title
+      }
+      userErrors {
+        code
+        message
+        path
+      }
+    }
+  }
+`;
+
 function normalizeLessonId(raw) {
   if (raw === undefined || raw === null) return null;
   const s = String(raw).trim();
@@ -42,10 +59,9 @@ function summarizePayload(json, mutationKey) {
   return { payload, userErrors, graphqlErrors, hasUserErrors, hasGraphqlErrors };
 }
 
-function isSuccessfulGraphql(response, json, mutationKey) {
-  if (!response.ok) return false;
-  const { hasUserErrors, hasGraphqlErrors } = summarizePayload(json, mutationKey);
-  return !hasUserErrors && !hasGraphqlErrors;
+function hasUserErrorCode(json, mutationKey, code) {
+  const userErrors = json?.data?.[mutationKey]?.userErrors;
+  return Array.isArray(userErrors) && userErrors.some((e) => e?.code === code);
 }
 
 async function postGraphql(query, variables, apiKey) {
@@ -75,6 +91,7 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const { lessonId: rawLessonId, email } = body;
   const lessonId = normalizeLessonId(rawLessonId);
+  const forceRecomplete = Boolean(body.forceRecomplete);
 
   if (!lessonId) {
     return res.status(400).json({
@@ -93,10 +110,7 @@ export default async function handler(req, res) {
 
   try {
     const r = await postGraphql(MUTATION_MARK_LESSON_COMPLETE, { lessonId }, apiKey);
-    const { hasUserErrors, hasGraphqlErrors } = summarizePayload(
-      r.json,
-      'markLessonComplete'
-    );
+    let { hasUserErrors, hasGraphqlErrors } = summarizePayload(r.json, 'markLessonComplete');
 
     if (!r.response.ok) {
       return res.status(r.response.status).json({
@@ -106,7 +120,75 @@ export default async function handler(req, res) {
         usedMutation: 'markLessonComplete',
         authorization: 'api_key',
         note: 'Request failed at Thinkific beta/graphql.',
+        forceRecomplete,
         graphql: r.json,
+      });
+    }
+
+    // Optional test helper: if already complete, reset then complete again
+    if (
+      forceRecomplete &&
+      hasUserErrors &&
+      hasUserErrorCode(r.json, 'markLessonComplete', 'ALREADY_COMPLETE')
+    ) {
+      const resetRes = await postGraphql(
+        MUTATION_MARK_LESSON_INCOMPLETE,
+        { lessonId },
+        apiKey
+      );
+      const resetSummary = summarizePayload(resetRes.json, 'markLessonIncomplete');
+
+      if (!resetRes.response.ok || resetSummary.hasGraphqlErrors || resetSummary.hasUserErrors) {
+        return res.status(422).json({
+          httpStatus: 422,
+          email: email?.trim() || null,
+          lessonId,
+          usedMutation: 'markLessonIncomplete',
+          authorization: 'api_key',
+          forceRecomplete,
+          note: 'Re-complete requested, but markLessonIncomplete failed.',
+          graphql: {
+            markLessonCompleteInitial: r.json,
+            markLessonIncomplete: resetRes.json,
+          },
+        });
+      }
+
+      const second = await postGraphql(MUTATION_MARK_LESSON_COMPLETE, { lessonId }, apiKey);
+      const secondSummary = summarizePayload(second.json, 'markLessonComplete');
+      hasUserErrors = secondSummary.hasUserErrors;
+      hasGraphqlErrors = secondSummary.hasGraphqlErrors;
+
+      if (!second.response.ok || hasGraphqlErrors || hasUserErrors) {
+        return res.status(422).json({
+          httpStatus: 422,
+          email: email?.trim() || null,
+          lessonId,
+          usedMutation: 'markLessonComplete',
+          authorization: 'api_key',
+          forceRecomplete,
+          note: 'markLessonIncomplete succeeded, but second markLessonComplete failed.',
+          graphql: {
+            markLessonCompleteInitial: r.json,
+            markLessonIncomplete: resetRes.json,
+            markLessonCompleteSecond: second.json,
+          },
+        });
+      }
+
+      return res.status(200).json({
+        httpStatus: 200,
+        email: email?.trim() || null,
+        lessonId,
+        usedMutation: 'markLessonComplete',
+        authorization: 'api_key',
+        forceRecomplete,
+        note: 'Lesson was already complete; ran markLessonIncomplete then markLessonComplete successfully.',
+        graphql: {
+          markLessonCompleteInitial: r.json,
+          markLessonIncomplete: resetRes.json,
+          markLessonCompleteSecond: second.json,
+        },
       });
     }
 
@@ -117,6 +199,7 @@ export default async function handler(req, res) {
         lessonId,
         usedMutation: 'markLessonComplete',
         authorization: 'api_key',
+        forceRecomplete,
         note: 'GraphQL returned errors/userErrors.',
         graphql: r.json,
       });
@@ -128,6 +211,7 @@ export default async function handler(req, res) {
       lessonId,
       usedMutation: 'markLessonComplete',
       authorization: 'api_key',
+      forceRecomplete,
       note: 'markLessonComplete succeeded with beta/graphql + API key.',
       graphql: r.json,
     });

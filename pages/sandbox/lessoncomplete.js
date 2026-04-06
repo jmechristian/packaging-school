@@ -44,6 +44,7 @@ const LessonComplete = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [lessonId, setLessonId] = useState('');
+  const [forceRecomplete, setForceRecomplete] = useState(false);
   const [results, setResults] = useState(null);
   const [progressSnapshot, setProgressSnapshot] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -95,6 +96,7 @@ const LessonComplete = () => {
         body: JSON.stringify({
           lessonId: trimmedLesson,
           email: trimmedEmail || undefined,
+          forceRecomplete,
         }),
       });
       const json = await res.json().catch(() => ({ parseError: true }));
@@ -143,7 +145,7 @@ const LessonComplete = () => {
     } finally {
       setLoading(false);
     }
-  }, [email, lessonId]);
+  }, [email, forceRecomplete, lessonId]);
 
   return (
     <>
@@ -286,6 +288,25 @@ const LessonComplete = () => {
           <p style={{ color: '#555', fontSize: '0.85rem', marginTop: 8, marginBottom: 0 }}>
             Uses the working route: Thinkific <code>/beta/graphql</code> with API key auth.
           </p>
+          <label
+            htmlFor="tf-recomplete"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 10,
+              fontSize: '0.9rem',
+              color: '#333',
+            }}
+          >
+            <input
+              id="tf-recomplete"
+              type="checkbox"
+              checked={forceRecomplete}
+              onChange={(e) => setForceRecomplete(e.target.checked)}
+            />
+            Force re-complete (if already complete, run markLessonIncomplete first)
+          </label>
           <div style={{ marginTop: 10 }}>
             <button
               type="button"
