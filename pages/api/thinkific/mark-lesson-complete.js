@@ -1,6 +1,6 @@
 /**
  * We try the SSO user JWT (same signing as generateJWT) first, then the GraphQL
- * API key. Thinkific typically returns 401 for the SSO JWT on stable/graphql:
+ * API key. Thinkific typically returns 401 for the SSO JWT on beta/graphql:
  * that token is for the browser SSO redirect, not Authorization on this API.
  * Learner-scoped mutations need whatever Thinkific documents (often API key +
  * user id in variables, OAuth, or a future endpoint)—confirm with support.
@@ -10,7 +10,7 @@
  */
 import { signThinkificSsoUserToken } from '../../../helpers/thinkificUserJwt';
 
-const GRAPHQL_URL = 'https://api.thinkific.com/stable/graphql';
+const GRAPHQL_URL = 'https://api.thinkific.com/beta/graphql';
 
 const MUTATION_MARK_LESSON_COMPLETE = `
   mutation MarkLessonComplete($lessonId: ID!) {
@@ -222,7 +222,7 @@ export default async function handler(req, res) {
           lessonId,
           usedMutation: 'viewLesson',
           authorization: 'user_sso_jwt',
-          note: 'markLessonComplete not available or failed; viewLesson OK with user SSO JWT. Stable schema uses viewLesson until support mutation ships.',
+          note: 'markLessonComplete not available or failed; viewLesson OK with user SSO JWT.',
           attempts,
           graphql: r.json,
         });
@@ -237,7 +237,7 @@ export default async function handler(req, res) {
 
     if (r.response.ok && ok) {
       const note = userJwtGot401
-        ? 'viewLesson succeeded with GraphQL API key (NEXT_THINKIFIC_PUBLIC_API_KEY). SSO user JWT returned 401: that token is for the browser SSO redirect, not Authorization on api.thinkific.com/stable/graphql. Learner-specific completion may need a different mechanism from Thinkific. markLessonComplete is not in this schema yet.'
+        ? 'viewLesson succeeded with GraphQL API key (NEXT_THINKIFIC_PUBLIC_API_KEY). SSO user JWT returned 401: that token is for the browser SSO redirect, not Authorization on api.thinkific.com/beta/graphql.'
         : 'Fell back to viewLesson with API key.';
       return res.status(200).json({
         httpStatus: 200,

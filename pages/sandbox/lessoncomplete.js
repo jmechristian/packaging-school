@@ -98,8 +98,9 @@ const LessonComplete = () => {
           <code>generateJWT</code> when email + first + last are filled, and tries
           GraphQL with that bearer token <em>before</em> the public API key—this is
           the &quot;secure token per user session&quot; Thinkific describes. Then it
-          tries <code>markLessonComplete</code> (if present) and{' '}
-          <code>viewLesson</code> fallbacks; see <code>attempts</code> in the JSON.
+          calls Thinkific&apos;s <code>/beta/graphql</code> endpoint and tries{' '}
+          <code>markLessonComplete</code> first, with <code>viewLesson</code>{' '}
+          fallback; see <code>attempts</code> in the JSON.
         </p>
 
         <section style={{ marginBottom: '1.75rem' }}>
