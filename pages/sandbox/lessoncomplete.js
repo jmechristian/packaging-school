@@ -39,6 +39,31 @@ const computeProgressDelta = (before, after) => {
   };
 };
 
+const summarizeLessonLockStatus = (payload) => {
+  const user = payload?.user;
+  const lesson = payload?.lesson;
+  const lock = lesson?.lockStatusByUserGid;
+  if (!user || !lesson || !lock) return null;
+  return {
+    user_id: user.id ?? null,
+    user_gid: user.gid ?? null,
+    lesson_id: lesson.id ?? null,
+    lesson_title: lesson.title ?? null,
+    locked: lock.locked ?? null,
+    lockedReason: lock.lockedReason ?? null,
+    releaseDate: lock.releaseDate ?? null,
+  };
+};
+
+const computeLockStatusDelta = (before, after) => {
+  if (!before || !after) return null;
+  return {
+    locked_changed: before.locked !== after.locked,
+    lockedReason_changed: before.lockedReason !== after.lockedReason,
+    releaseDate_changed: before.releaseDate !== after.releaseDate,
+  };
+};
+
 const LessonComplete = () => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -87,8 +112,18 @@ const LessonComplete = () => {
         );
         return enrollmentRes.json().catch(() => ({ parseError: true }));
       };
+      const getLessonLockSnapshot = async () => {
+        if (!trimmedEmail) return null;
+        const statusRes = await fetch(
+          `/api/thinkific/get-lesson-lock-status?email=${encodeURIComponent(
+            trimmedEmail
+          )}&lessonId=${encodeURIComponent(trimmedLesson)}`
+        );
+        return statusRes.json().catch(() => ({ parseError: true }));
+      };
 
       const beforeEnrollments = await getEnrollmentSnapshot();
+      const beforeLessonLockRaw = await getLessonLockSnapshot();
 
       const res = await fetch('/api/thinkific/mark-lesson-complete', {
         method: 'POST',
@@ -105,10 +140,14 @@ const LessonComplete = () => {
         json?.body?.graphql?.data?.markLessonComplete?.course?.id ||
         null;
       const afterEnrollments = await getEnrollmentSnapshot();
+      const afterLessonLockRaw = await getLessonLockSnapshot();
 
       const before = summarizeEnrollmentForCourse(beforeEnrollments, courseId);
       const after = summarizeEnrollmentForCourse(afterEnrollments, courseId);
       const delta = computeProgressDelta(before, after);
+      const beforeLessonLock = summarizeLessonLockStatus(beforeLessonLockRaw);
+      const afterLessonLock = summarizeLessonLockStatus(afterLessonLockRaw);
+      const lessonLockDelta = computeLockStatusDelta(beforeLessonLock, afterLessonLock);
 
       setResults({
         httpStatus: res.status,
@@ -121,14 +160,19 @@ const LessonComplete = () => {
         before,
         after,
         delta,
+        beforeLessonLock,
+        afterLessonLock,
+        lessonLockDelta,
         enrollmentCountBefore: Array.isArray(beforeEnrollments?.items)
           ? beforeEnrollments.items.length
           : null,
         enrollmentCountAfter: Array.isArray(afterEnrollments?.items)
           ? afterEnrollments.items.length
           : null,
+        lessonLockRawBefore: beforeLessonLockRaw,
+        lessonLockRawAfter: afterLessonLockRaw,
         note: trimmedEmail
-          ? 'Snapshot captures immediate before/after from get-enrollments. Thinkific UI progress may update with delay.'
+          ? 'Snapshot captures immediate before/after from get-enrollments and lesson lockStatusByUserGid. Thinkific UI progress may update with delay.'
           : 'No email provided; enrollment snapshot skipped.',
       });
     } catch (e) {
