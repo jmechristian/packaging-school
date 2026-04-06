@@ -2,12 +2,50 @@ import React, { useCallback, useState } from 'react';
 import Head from 'next/head';
 import { runThinkificSSO } from '../../helpers/sso';
 
+const normalizeCourseId = (value) => {
+  if (value === undefined || value === null) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+};
+
+const summarizeEnrollmentForCourse = (enrollments, courseIdRaw) => {
+  const courseId = normalizeCourseId(courseIdRaw);
+  const items = enrollments?.items;
+  if (!courseId || !Array.isArray(items)) return null;
+  const match = items.find((e) => normalizeCourseId(e.course_id) === courseId);
+  if (!match) return null;
+  return {
+    enrollment_id: match.id ?? null,
+    course_id: match.course_id ?? null,
+    course_name: match.course_name ?? null,
+    percentage_completed: match.percentage_completed ?? null,
+    completed: match.completed ?? null,
+    expired: match.expired ?? null,
+    updated_at: match.updated_at ?? null,
+  };
+};
+
+const computeProgressDelta = (before, after) => {
+  if (!before || !after) return null;
+  if (
+    typeof before.percentage_completed !== 'number' ||
+    typeof after.percentage_completed !== 'number'
+  ) {
+    return null;
+  }
+  return {
+    percentage_completed: after.percentage_completed - before.percentage_completed,
+    completed_changed: before.completed !== after.completed,
+  };
+};
+
 const LessonComplete = () => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [lessonId, setLessonId] = useState('');
   const [results, setResults] = useState(null);
+  const [progressSnapshot, setProgressSnapshot] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleThinkificLogin = useCallback(async () => {
@@ -32,46 +70,80 @@ const LessonComplete = () => {
   const handleMarkComplete = useCallback(async () => {
     const trimmedLesson = lessonId.trim();
     const trimmedEmail = email.trim();
-    const fn = firstName.trim();
-    const ln = lastName.trim();
     if (!trimmedLesson) {
       window.alert('Enter a lesson ID.');
-      return;
-    }
-    if (!trimmedEmail || !fn || !ln) {
-      window.alert(
-        'Fill email, first name, and last name above so the API can sign a Thinkific user JWT and try GraphQL with it before the public API key.'
-      );
       return;
     }
 
     setLoading(true);
     setResults(null);
+    setProgressSnapshot(null);
     try {
+      const getEnrollmentSnapshot = async () => {
+        if (!trimmedEmail) return null;
+        const enrollmentRes = await fetch(
+          `/api/thinkific/get-enrollments?email=${encodeURIComponent(trimmedEmail)}`
+        );
+        return enrollmentRes.json().catch(() => ({ parseError: true }));
+      };
+
+      const beforeEnrollments = await getEnrollmentSnapshot();
+
       const res = await fetch('/api/thinkific/mark-lesson-complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           lessonId: trimmedLesson,
-          email: trimmedEmail,
-          first_name: fn,
-          last_name: ln,
+          email: trimmedEmail || undefined,
         }),
       });
       const json = await res.json().catch(() => ({ parseError: true }));
+      const courseId =
+        json?.graphql?.data?.markLessonComplete?.course?.id ||
+        json?.body?.graphql?.data?.markLessonComplete?.course?.id ||
+        null;
+      const afterEnrollments = await getEnrollmentSnapshot();
+
+      const before = summarizeEnrollmentForCourse(beforeEnrollments, courseId);
+      const after = summarizeEnrollmentForCourse(afterEnrollments, courseId);
+      const delta = computeProgressDelta(before, after);
+
       setResults({
         httpStatus: res.status,
         body: json,
+      });
+      setProgressSnapshot({
+        email: trimmedEmail || null,
+        lessonId: trimmedLesson,
+        targetCourseId: courseId || null,
+        before,
+        after,
+        delta,
+        enrollmentCountBefore: Array.isArray(beforeEnrollments?.items)
+          ? beforeEnrollments.items.length
+          : null,
+        enrollmentCountAfter: Array.isArray(afterEnrollments?.items)
+          ? afterEnrollments.items.length
+          : null,
+        note: trimmedEmail
+          ? 'Snapshot captures immediate before/after from get-enrollments. Thinkific UI progress may update with delay.'
+          : 'No email provided; enrollment snapshot skipped.',
       });
     } catch (e) {
       setResults({
         httpStatus: null,
         body: { message: e.message || String(e) },
       });
+      setProgressSnapshot({
+        email: trimmedEmail || null,
+        lessonId: trimmedLesson,
+        note: 'Snapshot failed before completion of comparison.',
+        error: e.message || String(e),
+      });
     } finally {
       setLoading(false);
     }
-  }, [email, firstName, lastName, lessonId]);
+  }, [email, lessonId]);
 
   return (
     <>
@@ -94,13 +166,9 @@ const LessonComplete = () => {
           <strong>last name</strong> for <code>generateJWT</code>.
         </p>
         <p style={{ color: '#444', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          The API signs the same <strong>SSO user JWT</strong> as{' '}
-          <code>generateJWT</code> when email + first + last are filled, and tries
-          GraphQL with that bearer token <em>before</em> the public API key—this is
-          the &quot;secure token per user session&quot; Thinkific describes. Then it
-          calls Thinkific&apos;s <code>/beta/graphql</code> endpoint and tries{' '}
-          <code>markLessonComplete</code> first, with <code>viewLesson</code>{' '}
-          fallback; see <code>attempts</code> in the JSON.
+          The API uses Thinkific&apos;s working path from support: <code>/beta/graphql</code>{' '}
+          + API key bearer auth, then runs <code>markLessonComplete</code>. Email is
+          included in the response payload for traceability only.
         </p>
 
         <section style={{ marginBottom: '1.75rem' }}>
@@ -216,8 +284,7 @@ const LessonComplete = () => {
             }}
           />
           <p style={{ color: '#555', fontSize: '0.85rem', marginTop: 8, marginBottom: 0 }}>
-            Uses the email and name fields above (required) to sign the same user JWT as
-            SSO before calling GraphQL.
+            Uses the working route: Thinkific <code>/beta/graphql</code> with API key auth.
           </p>
           <div style={{ marginTop: 10 }}>
             <button
@@ -233,6 +300,26 @@ const LessonComplete = () => {
               {loading ? 'Calling API…' : 'Mark lesson complete'}
             </button>
           </div>
+        </section>
+
+        <section style={{ marginBottom: '1.75rem' }}>
+          <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>Enrollment Progress Snapshot</h2>
+          <pre
+            style={{
+              margin: 0,
+              padding: '1rem',
+              background: '#111827',
+              color: '#e5e7eb',
+              fontSize: '0.8rem',
+              overflow: 'auto',
+              borderRadius: 6,
+              minHeight: 120,
+            }}
+          >
+            {progressSnapshot
+              ? JSON.stringify(progressSnapshot, null, 2)
+              : 'Run “Mark lesson complete” to capture before/after enrollment snapshot.'}
+          </pre>
         </section>
 
         <section>
