@@ -985,10 +985,7 @@ export const getAllLMSCourses = async () => {
       filter: {
         // Only exclude CUSTOMER and HIDDEN; COLLECTION / COLLECTIONS are included
         not: {
-          or: [
-            { type: { eq: 'CUSTOMER' } },
-            { type: { eq: 'HIDDEN' } },
-          ],
+          or: [{ type: { eq: 'CUSTOMER' } }, { type: { eq: 'HIDDEN' } }],
         },
       },
       limit: 500,
@@ -2689,6 +2686,65 @@ export const getPipelineLibrary = async () => {
   const res = await API.graphql({
     query: getPipelineLibraryQuery,
     variables: { slug: 'pipeline' },
+  });
+  return res.data.customerLibariesBySlug.items[0];
+};
+
+export const getPPCLibrary = async () => {
+  const getPPCLibraryQuery = /* GraphQL */ `
+    query MyQuery {
+      customerLibariesBySlug(slug: "ppc") {
+        items {
+          email
+          displayName
+          description
+          addOns
+          backgroundImage
+          highlightColor
+          id
+          link
+          code
+          logo
+          pdf
+          primaryColor
+          pschoolCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
+          }
+          slide
+          slug
+          status
+          video
+        }
+      }
+    }
+  `;
+  const res = await API.graphql({
+    query: getPPCLibraryQuery,
+    variables: { slug: 'ppc' },
   });
   return res.data.customerLibariesBySlug.items[0];
 };
