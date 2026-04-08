@@ -18,6 +18,7 @@ import {
   createNewOrder,
   getPPCLibrary,
   getDeviceType,
+  cpsCourses,
 } from '../../helpers/api';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
@@ -229,15 +230,6 @@ const Page = ({ lib, learningOfTheMonths }) => {
       answer:
         'Each time you plan to enroll in a new course, come back to this page: packagingschool.com/pipeline-packaging. Be sure to bookmark it or save it as your homepage for easy access. This page will show the current quarter’s courses available for enrollment and allow you to preview upcoming quarters. ',
     },
-  ];
-
-  const psCourses = [
-    '2781c8c6-482e-406f-bbab-01c73c66a5ce',
-    '85fc42f0-1292-4ac2-8720-c33742578045',
-    '2930bbef-bfa9-4b09-883c-461b7eb96067',
-    'ff01c335-370e-42a8-b1cd-0d9c9f65e7c6',
-    '287ec6de-23a7-436b-bfb8-6b2170045494',
-    '73139212-0b15-4d96-9942-1757fa058fdf',
   ];
 
   const spcCourses = [
@@ -475,14 +467,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
         </div>
         <div className='w-full p-12'>
           <div className='col-span-3 grid grid-cols-4 gap-8'>
-            {psCourses.map((course) => (
+            {cpsCourses.map((course) => (
               <CourseCard key={course} course={course} />
             ))}
           </div>
         </div>
       </div>
       {/* SPC */}
-      <div className='w-full max-w-7xl mx-auto flex flex-col bg-[#DDDDDD] rounded-xl overflow-hidden'>
+      {/* <div className='w-full max-w-7xl mx-auto flex flex-col bg-[#DDDDDD] rounded-xl overflow-hidden'>
         <div className='grid grid-cols-5 w-full rounded-t-xl overflow-hidden'>
           <div className='col-span-3 bg-black flex items-center gap-0'>
             <div className='py-4 px-6'>
@@ -506,7 +498,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Learning of the Month */}
       <div className='w-full max-w-7xl mx-auto flex flex-col gap-5 p-4 border-y border-gray-300'>
         <div className='w-full flex items-center justify-between'>
