@@ -201,15 +201,36 @@ const timeline = [
   },
   {
     name: 'B2B Services',
-    description:
-      'Packaging School Library debut with Church & Dwight.',
+    description: 'Packaging School Library debut with Church & Dwight.',
     date: '2025',
   },
   {
     name: 'B2B Services',
-    description:
-      'Packaging School Library debut with Schwarz Partners.',
+    description: 'Packaging School Library debut with Schwarz Partners.',
     date: '2025',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Nine students received ICPF’s $7,000 scholarship for the 12-week CMPM program, representing the University of Northern Iowa, Carlow University, Clemson University, Rutgers University, and Wake Forest University.',
+    date: '2025',
+  },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with Pipeline Packaging.',
+    date: '2026',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Following the success of the inaugural cohort, ICPF and The Packaging School will launch a new, fully funded CMPM cohort in April for college-aged students, attracting over 50 applicants from 12 schools.',
+    date: '2026',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'The Foundation for Graphic Communication Education (FGCE) has partnered with The Packaging School to expand access to education in packaging, printing, and graphic communications. Six students were selected for scholarships to complete certificate programs.',
+    date: '2026',
   },
 ];
 
