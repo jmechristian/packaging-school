@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { runThinkificSSO } from '../../helpers/sso';
 
@@ -70,6 +70,36 @@ const LessonComplete = () => {
   const [lastName, setLastName] = useState('');
   const [lessonId, setLessonId] = useState('');
   const [forceRecomplete, setForceRecomplete] = useState(false);
+  const [useOAuth, setUseOAuth] = useState(false);
+  const [oauthIdentity, setOauthIdentity] = useState('student');
+  const [oauthSubdomain, setOauthSubdomain] = useState('packagingschool');
+  const [oauthStatusByIdentity, setOauthStatusByIdentity] = useState({
+    admin: {
+      connected: false,
+      hasRefreshToken: false,
+      subdomain: null,
+      expiresAt: null,
+      lastError: null,
+    },
+    student: {
+      connected: false,
+      hasRefreshToken: false,
+      subdomain: null,
+      expiresAt: null,
+      lastError: null,
+    },
+  });
+  const [oauthMeByIdentity, setOauthMeByIdentity] = useState({
+    admin: null,
+    student: null,
+  });
+  const [oauthStatus, setOauthStatus] = useState({
+    connected: false,
+    hasRefreshToken: false,
+    subdomain: null,
+    expiresAt: null,
+    lastError: null,
+  });
   const [results, setResults] = useState(null);
   const [progressSnapshot, setProgressSnapshot] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -92,6 +122,105 @@ const LessonComplete = () => {
       returnTo
     );
   }, [email, firstName, lastName]);
+
+  const refreshOAuthStatus = useCallback(async (identity = oauthIdentity) => {
+    try {
+      const res = await fetch(`/api/thinkific/oauth/status?identity=${identity}`);
+      const json = await res.json();
+      setOauthStatusByIdentity((prev) => ({
+        ...prev,
+        [identity]: { ...prev[identity], ...json, lastError: null },
+      }));
+      if (identity === oauthIdentity) {
+        setOauthStatus((prev) => ({ ...prev, ...json, lastError: null }));
+      }
+      if (!json?.connected) {
+        setOauthMeByIdentity((prev) => ({ ...prev, [identity]: null }));
+      }
+    } catch (e) {
+      setOauthStatusByIdentity((prev) => ({
+        ...prev,
+        [identity]: {
+          ...prev[identity],
+          lastError: e.message || String(e),
+        },
+      }));
+      if (identity === oauthIdentity) {
+        setOauthStatus((prev) => ({
+          ...prev,
+          lastError: e.message || String(e),
+        }));
+      }
+    }
+  }, [oauthIdentity]);
+
+  const refreshOAuthMe = useCallback(async (identity = oauthIdentity) => {
+    try {
+      const res = await fetch(`/api/thinkific/oauth/me?identity=${identity}`);
+      const json = await res.json().catch(() => ({ parseError: true }));
+      if (!res.ok) {
+        setOauthMeByIdentity((prev) => ({
+          ...prev,
+          [identity]: {
+          ok: false,
+          httpStatus: res.status,
+          body: json,
+          },
+        }));
+        return;
+      }
+      setOauthMeByIdentity((prev) => ({
+        ...prev,
+        [identity]: {
+        ok: true,
+        httpStatus: res.status,
+        body: json,
+        },
+      }));
+    } catch (e) {
+      setOauthMeByIdentity((prev) => ({
+        ...prev,
+        [identity]: {
+        ok: false,
+        httpStatus: null,
+        body: { message: e.message || String(e) },
+        },
+      }));
+    }
+  }, [oauthIdentity]);
+
+  useEffect(() => {
+    refreshOAuthStatus('admin');
+    refreshOAuthStatus('student');
+  }, [refreshOAuthStatus]);
+
+  useEffect(() => {
+    const selected = oauthStatusByIdentity[oauthIdentity] || {};
+    setOauthStatus((prev) => ({ ...prev, ...selected }));
+  }, [oauthIdentity, oauthStatusByIdentity]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const oauthParam = params.get('oauth');
+    if (oauthParam) {
+      const identity = params.get('identity') || oauthIdentity;
+      refreshOAuthStatus(identity);
+      refreshOAuthMe(identity);
+    }
+  }, [oauthIdentity, refreshOAuthMe, refreshOAuthStatus]);
+
+  const handleStartOAuth = useCallback(() => {
+    const sub = (oauthSubdomain || '').trim().replace(/\.thinkific\.com$/i, '');
+    if (!sub) {
+      window.alert('Enter your Thinkific subdomain first.');
+      return;
+    }
+    const returnTo = window.location.pathname;
+    window.location.href = `/api/thinkific/oauth/start?subdomain=${encodeURIComponent(
+      sub
+    )}&identity=${encodeURIComponent(oauthIdentity)}&returnTo=${encodeURIComponent(returnTo)}`;
+  }, [oauthIdentity, oauthSubdomain]);
 
   const handleMarkComplete = useCallback(async () => {
     const trimmedLesson = lessonId.trim();
@@ -132,6 +261,8 @@ const LessonComplete = () => {
           lessonId: trimmedLesson,
           email: trimmedEmail || undefined,
           forceRecomplete,
+          useOAuth,
+          oauthIdentity,
         }),
       });
       const json = await res.json().catch(() => ({ parseError: true }));
@@ -189,7 +320,7 @@ const LessonComplete = () => {
     } finally {
       setLoading(false);
     }
-  }, [email, forceRecomplete, lessonId]);
+  }, [email, forceRecomplete, lessonId, oauthIdentity, useOAuth]);
 
   return (
     <>
@@ -216,6 +347,79 @@ const LessonComplete = () => {
           + API key bearer auth, then runs <code>markLessonComplete</code>. Email is
           included in the response payload for traceability only.
         </p>
+
+        <section
+          style={{
+            marginBottom: '1.75rem',
+            border: '1px solid #e5e7eb',
+            borderRadius: 8,
+            padding: '0.85rem',
+          }}
+        >
+          <h2 style={{ fontSize: '1rem', margin: 0, marginBottom: 8 }}>Thinkific OAuth</h2>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input
+              type='text'
+              value={oauthSubdomain}
+              onChange={(e) => setOauthSubdomain(e.target.value)}
+              placeholder='packagingschool'
+              style={{ padding: '0.45rem 0.6rem', minWidth: 220, boxSizing: 'border-box' }}
+            />
+            <button
+              type='button'
+              onClick={handleStartOAuth}
+              style={{ padding: '0.45rem 0.75rem', cursor: 'pointer' }}
+            >
+              Connect OAuth
+            </button>
+            <select
+              value={oauthIdentity}
+              onChange={(e) => setOauthIdentity(e.target.value)}
+              style={{ padding: '0.45rem 0.6rem', cursor: 'pointer' }}
+            >
+              <option value='student'>student identity</option>
+              <option value='admin'>admin identity</option>
+            </select>
+            <button
+              type='button'
+              onClick={() => refreshOAuthStatus(oauthIdentity)}
+              style={{ padding: '0.45rem 0.75rem', cursor: 'pointer' }}
+            >
+              Refresh Status
+            </button>
+            <button
+              type='button'
+              onClick={() => refreshOAuthMe(oauthIdentity)}
+              style={{ padding: '0.45rem 0.75rem', cursor: 'pointer' }}
+            >
+              Who am I (OAuth)
+            </button>
+          </div>
+          <div style={{ fontSize: '0.85rem', color: '#374151', marginTop: 8 }}>
+            connected: <strong>{String(oauthStatus.connected)}</strong>{' '}
+            | identity: <strong>{oauthIdentity}</strong>{' '}
+            {oauthStatus.subdomain ? `| subdomain: ${oauthStatus.subdomain}` : ''}{' '}
+            {oauthStatus.expiresAt ? `| expires: ${oauthStatus.expiresAt}` : ''}{' '}
+            {oauthStatus.lastError ? `| error: ${oauthStatus.lastError}` : ''}
+          </div>
+          <pre
+            style={{
+              marginTop: 8,
+              marginBottom: 0,
+              padding: '0.6rem',
+              background: '#111827',
+              color: '#e5e7eb',
+              borderRadius: 6,
+              fontSize: '0.78rem',
+              overflow: 'auto',
+              minHeight: 70,
+            }}
+          >
+            {oauthMeByIdentity[oauthIdentity]
+              ? JSON.stringify(oauthMeByIdentity[oauthIdentity], null, 2)
+              : 'Click “Who am I (OAuth)” to inspect token principal via GraphQL me.'}
+          </pre>
+        </section>
 
         <section style={{ marginBottom: '1.75rem' }}>
           <label
@@ -350,6 +554,25 @@ const LessonComplete = () => {
               onChange={(e) => setForceRecomplete(e.target.checked)}
             />
             Force re-complete (if already complete, run markLessonIncomplete first)
+          </label>
+          <label
+            htmlFor='tf-use-oauth'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 8,
+              fontSize: '0.9rem',
+              color: '#333',
+            }}
+          >
+            <input
+              id='tf-use-oauth'
+              type='checkbox'
+              checked={useOAuth}
+              onChange={(e) => setUseOAuth(e.target.checked)}
+            />
+            Use OAuth access token ({oauthIdentity}) instead of API key
           </label>
           <div style={{ marginTop: 10 }}>
             <button

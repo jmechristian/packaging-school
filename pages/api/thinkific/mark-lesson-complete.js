@@ -44,6 +44,26 @@ const MUTATION_MARK_LESSON_INCOMPLETE = `
   }
 `;
 
+function parseCookies(cookieHeader) {
+  const out = {};
+  (cookieHeader || '')
+    .split(';')
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .forEach((part) => {
+      const idx = part.indexOf('=');
+      if (idx === -1) return;
+      const key = part.slice(0, idx);
+      const value = part.slice(idx + 1);
+      out[key] = decodeURIComponent(value);
+    });
+  return out;
+}
+
+function normalizeIdentity(raw) {
+  return raw === 'student' ? 'student' : 'admin';
+}
+
 function normalizeLessonId(raw) {
   if (raw === undefined || raw === null) return null;
   const s = String(raw).trim();
@@ -92,6 +112,8 @@ export default async function handler(req, res) {
   const { lessonId: rawLessonId, email } = body;
   const lessonId = normalizeLessonId(rawLessonId);
   const forceRecomplete = Boolean(body.forceRecomplete);
+  const useOAuth = Boolean(body.useOAuth);
+  const oauthIdentity = normalizeIdentity(body.oauthIdentity);
 
   if (!lessonId) {
     return res.status(400).json({
@@ -108,8 +130,21 @@ export default async function handler(req, res) {
     });
   }
 
+  const cookies = parseCookies(req.headers.cookie);
+  const oauthToken = cookies[`thinkific_oauth_access_token_${oauthIdentity}`];
+  const authToken = useOAuth ? oauthToken : apiKey;
+  const authorization = useOAuth ? `oauth_access_token:${oauthIdentity}` : 'api_key';
+
+  if (useOAuth && !oauthToken) {
+    return res.status(400).json({
+      message: 'OAuth token not found in cookie',
+      detail:
+        `Connect ${oauthIdentity} OAuth first via /api/thinkific/oauth/start?identity=${oauthIdentity}, then retry with useOAuth enabled.`,
+    });
+  }
+
   try {
-    const r = await postGraphql(MUTATION_MARK_LESSON_COMPLETE, { lessonId }, apiKey);
+    const r = await postGraphql(MUTATION_MARK_LESSON_COMPLETE, { lessonId }, authToken);
     let { hasUserErrors, hasGraphqlErrors } = summarizePayload(r.json, 'markLessonComplete');
 
     if (!r.response.ok) {
@@ -118,7 +153,7 @@ export default async function handler(req, res) {
         email: email?.trim() || null,
         lessonId,
         usedMutation: 'markLessonComplete',
-        authorization: 'api_key',
+        authorization,
         note: 'Request failed at Thinkific beta/graphql.',
         forceRecomplete,
         graphql: r.json,
@@ -134,7 +169,7 @@ export default async function handler(req, res) {
       const resetRes = await postGraphql(
         MUTATION_MARK_LESSON_INCOMPLETE,
         { lessonId },
-        apiKey
+        authToken
       );
       const resetSummary = summarizePayload(resetRes.json, 'markLessonIncomplete');
 
@@ -144,7 +179,7 @@ export default async function handler(req, res) {
           email: email?.trim() || null,
           lessonId,
           usedMutation: 'markLessonIncomplete',
-          authorization: 'api_key',
+          authorization,
           forceRecomplete,
           note: 'Re-complete requested, but markLessonIncomplete failed.',
           graphql: {
@@ -154,7 +189,11 @@ export default async function handler(req, res) {
         });
       }
 
-      const second = await postGraphql(MUTATION_MARK_LESSON_COMPLETE, { lessonId }, apiKey);
+      const second = await postGraphql(
+        MUTATION_MARK_LESSON_COMPLETE,
+        { lessonId },
+        authToken
+      );
       const secondSummary = summarizePayload(second.json, 'markLessonComplete');
       hasUserErrors = secondSummary.hasUserErrors;
       hasGraphqlErrors = secondSummary.hasGraphqlErrors;
@@ -165,7 +204,7 @@ export default async function handler(req, res) {
           email: email?.trim() || null,
           lessonId,
           usedMutation: 'markLessonComplete',
-          authorization: 'api_key',
+          authorization,
           forceRecomplete,
           note: 'markLessonIncomplete succeeded, but second markLessonComplete failed.',
           graphql: {
@@ -181,7 +220,7 @@ export default async function handler(req, res) {
         email: email?.trim() || null,
         lessonId,
         usedMutation: 'markLessonComplete',
-        authorization: 'api_key',
+        authorization,
         forceRecomplete,
         note: 'Lesson was already complete; ran markLessonIncomplete then markLessonComplete successfully.',
         graphql: {
@@ -198,7 +237,7 @@ export default async function handler(req, res) {
         email: email?.trim() || null,
         lessonId,
         usedMutation: 'markLessonComplete',
-        authorization: 'api_key',
+        authorization,
         forceRecomplete,
         note: 'GraphQL returned errors/userErrors.',
         graphql: r.json,
@@ -210,9 +249,11 @@ export default async function handler(req, res) {
       email: email?.trim() || null,
       lessonId,
       usedMutation: 'markLessonComplete',
-      authorization: 'api_key',
+      authorization,
       forceRecomplete,
-      note: 'markLessonComplete succeeded with beta/graphql + API key.',
+      note: useOAuth
+        ? 'markLessonComplete succeeded with beta/graphql + OAuth token.'
+        : 'markLessonComplete succeeded with beta/graphql + API key.',
       graphql: r.json,
     });
   } catch (error) {

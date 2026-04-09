@@ -89,23 +89,10 @@ const WiredCourseCard = ({
 
   return isLesson ? (
     <motion.div
-      className='w-full min-h-[270px] max-h-[455px] max-w-[300px] rounded-lg shadow-xl bg-cover bg-bottom bg-opacity-60 relative bg-black'
+      className='w-full max-w-[300px] rounded-lg shadow-xl bg-black overflow-hidden'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <motion.div className='absolute z-[1] left-0 right-0 bottom-0 top-1/3 bg-gradient-to-t from-neutral-900 via-neutral-500 rounded-b-lg'></motion.div>
-      <motion.div
-        className='absolute z-0 left-0 right-0 top-0 bottom-1/3 bg-black rounded-t-lg bg-cover bg-center bg-no-repeat w-full h-auto'
-        style={{
-          backgroundImage: `url(${isLesson.seoImage})`,
-        }}
-      >
-        <img
-          src={isLesson.seoImage}
-          alt={isLesson.subheadline}
-          className='opacity-0'
-        />
-      </motion.div>
       {callout && (
         <motion.div className='w-full justify-center items-center gap-1.5 h-12 backdrop-blur text-center border-b border-b-neutral-200 rounded-t-lg flex relative z-[2] bg-neutral-800/40'>
           <motion.div>
@@ -114,64 +101,68 @@ const WiredCourseCard = ({
           <motion.div className=' font-bold text-white '>{callout}</motion.div>
         </motion.div>
       )}
-      {isPlaying ? (
-        <motion.div className='aspect-[16/9] w-full h-auto relative z-[2] flex items-center justify-center bg-black transition-opacity ease-in'>
-          <VideoPlayer
-            videoEmbedLink={isLesson.preview}
-            light={false}
-            playing={true}
-          />
-        </motion.div>
-      ) : isMobile ? (
-        <motion.div
-          className='aspect-[16/9] w-full h-auto relative z-[2] flex items-center justify-center '
-          onClick={isLesson.preview ? () => setIsPlaying(true) : () => {}}
-        >
-          {isLesson.preview && (
-            <motion.div className='w-20 h-20 bg-white/40 backdrop-blur-lg hover:bg-clemson transition-colors ease-in rounded-full shadow-xl flex justify-center items-center cursor-pointer'>
-              <PlayCircleIcon className='w-20 h-20' />
-            </motion.div>
-          )}
-        </motion.div>
-      ) : (
-        <motion.div
-          className='aspect-[16/9] w-full h-auto relative z-[2] flex items-center justify-center '
-          onClick={isLesson.preview ? () => setIsPlaying(true) : () => {}}
-        >
-          {isLesson.preview && isHover && (
-            <motion.div className='w-20 h-20 bg-white/40 backdrop-blur-lg hover:bg-clemson transition-colors ease-in rounded-full shadow-xl flex justify-center items-center cursor-pointer'>
-              <PlayCircleIcon className='w-20 h-20' />
-            </motion.div>
-          )}
-        </motion.div>
-      )}
-      <motion.div className='flex flex-col justify-center items-center h-[225px]'>
-        <motion.div className='mt-6 h-full min-h-[180px] bg-white/90 backdrop-blur shadow-lg rounded-b-lg mx-2 rounded-lg mb-4 relative z-[2] flex flex-col flex-1'>
-          <motion.div className='w-full h-10 bg-gradient-to-t from-white/80 absolute bottom-0'></motion.div>
-          <motion.div className='flex flex-col gap-3 h-full pt-3'>
-            <motion.div className='font-semibold text-lg tracking-tight leading-none px-3 text-neutral-900'>
-              {isLesson.title}
-            </motion.div>
+      <motion.div className='relative w-full aspect-[16/9] bg-black'>
+        {isPlaying ? (
+          <motion.div className='absolute inset-0 z-[2] flex items-center justify-center bg-black transition-opacity ease-in'>
+            <VideoPlayer
+              videoEmbedLink={isLesson.preview}
+              light={false}
+              playing={true}
+            />
+          </motion.div>
+        ) : (
+          <>
             <motion.div
-              className='text-sm leading-tight px-3 pb-6 mb-4 text-neutral-600 overflow-x-scroll'
-              id='scrollers'
+              className='absolute inset-0 z-0 bg-black bg-cover bg-center bg-no-repeat'
+              style={{
+                backgroundImage: `url(${isLesson.seoImage})`,
+              }}
             >
-              {isLesson.subheadline}
+              <img
+                src={isLesson.seoImage}
+                alt={isLesson.subheadline}
+                className='opacity-0'
+              />
             </motion.div>
+            <motion.div className='absolute inset-x-0 bottom-0 z-[1] h-20 bg-gradient-to-t from-black/70 to-transparent'></motion.div>
+            <motion.div
+              className='absolute inset-0 z-[2] flex items-center justify-center'
+              onClick={isLesson.preview ? () => setIsPlaying(true) : () => {}}
+            >
+              {isLesson.preview && (isMobile || isHover) && (
+                <motion.div className='w-20 h-20 bg-white/40 backdrop-blur-lg hover:bg-clemson transition-colors ease-in rounded-full shadow-xl flex justify-center items-center cursor-pointer'>
+                  <PlayCircleIcon className='w-20 h-20' />
+                </motion.div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </motion.div>
+      <motion.div className='bg-white/90 backdrop-blur shadow-lg m-2 rounded-lg relative z-[2] flex flex-col min-h-[220px]'>
+        <motion.div className='w-full h-10 bg-gradient-to-t from-white/80 absolute bottom-0'></motion.div>
+        <motion.div className='flex flex-col gap-3 h-full pt-3'>
+          <motion.div className='font-semibold text-lg tracking-tight leading-none px-3 text-neutral-900'>
+            {isLesson.title}
+          </motion.div>
+          <motion.div
+            className='text-sm leading-tight px-3 pb-6 mb-4 text-neutral-600 overflow-x-scroll'
+            id='scrollers'
+          >
+            {isLesson.subheadline}
           </motion.div>
         </motion.div>
-        <motion.div
-          className='bg-black w-full rounded-b-lg z-10 relative text-center cursor-pointer'
-          onClick={
-            isLesson.altLink
-              ? window.open(isLesson.altLink, '_blank')
-              : cardClickHandler
-          }
-        >
-          <div className='text-white font-bold px-6 py-3'>
-            {link_text ? link_text : 'Select Course'}
-          </div>
-        </motion.div>
+      </motion.div>
+      <motion.div
+        className='bg-black w-full z-10 relative text-center cursor-pointer'
+        onClick={
+          isLesson.altLink
+            ? window.open(isLesson.altLink, '_blank')
+            : cardClickHandler
+        }
+      >
+        <div className='text-white font-bold px-6 py-3'>
+          {link_text ? link_text : 'Select Course'}
+        </div>
       </motion.div>
     </motion.div>
   ) : (
