@@ -425,6 +425,14 @@ export const getLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      wired
+      wiredQuestions {
+        question
+        options
+        correctAnswer
+        __typename
+      }
+      wiredLessonId
       createdAt
       updatedAt
       lessonAnalysisId
@@ -471,6 +479,8 @@ export const listLessons = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -1588,6 +1598,8 @@ export const getLearningPathLesson = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -5504,6 +5516,8 @@ export const getLessonTags = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -5789,6 +5803,8 @@ export const getUserCompletedLessons = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -5905,6 +5921,8 @@ export const getLessonGlossaryTerms = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -7266,6 +7284,8 @@ export const lessonsBySlug = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId

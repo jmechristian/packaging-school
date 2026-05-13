@@ -20,7 +20,8 @@ function normalizeIdentity(raw) {
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
   }
 
   const c = parseCookies(req.headers.cookie);
@@ -30,7 +31,7 @@ export default function handler(req, res) {
   const subdomain = c[`thinkific_oauth_subdomain_live_${identity}`] || null;
   const expiresAt = c[`thinkific_oauth_expires_at_${identity}`] || null;
 
-  return res.status(200).json({
+  res.status(200).json({
     identity,
     connected: Boolean(accessToken),
     hasRefreshToken: Boolean(refreshToken),

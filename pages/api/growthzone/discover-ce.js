@@ -28,7 +28,7 @@ function withQuery(path, query) {
 function getHeaders(apiKey) {
   return {
     'Content-Type': 'application/json',
-    'X-API-Key': apiKey,
+    Authorization: `ApiKey ${apiKey}`,
   };
 }
 

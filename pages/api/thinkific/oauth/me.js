@@ -18,7 +18,7 @@ function normalizeIdentity(raw) {
   return raw === 'student' ? 'student' : 'admin';
 }
 
-const GRAPHQL_URL = 'https://api.thinkific.com/beta/graphql';
+const GRAPHQL_URL = 'https://api.thinkific.com/stable/graphql';
 
 const QUERY_ME = `
   query CurrentOAuthPrincipal {

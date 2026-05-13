@@ -2,8 +2,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
 import { API } from 'aws-amplify';
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import lessonAnimation from '/public/lesson.json';
 
 const LessonShareButtons = dynamic(
   () => import('../../components/lessons/LessonShareButtons'),
@@ -51,7 +53,12 @@ import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 import { optimizeTiptapImages } from '../../libs/tiptapContent';
 
-const Page = ({ lesson }) => {
+const Page = ({
+  lesson,
+  enableProgressTracking = false,
+  enableDemoQuiz = false,
+  enableOauthTestPanel = false,
+}) => {
   const router = useRouter();
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
@@ -71,6 +78,44 @@ const Page = ({ lesson }) => {
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [demoQuizSelections, setDemoQuizSelections] = useState({});
+  const [demoQuizSubmitted, setDemoQuizSubmitted] = useState(false);
+  const [isCompletingWiredLessons, setIsCompletingWiredLessons] = useState(false);
+  const [wiredCompletionResults, setWiredCompletionResults] = useState([]);
+  const [showDemoQuizUpsell, setShowDemoQuizUpsell] = useState(false);
+  const [quizEmail, setQuizEmail] = useState('');
+  const [oauthPrincipalEmail, setOauthPrincipalEmail] = useState('');
+  const [oauthTestSubdomain, setOauthTestSubdomain] = useState('packagingschool');
+  const [oauthTestDebug, setOauthTestDebug] = useState(null);
+  const [isProgressCalloutSticky, setIsProgressCalloutSticky] = useState(false);
+  const progressCalloutRef = useRef(null);
+  const wiredQuizRef = useRef(null);
+
+  const wiredQuestions = Array.isArray(lesson?.wiredQuestions)
+    ? lesson.wiredQuestions
+    : [];
+  const wiredLessonIds = Array.isArray(lesson?.wiredLessonId)
+    ? lesson.wiredLessonId.filter((id) => Boolean(String(id || '').trim()))
+    : [];
+  const isWiredDemo = Boolean(enableDemoQuiz && lesson?.wired && wiredQuestions.length > 0);
+  const isDemoQuizUnlocked = scrollProgress >= 100;
+  const answeredQuestionCount = Object.keys(demoQuizSelections).length;
+  const isDemoQuizComplete =
+    wiredQuestions.length > 0 && answeredQuestionCount === wiredQuestions.length;
+  const isDemoQuizCorrect =
+    wiredQuestions.length > 0 &&
+    wiredQuestions.every(
+      (question, idx) =>
+        String(demoQuizSelections[idx] || '').trim() ===
+        String(question?.correctAnswer || '').trim()
+    );
+  const hasOauthPrincipalEmail = Boolean(String(oauthPrincipalEmail || '').trim());
+  const normalizedQuizEmail = String(quizEmail || '').trim().toLowerCase();
+  const isQuizEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedQuizEmail);
+  const wiredCompletionSucceededCount = wiredCompletionResults.filter(
+    (result) => result?.ok
+  ).length;
 
   const lessonJsonLd = lesson ? buildLessonJsonLd(lesson, siteUrl) : null;
 
@@ -79,6 +124,91 @@ const Page = ({ lesson }) => {
       setIsSaved(awsUser.savedLessons.includes(lesson.id));
     }
   }, [awsUser, lesson]);
+
+  useEffect(() => {
+    const loggedInEmail =
+      user?.email || awsUser?.email || awsUser?.userName || '';
+    if (loggedInEmail) {
+      setQuizEmail(String(loggedInEmail).trim());
+    }
+  }, [awsUser?.email, awsUser?.userName, user?.email]);
+
+  const tryPopulateQuizEmailFromOauth = async () => {
+    try {
+      const res = await fetch('/api/thinkific/oauth/me?identity=student');
+      const json = await res.json().catch(() => ({}));
+      const oauthEmail = String(json?.me?.email || '').trim();
+      if (!oauthEmail) return false;
+
+      setOauthPrincipalEmail(oauthEmail);
+      setQuizEmail((prev) => (String(prev || '').trim() ? prev : oauthEmail));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isWiredDemo || !isDemoQuizUnlocked || normalizedQuizEmail) return;
+
+    let cancelled = false;
+    let timerId;
+
+    const attemptPopulate = async () => {
+      const found = await tryPopulateQuizEmailFromOauth();
+      if (found && !cancelled && timerId) {
+        window.clearInterval(timerId);
+      }
+    };
+
+    attemptPopulate();
+    timerId = window.setInterval(attemptPopulate, 3000);
+    return () => {
+      cancelled = true;
+      if (timerId) {
+        window.clearInterval(timerId);
+      }
+    };
+  }, [isDemoQuizUnlocked, isWiredDemo, normalizedQuizEmail]);
+
+  const handleStartOauthTest = () => {
+    if (typeof window === 'undefined') return;
+    const sub = (oauthTestSubdomain || '').trim().replace(/\.thinkific\.com$/i, '');
+    if (!sub) {
+      window.alert('Enter your Thinkific subdomain first.');
+      return;
+    }
+    const returnTo = window.location.pathname;
+    window.location.href = `/api/thinkific/oauth/start?subdomain=${encodeURIComponent(
+      sub
+    )}&identity=student&returnTo=${encodeURIComponent(returnTo)}`;
+  };
+
+  const handleCheckOauthTest = async () => {
+    try {
+      const [statusRes, meRes] = await Promise.all([
+        fetch('/api/thinkific/oauth/status?identity=student'),
+        fetch('/api/thinkific/oauth/me?identity=student'),
+      ]);
+      const statusJson = await statusRes.json().catch(() => ({ parseError: true }));
+      const meJson = await meRes.json().catch(() => ({ parseError: true }));
+      const oauthEmail = String(meJson?.me?.email || '').trim();
+      if (oauthEmail) {
+        setOauthPrincipalEmail(oauthEmail);
+        setQuizEmail((prev) => (String(prev || '').trim() ? prev : oauthEmail));
+      }
+      setOauthTestDebug({
+        checkedAt: new Date().toISOString(),
+        status: { httpStatus: statusRes.status, body: statusJson },
+        me: { httpStatus: meRes.status, body: meJson },
+      });
+    } catch (error) {
+      setOauthTestDebug({
+        checkedAt: new Date().toISOString(),
+        error: error?.message || String(error),
+      });
+    }
+  };
 
   useEffect(() => {
     const getFeaturedCard = async (type, id) => {
@@ -213,6 +343,122 @@ const Page = ({ lesson }) => {
     }
   }, [lesson]);
 
+  useEffect(() => {
+    if (!enableProgressTracking) return undefined;
+
+    const calculateProgress = () => {
+      const doc = document.documentElement;
+
+      // Add extra top padding only once sticky behavior is active.
+      if (progressCalloutRef.current) {
+        const rect = progressCalloutRef.current.getBoundingClientRect();
+        const stickyTopPx = window.innerWidth >= 1024 ? 112 : 128; // lg: top-28, default: top-32
+        setIsProgressCalloutSticky(rect.top <= stickyTopPx + 1);
+      }
+
+      // If the quiz is on screen, count the lesson as fully complete.
+      if (isWiredDemo && wiredQuizRef.current) {
+        const quizRect = wiredQuizRef.current.getBoundingClientRect();
+        const quizIsVisible = quizRect.top < window.innerHeight && quizRect.bottom > 0;
+        if (quizIsVisible) {
+          setScrollProgress((prev) => Math.max(prev, 100));
+          return;
+        }
+      }
+
+      const scrollableHeight = doc.scrollHeight - window.innerHeight;
+      if (scrollableHeight <= 0) {
+        setScrollProgress((prev) => Math.max(prev, 100));
+        return;
+      }
+
+      const scrollTop = window.scrollY || doc.scrollTop || 0;
+      const next = Math.round((scrollTop / scrollableHeight) * 100);
+      const clamped = Math.max(0, Math.min(100, next));
+      setScrollProgress((prev) => Math.max(prev, clamped));
+    };
+
+    calculateProgress();
+    window.addEventListener('scroll', calculateProgress, { passive: true });
+    window.addEventListener('resize', calculateProgress);
+
+    return () => {
+      window.removeEventListener('scroll', calculateProgress);
+      window.removeEventListener('resize', calculateProgress);
+    };
+  }, [enableProgressTracking, isWiredDemo]);
+
+  useEffect(() => {
+    if (!isDemoQuizUnlocked) {
+      setDemoQuizSelections({});
+      setDemoQuizSubmitted(false);
+      setIsCompletingWiredLessons(false);
+      setWiredCompletionResults([]);
+      setShowDemoQuizUpsell(false);
+    }
+  }, [isDemoQuizUnlocked]);
+
+  const handleDemoQuizSubmit = async () => {
+    setDemoQuizSubmitted(true);
+    if (!isQuizEmailValid) return;
+    if (!isDemoQuizCorrect) return;
+
+    setShowDemoQuizUpsell(true);
+
+    if (!wiredLessonIds.length) {
+      setWiredCompletionResults([
+        {
+          lessonId: null,
+          ok: true,
+          note: 'No wiredLessonId values configured on this lesson.',
+        },
+      ]);
+      return;
+    }
+
+    setIsCompletingWiredLessons(true);
+    try {
+      const results = [];
+      for (const lessonId of wiredLessonIds) {
+        const response = await fetch('/api/thinkific/mark-lesson-complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lessonId,
+            email: normalizedQuizEmail,
+            useOAuth: true,
+            oauthIdentity: 'student',
+          }),
+        });
+        const body = await response.json().catch(() => ({ parseError: true }));
+        results.push({
+          lessonId,
+          httpStatus: response.status,
+          ok: response.ok,
+          body,
+        });
+      }
+      setWiredCompletionResults(results);
+    } catch (error) {
+      setWiredCompletionResults([
+        {
+          lessonId: null,
+          ok: false,
+          message: error?.message || String(error),
+        },
+      ]);
+    } finally {
+      setIsCompletingWiredLessons(false);
+    }
+  };
+
+  const handleResetDemoQuiz = () => {
+    setDemoQuizSelections({});
+    setDemoQuizSubmitted(false);
+    setWiredCompletionResults([]);
+    setShowDemoQuizUpsell(false);
+  };
+
   const handleBookmarkToggle = async () => {
     if (!awsUser || !lesson?.id) {
       dispatch(toggleSignInModal());
@@ -262,6 +508,61 @@ const Page = ({ lesson }) => {
             lessonJsonLd?.article,
           ].filter(Boolean)}
         />
+        {enableDemoQuiz && showDemoQuizUpsell && (
+          <div className='fixed inset-0 z-[80] bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4'>
+            <div className='w-full max-w-2xl bg-white dark:bg-base-dark rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8'>
+              <div className='text-xs lg:text-sm font-semibold tracking-[0.08em] uppercase text-brand-yellow mb-2'>
+                Milestone unlocked
+              </div>
+              <h2 className='text-2xl lg:text-3xl font-bold leading-tight dark:text-white mb-3'>
+                You&apos;ve completed 10% of the Certificate of Sustainable Packaging.
+              </h2>
+              <p className='text-gray-700 dark:text-gray-200 text-base lg:text-lg mb-2'>
+                You&apos;re building real momentum. Enroll in the full certificate to keep
+                this progress, deepen your packaging sustainability expertise, and earn a
+                credential that strengthens your resume and LinkedIn profile.
+              </p>
+              <p className='text-gray-600 dark:text-gray-300 mb-6'>
+                Turn this first win into a complete career-ready achievement.
+              </p>
+              <div className='mb-6 text-sm'>
+                {isCompletingWiredLessons ? (
+                  <div className='text-gray-700 dark:text-gray-200'>
+                    Saving your wired lesson completion to Thinkific...
+                  </div>
+                ) : wiredCompletionResults.length > 0 ? (
+                  <div className='text-gray-700 dark:text-gray-200'>
+                    Thinkific completion calls succeeded for{' '}
+                    <strong>
+                      {wiredCompletionSucceededCount}/{wiredCompletionResults.length}
+                    </strong>{' '}
+                    lesson IDs.
+                  </div>
+                ) : (
+                  <div className='text-gray-700 dark:text-gray-200'>
+                    Completion will be saved to Thinkific for your wired lesson IDs.
+                  </div>
+                )}
+              </div>
+
+              <div className='flex flex-col sm:flex-row gap-3'>
+                <Link
+                  href='/certifications/get-to-know-csp'
+                  className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition'
+                >
+                  Continue to Full Certificate
+                </Link>
+                <button
+                  type='button'
+                  onClick={() => setShowDemoQuizUpsell(false)}
+                  className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold border border-gray-300 dark:border-gray-600 dark:text-white'
+                >
+                  Keep Reading This Lesson
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className='w-full max-w-7xl mx-auto py-10 lg:py-16 flex flex-col px-4 lg:px-0'>
           <div className='w-full grid grid-cols-12 gap-4 lg:gap-10 relative'>
             <div className='absolute top-0 -left-16 !hidden lg:!flex h-full w-fit'>
@@ -362,10 +663,191 @@ const Page = ({ lesson }) => {
                     )}
                   </div>
                 ))}
+              {enableProgressTracking && (
+                <div
+                  ref={progressCalloutRef}
+                  className={`sticky top-32 lg:top-28 z-40 -mt-3 ${
+                    isProgressCalloutSticky ? 'pt-6' : 'pt-0'
+                  }`}
+                >
+                  <div className='w-full border border-brand-yellow/50 bg-white dark:bg-base-dark rounded-xl px-4 lg:px-5 py-5 flex items-center gap-4 lg:gap-5 shadow-md'>
+                    <div className='hidden sm:block w-24 h-24 lg:w-28 lg:h-28 shrink-0'>
+                      <Lottie
+                        animationData={lessonAnimation}
+                        loop={true}
+                        autoplay={true}
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <div className='flex-1 flex flex-col gap-3'>
+                      <div className='flex flex-col gap-1'>
+                        <div className='text-base lg:text-lg font-bold text-black dark:text-white'>
+                          Complete this free lesson to earn live course credits!
+                        </div>
+                        <div className='text-sm lg:text-base text-gray-800 dark:text-gray-100'>
+                          Follow the content and correctly answer the quiz to earn course
+                          credits. Must be logged in to save your progress. No account? Just
+                          enter your email to get started for free.
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-2'>
+                        <div className='text-sm lg:text-base font-semibold min-w-[3.5rem] dark:text-white'>
+                          {scrollProgress}%
+                        </div>
+                        <div className='h-3.5 w-full rounded-full bg-white/80 dark:bg-gray-700 overflow-hidden'>
+                          <div
+                            className='h-full bg-brand-yellow transition-[width] duration-150 ease-linear'
+                            style={{ width: `${scrollProgress}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div
                 dangerouslySetInnerHTML={{ __html: contentWithImagePriority }}
                 className='tiptap lg:text-lg'
               />
+              {isWiredDemo && (
+                <div
+                  ref={wiredQuizRef}
+                  className='w-full border border-sky-200 dark:border-sky-700 rounded-xl p-6 lg:p-7 flex flex-col gap-5 bg-sky-50 dark:bg-sky-950/40'
+                >
+                  <div className='flex items-center justify-between gap-3'>
+                    <h2 className='text-xl lg:text-2xl font-semibold dark:text-white'>
+                      Lesson Quiz
+                    </h2>
+                    <span
+                      className={`text-sm font-bold px-3 py-1.5 rounded ${
+                        isDemoQuizUnlocked
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200'
+                      }`}
+                    >
+                      {isDemoQuizUnlocked ? 'Unlocked' : 'Locked until 100%'}
+                    </span>
+                  </div>
+
+                  <div className={isDemoQuizUnlocked ? '' : 'blur-sm pointer-events-none select-none'}>
+                    <div className='flex flex-col gap-5'>
+                      {wiredQuestions.map((question, questionIndex) => (
+                        <div
+                          key={`wired-question-${questionIndex}`}
+                          className='flex flex-col gap-3'
+                        >
+                          <div className='text-base lg:text-lg font-medium dark:text-white'>
+                            {questionIndex + 1}. {question.question}
+                          </div>
+                          <div className='flex flex-col gap-2'>
+                            {(question.options || []).map((option) => (
+                              <label
+                                key={`${questionIndex}-${option}`}
+                                className='flex items-center gap-3 text-sm lg:text-base dark:text-gray-100'
+                              >
+                                <input
+                                  type='radio'
+                                  name={`wired-quiz-answer-${questionIndex}`}
+                                  value={option}
+                                  checked={demoQuizSelections[questionIndex] === option}
+                                  onChange={(e) =>
+                                    setDemoQuizSelections((prev) => ({
+                                      ...prev,
+                                      [questionIndex]: e.target.value,
+                                    }))
+                                  }
+                                  disabled={!isDemoQuizUnlocked}
+                                />
+                                <span>{option}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {!isDemoQuizUnlocked && (
+                    <div className='text-sm lg:text-base text-gray-700 dark:text-gray-200'>
+                      Keep scrolling to 100% to unlock this question.
+                    </div>
+                  )}
+
+                  <div className='flex items-center gap-3'>
+                    <div className='flex-1 min-w-[220px] flex flex-col gap-2'>
+                      {hasOauthPrincipalEmail ? (
+                        <div className='px-4 py-3 rounded-lg border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 text-sm lg:text-base text-green-900 dark:text-green-100'>
+                          {oauthPrincipalEmail}
+                        </div>
+                      ) : (
+                        <>
+                          <input
+                            type='email'
+                            value={quizEmail}
+                            onChange={(e) => setQuizEmail(e.target.value)}
+                            placeholder='Email required to save progress'
+                            className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                          />
+                          <div className='text-xs lg:text-sm text-gray-700 dark:text-gray-200'>
+                            Already a learner?{' '}
+                            <button
+                              type='button'
+                              onClick={handleStartOauthTest}
+                              className='underline text-blue-700 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200 font-semibold'
+                            >
+                              Log in to complete
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <button
+                      type='button'
+                      disabled={
+                        !isDemoQuizUnlocked ||
+                        !isDemoQuizComplete ||
+                        isCompletingWiredLessons ||
+                        !isQuizEmailValid
+                      }
+                      onClick={handleDemoQuizSubmit}
+                      className='px-5 py-3 rounded-lg text-base font-semibold bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black'
+                    >
+                      {isCompletingWiredLessons ? 'Saving completion...' : 'Submit answers'}
+                    </button>
+                    {demoQuizSubmitted && !isDemoQuizCorrect && (
+                      <button
+                        type='button'
+                        onClick={handleResetDemoQuiz}
+                        aria-label='Reset quiz'
+                        title='Reset quiz'
+                        className='h-11 w-11 inline-flex items-center justify-center rounded-lg text-xl font-semibold border border-gray-300 dark:border-gray-600 dark:text-white'
+                      >
+                        ↺
+                      </button>
+                    )}
+                    {demoQuizSubmitted && (
+                      <div
+                        className={`text-sm font-medium ${
+                          isDemoQuizCorrect
+                            ? 'text-green-700 dark:text-green-300'
+                            : 'text-red-700 dark:text-red-300'
+                        }`}
+                      >
+                        {!isQuizEmailValid
+                          ? 'Enter a valid email to save progress.'
+                          : isDemoQuizCorrect
+                          ? 'Correct. Nice work.'
+                          : 'One or more answers are incorrect. Try again.'}
+                      </div>
+                    )}
+                  </div>
+                  {!!wiredCompletionResults.length && (
+                    <pre className='mt-2 p-3 rounded bg-gray-100 dark:bg-gray-900 text-xs overflow-auto'>
+                      {JSON.stringify(wiredCompletionResults, null, 2)}
+                    </pre>
+                  )}
+                </div>
+              )}
               {lesson.analysis && awsUser && (
                 <div className='w-full'>
                   <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
@@ -373,6 +855,39 @@ const Page = ({ lesson }) => {
               )}
             </div>
             <div className='col-span-12 lg:col-span-3 border-l-0 lg:border-l border-l-gray-400 lg:!pl-4'>
+              {enableOauthTestPanel && (
+                <div className='fixed right-4 top-24 z-[95] w-[360px] max-w-[calc(100vw-2rem)] p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-base-dark flex flex-col gap-3 shadow-2xl'>
+                  <div className='font-semibold dark:text-white'>OAuth Test Panel</div>
+                  <input
+                    type='text'
+                    value={oauthTestSubdomain}
+                    onChange={(e) => setOauthTestSubdomain(e.target.value)}
+                    placeholder='packagingschool'
+                    className='w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm dark:text-white'
+                  />
+                  <div className='flex gap-2'>
+                    <button
+                      type='button'
+                      onClick={handleStartOauthTest}
+                      className='px-3 py-2 rounded bg-black text-white text-sm dark:bg-white dark:text-black'
+                    >
+                      Connect OAuth
+                    </button>
+                    <button
+                      type='button'
+                      onClick={handleCheckOauthTest}
+                      className='px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-sm dark:text-white'
+                    >
+                      Check OAuth
+                    </button>
+                  </div>
+                  <pre className='p-3 rounded bg-gray-100 dark:bg-gray-900 text-xs overflow-auto min-h-[90px]'>
+                    {oauthTestDebug
+                      ? JSON.stringify(oauthTestDebug, null, 2)
+                      : 'Run "Check OAuth" to view status + me.'}
+                  </pre>
+                </div>
+              )}
               <div className='w-full flex flex-col'>
                 <div className='flex flex-col gap-5 px-4 lg:px-0'>
                   <div className='text-sm text-gray-700'>{newDate}</div>

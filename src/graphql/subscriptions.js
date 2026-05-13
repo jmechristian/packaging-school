@@ -578,6 +578,14 @@ export const onCreateLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      wired
+      wiredQuestions {
+        question
+        options
+        correctAnswer
+        __typename
+      }
+      wiredLessonId
       createdAt
       updatedAt
       lessonAnalysisId
@@ -655,6 +663,14 @@ export const onUpdateLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      wired
+      wiredQuestions {
+        question
+        options
+        correctAnswer
+        __typename
+      }
+      wiredLessonId
       createdAt
       updatedAt
       lessonAnalysisId
@@ -732,6 +748,14 @@ export const onDeleteLesson = /* GraphQL */ `
         nextToken
         __typename
       }
+      wired
+      wiredQuestions {
+        question
+        options
+        correctAnswer
+        __typename
+      }
+      wiredLessonId
       createdAt
       updatedAt
       lessonAnalysisId
@@ -2833,6 +2857,8 @@ export const onCreateLearningPathLesson = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -2900,6 +2926,8 @@ export const onUpdateLearningPathLesson = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -2967,6 +2995,8 @@ export const onDeleteLearningPathLesson = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9120,6 +9150,8 @@ export const onCreateLessonTags = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9178,6 +9210,8 @@ export const onUpdateLessonTags = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9236,6 +9270,8 @@ export const onDeleteLessonTags = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9737,6 +9773,8 @@ export const onCreateUserCompletedLessons = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9831,6 +9869,8 @@ export const onUpdateUserCompletedLessons = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -9925,6 +9965,8 @@ export const onDeleteUserCompletedLessons = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -10019,6 +10061,8 @@ export const onCreateLessonGlossaryTerms = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -10084,6 +10128,8 @@ export const onUpdateLessonGlossaryTerms = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
@@ -10149,6 +10195,8 @@ export const onDeleteLessonGlossaryTerms = /* GraphQL */ `
         seoUrl
         seoRobots
         seoFollow
+        wired
+        wiredLessonId
         createdAt
         updatedAt
         lessonAnalysisId
