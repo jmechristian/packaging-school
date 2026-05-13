@@ -851,7 +851,7 @@ export const getCoursesByCategory = async (category) => {
     variables: {
       filter: {
         categoryArray: { contains: category },
-        type: { ne: 'CUSTOMER' },
+        and: [{ type: { ne: 'CUSTOMER' } }, { type: { ne: 'HIDDEN' } }],
       },
       limit: 500,
     },
