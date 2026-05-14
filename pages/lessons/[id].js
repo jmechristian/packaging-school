@@ -15,10 +15,9 @@ import LessonQuiz from '../../components/lessons/LessonQuiz';
 import LessonVideoHero from '../../components/lessons/LessonVideoHero';
 import VideoPlayerInView from '../../components/lessons/VideoPlayerInView';
 
-const VideoPlayer = dynamic(
-  () => import('../../components/VideoPlayer'),
-  { ssr: false }
-);
+const VideoPlayer = dynamic(() => import('../../components/VideoPlayer'), {
+  ssr: false,
+});
 import {
   registerCertificateClick,
   getDeviceType,
@@ -57,8 +56,29 @@ const Page = ({
   lesson,
   enableProgressTracking = false,
   enableDemoQuiz = false,
-  enableOauthTestPanel = false,
 }) => {
+  const normalizeWiredLessonIds = (raw) => {
+    if (Array.isArray(raw)) {
+      return raw.map((id) => String(id || '').trim()).filter(Boolean);
+    }
+    if (typeof raw === 'string') {
+      const s = raw.trim();
+      if (!s) return [];
+      try {
+        const parsed = JSON.parse(s);
+        if (Array.isArray(parsed)) {
+          return parsed.map((id) => String(id || '').trim()).filter(Boolean);
+        }
+      } catch {
+        // fall through and treat as comma-separated string
+      }
+      return s
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean);
+    }
+    return [];
+  };
   const router = useRouter();
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
@@ -78,44 +98,61 @@ const Page = ({
   const [isFeaturedCourse, setIsFeaturedCourse] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isFeaturedCard, setIsFeaturedCard] = useState(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [demoQuizSelections, setDemoQuizSelections] = useState({});
   const [demoQuizSubmitted, setDemoQuizSubmitted] = useState(false);
-  const [isCompletingWiredLessons, setIsCompletingWiredLessons] = useState(false);
+  const [isCompletingWiredLessons, setIsCompletingWiredLessons] =
+    useState(false);
   const [wiredCompletionResults, setWiredCompletionResults] = useState([]);
+  const [wiredCourseNames, setWiredCourseNames] = useState([]);
   const [showDemoQuizUpsell, setShowDemoQuizUpsell] = useState(false);
   const [quizEmail, setQuizEmail] = useState('');
   const [oauthPrincipalEmail, setOauthPrincipalEmail] = useState('');
-  const [oauthTestSubdomain, setOauthTestSubdomain] = useState('packagingschool');
-  const [oauthTestDebug, setOauthTestDebug] = useState(null);
-  const [isProgressCalloutSticky, setIsProgressCalloutSticky] = useState(false);
-  const progressCalloutRef = useRef(null);
   const wiredQuizRef = useRef(null);
+  const wiredTakeUrlsByLessonIdRef = useRef({});
 
   const wiredQuestions = Array.isArray(lesson?.wiredQuestions)
     ? lesson.wiredQuestions
     : [];
-  const wiredLessonIds = Array.isArray(lesson?.wiredLessonId)
-    ? lesson.wiredLessonId.filter((id) => Boolean(String(id || '').trim()))
-    : [];
-  const isWiredDemo = Boolean(enableDemoQuiz && lesson?.wired && wiredQuestions.length > 0);
-  const isDemoQuizUnlocked = scrollProgress >= 100;
+  const wiredLessonIds = useMemo(
+    () => normalizeWiredLessonIds(lesson?.wiredLessonId),
+    [lesson?.wiredLessonId],
+  );
+  const wiredLessonIdsKey = wiredLessonIds.join('|');
+  const isWiredDemo = Boolean(
+    enableDemoQuiz && lesson?.wired && wiredQuestions.length > 0,
+  );
+  const isDemoQuizUnlocked = true;
   const answeredQuestionCount = Object.keys(demoQuizSelections).length;
   const isDemoQuizComplete =
-    wiredQuestions.length > 0 && answeredQuestionCount === wiredQuestions.length;
+    wiredQuestions.length > 0 &&
+    answeredQuestionCount === wiredQuestions.length;
   const isDemoQuizCorrect =
     wiredQuestions.length > 0 &&
     wiredQuestions.every(
       (question, idx) =>
         String(demoQuizSelections[idx] || '').trim() ===
-        String(question?.correctAnswer || '').trim()
+        String(question?.correctAnswer || '').trim(),
     );
-  const hasOauthPrincipalEmail = Boolean(String(oauthPrincipalEmail || '').trim());
-  const normalizedQuizEmail = String(quizEmail || '').trim().toLowerCase();
-  const isQuizEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedQuizEmail);
+  const hasOauthPrincipalEmail = Boolean(
+    String(oauthPrincipalEmail || '').trim(),
+  );
+  const normalizedQuizEmail = String(quizEmail || '')
+    .trim()
+    .toLowerCase();
+  const isQuizEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    normalizedQuizEmail,
+  );
   const wiredCompletionSucceededCount = wiredCompletionResults.filter(
-    (result) => result?.ok
+    (result) => result?.ok,
   ).length;
+  const wiredCourseNamesText = useMemo(() => {
+    if (!wiredCourseNames.length) return '';
+    if (wiredCourseNames.length === 1) return wiredCourseNames[0];
+    if (wiredCourseNames.length === 2) {
+      return `${wiredCourseNames[0]} and ${wiredCourseNames[1]}`;
+    }
+    return wiredCourseNames.join(', ');
+  }, [wiredCourseNames]);
 
   const lessonJsonLd = lesson ? buildLessonJsonLd(lesson, siteUrl) : null;
 
@@ -171,43 +208,48 @@ const Page = ({
     };
   }, [isDemoQuizUnlocked, isWiredDemo, normalizedQuizEmail]);
 
+  useEffect(() => {
+    if (!enableProgressTracking || !wiredLessonIds.length) return;
+
+    let ignore = false;
+    const loadCourseNames = async () => {
+      try {
+        const res = await fetch('/api/thinkific/get-lesson-course-names', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonIds: wiredLessonIds }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (ignore) return;
+        if (res.ok && Array.isArray(json?.names) && json.names.length > 0) {
+          setWiredCourseNames(json.names);
+        }
+        if (
+          res.ok &&
+          json?.takeUrlsByLessonId &&
+          typeof json.takeUrlsByLessonId === 'object'
+        ) {
+          wiredTakeUrlsByLessonIdRef.current = json.takeUrlsByLessonId;
+        }
+      } catch {
+        // Keep last successful names visible on transient failures.
+      }
+    };
+
+    loadCourseNames();
+
+    return () => {
+      ignore = true;
+    };
+  }, [enableProgressTracking, wiredLessonIds, wiredLessonIdsKey]);
+
   const handleStartOauthTest = () => {
     if (typeof window === 'undefined') return;
-    const sub = (oauthTestSubdomain || '').trim().replace(/\.thinkific\.com$/i, '');
-    if (!sub) {
-      window.alert('Enter your Thinkific subdomain first.');
-      return;
-    }
+    const sub = 'packagingschool';
     const returnTo = window.location.pathname;
     window.location.href = `/api/thinkific/oauth/start?subdomain=${encodeURIComponent(
-      sub
+      sub,
     )}&identity=student&returnTo=${encodeURIComponent(returnTo)}`;
-  };
-
-  const handleCheckOauthTest = async () => {
-    try {
-      const [statusRes, meRes] = await Promise.all([
-        fetch('/api/thinkific/oauth/status?identity=student'),
-        fetch('/api/thinkific/oauth/me?identity=student'),
-      ]);
-      const statusJson = await statusRes.json().catch(() => ({ parseError: true }));
-      const meJson = await meRes.json().catch(() => ({ parseError: true }));
-      const oauthEmail = String(meJson?.me?.email || '').trim();
-      if (oauthEmail) {
-        setOauthPrincipalEmail(oauthEmail);
-        setQuizEmail((prev) => (String(prev || '').trim() ? prev : oauthEmail));
-      }
-      setOauthTestDebug({
-        checkedAt: new Date().toISOString(),
-        status: { httpStatus: statusRes.status, body: statusJson },
-        me: { httpStatus: meRes.status, body: meJson },
-      });
-    } catch (error) {
-      setOauthTestDebug({
-        checkedAt: new Date().toISOString(),
-        error: error?.message || String(error),
-      });
-    }
   };
 
   useEffect(() => {
@@ -344,51 +386,6 @@ const Page = ({
   }, [lesson]);
 
   useEffect(() => {
-    if (!enableProgressTracking) return undefined;
-
-    const calculateProgress = () => {
-      const doc = document.documentElement;
-
-      // Add extra top padding only once sticky behavior is active.
-      if (progressCalloutRef.current) {
-        const rect = progressCalloutRef.current.getBoundingClientRect();
-        const stickyTopPx = window.innerWidth >= 1024 ? 112 : 128; // lg: top-28, default: top-32
-        setIsProgressCalloutSticky(rect.top <= stickyTopPx + 1);
-      }
-
-      // If the quiz is on screen, count the lesson as fully complete.
-      if (isWiredDemo && wiredQuizRef.current) {
-        const quizRect = wiredQuizRef.current.getBoundingClientRect();
-        const quizIsVisible = quizRect.top < window.innerHeight && quizRect.bottom > 0;
-        if (quizIsVisible) {
-          setScrollProgress((prev) => Math.max(prev, 100));
-          return;
-        }
-      }
-
-      const scrollableHeight = doc.scrollHeight - window.innerHeight;
-      if (scrollableHeight <= 0) {
-        setScrollProgress((prev) => Math.max(prev, 100));
-        return;
-      }
-
-      const scrollTop = window.scrollY || doc.scrollTop || 0;
-      const next = Math.round((scrollTop / scrollableHeight) * 100);
-      const clamped = Math.max(0, Math.min(100, next));
-      setScrollProgress((prev) => Math.max(prev, clamped));
-    };
-
-    calculateProgress();
-    window.addEventListener('scroll', calculateProgress, { passive: true });
-    window.addEventListener('resize', calculateProgress);
-
-    return () => {
-      window.removeEventListener('scroll', calculateProgress);
-      window.removeEventListener('resize', calculateProgress);
-    };
-  }, [enableProgressTracking, isWiredDemo]);
-
-  useEffect(() => {
     if (!isDemoQuizUnlocked) {
       setDemoQuizSelections({});
       setDemoQuizSubmitted(false);
@@ -515,12 +512,14 @@ const Page = ({
                 Milestone unlocked
               </div>
               <h2 className='text-2xl lg:text-3xl font-bold leading-tight dark:text-white mb-3'>
-                You&apos;ve completed 10% of the Certificate of Sustainable Packaging.
+                You&apos;ve completed 10% of the Certificate of Sustainable
+                Packaging.
               </h2>
               <p className='text-gray-700 dark:text-gray-200 text-base lg:text-lg mb-2'>
-                You&apos;re building real momentum. Enroll in the full certificate to keep
-                this progress, deepen your packaging sustainability expertise, and earn a
-                credential that strengthens your resume and LinkedIn profile.
+                You&apos;re building real momentum. Enroll in the full
+                certificate to keep this progress, deepen your packaging
+                sustainability expertise, and earn a credential that strengthens
+                your resume and LinkedIn profile.
               </p>
               <p className='text-gray-600 dark:text-gray-300 mb-6'>
                 Turn this first win into a complete career-ready achievement.
@@ -534,13 +533,15 @@ const Page = ({
                   <div className='text-gray-700 dark:text-gray-200'>
                     Thinkific completion calls succeeded for{' '}
                     <strong>
-                      {wiredCompletionSucceededCount}/{wiredCompletionResults.length}
+                      {wiredCompletionSucceededCount}/
+                      {wiredCompletionResults.length}
                     </strong>{' '}
                     lesson IDs.
                   </div>
                 ) : (
                   <div className='text-gray-700 dark:text-gray-200'>
-                    Completion will be saved to Thinkific for your wired lesson IDs.
+                    Completion will be saved to Thinkific for your wired lesson
+                    IDs.
                   </div>
                 )}
               </div>
@@ -664,13 +665,8 @@ const Page = ({
                   </div>
                 ))}
               {enableProgressTracking && (
-                <div
-                  ref={progressCalloutRef}
-                  className={`sticky top-32 lg:top-28 z-40 -mt-3 ${
-                    isProgressCalloutSticky ? 'pt-6' : 'pt-0'
-                  }`}
-                >
-                  <div className='w-full border border-brand-yellow/50 bg-white dark:bg-base-dark rounded-xl px-4 lg:px-5 py-5 flex items-center gap-4 lg:gap-5 shadow-md'>
+                <div>
+                  <div className='w-full border border-brand-yellow/50 bg-white dark:bg-base-dark rounded-xl px-4 lg:px-5 py-3 flex items-center gap-4 lg:gap-5 shadow-md'>
                     <div className='hidden sm:block w-24 h-24 lg:w-28 lg:h-28 shrink-0'>
                       <Lottie
                         animationData={lessonAnimation}
@@ -679,27 +675,23 @@ const Page = ({
                         className='w-full h-full'
                       />
                     </div>
-                    <div className='flex-1 flex flex-col gap-3'>
-                      <div className='flex flex-col gap-1'>
-                        <div className='text-base lg:text-lg font-bold text-black dark:text-white'>
-                          Complete this free lesson to earn live course credits!
-                        </div>
-                        <div className='text-sm lg:text-base text-gray-800 dark:text-gray-100'>
-                          Follow the content and correctly answer the quiz to earn course
-                          credits. Must be logged in to save your progress. No account? Just
-                          enter your email to get started for free.
-                        </div>
+                    <div className='flex-1'>
+                      <div className='text-base lg:text-lg font-bold text-black dark:text-white leading-tight'>
+                        {wiredCourseNames.length ? (
+                          <>
+                            This lesson is a part of{' '}
+                            <span className='text-clemson leading-none'>
+                              {wiredCourseNamesText}
+                            </span>
+                            .
+                          </>
+                        ) : (
+                          'This lesson is a part of our course credits track.'
+                        )}
                       </div>
-                      <div className='flex items-center gap-2'>
-                        <div className='text-sm lg:text-base font-semibold min-w-[3.5rem] dark:text-white'>
-                          {scrollProgress}%
-                        </div>
-                        <div className='h-3.5 w-full rounded-full bg-white/80 dark:bg-gray-700 overflow-hidden'>
-                          <div
-                            className='h-full bg-brand-yellow transition-[width] duration-150 ease-linear'
-                            style={{ width: `${scrollProgress}%` }}
-                          />
-                        </div>
+                      <div className='text-base lg:text-lg text-gray-800 dark:text-gray-100 mt-2'>
+                        Complete the short assessment below to earn credit
+                        toward the full course.
                       </div>
                     </div>
                   </div>
@@ -714,22 +706,11 @@ const Page = ({
                   ref={wiredQuizRef}
                   className='w-full border border-sky-200 dark:border-sky-700 rounded-xl p-6 lg:p-7 flex flex-col gap-5 bg-sky-50 dark:bg-sky-950/40'
                 >
-                  <div className='flex items-center justify-between gap-3'>
-                    <h2 className='text-xl lg:text-2xl font-semibold dark:text-white'>
-                      Lesson Quiz
-                    </h2>
-                    <span
-                      className={`text-sm font-bold px-3 py-1.5 rounded ${
-                        isDemoQuizUnlocked
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
-                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200'
-                      }`}
-                    >
-                      {isDemoQuizUnlocked ? 'Unlocked' : 'Locked until 100%'}
-                    </span>
-                  </div>
+                  <h2 className='text-xl lg:text-2xl font-semibold dark:text-white'>
+                    Lesson Quiz
+                  </h2>
 
-                  <div className={isDemoQuizUnlocked ? '' : 'blur-sm pointer-events-none select-none'}>
+                  <div>
                     <div className='flex flex-col gap-5'>
                       {wiredQuestions.map((question, questionIndex) => (
                         <div
@@ -749,14 +730,15 @@ const Page = ({
                                   type='radio'
                                   name={`wired-quiz-answer-${questionIndex}`}
                                   value={option}
-                                  checked={demoQuizSelections[questionIndex] === option}
+                                  checked={
+                                    demoQuizSelections[questionIndex] === option
+                                  }
                                   onChange={(e) =>
                                     setDemoQuizSelections((prev) => ({
                                       ...prev,
                                       [questionIndex]: e.target.value,
                                     }))
                                   }
-                                  disabled={!isDemoQuizUnlocked}
                                 />
                                 <span>{option}</span>
                               </label>
@@ -766,12 +748,6 @@ const Page = ({
                       ))}
                     </div>
                   </div>
-
-                  {!isDemoQuizUnlocked && (
-                    <div className='text-sm lg:text-base text-gray-700 dark:text-gray-200'>
-                      Keep scrolling to 100% to unlock this question.
-                    </div>
-                  )}
 
                   <div className='flex items-center gap-3'>
                     <div className='flex-1 min-w-[220px] flex flex-col gap-2'>
@@ -812,7 +788,9 @@ const Page = ({
                       onClick={handleDemoQuizSubmit}
                       className='px-5 py-3 rounded-lg text-base font-semibold bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black'
                     >
-                      {isCompletingWiredLessons ? 'Saving completion...' : 'Submit answers'}
+                      {isCompletingWiredLessons
+                        ? 'Saving completion...'
+                        : 'Submit answers'}
                     </button>
                     {demoQuizSubmitted && !isDemoQuizCorrect && (
                       <button
@@ -836,8 +814,8 @@ const Page = ({
                         {!isQuizEmailValid
                           ? 'Enter a valid email to save progress.'
                           : isDemoQuizCorrect
-                          ? 'Correct. Nice work.'
-                          : 'One or more answers are incorrect. Try again.'}
+                            ? 'Correct. Nice work.'
+                            : 'One or more answers are incorrect. Try again.'}
                       </div>
                     )}
                   </div>
@@ -855,39 +833,6 @@ const Page = ({
               )}
             </div>
             <div className='col-span-12 lg:col-span-3 border-l-0 lg:border-l border-l-gray-400 lg:!pl-4'>
-              {enableOauthTestPanel && (
-                <div className='fixed right-4 top-24 z-[95] w-[360px] max-w-[calc(100vw-2rem)] p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-base-dark flex flex-col gap-3 shadow-2xl'>
-                  <div className='font-semibold dark:text-white'>OAuth Test Panel</div>
-                  <input
-                    type='text'
-                    value={oauthTestSubdomain}
-                    onChange={(e) => setOauthTestSubdomain(e.target.value)}
-                    placeholder='packagingschool'
-                    className='w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm dark:text-white'
-                  />
-                  <div className='flex gap-2'>
-                    <button
-                      type='button'
-                      onClick={handleStartOauthTest}
-                      className='px-3 py-2 rounded bg-black text-white text-sm dark:bg-white dark:text-black'
-                    >
-                      Connect OAuth
-                    </button>
-                    <button
-                      type='button'
-                      onClick={handleCheckOauthTest}
-                      className='px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-sm dark:text-white'
-                    >
-                      Check OAuth
-                    </button>
-                  </div>
-                  <pre className='p-3 rounded bg-gray-100 dark:bg-gray-900 text-xs overflow-auto min-h-[90px]'>
-                    {oauthTestDebug
-                      ? JSON.stringify(oauthTestDebug, null, 2)
-                      : 'Run "Check OAuth" to view status + me.'}
-                  </pre>
-                </div>
-              )}
               <div className='w-full flex flex-col'>
                 <div className='flex flex-col gap-5 px-4 lg:px-0'>
                   <div className='text-sm text-gray-700'>{newDate}</div>

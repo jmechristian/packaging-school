@@ -94,7 +94,6 @@ const SandboxLessonComplete = ({ lesson }) => {
       lesson={lesson}
       enableProgressTracking={true}
       enableDemoQuiz={true}
-      enableOauthTestPanel={true}
     />
   );
 };
