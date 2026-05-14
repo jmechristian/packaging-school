@@ -1419,6 +1419,7 @@ export const onCreateUser = /* GraphQL */ `
         paymentConfirmation
         contactConsent
         status
+        videoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -1671,6 +1672,7 @@ export const onUpdateUser = /* GraphQL */ `
         paymentConfirmation
         contactConsent
         status
+        videoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -1923,6 +1925,7 @@ export const onDeleteUser = /* GraphQL */ `
         paymentConfirmation
         contactConsent
         status
+        videoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -3401,6 +3404,7 @@ export const onCreateIcpfCmpmForm = /* GraphQL */ `
       paymentConfirmation
       contactConsent
       status
+      videoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId
@@ -3496,6 +3500,7 @@ export const onUpdateIcpfCmpmForm = /* GraphQL */ `
       paymentConfirmation
       contactConsent
       status
+      videoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId
@@ -3591,6 +3596,7 @@ export const onDeleteIcpfCmpmForm = /* GraphQL */ `
       paymentConfirmation
       contactConsent
       status
+      videoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId

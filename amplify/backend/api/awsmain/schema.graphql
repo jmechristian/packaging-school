@@ -484,6 +484,7 @@ type IcpfCmpmForm
   paymentConfirmation: String
   contactConsent: Boolean
   status: String @default(value: "DRAFT")
+  videoLink: String
 }
 
 type PgsfForm

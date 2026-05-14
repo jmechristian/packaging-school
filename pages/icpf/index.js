@@ -63,7 +63,7 @@ const ICPF = () => {
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'>
               <div className='text-icpf-dark font-oswald uppercase text-lg'>
-                Apr 13, 2026 - July 06, 2026
+                Sept. 21, 2026 - Dec. 14, 2026
               </div>
             </div>
             <div className='h1-base'>
@@ -100,18 +100,20 @@ const ICPF = () => {
             <div className='bg-icpf-light p-5 rounded-lg flex flex-col gap-4 md:col-span-2'>
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-0.5'>
-                  <div className='text-lg font-bold'>CMPM Spring 1</div>
+                  <div className='text-lg font-bold'>CMPM Fall II</div>
                   <div>ICPF Sponsored Cohort</div>
                 </div>
                 <div className='flex items-center gap-1 py-3 border-y border-y-icpf-dark'>
                   <div className='text-xl'>
                     <MdCalendarMonth />
                   </div>
-                  <div className='font-bold'>Apr 13, 2026 - July 6, 2026</div>
+                  <div className='font-bold'>
+                    Sept. 21, 2026 - Dec. 14, 2026
+                  </div>
                 </div>
                 <div className='flex flex-col gap-0'>
                   <div className='text-lg font-bold'>Deadline</div>
-                  <div>Apr 1, 2026</div>
+                  <div>Sept. 9th, 2026</div>
                 </div>
               </div>
               <div>
@@ -159,6 +161,7 @@ const ICPF = () => {
                       whyPackaging: '',
                       yearGoals: '',
                       contactConsent: false,
+                      videoLink: '',
                     });
 
                     router.push(`/forms/cmpm/icpf/${form.id}`);

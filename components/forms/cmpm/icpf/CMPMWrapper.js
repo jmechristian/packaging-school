@@ -12,7 +12,8 @@ const CMPMWrapper = ({ params, free }) => {
   useEffect(() => {
     if (params) {
       for (const property in params) {
-        methods.setValue(`${property}`, `${params[property]}`);
+        const value = params[property];
+        methods.setValue(property, value ?? '');
       }
     }
 

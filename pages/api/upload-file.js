@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
   try {
     const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, // 10MB
+      maxFileSize: 250 * 1024 * 1024, // 250MB to support short video uploads
       keepExtensions: true,
     });
 
@@ -52,20 +52,40 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    const fieldName = Array.isArray(fields.fieldName)
+      ? fields.fieldName[0]
+      : fields.fieldName;
+    const isVideoUpload = fieldName === 'videoLink';
+
     // Validate file type
-    const allowedTypes = ['.pdf', '.jpg', '.jpeg', '.png', '.gif'];
+    const allowedTypes = isVideoUpload
+      ? ['.mp4', '.mov', '.m4v', '.webm', '.avi']
+      : ['.pdf', '.jpg', '.jpeg', '.png', '.gif'];
     const fileExtension = path.extname(file.originalFilename).toLowerCase();
     if (!allowedTypes.includes(fileExtension)) {
       return res.status(400).json({
-        error:
-          'Invalid file type. Only PDF, JPG, JPEG, PNG, and GIF files are allowed.',
+        error: isVideoUpload
+          ? 'Invalid file type. Only MP4, MOV, M4V, WEBM, and AVI files are allowed.'
+          : 'Invalid file type. Only PDF, JPG, JPEG, PNG, and GIF files are allowed.',
+      });
+    }
+
+    const maxAllowedSize = isVideoUpload
+      ? 250 * 1024 * 1024
+      : 10 * 1024 * 1024;
+    if (file.size > maxAllowedSize) {
+      return res.status(400).json({
+        error: isVideoUpload
+          ? 'Video file too large. Maximum size is 250MB.'
+          : 'File too large. Maximum size is 10MB.',
       });
     }
 
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const fileName = `transcripts/${timestamp}-${randomString}${fileExtension}`;
+    const uploadFolder = isVideoUpload ? 'application-videos' : 'transcripts';
+    const fileName = `${uploadFolder}/${timestamp}-${randomString}${fileExtension}`;
 
     // Read file buffer
     const fileBuffer = fs.readFileSync(file.filepath);

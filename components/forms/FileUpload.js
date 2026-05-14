@@ -21,6 +21,10 @@ const FileUpload = ({
   } = useFormContext();
 
   const currentValue = watch(name);
+  const hasUploadedFile =
+    !!currentValue &&
+    currentValue !== 'null' &&
+    currentValue !== 'undefined';
 
   const uploadToS3 = async (file) => {
     setIsUploading(true);
@@ -110,7 +114,7 @@ const FileUpload = ({
       </div>
 
       <div className='mt-1 md:mt-2'>
-        {!currentValue ? (
+        {!hasUploadedFile ? (
           <div className='flex items-center justify-center w-full'>
             <label
               htmlFor={`file-${name}`}
