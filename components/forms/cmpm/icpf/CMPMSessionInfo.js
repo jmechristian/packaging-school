@@ -43,11 +43,11 @@ const CMPMSessionInfo = ({ email, free }) => {
                 htmlFor={'icpf-session'}
                 className='block font-medium font-greycliff leading-6 text-slate-900'
               >
-                Spring 1 - ICPF Sponsored <br />
+                Fall 2 - ICPF Sponsored <br />
                 <span className='text-sm text-slate-700'>
-                  Apr 13, 2026 - July 06, 2026
+                  Sep 21, 2026 - Dec 14, 2026
                   <br />
-                  Deadline: Apr 1, 2026
+                  Deadline: Sep 9, 2026
                 </span>
               </label>
             </div>

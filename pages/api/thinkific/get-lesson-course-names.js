@@ -7,6 +7,9 @@ const QUERY_LESSON_COURSE_NAME = `
       takeUrl
       course {
         name
+        product {
+          checkoutUrl
+        }
       }
     }
   }
@@ -40,6 +43,7 @@ async function fetchLessonCourseName(lessonId, token) {
     ok: response.ok,
     courseName: json?.data?.lesson?.course?.name || null,
     takeUrl: json?.data?.lesson?.takeUrl || null,
+    checkoutUrl: json?.data?.lesson?.course?.product?.checkoutUrl || null,
     graphqlErrors: json?.errors || null,
   };
 }
@@ -85,11 +89,18 @@ export default async function handler(req, res) {
       }
       return acc;
     }, {});
+    const checkoutUrlsByLessonId = results.reduce((acc, item) => {
+      if (item?.lessonId && item?.checkoutUrl) {
+        acc[item.lessonId] = item.checkoutUrl;
+      }
+      return acc;
+    }, {});
 
     res.status(200).json({
       lessonIds,
       names,
       takeUrlsByLessonId,
+      checkoutUrlsByLessonId,
       results,
     });
   } catch (error) {

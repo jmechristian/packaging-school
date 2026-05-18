@@ -105,10 +105,13 @@ const Page = ({
   const [wiredCompletionResults, setWiredCompletionResults] = useState([]);
   const [wiredCourseNames, setWiredCourseNames] = useState([]);
   const [showDemoQuizUpsell, setShowDemoQuizUpsell] = useState(false);
-  const [quizEmail, setQuizEmail] = useState('');
-  const [oauthPrincipalEmail, setOauthPrincipalEmail] = useState('');
+  const [leadFirstName, setLeadFirstName] = useState('');
+  const [leadLastName, setLeadLastName] = useState('');
+  const [leadEmail, setLeadEmail] = useState('');
+  const [popupFormError, setPopupFormError] = useState('');
   const wiredQuizRef = useRef(null);
   const wiredTakeUrlsByLessonIdRef = useRef({});
+  const wiredCheckoutUrlsByLessonIdRef = useRef({});
 
   const wiredQuestions = Array.isArray(lesson?.wiredQuestions)
     ? lesson.wiredQuestions
@@ -121,7 +124,6 @@ const Page = ({
   const isWiredDemo = Boolean(
     enableDemoQuiz && lesson?.wired && wiredQuestions.length > 0,
   );
-  const isDemoQuizUnlocked = true;
   const answeredQuestionCount = Object.keys(demoQuizSelections).length;
   const isDemoQuizComplete =
     wiredQuestions.length > 0 &&
@@ -133,14 +135,11 @@ const Page = ({
         String(demoQuizSelections[idx] || '').trim() ===
         String(question?.correctAnswer || '').trim(),
     );
-  const hasOauthPrincipalEmail = Boolean(
-    String(oauthPrincipalEmail || '').trim(),
-  );
-  const normalizedQuizEmail = String(quizEmail || '')
+  const normalizedLeadEmail = String(leadEmail || '')
     .trim()
     .toLowerCase();
-  const isQuizEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-    normalizedQuizEmail,
+  const isLeadEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    normalizedLeadEmail,
   );
   const wiredCompletionSucceededCount = wiredCompletionResults.filter(
     (result) => result?.ok,
@@ -163,22 +162,51 @@ const Page = ({
   }, [awsUser, lesson]);
 
   useEffect(() => {
+    const loggedInFirstName =
+      user?.given_name || awsUser?.firstName || '';
+    const loggedInLastName =
+      user?.family_name || awsUser?.lastName || '';
     const loggedInEmail =
       user?.email || awsUser?.email || awsUser?.userName || '';
-    if (loggedInEmail) {
-      setQuizEmail(String(loggedInEmail).trim());
+    if (loggedInFirstName) {
+      setLeadFirstName((prev) => prev || String(loggedInFirstName).trim());
     }
-  }, [awsUser?.email, awsUser?.userName, user?.email]);
+    if (loggedInLastName) {
+      setLeadLastName((prev) => prev || String(loggedInLastName).trim());
+    }
+    if (loggedInEmail) {
+      setLeadEmail((prev) => prev || String(loggedInEmail).trim());
+    }
+  }, [
+    awsUser?.email,
+    awsUser?.firstName,
+    awsUser?.lastName,
+    awsUser?.userName,
+    user?.email,
+    user?.family_name,
+    user?.given_name,
+  ]);
 
-  const tryPopulateQuizEmailFromOauth = async () => {
+  const tryPopulateLeadFromOauth = async () => {
     try {
       const res = await fetch('/api/thinkific/oauth/me?identity=student');
       const json = await res.json().catch(() => ({}));
+      const oauthFirstName = String(json?.me?.firstName || '').trim();
+      const oauthLastName = String(json?.me?.lastName || '').trim();
       const oauthEmail = String(json?.me?.email || '').trim();
-      if (!oauthEmail) return false;
+      const hasAny =
+        Boolean(oauthFirstName) || Boolean(oauthLastName) || Boolean(oauthEmail);
+      if (!hasAny) return false;
 
-      setOauthPrincipalEmail(oauthEmail);
-      setQuizEmail((prev) => (String(prev || '').trim() ? prev : oauthEmail));
+      if (oauthFirstName) {
+        setLeadFirstName((prev) => prev || oauthFirstName);
+      }
+      if (oauthLastName) {
+        setLeadLastName((prev) => prev || oauthLastName);
+      }
+      if (oauthEmail) {
+        setLeadEmail((prev) => prev || oauthEmail);
+      }
       return true;
     } catch {
       return false;
@@ -186,27 +214,10 @@ const Page = ({
   };
 
   useEffect(() => {
-    if (!isWiredDemo || !isDemoQuizUnlocked || normalizedQuizEmail) return;
-
-    let cancelled = false;
-    let timerId;
-
-    const attemptPopulate = async () => {
-      const found = await tryPopulateQuizEmailFromOauth();
-      if (found && !cancelled && timerId) {
-        window.clearInterval(timerId);
-      }
-    };
-
-    attemptPopulate();
-    timerId = window.setInterval(attemptPopulate, 3000);
-    return () => {
-      cancelled = true;
-      if (timerId) {
-        window.clearInterval(timerId);
-      }
-    };
-  }, [isDemoQuizUnlocked, isWiredDemo, normalizedQuizEmail]);
+    if (!showDemoQuizUpsell) return;
+    // On modal open, attempt immediate OAuth prefill for first/last/email.
+    tryPopulateLeadFromOauth();
+  }, [showDemoQuizUpsell]);
 
   useEffect(() => {
     if (!enableProgressTracking || !wiredLessonIds.length) return;
@@ -231,6 +242,13 @@ const Page = ({
         ) {
           wiredTakeUrlsByLessonIdRef.current = json.takeUrlsByLessonId;
         }
+        if (
+          res.ok &&
+          json?.checkoutUrlsByLessonId &&
+          typeof json.checkoutUrlsByLessonId === 'object'
+        ) {
+          wiredCheckoutUrlsByLessonIdRef.current = json.checkoutUrlsByLessonId;
+        }
       } catch {
         // Keep last successful names visible on transient failures.
       }
@@ -242,15 +260,6 @@ const Page = ({
       ignore = true;
     };
   }, [enableProgressTracking, wiredLessonIds, wiredLessonIdsKey]);
-
-  const handleStartOauthTest = () => {
-    if (typeof window === 'undefined') return;
-    const sub = 'packagingschool';
-    const returnTo = window.location.pathname;
-    window.location.href = `/api/thinkific/oauth/start?subdomain=${encodeURIComponent(
-      sub,
-    )}&identity=student&returnTo=${encodeURIComponent(returnTo)}`;
-  };
 
   useEffect(() => {
     const getFeaturedCard = async (type, id) => {
@@ -385,31 +394,34 @@ const Page = ({
     }
   }, [lesson]);
 
-  useEffect(() => {
-    if (!isDemoQuizUnlocked) {
-      setDemoQuizSelections({});
-      setDemoQuizSubmitted(false);
-      setIsCompletingWiredLessons(false);
-      setWiredCompletionResults([]);
-      setShowDemoQuizUpsell(false);
-    }
-  }, [isDemoQuizUnlocked]);
-
   const handleDemoQuizSubmit = async () => {
     setDemoQuizSubmitted(true);
-    if (!isQuizEmailValid) return;
     if (!isDemoQuizCorrect) return;
-
     setShowDemoQuizUpsell(true);
+  };
+
+  const handleContinueMyLearning = async () => {
+    const firstName = String(leadFirstName || '').trim();
+    const lastName = String(leadLastName || '').trim();
+    const email = normalizedLeadEmail;
+
+    if (!firstName || !lastName || !isLeadEmailValid) {
+      setPopupFormError('Enter first name, last name, and a valid email.');
+      return;
+    }
+    setPopupFormError('');
+
+    const firstCheckoutUrl = wiredLessonIds
+      .map((id) => wiredCheckoutUrlsByLessonIdRef.current[id])
+      .find(Boolean);
+    const checkoutCtaUrl = firstCheckoutUrl
+      ? `${firstCheckoutUrl}${
+          firstCheckoutUrl.includes('?') ? '&' : '?'
+        }et=free_trial`
+      : null;
 
     if (!wiredLessonIds.length) {
-      setWiredCompletionResults([
-        {
-          lessonId: null,
-          ok: true,
-          note: 'No wiredLessonId values configured on this lesson.',
-        },
-      ]);
+      if (checkoutCtaUrl) window.location.href = checkoutCtaUrl;
       return;
     }
 
@@ -422,7 +434,7 @@ const Page = ({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             lessonId,
-            email: normalizedQuizEmail,
+            email,
             useOAuth: true,
             oauthIdentity: 'student',
           }),
@@ -446,6 +458,9 @@ const Page = ({
       ]);
     } finally {
       setIsCompletingWiredLessons(false);
+      if (checkoutCtaUrl) {
+        window.location.href = checkoutCtaUrl;
+      }
     }
   };
 
@@ -454,6 +469,7 @@ const Page = ({
     setDemoQuizSubmitted(false);
     setWiredCompletionResults([]);
     setShowDemoQuizUpsell(false);
+    setPopupFormError('');
   };
 
   const handleBookmarkToggle = async () => {
@@ -507,23 +523,52 @@ const Page = ({
         />
         {enableDemoQuiz && showDemoQuizUpsell && (
           <div className='fixed inset-0 z-[80] bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4'>
-            <div className='w-full max-w-2xl bg-white dark:bg-base-dark rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8'>
-              <div className='text-xs lg:text-sm font-semibold tracking-[0.08em] uppercase text-brand-yellow mb-2'>
-                Milestone unlocked
+            <div className='w-full max-w-2xl bg-gradient-to-br from-white to-slate-50 dark:from-base-dark dark:to-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8'>
+              <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/20 text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3'>
+                <MdRocket size={16} />
+                Lesson milestone
               </div>
-              <h2 className='text-2xl lg:text-3xl font-bold leading-tight dark:text-white mb-3'>
-                You&apos;ve completed 10% of the Certificate of Sustainable
-                Packaging.
+              <h2 className='text-2xl lg:text-3xl font-bold leading-snug dark:text-white mb-3'>
+                You&apos;ve Started the Course
               </h2>
               <p className='text-gray-700 dark:text-gray-200 text-base lg:text-lg mb-2'>
-                You&apos;re building real momentum. Enroll in the full
-                certificate to keep this progress, deepen your packaging
-                sustainability expertise, and earn a credential that strengthens
-                your resume and LinkedIn profile.
+                Nice work - this lesson now counts toward your Packaging School
+                course.
               </p>
               <p className='text-gray-600 dark:text-gray-300 mb-6'>
-                Turn this first win into a complete career-ready achievement.
+                Enter your name and email to save your progress and continue
+                building toward certificate completion.
               </p>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-3'>
+                <input
+                  type='text'
+                  value={leadFirstName}
+                  onChange={(e) => setLeadFirstName(e.target.value)}
+                  placeholder='First name'
+                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                />
+                <input
+                  type='text'
+                  value={leadLastName}
+                  onChange={(e) => setLeadLastName(e.target.value)}
+                  placeholder='Last name'
+                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                />
+              </div>
+              <div className='mb-4'>
+                <input
+                  type='email'
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  placeholder='Email'
+                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                />
+              </div>
+              {popupFormError && (
+                <div className='mb-4 text-sm font-medium text-red-700 dark:text-red-300'>
+                  {popupFormError}
+                </div>
+              )}
               <div className='mb-6 text-sm'>
                 {isCompletingWiredLessons ? (
                   <div className='text-gray-700 dark:text-gray-200'>
@@ -538,21 +583,17 @@ const Page = ({
                     </strong>{' '}
                     lesson IDs.
                   </div>
-                ) : (
-                  <div className='text-gray-700 dark:text-gray-200'>
-                    Completion will be saved to Thinkific for your wired lesson
-                    IDs.
-                  </div>
-                )}
+                ) : null}
               </div>
 
               <div className='flex flex-col sm:flex-row gap-3'>
-                <Link
-                  href='/certifications/get-to-know-csp'
-                  className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition'
+                <button
+                  type='button'
+                  onClick={handleContinueMyLearning}
+                  className='inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition shadow-md'
                 >
-                  Continue to Full Certificate
-                </Link>
+                  Continue My Learning
+                </button>
                 <button
                   type='button'
                   onClick={() => setShowDemoQuizUpsell(false)}
@@ -750,40 +791,11 @@ const Page = ({
                   </div>
 
                   <div className='flex items-center gap-3'>
-                    <div className='flex-1 min-w-[220px] flex flex-col gap-2'>
-                      {hasOauthPrincipalEmail ? (
-                        <div className='px-4 py-3 rounded-lg border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 text-sm lg:text-base text-green-900 dark:text-green-100'>
-                          {oauthPrincipalEmail}
-                        </div>
-                      ) : (
-                        <>
-                          <input
-                            type='email'
-                            value={quizEmail}
-                            onChange={(e) => setQuizEmail(e.target.value)}
-                            placeholder='Email required to save progress'
-                            className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
-                          />
-                          <div className='text-xs lg:text-sm text-gray-700 dark:text-gray-200'>
-                            Already a learner?{' '}
-                            <button
-                              type='button'
-                              onClick={handleStartOauthTest}
-                              className='underline text-blue-700 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200 font-semibold'
-                            >
-                              Log in to complete
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
                     <button
                       type='button'
                       disabled={
-                        !isDemoQuizUnlocked ||
                         !isDemoQuizComplete ||
-                        isCompletingWiredLessons ||
-                        !isQuizEmailValid
+                        isCompletingWiredLessons
                       }
                       onClick={handleDemoQuizSubmit}
                       className='px-5 py-3 rounded-lg text-base font-semibold bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black'
@@ -811,9 +823,7 @@ const Page = ({
                             : 'text-red-700 dark:text-red-300'
                         }`}
                       >
-                        {!isQuizEmailValid
-                          ? 'Enter a valid email to save progress.'
-                          : isDemoQuizCorrect
+                        {isDemoQuizCorrect
                             ? 'Correct. Nice work.'
                             : 'One or more answers are incorrect. Try again.'}
                       </div>
