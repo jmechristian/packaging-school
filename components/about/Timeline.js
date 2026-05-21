@@ -217,6 +217,11 @@ const timeline = [
   },
   {
     name: 'B2B Services',
+    description: 'Packaging School Library debut with Lucid Motors.',
+    date: '2026',
+  },
+  {
+    name: 'B2B Services',
     description: 'Packaging School Library debut with Pipeline Packaging.',
     date: '2026',
   },
@@ -230,6 +235,12 @@ const timeline = [
     name: 'Partner Educators',
     description:
       'The Foundation for Graphic Communication Education (FGCE) has partnered with The Packaging School to expand access to education in packaging, printing, and graphic communications. Six students were selected for full scholarships to complete certificate programs.',
+    date: '2026',
+  },
+  {
+    name: 'Partner Educators',
+    description:
+      'Launch of published courses as the education partner for the Paperboard Packaging Council.',
     date: '2026',
   },
 ];

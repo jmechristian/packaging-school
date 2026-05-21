@@ -1,11 +1,11 @@
-const APPSYNC_ENDPOINT = process.env.GRAPHQL_ENDPOINT;
-const APPSYNC_API_KEY = process.env.GRAPHQL_API_KEY;
+import { API } from 'aws-amplify';
 
 const QUERY_PROGRESS_BY_USER = `
-  query BoosterProgressByUser($userId: ID!, $limit: Int) {
-    boosterProgressByUser(userId: $userId, limit: $limit) {
+  query ListBoosterCourseProgresses($filter: ModelBoosterCourseProgressFilterInput, $limit: Int) {
+    listBoosterCourseProgresses(filter: $filter, limit: $limit) {
       items {
         id
+        userId
         thinkificCourseId
         courseTitle
         completedLessonIds
@@ -20,10 +20,11 @@ const QUERY_PROGRESS_BY_USER = `
 `;
 
 const QUERY_CODES_BY_USER = `
-  query BoosterCodesByUser($userId: ID!, $limit: Int) {
-    boosterCodesByUser(userId: $userId, limit: $limit) {
+  query ListBoosterDiscountCodes($filter: ModelBoosterDiscountCodeFilterInput, $limit: Int) {
+    listBoosterDiscountCodes(filter: $filter, limit: $limit) {
       items {
         id
+        userId
         thinkificCourseId
         milestonePercent
         code
@@ -36,24 +37,26 @@ const QUERY_CODES_BY_USER = `
 `;
 
 async function appSync(query, variables) {
-  const response = await fetch(APPSYNC_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'x-api-key': APPSYNC_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-  return response.json().catch(() => ({}));
+  try {
+    const result = await API.graphql({ query, variables });
+    return {
+      data: result?.data || null,
+      errors: result?.errors || null,
+    };
+  } catch (error) {
+    if (Array.isArray(error?.errors)) {
+      return {
+        data: error?.data || null,
+        errors: error.errors,
+      };
+    }
+    throw error;
+  }
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
-  }
-
-  if (!APPSYNC_ENDPOINT || !APPSYNC_API_KEY) {
-    return res.status(500).json({ message: 'Missing GraphQL endpoint configuration.' });
   }
 
   const userId = String(req.query?.userId || '').trim();
@@ -63,12 +66,31 @@ export default async function handler(req, res) {
 
   try {
     const [progressJson, codesJson] = await Promise.all([
-      appSync(QUERY_PROGRESS_BY_USER, { userId, limit: 100 }),
-      appSync(QUERY_CODES_BY_USER, { userId, limit: 200 }),
+      appSync(QUERY_PROGRESS_BY_USER, {
+        limit: 100,
+        filter: { userId: { eq: userId } },
+      }),
+      appSync(QUERY_CODES_BY_USER, {
+        limit: 200,
+        filter: { userId: { eq: userId } },
+      }),
     ]);
 
-    const progress = progressJson?.data?.boosterProgressByUser?.items || [];
-    const codes = codesJson?.data?.boosterCodesByUser?.items || [];
+    if (Array.isArray(progressJson?.errors) && progressJson.errors.length) {
+      return res.status(500).json({
+        message: progressJson.errors[0]?.message || 'Failed to load booster progress.',
+        errors: progressJson.errors,
+      });
+    }
+    if (Array.isArray(codesJson?.errors) && codesJson.errors.length) {
+      return res.status(500).json({
+        message: codesJson.errors[0]?.message || 'Failed to load booster discount codes.',
+        errors: codesJson.errors,
+      });
+    }
+
+    const progress = progressJson?.data?.listBoosterCourseProgresses?.items || [];
+    const codes = codesJson?.data?.listBoosterDiscountCodes?.items || [];
 
     return res.status(200).json({ message: 'success', progress, codes });
   } catch (error) {

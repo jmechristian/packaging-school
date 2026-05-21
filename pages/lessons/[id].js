@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useEffect, useState, useRef } from 'react';
+import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
 import { API } from 'aws-amplify';
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import lessonAnimation from '/public/lesson.json';
@@ -116,8 +116,11 @@ const Page = ({
   const [leadEmail, setLeadEmail] = useState('');
   const [popupFormError, setPopupFormError] = useState('');
   const wiredQuizRef = useRef(null);
+  const hasAutoSavedBoosterRef = useRef(false);
   const wiredCourseIdsByLessonIdRef = useRef({});
   const wiredCourseDetailsByCourseIdRef = useRef({});
+  const wiredLessonTitlesByLessonIdRef = useRef({});
+  const boosterCourseLessonCountsByCourseIdRef = useRef({});
   const wiredTakeUrlsByLessonIdRef = useRef({});
   const wiredCheckoutUrlsByLessonIdRef = useRef({});
 
@@ -236,32 +239,48 @@ const Page = ({
             (primaryCourseId && details[primaryCourseId]) || fallbackDetail || null,
           );
         }
+        if (res.ok && Array.isArray(json?.results)) {
+          wiredLessonTitlesByLessonIdRef.current = json.results.reduce((acc, item) => {
+            if (item?.lessonId && item?.lessonTitle) {
+              acc[item.lessonId] = item.lessonTitle;
+            }
+            return acc;
+          }, {});
+        }
         if (enableBoosterFlow && res.ok) {
           const courseIdsByLessonId =
             json?.courseIdsByLessonId &&
             typeof json.courseIdsByLessonId === 'object'
               ? json.courseIdsByLessonId
               : {};
-          const primaryCourseId =
-            (Array.isArray(json?.courseIds) && json.courseIds[0]) ||
-            Object.values(courseIdsByLessonId)[0];
-
-          if (primaryCourseId) {
-            const lessonCountInCourse = wiredLessonIds.filter(
-              (lessonId) => courseIdsByLessonId[lessonId] === primaryCourseId,
-            ).length;
-            const numerator = Math.max(1, lessonCountInCourse);
+          const courseIds = [
+            ...(Array.isArray(json?.courseIds) ? json.courseIds : []),
+            ...Object.values(courseIdsByLessonId),
+          ].filter(Boolean);
+          const uniqueCourseIds = [...new Set(courseIds)];
+          const lessonCountsByCourseId = {};
+          for (const courseId of uniqueCourseIds) {
+            // eslint-disable-next-line no-await-in-loop
             const outlineRes = await fetch(
-              `/api/thinkific/get-course-outline?id=${encodeURIComponent(
-                primaryCourseId,
-              )}`,
+              `/api/thinkific/get-course-outline?id=${encodeURIComponent(courseId)}`,
             );
+            // eslint-disable-next-line no-await-in-loop
             const outlineJson = await outlineRes.json().catch(() => ({}));
-            const totalLessons = Number(
+            lessonCountsByCourseId[courseId] = Number(
               outlineJson?.data?.course?.curriculum?.lessonsCount ||
                 outlineJson?.data?.data?.course?.curriculum?.lessonsCount ||
                 0,
             );
+          }
+          boosterCourseLessonCountsByCourseIdRef.current = lessonCountsByCourseId;
+
+          const primaryCourseId = uniqueCourseIds[0];
+          if (primaryCourseId && lessonCountsByCourseId[primaryCourseId]) {
+            const lessonCountInCourse = wiredLessonIds.filter(
+              (lessonId) => courseIdsByLessonId[lessonId] === primaryCourseId,
+            ).length;
+            const numerator = Math.max(1, lessonCountInCourse);
+            const totalLessons = lessonCountsByCourseId[primaryCourseId];
             const calcPercent =
               totalLessons > 0
                 ? Math.max(
@@ -455,6 +474,116 @@ const Page = ({
     setShowDemoQuizUpsell(true);
   };
 
+  const saveBoosterProgress = useCallback(async () => {
+    if (!user || !awsUser?.id) {
+      setPopupFormError('Please log in to save your booster lesson progress.');
+      return false;
+    }
+
+    if (!wiredLessonIds.length) {
+      setBoosterSaveResult({
+        ok: true,
+        progressCount: 0,
+        issuedCodes: [],
+        body: { message: 'No wired lesson IDs found for this lesson.' },
+      });
+      return true;
+    }
+
+    setPopupFormError('');
+    setIsCompletingWiredLessons(true);
+    try {
+      const courseIdsByLessonId = wiredCourseIdsByLessonIdRef.current || {};
+      const courseDetailsByCourseId = wiredCourseDetailsByCourseIdRef.current || {};
+      const lessonTitlesByLessonId = wiredLessonTitlesByLessonIdRef.current || {};
+      const lessonCountsByCourseId = boosterCourseLessonCountsByCourseIdRef.current || {};
+      const groupedCourses = wiredLessonIds.reduce((acc, lessonId) => {
+        const courseId = courseIdsByLessonId[lessonId];
+        if (!courseId) return acc;
+        if (!acc[courseId]) {
+          acc[courseId] = {
+            courseId,
+            courseTitle: courseDetailsByCourseId[courseId]?.name || null,
+            totalLessonCount: Number(lessonCountsByCourseId[courseId] || 0),
+            lessonIds: [],
+            lessonTitles: [],
+          };
+        }
+        acc[courseId].lessonIds.push(lessonId);
+        const lessonTitle = lessonTitlesByLessonId[lessonId];
+        if (lessonTitle) acc[courseId].lessonTitles.push(lessonTitle);
+        return acc;
+      }, {});
+      const coursesPayload = Object.values(groupedCourses).map((course) => ({
+        ...course,
+        lessonIds: [...new Set(course.lessonIds)],
+        lessonTitles: [...new Set(course.lessonTitles)],
+      }));
+      if (!coursesPayload.length) {
+        setPopupFormError(
+          'No course mapping found for this lesson. Please refresh and try again.',
+        );
+        return false;
+      }
+
+      const response = await fetch('/api/booster/upsert-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: awsUser.id,
+          userEmail: user?.email || awsUser?.email || normalizedLeadEmail,
+          courses: coursesPayload,
+        }),
+      });
+      const body = await response.json().catch(() => ({ parseError: true }));
+      const saveResult = {
+        ok: response.ok,
+        progressCount: Array.isArray(body?.progress) ? body.progress.length : 0,
+        issuedCodes: Array.isArray(body?.issuedCodes) ? body.issuedCodes : [],
+        body,
+      };
+      setBoosterSaveResult(saveResult);
+
+      if (!response.ok) {
+        setPopupFormError(
+          body?.message || 'We could not save your booster progress right now.',
+        );
+        return false;
+      }
+      return true;
+    } catch (error) {
+      setBoosterSaveResult({
+        ok: false,
+        progressCount: 0,
+        issuedCodes: [],
+        body: { message: error?.message || String(error) },
+      });
+      setPopupFormError(
+        error?.message || 'We could not save your booster progress right now.',
+      );
+      return false;
+    } finally {
+      setIsCompletingWiredLessons(false);
+    }
+  }, [
+    awsUser?.email,
+    awsUser?.id,
+    normalizedLeadEmail,
+    user,
+    wiredLessonIds,
+  ]);
+
+  useEffect(() => {
+    if (!enableBoosterFlow || !showDemoQuizUpsell) {
+      hasAutoSavedBoosterRef.current = false;
+      return;
+    }
+    if (!user || !awsUser?.id) return;
+    if (hasAutoSavedBoosterRef.current) return;
+    hasAutoSavedBoosterRef.current = true;
+    saveBoosterProgress();
+  }, [enableBoosterFlow, showDemoQuizUpsell, user, awsUser?.id, saveBoosterProgress]);
+
   const handleContinueMyLearning = async () => {
     const firstName = String(leadFirstName || '').trim();
     const lastName = String(leadLastName || '').trim();
@@ -468,6 +597,8 @@ const Page = ({
         )}`;
         return;
       }
+      router.push('/profile?tab=boosterProgress');
+      return;
     } else if (!firstName || !lastName || !isLeadEmailValid) {
       setPopupFormError('Enter first name, last name, and a valid email.');
       return;
@@ -562,7 +693,7 @@ const Page = ({
       setIsCompletingWiredLessons(false);
       if (enableBoosterFlow && shouldNavigateToBoosterProfile) {
         router.push('/profile?tab=boosterProgress');
-      } else if (checkoutCtaUrl) {
+      } else if (!enableBoosterFlow && checkoutCtaUrl) {
         window.location.href = checkoutCtaUrl;
       }
     }
@@ -723,24 +854,6 @@ const Page = ({
                   {popupFormError}
                 </div>
               )}
-              <div className='mb-6 text-sm'>
-                {isCompletingWiredLessons ? (
-                  <div className='text-gray-700 dark:text-gray-200'>
-                    {enableBoosterFlow
-                      ? 'Saving your booster lesson progress...'
-                      : 'Saving your wired lesson completion to Thinkific...'}
-                  </div>
-                ) : boosterSaveResult ? (
-                  <div className='text-gray-700 dark:text-gray-200'>
-                    {boosterSaveResult.ok
-                      ? `Progress saved for ${boosterSaveResult.progressCount} course(s).`
-                      : 'We could not save progress right now. Please try again.'}
-                    {boosterSaveResult.issuedCodes?.length > 0
-                      ? ` ${boosterSaveResult.issuedCodes.length} milestone code(s) unlocked.`
-                      : ''}
-                  </div>
-                ) : null}
-              </div>
               {enableBoosterFlow && (
                 <div className='mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/70 p-4'>
                   <div className='flex items-start gap-3'>
@@ -784,7 +897,15 @@ const Page = ({
                         )}`;
                         return;
                       }
-                      handleContinueMyLearning();
+                      if (boosterSaveResult?.ok) {
+                        router.push('/profile?tab=boosterProgress');
+                        return;
+                      }
+                      saveBoosterProgress().then((ok) => {
+                        if (ok) {
+                          router.push('/profile?tab=boosterProgress');
+                        }
+                      });
                     }}
                     disabled={isCompletingWiredLessons}
                     className='w-full inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed'
@@ -1046,11 +1167,6 @@ const Page = ({
                       </div>
                     )}
                   </div>
-                  {boosterSaveResult?.body && !boosterSaveResult.ok && (
-                    <pre className='mt-2 p-3 rounded bg-gray-100 dark:bg-gray-900 text-xs overflow-auto'>
-                      {JSON.stringify(boosterSaveResult.body, null, 2)}
-                    </pre>
-                  )}
                 </div>
               )}
               {lesson.analysis && awsUser && (
