@@ -115,6 +115,16 @@ function makeCode(milestonePercent) {
   return `BOOST-${milestonePercent}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
+function throwIfGraphqlErrors(json, context) {
+  if (Array.isArray(json?.errors) && json.errors.length > 0) {
+    const detail = json.errors
+      .map((err) => err?.message)
+      .filter(Boolean)
+      .join(' | ');
+    throw new Error(`${context}: ${detail || 'GraphQL request failed'}`);
+  }
+}
+
 async function postJson(url, headers, body) {
   const response = await fetch(url, {
     method: 'POST',
@@ -152,6 +162,7 @@ async function lessonMappings(lessonIds) {
   for (const lessonId of lessonIds) {
     // eslint-disable-next-line no-await-in-loop
     const { json } = await thinkific(QUERY_LESSON_TO_COURSE, { lessonId });
+    throwIfGraphqlErrors(json, `Thinkific lesson lookup failed for ${lessonId}`);
     const lesson = json?.data?.lesson;
     if (!lesson?.course?.id) continue;
     rows.push({
@@ -166,6 +177,7 @@ async function lessonMappings(lessonIds) {
 
 async function getTotalLessons(courseId) {
   const { json } = await thinkific(QUERY_COURSE_LESSONS_COUNT, { courseId });
+  throwIfGraphqlErrors(json, `Thinkific course outline failed for ${courseId}`);
   return Number(json?.data?.course?.curriculum?.lessonsCount || 0);
 }
 
@@ -175,6 +187,7 @@ async function getProgress(userId, courseId) {
     limit: 1,
     filter: { thinkificCourseId: { eq: courseId } },
   });
+  throwIfGraphqlErrors(json, `AppSync progress query failed for course ${courseId}`);
   return json?.data?.boosterProgressByUser?.items?.[0] || null;
 }
 
@@ -187,6 +200,10 @@ async function hasCode(userId, courseId, milestonePercent) {
       milestonePercent: { eq: milestonePercent },
     },
   });
+  throwIfGraphqlErrors(
+    json,
+    `AppSync discount code query failed for course ${courseId} milestone ${milestonePercent}`
+  );
   return Boolean(json?.data?.boosterCodesByUser?.items?.[0]);
 }
 
@@ -207,6 +224,12 @@ export default async function handler(req, res) {
 
   try {
     const mappings = await lessonMappings(lessonIds);
+    if (!mappings.length) {
+      return res.status(400).json({
+        message: 'No valid Thinkific lesson-to-course mappings found for lessonIds.',
+        lessonIds,
+      });
+    }
     const byCourse = mappings.reduce((acc, item) => {
       if (!acc[item.courseId]) {
         acc[item.courseId] = {
@@ -264,13 +287,20 @@ export default async function handler(req, res) {
         const { json } = await appSync(MUTATION_UPDATE_PROGRESS, {
           input: { id: existing.id, ...baseInput, milestonesIssued: nextMilestones },
         });
+        throwIfGraphqlErrors(json, `AppSync update progress failed for course ${courseId}`);
         saved = json?.data?.updateBoosterCourseProgress;
       } else {
         // eslint-disable-next-line no-await-in-loop
         const { json } = await appSync(MUTATION_CREATE_PROGRESS, {
           input: { ...baseInput, milestonesIssued: nextMilestones },
         });
+        throwIfGraphqlErrors(json, `AppSync create progress failed for course ${courseId}`);
         saved = json?.data?.createBoosterCourseProgress;
+      }
+      if (!saved) {
+        throw new Error(
+          `AppSync returned null progress object for course ${courseId}. Check schema deployment and resolvers.`
+        );
       }
 
       progress.push(saved);
@@ -292,6 +322,10 @@ export default async function handler(req, res) {
             isRedeemed: false,
           },
         });
+        throwIfGraphqlErrors(
+          json,
+          `AppSync create discount code failed for course ${courseId} milestone ${milestonePercent}`
+        );
         const created = json?.data?.createBoosterDiscountCode;
         if (created) issuedCodes.push(created);
       }

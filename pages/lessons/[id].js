@@ -483,11 +483,15 @@ const Page = ({
         }et=free_trial`
       : null;
 
+    let shouldNavigateToBoosterProfile = false;
     if (!wiredLessonIds.length) {
       if (enableBoosterFlow) {
-        router.push('/profile?tab=boosterProgress');
+        shouldNavigateToBoosterProfile = true;
       } else if (checkoutCtaUrl) {
         window.location.href = checkoutCtaUrl;
+      }
+      if (shouldNavigateToBoosterProfile) {
+        router.push('/profile?tab=boosterProgress');
       }
       return;
     }
@@ -511,6 +515,13 @@ const Page = ({
           issuedCodes: Array.isArray(body?.issuedCodes) ? body.issuedCodes : [],
           body,
         });
+        if (!response.ok) {
+          setPopupFormError(
+            body?.message || 'We could not save your booster progress right now.',
+          );
+          return;
+        }
+        shouldNavigateToBoosterProfile = true;
       } else {
         const results = [];
         for (const lessonId of wiredLessonIds) {
@@ -542,9 +553,14 @@ const Page = ({
         issuedCodes: [],
         body: { message: error?.message || String(error) },
       });
+      if (enableBoosterFlow) {
+        setPopupFormError(
+          error?.message || 'We could not save your booster progress right now.',
+        );
+      }
     } finally {
       setIsCompletingWiredLessons(false);
-      if (enableBoosterFlow) {
+      if (enableBoosterFlow && shouldNavigateToBoosterProfile) {
         router.push('/profile?tab=boosterProgress');
       } else if (checkoutCtaUrl) {
         window.location.href = checkoutCtaUrl;
