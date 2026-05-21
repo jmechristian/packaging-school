@@ -2620,6 +2620,135 @@ export const onDeleteLearningPathProgress = /* GraphQL */ `
     }
   }
 `;
+export const onCreateBoosterCourseProgress = /* GraphQL */ `
+  subscription OnCreateBoosterCourseProgress(
+    $filter: ModelSubscriptionBoosterCourseProgressFilterInput
+  ) {
+    onCreateBoosterCourseProgress(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateBoosterCourseProgress = /* GraphQL */ `
+  subscription OnUpdateBoosterCourseProgress(
+    $filter: ModelSubscriptionBoosterCourseProgressFilterInput
+  ) {
+    onUpdateBoosterCourseProgress(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteBoosterCourseProgress = /* GraphQL */ `
+  subscription OnDeleteBoosterCourseProgress(
+    $filter: ModelSubscriptionBoosterCourseProgressFilterInput
+  ) {
+    onDeleteBoosterCourseProgress(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateBoosterDiscountCode = /* GraphQL */ `
+  subscription OnCreateBoosterDiscountCode(
+    $filter: ModelSubscriptionBoosterDiscountCodeFilterInput
+  ) {
+    onCreateBoosterDiscountCode(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateBoosterDiscountCode = /* GraphQL */ `
+  subscription OnUpdateBoosterDiscountCode(
+    $filter: ModelSubscriptionBoosterDiscountCodeFilterInput
+  ) {
+    onUpdateBoosterDiscountCode(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteBoosterDiscountCode = /* GraphQL */ `
+  subscription OnDeleteBoosterDiscountCode(
+    $filter: ModelSubscriptionBoosterDiscountCodeFilterInput
+  ) {
+    onDeleteBoosterDiscountCode(filter: $filter) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateLearningPathCourse = /* GraphQL */ `
   subscription OnCreateLearningPathCourse(
     $filter: ModelSubscriptionLearningPathCourseFilterInput

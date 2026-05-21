@@ -2755,6 +2755,141 @@ export const deleteLearningPathProgress = /* GraphQL */ `
     }
   }
 `;
+export const createBoosterCourseProgress = /* GraphQL */ `
+  mutation CreateBoosterCourseProgress(
+    $input: CreateBoosterCourseProgressInput!
+    $condition: ModelBoosterCourseProgressConditionInput
+  ) {
+    createBoosterCourseProgress(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateBoosterCourseProgress = /* GraphQL */ `
+  mutation UpdateBoosterCourseProgress(
+    $input: UpdateBoosterCourseProgressInput!
+    $condition: ModelBoosterCourseProgressConditionInput
+  ) {
+    updateBoosterCourseProgress(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteBoosterCourseProgress = /* GraphQL */ `
+  mutation DeleteBoosterCourseProgress(
+    $input: DeleteBoosterCourseProgressInput!
+    $condition: ModelBoosterCourseProgressConditionInput
+  ) {
+    deleteBoosterCourseProgress(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      courseTitle
+      completedLessonIds
+      completedLessonTitles
+      totalLessonCount
+      percentComplete
+      milestonesIssued
+      lastCompletedLessonId
+      lastCompletedLessonTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createBoosterDiscountCode = /* GraphQL */ `
+  mutation CreateBoosterDiscountCode(
+    $input: CreateBoosterDiscountCodeInput!
+    $condition: ModelBoosterDiscountCodeConditionInput
+  ) {
+    createBoosterDiscountCode(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateBoosterDiscountCode = /* GraphQL */ `
+  mutation UpdateBoosterDiscountCode(
+    $input: UpdateBoosterDiscountCodeInput!
+    $condition: ModelBoosterDiscountCodeConditionInput
+  ) {
+    updateBoosterDiscountCode(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteBoosterDiscountCode = /* GraphQL */ `
+  mutation DeleteBoosterDiscountCode(
+    $input: DeleteBoosterDiscountCodeInput!
+    $condition: ModelBoosterDiscountCodeConditionInput
+  ) {
+    deleteBoosterDiscountCode(input: $input, condition: $condition) {
+      id
+      userId
+      userEmail
+      thinkificCourseId
+      milestonePercent
+      code
+      issuedAt
+      redeemedAt
+      isRedeemed
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createLearningPathCourse = /* GraphQL */ `
   mutation CreateLearningPathCourse(
     $input: CreateLearningPathCourseInput!
