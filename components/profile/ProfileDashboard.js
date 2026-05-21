@@ -77,15 +77,6 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
       value: 'certificates',
     },
     {
-      label: ' Learning Paths',
-      value: 'paths',
-    },
-
-    {
-      label: 'Lessons Completed',
-      value: 'lessonsCompleted',
-    },
-    {
       label: 'Booster Progress',
       value: 'boosterProgress',
     },
