@@ -20,6 +20,7 @@ import ProfilePaths from './ProfilePaths';
 import ProfileApplications from './ProfileApplications';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
+import BoosterProgress from './BoosterProgress';
 const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
@@ -83,6 +84,10 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
     {
       label: 'Lessons Completed',
       value: 'lessonsCompleted',
+    },
+    {
+      label: 'Booster Progress',
+      value: 'boosterProgress',
     },
     {
       label: 'Lessons Saved',
@@ -152,6 +157,8 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
         );
       case 'lessonsCompleted':
         return <CompletedLesson lessons={awsUser?.lessonsCompleted?.items} />;
+      case 'boosterProgress':
+        return <BoosterProgress userId={awsUser?.id} />;
       case 'lessonsSaved':
         return <SavedLessons lessons={awsUser?.savedLessons} />;
       case 'profile':

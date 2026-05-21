@@ -21,6 +21,7 @@ const nextConfig = {
       'media.licdn.com',
       'packmedia54032-staging.s3.amazonaws.com',
       'packschool.s3.us-east-1.amazonaws.com',
+      'files.cdn.thinkific.com',
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days for optimized images

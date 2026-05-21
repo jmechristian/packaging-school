@@ -6,6 +6,7 @@ import React, { useMemo, useEffect, useState, useRef } from 'react';
 import { API } from 'aws-amplify';
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import lessonAnimation from '/public/lesson.json';
+import confettiAnimation from '/public/Confetti2.json';
 
 const LessonShareButtons = dynamic(
   () => import('../../components/lessons/LessonShareButtons'),
@@ -56,6 +57,7 @@ const Page = ({
   lesson,
   enableProgressTracking = false,
   enableDemoQuiz = false,
+  enableBoosterFlow = false,
 }) => {
   const normalizeWiredLessonIds = (raw) => {
     if (Array.isArray(raw)) {
@@ -102,14 +104,20 @@ const Page = ({
   const [demoQuizSubmitted, setDemoQuizSubmitted] = useState(false);
   const [isCompletingWiredLessons, setIsCompletingWiredLessons] =
     useState(false);
-  const [wiredCompletionResults, setWiredCompletionResults] = useState([]);
+  const [boosterSaveResult, setBoosterSaveResult] = useState(null);
   const [wiredCourseNames, setWiredCourseNames] = useState([]);
   const [showDemoQuizUpsell, setShowDemoQuizUpsell] = useState(false);
+  const [showUpsellCard, setShowUpsellCard] = useState(false);
+  const [boosterLessonPercent, setBoosterLessonPercent] = useState(0);
+  const [boosterLessonCourseTitle, setBoosterLessonCourseTitle] = useState('');
+  const [boosterCourseCallout, setBoosterCourseCallout] = useState(null);
   const [leadFirstName, setLeadFirstName] = useState('');
   const [leadLastName, setLeadLastName] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
   const [popupFormError, setPopupFormError] = useState('');
   const wiredQuizRef = useRef(null);
+  const wiredCourseIdsByLessonIdRef = useRef({});
+  const wiredCourseDetailsByCourseIdRef = useRef({});
   const wiredTakeUrlsByLessonIdRef = useRef({});
   const wiredCheckoutUrlsByLessonIdRef = useRef({});
 
@@ -141,9 +149,6 @@ const Page = ({
   const isLeadEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
     normalizedLeadEmail,
   );
-  const wiredCompletionSucceededCount = wiredCompletionResults.filter(
-    (result) => result?.ok,
-  ).length;
   const wiredCourseNamesText = useMemo(() => {
     if (!wiredCourseNames.length) return '';
     if (wiredCourseNames.length === 1) return wiredCourseNames[0];
@@ -152,6 +157,9 @@ const Page = ({
     }
     return wiredCourseNames.join(', ');
   }, [wiredCourseNames]);
+  const boosterCourseTitle =
+    boosterLessonCourseTitle || wiredCourseNames?.[0] || 'your Packaging School course';
+  const boosterCourseDetail = boosterCourseCallout;
 
   const lessonJsonLd = lesson ? buildLessonJsonLd(lesson, siteUrl) : null;
 
@@ -187,38 +195,6 @@ const Page = ({
     user?.given_name,
   ]);
 
-  const tryPopulateLeadFromOauth = async () => {
-    try {
-      const res = await fetch('/api/thinkific/oauth/me?identity=student');
-      const json = await res.json().catch(() => ({}));
-      const oauthFirstName = String(json?.me?.firstName || '').trim();
-      const oauthLastName = String(json?.me?.lastName || '').trim();
-      const oauthEmail = String(json?.me?.email || '').trim();
-      const hasAny =
-        Boolean(oauthFirstName) || Boolean(oauthLastName) || Boolean(oauthEmail);
-      if (!hasAny) return false;
-
-      if (oauthFirstName) {
-        setLeadFirstName((prev) => prev || oauthFirstName);
-      }
-      if (oauthLastName) {
-        setLeadLastName((prev) => prev || oauthLastName);
-      }
-      if (oauthEmail) {
-        setLeadEmail((prev) => prev || oauthEmail);
-      }
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    if (!showDemoQuizUpsell) return;
-    // On modal open, attempt immediate OAuth prefill for first/last/email.
-    tryPopulateLeadFromOauth();
-  }, [showDemoQuizUpsell]);
-
   useEffect(() => {
     if (!enableProgressTracking || !wiredLessonIds.length) return;
 
@@ -234,6 +210,74 @@ const Page = ({
         if (ignore) return;
         if (res.ok && Array.isArray(json?.names) && json.names.length > 0) {
           setWiredCourseNames(json.names);
+        }
+        if (
+          res.ok &&
+          json?.courseIdsByLessonId &&
+          typeof json.courseIdsByLessonId === 'object'
+        ) {
+          wiredCourseIdsByLessonIdRef.current = json.courseIdsByLessonId;
+        }
+        if (
+          res.ok &&
+          json?.courseDetailsByCourseId &&
+          typeof json.courseDetailsByCourseId === 'object'
+        ) {
+          wiredCourseDetailsByCourseIdRef.current = json.courseDetailsByCourseId;
+          const details = json.courseDetailsByCourseId;
+          const mappedIds =
+            json?.courseIdsByLessonId && typeof json.courseIdsByLessonId === 'object'
+              ? json.courseIdsByLessonId
+              : {};
+          const firstCourseId = wiredLessonIds.find((id) => mappedIds[id]) || null;
+          const primaryCourseId = firstCourseId ? mappedIds[firstCourseId] : null;
+          const fallbackDetail = Object.values(details)[0] || null;
+          setBoosterCourseCallout(
+            (primaryCourseId && details[primaryCourseId]) || fallbackDetail || null,
+          );
+        }
+        if (enableBoosterFlow && res.ok) {
+          const courseIdsByLessonId =
+            json?.courseIdsByLessonId &&
+            typeof json.courseIdsByLessonId === 'object'
+              ? json.courseIdsByLessonId
+              : {};
+          const primaryCourseId =
+            (Array.isArray(json?.courseIds) && json.courseIds[0]) ||
+            Object.values(courseIdsByLessonId)[0];
+
+          if (primaryCourseId) {
+            const lessonCountInCourse = wiredLessonIds.filter(
+              (lessonId) => courseIdsByLessonId[lessonId] === primaryCourseId,
+            ).length;
+            const numerator = Math.max(1, lessonCountInCourse);
+            const outlineRes = await fetch(
+              `/api/thinkific/get-course-outline?id=${encodeURIComponent(
+                primaryCourseId,
+              )}`,
+            );
+            const outlineJson = await outlineRes.json().catch(() => ({}));
+            const totalLessons = Number(
+              outlineJson?.data?.course?.curriculum?.lessonsCount ||
+                outlineJson?.data?.data?.course?.curriculum?.lessonsCount ||
+                0,
+            );
+            const calcPercent =
+              totalLessons > 0
+                ? Math.max(
+                    0,
+                    Math.min(
+                      100,
+                      Math.round(((numerator / totalLessons) * 100 + Number.EPSILON) * 100) / 100,
+                    ),
+                  )
+                : 0;
+            setBoosterLessonPercent(calcPercent);
+            setBoosterLessonCourseTitle(
+              json?.results?.find((item) => item?.courseId === primaryCourseId)
+                ?.courseName || json?.names?.[0] || '',
+            );
+          }
         }
         if (
           res.ok &&
@@ -259,7 +303,18 @@ const Page = ({
     return () => {
       ignore = true;
     };
-  }, [enableProgressTracking, wiredLessonIds, wiredLessonIdsKey]);
+  }, [enableBoosterFlow, enableProgressTracking, wiredLessonIds, wiredLessonIdsKey]);
+
+  useEffect(() => {
+    if (!showDemoQuizUpsell) {
+      setShowUpsellCard(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setShowUpsellCard(true);
+    }, 220);
+    return () => clearTimeout(timer);
+  }, [showDemoQuizUpsell]);
 
   useEffect(() => {
     const getFeaturedCard = async (type, id) => {
@@ -405,7 +460,15 @@ const Page = ({
     const lastName = String(leadLastName || '').trim();
     const email = normalizedLeadEmail;
 
-    if (!firstName || !lastName || !isLeadEmailValid) {
+    if (enableBoosterFlow) {
+      if (!user || !awsUser?.id) {
+        setPopupFormError('Please log in to save your booster lesson progress.');
+        window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(
+          router.asPath,
+        )}`;
+        return;
+      }
+    } else if (!firstName || !lastName || !isLeadEmailValid) {
       setPopupFormError('Enter first name, last name, and a valid email.');
       return;
     }
@@ -421,44 +484,69 @@ const Page = ({
       : null;
 
     if (!wiredLessonIds.length) {
-      if (checkoutCtaUrl) window.location.href = checkoutCtaUrl;
+      if (enableBoosterFlow) {
+        router.push('/profile?tab=boosterProgress');
+      } else if (checkoutCtaUrl) {
+        window.location.href = checkoutCtaUrl;
+      }
       return;
     }
 
     setIsCompletingWiredLessons(true);
     try {
-      const results = [];
-      for (const lessonId of wiredLessonIds) {
-        const response = await fetch('/api/thinkific/mark-lesson-complete', {
+      if (enableBoosterFlow) {
+        const response = await fetch('/api/booster/upsert-progress', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            lessonId,
-            email,
-            useOAuth: true,
-            oauthIdentity: 'student',
+            userId: awsUser.id,
+            userEmail: user?.email || awsUser?.email || email,
+            lessonIds: wiredLessonIds,
           }),
         });
         const body = await response.json().catch(() => ({ parseError: true }));
-        results.push({
-          lessonId,
-          httpStatus: response.status,
+        setBoosterSaveResult({
           ok: response.ok,
+          progressCount: Array.isArray(body?.progress) ? body.progress.length : 0,
+          issuedCodes: Array.isArray(body?.issuedCodes) ? body.issuedCodes : [],
           body,
         });
+      } else {
+        const results = [];
+        for (const lessonId of wiredLessonIds) {
+          const response = await fetch('/api/thinkific/mark-lesson-complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              lessonId,
+              email,
+              useOAuth: true,
+              oauthIdentity: 'student',
+            }),
+          });
+          // eslint-disable-next-line no-await-in-loop
+          const body = await response.json().catch(() => ({ parseError: true }));
+          results.push({ ok: response.ok, body });
+        }
+        setBoosterSaveResult({
+          ok: results.every((r) => r.ok),
+          progressCount: results.length,
+          issuedCodes: [],
+          body: { results },
+        });
       }
-      setWiredCompletionResults(results);
     } catch (error) {
-      setWiredCompletionResults([
-        {
-          lessonId: null,
-          ok: false,
-          message: error?.message || String(error),
-        },
-      ]);
+      setBoosterSaveResult({
+        ok: false,
+        progressCount: 0,
+        issuedCodes: [],
+        body: { message: error?.message || String(error) },
+      });
     } finally {
       setIsCompletingWiredLessons(false);
-      if (checkoutCtaUrl) {
+      if (enableBoosterFlow) {
+        router.push('/profile?tab=boosterProgress');
+      } else if (checkoutCtaUrl) {
         window.location.href = checkoutCtaUrl;
       }
     }
@@ -467,7 +555,7 @@ const Page = ({
   const handleResetDemoQuiz = () => {
     setDemoQuizSelections({});
     setDemoQuizSubmitted(false);
-    setWiredCompletionResults([]);
+    setBoosterSaveResult(null);
     setShowDemoQuizUpsell(false);
     setPopupFormError('');
   };
@@ -523,47 +611,97 @@ const Page = ({
         />
         {enableDemoQuiz && showDemoQuizUpsell && (
           <div className='fixed inset-0 z-[80] bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4'>
-            <div className='w-full max-w-2xl bg-gradient-to-br from-white to-slate-50 dark:from-base-dark dark:to-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8'>
+            {enableBoosterFlow && (
+              <div className='absolute inset-0 pointer-events-none opacity-95'>
+                <Lottie
+                  animationData={confettiAnimation}
+                  loop={false}
+                  autoplay
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+            )}
+            {enableBoosterFlow && (
+              <div
+                className='absolute inset-0 pointer-events-none opacity-70'
+                style={{ transform: 'scale(1.2)' }}
+              >
+                <Lottie
+                  animationData={confettiAnimation}
+                  loop={false}
+                  autoplay
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+            )}
+            <div
+              className={`relative z-10 w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8 overflow-hidden transition-all duration-500 ease-out ${
+                showUpsellCard
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-3 scale-[0.98]'
+              }`}
+            >
               <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/20 text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3'>
                 <MdRocket size={16} />
                 Lesson milestone
               </div>
               <h2 className='text-2xl lg:text-3xl font-bold leading-snug dark:text-white mb-3'>
-                You&apos;ve Started the Course
+                {enableBoosterFlow
+                  ? `You've Completed ${boosterLessonPercent}% of the course`
+                  : "You've Started the Course"}
               </h2>
               <p className='text-gray-700 dark:text-gray-200 text-base lg:text-lg mb-2'>
-                Nice work - this lesson now counts toward your Packaging School
-                course.
+                {enableBoosterFlow
+                  ? `Nice work - this lesson now counts toward ${boosterCourseTitle}.`
+                  : 'Nice work - this lesson now counts toward your Packaging School course.'}
               </p>
               <p className='text-gray-600 dark:text-gray-300 mb-6'>
-                Enter your name and email to save your progress and continue
-                building toward certificate completion.
+                {enableBoosterFlow
+                  ? 'Keep the momentum going - complete more booster lessons, hit new percentage milestones, and unlock exclusive savings on this course.'
+                  : 'Enter your name and email to save your progress and continue building toward certificate completion.'}
               </p>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-3'>
-                <input
-                  type='text'
-                  value={leadFirstName}
-                  onChange={(e) => setLeadFirstName(e.target.value)}
-                  placeholder='First name'
-                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
-                />
-                <input
-                  type='text'
-                  value={leadLastName}
-                  onChange={(e) => setLeadLastName(e.target.value)}
-                  placeholder='Last name'
-                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
-                />
-              </div>
-              <div className='mb-4'>
-                <input
-                  type='email'
-                  value={leadEmail}
-                  onChange={(e) => setLeadEmail(e.target.value)}
-                  placeholder='Email'
-                  className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
-                />
-              </div>
+              {enableBoosterFlow ? (
+                <div
+                  className={`mb-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900 px-4 py-3 text-sm ${
+                    user && awsUser?.id ? '' : 'hidden'
+                  }`}
+                >
+                  {user && awsUser?.id && (
+                    <div className='text-gray-700 dark:text-gray-200'>
+                      Saving progress for{' '}
+                      <strong>{user?.email || awsUser?.email || awsUser?.name}</strong>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-3'>
+                    <input
+                      type='text'
+                      value={leadFirstName}
+                      onChange={(e) => setLeadFirstName(e.target.value)}
+                      placeholder='First name'
+                      className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                    />
+                    <input
+                      type='text'
+                      value={leadLastName}
+                      onChange={(e) => setLeadLastName(e.target.value)}
+                      placeholder='Last name'
+                      className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                    />
+                  </div>
+                  <div className='mb-4'>
+                    <input
+                      type='email'
+                      value={leadEmail}
+                      onChange={(e) => setLeadEmail(e.target.value)}
+                      placeholder='Email'
+                      className='w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm lg:text-base'
+                    />
+                  </div>
+                </>
+              )}
               {popupFormError && (
                 <div className='mb-4 text-sm font-medium text-red-700 dark:text-red-300'>
                   {popupFormError}
@@ -572,36 +710,99 @@ const Page = ({
               <div className='mb-6 text-sm'>
                 {isCompletingWiredLessons ? (
                   <div className='text-gray-700 dark:text-gray-200'>
-                    Saving your wired lesson completion to Thinkific...
+                    {enableBoosterFlow
+                      ? 'Saving your booster lesson progress...'
+                      : 'Saving your wired lesson completion to Thinkific...'}
                   </div>
-                ) : wiredCompletionResults.length > 0 ? (
+                ) : boosterSaveResult ? (
                   <div className='text-gray-700 dark:text-gray-200'>
-                    Thinkific completion calls succeeded for{' '}
-                    <strong>
-                      {wiredCompletionSucceededCount}/
-                      {wiredCompletionResults.length}
-                    </strong>{' '}
-                    lesson IDs.
+                    {boosterSaveResult.ok
+                      ? `Progress saved for ${boosterSaveResult.progressCount} course(s).`
+                      : 'We could not save progress right now. Please try again.'}
+                    {boosterSaveResult.issuedCodes?.length > 0
+                      ? ` ${boosterSaveResult.issuedCodes.length} milestone code(s) unlocked.`
+                      : ''}
                   </div>
                 ) : null}
               </div>
+              {enableBoosterFlow && (
+                <div className='mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/70 p-4'>
+                  <div className='flex items-start gap-3'>
+                    {boosterCourseDetail?.cardImageUrl ? (
+                      <div className='w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700'>
+                        <Image
+                          src={boosterCourseDetail.cardImageUrl}
+                          alt={boosterCourseDetail?.name || 'Course image'}
+                          width={80}
+                          height={80}
+                          className='w-full h-full object-cover'
+                        />
+                      </div>
+                    ) : (
+                      <div className='w-20 h-20 rounded-lg shrink-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-600 dark:text-gray-300 font-semibold'>
+                        Course
+                      </div>
+                    )}
+                    <div className='min-w-0'>
+                      <div className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1'>
+                        {boosterCourseDetail?.name || boosterCourseTitle}
+                      </div>
+                      {boosterCourseDetail?.description && (
+                        <p className='text-sm text-gray-700 dark:text-gray-300 line-clamp-3'>
+                          {boosterCourseDetail.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              <div className='flex flex-col sm:flex-row gap-3'>
-                <button
-                  type='button'
-                  onClick={handleContinueMyLearning}
-                  className='inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition shadow-md'
-                >
-                  Continue My Learning
-                </button>
-                <button
-                  type='button'
-                  onClick={() => setShowDemoQuizUpsell(false)}
-                  className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold border border-gray-300 dark:border-gray-600 dark:text-white'
-                >
-                  Keep Reading This Lesson
-                </button>
-              </div>
+              {enableBoosterFlow ? (
+                <div className='flex flex-col sm:flex-row gap-3'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      if (!user || !awsUser?.id) {
+                        window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(
+                          router.asPath,
+                        )}`;
+                        return;
+                      }
+                      handleContinueMyLearning();
+                    }}
+                    disabled={isCompletingWiredLessons}
+                    className='w-full inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed'
+                  >
+                    {user && awsUser?.id
+                      ? 'View Booster Progress'
+                      : 'Log In to Save Progress'}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => setShowDemoQuizUpsell(false)}
+                    className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold border border-gray-300 dark:border-gray-600 dark:text-white'
+                  >
+                    Keep Reading This Lesson
+                  </button>
+                </div>
+              ) : (
+                <div className='flex flex-col sm:flex-row gap-3'>
+                  <button
+                    type='button'
+                    onClick={handleContinueMyLearning}
+                    className='inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm lg:text-base font-semibold bg-brand-yellow text-black hover:brightness-95 transition shadow-md'
+                  >
+                    Continue My Learning
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => setShowDemoQuizUpsell(false)}
+                    className='inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm lg:text-base font-semibold border border-gray-300 dark:border-gray-600 dark:text-white'
+                  >
+                    Keep Reading This Lesson
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -829,9 +1030,9 @@ const Page = ({
                       </div>
                     )}
                   </div>
-                  {!!wiredCompletionResults.length && (
+                  {boosterSaveResult?.body && !boosterSaveResult.ok && (
                     <pre className='mt-2 p-3 rounded bg-gray-100 dark:bg-gray-900 text-xs overflow-auto'>
-                      {JSON.stringify(wiredCompletionResults, null, 2)}
+                      {JSON.stringify(boosterSaveResult.body, null, 2)}
                     </pre>
                   )}
                 </div>

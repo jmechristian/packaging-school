@@ -384,6 +384,41 @@ type LearningPathProgress @model @auth(rules: [{ allow: public }]) {
   credentialDate: String
 }
 
+type BoosterCourseProgress @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userId: ID!
+    @index(name: "boosterProgressByUser", queryField: "boosterProgressByUser")
+  userEmail: String
+    @index(
+      name: "boosterProgressByUserEmail"
+      queryField: "boosterProgressByUserEmail"
+    )
+  thinkificCourseId: String!
+    @index(name: "boosterProgressByCourse", queryField: "boosterProgressByCourse")
+  courseTitle: String
+  completedLessonIds: [String]
+  completedLessonTitles: [String]
+  totalLessonCount: Int
+  percentComplete: Float
+  milestonesIssued: [Int]
+  lastCompletedLessonId: String
+  lastCompletedLessonTitle: String
+}
+
+type BoosterDiscountCode @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userId: ID! @index(name: "boosterCodesByUser", queryField: "boosterCodesByUser")
+  userEmail: String
+    @index(name: "boosterCodesByUserEmail", queryField: "boosterCodesByUserEmail")
+  thinkificCourseId: String!
+    @index(name: "boosterCodesByCourse", queryField: "boosterCodesByCourse")
+  milestonePercent: Int!
+  code: String!
+  issuedAt: AWSDateTime
+  redeemedAt: AWSDateTime
+  isRedeemed: Boolean
+}
+
 type LearningPathCourse @model @auth(rules: [{ allow: public }]) {
   id: ID!
   courseId: String
