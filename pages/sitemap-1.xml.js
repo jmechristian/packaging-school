@@ -141,7 +141,12 @@ export async function getServerSideProps({ res }) {
 
   const courses = await fetchAll(
     listLMSCourses,
-    { filter: { collection: { contains: 'null' } }, limit: 200 },
+    {
+      filter: {
+        and: [{ type: { ne: 'CUSTOMER' } }, { type: { ne: 'HIDDEN' } }],
+      },
+      limit: 200,
+    },
     ['listLMSCourses']
   );
 

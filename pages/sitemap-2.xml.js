@@ -110,7 +110,7 @@ export async function getServerSideProps({ res }) {
     {
       filter: {
         preview: { attributeExists: true },
-        collection: { contains: 'null' },
+        and: [{ type: { ne: 'CUSTOMER' } }, { type: { ne: 'HIDDEN' } }],
       },
       limit: 200,
     },
