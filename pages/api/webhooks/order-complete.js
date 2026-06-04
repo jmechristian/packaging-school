@@ -61,6 +61,18 @@ function normalizeString(value) {
   return String(value);
 }
 
+function normalizeLower(value) {
+  const normalized = normalizeString(value);
+  return normalized ? normalized.toLowerCase() : null;
+}
+
+function isLikelyInternalOrderId(value) {
+  const normalized = normalizeString(value);
+  if (!normalized) return false;
+  if (/^\d+$/.test(normalized)) return false;
+  return normalized.length >= 12;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -87,50 +99,57 @@ export default async function handler(req, res) {
     }
 
     const payload = body.payload || body;
-    const action = normalizeString(body.action || payload.action);
+    const action = normalizeLower(body.action || payload.action);
+    const orderStatus = normalizeLower(payload.status);
+    const looksCompleted =
+      ['paid', 'completed', 'purchase'].includes(action || '') ||
+      ['complete', 'completed', 'paid'].includes(orderStatus || '');
 
-    if (action && !['paid', 'completed', 'purchase'].includes(action)) {
+    if (!looksCompleted) {
       return res.status(200).json({
         success: true,
         ignored: true,
-        reason: `Webhook action '${action}' does not represent completed sale`,
+        reason: `Webhook action/status '${action || 'unknown'}/${orderStatus || 'unknown'}' does not represent completed sale`,
       });
     }
-
-    const orderId = normalizeString(payload.order_id || payload.id);
-    if (!orderId) {
-      return res.status(400).json({ error: 'Missing order id in webhook payload' });
-    }
-
-    const orderResponse = await API.graphql({
-      query: getOrderQuery,
-      variables: { id: orderId },
-    });
-
-    const existingOrder = orderResponse?.data?.getOrder;
-    if (!existingOrder) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-
-    if (existingOrder.status === 'COMPLETE') {
-      return res.status(200).json({
-        success: true,
-        message: 'Order already completed',
-        orderId,
-      });
-    }
-
-    await API.graphql({
-      query: updateOrderMutation,
-      variables: {
-        input: {
-          id: orderId,
-          status: 'COMPLETE',
-        },
-      },
-    });
 
     const metadata = payload.metadata || payload.custom_fields || null;
+    const possibleInternalOrderId = normalizeString(
+      payload.order_id || payload.internal_order_id || metadata?.order_id,
+    );
+    const externalOrderId = normalizeString(
+      payload.external_order_id ||
+        payload.transaction_id ||
+        payload.order_number ||
+        payload.id,
+    );
+
+    let existingOrder = null;
+
+    if (isLikelyInternalOrderId(possibleInternalOrderId)) {
+      try {
+        const orderResponse = await API.graphql({
+          query: getOrderQuery,
+          variables: { id: possibleInternalOrderId },
+        });
+        existingOrder = orderResponse?.data?.getOrder || null;
+      } catch (error) {
+        console.warn('Failed to fetch internal order for webhook:', error?.message);
+      }
+    }
+
+    if (existingOrder && existingOrder.status !== 'COMPLETE') {
+      await API.graphql({
+        query: updateOrderMutation,
+        variables: {
+          input: {
+            id: existingOrder.id,
+            status: 'COMPLETE',
+          },
+        },
+      });
+    }
+
     const variant = normalizeString(
       payload.ab_variant || payload.variant || metadata?.ab_variant,
     );
@@ -166,12 +185,12 @@ export default async function handler(req, res) {
           acquisitionSource,
           acquisitionMedium,
           acquisitionCampaign,
-          userID: normalizeString(existingOrder.userID),
-          pagePath: normalizeString(existingOrder.page),
-          orderId,
-          externalOrderId: normalizeString(
-            payload.external_order_id || payload.transaction_id,
+          userID: normalizeString(
+            existingOrder?.userID || payload?.user?.id || metadata?.user_id,
           ),
+          pagePath: normalizeString(existingOrder?.page || metadata?.page_path),
+          orderId: normalizeString(existingOrder?.id || possibleInternalOrderId),
+          externalOrderId,
           source: 'lms_webhook',
           metadata: metadata ? JSON.stringify(metadata) : null,
           createdAt: new Date().toISOString(),
@@ -179,7 +198,12 @@ export default async function handler(req, res) {
       },
     });
 
-    return res.status(200).json({ success: true, orderId });
+    return res.status(200).json({
+      success: true,
+      internalOrderId: existingOrder?.id || possibleInternalOrderId || null,
+      externalOrderId,
+      matchedInternalOrder: Boolean(existingOrder),
+    });
   } catch (error) {
     console.error('Order completion webhook failed:', error);
     return res.status(500).json({ error: 'Failed to process order webhook' });
