@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [eventsSearch, setEventsSearch] = useState('');
   const [eventsPageSize, setEventsPageSize] = useState(50);
   const [eventsPage, setEventsPage] = useState(1);
+  const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -81,14 +82,16 @@ const Dashboard = () => {
     const byVariant = summary?.byVariant || {};
     const rows = Object.entries(byVariant).map(([variant, data]) => {
       const exposures = data.exposure || 0;
+      const pageViews = data.pageViews || 0;
       const purchaseIntent = data.purchaseIntent || 0;
       const purchaseComplete = data.purchaseComplete || 0;
+      const rateDenominator = exposures > 0 ? exposures : pageViews;
 
       return {
         variant,
         ...data,
-        intentRate: exposures ? purchaseIntent / exposures : 0,
-        completionRate: exposures ? purchaseComplete / exposures : 0,
+        intentRate: rateDenominator ? purchaseIntent / rateDenominator : 0,
+        completionRate: rateDenominator ? purchaseComplete / rateDenominator : 0,
       };
     });
 
@@ -192,6 +195,13 @@ const Dashboard = () => {
     const endIndex = startIndex + eventsPageSize;
     return filteredEvents.slice(startIndex, endIndex);
   }, [filteredEvents, currentEventsPage, eventsPageSize]);
+
+  const selectedSessionEvents = useMemo(() => {
+    if (!selectedSessionId) return [];
+    return events
+      .filter((event) => (event.sessionId || null) === selectedSessionId)
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  }, [events, selectedSessionId]);
 
   const exportSummaryCsv = () => {
     const header = [
@@ -700,7 +710,20 @@ const Dashboard = () => {
                         className='text-xs text-gray-500 max-w-[220px] truncate'
                         title={event.sessionId || ''}
                       >
-                        {event.sessionId || 'N/A'}
+                        {event.sessionId ? (
+                          <button
+                            type='button'
+                            className='text-clemson hover:underline'
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedSessionId(event.sessionId);
+                            }}
+                          >
+                            {event.sessionId}
+                          </button>
+                        ) : (
+                          'N/A'
+                        )}
                       </div>
                     </td>
                     <td className='px-4 py-2'>{event.variant || 'NA'}</td>
@@ -739,6 +762,73 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {selectedSessionId ? (
+        <div
+          className='fixed inset-0 z-[130] bg-black/40 flex items-center justify-center p-4'
+          onClick={() => setSelectedSessionId(null)}
+        >
+          <div
+            className='w-full max-w-4xl rounded-xl bg-white shadow-xl border border-slate-200'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-4'>
+              <div>
+                <h3 className='text-lg font-semibold text-slate-900'>Session Journey</h3>
+                <p className='text-xs text-slate-500 break-all'>{selectedSessionId}</p>
+              </div>
+              <button
+                onClick={() => setSelectedSessionId(null)}
+                className='rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50'
+              >
+                Close
+              </button>
+            </div>
+            <div className='max-h-[70vh] overflow-auto'>
+              <table className='w-full text-sm'>
+                <thead className='bg-slate-50 text-xs uppercase tracking-wide text-gray-500'>
+                  <tr>
+                    <th className='text-left px-4 py-2'>Time</th>
+                    <th className='text-left px-4 py-2'>Event</th>
+                    <th className='text-left px-4 py-2'>Variant</th>
+                    <th className='text-left px-4 py-2'>Page</th>
+                    <th className='text-left px-4 py-2'>Next</th>
+                    <th className='text-left px-4 py-2'>Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedSessionEvents.length === 0 ? (
+                    <tr>
+                      <td className='px-4 py-4 text-gray-500' colSpan={6}>
+                        No events found for this session.
+                      </td>
+                    </tr>
+                  ) : (
+                    selectedSessionEvents.map((event) => (
+                      <tr key={event.id} className='border-t border-slate-100'>
+                        <td className='px-4 py-2 whitespace-nowrap'>
+                          {event.createdAt
+                            ? new Date(event.createdAt).toLocaleString()
+                            : 'N/A'}
+                        </td>
+                        <td className='px-4 py-2'>{event.eventName || 'NA'}</td>
+                        <td className='px-4 py-2'>{event.variant || 'NA'}</td>
+                        <td className='px-4 py-2 max-w-xs truncate' title={event.pagePath || ''}>
+                          {event.pagePath || 'N/A'}
+                        </td>
+                        <td className='px-4 py-2 max-w-xs truncate' title={event.nextPath || ''}>
+                          {event.nextPath || 'N/A'}
+                        </td>
+                        <td className='px-4 py-2'>{event.source || 'N/A'}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {selectedEvent ? (
         <div

@@ -2363,11 +2363,13 @@ export const createNewOrder = async (data) => {
     trackAbPurchaseIntent({
       ...abContext,
       pagePath: data.page || abContext.pagePath,
+      userID: data.userID || null,
       orderId: data.id,
       source: 'create_new_order',
       metadata: {
         type: data.type || null,
         courseName: data.courseName || null,
+        email: data.email || null,
       },
     });
   }
