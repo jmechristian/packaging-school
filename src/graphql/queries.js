@@ -3746,6 +3746,144 @@ export const listCategoryClicks = /* GraphQL */ `
     }
   }
 `;
+export const getAbTestExposure = /* GraphQL */ `
+  query GetAbTestExposure($id: ID!) {
+    getAbTestExposure(id: $id) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAbTestExposures = /* GraphQL */ `
+  query ListAbTestExposures(
+    $filter: ModelAbTestExposureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAbTestExposures(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        experimentKey
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        source
+        referrer
+        ipAddress
+        country
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAbTestEvent = /* GraphQL */ `
+  query GetAbTestEvent($id: ID!) {
+    getAbTestEvent(id: $id) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAbTestEvents = /* GraphQL */ `
+  query ListAbTestEvents(
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAbTestEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        experimentKey
+        eventName
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getClick = /* GraphQL */ `
   query GetClick($id: ID!) {
     getClick(id: $id) {
@@ -8616,6 +8754,350 @@ export const courseSearchesByTerm = /* GraphQL */ `
         term
         ipAddress
         country
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestExposuresByExperimentKeyAndCreatedAt = /* GraphQL */ `
+  query AbTestExposuresByExperimentKeyAndCreatedAt(
+    $experimentKey: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestExposureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestExposuresByExperimentKeyAndCreatedAt(
+      experimentKey: $experimentKey
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        source
+        referrer
+        ipAddress
+        country
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestExposuresBySessionIdAndCreatedAt = /* GraphQL */ `
+  query AbTestExposuresBySessionIdAndCreatedAt(
+    $sessionId: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestExposureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestExposuresBySessionIdAndCreatedAt(
+      sessionId: $sessionId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        source
+        referrer
+        ipAddress
+        country
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestExposuresByUserIDAndCreatedAt = /* GraphQL */ `
+  query AbTestExposuresByUserIDAndCreatedAt(
+    $userID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestExposureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestExposuresByUserIDAndCreatedAt(
+      userID: $userID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        source
+        referrer
+        ipAddress
+        country
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByExperimentKeyAndCreatedAt(
+    $experimentKey: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByExperimentKeyAndCreatedAt(
+      experimentKey: $experimentKey
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        eventName
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByEventNameAndCreatedAt(
+    $eventName: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByEventNameAndCreatedAt(
+      eventName: $eventName
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        eventName
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsBySessionIdAndCreatedAt(
+    $sessionId: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsBySessionIdAndCreatedAt(
+      sessionId: $sessionId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        eventName
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByUserIDAndCreatedAt(
+    $userID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByUserIDAndCreatedAt(
+      userID: $userID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        eventName
+        variant
+        sessionId
+        userID
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        source
+        reason
+        ipAddress
+        country
+        metadata
         createdAt
         updatedAt
         __typename

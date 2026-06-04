@@ -978,6 +978,59 @@ type CategoryClick @model @auth(rules: [{ allow: public }]) {
   page: String
 }
 
+type AbTestExposure @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  experimentKey: String!
+    @index(name: "abExposureByExperiment", sortKeyFields: ["createdAt"])
+  variant: String!
+  sessionId: String @index(name: "abExposureBySession", sortKeyFields: ["createdAt"])
+  userID: ID @index(name: "abExposureByUser", sortKeyFields: ["createdAt"])
+  pagePath: String
+  deviceType: String
+  acquisitionChannel: String
+  acquisitionSource: String
+  acquisitionMedium: String
+  acquisitionCampaign: String
+  acquisitionTerm: String
+  acquisitionContent: String
+  source: String
+  referrer: String
+  ipAddress: String
+  country: String
+  createdAt: AWSDateTime
+}
+
+type AbTestEvent @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  experimentKey: String!
+    @index(name: "abEventByExperiment", sortKeyFields: ["createdAt"])
+  eventName: String! @index(name: "abEventByName", sortKeyFields: ["createdAt"])
+  variant: String
+  sessionId: String @index(name: "abEventBySession", sortKeyFields: ["createdAt"])
+  userID: ID @index(name: "abEventByUser", sortKeyFields: ["createdAt"])
+  pagePath: String
+  deviceType: String
+  acquisitionChannel: String
+  acquisitionSource: String
+  acquisitionMedium: String
+  acquisitionCampaign: String
+  acquisitionTerm: String
+  acquisitionContent: String
+  referrer: String
+  previousPath: String
+  nextPath: String
+  metric: String
+  value: Int
+  orderId: ID
+  externalOrderId: String
+  source: String
+  reason: String
+  ipAddress: String
+  country: String
+  metadata: AWSJSON
+  createdAt: AWSDateTime
+}
+
 ######### INDIA #########
 
 type Click @model @auth(rules: [{ allow: public }]) {

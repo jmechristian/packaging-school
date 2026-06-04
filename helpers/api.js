@@ -65,6 +65,7 @@ import {
   createPgsfForm,
   updatePgsfForm,
 } from '../src/graphql/mutations';
+import { getAbContext, trackAbPurchaseIntent } from '../libs/analytics';
 
 export const cpsCourses = [
   'ff174f01-5f76-486c-8d7a-849d6d3ff914',
@@ -2354,6 +2355,23 @@ export const getOrderByID = async (oid) => {
 };
 
 export const createNewOrder = async (data) => {
+  // Fire-and-forget client analytics for purchase intent before order creation.
+  if (typeof window !== 'undefined') {
+    const abContext = getAbContext({
+      pagePath: data.page || window.location.pathname,
+    });
+    trackAbPurchaseIntent({
+      ...abContext,
+      pagePath: data.page || abContext.pagePath,
+      orderId: data.id,
+      source: 'create_new_order',
+      metadata: {
+        type: data.type || null,
+        courseName: data.courseName || null,
+      },
+    });
+  }
+
   // Minimal selection to avoid nested User relationships (e.g. apss) that can
   // break in environments without certain GSIs.
   const minimalCreateOrder = /* GraphQL */ `
@@ -2747,6 +2765,69 @@ export const getPPCLibrary = async () => {
     variables: { slug: 'ppc' },
   });
   return res.data.customerLibariesBySlug.items[0];
+};
+
+export const getAbExperimentSummary = async (experimentKey = 'home_v1') => {
+  const query = /* GraphQL */ `
+    query ListAbTestEventsForSummary(
+      $filter: ModelAbTestEventFilterInput
+      $limit: Int
+      $nextToken: String
+    ) {
+      listAbTestEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          eventName
+          variant
+          createdAt
+        }
+        nextToken
+      }
+    }
+  `;
+
+  let items = [];
+  let nextToken = null;
+
+  do {
+    const res = await API.graphql({
+      query,
+      variables: {
+        filter: { experimentKey: { eq: experimentKey } },
+        limit: 1000,
+        nextToken,
+      },
+    });
+
+    const page = res?.data?.listAbTestEvents?.items || [];
+    items = items.concat(page);
+    nextToken = res?.data?.listAbTestEvents?.nextToken || null;
+  } while (nextToken);
+
+  const summary = items.reduce(
+    (acc, item) => {
+      const variant = item.variant || 'UNASSIGNED';
+      if (!acc.byVariant[variant]) {
+        acc.byVariant[variant] = {
+          exposure: 0,
+          pageViews: 0,
+          purchaseIntent: 0,
+          purchaseComplete: 0,
+          events: 0,
+        };
+      }
+
+      const bucket = acc.byVariant[variant];
+      bucket.events += 1;
+      if (item.eventName === 'ab_exposure') bucket.exposure += 1;
+      if (item.eventName === 'ab_page_view') bucket.pageViews += 1;
+      if (item.eventName === 'ab_purchase_intent') bucket.purchaseIntent += 1;
+      if (item.eventName === 'ab_purchase_complete') bucket.purchaseComplete += 1;
+      return acc;
+    },
+    { experimentKey, totalEvents: items.length, byVariant: {} },
+  );
+
+  return summary;
 };
 
 export const getLucidMotorsLibrary = async () => {

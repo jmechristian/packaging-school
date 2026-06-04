@@ -6367,6 +6367,201 @@ export const onDeleteCategoryClick = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAbTestExposure = /* GraphQL */ `
+  subscription OnCreateAbTestExposure(
+    $filter: ModelSubscriptionAbTestExposureFilterInput
+  ) {
+    onCreateAbTestExposure(filter: $filter) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAbTestExposure = /* GraphQL */ `
+  subscription OnUpdateAbTestExposure(
+    $filter: ModelSubscriptionAbTestExposureFilterInput
+  ) {
+    onUpdateAbTestExposure(filter: $filter) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAbTestExposure = /* GraphQL */ `
+  subscription OnDeleteAbTestExposure(
+    $filter: ModelSubscriptionAbTestExposureFilterInput
+  ) {
+    onDeleteAbTestExposure(filter: $filter) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateAbTestEvent = /* GraphQL */ `
+  subscription OnCreateAbTestEvent(
+    $filter: ModelSubscriptionAbTestEventFilterInput
+  ) {
+    onCreateAbTestEvent(filter: $filter) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAbTestEvent = /* GraphQL */ `
+  subscription OnUpdateAbTestEvent(
+    $filter: ModelSubscriptionAbTestEventFilterInput
+  ) {
+    onUpdateAbTestEvent(filter: $filter) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAbTestEvent = /* GraphQL */ `
+  subscription OnDeleteAbTestEvent(
+    $filter: ModelSubscriptionAbTestEventFilterInput
+  ) {
+    onDeleteAbTestEvent(filter: $filter) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateClick = /* GraphQL */ `
   subscription OnCreateClick($filter: ModelSubscriptionClickFilterInput) {
     onCreateClick(filter: $filter) {

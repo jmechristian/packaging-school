@@ -40,7 +40,7 @@ import CertificateMobileCard from '../components/shared/CertificateMobileCard';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { useThinkificLink } from '../hooks/useThinkificLink';
-import { trackEvent } from '../libs/analytics';
+import { getAbContext, trackEvent } from '../libs/analytics';
 
 const CATEGORY_ORDER = [
   'AUTO',
@@ -321,10 +321,14 @@ const Page = ({ firstCardImage }) => {
 
     const numericValue =
       courseData.price === 'FREE' ? 0 : Number(courseData.price || 0);
+    const abContext = getAbContext();
 
     // Fire tracking BEFORE navigation so GTM sees it
     trackEvent('thinkific_purchase', {
       user_id: awsUser?.id,
+      experiment_key: abContext.experimentKey,
+      experiment_variant: abContext.variant,
+      experiment_session_id: abContext.sessionId,
       value: numericValue, // <- map this to Meta 'value' in GTM
       currency: 'USD', // <- map this to Meta 'currency'
       ecommerce: {

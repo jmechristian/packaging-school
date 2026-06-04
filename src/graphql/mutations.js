@@ -6667,6 +6667,207 @@ export const deleteCategoryClick = /* GraphQL */ `
     }
   }
 `;
+export const createAbTestExposure = /* GraphQL */ `
+  mutation CreateAbTestExposure(
+    $input: CreateAbTestExposureInput!
+    $condition: ModelAbTestExposureConditionInput
+  ) {
+    createAbTestExposure(input: $input, condition: $condition) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAbTestExposure = /* GraphQL */ `
+  mutation UpdateAbTestExposure(
+    $input: UpdateAbTestExposureInput!
+    $condition: ModelAbTestExposureConditionInput
+  ) {
+    updateAbTestExposure(input: $input, condition: $condition) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAbTestExposure = /* GraphQL */ `
+  mutation DeleteAbTestExposure(
+    $input: DeleteAbTestExposureInput!
+    $condition: ModelAbTestExposureConditionInput
+  ) {
+    deleteAbTestExposure(input: $input, condition: $condition) {
+      id
+      experimentKey
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      source
+      referrer
+      ipAddress
+      country
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createAbTestEvent = /* GraphQL */ `
+  mutation CreateAbTestEvent(
+    $input: CreateAbTestEventInput!
+    $condition: ModelAbTestEventConditionInput
+  ) {
+    createAbTestEvent(input: $input, condition: $condition) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAbTestEvent = /* GraphQL */ `
+  mutation UpdateAbTestEvent(
+    $input: UpdateAbTestEventInput!
+    $condition: ModelAbTestEventConditionInput
+  ) {
+    updateAbTestEvent(input: $input, condition: $condition) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAbTestEvent = /* GraphQL */ `
+  mutation DeleteAbTestEvent(
+    $input: DeleteAbTestEventInput!
+    $condition: ModelAbTestEventConditionInput
+  ) {
+    deleteAbTestEvent(input: $input, condition: $condition) {
+      id
+      experimentKey
+      eventName
+      variant
+      sessionId
+      userID
+      pagePath
+      deviceType
+      acquisitionChannel
+      acquisitionSource
+      acquisitionMedium
+      acquisitionCampaign
+      acquisitionTerm
+      acquisitionContent
+      referrer
+      previousPath
+      nextPath
+      metric
+      value
+      orderId
+      externalOrderId
+      source
+      reason
+      ipAddress
+      country
+      metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createClick = /* GraphQL */ `
   mutation CreateClick(
     $input: CreateClickInput!
