@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PlayIcon, StarIcon } from '@heroicons/react/24/solid';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { API } from 'aws-amplify';
 import { useSelector } from 'react-redux';
@@ -561,12 +562,12 @@ const HomeVariantB = () => {
             Explore approximately {buildEstimatedCount(catalogEstimate.count)} courses
             across {formatTopics(catalogEstimate.topics)}.
           </p>
-          <a
+          <Link
             href='/all_courses'
             className='mt-7 inline-flex items-center justify-center rounded-md bg-clemson px-6 py-3 text-white text-sm md:text-base font-semibold hover:opacity-90 transition'
           >
             View All Courses
-          </a>
+          </Link>
         </div>
       </section>
     </main>
