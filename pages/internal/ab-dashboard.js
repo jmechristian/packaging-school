@@ -258,6 +258,7 @@ const Dashboard = () => {
         title={metadata.title}
         description={metadata.description}
         url='/internal/ab-dashboard'
+        robots='noindex, nofollow, noarchive, nosnippet'
       />
 
       <div className='w-full max-w-7xl mx-auto py-10 px-4 space-y-8'>
