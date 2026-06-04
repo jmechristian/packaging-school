@@ -27,6 +27,8 @@ const getRangeBounds = (preset) => {
 
 const cardBaseClass =
   'rounded-lg border border-slate-300 bg-white p-4 shadow-sm space-y-2';
+const loadingOverlayClass =
+  'absolute inset-0 bg-white/70 backdrop-blur-[1px] flex items-center justify-center z-10';
 
 const Dashboard = () => {
   const [experimentKey, setExperimentKey] = useState('home_v1');
@@ -309,12 +311,20 @@ const Dashboard = () => {
             </div>
             <button
               onClick={loadData}
-              className='rounded-md bg-clemson px-4 py-2 text-white text-sm font-medium hover:opacity-90'
+              disabled={loading}
+              className='rounded-md bg-clemson px-4 py-2 text-white text-sm font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed'
             >
-              Refresh
+              {loading ? 'Refreshing...' : 'Refresh'}
             </button>
           </div>
         </div>
+
+        {loading ? (
+          <div className='rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 flex items-center gap-2'>
+            <span className='inline-block h-4 w-4 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            Loading latest experiment data...
+          </div>
+        ) : null}
 
         {error ? (
           <div className='rounded-md border border-red-300 bg-red-50 p-4 text-red-700 text-sm'>
@@ -325,50 +335,86 @@ const Dashboard = () => {
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           <div className={cardBaseClass}>
             <p className='text-xs uppercase tracking-wide text-gray-500'>Exposure</p>
-            <p className='text-3xl font-semibold text-gray-900'>
-              {totalExposure.toLocaleString()}
-            </p>
+            {loading && !summary ? (
+              <div className='h-9 w-24 rounded bg-slate-200 animate-pulse'></div>
+            ) : (
+              <p className='text-3xl font-semibold text-gray-900'>
+                {totalExposure.toLocaleString()}
+              </p>
+            )}
           </div>
           <div className={cardBaseClass}>
             <p className='text-xs uppercase tracking-wide text-gray-500'>
               Purchase intent
             </p>
-            <p className='text-3xl font-semibold text-gray-900'>
-              {totalIntent.toLocaleString()}
-            </p>
-            <p className='text-sm text-gray-600'>
-              {totalExposure ? fmtPercent(totalIntent / totalExposure) : '0.0%'} of
-              exposures
-            </p>
+            {loading && !summary ? (
+              <>
+                <div className='h-9 w-24 rounded bg-slate-200 animate-pulse'></div>
+                <div className='h-4 w-40 rounded bg-slate-200 animate-pulse'></div>
+              </>
+            ) : (
+              <>
+                <p className='text-3xl font-semibold text-gray-900'>
+                  {totalIntent.toLocaleString()}
+                </p>
+                <p className='text-sm text-gray-600'>
+                  {totalExposure ? fmtPercent(totalIntent / totalExposure) : '0.0%'} of
+                  exposures
+                </p>
+              </>
+            )}
           </div>
           <div className={cardBaseClass}>
             <p className='text-xs uppercase tracking-wide text-gray-500'>
               Purchase complete
             </p>
-            <p className='text-3xl font-semibold text-gray-900'>
-              {totalComplete.toLocaleString()}
-            </p>
-            <p className='text-sm text-gray-600'>
-              {totalExposure ? fmtPercent(totalComplete / totalExposure) : '0.0%'} of
-              exposures
-            </p>
+            {loading && !summary ? (
+              <>
+                <div className='h-9 w-24 rounded bg-slate-200 animate-pulse'></div>
+                <div className='h-4 w-40 rounded bg-slate-200 animate-pulse'></div>
+              </>
+            ) : (
+              <>
+                <p className='text-3xl font-semibold text-gray-900'>
+                  {totalComplete.toLocaleString()}
+                </p>
+                <p className='text-sm text-gray-600'>
+                  {totalExposure ? fmtPercent(totalComplete / totalExposure) : '0.0%'} of
+                  exposures
+                </p>
+              </>
+            )}
           </div>
           <div className={cardBaseClass}>
             <p className='text-xs uppercase tracking-wide text-gray-500'>
               Winner (completion rate)
             </p>
-            <p className='text-3xl font-semibold text-gray-900'>{winner}</p>
-            <p className='text-sm text-gray-600'>
-              {completionDelta === null
-                ? 'Need at least two active variants'
-                : `${completionDelta >= 0 ? '+' : ''}${(completionDelta * 100).toFixed(
-                    2
-                  )}pp (${completionLift === null ? 'n/a' : `${(completionLift * 100).toFixed(1)}%`} lift ${winnerRow?.variant} vs ${baselineRow?.variant})`}
-            </p>
+            {loading && !summary ? (
+              <>
+                <div className='h-9 w-16 rounded bg-slate-200 animate-pulse'></div>
+                <div className='h-4 w-full rounded bg-slate-200 animate-pulse'></div>
+              </>
+            ) : (
+              <>
+                <p className='text-3xl font-semibold text-gray-900'>{winner}</p>
+                <p className='text-sm text-gray-600'>
+                  {completionDelta === null
+                    ? 'Need at least two active variants'
+                    : `${completionDelta >= 0 ? '+' : ''}${(completionDelta * 100).toFixed(
+                        2
+                      )}pp (${completionLift === null ? 'n/a' : `${(completionLift * 100).toFixed(1)}%`} lift ${winnerRow?.variant} vs ${baselineRow?.variant})`}
+                </p>
+              </>
+            )}
           </div>
         </div>
 
-        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden'>
+        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
+          {loading ? (
+            <div className={loadingOverlayClass}>
+              <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            </div>
+          ) : null}
           <div className='px-4 py-3 border-b border-slate-200'>
             <h2 className='text-base font-semibold text-gray-900'>
               Traffic Source Mix (session-level)
@@ -421,7 +467,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden'>
+        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
+          {loading ? (
+            <div className={loadingOverlayClass}>
+              <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            </div>
+          ) : null}
           <div className='px-4 py-3 border-b border-slate-200'>
             <h2 className='text-base font-semibold text-gray-900'>
               Variant x Channel Performance
@@ -470,7 +521,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden'>
+        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
+          {loading ? (
+            <div className={loadingOverlayClass}>
+              <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            </div>
+          ) : null}
           <div className='px-4 py-3 border-b border-slate-200 flex justify-between items-center gap-3'>
             <h2 className='text-base font-semibold text-gray-900'>Variant performance</h2>
             <div className='flex items-center gap-3'>
@@ -526,7 +582,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden'>
+        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
+          {loading ? (
+            <div className={loadingOverlayClass}>
+              <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            </div>
+          ) : null}
           <div className='px-4 py-3 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3'>
             <h2 className='text-base font-semibold text-gray-900'>Recent events</h2>
             <div className='flex flex-wrap items-center gap-2'>
