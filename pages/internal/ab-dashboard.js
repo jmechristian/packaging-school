@@ -35,8 +35,10 @@ const Dashboard = () => {
   const [rangePreset, setRangePreset] = useState('30d');
   const [summary, setSummary] = useState(null);
   const [events, setEvents] = useState([]);
+  const [eventsSearch, setEventsSearch] = useState('');
   const [eventsPageSize, setEventsPageSize] = useState(50);
   const [eventsPage, setEventsPage] = useState(1);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -123,7 +125,31 @@ const Dashboard = () => {
       : null;
   const winner = winnerRow ? winnerRow.variant : 'Pending';
 
-  const totalEventPages = Math.max(1, Math.ceil(events.length / eventsPageSize));
+  const filteredEvents = useMemo(() => {
+    const query = eventsSearch.trim().toLowerCase();
+    if (!query) return events;
+
+    return events.filter((event) => {
+      const haystack = [
+        event.eventName,
+        event.variant,
+        event.pagePath,
+        event.nextPath,
+        event.previousPath,
+        event.sessionId,
+        event.source,
+      ]
+        .map((value) => String(value || '').toLowerCase())
+        .join(' ');
+
+      return haystack.includes(query);
+    });
+  }, [events, eventsSearch]);
+
+  const totalEventPages = Math.max(
+    1,
+    Math.ceil(filteredEvents.length / eventsPageSize),
+  );
   const currentEventsPage = Math.min(eventsPage, totalEventPages);
   const channelRows = useMemo(() => {
     const byChannel = summary?.acquisition?.byChannel || {};
@@ -164,8 +190,8 @@ const Dashboard = () => {
   const paginatedEvents = useMemo(() => {
     const startIndex = (currentEventsPage - 1) * eventsPageSize;
     const endIndex = startIndex + eventsPageSize;
-    return events.slice(startIndex, endIndex);
-  }, [events, currentEventsPage, eventsPageSize]);
+    return filteredEvents.slice(startIndex, endIndex);
+  }, [filteredEvents, currentEventsPage, eventsPageSize]);
 
   const exportSummaryCsv = () => {
     const header = [
@@ -245,7 +271,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setEventsPage(1);
-  }, [eventsPageSize]);
+  }, [eventsPageSize, eventsSearch]);
 
   const metadata = generateMetadata({
     pageType: 'STATIC',
@@ -591,6 +617,13 @@ const Dashboard = () => {
           <div className='px-4 py-3 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3'>
             <h2 className='text-base font-semibold text-gray-900'>Recent events</h2>
             <div className='flex flex-wrap items-center gap-2'>
+              <input
+                type='text'
+                value={eventsSearch}
+                onChange={(e) => setEventsSearch(e.target.value)}
+                placeholder='Search routes, variants, events, session ID...'
+                className='border border-slate-300 rounded-md px-3 py-1 text-xs min-w-[260px]'
+              />
               <label className='text-xs text-gray-600'>Rows:</label>
               <select
                 value={eventsPageSize}
@@ -632,7 +665,7 @@ const Dashboard = () => {
             <table className='w-full text-sm'>
               <thead className='bg-slate-50 text-xs uppercase tracking-wide text-gray-500'>
                 <tr>
-                  <th className='text-left px-4 py-2'>Time</th>
+                  <th className='text-left px-4 py-2'>Time / Session</th>
                   <th className='text-left px-4 py-2'>Variant</th>
                   <th className='text-left px-4 py-2'>Event</th>
                   <th className='text-left px-4 py-2'>Page</th>
@@ -644,21 +677,33 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {events.length === 0 && !loading ? (
+                {filteredEvents.length === 0 && !loading ? (
                   <tr>
                     <td className='px-4 py-4 text-gray-500' colSpan={9}>
-                      No events yet for this experiment.
+                      No events match your current search.
                     </td>
                   </tr>
                 ) : null}
                 {paginatedEvents.map((event) => (
-                  <tr key={event.id} className='border-t border-slate-100'>
+                  <tr
+                    key={event.id}
+                    className='border-t border-slate-100 hover:bg-slate-50 cursor-pointer'
+                    onClick={() => setSelectedEvent(event)}
+                  >
                     <td className='px-4 py-2 whitespace-nowrap'>
-                      {event.createdAt
-                        ? new Date(event.createdAt).toLocaleString()
-                        : 'N/A'}
+                      <div className='font-medium text-gray-900'>
+                        {event.createdAt
+                          ? new Date(event.createdAt).toLocaleString()
+                          : 'N/A'}
+                      </div>
+                      <div
+                        className='text-xs text-gray-500 max-w-[220px] truncate'
+                        title={event.sessionId || ''}
+                      >
+                        {event.sessionId || 'N/A'}
+                      </div>
                     </td>
-                    <td className='px-4 py-2'>{event.variant || 'UNASSIGNED'}</td>
+                    <td className='px-4 py-2'>{event.variant || 'NA'}</td>
                     <td className='px-4 py-2'>{event.eventName}</td>
                     <td className='px-4 py-2 max-w-xs truncate' title={event.pagePath || ''}>
                       {event.pagePath || 'N/A'}
@@ -683,14 +728,93 @@ const Dashboard = () => {
           </div>
           <div className='px-4 py-2 border-t border-slate-200 text-xs text-gray-600'>
             Showing{' '}
-            {events.length === 0
+            {filteredEvents.length === 0
               ? 0
               : (currentEventsPage - 1) * eventsPageSize + 1}{' '}
-            - {Math.min(currentEventsPage * eventsPageSize, events.length)} of{' '}
-            {events.length.toLocaleString()} events
+            - {Math.min(currentEventsPage * eventsPageSize, filteredEvents.length)} of{' '}
+            {filteredEvents.length.toLocaleString()} events
+            {eventsSearch.trim()
+              ? ` (filtered from ${events.length.toLocaleString()})`
+              : ''}
           </div>
         </div>
       </div>
+
+      {selectedEvent ? (
+        <div
+          className='fixed inset-0 z-[120] bg-black/40 flex items-center justify-center p-4'
+          onClick={() => setSelectedEvent(null)}
+        >
+          <div
+            className='w-full max-w-2xl rounded-xl bg-white shadow-xl border border-slate-200'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-4'>
+              <div>
+                <h3 className='text-lg font-semibold text-slate-900'>Event Summary</h3>
+                <p className='text-xs text-slate-500'>
+                  {selectedEvent.createdAt
+                    ? new Date(selectedEvent.createdAt).toLocaleString()
+                    : 'N/A'}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedEvent(null)}
+                className='rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50'
+              >
+                Close
+              </button>
+            </div>
+            <div className='px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm'>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Event</p>
+                <p className='text-slate-900 font-medium'>{selectedEvent.eventName || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Variant</p>
+                <p className='text-slate-900 font-medium'>{selectedEvent.variant || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Session ID</p>
+                <p className='text-slate-900 break-all'>{selectedEvent.sessionId || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Device</p>
+                <p className='text-slate-900'>{selectedEvent.deviceType || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Page Path</p>
+                <p className='text-slate-900 break-all'>{selectedEvent.pagePath || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Next Path</p>
+                <p className='text-slate-900 break-all'>{selectedEvent.nextPath || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Source</p>
+                <p className='text-slate-900'>{selectedEvent.source || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Channel</p>
+                <p className='text-slate-900'>{selectedEvent.acquisitionChannel || 'NA'}</p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>
+                  Source / Medium
+                </p>
+                <p className='text-slate-900 break-all'>
+                  {selectedEvent.acquisitionSource || 'NA'} /{' '}
+                  {selectedEvent.acquisitionMedium || 'NA'}
+                </p>
+              </div>
+              <div>
+                <p className='text-xs uppercase tracking-wide text-slate-500'>Campaign</p>
+                <p className='text-slate-900'>{selectedEvent.acquisitionCampaign || 'NA'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };
