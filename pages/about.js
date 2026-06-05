@@ -35,7 +35,7 @@ const Page = ({ pageData }) => {
         title={metadata.title}
         description={metadata.description}
         url='/about'
-        image='https://packschool.s3.amazonaws.com/about-seoImage.webp'
+        image='https://packschool.s3.us-east-1.amazonaws.com/Team+Photo+2025+APS+compressed.png'
       />
       <Mission />
       <Staff staff={pageData?.listStaff?.items ?? []} />

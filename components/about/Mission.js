@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 
 const MISSION_IMAGE =
-  'https://packschool.s3.amazonaws.com/partner-3.webp';
+  'https://packschool.s3.us-east-1.amazonaws.com/Team+Photo+2025+APS+compressed.png';
 
 const Mission = () => {
   return (
