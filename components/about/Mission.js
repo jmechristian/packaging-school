@@ -8,7 +8,7 @@ const Mission = () => {
   return (
     <div className='mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8'>
       <div className='mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8'>
-        <h1 className='max-w-2xl text-3xl font-bold font-greycliff tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto'>
+        <h1 className='max-w-2xl text-3xl font-bold font-greycliff tracking-tight text-gray-900 sm:text-4xl lg:col-span-2 xl:col-auto'>
           Our mission is to provide accessible and applicable online education
           to a global audience by training the leaders of tomorrow in the art
           and science of packaging.
@@ -28,7 +28,7 @@ const Mission = () => {
             Contact Us
           </a>
         </div>
-        <div className='relative mt-10 aspect-[6/5] w-full max-w-lg overflow-hidden rounded-2xl sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36'>
+        <div className='relative mt-10 aspect-[3/2] w-full max-w-lg overflow-hidden rounded-2xl sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36'>
           <Image
             src={MISSION_IMAGE}
             alt='Packaging School partners'
