@@ -29,6 +29,15 @@ const cardBaseClass =
   'rounded-lg border border-slate-300 bg-white p-4 shadow-sm space-y-2';
 const loadingOverlayClass =
   'absolute inset-0 bg-white/70 backdrop-blur-[1px] flex items-center justify-center z-10';
+const getEventRowClass = (eventName) => {
+  if (eventName === 'ab_purchase_complete') {
+    return 'bg-emerald-300/75 hover:bg-emerald-300';
+  }
+  if (eventName === 'ab_purchase_intent') {
+    return 'bg-yellow-100/80 hover:bg-yellow-100';
+  }
+  return 'hover:bg-slate-50';
+};
 
 const Dashboard = () => {
   const [experimentKey, setExperimentKey] = useState('home_v1');
@@ -697,7 +706,9 @@ const Dashboard = () => {
                 {paginatedEvents.map((event) => (
                   <tr
                     key={event.id}
-                    className='border-t border-slate-100 hover:bg-slate-50 cursor-pointer'
+                    className={`border-t border-slate-100 cursor-pointer ${getEventRowClass(
+                      event.eventName,
+                    )}`}
                     onClick={() => setSelectedEvent(event)}
                   >
                     <td className='px-4 py-2 whitespace-nowrap'>
