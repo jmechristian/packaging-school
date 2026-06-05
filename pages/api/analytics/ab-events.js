@@ -54,7 +54,8 @@ export default async function handler(req, res) {
       ? req.query.experimentKey.trim()
       : 'home_v1';
 
-  const limit = Math.min(Number(req.query.limit) || 200, 1000);
+  const includeAll = String(req.query.all || '').toLowerCase() === 'true';
+  const limit = includeAll ? Number.MAX_SAFE_INTEGER : Math.min(Number(req.query.limit) || 200, 1000);
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
   const filter = {
@@ -78,7 +79,7 @@ export default async function handler(req, res) {
         query: listAbEventsQuery,
         variables: {
           filter,
-          limit: Math.min(limit, 1000),
+          limit: 1000,
           nextToken,
         },
       });
@@ -86,16 +87,17 @@ export default async function handler(req, res) {
       const pageItems = response?.data?.listAbTestEvents?.items || [];
       items = items.concat(pageItems);
       nextToken = response?.data?.listAbTestEvents?.nextToken || null;
-    } while (nextToken && items.length < limit);
+    } while (nextToken && (includeAll || items.length < limit));
 
     const sorted = items
-      .slice(0, limit)
+      .slice(0, includeAll ? items.length : limit)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     return res.status(200).json({
       experimentKey,
       from,
       to,
+      includeAll,
       count: sorted.length,
       items: sorted,
     });

@@ -55,7 +55,7 @@ const Dashboard = () => {
 
       const [summaryRes, eventsRes] = await Promise.all([
         fetch(`/api/analytics/ab-summary?${query.toString()}`),
-        fetch(`/api/analytics/ab-events?${query.toString()}&limit=1000`),
+        fetch(`/api/analytics/ab-events?${query.toString()}&all=true`),
       ]);
 
       if (!summaryRes.ok) throw new Error('Failed to load summary');
