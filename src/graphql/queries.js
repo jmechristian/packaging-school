@@ -3830,6 +3830,14 @@ export const getAbTestEvent = /* GraphQL */ `
       value
       orderId
       externalOrderId
+      orderNumber
+      purchaserEmail
+      purchaserFirstName
+      purchaserLastName
+      couponCode
+      grossAmountCents
+      netAmountCents
+      discountAmountCents
       source
       reason
       ipAddress
@@ -3870,6 +3878,14 @@ export const listAbTestEvents = /* GraphQL */ `
         value
         orderId
         externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         source
         reason
         ipAddress
@@ -8934,6 +8950,14 @@ export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
         value
         orderId
         externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         source
         reason
         ipAddress
@@ -8987,6 +9011,14 @@ export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
         value
         orderId
         externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         source
         reason
         ipAddress
@@ -9040,6 +9072,14 @@ export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
         value
         orderId
         externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         source
         reason
         ipAddress
@@ -9093,6 +9133,14 @@ export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
         value
         orderId
         externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         source
         reason
         ipAddress

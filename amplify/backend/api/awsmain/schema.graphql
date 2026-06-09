@@ -1023,6 +1023,14 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
   value: Int
   orderId: ID
   externalOrderId: String
+  orderNumber: String
+  purchaserEmail: String
+  purchaserFirstName: String
+  purchaserLastName: String
+  couponCode: String
+  grossAmountCents: Int
+  netAmountCents: Int
+  discountAmountCents: Int
   source: String
   reason: String
   ipAddress: String

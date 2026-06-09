@@ -106,6 +106,23 @@ function normalizeComparable(value) {
   return normalized.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function normalizeNumber(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.round(parsed) : null;
+}
+
+function deriveGrossCentsFromItems(items) {
+  if (!Array.isArray(items)) return null;
+  const total = items.reduce((sum, item) => {
+    const amountCents = normalizeNumber(item?.amount_cents);
+    const quantity = normalizeNumber(item?.quantity) || 1;
+    if (!Number.isFinite(amountCents)) return sum;
+    return sum + amountCents * quantity;
+  }, 0);
+  return Number.isFinite(total) ? total : null;
+}
+
 function parseEventMetadata(rawMetadata) {
   if (!rawMetadata) return {};
   if (typeof rawMetadata === 'object') return rawMetadata;
@@ -241,10 +258,10 @@ export default async function handler(req, res) {
       payload.order_id || payload.internal_order_id || metadata?.order_id,
     );
     const externalOrderId = normalizeString(
-      payload.external_order_id ||
+      payload.id ||
+        payload.external_order_id ||
         payload.transaction_id ||
-        payload.order_number ||
-        payload.id,
+        payload.order_number,
     );
 
     let existingOrder = null;
@@ -298,6 +315,16 @@ export default async function handler(req, res) {
       normalizeString(payload.created_at) || normalizeString(body.created_at);
     const webhookProductName = normalizeString(payload.product_name);
     const webhookUserEmail = normalizeString(payload?.user?.email);
+    const webhookOrderNumber = normalizeString(payload?.order_number);
+    const webhookPurchaserFirstName = normalizeString(payload?.user?.first_name);
+    const webhookPurchaserLastName = normalizeString(payload?.user?.last_name);
+    const webhookCouponCode = normalizeString(payload?.coupon?.code);
+    const netAmountCents = normalizeNumber(payload?.amount_cents);
+    const grossAmountCents = deriveGrossCentsFromItems(payload?.items) ?? netAmountCents;
+    const discountAmountCents =
+      Number.isFinite(grossAmountCents) && Number.isFinite(netAmountCents)
+        ? grossAmountCents - netAmountCents
+        : null;
 
     let matchedIntentEvent = null;
     const needsBackfill = !variant || !sessionId;
@@ -312,6 +339,23 @@ export default async function handler(req, res) {
         console.warn('Failed to backfill from purchase intent:', error?.message);
       }
     }
+
+    const eventMetadata = {
+      customMetadata: metadata || null,
+      webhookPayload: {
+        id: payload?.id ?? null,
+        order_number: payload?.order_number ?? null,
+        status: payload?.status ?? null,
+        payment_type: payload?.payment_type ?? null,
+        amount_cents: payload?.amount_cents ?? null,
+        amount_dollars: payload?.amount_dollars ?? null,
+        product_name: payload?.product_name ?? null,
+        product_id: payload?.product_id ?? null,
+        coupon: payload?.coupon ?? null,
+        user: payload?.user ?? null,
+        items: Array.isArray(payload?.items) ? payload.items : [],
+      },
+    };
 
     await API.graphql({
       query: createAbEventMutation,
@@ -345,8 +389,16 @@ export default async function handler(req, res) {
           ),
           orderId: normalizeString(existingOrder?.id || possibleInternalOrderId),
           externalOrderId,
+          orderNumber: webhookOrderNumber,
+          purchaserEmail: webhookUserEmail,
+          purchaserFirstName: webhookPurchaserFirstName,
+          purchaserLastName: webhookPurchaserLastName,
+          couponCode: webhookCouponCode,
+          grossAmountCents,
+          netAmountCents,
+          discountAmountCents,
           source: 'lms_webhook',
-          metadata: metadata ? JSON.stringify(metadata) : null,
+          metadata: JSON.stringify(eventMetadata),
           createdAt: new Date().toISOString(),
         },
       },

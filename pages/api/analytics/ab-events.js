@@ -17,6 +17,16 @@ const listAbEventsQuery = /* GraphQL */ `
         eventName
         variant
         sessionId
+        orderId
+        externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
         pagePath
         deviceType
         acquisitionChannel
@@ -30,6 +40,7 @@ const listAbEventsQuery = /* GraphQL */ `
         source
         referrer
         reason
+        metadata
         createdAt
       }
       nextToken

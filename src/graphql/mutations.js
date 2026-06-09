@@ -6781,6 +6781,14 @@ export const createAbTestEvent = /* GraphQL */ `
       value
       orderId
       externalOrderId
+      orderNumber
+      purchaserEmail
+      purchaserFirstName
+      purchaserLastName
+      couponCode
+      grossAmountCents
+      netAmountCents
+      discountAmountCents
       source
       reason
       ipAddress
@@ -6819,6 +6827,14 @@ export const updateAbTestEvent = /* GraphQL */ `
       value
       orderId
       externalOrderId
+      orderNumber
+      purchaserEmail
+      purchaserFirstName
+      purchaserLastName
+      couponCode
+      grossAmountCents
+      netAmountCents
+      discountAmountCents
       source
       reason
       ipAddress
@@ -6857,6 +6873,14 @@ export const deleteAbTestEvent = /* GraphQL */ `
       value
       orderId
       externalOrderId
+      orderNumber
+      purchaserEmail
+      purchaserFirstName
+      purchaserLastName
+      couponCode
+      grossAmountCents
+      netAmountCents
+      discountAmountCents
       source
       reason
       ipAddress
