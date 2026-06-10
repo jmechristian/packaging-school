@@ -22,7 +22,7 @@ const PROGRAMS = {
     format: '100% online self-paced',
     commitment: '8 clockhours',
     access: 'Focused starter curriculum',
-    price: '$400',
+    price: '$179',
     details:
       'Foundational packaging principles to build practical fluency quickly.',
   },
@@ -43,8 +43,7 @@ const PROGRAMS = {
     commitment: 'Professor-led 12-week program',
     access: '1-year access to complete catalog',
     price: 'Certificate enrollment',
-    details:
-      'Custom project tailored to your focus with continuous feedback.',
+    details: 'Custom project tailored to your focus with continuous feedback.',
   },
 };
 
@@ -132,7 +131,9 @@ const HomeVariantB = () => {
 
   useEffect(() => {
     const normalizeFreeCourse = (course) => {
-      const rawPrice = String(course?.price ?? '').trim().toLowerCase();
+      const rawPrice = String(course?.price ?? '')
+        .trim()
+        .toLowerCase();
       if (rawPrice === 'free') return true;
       if (rawPrice === '$0') return true;
       const numeric = Number(rawPrice.replace(/[^0-9.-]/g, ''));
@@ -146,10 +147,7 @@ const HomeVariantB = () => {
           query: listLMSCourses,
           variables: {
             filter: {
-              and: [
-                { type: { ne: 'CUSTOMER' } },
-                { type: { ne: 'HIDDEN' } },
-              ],
+              and: [{ type: { ne: 'CUSTOMER' } }, { type: { ne: 'HIDDEN' } }],
             },
             limit: 500,
           },
@@ -167,7 +165,9 @@ const HomeVariantB = () => {
           const type = String(item?.type || '').toUpperCase();
           return type !== 'COLLECTION' && type !== 'COLLECTIONS';
         });
-        const relevantItems = courseOnlyItems.length ? courseOnlyItems : catalogItems;
+        const relevantItems = courseOnlyItems.length
+          ? courseOnlyItems
+          : catalogItems;
 
         const topicSet = new Set();
         relevantItems.forEach((item) => {
@@ -178,7 +178,7 @@ const HomeVariantB = () => {
         });
 
         const orderedTopics = CATALOG_TOPIC_ORDER.filter((cat) =>
-          topicSet.has(cat)
+          topicSet.has(cat),
         ).map((cat) => CATALOG_TOPIC_LABELS[cat]);
 
         setCatalogEstimate({
@@ -213,7 +213,7 @@ const HomeVariantB = () => {
       router.asPath,
       safeLocation,
       course.link,
-      'HOME'
+      'HOME',
     );
 
     const order = await createNewOrder({
@@ -243,12 +243,12 @@ const HomeVariantB = () => {
     <main className='w-full bg-white'>
       <section className='w-full max-w-7xl mx-auto px-4 lg:px-8 py-14 lg:py-20'>
         <h1 className='text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight text-slate-900 max-w-6xl text-center mx-auto'>
-          Packaging is part of every business, but many people lack the skills to
-          navigate its intricacies.
+          Packaging is part of every business, but many people lack the skills
+          to navigate its intricacies.
         </h1>
         <p className='mt-4 text-lg md:text-xl text-slate-700 max-w-5xl leading-relaxed text-center mx-auto'>
-          By mastering the language of packaging, you can enhance your resume and
-          open a world of opportunities.
+          By mastering the language of packaging, you can enhance your resume
+          and open a world of opportunities.
         </p>
 
         <div className='mt-10 block sm:!hidden space-y-4'>
@@ -316,7 +316,9 @@ const HomeVariantB = () => {
           <table className='w-full min-w-[980px] bg-white'>
             <thead>
               <tr className='bg-slate-900 text-white text-[15px]'>
-                <th className='text-left px-5 py-4 font-semibold'>Comparison</th>
+                <th className='text-left px-5 py-4 font-semibold'>
+                  Comparison
+                </th>
                 <th className='text-left px-5 py-4 font-semibold border-l border-slate-700'>
                   Packaging Boot Camp 101
                 </th>
@@ -537,7 +539,8 @@ const HomeVariantB = () => {
                       </span>
                     </div>
                     <p className='mt-3 text-sm text-slate-600'>
-                      {course.subheadline || 'Learn key packaging concepts and build practical skills.'}
+                      {course.subheadline ||
+                        'Learn key packaging concepts and build practical skills.'}
                     </p>
                     <div className='mt-auto pt-4'>
                       <button
@@ -559,8 +562,8 @@ const HomeVariantB = () => {
             Explore the Full Catalog
           </h3>
           <p className='mt-4 text-base md:text-lg text-slate-700 max-w-4xl mx-auto leading-relaxed'>
-            Explore approximately {buildEstimatedCount(catalogEstimate.count)} courses
-            across {formatTopics(catalogEstimate.topics)}.
+            Explore approximately {buildEstimatedCount(catalogEstimate.count)}{' '}
+            courses across {formatTopics(catalogEstimate.topics)}.
           </p>
           <Link
             href='/all_courses'
