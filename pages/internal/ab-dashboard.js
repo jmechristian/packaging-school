@@ -101,8 +101,30 @@ const getEventRowClass = (eventName) => {
   return 'hover:bg-slate-50';
 };
 const PURCHASE_PAGE_SIZE = 50;
+const METRIC_KEY_ITEMS = [
+  {
+    term: 'Intent',
+    description:
+      'A visitor showed buying intent (for example, clicked into the purchase flow).',
+  },
+  {
+    term: 'Complete',
+    description:
+      'A purchase was confirmed complete, usually from the LMS webhook.',
+  },
+  {
+    term: 'pp (percentage points)',
+    description:
+      'An absolute difference between two rates (example: 12% vs 8% = +4pp).',
+  },
+  {
+    term: 'Lift',
+    description:
+      'Relative improvement vs baseline (example: 12% vs 8% = +50% lift).',
+  },
+];
 
-const Dashboard = () => {
+const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [experimentKey, setExperimentKey] = useState('home_v1');
   const [rangePreset, setRangePreset] = useState('30d');
   const [customFromDate, setCustomFromDate] = useState('');
@@ -118,6 +140,9 @@ const Dashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authSubmitting, setAuthSubmitting] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -166,8 +191,9 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    if (!isAuthorized) return;
     loadData();
-  }, [experimentKey, rangePreset, customFromDate, customToDate]);
+  }, [experimentKey, rangePreset, customFromDate, customToDate, isAuthorized]);
 
   const variantRows = useMemo(() => {
     const byVariant = summary?.byVariant || {};
@@ -486,6 +512,82 @@ const Dashboard = () => {
     description: 'Internal A/B test performance dashboard.',
   });
 
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setAuthSubmitting(true);
+    setAuthError('');
+    try {
+      const response = await fetch('/api/internal/ab-dashboard-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: authPassword }),
+      });
+      if (!response.ok) {
+        const json = await response.json().catch(() => null);
+        throw new Error(json?.error || 'Invalid password');
+      }
+      window.location.reload();
+    } catch (err) {
+      setAuthError(err.message || 'Authentication failed');
+    } finally {
+      setAuthSubmitting(false);
+    }
+  };
+
+  if (!isAuthorized) {
+    return (
+      <>
+        <Meta
+          title={metadata.title}
+          description={metadata.description}
+          url='/internal/ab-dashboard'
+          robots='noindex, nofollow, noarchive, nosnippet'
+        />
+        <div className='w-full max-w-7xl mx-auto py-10 px-4'>
+          <div className='max-w-md mx-auto rounded-lg border border-slate-300 bg-white p-6 shadow-sm space-y-4'>
+            <div>
+              <h1 className='text-xl font-semibold text-slate-900'>Internal Dashboard Access</h1>
+              <p className='text-sm text-slate-600'>
+                Enter the internal dashboard password to continue.
+              </p>
+            </div>
+            {authError ? (
+              <div className='rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700'>
+                {authError}
+              </div>
+            ) : null}
+            <form className='space-y-3' onSubmit={handlePasswordSubmit}>
+              <div className='flex flex-col gap-1'>
+                <label
+                  htmlFor='dashboardPassword'
+                  className='text-xs uppercase font-semibold text-gray-500 tracking-wide'
+                >
+                  Password
+                </label>
+                <input
+                  id='dashboardPassword'
+                  type='password'
+                  autoComplete='current-password'
+                  value={authPassword}
+                  onChange={(event) => setAuthPassword(event.target.value)}
+                  className='border border-slate-300 rounded-md px-3 py-2 text-sm'
+                  required
+                />
+              </div>
+              <button
+                type='submit'
+                disabled={authSubmitting}
+                className='w-full rounded-md bg-clemson px-4 py-2 text-white text-sm font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed'
+              >
+                {authSubmitting ? 'Checking...' : 'Enter dashboard'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <Meta
@@ -496,6 +598,14 @@ const Dashboard = () => {
       />
 
       <div className='w-full max-w-7xl mx-auto py-10 px-4 space-y-8'>
+        {authConfigMissing ? (
+          <div className='rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900'>
+            Dashboard password is not configured. Set{' '}
+            <code>INTERNAL_DASHBOARD_PASSWORD</code> (or{' '}
+            <code>AB_DASHBOARD_PASSWORD</code>) in your environment.
+          </div>
+        ) : null}
+
         <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
           <div>
             <h1 className='text-2xl font-semibold text-gray-900'>
@@ -597,6 +707,18 @@ const Dashboard = () => {
             {error}
           </div>
         ) : null}
+
+        <div className='rounded-lg border border-slate-300 bg-white p-4'>
+          <h2 className='text-sm font-semibold text-slate-900 mb-3'>Metric key</h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3 text-sm'>
+            {METRIC_KEY_ITEMS.map((item) => (
+              <div key={item.term} className='rounded-md border border-slate-200 bg-slate-50 p-3'>
+                <p className='font-semibold text-slate-900'>{item.term}</p>
+                <p className='text-slate-700'>{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
 
         <div className='relative'>
           {loading ? (
@@ -1341,3 +1463,28 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+function parseCookieHeader(headerValue) {
+  if (!headerValue) return {};
+  return headerValue.split(';').reduce((acc, part) => {
+    const [rawKey, ...rest] = part.split('=');
+    const key = rawKey?.trim();
+    if (!key) return acc;
+    const value = rest.join('=').trim();
+    acc[key] = decodeURIComponent(value || '');
+    return acc;
+  }, {});
+}
+
+export async function getServerSideProps({ req }) {
+  const expectedPassword =
+    process.env.INTERNAL_DASHBOARD_PASSWORD || process.env.AB_DASHBOARD_PASSWORD;
+
+  if (!expectedPassword) {
+    return { props: { authConfigMissing: true } };
+  }
+
+  const cookies = parseCookieHeader(req.headers.cookie || '');
+  const isAuthorized = cookies.ps_ab_dash_auth === expectedPassword;
+  return { props: { isAuthorized } };
+}
