@@ -34,6 +34,15 @@ const createAbEventMutation = /* GraphQL */ `
   }
 `;
 
+function isDuplicateMutationError(error) {
+  const raw = JSON.stringify(error || {});
+  return (
+    raw.includes('ConditionalCheckFailedException') ||
+    raw.includes('already exists') ||
+    raw.includes('The conditional request failed')
+  );
+}
+
 const listAbIntentEventsQuery = /* GraphQL */ `
   query ListRecentAbIntentEvents(
     $filter: ModelAbTestEventFilterInput
@@ -138,6 +147,40 @@ function parseEventMetadata(rawMetadata) {
     return first && typeof first === 'object' ? first : {};
   } catch {
     return {};
+  }
+}
+
+function buildPurchaseCompleteEventId({
+  externalOrderId,
+  orderNumber,
+  fallbackOrderId,
+  payloadCreatedAt,
+}) {
+  const stableKey =
+    normalizeString(externalOrderId) ||
+    normalizeString(orderNumber) ||
+    normalizeString(fallbackOrderId) ||
+    normalizeString(payloadCreatedAt);
+  if (!stableKey) return null;
+
+  const normalized = String(stableKey).trim().toLowerCase();
+  let hash = 0;
+  for (let i = 0; i < normalized.length; i += 1) {
+    hash = (hash << 5) - hash + normalized.charCodeAt(i);
+    hash |= 0;
+  }
+  return `abpc_${Math.abs(hash).toString(36)}`;
+}
+
+async function withTimeout(promise, ms) {
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms);
+  });
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -327,14 +370,20 @@ export default async function handler(req, res) {
         : null;
 
     let matchedIntentEvent = null;
-    const needsBackfill = !variant || !sessionId;
+    const enableIntentBackfill = String(process.env.ENABLE_WEBHOOK_INTENT_BACKFILL || '')
+      .trim()
+      .toLowerCase() === 'true';
+    const needsBackfill = enableIntentBackfill && (!variant || !sessionId);
     if (needsBackfill) {
       try {
-        matchedIntentEvent = await getBestIntentMatch({
-          productName: webhookProductName,
-          userEmail: webhookUserEmail,
-          createdAtIso: webhookCreatedAt,
-        });
+        matchedIntentEvent = await withTimeout(
+          getBestIntentMatch({
+            productName: webhookProductName,
+            userEmail: webhookUserEmail,
+            createdAtIso: webhookCreatedAt,
+          }),
+          2000,
+        );
       } catch (error) {
         console.warn('Failed to backfill from purchase intent:', error?.message);
       }
@@ -357,52 +406,66 @@ export default async function handler(req, res) {
       },
     };
 
-    await API.graphql({
-      query: createAbEventMutation,
-      variables: {
-        input: {
-          experimentKey: 'home_v1',
-          eventName: 'ab_purchase_complete',
-          variant: normalizeString(variant || matchedIntentEvent?.variant),
-          sessionId: normalizeString(sessionId || matchedIntentEvent?.sessionId),
-          deviceType: normalizeString(deviceType || matchedIntentEvent?.deviceType),
-          acquisitionChannel: normalizeString(
-            acquisitionChannel || matchedIntentEvent?.acquisitionChannel,
-          ),
-          acquisitionSource: normalizeString(
-            acquisitionSource || matchedIntentEvent?.acquisitionSource,
-          ),
-          acquisitionMedium: normalizeString(
-            acquisitionMedium || matchedIntentEvent?.acquisitionMedium,
-          ),
-          acquisitionCampaign: normalizeString(
-            acquisitionCampaign || matchedIntentEvent?.acquisitionCampaign,
-          ),
-          userID: normalizeString(
-            existingOrder?.userID ||
-              matchedIntentEvent?.userID ||
-              payload?.user?.id ||
-              metadata?.user_id,
-          ),
-          pagePath: normalizeString(
-            existingOrder?.page || matchedIntentEvent?.pagePath || metadata?.page_path,
-          ),
-          orderId: normalizeString(existingOrder?.id || possibleInternalOrderId),
-          externalOrderId,
-          orderNumber: webhookOrderNumber,
-          purchaserEmail: webhookUserEmail,
-          purchaserFirstName: webhookPurchaserFirstName,
-          purchaserLastName: webhookPurchaserLastName,
-          couponCode: webhookCouponCode,
-          grossAmountCents,
-          netAmountCents,
-          discountAmountCents,
-          source: 'lms_webhook',
-          metadata: JSON.stringify(eventMetadata),
-          createdAt: new Date().toISOString(),
-        },
-      },
+    const dedupeEventId = buildPurchaseCompleteEventId({
+      externalOrderId,
+      orderNumber: webhookOrderNumber,
+      fallbackOrderId: possibleInternalOrderId,
+      payloadCreatedAt: webhookCreatedAt,
     });
+
+    try {
+      await API.graphql({
+        query: createAbEventMutation,
+        variables: {
+          input: {
+            id: dedupeEventId,
+            experimentKey: 'home_v1',
+            eventName: 'ab_purchase_complete',
+            variant: normalizeString(variant || matchedIntentEvent?.variant),
+            sessionId: normalizeString(sessionId || matchedIntentEvent?.sessionId),
+            deviceType: normalizeString(deviceType || matchedIntentEvent?.deviceType),
+            acquisitionChannel: normalizeString(
+              acquisitionChannel || matchedIntentEvent?.acquisitionChannel,
+            ),
+            acquisitionSource: normalizeString(
+              acquisitionSource || matchedIntentEvent?.acquisitionSource,
+            ),
+            acquisitionMedium: normalizeString(
+              acquisitionMedium || matchedIntentEvent?.acquisitionMedium,
+            ),
+            acquisitionCampaign: normalizeString(
+              acquisitionCampaign || matchedIntentEvent?.acquisitionCampaign,
+            ),
+            userID: normalizeString(
+              existingOrder?.userID ||
+                matchedIntentEvent?.userID ||
+                payload?.user?.id ||
+                metadata?.user_id,
+            ),
+            pagePath: normalizeString(
+              existingOrder?.page || matchedIntentEvent?.pagePath || metadata?.page_path,
+            ),
+            orderId: normalizeString(existingOrder?.id || possibleInternalOrderId),
+            externalOrderId,
+            orderNumber: webhookOrderNumber,
+            purchaserEmail: webhookUserEmail,
+            purchaserFirstName: webhookPurchaserFirstName,
+            purchaserLastName: webhookPurchaserLastName,
+            couponCode: webhookCouponCode,
+            grossAmountCents,
+            netAmountCents,
+            discountAmountCents,
+            source: 'lms_webhook',
+            metadata: JSON.stringify(eventMetadata),
+            createdAt: new Date().toISOString(),
+          },
+        },
+      });
+    } catch (error) {
+      if (!isDuplicateMutationError(error)) {
+        throw error;
+      }
+    }
 
     return res.status(200).json({
       success: true,
