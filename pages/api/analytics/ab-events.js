@@ -55,6 +55,30 @@ function parseDateInput(value) {
   return date.toISOString();
 }
 
+function normalizeSearchTerm(value) {
+  if (typeof value !== 'string') return '';
+  return value.trim().toLowerCase();
+}
+
+function eventMatchesSearch(event, query) {
+  if (!query) return true;
+  const haystack = [
+    event?.eventName,
+    event?.variant,
+    event?.sessionId,
+    event?.pagePath,
+    event?.nextPath,
+    event?.previousPath,
+    event?.source,
+    event?.orderNumber,
+    event?.purchaserEmail,
+    event?.externalOrderId,
+  ]
+    .map((value) => String(value || '').toLowerCase())
+    .join(' ');
+  return haystack.includes(query);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -66,11 +90,23 @@ export default async function handler(req, res) {
       : 'home_v1';
 
   const includeAll = String(req.query.all || '').toLowerCase() === 'true';
-  const limit = includeAll ? Number.MAX_SAFE_INTEGER : Math.min(Number(req.query.limit) || 200, 1000);
+  const limit = includeAll
+    ? Number.MAX_SAFE_INTEGER
+    : Math.min(Number(req.query.limit) || 200, 1000);
+  const requestedNextToken =
+    typeof req.query.nextToken === 'string' && req.query.nextToken.trim()
+      ? req.query.nextToken
+      : null;
+  const sessionId =
+    typeof req.query.sessionId === 'string' && req.query.sessionId.trim()
+      ? req.query.sessionId.trim()
+      : null;
+  const search = normalizeSearchTerm(req.query.search || '');
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
   const filter = {
     experimentKey: { eq: experimentKey },
+    ...(sessionId ? { sessionId: { eq: sessionId } } : {}),
     ...(from || to
       ? {
           createdAt: {
@@ -83,22 +119,41 @@ export default async function handler(req, res) {
 
   try {
     let items = [];
-    let nextToken = null;
+    let nextToken = requestedNextToken;
+    let responseNextToken = null;
+    const pageSize = 250;
 
-    do {
+    if (!includeAll && !search) {
       const response = await API.graphql({
         query: listAbEventsQuery,
         variables: {
           filter,
-          limit: 1000,
+          limit,
           nextToken,
         },
       });
+      items = response?.data?.listAbTestEvents?.items || [];
+      responseNextToken = response?.data?.listAbTestEvents?.nextToken || null;
+    } else {
+      do {
+        const response = await API.graphql({
+          query: listAbEventsQuery,
+          variables: {
+            filter,
+            limit: pageSize,
+            nextToken,
+          },
+        });
 
-      const pageItems = response?.data?.listAbTestEvents?.items || [];
-      items = items.concat(pageItems);
-      nextToken = response?.data?.listAbTestEvents?.nextToken || null;
-    } while (nextToken && (includeAll || items.length < limit));
+        const pageItems = response?.data?.listAbTestEvents?.items || [];
+        const matchedItems = search
+          ? pageItems.filter((event) => eventMatchesSearch(event, search))
+          : pageItems;
+        items = items.concat(matchedItems);
+        nextToken = response?.data?.listAbTestEvents?.nextToken || null;
+        responseNextToken = nextToken;
+      } while (nextToken && (includeAll || items.length < limit));
+    }
 
     const sorted = items
       .slice(0, includeAll ? items.length : limit)
@@ -109,6 +164,10 @@ export default async function handler(req, res) {
       from,
       to,
       includeAll,
+      limit,
+      search: search || null,
+      sessionId,
+      nextToken: responseNextToken,
       count: sorted.length,
       items: sorted,
     });

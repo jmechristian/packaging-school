@@ -44,6 +44,13 @@ function parseDateInput(value) {
   return date.toISOString();
 }
 
+function parseBool(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase();
+  return ['1', 'true', 'yes', 'y'].includes(normalized);
+}
+
 function parseJsonSafe(raw) {
   if (!raw) return null;
   if (typeof raw === 'object') return raw;
@@ -218,7 +225,9 @@ export default async function handler(req, res) {
       : 'home_v1';
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
-  const limit = Math.min(Number(req.query.limit) || 200, 1000);
+  const includeAll = parseBool(req.query.all);
+  const limit = includeAll ? Number.MAX_SAFE_INTEGER : Math.min(Number(req.query.limit) || 200, 1000);
+  const includeDuplicates = parseBool(req.query.includeDuplicates);
 
   const filter = {
     experimentKey: { eq: experimentKey },
@@ -250,10 +259,10 @@ export default async function handler(req, res) {
       const pageItems = response?.data?.listAbTestEvents?.items || [];
       events = events.concat(pageItems);
       nextToken = response?.data?.listAbTestEvents?.nextToken || null;
-    } while (nextToken && events.length < limit);
+    } while (nextToken && (includeAll || events.length < limit));
 
     const sortedEvents = events
-      .slice(0, limit)
+      .slice(0, includeAll ? events.length : limit)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     const orderCache = new Map();
@@ -272,12 +281,37 @@ export default async function handler(req, res) {
       rows.push(normalizeOrderDetails(event, thinkificOrder));
     }
 
+    const orderedRows = rows.sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+    );
+
+    const dedupedRows = [];
+    const seenKeys = new Set();
+    for (const row of orderedRows) {
+      const dedupeKey =
+        normalizeString(row.externalOrderId) ||
+        normalizeString(row.orderNumber) ||
+        normalizeString(row.eventId);
+      if (!dedupeKey) {
+        dedupedRows.push(row);
+        continue;
+      }
+      if (seenKeys.has(dedupeKey)) continue;
+      seenKeys.add(dedupeKey);
+      dedupedRows.push(row);
+    }
+
+    const finalRows = includeDuplicates ? orderedRows : dedupedRows;
+
     return res.status(200).json({
       experimentKey,
       from,
       to,
-      count: rows.length,
-      items: rows,
+      includeAll,
+      includeDuplicates,
+      count: finalRows.length,
+      rawCount: orderedRows.length,
+      items: finalRows,
     });
   } catch (error) {
     console.error('Failed to load purchase complete details:', error);

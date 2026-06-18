@@ -134,17 +134,28 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [eventsSearch, setEventsSearch] = useState('');
   const [eventsPageSize, setEventsPageSize] = useState(50);
   const [eventsPage, setEventsPage] = useState(1);
+  const [eventsCursor, setEventsCursor] = useState(null);
+  const [eventsNextCursor, setEventsNextCursor] = useState(null);
+  const [eventsPrevCursors, setEventsPrevCursors] = useState([]);
   const [purchaseRows, setPurchaseRows] = useState([]);
+  const [purchaseSearch, setPurchaseSearch] = useState('');
   const [purchasePage, setPurchasePage] = useState(1);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedSessionEvents, setSelectedSessionEvents] = useState([]);
+  const [sessionLoading, setSessionLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authSubmitting, setAuthSubmitting] = useState(false);
 
-  const loadData = async () => {
+  const loadData = async ({
+    cursor = eventsCursor,
+    page = eventsPage,
+    prevCursors = eventsPrevCursors,
+    reloadOverview = true,
+  } = {}) => {
     setLoading(true);
     setError('');
 
@@ -165,24 +176,34 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
       if (from) query.set('from', from);
       if (to) query.set('to', to);
 
-      const [summaryRes, eventsRes, purchaseRes] = await Promise.all([
-        fetch(`/api/analytics/ab-summary?${query.toString()}`),
-        fetch(`/api/analytics/ab-events?${query.toString()}&all=true`),
-        fetch(`/api/analytics/ab-purchase-complete?${query.toString()}`),
-      ]);
+      const eventQuery = new URLSearchParams(query.toString());
+      eventQuery.set('limit', String(eventsPageSize));
+      if (cursor) eventQuery.set('nextToken', cursor);
+      if (eventsSearch.trim()) eventQuery.set('search', eventsSearch.trim());
 
-      if (!summaryRes.ok) throw new Error('Failed to load summary');
+      const eventsRes = await fetch(`/api/analytics/ab-events?${eventQuery.toString()}`);
       if (!eventsRes.ok) throw new Error('Failed to load events');
-      if (!purchaseRes.ok) throw new Error('Failed to load purchase details');
-
-      const summaryData = await summaryRes.json();
       const eventsData = await eventsRes.json();
-      const purchaseData = await purchaseRes.json();
-
-      setSummary(summaryData);
       setEvents(eventsData.items || []);
-      setPurchaseRows(purchaseData.items || []);
-      setEventsPage(1);
+      setEventsNextCursor(eventsData.nextToken || null);
+      setEventsCursor(cursor || null);
+      setEventsPage(page);
+      setEventsPrevCursors(prevCursors);
+
+      if (reloadOverview) {
+        const [summaryRes, purchaseRes] = await Promise.all([
+          fetch(`/api/analytics/ab-summary?${query.toString()}`),
+          fetch(`/api/analytics/ab-purchase-complete?${query.toString()}&all=true`),
+        ]);
+
+        if (!summaryRes.ok) throw new Error('Failed to load summary');
+        if (!purchaseRes.ok) throw new Error('Failed to load purchase details');
+
+        const summaryData = await summaryRes.json();
+        const purchaseData = await purchaseRes.json();
+        setSummary(summaryData);
+        setPurchaseRows(purchaseData.items || []);
+      }
     } catch (err) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
@@ -192,8 +213,26 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
 
   useEffect(() => {
     if (!isAuthorized) return;
-    loadData();
-  }, [experimentKey, rangePreset, customFromDate, customToDate, isAuthorized]);
+    loadData({
+      cursor: null,
+      page: 1,
+      prevCursors: [],
+      reloadOverview: true,
+    });
+  }, [experimentKey, rangePreset, customFromDate, customToDate, isAuthorized, eventsPageSize]);
+
+  useEffect(() => {
+    if (!isAuthorized) return;
+    const timeoutId = setTimeout(() => {
+      loadData({
+        cursor: null,
+        page: 1,
+        prevCursors: [],
+        reloadOverview: false,
+      });
+    }, 250);
+    return () => clearTimeout(timeoutId);
+  }, [eventsSearch]);
 
   const variantRows = useMemo(() => {
     const byVariant = summary?.byVariant || {};
@@ -264,35 +303,23 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
       : null;
   const winner = winnerRow ? winnerRow.variant : 'Pending';
 
-  const filteredEvents = useMemo(() => {
-    const query = eventsSearch.trim().toLowerCase();
-    if (!query) return events;
-
-    return events.filter((event) => {
-      const haystack = [
-        event.eventName,
-        event.variant,
-        event.pagePath,
-        event.nextPath,
-        event.previousPath,
-        event.sessionId,
-        event.source,
-      ]
-        .map((value) => String(value || '').toLowerCase())
-        .join(' ');
-
-      return haystack.includes(query);
+  const filteredEvents = events;
+  const currentEventsPage = eventsPage;
+  const filteredPurchaseRows = useMemo(() => {
+    const ordered = [...purchaseRows].sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+    );
+    const query = purchaseSearch.trim().toLowerCase();
+    if (!query) return ordered;
+    return ordered.filter((row) => {
+      const order = String(row?.orderNumber || '').toLowerCase();
+      const email = String(row?.email || '').toLowerCase();
+      return order.includes(query) || email.includes(query);
     });
-  }, [events, eventsSearch]);
-
-  const totalEventPages = Math.max(
-    1,
-    Math.ceil(filteredEvents.length / eventsPageSize),
-  );
-  const currentEventsPage = Math.min(eventsPage, totalEventPages);
+  }, [purchaseRows, purchaseSearch]);
   const totalPurchasePages = Math.max(
     1,
-    Math.ceil(purchaseRows.length / PURCHASE_PAGE_SIZE),
+    Math.ceil(filteredPurchaseRows.length / PURCHASE_PAGE_SIZE),
   );
   const currentPurchasePage = Math.min(purchasePage, totalPurchasePages);
   const channelRows = useMemo(() => {
@@ -331,23 +358,39 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     });
   }, [summary]);
 
-  const paginatedEvents = useMemo(() => {
-    const startIndex = (currentEventsPage - 1) * eventsPageSize;
-    const endIndex = startIndex + eventsPageSize;
-    return filteredEvents.slice(startIndex, endIndex);
-  }, [filteredEvents, currentEventsPage, eventsPageSize]);
+  const paginatedEvents = useMemo(() => filteredEvents, [filteredEvents]);
   const paginatedPurchaseRows = useMemo(() => {
     const startIndex = (currentPurchasePage - 1) * PURCHASE_PAGE_SIZE;
     const endIndex = startIndex + PURCHASE_PAGE_SIZE;
-    return purchaseRows.slice(startIndex, endIndex);
-  }, [purchaseRows, currentPurchasePage]);
+    return filteredPurchaseRows.slice(startIndex, endIndex);
+  }, [filteredPurchaseRows, currentPurchasePage]);
 
-  const selectedSessionEvents = useMemo(() => {
-    if (!selectedSessionId) return [];
-    return events
-      .filter((event) => (event.sessionId || null) === selectedSessionId)
-      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  }, [events, selectedSessionId]);
+  const openSessionJourney = async (sessionId) => {
+    if (!sessionId) return;
+    setSelectedSessionId(sessionId);
+    setSessionLoading(true);
+    try {
+      const { from, to } = getRangeBounds(rangePreset, {
+        fromDate: customFromDate,
+        toDate: customToDate,
+      });
+      const query = new URLSearchParams({ experimentKey, sessionId, all: 'true' });
+      if (from) query.set('from', from);
+      if (to) query.set('to', to);
+      const response = await fetch(`/api/analytics/ab-events?${query.toString()}`);
+      if (!response.ok) throw new Error('Failed to load session journey');
+      const data = await response.json();
+      const ordered = (data.items || []).sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      );
+      setSelectedSessionEvents(ordered);
+    } catch (err) {
+      setSelectedSessionEvents([]);
+      setError(err.message || 'Failed to load session journey');
+    } finally {
+      setSessionLoading(false);
+    }
+  };
   const purchaseRowsByEventId = useMemo(() => {
     const map = {};
     purchaseRows.forEach((row) => {
@@ -499,11 +542,8 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   };
 
   useEffect(() => {
-    setEventsPage(1);
-  }, [eventsPageSize, eventsSearch]);
-  useEffect(() => {
     setPurchasePage(1);
-  }, [purchaseRows]);
+  }, [purchaseRows, purchaseSearch]);
 
   const metadata = generateMetadata({
     pageType: 'STATIC',
@@ -1029,11 +1069,20 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               </button>
             </div>
           </div>
+          <div className='px-4 py-2 border-b border-slate-200 flex flex-wrap items-center gap-2'>
+            <input
+              type='text'
+              value={purchaseSearch}
+              onChange={(e) => setPurchaseSearch(e.target.value)}
+              placeholder='Search order # or email...'
+              className='border border-slate-300 rounded-md px-3 py-1 text-xs min-w-[260px]'
+            />
+          </div>
           <div className='overflow-x-auto'>
             <table className='w-full text-sm'>
               <thead className='bg-slate-50 text-xs uppercase tracking-wide text-gray-500'>
                 <tr>
-                  <th className='text-left px-4 py-2'>Time</th>
+                  <th className='text-left px-4 py-2'>Time / Session</th>
                   <th className='text-left px-4 py-2'>Variant</th>
                   <th className='text-left px-4 py-2'>External order ID</th>
                   <th className='text-left px-4 py-2'>Order #</th>
@@ -1055,7 +1104,25 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                 {paginatedPurchaseRows.map((row) => (
                   <tr key={row.eventId} className='border-t border-slate-100'>
                     <td className='px-4 py-2 whitespace-nowrap'>
-                      {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A'}
+                      <div className='font-medium text-gray-900'>
+                        {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A'}
+                      </div>
+                      <div
+                        className='text-xs text-gray-500 max-w-[220px] truncate'
+                        title={row.sessionId || ''}
+                      >
+                        {row.sessionId ? (
+                          <button
+                            type='button'
+                            className='text-clemson hover:underline'
+                            onClick={() => openSessionJourney(row.sessionId)}
+                          >
+                            {row.sessionId}
+                          </button>
+                        ) : (
+                          'N/A'
+                        )}
+                      </div>
                     </td>
                     <td className='px-4 py-2'>{row.variant || 'NA'}</td>
                     <td className='px-4 py-2 font-mono text-xs'>
@@ -1081,11 +1148,14 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
           <div className='px-4 py-2 border-t border-slate-200 text-xs text-gray-600 flex items-center justify-between gap-3'>
             <span>
               Showing{' '}
-              {purchaseRows.length === 0
+              {filteredPurchaseRows.length === 0
                 ? 0
                 : (currentPurchasePage - 1) * PURCHASE_PAGE_SIZE + 1}{' '}
-              - {Math.min(currentPurchasePage * PURCHASE_PAGE_SIZE, purchaseRows.length)} of{' '}
-              {purchaseRows.length.toLocaleString()} completed orders
+              - {Math.min(currentPurchasePage * PURCHASE_PAGE_SIZE, filteredPurchaseRows.length)} of{' '}
+              {filteredPurchaseRows.length.toLocaleString()} completed orders
+              {purchaseSearch.trim()
+                ? ` (filtered from ${purchaseRows.length.toLocaleString()})`
+                : ''}
             </span>
             <div className='flex items-center gap-2'>
               <button
@@ -1130,7 +1200,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               <label className='text-xs text-gray-600'>Rows:</label>
               <select
                 value={eventsPageSize}
-                onChange={(e) => setEventsPageSize(Number(e.target.value))}
+                onChange={(e) => {
+                  setEventsPageSize(Number(e.target.value));
+                  setEventsPage(1);
+                  setEventsCursor(null);
+                  setEventsNextCursor(null);
+                  setEventsPrevCursors([]);
+                }}
                 className='border border-slate-300 rounded-md pl-2 pr-8 py-1 text-xs'
               >
                 <option value={10}>10</option>
@@ -1138,20 +1214,36 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                 <option value={100}>100</option>
               </select>
               <button
-                onClick={() => setEventsPage((page) => Math.max(1, page - 1))}
+                onClick={() => {
+                  if (currentEventsPage === 1) return;
+                  const nextStack = [...eventsPrevCursors];
+                  const previousCursor = nextStack.pop() || null;
+                  loadData({
+                    cursor: previousCursor,
+                    page: Math.max(1, currentEventsPage - 1),
+                    prevCursors: nextStack,
+                    reloadOverview: false,
+                  });
+                }}
                 disabled={currentEventsPage === 1}
                 className='rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 Prev
               </button>
               <span className='text-xs text-gray-600'>
-                Page {currentEventsPage} / {totalEventPages}
+                Page {currentEventsPage}
               </span>
               <button
-                onClick={() =>
-                  setEventsPage((page) => Math.min(totalEventPages, page + 1))
-                }
-                disabled={currentEventsPage >= totalEventPages}
+                onClick={() => {
+                  if (!eventsNextCursor) return;
+                  loadData({
+                    cursor: eventsNextCursor,
+                    page: currentEventsPage + 1,
+                    prevCursors: [...eventsPrevCursors, eventsCursor],
+                    reloadOverview: false,
+                  });
+                }}
+                disabled={!eventsNextCursor}
                 className='rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 Next
@@ -1211,7 +1303,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                             className='text-clemson hover:underline'
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedSessionId(event.sessionId);
+                              openSessionJourney(event.sessionId);
                             }}
                           >
                             {event.sessionId}
@@ -1246,13 +1338,10 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
           </div>
           <div className='px-4 py-2 border-t border-slate-200 text-xs text-gray-600'>
             Showing{' '}
-            {filteredEvents.length === 0
-              ? 0
-              : (currentEventsPage - 1) * eventsPageSize + 1}{' '}
-            - {Math.min(currentEventsPage * eventsPageSize, filteredEvents.length)} of{' '}
-            {filteredEvents.length.toLocaleString()} events
+            {filteredEvents.length === 0 ? 0 : 1} - {filteredEvents.length} of{' '}
+            {filteredEvents.length.toLocaleString()} events on this page
             {eventsSearch.trim()
-              ? ` (filtered from ${events.length.toLocaleString()})`
+              ? ' (matching search)'
               : ''}
           </div>
         </div>
@@ -1261,7 +1350,10 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
       {selectedSessionId ? (
         <div
           className='fixed inset-0 z-[130] bg-black/40 flex items-center justify-center p-4'
-          onClick={() => setSelectedSessionId(null)}
+          onClick={() => {
+            setSelectedSessionId(null);
+            setSelectedSessionEvents([]);
+          }}
         >
           <div
             className='w-full max-w-4xl rounded-xl bg-white shadow-xl border border-slate-200'
@@ -1273,7 +1365,10 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                 <p className='text-xs text-slate-500 break-all'>{selectedSessionId}</p>
               </div>
               <button
-                onClick={() => setSelectedSessionId(null)}
+                onClick={() => {
+                  setSelectedSessionId(null);
+                  setSelectedSessionEvents([]);
+                }}
                 className='rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50'
               >
                 Close
@@ -1292,7 +1387,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedSessionEvents.length === 0 ? (
+                  {sessionLoading ? (
+                    <tr>
+                      <td className='px-4 py-4 text-gray-500' colSpan={6}>
+                        Loading session journey...
+                      </td>
+                    </tr>
+                  ) : selectedSessionEvents.length === 0 ? (
                     <tr>
                       <td className='px-4 py-4 text-gray-500' colSpan={6}>
                         No events found for this session.
