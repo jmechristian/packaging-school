@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 
@@ -101,6 +101,7 @@ const getEventRowClass = (eventName) => {
   return 'hover:bg-slate-50';
 };
 const PURCHASE_PAGE_SIZE = 50;
+const MIN_LOADING_VISIBLE_MS = 450;
 const METRIC_KEY_ITEMS = [
   {
     term: 'Intent',
@@ -145,10 +146,14 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [selectedSessionEvents, setSelectedSessionEvents] = useState([]);
   const [sessionLoading, setSessionLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingVisible, setLoadingVisible] = useState(true);
   const [error, setError] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authSubmitting, setAuthSubmitting] = useState(false);
+  const loadRequestIdRef = useRef(0);
+  const hasLoadedOverviewRef = useRef(false);
+  const hasRunSearchEffectRef = useRef(false);
 
   const loadData = async ({
     cursor = eventsCursor,
@@ -156,7 +161,11 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     prevCursors = eventsPrevCursors,
     reloadOverview = true,
   } = {}) => {
+    const loadRequestId = loadRequestIdRef.current + 1;
+    loadRequestIdRef.current = loadRequestId;
+    const loadStartedAt = Date.now();
     setLoading(true);
+    setLoadingVisible(true);
     setError('');
 
     try {
@@ -192,7 +201,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
 
       if (reloadOverview) {
         const [summaryRes, purchaseRes] = await Promise.all([
-          fetch(`/api/analytics/ab-summary?${query.toString()}`),
+          fetch(`/api/analytics/ab-summary?${query.toString()}&maxScan=20000`),
           fetch(`/api/analytics/ab-purchase-complete?${query.toString()}&all=true`),
         ]);
 
@@ -203,16 +212,27 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         const purchaseData = await purchaseRes.json();
         setSummary(summaryData);
         setPurchaseRows(purchaseData.items || []);
+        hasLoadedOverviewRef.current = true;
       }
     } catch (err) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
-      setLoading(false);
+      const elapsed = Date.now() - loadStartedAt;
+      const remaining = Math.max(0, MIN_LOADING_VISIBLE_MS - elapsed);
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+      if (loadRequestIdRef.current === loadRequestId) {
+        setLoading(false);
+        setLoadingVisible(false);
+      }
     }
   };
 
   useEffect(() => {
     if (!isAuthorized) return;
+    hasLoadedOverviewRef.current = false;
+    hasRunSearchEffectRef.current = false;
     loadData({
       cursor: null,
       page: 1,
@@ -223,6 +243,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
 
   useEffect(() => {
     if (!isAuthorized) return;
+    // Skip mount run so it cannot race initial full dashboard load.
+    if (!hasRunSearchEffectRef.current) {
+      hasRunSearchEffectRef.current = true;
+      return;
+    }
+    // Do not run events-only searches until overview has loaded at least once.
+    if (!hasLoadedOverviewRef.current) return;
     const timeoutId = setTimeout(() => {
       loadData({
         cursor: null,
@@ -730,12 +757,12 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               disabled={loading}
               className='rounded-md bg-clemson px-4 py-2 text-white text-sm font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed'
             >
-              {loading ? 'Refreshing...' : 'Refresh'}
+              {loadingVisible ? 'Refreshing...' : 'Refresh'}
             </button>
           </div>
         </div>
 
-        {loading ? (
+        {loadingVisible ? (
           <div className='rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 flex items-center gap-2'>
             <span className='inline-block h-4 w-4 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             Loading latest experiment data...
@@ -761,7 +788,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -845,7 +872,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -873,7 +900,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -931,7 +958,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -985,7 +1012,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -993,7 +1020,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
           <div className='px-4 py-3 border-b border-slate-200 flex justify-between items-center gap-3'>
             <h2 className='text-base font-semibold text-gray-900'>Variant performance</h2>
             <div className='flex items-center gap-3'>
-              {loading ? (
+              {loadingVisible ? (
                 <span className='text-xs text-gray-500'>Loading...</span>
               ) : (
                 <span className='text-xs text-gray-500'>
@@ -1048,7 +1075,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>
@@ -1182,7 +1209,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
-          {loading ? (
+          {loadingVisible ? (
             <div className={loadingOverlayClass}>
               <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
             </div>

@@ -34,6 +34,13 @@ function parseDateInput(value) {
   return date.toISOString();
 }
 
+function parseBoundedInt(value, fallback, min, max) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  const rounded = Math.floor(parsed);
+  return Math.min(max, Math.max(min, rounded));
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -45,6 +52,7 @@ export default async function handler(req, res) {
       : 'home_v1';
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
+  const maxScan = parseBoundedInt(req.query.maxScan, 20000, 1000, 100000);
   const filter = {
     experimentKey: { eq: experimentKey },
     ...(from || to
@@ -74,7 +82,7 @@ export default async function handler(req, res) {
       const page = result?.data?.listAbTestEvents?.items || [];
       items = items.concat(page);
       nextToken = result?.data?.listAbTestEvents?.nextToken || null;
-    } while (nextToken);
+    } while (nextToken && items.length < maxScan);
 
     const byVariant = {};
     const attributionBySession = new Map();
@@ -151,6 +159,8 @@ export default async function handler(req, res) {
       experimentKey,
       from,
       to,
+      maxScan,
+      truncated: Boolean(nextToken),
       totalEvents: items.length,
       byVariant,
       acquisition: {

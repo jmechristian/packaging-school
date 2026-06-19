@@ -228,6 +228,7 @@ export default async function handler(req, res) {
   const includeAll = parseBool(req.query.all);
   const limit = includeAll ? Number.MAX_SAFE_INTEGER : Math.min(Number(req.query.limit) || 200, 1000);
   const includeDuplicates = parseBool(req.query.includeDuplicates);
+  const enrichFromThinkific = parseBool(req.query.enrichFromThinkific);
 
   const filter = {
     experimentKey: { eq: experimentKey },
@@ -274,7 +275,7 @@ export default async function handler(req, res) {
       const quickDetails = normalizeOrderDetails(event);
       const needsBackfill =
         !quickDetails.email || !Number.isFinite(quickDetails.netAmountCents);
-      const thinkificOrder = needsBackfill
+      const thinkificOrder = enrichFromThinkific && needsBackfill
         ? await fetchThinkificOrderById(lookupId, orderCache)
         : null;
 
@@ -309,6 +310,7 @@ export default async function handler(req, res) {
       to,
       includeAll,
       includeDuplicates,
+      enrichFromThinkific,
       count: finalRows.length,
       rawCount: orderedRows.length,
       items: finalRows,

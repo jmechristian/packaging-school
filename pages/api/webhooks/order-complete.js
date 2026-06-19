@@ -256,6 +256,68 @@ async function getBestIntentMatch({ productName, userEmail, createdAtIso }) {
   return bestMatch?.event || null;
 }
 
+async function getFastIntentMatch({ productName, userEmail, createdAtIso }) {
+  const createdAtMs = Date.parse(createdAtIso || '');
+  if (!Number.isFinite(createdAtMs)) return null;
+
+  const lowerBound = new Date(createdAtMs - 6 * 60 * 60 * 1000).toISOString();
+  const normalizedProductName = normalizeComparable(productName);
+  const normalizedEmail = normalizeComparable(userEmail);
+
+  const result = await API.graphql({
+    query: listAbIntentEventsQuery,
+    variables: {
+      filter: {
+        experimentKey: { eq: 'home_v1' },
+        eventName: { eq: 'ab_purchase_intent' },
+        createdAt: { ge: lowerBound },
+      },
+      limit: 120,
+      nextToken: null,
+    },
+  });
+
+  const candidates = result?.data?.listAbTestEvents?.items || [];
+  let bestMatch = null;
+
+  for (const candidate of candidates) {
+    const candidateCreatedAtMs = Date.parse(candidate?.createdAt || '');
+    if (!Number.isFinite(candidateCreatedAtMs)) continue;
+
+    const metadata = parseEventMetadata(candidate?.metadata);
+    const candidateCourseName = normalizeComparable(
+      metadata?.courseName || metadata?.productName,
+    );
+    const candidateEmail = normalizeComparable(metadata?.email);
+    const timeDeltaMs = Math.abs(createdAtMs - candidateCreatedAtMs);
+
+    const courseMatches =
+      normalizedProductName &&
+      candidateCourseName &&
+      (candidateCourseName === normalizedProductName ||
+        candidateCourseName.includes(normalizedProductName) ||
+        normalizedProductName.includes(candidateCourseName));
+    const emailMatches = normalizedEmail && candidateEmail && candidateEmail === normalizedEmail;
+
+    if (!courseMatches && !emailMatches) continue;
+    if (timeDeltaMs > 6 * 60 * 60 * 1000) continue;
+
+    const score =
+      (emailMatches ? 3 : 0) +
+      (courseMatches ? 3 : 0) +
+      Math.max(0, 2 - timeDeltaMs / (60 * 60 * 1000));
+
+    if (!bestMatch || score > bestMatch.score) {
+      bestMatch = {
+        score,
+        event: candidate,
+      };
+    }
+  }
+
+  return bestMatch?.event || null;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -370,10 +432,26 @@ export default async function handler(req, res) {
         : null;
 
     let matchedIntentEvent = null;
+    const needsSessionBackfill = !sessionId;
+    if (needsSessionBackfill) {
+      try {
+        matchedIntentEvent = await withTimeout(
+          getFastIntentMatch({
+            productName: webhookProductName,
+            userEmail: webhookUserEmail,
+            createdAtIso: webhookCreatedAt,
+          }),
+          1200,
+        );
+      } catch (error) {
+        console.warn('Fast session backfill failed:', error?.message);
+      }
+    }
+
     const enableIntentBackfill = String(process.env.ENABLE_WEBHOOK_INTENT_BACKFILL || '')
       .trim()
       .toLowerCase() === 'true';
-    const needsBackfill = enableIntentBackfill && (!variant || !sessionId);
+    const needsBackfill = enableIntentBackfill && (!variant || !sessionId) && !matchedIntentEvent;
     if (needsBackfill) {
       try {
         matchedIntentEvent = await withTimeout(
