@@ -51,6 +51,15 @@ function parseBool(value) {
   return ['1', 'true', 'yes', 'y'].includes(normalized);
 }
 
+function parseBoundedInt(value, fallback, min, max) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  const rounded = Math.floor(parsed);
+  return Math.min(max, Math.max(min, rounded));
+}
+
+const MAX_RUNTIME_MS = 6500;
+
 function parseJsonSafe(raw) {
   if (!raw) return null;
   if (typeof raw === 'object') return raw;
@@ -226,7 +235,10 @@ export default async function handler(req, res) {
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
   const includeAll = parseBool(req.query.all);
-  const limit = includeAll ? Number.MAX_SAFE_INTEGER : Math.min(Number(req.query.limit) || 200, 1000);
+  const limit = includeAll
+    ? Number.MAX_SAFE_INTEGER
+    : Math.min(Number(req.query.limit) || 200, 1000);
+  const maxScan = parseBoundedInt(req.query.maxScan, 5000, 500, 100000);
   const includeDuplicates = parseBool(req.query.includeDuplicates);
   const enrichFromThinkific = parseBool(req.query.enrichFromThinkific);
 
@@ -246,6 +258,8 @@ export default async function handler(req, res) {
   try {
     let events = [];
     let nextToken = null;
+    const startedAt = Date.now();
+    let truncatedByRuntime = false;
 
     do {
       const response = await API.graphql({
@@ -260,10 +274,14 @@ export default async function handler(req, res) {
       const pageItems = response?.data?.listAbTestEvents?.items || [];
       events = events.concat(pageItems);
       nextToken = response?.data?.listAbTestEvents?.nextToken || null;
-    } while (nextToken && (includeAll || events.length < limit));
+      if (Date.now() - startedAt >= MAX_RUNTIME_MS) {
+        truncatedByRuntime = true;
+        break;
+      }
+    } while (nextToken && (includeAll ? events.length < maxScan : events.length < limit));
 
     const sortedEvents = events
-      .slice(0, includeAll ? events.length : limit)
+      .slice(0, includeAll ? Math.min(events.length, maxScan) : limit)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     const orderCache = new Map();
@@ -311,6 +329,9 @@ export default async function handler(req, res) {
       includeAll,
       includeDuplicates,
       enrichFromThinkific,
+      maxScan,
+      truncated: Boolean(nextToken) || truncatedByRuntime,
+      truncatedByRuntime,
       count: finalRows.length,
       rawCount: orderedRows.length,
       items: finalRows,

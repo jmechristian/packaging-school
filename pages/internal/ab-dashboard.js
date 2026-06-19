@@ -201,8 +201,8 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
 
       if (reloadOverview) {
         const [summaryRes, purchaseRes] = await Promise.all([
-          fetch(`/api/analytics/ab-summary?${query.toString()}&maxScan=20000`),
-          fetch(`/api/analytics/ab-purchase-complete?${query.toString()}&all=true`),
+          fetch(`/api/analytics/ab-summary?${query.toString()}&maxScan=5000`),
+          fetch(`/api/analytics/ab-purchase-complete?${query.toString()}&all=true&maxScan=5000`),
         ]);
 
         if (!summaryRes.ok) throw new Error('Failed to load summary');

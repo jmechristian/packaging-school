@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
-import HomeVariantA from '../components/home/variants/HomeVariantA';
 import HomeVariantB from '../components/home/variants/HomeVariantB';
+import HomeVariantC from '../components/home/variants/HomeVariantC';
 import {
   HOME_EXPERIMENT_KEY,
   chooseVariant,
@@ -19,14 +19,14 @@ import {
 } from '../libs/analytics';
 
 const HOME_VARIANT_COMPONENTS = {
-  A: HomeVariantA,
   B: HomeVariantB,
+  C: HomeVariantC,
 };
 
 const App = ({ variant }) => {
   const router = useRouter();
   const { user } = useUser();
-  const resolvedVariant = HOME_VARIANT_COMPONENTS[variant] ? variant : 'A';
+  const resolvedVariant = HOME_VARIANT_COMPONENTS[variant] ? variant : 'B';
   const VariantComponent = HOME_VARIANT_COMPONENTS[resolvedVariant];
 
   // Handle expired token error from Thinkific SSO

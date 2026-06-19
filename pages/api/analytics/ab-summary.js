@@ -41,6 +41,8 @@ function parseBoundedInt(value, fallback, min, max) {
   return Math.min(max, Math.max(min, rounded));
 }
 
+const MAX_RUNTIME_MS = 6500;
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -68,6 +70,8 @@ export default async function handler(req, res) {
   try {
     let nextToken = null;
     let items = [];
+    const startedAt = Date.now();
+    let truncatedByRuntime = false;
 
     do {
       const result = await API.graphql({
@@ -82,6 +86,10 @@ export default async function handler(req, res) {
       const page = result?.data?.listAbTestEvents?.items || [];
       items = items.concat(page);
       nextToken = result?.data?.listAbTestEvents?.nextToken || null;
+      if (Date.now() - startedAt >= MAX_RUNTIME_MS) {
+        truncatedByRuntime = true;
+        break;
+      }
     } while (nextToken && items.length < maxScan);
 
     const byVariant = {};
@@ -160,7 +168,8 @@ export default async function handler(req, res) {
       from,
       to,
       maxScan,
-      truncated: Boolean(nextToken),
+      truncated: Boolean(nextToken) || truncatedByRuntime,
+      truncatedByRuntime,
       totalEvents: items.length,
       byVariant,
       acquisition: {
