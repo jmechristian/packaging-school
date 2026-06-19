@@ -1,7 +1,7 @@
 import React from 'react';
 
 const B_VARIANT_STATIC_TEXT =
-  'A Professional Packaging Curriculum Developed at Clemson University, Licensed by SC Commission on Higher Education #5400';
+  'Curriculum Developed at Clemson University–SC Commission on Higher Education license #5400';
 
 const SalesBar = () => {
   return (

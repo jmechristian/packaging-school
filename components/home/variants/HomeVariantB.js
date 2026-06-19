@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlayIcon, StarIcon } from '@heroicons/react/24/solid';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -8,20 +8,27 @@ import { useSelector } from 'react-redux';
 import { listLMSCourses } from '../../../src/graphql/queries';
 import {
   createNewOrder,
+  getAllLearningOfTheMonths,
+  getAuthors,
   getDeviceType,
   registgerCourseClick,
 } from '../../../helpers/api';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
+import {
+  trackAbLessonClick,
+  trackAbMeetingClick,
+  trackAbPdfClick,
+} from '../../../libs/analytics';
 
 const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 
 const PROGRAMS = {
   BOOTCAMP: {
     href: 'https://packagingschool.com/courses/packaging-boot-camp-101',
-    credential: 'Bootcamp',
+    credential: 'Certificate of Completion',
     format: '100% online self-paced',
-    commitment: '8 clockhours',
-    access: 'Focused starter curriculum',
+    commitment: '8 clock hours',
+    access: '3-month access',
     price: '$179',
     details:
       'Foundational packaging principles to build practical fluency quickly.',
@@ -30,8 +37,8 @@ const PROGRAMS = {
     href: 'https://packagingschool.com/certifications/get-to-know-cps',
     credential: 'Packaging School Certificate',
     format: '100% online self-paced',
-    commitment: 'Flexible pacing',
-    access: '6-months access to complete catalog',
+    commitment: '60 clock hours, flexible pacing over 6 months',
+    access: '6-months access',
     price: 'Certificate enrollment',
     details:
       'Comprehensive packaging curriculum with broad applicability across roles.',
@@ -39,11 +46,12 @@ const PROGRAMS = {
   CMPM: {
     href: 'https://packagingschool.com/certifications/get-to-know-cmpm',
     credential: 'Clemson University Certificate',
-    format: '100% online with professor office hours',
-    commitment: 'Professor-led 12-week program',
-    access: '1-year access to complete catalog',
+    format: '100% online self-paced',
+    commitment: '80 clock hours, 12 week instructor-led program',
+    access: '1-year access',
     price: 'Certificate enrollment',
-    details: 'Custom project tailored to your focus with continuous feedback.',
+    details:
+      'Comprehensive packaging curriculum with broad applicability across roles.',
   },
 };
 
@@ -118,7 +126,119 @@ const formatTopics = (topics) => {
   return `${topics.slice(0, -1).join(', ')}, and ${topics[topics.length - 1]}`;
 };
 
-const HomeVariantB = () => {
+const LESSON_BREAKPOINTS = {
+  mobileMax: 767,
+  tabletMax: 1023,
+};
+
+const getLessonCardsPerView = (width) => {
+  if (width <= LESSON_BREAKPOINTS.mobileMax) return 1;
+  if (width <= LESSON_BREAKPOINTS.tabletMax) return 2;
+  return 3;
+};
+
+const parseLessonTimestamp = (dateValue) => {
+  if (!dateValue) return 0;
+  const parsed = new Date(dateValue).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const getLessonSortDate = (lesson) => lesson?.backdate || lesson?.createdAt || null;
+
+const formatLessonDate = (dateValue) => {
+  if (!dateValue) return '';
+  const parsed = new Date(dateValue);
+  if (!Number.isFinite(parsed.getTime())) return '';
+  return parsed.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
+const UUID_REGEX =
+  /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+
+const isUuid = (value) =>
+  typeof value === 'string' &&
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value.trim(),
+  );
+
+const extractAuthorTokens = (rawAuthor) => {
+  if (!rawAuthor) return [];
+
+  if (Array.isArray(rawAuthor)) {
+    return rawAuthor.map((value) => String(value || '').trim()).filter(Boolean);
+  }
+
+  if (typeof rawAuthor === 'string') {
+    const trimmed = rawAuthor.trim();
+    if (!trimmed) return [];
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.map((value) => String(value || '').trim()).filter(Boolean);
+      }
+    } catch {
+      // fall through
+    }
+
+    const matches = trimmed.match(UUID_REGEX);
+    if (matches?.length) {
+      return Array.from(new Set(matches.map((value) => value.trim())));
+    }
+
+    return trimmed
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
+  }
+
+  return [String(rawAuthor).trim()].filter(Boolean);
+};
+
+const resolveLessonAuthorLabel = (rawAuthor, authorNameMap) => {
+  const tokens = extractAuthorTokens(rawAuthor);
+  if (!tokens.length) return 'Packaging School';
+
+  const names = tokens
+    .map((token) => {
+      if (authorNameMap[token]) return authorNameMap[token];
+      if (!isUuid(token)) return token;
+      return null;
+    })
+    .filter(Boolean);
+
+  if (!names.length) return 'Packaging School';
+  return Array.from(new Set(names)).join(', ');
+};
+
+const HomeVariantB = ({
+  columnCallouts = {},
+  cmpmFormatCallout = null,
+  cmpmDetailsCallout = null,
+  secondaryCallout = null,
+  lessonsSection = null,
+}) => {
+  const getCalloutConfig = (columnKey) => {
+    const raw = columnCallouts[columnKey];
+    if (!raw) return null;
+    if (typeof raw === 'string') {
+      return {
+        label: raw,
+        className: 'bg-clemson text-white',
+      };
+    }
+    if (typeof raw === 'object' && raw.label) {
+      return {
+        label: raw.label,
+        className: raw.className || 'bg-clemson text-white',
+      };
+    }
+    return null;
+  };
   const router = useRouter();
   const { awsUser, location } = useSelector((state) => state.auth);
   const { navigateToThinkific } = useThinkificLink();
@@ -128,6 +248,14 @@ const HomeVariantB = () => {
     count: 0,
     topics: [],
   });
+  const [lotmLessons, setLotmLessons] = useState([]);
+  const [lotmAuthorNames, setLotmAuthorNames] = useState({});
+  const [isLoadingLotmLessons, setIsLoadingLotmLessons] = useState(
+    Boolean(lessonsSection),
+  );
+  const [lessonCardsPerView, setLessonCardsPerView] = useState(3);
+  const [lessonCarouselPage, setLessonCarouselPage] = useState(0);
+  const lessonTouchStartRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const normalizeFreeCourse = (course) => {
@@ -200,6 +328,132 @@ const HomeVariantB = () => {
     getFreeCourses();
   }, []);
 
+  useEffect(() => {
+    if (!lessonsSection) return;
+
+    const getLessons = async () => {
+      setIsLoadingLotmLessons(true);
+      try {
+        const items = await getAllLearningOfTheMonths();
+        const sorted = [...items]
+          .filter((item) => item?.id && item?.slug)
+          .sort((a, b) => {
+            const aDate = parseLessonTimestamp(getLessonSortDate(a));
+            const bDate = parseLessonTimestamp(getLessonSortDate(b));
+            return bDate - aDate;
+          })
+          .slice(0, 24);
+        setLotmLessons(sorted);
+
+        const authorIds = [
+          ...new Set(
+            sorted.flatMap((item) =>
+              extractAuthorTokens(item?.author).filter((token) => isUuid(token)),
+            ),
+          ),
+        ];
+        if (authorIds.length) {
+          const resolvedAuthors = await Promise.all(
+            authorIds.map(async (authorId) => {
+              try {
+                const data = await getAuthors(authorId);
+                return [authorId, data?.getAuthor?.name || null];
+              } catch (error) {
+                console.warn('Error loading lesson author:', authorId, error);
+                return [authorId, null];
+              }
+            }),
+          );
+
+          setLotmAuthorNames(
+            resolvedAuthors.reduce((acc, [authorId, name]) => {
+              if (name) acc[authorId] = name;
+              return acc;
+            }, {}),
+          );
+        } else {
+          setLotmAuthorNames({});
+        }
+      } catch (error) {
+        console.error('Error loading LOTM lessons:', error);
+        setLotmLessons([]);
+        setLotmAuthorNames({});
+      } finally {
+        setIsLoadingLotmLessons(false);
+      }
+    };
+
+    getLessons();
+  }, [lessonsSection]);
+
+  useEffect(() => {
+    if (!lessonsSection || typeof window === 'undefined') return;
+
+    const syncCardsPerView = () => {
+      setLessonCardsPerView(getLessonCardsPerView(window.innerWidth));
+    };
+
+    syncCardsPerView();
+    window.addEventListener('resize', syncCardsPerView);
+    return () => window.removeEventListener('resize', syncCardsPerView);
+  }, [lessonsSection]);
+
+  const lessonPageCount = Math.max(
+    1,
+    Math.ceil((lotmLessons.length || 0) / lessonCardsPerView),
+  );
+  const currentLessonPage = lessonCarouselPage % lessonPageCount;
+  const lessonPageStart = currentLessonPage * lessonCardsPerView;
+  const visibleLessons = lotmLessons.slice(
+    lessonPageStart,
+    lessonPageStart + lessonCardsPerView,
+  );
+
+  useEffect(() => {
+    setLessonCarouselPage((previous) => {
+      if (lessonPageCount <= 1) return 0;
+      return previous >= lessonPageCount ? 0 : previous;
+    });
+  }, [lessonPageCount]);
+
+  const goToPreviousLessonPage = () => {
+    setLessonCarouselPage((previous) =>
+      previous === 0 ? lessonPageCount - 1 : previous - 1,
+    );
+  };
+
+  const goToNextLessonPage = () => {
+    setLessonCarouselPage((previous) => (previous + 1) % lessonPageCount);
+  };
+
+  const handleLessonTouchStart = (event) => {
+    if (lessonCardsPerView !== 1) return;
+    const touch = event.touches?.[0];
+    if (!touch) return;
+    lessonTouchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleLessonTouchEnd = (event) => {
+    if (lessonCardsPerView !== 1 || lessonPageCount <= 1) return;
+    const touch = event.changedTouches?.[0];
+    if (!touch) return;
+
+    const deltaX = touch.clientX - lessonTouchStartRef.current.x;
+    const deltaY = touch.clientY - lessonTouchStartRef.current.y;
+    const minSwipeDistance = 50;
+
+    // Ignore short or mostly vertical gestures.
+    if (Math.abs(deltaX) < minSwipeDistance || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      goToNextLessonPage();
+    } else {
+      goToPreviousLessonPage();
+    }
+  };
+
   const handleOrderCourse = async (course) => {
     const safeLocation = {
       ip: location?.ip || '',
@@ -241,17 +495,17 @@ const HomeVariantB = () => {
 
   return (
     <main className='w-full bg-white'>
-      <section className='w-full max-w-7xl mx-auto px-4 lg:px-8 py-14 lg:py-20'>
-        <h1 className='text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight text-slate-900 max-w-6xl text-center mx-auto'>
+      <section className='w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24'>
+        <h1 className='text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.1] text-slate-900 max-w-5xl text-center mx-auto'>
           Packaging is part of every business, but many people lack the skills
           to navigate its intricacies.
         </h1>
-        <p className='mt-4 text-lg md:text-xl text-slate-700 max-w-5xl leading-relaxed text-center mx-auto'>
+        <p className='mt-6 text-lg md:text-2xl text-slate-700 max-w-4xl leading-relaxed text-center mx-auto'>
           By mastering the language of packaging, you can enhance your resume
           and open a world of opportunities.
         </p>
 
-        <div className='mt-10 block sm:!hidden space-y-4'>
+        <div className='mt-12 block sm:!hidden space-y-5'>
           {PROGRAM_COLUMNS.map((column) => {
             const program = PROGRAMS[column.key];
             return (
@@ -260,6 +514,15 @@ const HomeVariantB = () => {
                 className='rounded-xl border border-slate-200 shadow-sm bg-white overflow-hidden'
               >
                 <div className='bg-slate-900 px-5 py-4'>
+                  {getCalloutConfig(column.key) ? (
+                    <div className='mb-2'>
+                      <span
+                        className={`inline-flex items-center rounded-md px-2.5 py-1 text-[11px] uppercase tracking-wide font-semibold ${getCalloutConfig(column.key).className}`}
+                      >
+                        {getCalloutConfig(column.key).label}
+                      </span>
+                    </div>
+                  ) : null}
                   <h3 className='text-white text-base font-semibold leading-snug'>
                     {column.title}
                   </h3>
@@ -277,6 +540,16 @@ const HomeVariantB = () => {
                       </div>
                       <div className='mt-1 text-sm text-slate-800 leading-relaxed'>
                         {program[row.key]}
+                        {column.key === 'CMPM' &&
+                        row.key === 'format' &&
+                        cmpmFormatCallout ? (
+                          <div className='mt-2 block'>
+                            <span className='inline-flex items-center gap-1.5 rounded-md bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700'>
+                              <StarIcon className='w-3.5 h-3.5 text-violet-700 shrink-0' />
+                              {cmpmFormatCallout}
+                            </span>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   ))}
@@ -285,10 +558,17 @@ const HomeVariantB = () => {
                       Details
                     </div>
                     <div className='mt-1 text-sm text-slate-800 leading-relaxed'>
-                      {column.highlightDetails ? (
-                        <div className='flex items-start gap-2'>
-                          <StarIcon className='w-4 h-4 text-amber-500 mt-0.5 shrink-0' />
-                          <span>{program.details}</span>
+                        {column.highlightDetails ? (
+                        <div>
+                          <div>{program.details}</div>
+                          {cmpmDetailsCallout ? (
+                            <div className='mt-2 block'>
+                              <span className='inline-flex items-center gap-1.5 rounded-md bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700'>
+                                <StarIcon className='w-3.5 h-3.5 text-violet-700 shrink-0' />
+                                {cmpmDetailsCallout}
+                              </span>
+                            </div>
+                          ) : null}
                         </div>
                       ) : (
                         program.details
@@ -312,25 +592,37 @@ const HomeVariantB = () => {
           })}
         </div>
 
-        <div className='mt-10 overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white hidden sm:!block'>
+        <div className='mt-20 overflow-x-auto rounded-xl shadow-sm bg-white hidden sm:!block'>
           <table className='w-full min-w-[980px] bg-white'>
             <thead>
-              <tr className='bg-slate-900 text-white text-[15px]'>
-                <th className='text-left px-5 py-4 font-semibold'>
-                  Comparison
+              <tr className='text-white text-[15px]'>
+                <th className='text-left px-5 py-4 font-semibold align-top bg-transparent'>
+                  <span className='sr-only'>Row labels</span>
                 </th>
-                <th className='text-left px-5 py-4 font-semibold border-l border-slate-700'>
-                  Packaging Boot Camp 101
-                </th>
-                <th className='text-left px-5 py-4 font-semibold border-l border-slate-700'>
-                  Certificate of Packaging Science (CPS)
-                </th>
-                <th className='text-left px-5 py-4 font-semibold border-l border-slate-700'>
-                  Certificate of Mastery in Packaging Management (CMPM)
-                </th>
+                {PROGRAM_COLUMNS.map((column, index) => (
+                  <th
+                    key={column.key}
+                    className={`text-left px-6 py-6 font-semibold align-top bg-slate-900 ${
+                      index === 0
+                        ? 'rounded-tl-xl'
+                        : 'border-l border-slate-700'
+                    }`}
+                  >
+                    {getCalloutConfig(column.key) ? (
+                      <div className='mb-2'>
+                        <span
+                          className={`inline-flex items-center rounded-md px-2.5 py-1 text-[11px] uppercase tracking-wide font-semibold ${getCalloutConfig(column.key).className}`}
+                        >
+                          {getCalloutConfig(column.key).label}
+                        </span>
+                      </div>
+                    ) : null}
+                    <div className='text-xl'>{column.title}</div>
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody className='divide-y divide-slate-100 text-sm text-slate-700'>
+            <tbody className='divide-y divide-slate-100 text-sm text-slate-700 border border-slate-200'>
               <tr className='odd:bg-white even:bg-slate-50/70'>
                 <td className='px-5 py-4 font-semibold text-slate-900 bg-slate-50/70'>
                   Credential
@@ -357,6 +649,14 @@ const HomeVariantB = () => {
                 </td>
                 <td className='px-5 py-4 border-l border-slate-200'>
                   {PROGRAMS.CMPM.format}
+                  {cmpmFormatCallout ? (
+                    <div className='mt-2 block'>
+                      <span className='inline-flex items-center gap-1.5 rounded-md bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700'>
+                        <StarIcon className='w-3.5 h-3.5 text-violet-700 shrink-0' />
+                        {cmpmFormatCallout}
+                      </span>
+                    </div>
+                  ) : null}
                 </td>
               </tr>
               <tr className='odd:bg-white even:bg-slate-50/70'>
@@ -412,22 +712,30 @@ const HomeVariantB = () => {
                   {PROGRAMS.CPS.details}
                 </td>
                 <td className='px-5 py-4 border-l border-slate-200 bg-emerald-100'>
-                  <div className='flex items-start gap-2'>
-                    <StarIcon className='w-4 h-4 text-amber-500 mt-0.5 shrink-0' />
-                    <span>{PROGRAMS.CMPM.details}</span>
-                  </div>
+                  <div>{PROGRAMS.CMPM.details}</div>
+                  {cmpmDetailsCallout ? (
+                    <div className='mt-2 block'>
+                      <span className='inline-flex items-center gap-1.5 rounded-md bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700'>
+                        <StarIcon className='w-3.5 h-3.5 text-violet-700 shrink-0' />
+                        {cmpmDetailsCallout}
+                      </span>
+                    </div>
+                  ) : null}
                 </td>
               </tr>
               <tr className='odd:bg-white even:bg-slate-50/70'>
-                <td className='px-5 py-4 font-semibold text-slate-900 bg-slate-50/70'>
-                  Learn more
+                <td
+                  aria-hidden='true'
+                  className='relative p-0 bg-white border-transparent !border-0'
+                >
+                  <span className='pointer-events-none absolute -inset-px bg-white' />
                 </td>
                 <td className='px-5 py-4 border-l border-slate-200'>
                   <a
                     href={PROGRAMS.BOOTCAMP.href}
                     className='text-clemson font-semibold hover:underline'
                   >
-                    BOOTCAMP
+                    Learn more
                   </a>
                 </td>
                 <td className='px-5 py-4 border-l border-slate-200'>
@@ -451,7 +759,7 @@ const HomeVariantB = () => {
           </table>
         </div>
 
-        <div className='mt-8 w-full rounded-xl bg-slate-900 px-6 py-6 md:px-8 md:py-6 flex flex-col sm:!flex-row sm:!items-center sm:!justify-between gap-4'>
+        <div className='mt-12 w-full rounded-xl bg-slate-900 px-6 py-7 md:px-8 md:py-7 flex flex-col sm:!flex-row sm:!items-center sm:!justify-between gap-5'>
           <div className='space-y-1'>
             <h3 className='text-white text-xl md:text-2xl font-semibold leading-tight'>
               Speak with a real human about your best-fit path.
@@ -465,12 +773,221 @@ const HomeVariantB = () => {
             target='_blank'
             rel='noreferrer'
             className='inline-flex items-center justify-center rounded-md bg-clemson px-5 py-2.5 text-white text-sm font-semibold hover:opacity-90 transition whitespace-nowrap shrink-0 w-full sm:!w-auto'
+            onClick={() => {
+              trackAbMeetingClick({
+                pagePath: '/',
+                nextPath: 'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
+                source: 'homepage_primary_callout',
+              });
+            }}
           >
             Schedule Free 15-Minute Call
           </a>
         </div>
 
-        <div className='mt-14'>
+        {secondaryCallout ? (
+          <div
+            className={`mt-6 w-full rounded-xl px-6 py-7 md:px-8 md:py-7 flex flex-col sm:!flex-row sm:!items-center sm:!justify-between gap-5 ${
+              secondaryCallout.className || 'bg-base-brand'
+            }`}
+          >
+            <div className='space-y-1'>
+              <h3 className='text-white text-xl md:text-2xl font-semibold leading-tight'>
+                {secondaryCallout.title}
+              </h3>
+              {secondaryCallout.description ? (
+                <p className='text-white/90 text-sm md:text-base'>
+                  {secondaryCallout.description}
+                </p>
+              ) : null}
+            </div>
+            <a
+              href={secondaryCallout.href}
+              target={secondaryCallout.newTab ? '_blank' : undefined}
+              rel={secondaryCallout.newTab ? 'noreferrer' : undefined}
+              className={`inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition whitespace-nowrap shrink-0 w-full sm:!w-auto ${
+                secondaryCallout.buttonClassName || 'bg-white text-clemson'
+              }`}
+              onClick={() => {
+                trackAbPdfClick({
+                  pagePath: '/',
+                  nextPath: secondaryCallout.href,
+                  source: 'homepage_secondary_callout',
+                });
+              }}
+            >
+              {secondaryCallout.ctaLabel}
+            </a>
+          </div>
+        ) : null}
+
+        {lessonsSection ? (
+          <div className='mt-12'>
+            <h3 className='text-2xl md:text-3xl font-semibold text-slate-900 text-center'>
+              {lessonsSection.title || 'Get Started Learning for Free'}
+            </h3>
+            <p className='mt-3 text-slate-600 text-center max-w-3xl mx-auto'>
+              {lessonsSection.description ||
+                'Explore our expansive free library of lessons and start learning on your schedule.'}
+            </p>
+
+            {isLoadingLotmLessons ? (
+              <div
+                className={`mt-10 grid gap-5 ${
+                  lessonCardsPerView === 1
+                    ? 'grid-cols-1'
+                    : lessonCardsPerView === 2
+                      ? 'grid-cols-2'
+                      : 'grid-cols-3'
+                }`}
+              >
+                {Array.from({ length: lessonCardsPerView }).map((_, i) => (
+                  <div
+                    key={i}
+                    className='rounded-xl border border-slate-200 bg-white shadow-sm animate-pulse overflow-hidden'
+                  >
+                    <div className='aspect-video bg-slate-200' />
+                    <div className='p-5 space-y-3'>
+                      <div className='h-6 bg-slate-200 rounded w-11/12' />
+                      <div className='h-4 bg-slate-200 rounded w-1/3' />
+                      <div className='h-6 bg-slate-200 rounded w-2/3' />
+                      <div className='h-4 bg-slate-200 rounded w-full' />
+                      <div className='h-4 bg-slate-200 rounded w-5/6' />
+                      <div className='h-10 bg-slate-200 rounded w-32' />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div onTouchStart={handleLessonTouchStart} onTouchEnd={handleLessonTouchEnd}>
+                <div
+                  className={`mt-10 grid gap-5 transition-all duration-300 ${
+                    lessonCardsPerView === 1
+                      ? 'grid-cols-1'
+                      : lessonCardsPerView === 2
+                        ? 'grid-cols-2'
+                        : 'grid-cols-3'
+                  }`}
+                >
+                  {visibleLessons.map((lesson) => {
+                  const lessonHref = `/lessons/${lesson.slug}`;
+                  const authorName = resolveLessonAuthorLabel(
+                    lesson.author,
+                    lotmAuthorNames,
+                  );
+                  const lessonDate = formatLessonDate(getLessonSortDate(lesson));
+                  const lessonTags = (lesson?.tags?.items || [])
+                    .map((entry) => entry?.tags?.tag)
+                    .filter(Boolean)
+                    .slice(0, 3);
+
+                    return (
+                      <article
+                        key={lesson.id}
+                        className='rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col'
+                      >
+                        <Link href={lessonHref} className='block'>
+                          <div className='aspect-video bg-slate-100'>
+                            {lesson.seoImage ? (
+                              <div
+                                className='h-full w-full bg-cover bg-center'
+                                style={{ backgroundImage: `url(${lesson.seoImage})` }}
+                              />
+                            ) : null}
+                          </div>
+                        </Link>
+                        <div className='p-5 flex flex-col grow'>
+                          {lessonDate ? (
+                            <p className='text-xs font-medium uppercase tracking-wide text-slate-500'>
+                              {lessonDate}
+                            </p>
+                          ) : null}
+                          <h4 className='text-lg font-semibold leading-snug text-slate-900'>
+                            {lesson.title}
+                          </h4>
+                          <p className='mt-2 text-sm text-slate-600'>
+                            By {authorName}
+                          </p>
+                          {lessonTags.length ? (
+                            <div className='mt-3 flex flex-wrap gap-2'>
+                              {lessonTags.map((tag) => (
+                                <span
+                                  key={`${lesson.id}-${tag}`}
+                                className='inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700'
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          ) : null}
+                          <p className='mt-3 text-sm leading-relaxed text-slate-700 grow'>
+                            {lesson.subhead ||
+                              'Read this free lesson from our library.'}
+                          </p>
+                          <Link
+                            href={lessonHref}
+                            onClick={() => {
+                              trackAbLessonClick({
+                                pagePath: '/',
+                                nextPath: lessonHref,
+                                source: 'homepage_free_lessons',
+                                metadata: {
+                                  lessonId: lesson.id,
+                                  lessonSlug: lesson.slug,
+                                },
+                              });
+                            }}
+                            className='mt-5 inline-flex items-center justify-center rounded-md bg-black px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition w-full sm:w-auto'
+                          >
+                            Read more
+                          </Link>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                <div className='mt-6 flex items-center justify-between gap-4'>
+                  <button
+                    type='button'
+                    onClick={goToPreviousLessonPage}
+                    disabled={lessonPageCount <= 1}
+                    className='inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed'
+                  >
+                    Previous
+                  </button>
+
+                  <div className='flex items-center gap-2'>
+                    {Array.from({ length: lessonPageCount }).map((_, idx) => (
+                      <button
+                        key={idx}
+                        type='button'
+                        onClick={() => setLessonCarouselPage(idx)}
+                        aria-label={`Go to lesson page ${idx + 1}`}
+                        className={`h-2.5 w-2.5 rounded-full transition ${
+                          idx === currentLessonPage
+                            ? 'bg-black'
+                            : 'bg-slate-300 hover:bg-slate-400'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    type='button'
+                    onClick={goToNextLessonPage}
+                    disabled={lessonPageCount <= 1}
+                    className='inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed'
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : null}
+
+        <div className='mt-16'>
           <h3 className='text-2xl md:text-3xl font-semibold text-slate-900 text-center'>
             Start with Free Courses
           </h3>
@@ -479,7 +996,7 @@ const HomeVariantB = () => {
           </p>
 
           {isLoadingCourses ? (
-            <div className='mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6'>
+            <div className='mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6'>
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -494,24 +1011,26 @@ const HomeVariantB = () => {
               ))}
             </div>
           ) : (
-            <div className='mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6'>
+            <div className='mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6'>
               {freeCourses.map((course) => (
                 <div
                   key={course.id}
                   className='rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm'
                 >
-                  <div className='aspect-video bg-slate-100'>
+                  <div className='relative w-full pt-[56.25%] bg-slate-100 overflow-hidden'>
                     {course.preview || course.demo ? (
                       <ReactPlayer
                         url={course.preview || course.demo}
                         width='100%'
                         height='100%'
+                        className='absolute inset-0'
+                        style={{ position: 'absolute', inset: 0 }}
                         controls
-                        light={course.seoImage || true}
+                        light={course.seoImage || false}
                       />
                     ) : (
                       <div
-                        className='w-full h-full relative bg-cover bg-center'
+                        className='absolute inset-0 bg-cover bg-center'
                         style={{
                           backgroundImage: course.seoImage
                             ? `url(${course.seoImage})`
@@ -530,7 +1049,7 @@ const HomeVariantB = () => {
                     <h4 className='text-base font-semibold text-slate-900 leading-tight min-h-[42px]'>
                       {course.title}
                     </h4>
-                    <div className='mt-3 flex items-center justify-between text-sm'>
+                    <div className='mt-4 flex items-center justify-between text-sm'>
                       <span className='inline-flex items-center rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-1 font-semibold'>
                         FREE
                       </span>
@@ -538,11 +1057,11 @@ const HomeVariantB = () => {
                         {course.hours || 'N/A'} hours
                       </span>
                     </div>
-                    <p className='mt-3 text-sm text-slate-600'>
+                    <p className='mt-4 text-sm text-slate-600'>
                       {course.subheadline ||
                         'Learn key packaging concepts and build practical skills.'}
                     </p>
-                    <div className='mt-auto pt-4'>
+                    <div className='mt-auto pt-5'>
                       <button
                         onClick={() => handleOrderCourse(course)}
                         className='w-full inline-flex items-center justify-center rounded-md bg-clemson px-4 py-2.5 text-white text-sm font-semibold hover:opacity-90 transition'
@@ -557,17 +1076,17 @@ const HomeVariantB = () => {
           )}
         </div>
 
-        <div className='mt-14 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-10 md:px-10 md:py-14 text-center'>
+        <div className='mt-16 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 md:px-10 md:py-16 text-center'>
           <h3 className='text-3xl md:text-4xl lg:text-5xl font-semibold text-slate-900 leading-tight'>
             Explore the Full Catalog
           </h3>
-          <p className='mt-4 text-base md:text-lg text-slate-700 max-w-4xl mx-auto leading-relaxed'>
+          <p className='mt-5 text-base md:text-lg text-slate-700 max-w-4xl mx-auto leading-relaxed'>
             Explore approximately {buildEstimatedCount(catalogEstimate.count)}{' '}
             courses across {formatTopics(catalogEstimate.topics)}.
           </p>
           <Link
             href='/all_courses'
-            className='mt-7 inline-flex items-center justify-center rounded-md bg-clemson px-6 py-3 text-white text-sm md:text-base font-semibold hover:opacity-90 transition'
+            className='mt-8 inline-flex items-center justify-center rounded-md bg-clemson px-6 py-3 text-white text-sm md:text-base font-semibold hover:opacity-90 transition'
           >
             View All Courses
           </Link>
