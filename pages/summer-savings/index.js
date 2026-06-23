@@ -39,7 +39,7 @@ const SummerSavings = () => {
     <>
       <Meta
         title='Summer Savings: A Second Course on Us'
-        description='For a limited time, enroll in any Packaging School course and get a second course of equal or lesser value free. Learn more and claim your summer savings.'
+        description='From June 25 through July 2, 2026, enroll in any Packaging School course and get a second course of equal or lesser value free. Learn more and claim your summer savings.'
         robots='noindex, nofollow'
         image='https://packschool.s3.us-east-1.amazonaws.com/Summer-School-Savings3.png'
       />
@@ -58,7 +58,7 @@ const SummerSavings = () => {
             {/* Right column: marketing copy */}
             <div className='flex flex-col justify-center'>
               <span className='inline-flex w-fit items-center gap-2 rounded-full bg-brand-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-black'>
-                Limited Time Summer Deal
+                June 25 – July 2, 2026
               </span>
 
               <h1 className='mt-4 text-4xl font-extrabold leading-tight tracking-tight text-dark sm:text-5xl'>
@@ -67,10 +67,10 @@ const SummerSavings = () => {
               </h1>
 
               <p className='mt-3 text-lg leading-relaxed text-gray-600'>
-                Invest in your packaging career this summer and bring a
-                colleague along — or stack your own skills. Purchase any course
-                and unlock a second course of equal or lesser value, completely
-                free.
+                From June 25th through July 2nd, 2026, invest in your packaging
+                career this summer and bring a colleague along — or stack your
+                own skills. Purchase any course and unlock a second course of
+                equal or lesser value, completely free.
               </p>
 
               <div className='mt-6'>
