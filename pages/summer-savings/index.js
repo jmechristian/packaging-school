@@ -68,9 +68,10 @@ const SummerSavings = () => {
 
               <p className='mt-3 text-lg leading-relaxed text-gray-600'>
                 From June 25th through July 2nd, 2026, invest in your packaging
-                career this summer and bring a colleague along — or stack your
-                own skills. Purchase any course and unlock a second course of
-                equal or lesser value, completely free.
+                career this summer and share the opportunity with a colleague—or
+                deepen your own expertise with a second course. Purchase any
+                course and unlock a second course of equal or lesser value,
+                completely free.
               </p>
 
               <div className='mt-6'>
