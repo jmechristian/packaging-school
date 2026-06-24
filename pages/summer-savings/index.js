@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import Meta from '../../components/shared/Meta';
 
 const steps = [
@@ -46,16 +47,7 @@ const SummerSavings = () => {
       <main className='bg-gradient-to-b from-base-light/40 via-white to-white py-12 sm:py-16'>
         <div className='mx-auto max-w-6xl px-4 sm:px-6 lg:px-8'>
           <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8'>
-            {/* Left column: image */}
-            <div className='overflow-hidden rounded-2xl shadow-lg'>
-              <img
-                src='https://packschool.s3.us-east-1.amazonaws.com/Summer-School-Savings3.png'
-                alt='Summer School Savings'
-                className='w-full'
-              />
-            </div>
-
-            {/* Right column: marketing copy */}
+            {/* Left column: marketing copy */}
             <div className='flex flex-col justify-center'>
               <span className='inline-flex w-fit items-center gap-2 rounded-full bg-brand-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-black'>
                 June 25 – July 2, 2026
@@ -107,14 +99,40 @@ const SummerSavings = () => {
                   ))}
                 </ol>
               </div>
+            </div>
 
-              <p className='mt-6 rounded-xl border border-base-light bg-base-light/30 px-4 py-3 text-sm text-base-dark'>
-                <span className='font-semibold'>Please note:</span> The second
-                course must be of equal or lesser value than the purchased
-                course.
-              </p>
+            {/* Right column: image + callout */}
+            <div className='flex flex-col gap-4'>
+              <div className='overflow-hidden rounded-2xl shadow-lg'>
+                <img
+                  src='https://packschool.s3.us-east-1.amazonaws.com/Summer-School-Savings3.png'
+                  alt='Summer School Savings'
+                  className='w-full'
+                />
+              </div>
+
+              <div className='rounded-2xl border border-base-light bg-base-light/30 px-6 py-5 text-center'>
+                <p className='text-lg font-semibold text-dark'>
+                  Ready to get started?
+                </p>
+                <p className='mt-1 text-sm text-gray-600'>
+                  Browse our full catalog and find the course that fits your
+                  goals.
+                </p>
+                <Link
+                  href='/all_courses'
+                  className='mt-4 inline-flex items-center justify-center rounded-md bg-base-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-base-dark'
+                >
+                  Explore Courses
+                </Link>
+              </div>
             </div>
           </div>
+
+          <p className='mt-8 text-black'>
+            <span className='font-bold'>Please note:</span> The second course
+            must be of equal or lesser value than the purchased course.
+          </p>
         </div>
       </main>
     </>
