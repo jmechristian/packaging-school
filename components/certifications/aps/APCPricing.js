@@ -44,7 +44,7 @@ const APCPricing = () => {
           : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`,
         type === 'BUY'
           ? `https://learn.packagingschool.com/enroll/735516`
-          : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`
+          : `https://learn.packagingschool.com/enroll/735516?price_id=2898851`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -123,7 +123,7 @@ const APCPricing = () => {
             onClick={() =>
               window.open(
                 'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-                '_blank'
+                '_blank',
               )
             }
           >
@@ -167,7 +167,7 @@ const APCPricing = () => {
                   $415
                 </span>
                 <span className='text-sm font-semibold leading-6 tracking-wide text-gray-600'>
-                  /mo for 6-months
+                  /mo for 6-months<sup>*</sup>
                 </span>
               </p>
 
@@ -177,6 +177,13 @@ const APCPricing = () => {
               >
                 Enroll Now
               </button>
+              <div className='bg-base-dark-highlight rounded-lg p-5 mt-6'>
+                <p className='text-sm leading-4 text-white font-semibold'>
+                  <sup>*</sup>To be eligible for the final exam module and
+                  certificate issuance, all program payments must be completed
+                  under the agreed plan.
+                </p>
+              </div>
 
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
