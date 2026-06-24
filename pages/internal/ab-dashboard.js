@@ -753,6 +753,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                   </option>
                 ))}
               </select>
+              <span className='text-[11px] text-gray-500'>
+                B/C cutoff:{' '}
+                {new Date(`${EXPERIMENT_CUTOVER_DATE}T00:00:00`).toLocaleDateString(
+                  'en-US',
+                  { year: 'numeric', month: 'short', day: 'numeric' },
+                )}
+              </span>
             </div>
             {rangePreset === 'custom' ? (
               <>
