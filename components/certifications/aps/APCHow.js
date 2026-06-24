@@ -157,6 +157,43 @@ const APCHow = () => {
                 title={`Hazmat Packaging*`}
               />
             </div>
+            <div className='mt-6 lg:mt-9 w-full rounded-lg bg-base-dark shadow-xl ring-1 ring-clemson-dark/40 dark:ring-clemson-dark/30 overflow-hidden'>
+              <div className='flex flex-col sm:flex-row items-center gap-6 lg:gap-12 p-6 lg:p-10'>
+                <div className='flex flex-col items-center gap-4 shrink-0'>
+                  <div className='flex shrink-0 items-center justify-center w-20 h-20 rounded-full bg-white/15 ring-1 ring-white/30'>
+                    <AcademicCapIcon className='w-12 h-12 stroke-white' />
+                  </div>
+                  <div className='flex flex-col gap-1 items-center text-center'>
+                    <span className=' font-bold uppercase tracking-widest text-clemson'>
+                      Final Step
+                    </span>
+                    <h3 className='text-2xl lg:text-3xl font-bold text-white'>
+                      Final Exam
+                    </h3>
+                  </div>
+                </div>
+                <div className='flex flex-col gap-3 flex-1 w-full'>
+                  <p className='text-white/90 text-base lg:text-lg '>
+                    As the final step in this program, please email{' '}
+                    <a
+                      href='mailto:info@packagingschool.com'
+                      className='font-semibold underline underline-offset-2 hover:text-white'
+                    >
+                      info@packagingschool.com
+                    </a>{' '}
+                    to request enrollment in the final exam module. Upon
+                    successful completion of the exam, you will receive your
+                    official certificate and be recognized as a program
+                    graduate!
+                  </p>
+                  <p className='text-white/70 text-sm '>
+                    To be eligible for the final exam module and certificate
+                    issuance, all program payments must be completed under the
+                    agreed plan.
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className='mt-8 dark:text-gray-600 text-sm w-full text-right'>
               <sup>*</sup>Special thanks to Josh Galvarino. This exclusive
               program is self-paced and can be accessed anytime, anywhere.
