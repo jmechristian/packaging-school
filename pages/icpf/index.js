@@ -78,7 +78,7 @@ const ICPF = () => {
               value each.
             </div>
             <div className='text-xl leading-relaxed'>
-              Open to current students (age 18-25) who are studying business,
+              Open to current students (age 18+) who are studying business,
               supply chain, graphic communications, design, engineering,
               environmental science, chemistry, or a STEAM-related field at a
               college, university, trade/technical school, or community college.

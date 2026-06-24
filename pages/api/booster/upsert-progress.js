@@ -1,6 +1,6 @@
 import { API } from 'aws-amplify';
 
-const BOOSTER_MILESTONES = [10, 20];
+const BOOSTER_MILESTONES = [10, 15, 25, 50];
 
 const QUERY_GET_PROGRESS_BY_ID = `
   query GetBoosterCourseProgress($id: ID!) {
@@ -57,6 +57,18 @@ const MUTATION_CREATE_DISCOUNT_CODE = `
       milestonePercent
       code
       issuedAt
+    }
+  }
+`;
+
+const QUERY_COURSE_CODES = `
+  query ListBoosterDiscountCodes($filter: ModelBoosterDiscountCodeFilterInput, $limit: Int) {
+    listBoosterDiscountCodes(filter: $filter, limit: $limit) {
+      items {
+        id
+        milestonePercent
+        isRedeemed
+      }
     }
   }
 `;
@@ -137,6 +149,19 @@ async function getProgress(progressId, courseId) {
   return json?.data?.getBoosterCourseProgress || null;
 }
 
+async function courseHasRedeemedCode(userId, courseId) {
+  const { json } = await appSync(QUERY_COURSE_CODES, {
+    limit: 50,
+    filter: {
+      userId: { eq: userId },
+      thinkificCourseId: { eq: courseId },
+    },
+  });
+  throwIfGraphqlErrors(json, `AppSync code lookup failed for course ${courseId}`);
+  const items = json?.data?.listBoosterDiscountCodes?.items || [];
+  return items.some((item) => item?.isRedeemed);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
 
@@ -213,7 +238,15 @@ export default async function handler(req, res) {
 
       progress.push(saved);
 
+      // Once any code for this course has been redeemed, the discount ladder is
+      // locked: do not issue any additional milestone codes.
+      // eslint-disable-next-line no-await-in-loop
+      const ladderLocked = reached.length
+        ? await courseHasRedeemedCode(userId, courseId)
+        : false;
+
       for (const milestonePercent of reached) {
+        if (ladderLocked) break;
         const codeId = `${userId}#${courseId}#${milestonePercent}`;
 
         // eslint-disable-next-line no-await-in-loop

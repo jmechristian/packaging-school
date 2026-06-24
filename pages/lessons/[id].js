@@ -52,6 +52,10 @@ import LessonSubscribe from '../../components/shared/LessonSubscribe';
 import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 import { optimizeTiptapImages } from '../../libs/tiptapContent';
+import { trackAbPromoClick } from '../../libs/analytics';
+
+const SIDEBAR_PROMO_SRC =
+  'https://packschool.s3.us-east-1.amazonaws.com/Summer-School-Savings-02.png';
 
 const Page = ({
   lesson,
@@ -59,6 +63,14 @@ const Page = ({
   enableDemoQuiz = false,
   enableBoosterFlow = false,
 }) => {
+  // Auto-enable the booster lesson experience for any wired lesson on the
+  // live route. Non-wired lessons are unaffected, and the sandbox can still
+  // force these on explicitly via props.
+  const isWiredLesson = Boolean(lesson?.wired);
+  enableProgressTracking = enableProgressTracking || isWiredLesson;
+  enableDemoQuiz = enableDemoQuiz || isWiredLesson;
+  enableBoosterFlow = enableBoosterFlow || isWiredLesson;
+
   const normalizeWiredLessonIds = (raw) => {
     if (Array.isArray(raw)) {
       return raw.map((id) => String(id || '').trim()).filter(Boolean);
@@ -1044,9 +1056,9 @@ const Page = ({
                   </div>
                 ))}
               {enableProgressTracking && (
-                <div>
-                  <div className='w-full border border-brand-yellow/50 bg-white dark:bg-base-dark rounded-xl px-4 lg:px-5 py-3 flex items-center gap-4 lg:gap-5 shadow-md'>
-                    <div className='hidden sm:block w-24 h-24 lg:w-28 lg:h-28 shrink-0'>
+                <div className='w-full border border-brand-yellow/50 bg-white dark:bg-base-dark rounded-xl shadow-md overflow-hidden'>
+                  <div className='flex items-start gap-4 lg:gap-5 p-5 lg:p-6'>
+                    <div className='hidden sm:block w-20 h-20 lg:w-24 lg:h-24 shrink-0'>
                       <Lottie
                         animationData={lessonAnimation}
                         loop={true}
@@ -1054,12 +1066,16 @@ const Page = ({
                         className='w-full h-full'
                       />
                     </div>
-                    <div className='flex-1'>
-                      <div className='text-base lg:text-lg font-bold text-black dark:text-white leading-tight'>
+                    <div className='flex-1 min-w-0'>
+                      <div className='inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-clemson mb-2'>
+                        <MdBolt size={16} />
+                        Booster Lesson
+                      </div>
+                      <div className='text-lg lg:text-xl font-bold text-black dark:text-white leading-snug'>
                         {wiredCourseNames.length ? (
                           <>
                             This lesson is a part of{' '}
-                            <span className='text-clemson leading-none'>
+                            <span className='text-clemson'>
                               {wiredCourseNamesText}
                             </span>
                             .
@@ -1068,12 +1084,19 @@ const Page = ({
                           'This lesson is a part of our course credits track.'
                         )}
                       </div>
-                      <div className='text-base lg:text-lg text-gray-800 dark:text-gray-100 mt-2'>
-                        Complete the short assessment below to earn credit
-                        toward the full course.
+                      <div className='text-sm lg:text-base text-gray-700 dark:text-gray-200 mt-1.5'>
+                        Complete the short assessment below to earn credit toward
+                        the full course.
                       </div>
                     </div>
                   </div>
+                  <Link
+                    href='/profile?tab=boosterProgress'
+                    className='flex items-center justify-between gap-2 px-5 lg:px-6 py-3 border-t border-brand-yellow/40 bg-brand-yellow/10 text-sm font-semibold text-clemson hover:bg-brand-yellow/20 transition-colors'
+                  >
+                    <span>Track your progress in your Booster Lessons</span>
+                    <span aria-hidden='true'>&rarr;</span>
+                  </Link>
                 </div>
               )}
               <div
@@ -1188,6 +1211,27 @@ const Page = ({
                       ))}
                     </div>
                   )}
+                  <Link
+                    href='/summer-savings'
+                    className='block w-full -mb-3'
+                    onClick={() =>
+                      trackAbPromoClick({
+                        pagePath: router.asPath,
+                        nextPath: '/summer-savings',
+                        source: 'lesson_sidebar_promo',
+                        metadata: {
+                          promo: 'summer_school_savings',
+                          lessonSlug: lesson?.slug || null,
+                        },
+                      })
+                    }
+                  >
+                    <img
+                      src={SIDEBAR_PROMO_SRC}
+                      alt='Summer School Savings - now through July 2, 2026'
+                      className='w-full h-auto rounded-lg'
+                    />
+                  </Link>
                 </div>
                 <div className='flex flex-col gap-5 py-5 px-4 lg:px-0'>
                   <div className='grid grid-cols-3 gap-2 w-fit lg:hidden'>
@@ -1459,6 +1503,13 @@ export async function getStaticProps({ params }) {
           featured
           related
           type
+          wired
+          wiredQuestions {
+            question
+            options
+            correctAnswer
+          }
+          wiredLessonId
           updatedAt
         }
       }

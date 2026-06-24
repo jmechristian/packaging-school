@@ -17,6 +17,7 @@ const EVENT_THROTTLE_MS = {
   ab_pdf_click: 1500,
   ab_meeting_click: 1500,
   ab_lesson_click: 1500,
+  ab_promo_click: 1500,
   ab_purchase_intent: 3000,
   ab_purchase_complete: 3000,
   ab_session_end: 30000,
@@ -425,6 +426,10 @@ export async function trackAbMeetingClick(payload = {}) {
 
 export async function trackAbLessonClick(payload = {}) {
   await writeAbEvent('ab_lesson_click', payload);
+}
+
+export async function trackAbPromoClick(payload = {}) {
+  await writeAbEvent('ab_promo_click', payload);
 }
 
 export async function trackAbPurchaseComplete(payload = {}) {
