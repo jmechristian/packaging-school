@@ -220,6 +220,26 @@ const Teams = () => {
             </div>
           </div>
         </section>
+        <section className='pb-16'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
+            <div className='w-full rounded-lg overflow-hidden'>
+              <Image
+                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+1.png'
+                alt='Cummins Packaging Training Library Testimonial 1'
+                width={600}
+                height={600}
+              />
+            </div>
+            <div className='w-full rounded-lg overflow-hidden'>
+              <Image
+                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins_testimonial_2_edit.png'
+                alt='Cummins Packaging Training Library Testimonial 2'
+                width={600}
+                height={600}
+              />
+            </div>
+          </div>
+        </section>
         <section className='py-16 bg-slate-900 rounded-t-2xl'>
           <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='max-w-3xl'>
@@ -492,6 +512,26 @@ const Teams = () => {
               >
                 Email Dr. Suggs to Get Started
               </a>
+            </div>
+          </div>
+        </section>
+        <section className='py-16'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
+            <div className='w-full rounded-lg overflow-hidden'>
+              <Image
+                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+3.png'
+                alt='Cummins Packaging Training Library Testimonial 3'
+                width={600}
+                height={600}
+              />
+            </div>
+            <div className='w-full rounded-lg overflow-hidden'>
+              <Image
+                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+4.png'
+                alt='Cummins Packaging Training Library Testimonial 4'
+                width={600}
+                height={600}
+              />
             </div>
           </div>
         </section>
