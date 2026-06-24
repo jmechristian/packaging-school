@@ -355,14 +355,10 @@ const ICPF = () => {
             <div className=''>
               <ul className='list-disc list-outside text-lg flex flex-col gap-4 pl-4'>
                 <li>
-                  Must be majoring in business, supply chain management, graphic
-                  communications/design, engineering, environmental science,
-                  chemistry, or another STEAM-related field.
-                </li>
-                <li>
-                  Must be majoring in business, supply chain management,
-                  industrial/graphic design, engineering, environmental science,
-                  or packaging.
+                  Open to current students (age 18+) who are studying business,
+                  supply chain management, graphic communications/design,
+                  engineering, environmental science, chemistry, or another
+                  STEAM-related field.
                 </li>
                 <li>
                   Must have completed at least one year of undergraduate
