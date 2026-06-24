@@ -6762,10 +6762,12 @@ export const createAbTestEvent = /* GraphQL */ `
     createAbTestEvent(input: $input, condition: $condition) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6789,6 +6791,8 @@ export const createAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
@@ -6808,10 +6812,12 @@ export const updateAbTestEvent = /* GraphQL */ `
     updateAbTestEvent(input: $input, condition: $condition) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6835,6 +6841,8 @@ export const updateAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
@@ -6854,10 +6862,12 @@ export const deleteAbTestEvent = /* GraphQL */ `
     deleteAbTestEvent(input: $input, condition: $condition) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6881,11 +6891,103 @@ export const deleteAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
       country
       metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createAbWebhookReceipt = /* GraphQL */ `
+  mutation CreateAbWebhookReceipt(
+    $input: CreateAbWebhookReceiptInput!
+    $condition: ModelAbWebhookReceiptConditionInput
+  ) {
+    createAbWebhookReceipt(input: $input, condition: $condition) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAbWebhookReceipt = /* GraphQL */ `
+  mutation UpdateAbWebhookReceipt(
+    $input: UpdateAbWebhookReceiptInput!
+    $condition: ModelAbWebhookReceiptConditionInput
+  ) {
+    updateAbWebhookReceipt(input: $input, condition: $condition) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAbWebhookReceipt = /* GraphQL */ `
+  mutation DeleteAbWebhookReceipt(
+    $input: DeleteAbWebhookReceiptInput!
+    $condition: ModelAbWebhookReceiptConditionInput
+  ) {
+    deleteAbWebhookReceipt(input: $input, condition: $condition) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
       createdAt
       updatedAt
       __typename
@@ -9336,6 +9438,105 @@ export const deleteOrder = /* GraphQL */ `
       createdAt
       updatedAt
       userOrdersId
+      __typename
+    }
+  }
+`;
+export const createThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  mutation CreateThinkificEnrollmentWebhookEvent(
+    $input: CreateThinkificEnrollmentWebhookEventInput!
+    $condition: ModelThinkificEnrollmentWebhookEventConditionInput
+  ) {
+    createThinkificEnrollmentWebhookEvent(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  mutation UpdateThinkificEnrollmentWebhookEvent(
+    $input: UpdateThinkificEnrollmentWebhookEventInput!
+    $condition: ModelThinkificEnrollmentWebhookEventConditionInput
+  ) {
+    updateThinkificEnrollmentWebhookEvent(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  mutation DeleteThinkificEnrollmentWebhookEvent(
+    $input: DeleteThinkificEnrollmentWebhookEventInput!
+    $condition: ModelThinkificEnrollmentWebhookEventConditionInput
+  ) {
+    deleteThinkificEnrollmentWebhookEvent(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
       __typename
     }
   }

@@ -1,47 +1,75 @@
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
+import {
+  EVENT_SUMMARY_FIELDS,
+  buildCreatedAtCondition,
+  eventsByExperimentKeyQuery,
+  parseDateInput,
+} from '../../../libs/abAnalyticsQueries';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
 }
 
-const listAbEventsQuery = /* GraphQL */ `
-  query ListAbEventsForSummary(
-    $filter: ModelAbTestEventFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAbTestEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        eventName
-        variant
-        sessionId
-        acquisitionChannel
-        acquisitionSource
-        acquisitionMedium
-        acquisitionCampaign
-        createdAt
-      }
-      nextToken
+const experimentKeyQuery = eventsByExperimentKeyQuery(EVENT_SUMMARY_FIELDS);
+
+const MAX_RUNTIME_MS = 8000;
+const PAGE_SIZE = 1000;
+
+function emptyVariantBucket() {
+  return {
+    exposure: 0,
+    pageViews: 0,
+    purchaseIntent: 0,
+    purchaseComplete: 0,
+    totalEvents: 0,
+  };
+}
+
+function accumulate(items, acc) {
+  const { byVariant, attributionBySession, byVariantChannel, sessionsByVariant } = acc;
+
+  for (const item of items) {
+    const variant = item.variant || 'UNASSIGNED';
+    if (!byVariant[variant]) byVariant[variant] = emptyVariantBucket();
+
+    byVariant[variant].totalEvents += 1;
+    if (item.eventName === 'ab_exposure') byVariant[variant].exposure += 1;
+    if (item.eventName === 'ab_page_view') byVariant[variant].pageViews += 1;
+    if (item.eventName === 'ab_purchase_intent') byVariant[variant].purchaseIntent += 1;
+    if (item.eventName === 'ab_purchase_complete') byVariant[variant].purchaseComplete += 1;
+
+    const sessionKey = item.sessionId || null;
+    if (sessionKey) {
+      if (!sessionsByVariant[variant]) sessionsByVariant[variant] = new Set();
+      sessionsByVariant[variant].add(sessionKey);
     }
+    if (sessionKey && !attributionBySession.has(sessionKey)) {
+      attributionBySession.set(sessionKey, {
+        channel: item.acquisitionChannel || 'unknown',
+        source: item.acquisitionSource || '(direct)',
+        medium: item.acquisitionMedium || '(none)',
+        campaign: item.acquisitionCampaign || '(none)',
+      });
+    }
+
+    const channel = item.acquisitionChannel || 'unknown';
+    if (!byVariantChannel[variant]) byVariantChannel[variant] = {};
+    if (!byVariantChannel[variant][channel]) {
+      byVariantChannel[variant][channel] = {
+        exposure: 0,
+        purchaseIntent: 0,
+        purchaseComplete: 0,
+        totalEvents: 0,
+      };
+    }
+    const bucket = byVariantChannel[variant][channel];
+    bucket.totalEvents += 1;
+    if (item.eventName === 'ab_exposure') bucket.exposure += 1;
+    if (item.eventName === 'ab_purchase_intent') bucket.purchaseIntent += 1;
+    if (item.eventName === 'ab_purchase_complete') bucket.purchaseComplete += 1;
   }
-`;
-
-function parseDateInput(value) {
-  if (typeof value !== 'string' || !value.trim()) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  return date.toISOString();
 }
-
-function parseBoundedInt(value, fallback, min, max) {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return fallback;
-  const rounded = Math.floor(parsed);
-  return Math.min(max, Math.max(min, rounded));
-}
-
-const MAX_RUNTIME_MS = 6500;
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -54,134 +82,94 @@ export default async function handler(req, res) {
       : 'home_v1';
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
-  const maxScan = parseBoundedInt(req.query.maxScan, 20000, 1000, 100000);
-  const filter = {
-    experimentKey: { eq: experimentKey },
-    ...(from || to
-      ? {
-          createdAt: {
-            ...(from ? { ge: from } : {}),
-            ...(to ? { le: to } : {}),
-          },
-        }
-      : {}),
+  const createdAt = buildCreatedAtCondition(from, to);
+
+  const acc = {
+    byVariant: {},
+    attributionBySession: new Map(),
+    byVariantChannel: {},
+    sessionsByVariant: {},
   };
 
-  try {
-    let nextToken = null;
-    let items = [];
-    const startedAt = Date.now();
-    let truncatedByRuntime = false;
+  const startedAt = Date.now();
+  let truncatedByRuntime = false;
+  let totalEvents = 0;
+  const usedFallback = false;
 
+  async function runExperimentKeyScan() {
+    let nextToken = null;
     do {
       const result = await API.graphql({
-        query: listAbEventsQuery,
+        query: experimentKeyQuery,
         variables: {
-          filter,
-          limit: 1000,
+          experimentKey,
+          createdAt,
+          sortDirection: 'ASC',
+          limit: PAGE_SIZE,
           nextToken,
         },
       });
-
-      const page = result?.data?.listAbTestEvents?.items || [];
-      items = items.concat(page);
-      nextToken = result?.data?.listAbTestEvents?.nextToken || null;
+      const data = result?.data?.abTestEventsByExperimentKeyAndCreatedAt;
+      const page = data?.items || [];
+      totalEvents += page.length;
+      accumulate(page, acc);
+      nextToken = data?.nextToken || null;
       if (Date.now() - startedAt >= MAX_RUNTIME_MS) {
         truncatedByRuntime = true;
         break;
       }
-    } while (nextToken && items.length < maxScan);
+    } while (nextToken);
+  }
 
-    const byVariant = {};
-    const attributionBySession = new Map();
+  try {
+    // Query the experimentKey GSI with a createdAt range. This is a single
+    // indexed Query (not a table scan) and, unlike the experimentDay fan-out,
+    // it includes pre-cutover rows that have a null experimentDay - so the
+    // dashboard populates for all historical and new data alike.
+    await runExperimentKeyScan();
+    return res.status(200).json(buildResponse());
+  } catch (error) {
+    console.error('Failed to build AB summary:', error);
+    return res.status(500).json({ error: 'Failed to build AB summary' });
+  }
 
-    for (const item of items) {
-      const variant = item.variant || 'UNASSIGNED';
-      if (!byVariant[variant]) {
-        byVariant[variant] = {
-          exposure: 0,
-          pageViews: 0,
-          purchaseIntent: 0,
-          purchaseComplete: 0,
-          totalEvents: 0,
-        };
-      }
-
-      byVariant[variant].totalEvents += 1;
-      if (item.eventName === 'ab_exposure') byVariant[variant].exposure += 1;
-      if (item.eventName === 'ab_page_view') byVariant[variant].pageViews += 1;
-      if (item.eventName === 'ab_purchase_intent')
-        byVariant[variant].purchaseIntent += 1;
-      if (item.eventName === 'ab_purchase_complete')
-        byVariant[variant].purchaseComplete += 1;
-
-      const sessionKey = item.sessionId || null;
-      if (sessionKey && !attributionBySession.has(sessionKey)) {
-        attributionBySession.set(sessionKey, {
-          channel: item.acquisitionChannel || 'unknown',
-          source: item.acquisitionSource || '(direct)',
-          medium: item.acquisitionMedium || '(none)',
-          campaign: item.acquisitionCampaign || '(none)',
-        });
-      }
-    }
-
+  function buildResponse() {
     const byChannel = {};
     const bySourceMedium = {};
     const byCampaign = {};
-    const byVariantChannel = {};
 
-    for (const attr of attributionBySession.values()) {
+    for (const attr of acc.attributionBySession.values()) {
       const channel = attr.channel || 'unknown';
       const sourceMedium = `${attr.source || '(direct)'} / ${attr.medium || '(none)'}`;
       const campaign = attr.campaign || '(none)';
-
       byChannel[channel] = (byChannel[channel] || 0) + 1;
       bySourceMedium[sourceMedium] = (bySourceMedium[sourceMedium] || 0) + 1;
       byCampaign[campaign] = (byCampaign[campaign] || 0) + 1;
     }
 
-    for (const item of items) {
-      const variant = item.variant || 'UNASSIGNED';
-      const sessionAttr = item.sessionId ? attributionBySession.get(item.sessionId) : null;
-      const channel = sessionAttr?.channel || item.acquisitionChannel || 'unknown';
+    // Fold per-variant unique session counts into the variant buckets.
+    const byVariant = acc.byVariant;
+    Object.entries(acc.sessionsByVariant).forEach(([variant, sessions]) => {
+      if (!byVariant[variant]) byVariant[variant] = emptyVariantBucket();
+      byVariant[variant].sessions = sessions.size;
+    });
 
-      if (!byVariantChannel[variant]) byVariantChannel[variant] = {};
-      if (!byVariantChannel[variant][channel]) {
-        byVariantChannel[variant][channel] = {
-          exposure: 0,
-          purchaseIntent: 0,
-          purchaseComplete: 0,
-          totalEvents: 0,
-        };
-      }
-
-      const bucket = byVariantChannel[variant][channel];
-      bucket.totalEvents += 1;
-      if (item.eventName === 'ab_exposure') bucket.exposure += 1;
-      if (item.eventName === 'ab_purchase_intent') bucket.purchaseIntent += 1;
-      if (item.eventName === 'ab_purchase_complete') bucket.purchaseComplete += 1;
-    }
-
-    return res.status(200).json({
+    return {
       experimentKey,
       from,
       to,
-      maxScan,
-      truncated: Boolean(nextToken) || truncatedByRuntime,
+      truncated: truncatedByRuntime,
       truncatedByRuntime,
-      totalEvents: items.length,
+      usedFallback,
+      totalEvents,
       byVariant,
       acquisition: {
-        attributedSessions: attributionBySession.size,
+        attributedSessions: acc.attributionBySession.size,
         byChannel,
         bySourceMedium,
         byCampaign,
-        byVariantChannel,
+        byVariantChannel: acc.byVariantChannel,
       },
-    });
-  } catch (error) {
-    console.error('Failed to build AB summary:', error);
-    return res.status(500).json({ error: 'Failed to build AB summary' });
+    };
   }
 }

@@ -1004,10 +1004,13 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
   id: ID!
   experimentKey: String!
     @index(name: "abEventByExperiment", sortKeyFields: ["createdAt"])
+  experimentDay: String
+    @index(name: "abEventByExperimentDay", sortKeyFields: ["createdAt"])
   eventName: String! @index(name: "abEventByName", sortKeyFields: ["createdAt"])
   variant: String
   sessionId: String @index(name: "abEventBySession", sortKeyFields: ["createdAt"])
   userID: ID @index(name: "abEventByUser", sortKeyFields: ["createdAt"])
+  email: String @index(name: "abEventByEmail", sortKeyFields: ["createdAt"])
   pagePath: String
   deviceType: String
   acquisitionChannel: String
@@ -1031,11 +1034,37 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
   grossAmountCents: Int
   netAmountCents: Int
   discountAmountCents: Int
+  matchedIntentId: String
+  attributionMethod: String
   source: String
   reason: String
   ipAddress: String
   country: String
   metadata: AWSJSON
+  createdAt: AWSDateTime
+}
+
+type AbWebhookReceipt @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  source: String!
+    @index(name: "abWebhookReceiptBySource", sortKeyFields: ["createdAt"])
+  receiptDay: String
+    @index(name: "abWebhookReceiptByDay", sortKeyFields: ["createdAt"])
+  experimentKey: String
+  decision: String
+  reason: String
+  action: String
+  status: String
+  thinkificOrderId: String
+  externalOrderId: String
+  orderNumber: String
+  email: String
+  variant: String
+  matchedSessionId: String
+  matchedIntentId: String
+  attributionMethod: String
+  abEventId: String
+  rawPayload: AWSJSON
   createdAt: AWSDateTime
 }
 
@@ -1355,6 +1384,27 @@ type Order @model @auth(rules: [{ allow: public }]) {
   country: String
   device: String
   page: String
+}
+
+type ThinkificEnrollmentWebhookEvent @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  eventId: String! @index(name: "webhookByEventId", queryField: "webhookByEventId")
+  resource: String!
+  action: String!
+  tenantId: String
+  eventCreatedAt: String
+  email: String
+  firstName: String
+  lastName: String
+  thinkificUserId: String
+  thinkificEnrollmentId: String
+  thinkificCourseId: String
+  status: String! @default(value: "received")
+  retryCount: Int! @default(value: "0")
+  growthzoneContactId: String
+  growthzoneCertificationContactId: String
+  error: String
+  processingNotes: String
 }
 
 ######### SEARCH LOGS #########

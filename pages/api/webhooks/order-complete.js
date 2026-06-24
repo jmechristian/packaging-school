@@ -1,10 +1,14 @@
 import crypto from 'crypto';
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
+import { eventsByEmailQuery, toExperimentDay } from '../../../libs/abAnalyticsQueries';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
 }
+
+const EXPERIMENT_KEY = 'home_v1';
+const WEBHOOK_SOURCE = 'thinkific_order_webhook';
 
 const getOrderQuery = /* GraphQL */ `
   query GetOrderForCompletion($id: ID!) {
@@ -34,6 +38,32 @@ const createAbEventMutation = /* GraphQL */ `
   }
 `;
 
+const createWebhookReceiptMutation = /* GraphQL */ `
+  mutation CreateAbWebhookReceipt($input: CreateAbWebhookReceiptInput!) {
+    createAbWebhookReceipt(input: $input) {
+      id
+    }
+  }
+`;
+
+// Indexed intent lookup by buyer email (abEventByEmail GSI), most-recent first.
+const intentByEmailQuery = eventsByEmailQuery(`
+  id
+  createdAt
+  eventName
+  variant
+  sessionId
+  userID
+  email
+  pagePath
+  deviceType
+  acquisitionChannel
+  acquisitionSource
+  acquisitionMedium
+  acquisitionCampaign
+  metadata
+`);
+
 function isDuplicateMutationError(error) {
   const raw = JSON.stringify(error || {});
   return (
@@ -42,33 +72,6 @@ function isDuplicateMutationError(error) {
     raw.includes('The conditional request failed')
   );
 }
-
-const listAbIntentEventsQuery = /* GraphQL */ `
-  query ListRecentAbIntentEvents(
-    $filter: ModelAbTestEventFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAbTestEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        createdAt
-        eventName
-        variant
-        sessionId
-        userID
-        pagePath
-        deviceType
-        acquisitionChannel
-        acquisitionSource
-        acquisitionMedium
-        acquisitionCampaign
-        metadata
-      }
-      nextToken
-    }
-  }
-`;
 
 function verifyWebhookSignature(rawBody, signature, secret) {
   if (!signature || !secret) return false;
@@ -100,6 +103,11 @@ function normalizeString(value) {
 function normalizeLower(value) {
   const normalized = normalizeString(value);
   return normalized ? normalized.toLowerCase() : null;
+}
+
+function normalizeEmail(value) {
+  const normalized = normalizeString(value);
+  return normalized ? normalized.trim().toLowerCase() : null;
 }
 
 function isLikelyInternalOrderId(value) {
@@ -150,6 +158,15 @@ function parseEventMetadata(rawMetadata) {
   }
 }
 
+function toReceiptDay(createdAtIso) {
+  const date = createdAtIso ? new Date(createdAtIso) : new Date();
+  const safe = Number.isNaN(date.getTime()) ? new Date() : date;
+  const y = safe.getUTCFullYear();
+  const m = String(safe.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(safe.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 function buildPurchaseCompleteEventId({
   externalOrderId,
   orderNumber,
@@ -184,138 +201,79 @@ async function withTimeout(promise, ms) {
   }
 }
 
-async function getBestIntentMatch({ productName, userEmail, createdAtIso }) {
+// Deterministic-ish attribution: scope to the buyer email via the GSI (no table
+// scan), then tie-break by product match and time proximity within a window.
+async function findIntentByEmail({ email, productName, createdAtIso, windowHours = 72 }) {
+  const canonicalEmail = normalizeEmail(email);
+  if (!canonicalEmail) return null;
+
   const createdAtMs = Date.parse(createdAtIso || '');
-  if (!Number.isFinite(createdAtMs)) return null;
-
-  const lowerBound = new Date(createdAtMs - 24 * 60 * 60 * 1000).toISOString();
+  const anchorMs = Number.isFinite(createdAtMs) ? createdAtMs : Date.now();
+  const lowerBound = new Date(anchorMs - windowHours * 60 * 60 * 1000).toISOString();
   const normalizedProductName = normalizeComparable(productName);
-  const normalizedEmail = normalizeComparable(userEmail);
-
-  let nextToken = null;
-  let candidates = [];
-
-  do {
-    const result = await API.graphql({
-      query: listAbIntentEventsQuery,
-      variables: {
-        filter: {
-          experimentKey: { eq: 'home_v1' },
-          eventName: { eq: 'ab_purchase_intent' },
-          createdAt: { ge: lowerBound },
-        },
-        limit: 500,
-        nextToken,
-      },
-    });
-
-    const page = result?.data?.listAbTestEvents?.items || [];
-    candidates = candidates.concat(page);
-    nextToken = result?.data?.listAbTestEvents?.nextToken || null;
-  } while (nextToken && candidates.length < 1500);
-
-  let bestMatch = null;
-
-  for (const candidate of candidates) {
-    const candidateCreatedAtMs = Date.parse(candidate?.createdAt || '');
-    if (!Number.isFinite(candidateCreatedAtMs)) continue;
-
-    const metadata = parseEventMetadata(candidate?.metadata);
-    const candidateCourseName = normalizeComparable(
-      metadata?.courseName || metadata?.productName,
-    );
-    const candidateEmail = normalizeComparable(metadata?.email);
-    const timeDeltaMs = Math.abs(createdAtMs - candidateCreatedAtMs);
-
-    const courseMatches =
-      normalizedProductName &&
-      candidateCourseName &&
-      (candidateCourseName === normalizedProductName ||
-        candidateCourseName.includes(normalizedProductName) ||
-        normalizedProductName.includes(candidateCourseName));
-    const emailMatches = normalizedEmail && candidateEmail && candidateEmail === normalizedEmail;
-
-    // Must have at least one strong signal and be reasonably close in time.
-    if (!courseMatches && !emailMatches) continue;
-    if (timeDeltaMs > 12 * 60 * 60 * 1000) continue;
-
-    // Weighted scoring: exact email/course wins, then closer timestamp.
-    const score =
-      (emailMatches ? 3 : 0) +
-      (courseMatches ? 3 : 0) +
-      Math.max(0, 2 - timeDeltaMs / (60 * 60 * 1000));
-
-    if (!bestMatch || score > bestMatch.score) {
-      bestMatch = {
-        score,
-        event: candidate,
-      };
-    }
-  }
-
-  return bestMatch?.event || null;
-}
-
-async function getFastIntentMatch({ productName, userEmail, createdAtIso }) {
-  const createdAtMs = Date.parse(createdAtIso || '');
-  if (!Number.isFinite(createdAtMs)) return null;
-
-  const lowerBound = new Date(createdAtMs - 6 * 60 * 60 * 1000).toISOString();
-  const normalizedProductName = normalizeComparable(productName);
-  const normalizedEmail = normalizeComparable(userEmail);
 
   const result = await API.graphql({
-    query: listAbIntentEventsQuery,
+    query: intentByEmailQuery,
     variables: {
-      filter: {
-        experimentKey: { eq: 'home_v1' },
-        eventName: { eq: 'ab_purchase_intent' },
-        createdAt: { ge: lowerBound },
-      },
-      limit: 120,
-      nextToken: null,
+      email: canonicalEmail,
+      createdAt: { ge: lowerBound },
+      sortDirection: 'DESC',
+      filter: { eventName: { eq: 'ab_purchase_intent' } },
+      limit: 50,
     },
   });
 
-  const candidates = result?.data?.listAbTestEvents?.items || [];
-  let bestMatch = null;
+  const candidates = result?.data?.abTestEventsByEmailAndCreatedAt?.items || [];
+  if (!candidates.length) return null;
 
+  let best = null;
   for (const candidate of candidates) {
-    const candidateCreatedAtMs = Date.parse(candidate?.createdAt || '');
-    if (!Number.isFinite(candidateCreatedAtMs)) continue;
+    const candMs = Date.parse(candidate?.createdAt || '');
+    if (!Number.isFinite(candMs)) continue;
 
     const metadata = parseEventMetadata(candidate?.metadata);
-    const candidateCourseName = normalizeComparable(
-      metadata?.courseName || metadata?.productName,
-    );
-    const candidateEmail = normalizeComparable(metadata?.email);
-    const timeDeltaMs = Math.abs(createdAtMs - candidateCreatedAtMs);
-
+    const candCourse = normalizeComparable(metadata?.courseName || metadata?.productName);
     const courseMatches =
       normalizedProductName &&
-      candidateCourseName &&
-      (candidateCourseName === normalizedProductName ||
-        candidateCourseName.includes(normalizedProductName) ||
-        normalizedProductName.includes(candidateCourseName));
-    const emailMatches = normalizedEmail && candidateEmail && candidateEmail === normalizedEmail;
+      candCourse &&
+      (candCourse === normalizedProductName ||
+        candCourse.includes(normalizedProductName) ||
+        normalizedProductName.includes(candCourse));
 
-    if (!courseMatches && !emailMatches) continue;
-    if (timeDeltaMs > 6 * 60 * 60 * 1000) continue;
+    const timeDelta = Math.abs(anchorMs - candMs);
+    const score = (courseMatches ? 5 : 0) + Math.max(0, 3 - timeDelta / (60 * 60 * 1000));
 
-    const score =
-      (emailMatches ? 3 : 0) +
-      (courseMatches ? 3 : 0) +
-      Math.max(0, 2 - timeDeltaMs / (60 * 60 * 1000));
-
-    if (!bestMatch || score > bestMatch.score) {
-      bestMatch = {
-        score,
-        event: candidate,
-      };
+    if (!best || score > best.score) {
+      best = { score, event: candidate, courseMatches: Boolean(courseMatches) };
     }
   }
 
-  return bestMatch?.event || null;
+  if (!best) return null;
+  return {
+    event: best.event,
+    method: best.courseMatches ? 'email_course' : 'email_recency',
+  };
+}
+
+async function recordReceipt(fields) {
+  try {
+    const createdAt = fields.createdAt || new Date().toISOString();
+    await API.graphql({
+      query: createWebhookReceiptMutation,
+      variables: {
+        input: {
+          source: WEBHOOK_SOURCE,
+          receiptDay: toReceiptDay(createdAt),
+          experimentKey: EXPERIMENT_KEY,
+          ...fields,
+          createdAt,
+        },
+      },
+    });
+  } catch (error) {
+    // Audit logging must never break the webhook response.
+    console.warn('Failed to record webhook receipt:', error?.message);
+  }
 }
 
 export default async function handler(req, res) {
@@ -323,12 +281,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  let rawBody = '';
   try {
-    const rawBody = await readRawBody(req);
+    rawBody = await readRawBody(req);
     let body = {};
     try {
       body = rawBody ? JSON.parse(rawBody) : {};
     } catch {
+      await recordReceipt({
+        decision: 'error',
+        reason: 'invalid_json',
+        rawPayload: JSON.stringify({ raw: String(rawBody || '').slice(0, 2000) }),
+      });
       return res.status(400).json({ error: 'Invalid JSON payload' });
     }
 
@@ -339,6 +303,11 @@ export default async function handler(req, res) {
     if (webhookSecret && signature) {
       const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
       if (!isValid) {
+        await recordReceipt({
+          decision: 'rejected',
+          reason: 'invalid_signature',
+          rawPayload: JSON.stringify(body),
+        });
         return res.status(401).json({ error: 'Invalid webhook signature' });
       }
     }
@@ -347,16 +316,8 @@ export default async function handler(req, res) {
     const action = normalizeLower(body.action || payload.action);
     const orderStatus = normalizeLower(payload.status);
     const looksCompleted =
-      ['paid', 'completed', 'purchase'].includes(action || '') ||
+      ['paid', 'completed', 'purchase', 'created'].includes(action || '') ||
       ['complete', 'completed', 'paid'].includes(orderStatus || '');
-
-    if (!looksCompleted) {
-      return res.status(200).json({
-        success: true,
-        ignored: true,
-        reason: `Webhook action/status '${action || 'unknown'}/${orderStatus || 'unknown'}' does not represent completed sale`,
-      });
-    }
 
     const metadata = payload.metadata || payload.custom_fields || null;
     const possibleInternalOrderId = normalizeString(
@@ -368,9 +329,28 @@ export default async function handler(req, res) {
         payload.transaction_id ||
         payload.order_number,
     );
+    const webhookOrderNumber = normalizeString(payload?.order_number);
+    const webhookUserEmail = normalizeString(payload?.user?.email);
+
+    if (!looksCompleted) {
+      await recordReceipt({
+        decision: 'ignored',
+        reason: `action/status '${action || 'unknown'}/${orderStatus || 'unknown'}' is not a completed sale`,
+        action,
+        status: orderStatus,
+        externalOrderId,
+        orderNumber: webhookOrderNumber,
+        email: normalizeEmail(webhookUserEmail),
+        rawPayload: JSON.stringify(body),
+      });
+      return res.status(200).json({
+        success: true,
+        ignored: true,
+        reason: `Webhook action/status '${action || 'unknown'}/${orderStatus || 'unknown'}' does not represent completed sale`,
+      });
+    }
 
     let existingOrder = null;
-
     if (isLikelyInternalOrderId(possibleInternalOrderId)) {
       try {
         const orderResponse = await API.graphql({
@@ -395,32 +375,36 @@ export default async function handler(req, res) {
       });
     }
 
-    const variant = normalizeString(
+    // Attribution fields, if Thinkific happens to echo them (usually empty).
+    let variant = normalizeString(
       payload.ab_variant || payload.variant || metadata?.ab_variant,
     );
-    const sessionId = normalizeString(
+    let sessionId = normalizeString(
       payload.ab_session_id || payload.session_id || metadata?.ab_session_id,
     );
-    const deviceType = normalizeString(
+    let deviceType = normalizeString(
       payload.device_type || payload.device || metadata?.device_type || metadata?.device,
     );
-    const acquisitionChannel = normalizeString(
+    let acquisitionChannel = normalizeString(
       payload.acquisition_channel || metadata?.acquisition_channel,
     );
-    const acquisitionSource = normalizeString(
+    let acquisitionSource = normalizeString(
       payload.acquisition_source || metadata?.acquisition_source,
     );
-    const acquisitionMedium = normalizeString(
+    let acquisitionMedium = normalizeString(
       payload.acquisition_medium || metadata?.acquisition_medium,
     );
-    const acquisitionCampaign = normalizeString(
+    let acquisitionCampaign = normalizeString(
       payload.acquisition_campaign || metadata?.acquisition_campaign,
     );
+    let userID = normalizeString(
+      existingOrder?.userID || payload?.user?.id || metadata?.user_id,
+    );
+    let pagePath = normalizeString(existingOrder?.page || metadata?.page_path);
+
     const webhookCreatedAt =
       normalizeString(payload.created_at) || normalizeString(body.created_at);
     const webhookProductName = normalizeString(payload.product_name);
-    const webhookUserEmail = normalizeString(payload?.user?.email);
-    const webhookOrderNumber = normalizeString(payload?.order_number);
     const webhookPurchaserFirstName = normalizeString(payload?.user?.first_name);
     const webhookPurchaserLastName = normalizeString(payload?.user?.last_name);
     const webhookCouponCode = normalizeString(payload?.coupon?.code);
@@ -431,44 +415,48 @@ export default async function handler(req, res) {
         ? grossAmountCents - netAmountCents
         : null;
 
-    let matchedIntentEvent = null;
-    const needsSessionBackfill = !sessionId;
-    if (needsSessionBackfill) {
+    // Deterministic-ish attribution by buyer email via the GSI (no scan).
+    let matchedIntent = null;
+    let attributionMethod = variant && sessionId ? 'payload' : 'none';
+    if (!variant || !sessionId) {
       try {
-        matchedIntentEvent = await withTimeout(
-          getFastIntentMatch({
+        const match = await withTimeout(
+          findIntentByEmail({
+            email: webhookUserEmail,
             productName: webhookProductName,
-            userEmail: webhookUserEmail,
             createdAtIso: webhookCreatedAt,
+            windowHours: 72,
           }),
-          1200,
+          3000,
         );
+        if (match?.event) {
+          matchedIntent = match.event;
+          attributionMethod = match.method;
+          variant = variant || normalizeString(matchedIntent.variant);
+          sessionId = sessionId || normalizeString(matchedIntent.sessionId);
+          deviceType = deviceType || normalizeString(matchedIntent.deviceType);
+          acquisitionChannel =
+            acquisitionChannel || normalizeString(matchedIntent.acquisitionChannel);
+          acquisitionSource =
+            acquisitionSource || normalizeString(matchedIntent.acquisitionSource);
+          acquisitionMedium =
+            acquisitionMedium || normalizeString(matchedIntent.acquisitionMedium);
+          acquisitionCampaign =
+            acquisitionCampaign || normalizeString(matchedIntent.acquisitionCampaign);
+          userID = userID || normalizeString(matchedIntent.userID);
+          pagePath = pagePath || normalizeString(matchedIntent.pagePath);
+        }
       } catch (error) {
-        console.warn('Fast session backfill failed:', error?.message);
-      }
-    }
-
-    const enableIntentBackfill = String(process.env.ENABLE_WEBHOOK_INTENT_BACKFILL || '')
-      .trim()
-      .toLowerCase() === 'true';
-    const needsBackfill = enableIntentBackfill && (!variant || !sessionId) && !matchedIntentEvent;
-    if (needsBackfill) {
-      try {
-        matchedIntentEvent = await withTimeout(
-          getBestIntentMatch({
-            productName: webhookProductName,
-            userEmail: webhookUserEmail,
-            createdAtIso: webhookCreatedAt,
-          }),
-          2000,
-        );
-      } catch (error) {
-        console.warn('Failed to backfill from purchase intent:', error?.message);
+        console.warn('Email intent match failed:', error?.message);
       }
     }
 
     const eventMetadata = {
       customMetadata: metadata || null,
+      attribution: {
+        method: attributionMethod,
+        matchedIntentId: matchedIntent?.id || null,
+      },
       webhookPayload: {
         id: payload?.id ?? null,
         order_number: payload?.order_number ?? null,
@@ -491,38 +479,29 @@ export default async function handler(req, res) {
       payloadCreatedAt: webhookCreatedAt,
     });
 
+    const completeCreatedAt = new Date().toISOString();
+    const canonicalEmail = normalizeEmail(webhookUserEmail);
+    let decision = 'recorded';
+
     try {
       await API.graphql({
         query: createAbEventMutation,
         variables: {
           input: {
             id: dedupeEventId,
-            experimentKey: 'home_v1',
+            experimentKey: EXPERIMENT_KEY,
+            experimentDay: toExperimentDay(EXPERIMENT_KEY, completeCreatedAt),
             eventName: 'ab_purchase_complete',
-            variant: normalizeString(variant || matchedIntentEvent?.variant),
-            sessionId: normalizeString(sessionId || matchedIntentEvent?.sessionId),
-            deviceType: normalizeString(deviceType || matchedIntentEvent?.deviceType),
-            acquisitionChannel: normalizeString(
-              acquisitionChannel || matchedIntentEvent?.acquisitionChannel,
-            ),
-            acquisitionSource: normalizeString(
-              acquisitionSource || matchedIntentEvent?.acquisitionSource,
-            ),
-            acquisitionMedium: normalizeString(
-              acquisitionMedium || matchedIntentEvent?.acquisitionMedium,
-            ),
-            acquisitionCampaign: normalizeString(
-              acquisitionCampaign || matchedIntentEvent?.acquisitionCampaign,
-            ),
-            userID: normalizeString(
-              existingOrder?.userID ||
-                matchedIntentEvent?.userID ||
-                payload?.user?.id ||
-                metadata?.user_id,
-            ),
-            pagePath: normalizeString(
-              existingOrder?.page || matchedIntentEvent?.pagePath || metadata?.page_path,
-            ),
+            variant: normalizeString(variant),
+            sessionId: normalizeString(sessionId),
+            deviceType: normalizeString(deviceType),
+            acquisitionChannel: normalizeString(acquisitionChannel),
+            acquisitionSource: normalizeString(acquisitionSource),
+            acquisitionMedium: normalizeString(acquisitionMedium),
+            acquisitionCampaign: normalizeString(acquisitionCampaign),
+            userID: normalizeString(userID),
+            email: canonicalEmail,
+            pagePath: normalizeString(pagePath),
             orderId: normalizeString(existingOrder?.id || possibleInternalOrderId),
             externalOrderId,
             orderNumber: webhookOrderNumber,
@@ -533,24 +512,62 @@ export default async function handler(req, res) {
             grossAmountCents,
             netAmountCents,
             discountAmountCents,
+            matchedIntentId: matchedIntent?.id || null,
+            attributionMethod,
             source: 'lms_webhook',
             metadata: JSON.stringify(eventMetadata),
-            createdAt: new Date().toISOString(),
+            createdAt: completeCreatedAt,
           },
         },
       });
     } catch (error) {
-      if (!isDuplicateMutationError(error)) {
+      if (isDuplicateMutationError(error)) {
+        decision = 'duplicate';
+      } else {
+        await recordReceipt({
+          decision: 'error',
+          reason: error?.message || 'create_event_failed',
+          action,
+          status: orderStatus,
+          externalOrderId,
+          orderNumber: webhookOrderNumber,
+          email: canonicalEmail,
+          variant,
+          matchedSessionId: sessionId,
+          matchedIntentId: matchedIntent?.id || null,
+          attributionMethod,
+          abEventId: dedupeEventId,
+          rawPayload: JSON.stringify(body),
+        });
         throw error;
       }
     }
 
+    await recordReceipt({
+      decision,
+      action,
+      status: orderStatus,
+      externalOrderId,
+      orderNumber: webhookOrderNumber,
+      email: canonicalEmail,
+      variant,
+      matchedSessionId: sessionId,
+      matchedIntentId: matchedIntent?.id || null,
+      attributionMethod,
+      abEventId: dedupeEventId,
+      rawPayload: JSON.stringify(body),
+      createdAt: completeCreatedAt,
+    });
+
     return res.status(200).json({
       success: true,
+      decision,
       internalOrderId: existingOrder?.id || possibleInternalOrderId || null,
       externalOrderId,
       matchedInternalOrder: Boolean(existingOrder),
-      matchedIntentEventId: matchedIntentEvent?.id || null,
+      matchedIntentEventId: matchedIntent?.id || null,
+      attributionMethod,
+      abEventId: dedupeEventId,
     });
   } catch (error) {
     console.error('Order completion webhook failed:', error);

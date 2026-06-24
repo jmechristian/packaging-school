@@ -1,5 +1,6 @@
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
+import { toExperimentDay } from '../../../libs/abAnalyticsQueries';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
@@ -91,6 +92,7 @@ export default async function handler(req, res) {
       orderId,
       externalOrderId,
       orderNumber,
+      email,
       purchaserEmail,
       purchaserFirstName,
       purchaserLastName,
@@ -98,6 +100,8 @@ export default async function handler(req, res) {
       grossAmountCents,
       netAmountCents,
       discountAmountCents,
+      matchedIntentId,
+      attributionMethod,
       source,
       referrer,
       reason,
@@ -117,6 +121,15 @@ export default async function handler(req, res) {
       : safeString(forwardedFor?.split(',')[0]) || safeString(req.socket?.remoteAddress);
 
     const createdAt = new Date().toISOString();
+    const experimentDay = toExperimentDay(experimentKey, createdAt);
+    const rawEmail =
+      safeString(email) ||
+      safeString(purchaserEmail) ||
+      safeString(metadata?.email) ||
+      null;
+    // Canonicalize so the email GSI partition key matches across intent writes
+    // and the order webhook's deterministic email lookup.
+    const resolvedEmail = rawEmail ? rawEmail.trim().toLowerCase() : null;
     const resolvedEventId =
       safeString(eventId) ||
       fallbackEventId(eventName, {
@@ -172,10 +185,12 @@ export default async function handler(req, res) {
           input: {
             id: resolvedEventId,
             experimentKey: safeString(experimentKey),
+            experimentDay,
             eventName: safeString(eventName),
             variant: safeString(variant),
             sessionId: safeString(sessionId),
             userID: safeString(userID),
+            email: resolvedEmail,
             pagePath: safeString(pagePath),
             deviceType: safeString(deviceType),
             acquisitionChannel: safeString(acquisitionChannel),
@@ -199,6 +214,8 @@ export default async function handler(req, res) {
             grossAmountCents: safeInt(grossAmountCents),
             netAmountCents: safeInt(netAmountCents),
             discountAmountCents: safeInt(discountAmountCents),
+            matchedIntentId: safeString(matchedIntentId),
+            attributionMethod: safeString(attributionMethod),
             source: safeString(source),
             reason: safeString(reason),
             ipAddress,

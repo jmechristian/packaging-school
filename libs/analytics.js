@@ -409,7 +409,10 @@ export async function trackAbEngagement(payload = {}) {
 }
 
 export async function trackAbPurchaseIntent(payload = {}) {
-  await writeAbEvent('ab_purchase_intent', payload);
+  // Promote the buyer email to a top-level, indexed field so the order webhook
+  // can deterministically link this intent to the completed purchase.
+  const email = payload.email || payload.metadata?.email || null;
+  await writeAbEvent('ab_purchase_intent', { ...payload, email });
 }
 
 export async function trackAbPdfClick(payload = {}) {

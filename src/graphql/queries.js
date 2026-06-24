@@ -3811,10 +3811,12 @@ export const getAbTestEvent = /* GraphQL */ `
     getAbTestEvent(id: $id) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -3838,6 +3840,8 @@ export const getAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
@@ -3859,10 +3863,12 @@ export const listAbTestEvents = /* GraphQL */ `
       items {
         id
         experimentKey
+        experimentDay
         eventName
         variant
         sessionId
         userID
+        email
         pagePath
         deviceType
         acquisitionChannel
@@ -3886,11 +3892,79 @@ export const listAbTestEvents = /* GraphQL */ `
         grossAmountCents
         netAmountCents
         discountAmountCents
+        matchedIntentId
+        attributionMethod
         source
         reason
         ipAddress
         country
         metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAbWebhookReceipt = /* GraphQL */ `
+  query GetAbWebhookReceipt($id: ID!) {
+    getAbWebhookReceipt(id: $id) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAbWebhookReceipts = /* GraphQL */ `
+  query ListAbWebhookReceipts(
+    $filter: ModelAbWebhookReceiptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAbWebhookReceipts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        source
+        receiptDay
+        experimentKey
+        decision
+        reason
+        action
+        status
+        thinkificOrderId
+        externalOrderId
+        orderNumber
+        email
+        variant
+        matchedSessionId
+        matchedIntentId
+        attributionMethod
+        abEventId
+        rawPayload
         createdAt
         updatedAt
         __typename
@@ -5314,6 +5388,72 @@ export const listOrders = /* GraphQL */ `
         createdAt
         updatedAt
         userOrdersId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  query GetThinkificEnrollmentWebhookEvent($id: ID!) {
+    getThinkificEnrollmentWebhookEvent(id: $id) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listThinkificEnrollmentWebhookEvents = /* GraphQL */ `
+  query ListThinkificEnrollmentWebhookEvents(
+    $filter: ModelThinkificEnrollmentWebhookEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listThinkificEnrollmentWebhookEvents(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        eventId
+        resource
+        action
+        tenantId
+        eventCreatedAt
+        email
+        firstName
+        lastName
+        thinkificUserId
+        thinkificEnrollmentId
+        thinkificCourseId
+        status
+        retryCount
+        growthzoneContactId
+        growthzoneCertificationContactId
+        error
+        processingNotes
+        createdAt
+        updatedAt
         __typename
       }
       nextToken
@@ -8931,10 +9071,12 @@ export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
       items {
         id
         experimentKey
+        experimentDay
         eventName
         variant
         sessionId
         userID
+        email
         pagePath
         deviceType
         acquisitionChannel
@@ -8958,6 +9100,73 @@ export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
         grossAmountCents
         netAmountCents
         discountAmountCents
+        matchedIntentId
+        attributionMethod
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByExperimentDayAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByExperimentDayAndCreatedAt(
+    $experimentDay: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByExperimentDayAndCreatedAt(
+      experimentDay: $experimentDay
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        experimentDay
+        eventName
+        variant
+        sessionId
+        userID
+        email
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
+        matchedIntentId
+        attributionMethod
         source
         reason
         ipAddress
@@ -8992,10 +9201,12 @@ export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
       items {
         id
         experimentKey
+        experimentDay
         eventName
         variant
         sessionId
         userID
+        email
         pagePath
         deviceType
         acquisitionChannel
@@ -9019,6 +9230,8 @@ export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
         grossAmountCents
         netAmountCents
         discountAmountCents
+        matchedIntentId
+        attributionMethod
         source
         reason
         ipAddress
@@ -9053,10 +9266,12 @@ export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
       items {
         id
         experimentKey
+        experimentDay
         eventName
         variant
         sessionId
         userID
+        email
         pagePath
         deviceType
         acquisitionChannel
@@ -9080,6 +9295,8 @@ export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
         grossAmountCents
         netAmountCents
         discountAmountCents
+        matchedIntentId
+        attributionMethod
         source
         reason
         ipAddress
@@ -9114,10 +9331,12 @@ export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
       items {
         id
         experimentKey
+        experimentDay
         eventName
         variant
         sessionId
         userID
+        email
         pagePath
         deviceType
         acquisitionChannel
@@ -9141,11 +9360,168 @@ export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
         grossAmountCents
         netAmountCents
         discountAmountCents
+        matchedIntentId
+        attributionMethod
         source
         reason
         ipAddress
         country
         metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByEmailAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByEmailAndCreatedAt(
+    $email: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByEmailAndCreatedAt(
+      email: $email
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        experimentDay
+        eventName
+        variant
+        sessionId
+        userID
+        email
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
+        matchedIntentId
+        attributionMethod
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abWebhookReceiptsBySourceAndCreatedAt = /* GraphQL */ `
+  query AbWebhookReceiptsBySourceAndCreatedAt(
+    $source: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbWebhookReceiptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abWebhookReceiptsBySourceAndCreatedAt(
+      source: $source
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        source
+        receiptDay
+        experimentKey
+        decision
+        reason
+        action
+        status
+        thinkificOrderId
+        externalOrderId
+        orderNumber
+        email
+        variant
+        matchedSessionId
+        matchedIntentId
+        attributionMethod
+        abEventId
+        rawPayload
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abWebhookReceiptsByReceiptDayAndCreatedAt = /* GraphQL */ `
+  query AbWebhookReceiptsByReceiptDayAndCreatedAt(
+    $receiptDay: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbWebhookReceiptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abWebhookReceiptsByReceiptDayAndCreatedAt(
+      receiptDay: $receiptDay
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        source
+        receiptDay
+        experimentKey
+        decision
+        reason
+        action
+        status
+        thinkificOrderId
+        externalOrderId
+        orderNumber
+        email
+        variant
+        matchedSessionId
+        matchedIntentId
+        attributionMethod
+        abEventId
+        rawPayload
         createdAt
         updatedAt
         __typename
@@ -9677,6 +10053,49 @@ export const ordersByUserID = /* GraphQL */ `
         createdAt
         updatedAt
         userOrdersId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const webhookByEventId = /* GraphQL */ `
+  query WebhookByEventId(
+    $eventId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelThinkificEnrollmentWebhookEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    webhookByEventId(
+      eventId: $eventId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        eventId
+        resource
+        action
+        tenantId
+        eventCreatedAt
+        email
+        firstName
+        lastName
+        thinkificUserId
+        thinkificEnrollmentId
+        thinkificCourseId
+        status
+        retryCount
+        growthzoneContactId
+        growthzoneCertificationContactId
+        error
+        processingNotes
+        createdAt
+        updatedAt
         __typename
       }
       nextToken

@@ -1,48 +1,43 @@
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
+import {
+  buildCreatedAtCondition,
+  eventsByEventNameQuery,
+  parseDateInput,
+} from '../../../libs/abAnalyticsQueries';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
 }
 
-const listPurchaseCompleteQuery = /* GraphQL */ `
-  query ListPurchaseCompleteEvents(
-    $filter: ModelAbTestEventFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAbTestEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        eventName
-        variant
-        sessionId
-        orderId
-        externalOrderId
-        orderNumber
-        purchaserEmail
-        purchaserFirstName
-        purchaserLastName
-        couponCode
-        grossAmountCents
-        netAmountCents
-        discountAmountCents
-        pagePath
-        value
-        metadata
-        createdAt
-      }
-      nextToken
-    }
-  }
+const PURCHASE_FIELDS = `
+  id
+  eventName
+  experimentKey
+  variant
+  sessionId
+  email
+  orderId
+  externalOrderId
+  orderNumber
+  purchaserEmail
+  purchaserFirstName
+  purchaserLastName
+  couponCode
+  grossAmountCents
+  netAmountCents
+  discountAmountCents
+  matchedIntentId
+  attributionMethod
+  pagePath
+  value
+  metadata
+  createdAt
 `;
 
-function parseDateInput(value) {
-  if (typeof value !== 'string' || !value.trim()) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  return date.toISOString();
-}
+const purchaseCompleteQuery = eventsByEventNameQuery(PURCHASE_FIELDS);
+
+const MAX_RUNTIME_MS = 8000;
 
 function parseBool(value) {
   const normalized = String(value ?? '')
@@ -57,8 +52,6 @@ function parseBoundedInt(value, fallback, min, max) {
   const rounded = Math.floor(parsed);
   return Math.min(max, Math.max(min, rounded));
 }
-
-const MAX_RUNTIME_MS = 6500;
 
 function parseJsonSafe(raw) {
   if (!raw) return null;
@@ -151,7 +144,11 @@ function normalizeOrderDetails(event, order = null) {
       payloadUser?.last_name,
   );
   const email = normalizeString(
-    orderUser?.email || order?.user_email || event?.purchaserEmail || payloadUser?.email,
+    orderUser?.email ||
+      order?.user_email ||
+      event?.purchaserEmail ||
+      event?.email ||
+      payloadUser?.email,
   );
 
   return {
@@ -161,6 +158,8 @@ function normalizeOrderDetails(event, order = null) {
     sessionId: event?.sessionId || null,
     pagePath: event?.pagePath || null,
     orderId: event?.orderId || null,
+    matchedIntentId: event?.matchedIntentId || null,
+    attributionMethod: event?.attributionMethod || null,
     externalOrderId: normalizeString(
       event?.externalOrderId || order?.id || payload?.id || payload?.order_number,
     ),
@@ -234,26 +233,10 @@ export default async function handler(req, res) {
       : 'home_v1';
   const from = parseDateInput(req.query.from);
   const to = parseDateInput(req.query.to);
-  const includeAll = parseBool(req.query.all);
-  const limit = includeAll
-    ? Number.MAX_SAFE_INTEGER
-    : Math.min(Number(req.query.limit) || 200, 1000);
-  const maxScan = parseBoundedInt(req.query.maxScan, 5000, 500, 100000);
+  const createdAt = buildCreatedAtCondition(from, to);
   const includeDuplicates = parseBool(req.query.includeDuplicates);
   const enrichFromThinkific = parseBool(req.query.enrichFromThinkific);
-
-  const filter = {
-    experimentKey: { eq: experimentKey },
-    eventName: { eq: 'ab_purchase_complete' },
-    ...(from || to
-      ? {
-          createdAt: {
-            ...(from ? { ge: from } : {}),
-            ...(to ? { le: to } : {}),
-          },
-        }
-      : {}),
-  };
+  const maxItems = parseBoundedInt(req.query.maxItems, 5000, 100, 50000);
 
   try {
     let events = [];
@@ -261,41 +244,46 @@ export default async function handler(req, res) {
     const startedAt = Date.now();
     let truncatedByRuntime = false;
 
+    // ab_purchase_complete is low-volume; the eventName GSI returns ALL of them
+    // chronologically without a table scan.
     do {
       const response = await API.graphql({
-        query: listPurchaseCompleteQuery,
+        query: purchaseCompleteQuery,
         variables: {
-          filter,
+          eventName: 'ab_purchase_complete',
+          createdAt,
+          sortDirection: 'DESC',
+          filter: { experimentKey: { eq: experimentKey } },
           limit: 500,
           nextToken,
         },
       });
 
-      const pageItems = response?.data?.listAbTestEvents?.items || [];
-      events = events.concat(pageItems);
-      nextToken = response?.data?.listAbTestEvents?.nextToken || null;
+      const data = response?.data?.abTestEventsByEventNameAndCreatedAt;
+      events = events.concat(data?.items || []);
+      nextToken = data?.nextToken || null;
       if (Date.now() - startedAt >= MAX_RUNTIME_MS) {
         truncatedByRuntime = true;
         break;
       }
-    } while (nextToken && (includeAll ? events.length < maxScan : events.length < limit));
+    } while (nextToken && events.length < maxItems);
 
-    const sortedEvents = events
-      .slice(0, includeAll ? Math.min(events.length, maxScan) : limit)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const sortedEvents = events.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
 
     const orderCache = new Map();
     const rows = [];
 
     for (const event of sortedEvents) {
       const lookupId = normalizeString(event?.orderId);
-
       const quickDetails = normalizeOrderDetails(event);
       const needsBackfill =
         !quickDetails.email || !Number.isFinite(quickDetails.netAmountCents);
-      const thinkificOrder = enrichFromThinkific && needsBackfill
-        ? await fetchThinkificOrderById(lookupId, orderCache)
-        : null;
+      const thinkificOrder =
+        enrichFromThinkific && needsBackfill
+          ? await fetchThinkificOrderById(lookupId, orderCache)
+          : null;
 
       rows.push(normalizeOrderDetails(event, thinkificOrder));
     }
@@ -326,10 +314,8 @@ export default async function handler(req, res) {
       experimentKey,
       from,
       to,
-      includeAll,
       includeDuplicates,
       enrichFromThinkific,
-      maxScan,
       truncated: Boolean(nextToken) || truncatedByRuntime,
       truncatedByRuntime,
       count: finalRows.length,

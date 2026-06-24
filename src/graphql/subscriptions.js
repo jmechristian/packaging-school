@@ -6458,10 +6458,12 @@ export const onCreateAbTestEvent = /* GraphQL */ `
     onCreateAbTestEvent(filter: $filter) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6485,6 +6487,8 @@ export const onCreateAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
@@ -6503,10 +6507,12 @@ export const onUpdateAbTestEvent = /* GraphQL */ `
     onUpdateAbTestEvent(filter: $filter) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6530,6 +6536,8 @@ export const onUpdateAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
@@ -6548,10 +6556,12 @@ export const onDeleteAbTestEvent = /* GraphQL */ `
     onDeleteAbTestEvent(filter: $filter) {
       id
       experimentKey
+      experimentDay
       eventName
       variant
       sessionId
       userID
+      email
       pagePath
       deviceType
       acquisitionChannel
@@ -6575,11 +6585,100 @@ export const onDeleteAbTestEvent = /* GraphQL */ `
       grossAmountCents
       netAmountCents
       discountAmountCents
+      matchedIntentId
+      attributionMethod
       source
       reason
       ipAddress
       country
       metadata
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateAbWebhookReceipt = /* GraphQL */ `
+  subscription OnCreateAbWebhookReceipt(
+    $filter: ModelSubscriptionAbWebhookReceiptFilterInput
+  ) {
+    onCreateAbWebhookReceipt(filter: $filter) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAbWebhookReceipt = /* GraphQL */ `
+  subscription OnUpdateAbWebhookReceipt(
+    $filter: ModelSubscriptionAbWebhookReceiptFilterInput
+  ) {
+    onUpdateAbWebhookReceipt(filter: $filter) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAbWebhookReceipt = /* GraphQL */ `
+  subscription OnDeleteAbWebhookReceipt(
+    $filter: ModelSubscriptionAbWebhookReceiptFilterInput
+  ) {
+    onDeleteAbWebhookReceipt(filter: $filter) {
+      id
+      source
+      receiptDay
+      experimentKey
+      decision
+      reason
+      action
+      status
+      thinkificOrderId
+      externalOrderId
+      orderNumber
+      email
+      variant
+      matchedSessionId
+      matchedIntentId
+      attributionMethod
+      abEventId
+      rawPayload
       createdAt
       updatedAt
       __typename
@@ -8901,6 +9000,93 @@ export const onDeleteOrder = /* GraphQL */ `
       createdAt
       updatedAt
       userOrdersId
+      __typename
+    }
+  }
+`;
+export const onCreateThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  subscription OnCreateThinkificEnrollmentWebhookEvent(
+    $filter: ModelSubscriptionThinkificEnrollmentWebhookEventFilterInput
+  ) {
+    onCreateThinkificEnrollmentWebhookEvent(filter: $filter) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  subscription OnUpdateThinkificEnrollmentWebhookEvent(
+    $filter: ModelSubscriptionThinkificEnrollmentWebhookEventFilterInput
+  ) {
+    onUpdateThinkificEnrollmentWebhookEvent(filter: $filter) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteThinkificEnrollmentWebhookEvent = /* GraphQL */ `
+  subscription OnDeleteThinkificEnrollmentWebhookEvent(
+    $filter: ModelSubscriptionThinkificEnrollmentWebhookEventFilterInput
+  ) {
+    onDeleteThinkificEnrollmentWebhookEvent(filter: $filter) {
+      id
+      eventId
+      resource
+      action
+      tenantId
+      eventCreatedAt
+      email
+      firstName
+      lastName
+      thinkificUserId
+      thinkificEnrollmentId
+      thinkificCourseId
+      status
+      retryCount
+      growthzoneContactId
+      growthzoneCertificationContactId
+      error
+      processingNotes
+      createdAt
+      updatedAt
       __typename
     }
   }

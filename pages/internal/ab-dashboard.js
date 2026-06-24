@@ -3,7 +3,11 @@ import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 
 const fmtPercent = (value) => `${(value * 100).toFixed(1)}%`;
+// Date the homepage experiment switched from A/B to B/C. Used as the default
+// dashboard start so legacy A/B data is excluded unless explicitly requested.
+const EXPERIMENT_CUTOVER_DATE = '2026-06-19';
 const RANGE_PRESETS = [
+  { id: 'sincebc', label: 'Since B/C launch' },
   { id: 'yesterday', label: 'Yesterday' },
   { id: 'mtd', label: 'Month to date' },
   { id: '7d', label: 'Last 7 days', days: 7 },
@@ -55,6 +59,12 @@ const toEndOfDayIso = (value) => {
 
 const getRangeBounds = (preset, customRange = {}) => {
   if (preset === 'all') return { from: null, to: null };
+  if (preset === 'sincebc') {
+    return {
+      from: toStartOfDayIso(EXPERIMENT_CUTOVER_DATE),
+      to: new Date().toISOString(),
+    };
+  }
   if (preset === 'custom') {
     return {
       from: toStartOfDayIso(customRange.fromDate),
@@ -127,7 +137,7 @@ const METRIC_KEY_ITEMS = [
 
 const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [experimentKey, setExperimentKey] = useState('home_v1');
-  const [rangePreset, setRangePreset] = useState('30d');
+  const [rangePreset, setRangePreset] = useState('sincebc');
   const [customFromDate, setCustomFromDate] = useState('');
   const [customToDate, setCustomToDate] = useState('');
   const [summary, setSummary] = useState(null);
@@ -141,6 +151,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [purchaseRows, setPurchaseRows] = useState([]);
   const [purchaseSearch, setPurchaseSearch] = useState('');
   const [purchasePage, setPurchasePage] = useState(1);
+  const [webhookReceipts, setWebhookReceipts] = useState(null);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedSessionEvents, setSelectedSessionEvents] = useState([]);
@@ -200,9 +211,10 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
       setEventsPrevCursors(prevCursors);
 
       if (reloadOverview) {
-        const [summaryRes, purchaseRes] = await Promise.all([
-          fetch(`/api/analytics/ab-summary?${query.toString()}&maxScan=5000`),
-          fetch(`/api/analytics/ab-purchase-complete?${query.toString()}&all=true&maxScan=5000`),
+        const [summaryRes, purchaseRes, receiptsRes] = await Promise.all([
+          fetch(`/api/analytics/ab-summary?${query.toString()}`),
+          fetch(`/api/analytics/ab-purchase-complete?${query.toString()}`),
+          fetch(`/api/analytics/ab-webhook-receipts?${query.toString()}`),
         ]);
 
         if (!summaryRes.ok) throw new Error('Failed to load summary');
@@ -212,6 +224,12 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
         const purchaseData = await purchaseRes.json();
         setSummary(summaryData);
         setPurchaseRows(purchaseData.items || []);
+        // Webhook receipts are best-effort; don't fail the dashboard if missing.
+        if (receiptsRes.ok) {
+          setWebhookReceipts(await receiptsRes.json());
+        } else {
+          setWebhookReceipts(null);
+        }
         hasLoadedOverviewRef.current = true;
       }
     } catch (err) {
@@ -281,8 +299,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
 
       return {
         variant,
-        sessions: sessionsByVariant[variant]?.size || 0,
         ...data,
+        // Prefer full-range session counts from the summary; fall back to the
+        // current events page only if the summary has not provided them.
+        sessions:
+          typeof data.sessions === 'number'
+            ? data.sessions
+            : sessionsByVariant[variant]?.size || 0,
         intentRate: rateDenominator ? purchaseIntent / rateDenominator : 0,
         completionRate: rateDenominator ? purchaseComplete / rateDenominator : 0,
       };
@@ -310,12 +333,9 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     .filter((row) => (row.exposure || 0) > 0)
     .sort((a, b) => b.completionRate - a.completionRate);
   const winnerRow = completionLeaders[0] || null;
-  const variantABaseline = variantRows.find((row) => row.variant === 'A') || null;
-  const runnerUp = completionLeaders[1] || null;
-  const baselineRow =
-    variantABaseline && winnerRow?.variant !== 'A'
-      ? variantABaseline
-      : runnerUp || variantABaseline;
+  // Compare the winner against the next-best variant (runner-up). This is
+  // variant-agnostic, so a B/C test reads "C vs B" without hardcoding a control.
+  const baselineRow = completionLeaders[1] || null;
 
   const completionDelta =
     winnerRow && baselineRow
@@ -384,6 +404,18 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
       return a.variant.localeCompare(b.variant);
     });
   }, [summary]);
+
+  const receiptDecisionRows = useMemo(() => {
+    const byDecision = webhookReceipts?.byDecision || {};
+    return Object.entries(byDecision).sort((a, b) => b[1] - a[1]);
+  }, [webhookReceipts]);
+
+  const flaggedReceipts = useMemo(() => {
+    const items = webhookReceipts?.items || [];
+    return items
+      .filter((receipt) => receipt.decision && receipt.decision !== 'recorded')
+      .slice(0, 50);
+  }, [webhookReceipts]);
 
   const paginatedEvents = useMemo(() => filteredEvents, [filteredEvents]);
   const paginatedPurchaseRows = useMemo(() => {
@@ -513,6 +545,8 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     const header = [
       'created_at',
       'variant',
+      'attribution_method',
+      'matched_intent_id',
       'external_order_id',
       'order_number',
       'product_name',
@@ -534,6 +568,8 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     const rows = purchaseRows.map((row) => [
       row.createdAt || '',
       row.variant || '',
+      row.attributionMethod || '',
+      row.matchedIntentId || '',
       row.externalOrderId || '',
       row.orderNumber || '',
       row.productName || '',
@@ -1111,6 +1147,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                 <tr>
                   <th className='text-left px-4 py-2'>Time / Session</th>
                   <th className='text-left px-4 py-2'>Variant</th>
+                  <th className='text-left px-4 py-2'>Attribution</th>
                   <th className='text-left px-4 py-2'>External order ID</th>
                   <th className='text-left px-4 py-2'>Order #</th>
                   <th className='text-left px-4 py-2'>Product</th>
@@ -1123,7 +1160,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               <tbody>
                 {purchaseRows.length === 0 && !loading ? (
                   <tr>
-                    <td className='px-4 py-4 text-gray-500' colSpan={9}>
+                    <td className='px-4 py-4 text-gray-500' colSpan={10}>
                       No purchase-complete events in this range.
                     </td>
                   </tr>
@@ -1152,6 +1189,18 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                       </div>
                     </td>
                     <td className='px-4 py-2'>{row.variant || 'NA'}</td>
+                    <td className='px-4 py-2'>
+                      <span
+                        className={`inline-block rounded px-2 py-0.5 text-xs font-medium ${
+                          row.attributionMethod && row.attributionMethod !== 'none'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                        title={row.matchedIntentId ? `Intent: ${row.matchedIntentId}` : ''}
+                      >
+                        {row.attributionMethod || 'none'}
+                      </span>
+                    </td>
                     <td className='px-4 py-2 font-mono text-xs'>
                       {row.externalOrderId || 'NA'}
                     </td>
@@ -1206,6 +1255,87 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
+          {loadingVisible ? (
+            <div className={loadingOverlayClass}>
+              <span className='inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-slate-700 animate-spin'></span>
+            </div>
+          ) : null}
+          <div className='px-4 py-3 border-b border-slate-200 flex justify-between items-center gap-3'>
+            <h2 className='text-base font-semibold text-gray-900'>
+              Webhook Receipts (delivery audit)
+            </h2>
+            <span className='text-xs text-gray-500'>
+              {(webhookReceipts?.count || 0).toLocaleString()} receipts
+            </span>
+          </div>
+          <div className='px-4 py-3 border-b border-slate-200 flex flex-wrap gap-2'>
+            {receiptDecisionRows.length === 0 ? (
+              <p className='text-sm text-gray-500'>
+                No webhook receipts in this range yet.
+              </p>
+            ) : (
+              receiptDecisionRows.map(([decision, count]) => (
+                <span
+                  key={decision}
+                  className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium ${
+                    decision === 'recorded'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : decision === 'ignored'
+                      ? 'bg-slate-100 text-slate-700'
+                      : decision === 'duplicate'
+                      ? 'bg-amber-100 text-amber-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {decision}: {count.toLocaleString()}
+                </span>
+              ))
+            )}
+          </div>
+          {flaggedReceipts.length > 0 ? (
+            <div className='overflow-x-auto'>
+              <table className='w-full text-sm'>
+                <thead className='bg-slate-50 text-xs uppercase tracking-wide text-gray-500'>
+                  <tr>
+                    <th className='text-left px-4 py-2'>Time</th>
+                    <th className='text-left px-4 py-2'>Decision</th>
+                    <th className='text-left px-4 py-2'>Reason</th>
+                    <th className='text-left px-4 py-2'>Order #</th>
+                    <th className='text-left px-4 py-2'>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {flaggedReceipts.map((receipt) => (
+                    <tr key={receipt.id} className='border-t border-slate-100'>
+                      <td className='px-4 py-2 whitespace-nowrap'>
+                        {receipt.createdAt
+                          ? new Date(receipt.createdAt).toLocaleString()
+                          : 'N/A'}
+                      </td>
+                      <td className='px-4 py-2'>{receipt.decision || 'NA'}</td>
+                      <td
+                        className='px-4 py-2 max-w-md truncate'
+                        title={receipt.reason || ''}
+                      >
+                        {receipt.reason || 'NA'}
+                      </td>
+                      <td className='px-4 py-2'>
+                        {receipt.orderNumber || receipt.externalOrderId || 'NA'}
+                      </td>
+                      <td className='px-4 py-2 break-all'>{receipt.email || 'NA'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className='px-4 py-3 text-xs text-gray-500'>
+              No unmatched or errored webhook deliveries in this range.
+            </div>
+          )}
         </div>
 
         <div className='rounded-lg border border-slate-300 bg-white overflow-hidden relative'>
@@ -1555,7 +1685,27 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                   <div>
                     <p className='text-xs uppercase tracking-wide text-slate-500'>Email</p>
                     <p className='text-slate-900 break-all'>
-                      {selectedPurchaseRow?.email || 'NA'}
+                      {selectedPurchaseRow?.email || selectedEvent.email || 'NA'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-xs uppercase tracking-wide text-slate-500'>
+                      Attribution
+                    </p>
+                    <p className='text-slate-900'>
+                      {selectedPurchaseRow?.attributionMethod ||
+                        selectedEvent.attributionMethod ||
+                        'none'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-xs uppercase tracking-wide text-slate-500'>
+                      Matched intent ID
+                    </p>
+                    <p className='text-slate-900 break-all font-mono text-xs'>
+                      {selectedPurchaseRow?.matchedIntentId ||
+                        selectedEvent.matchedIntentId ||
+                        'NA'}
                     </p>
                   </div>
                   <div>
