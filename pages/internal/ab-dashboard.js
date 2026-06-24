@@ -719,7 +719,8 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
             </p>
           </div>
 
-          <div className='flex flex-wrap items-end gap-3'>
+          <div className='flex flex-col gap-1 md:items-end'>
+            <div className='flex flex-wrap items-end gap-3'>
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='experimentKey'
@@ -753,13 +754,6 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                   </option>
                 ))}
               </select>
-              <span className='text-[11px] text-gray-500'>
-                B/C cutoff:{' '}
-                {new Date(`${EXPERIMENT_CUTOVER_DATE}T00:00:00`).toLocaleDateString(
-                  'en-US',
-                  { year: 'numeric', month: 'short', day: 'numeric' },
-                )}
-              </span>
             </div>
             {rangePreset === 'custom' ? (
               <>
@@ -802,6 +796,14 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
             >
               {loadingVisible ? 'Refreshing...' : 'Refresh'}
             </button>
+            </div>
+            <span className='text-[11px] text-gray-500'>
+              B/C cutoff:{' '}
+              {new Date(`${EXPERIMENT_CUTOVER_DATE}T00:00:00`).toLocaleDateString(
+                'en-US',
+                { year: 'numeric', month: 'short', day: 'numeric' },
+              )}
+            </span>
           </div>
         </div>
 
