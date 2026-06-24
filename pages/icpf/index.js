@@ -58,7 +58,7 @@ const ICPF = () => {
         title='CMPM ICPF Scholarship'
         description='ICPF is awarding several FULL scholarships to the 12-week online Certificate of Mastery in Packaging Management program––a $7,000 value each.'
       />
-      <div className='w-full grid grid-cols-1 md:grid-cols-6 gap-10 md:gap-24 py-10 lg:py-20 px-4 xl:px-0 max-w-7xl mx-auto'>
+      <div className='w-full grid grid-cols-1 md:grid-cols-6 gap-10 md:!gap-24 py-10 lg:!py-12 px-4 xl:px-0 max-w-7xl mx-auto'>
         <div className='md:col-span-4 flex flex-col gap-12 w-full'>
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'>
