@@ -11,9 +11,15 @@ if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
 }
 
+// Allow the aggregation to run long enough to page through the full range.
+// The summary must read every event in the window (not just the oldest slice)
+// so that all variants with activity - including retired/non-live ones - show
+// up in the Variant Performance and Variant Channel modules.
+export const config = { maxDuration: 60 };
+
 const experimentKeyQuery = eventsByExperimentKeyQuery(EVENT_SUMMARY_FIELDS);
 
-const MAX_RUNTIME_MS = 8000;
+const MAX_RUNTIME_MS = 55000;
 const PAGE_SIZE = 1000;
 
 function emptyVariantBucket() {
