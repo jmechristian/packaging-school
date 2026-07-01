@@ -21,6 +21,7 @@ import SalesBar from './SalesBar';
 import LogoWhite from '../../../components/layout/LogoWhite';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { getVariantFromDocumentCookie } from '../../../libs/abVariant';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -48,6 +49,16 @@ export default function HeaderNew() {
   const dispatch = useDispatch();
   const router = useRouter();
   const currentPath = router.asPath;
+
+  // Hide the promotional SalesBar on the homepage when the D experiment
+  // variant is active. Resolved client-side after mount to avoid hydration
+  // mismatches, since the header is shared across all pages.
+  const [hideHomeSalesBar, setHideHomeSalesBar] = useState(false);
+  useEffect(() => {
+    const isHome = router.pathname === '/';
+    const variant = getVariantFromDocumentCookie();
+    setHideHomeSalesBar(isHome && variant === 'D');
+  }, [router.pathname, router.asPath]);
 
   // Initialize autocomplete when component mounts
   useEffect(() => {
@@ -427,9 +438,11 @@ export default function HeaderNew() {
             </div>
           </div>
           {/* Top navigation */}
-          <Suspense>
-            <SalesBar user={user} />
-          </Suspense>
+          {!hideHomeSalesBar ? (
+            <Suspense>
+              <SalesBar user={user} />
+            </Suspense>
+          ) : null}
           {/* <div className='w-full bg-red-700 h-12 flex gap-4 items-center justify-center p-4'>
             <div>
               <WrenchScrewdriverIcon className='w-6 h-6 text-white' />

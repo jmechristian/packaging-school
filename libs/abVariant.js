@@ -4,8 +4,9 @@ export const AB_SESSION_COOKIE = 'ps_ab_session_id';
 export const AB_COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days
 export const AB_SESSION_MAX_AGE = 60 * 60 * 6; // 6 hours
 export const HOME_VARIANT_CONFIG = [
-  { key: 'B', weight: 50 },
-  { key: 'C', weight: 50 },
+  { key: 'B', weight: 1 },
+  { key: 'C', weight: 1 },
+  { key: 'D', weight: 1 },
 ];
 
 function normalizeVariant(value) {
@@ -63,7 +64,7 @@ export function chooseVariant() {
   const weighted = HOME_VARIANT_CONFIG.filter(
     (entry) => entry?.key && Number(entry.weight) > 0,
   );
-  if (weighted.length === 0) return 'B';
+  if (weighted.length === 0) return 'C';
 
   const totalWeight = weighted.reduce((sum, entry) => sum + Number(entry.weight), 0);
   const roll = Math.random() * totalWeight;

@@ -5,6 +5,7 @@ import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
 import HomeVariantB from '../components/home/variants/HomeVariantB';
 import HomeVariantC from '../components/home/variants/HomeVariantC';
+import HomeVariantD from '../components/home/variants/HomeVariantD';
 import SummerSavingsBanner from '../components/nav/SummerSavingsBanner';
 import {
   HOME_EXPERIMENT_KEY,
@@ -22,12 +23,13 @@ import {
 const HOME_VARIANT_COMPONENTS = {
   B: HomeVariantB,
   C: HomeVariantC,
+  D: HomeVariantD,
 };
 
 const App = ({ variant }) => {
   const router = useRouter();
   const { user } = useUser();
-  const resolvedVariant = HOME_VARIANT_COMPONENTS[variant] ? variant : 'B';
+  const resolvedVariant = HOME_VARIANT_COMPONENTS[variant] ? variant : 'C';
   const VariantComponent = HOME_VARIANT_COMPONENTS[resolvedVariant];
 
   // Handle expired token error from Thinkific SSO
@@ -152,7 +154,7 @@ const App = ({ variant }) => {
         url='/'
         image='https://packschool.s3.amazonaws.com/firework-box-3.webp'
       />
-      <SummerSavingsBanner />
+      {resolvedVariant !== 'D' ? <SummerSavingsBanner /> : null}
       <VariantComponent />
     </>
   );

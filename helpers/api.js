@@ -1923,6 +1923,8 @@ export const getAllLearningOfTheMonths = async () => {
           content
           createdAt
           id
+          media
+          mediaType
           objectives
           screengrab
           seoImage

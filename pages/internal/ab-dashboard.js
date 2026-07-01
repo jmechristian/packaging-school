@@ -3,10 +3,14 @@ import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 
 const fmtPercent = (value) => `${(value * 100).toFixed(1)}%`;
-// Date the homepage experiment switched from A/B to B/C. Used as the default
-// dashboard start so legacy A/B data is excluded unless explicitly requested.
-const EXPERIMENT_CUTOVER_DATE = '2026-06-19';
+// Homepage experiment cutover dates. The active experiment is a 3-way B/C/D
+// split (started 2026-07-01). B/C ran 2026-06-19 -> 2026-07-01. Defaulting the
+// dashboard to the B/C/D start keeps legacy windows out unless explicitly asked.
+const BC_CUTOVER_DATE = '2026-06-19';
+const BCD_CUTOVER_DATE = '2026-07-01';
+const EXPERIMENT_CUTOVER_DATE = BCD_CUTOVER_DATE;
 const RANGE_PRESETS = [
+  { id: 'sincebcd', label: 'Since B/C/D launch' },
   { id: 'sincebc', label: 'Since B/C launch' },
   { id: 'yesterday', label: 'Yesterday' },
   { id: 'mtd', label: 'Month to date' },
@@ -59,10 +63,17 @@ const toEndOfDayIso = (value) => {
 
 const getRangeBounds = (preset, customRange = {}) => {
   if (preset === 'all') return { from: null, to: null };
-  if (preset === 'sincebc') {
+  if (preset === 'sincebcd') {
     return {
-      from: toStartOfDayIso(EXPERIMENT_CUTOVER_DATE),
+      from: toStartOfDayIso(BCD_CUTOVER_DATE),
       to: new Date().toISOString(),
+    };
+  }
+  if (preset === 'sincebc') {
+    // Legacy B/C window: from the B/C launch up to the B/C/D cutover.
+    return {
+      from: toStartOfDayIso(BC_CUTOVER_DATE),
+      to: toStartOfDayIso(BCD_CUTOVER_DATE),
     };
   }
   if (preset === 'custom') {
@@ -137,7 +148,7 @@ const METRIC_KEY_ITEMS = [
 
 const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
   const [experimentKey, setExperimentKey] = useState('home_v1');
-  const [rangePreset, setRangePreset] = useState('sincebc');
+  const [rangePreset, setRangePreset] = useState('sincebcd');
   const [customFromDate, setCustomFromDate] = useState('');
   const [customToDate, setCustomToDate] = useState('');
   const [summary, setSummary] = useState(null);
@@ -334,7 +345,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     .sort((a, b) => b.completionRate - a.completionRate);
   const winnerRow = completionLeaders[0] || null;
   // Compare the winner against the next-best variant (runner-up). This is
-  // variant-agnostic, so a B/C test reads "C vs B" without hardcoding a control.
+  // variant-agnostic, so a B/C/D test reads e.g. "D vs C" without hardcoding a control.
   const baselineRow = completionLeaders[1] || null;
 
   const completionDelta =
@@ -798,7 +809,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
             </button>
             </div>
             <span className='text-[11px] text-gray-500'>
-              B/C cutoff:{' '}
+              B/C/D launch:{' '}
               {new Date(`${EXPERIMENT_CUTOVER_DATE}T00:00:00`).toLocaleDateString(
                 'en-US',
                 { year: 'numeric', month: 'short', day: 'numeric' },
