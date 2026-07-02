@@ -1,10 +1,34 @@
 import { runThinkificSSO } from './sso';
+import { getAbContext, trackAbPurchaseIntent } from '../libs/analytics';
 
 export const handleThinkificLink = async (url, awsUser, returnTo) => {
   // If user is not authenticated, redirect to Thinkific directly
   if (!awsUser || !awsUser.email) {
     window.location.href = url;
     return;
+  }
+
+  // Thinkific's order webhook has no way to carry campaign data back to us,
+  // so right before we hand off to Thinkific we record a purchase-intent
+  // event that pairs the buyer's now-known email with any LinkedIn click id
+  // (li_fat_id) captured on landing. The order webhook later matches on this
+  // email within a time window to attribute (and, for the LinkedIn boot camp
+  // campaign, confirm) the sale. Fire-and-forget: keepalive covers the
+  // imminent navigation away from the page.
+  try {
+    const abContext = getAbContext();
+    trackAbPurchaseIntent({
+      ...abContext,
+      email: awsUser.email,
+      source: 'pre_thinkific_redirect',
+      metadata: {
+        email: awsUser.email,
+        liFatId: abContext.liFatId,
+        courseLink: url,
+      },
+    });
+  } catch (error) {
+    console.warn('Failed to record pre-redirect purchase intent:', error?.message);
   }
 
   // Check if user has completed onboarding (you might want to adjust this condition)

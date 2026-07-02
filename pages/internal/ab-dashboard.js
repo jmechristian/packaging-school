@@ -389,6 +389,13 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
     const bySourceMedium = summary?.acquisition?.bySourceMedium || {};
     return Object.entries(bySourceMedium).sort((a, b) => b[1] - a[1]).slice(0, 8);
   }, [summary]);
+  const campaignRows = useMemo(() => {
+    const byCampaign = summary?.acquisition?.byCampaign || {};
+    return Object.entries(byCampaign)
+      .filter(([label]) => label && label !== '(none)')
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+  }, [summary]);
   const variantChannelRows = useMemo(() => {
     const byVariantChannel = summary?.acquisition?.byVariantChannel || {};
     const rows = [];
@@ -966,7 +973,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               Traffic Source Mix (session-level)
             </h2>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-0'>
             <div className='p-4 border-b md:border-b-0 md:border-r border-slate-200'>
               <p className='text-xs uppercase tracking-wide text-gray-500 mb-3'>
                 Channels
@@ -989,7 +996,7 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
                 </div>
               )}
             </div>
-            <div className='p-4'>
+            <div className='p-4 border-b md:border-b-0 md:border-r border-slate-200'>
               <p className='text-xs uppercase tracking-wide text-gray-500 mb-3'>
                 Top Source / Medium
               </p>
@@ -998,6 +1005,27 @@ const Dashboard = ({ authConfigMissing = false, isAuthorized = true }) => {
               ) : (
                 <div className='space-y-2'>
                   {sourceMediumRows.map(([label, count]) => (
+                    <div key={label} className='flex items-center justify-between text-sm gap-3'>
+                      <span className='text-gray-700 truncate' title={label}>
+                        {label}
+                      </span>
+                      <span className='font-semibold text-gray-900 shrink-0'>
+                        {count.toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className='p-4'>
+              <p className='text-xs uppercase tracking-wide text-gray-500 mb-3'>
+                Top Campaigns
+              </p>
+              {campaignRows.length === 0 ? (
+                <p className='text-sm text-gray-500'>No campaign traffic yet.</p>
+              ) : (
+                <div className='space-y-2'>
+                  {campaignRows.map(([label, count]) => (
                     <div key={label} className='flex items-center justify-between text-sm gap-3'>
                       <span className='text-gray-700 truncate' title={label}>
                         {label}

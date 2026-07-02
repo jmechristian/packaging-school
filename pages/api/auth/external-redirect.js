@@ -1,5 +1,53 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
+import { parseCookieHeader, AB_SESSION_COOKIE, HOME_EXPERIMENT_KEY } from '../../../libs/abVariant';
+import { AB_ATTRIBUTION_COOKIE } from '../../../libs/analytics';
+
+// Thinkific's order webhook can't carry campaign data back to us, so right
+// before handing off to Thinkific SSO we record a purchase-intent event that
+// pairs the buyer's now-known email with any LinkedIn click id (li_fat_id)
+// captured on landing. The order webhook later matches on this email within
+// a time window to attribute (and, for gated campaigns, confirm) the sale.
+async function recordPreThinkificIntent({ req, baseUrl, email, courseLink }) {
+  try {
+    const cookies = parseCookieHeader(req.headers.cookie || '');
+    let attribution = null;
+    if (cookies[AB_ATTRIBUTION_COOKIE]) {
+      try {
+        attribution = JSON.parse(cookies[AB_ATTRIBUTION_COOKIE]);
+      } catch {
+        attribution = null;
+      }
+    }
+
+    await fetch(`${baseUrl}/api/analytics/ab-event`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        eventName: 'ab_purchase_intent',
+        experimentKey: HOME_EXPERIMENT_KEY,
+        sessionId: attribution?.sessionId || cookies[AB_SESSION_COOKIE] || null,
+        email,
+        pagePath: '/api/auth/external-redirect',
+        acquisitionChannel: attribution?.channel || null,
+        acquisitionSource: attribution?.source || null,
+        acquisitionMedium: attribution?.medium || null,
+        acquisitionCampaign: attribution?.campaign || null,
+        acquisitionTerm: attribution?.term || null,
+        acquisitionContent: attribution?.content || null,
+        referrer: attribution?.referrer || null,
+        source: 'external_redirect_pre_sso',
+        metadata: {
+          email,
+          liFatId: attribution?.liFatId || null,
+          courseLink,
+        },
+      }),
+    });
+  } catch (error) {
+    console.warn('Failed to record pre-SSO purchase intent:', error?.message);
+  }
+}
 
 export default async function externalRedirectHandler(req, res) {
   try {
@@ -80,6 +128,13 @@ export default async function externalRedirectHandler(req, res) {
         )}; Path=/; Max-Age=900; SameSite=Lax`
       );
 
+      await recordPreThinkificIntent({
+        req,
+        baseUrl,
+        email: session.user.email,
+        courseLink: actualReturnTo,
+      });
+
       const redirectUrl = await handleSSO({
         email: session.user.email,
         first_name: firstName,
@@ -133,6 +188,13 @@ export default async function externalRedirectHandler(req, res) {
             actualReturnTo
           )}; Path=/; Max-Age=900; SameSite=Lax`
         );
+
+        await recordPreThinkificIntent({
+          req,
+          baseUrl,
+          email: session.user.email,
+          courseLink: actualReturnTo,
+        });
 
         const redirectUrl = await handleSSO({
           email: session.user.email,

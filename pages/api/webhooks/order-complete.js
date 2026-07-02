@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
 import { eventsByEmailQuery, toExperimentDay } from '../../../libs/abAnalyticsQueries';
+import { isLinkedInTargetProduct, sendLinkedInConversionEvent } from '../../../libs/linkedinConversions';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
@@ -479,6 +480,9 @@ export default async function handler(req, res) {
       payloadCreatedAt: webhookCreatedAt,
     });
 
+    const webhookProductId = normalizeString(
+      payload?.product_id ?? payload?.items?.[0]?.product_id,
+    );
     const completeCreatedAt = new Date().toISOString();
     const canonicalEmail = normalizeEmail(webhookUserEmail);
     let decision = 'recorded';
@@ -543,6 +547,41 @@ export default async function handler(req, res) {
       }
     }
 
+    // Report to LinkedIn's Conversions API only once per genuinely new sale
+    // (never on duplicate webhook deliveries) and only for campaigns we've
+    // opted in via LINKEDIN_CONVERSION_PRODUCT_IDS (defaults to the boot
+    // camp). The Insight Tag pixel can't do this: it only fires from a
+    // browser, and this confirmation arrives via a server-to-server webhook
+    // with no browser in the loop.
+    let linkedInConversion = null;
+    if (
+      decision === 'recorded' &&
+      isLinkedInTargetProduct({ productId: webhookProductId, productName: webhookProductName })
+    ) {
+      try {
+        const matchedMetadata = parseEventMetadata(matchedIntent?.metadata);
+        const liFatId = normalizeString(matchedMetadata?.liFatId);
+        const conversionHappenedAt = Date.parse(webhookCreatedAt || '') || Date.now();
+
+        linkedInConversion = await sendLinkedInConversionEvent({
+          email: canonicalEmail,
+          liFatId,
+          amountDollars: payload?.amount_dollars,
+          conversionHappenedAt,
+          eventId: `li_${dedupeEventId}`,
+          firstName: webhookPurchaserFirstName,
+          lastName: webhookPurchaserLastName,
+        });
+
+        if (!linkedInConversion?.success && !linkedInConversion?.skipped) {
+          console.warn('LinkedIn conversion event did not succeed:', linkedInConversion);
+        }
+      } catch (error) {
+        linkedInConversion = { success: false, error: error?.message };
+        console.warn('LinkedIn conversion event threw:', error?.message);
+      }
+    }
+
     await recordReceipt({
       decision,
       action,
@@ -555,7 +594,18 @@ export default async function handler(req, res) {
       matchedIntentId: matchedIntent?.id || null,
       attributionMethod,
       abEventId: dedupeEventId,
-      rawPayload: JSON.stringify(body),
+      reason: linkedInConversion
+        ? `linkedin_conversion:${
+            linkedInConversion.success
+              ? 'sent'
+              : linkedInConversion.skipped
+                ? `skipped:${linkedInConversion.reason}`
+                : `failed:${linkedInConversion.status || linkedInConversion.error || 'unknown'}`
+          }`
+        : undefined,
+      rawPayload: linkedInConversion
+        ? JSON.stringify({ ...body, _linkedinConversion: linkedInConversion })
+        : JSON.stringify(body),
       createdAt: completeCreatedAt,
     });
 
@@ -568,6 +618,7 @@ export default async function handler(req, res) {
       matchedIntentEventId: matchedIntent?.id || null,
       attributionMethod,
       abEventId: dedupeEventId,
+      linkedInConversion,
     });
   } catch (error) {
     console.error('Order completion webhook failed:', error);

@@ -8,7 +8,7 @@ import {
 } from './abVariant';
 
 const DEFAULT_THROTTLE_MS = 1500;
-const AB_ATTRIBUTION_COOKIE = 'ps_ab_attribution';
+export const AB_ATTRIBUTION_COOKIE = 'ps_ab_attribution';
 const EVENT_THROTTLE_MS = {
   ab_exposure: 60000,
   ab_page_view: 3000,
@@ -137,7 +137,7 @@ function classifyAcquisitionChannel({ medium, source, hasClickId, referrerHost }
     /(social|facebook|instagram|linkedin|x|twitter|tiktok|pinterest|reddit)/.test(
       normalizedMedium
     ) ||
-    /(facebook|instagram|linkedin|t\\.co|twitter|tiktok|pinterest|reddit)/.test(
+    /(facebook|instagram|linkedin|t\.co|twitter|tiktok|pinterest|reddit)/.test(
       normalizedSource
     )
   ) {
@@ -146,7 +146,7 @@ function classifyAcquisitionChannel({ medium, source, hasClickId, referrerHost }
   if (normalizedMedium === 'organic') return 'organic';
   if (!source && !referrerHost) return 'direct';
   if (referrerHost && !isOwnReferrerHost(referrerHost)) {
-    if (/google\\.|bing\\.|yahoo\\.|duckduckgo\\./.test(referrerHost)) {
+    if (/google\.|bing\.|yahoo\.|duckduckgo\./.test(referrerHost)) {
       return 'organic';
     }
     return 'referral';
@@ -162,12 +162,22 @@ function detectAttributionContext() {
   const referrer = typeof document !== 'undefined' ? document.referrer || '' : '';
   const referrerHost = getReferrerHost(referrer);
 
-  const source = params.get('utm_source') || params.get('source') || referrerHost || null;
-  const medium = params.get('utm_medium') || null;
-  const campaign = params.get('utm_campaign') || null;
-  const term = params.get('utm_term') || null;
-  const content = params.get('utm_content') || null;
+  // Accept both standard utm_* params and the bare names used by our ad links
+  // (e.g. LinkedIn ads land with ?source=LinkedIn&campaign=bootcamp).
+  const source =
+    params.get('utm_source') || params.get('source') || referrerHost || null;
+  const medium = params.get('utm_medium') || params.get('medium') || null;
+  const campaign = params.get('utm_campaign') || params.get('campaign') || null;
+  const term = params.get('utm_term') || params.get('term') || null;
+  const content = params.get('utm_content') || params.get('content') || null;
 
+  // li_fat_id is LinkedIn's per-click first-party ad tracking id (populated
+  // automatically when Enhanced Conversion Tracking is on). Unlike the other
+  // click ids we only use for channel classification, this one is persisted
+  // verbatim so it can be replayed to LinkedIn's Conversions API once a
+  // purchase is confirmed server-side (Thinkific's webhook cannot carry it
+  // back to us, so we have to remember it ourselves).
+  const liFatId = params.get('li_fat_id') || null;
   const hasClickId = ['gclid', 'msclkid', 'fbclid', 'ttclid', 'li_fat_id'].some((key) =>
     Boolean(params.get(key))
   );
@@ -188,23 +198,63 @@ function detectAttributionContext() {
     term,
     content,
     referrer: referrer || null,
+    liFatId,
   };
 }
 
-function resolveAttributionContext(sessionId) {
-  if (typeof window === 'undefined') return null;
+const MARKETING_PARAM_KEYS = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+  'source',
+  'medium',
+  'campaign',
+  'gclid',
+  'msclkid',
+  'fbclid',
+  'ttclid',
+  'li_fat_id',
+];
+
+// True when the current URL carries an explicit campaign/click-id signal
+// (i.e. the visitor arrived via a tagged ad or campaign link).
+function hasMarketingParams() {
+  if (typeof window === 'undefined') return false;
+  const params = new URL(window.location.href).searchParams;
+  return MARKETING_PARAM_KEYS.some((key) => Boolean(params.get(key)));
+}
+
+function readCachedAttribution(sessionId) {
   if (window.__abAttributionCache?.sessionId === sessionId) {
     return window.__abAttributionCache;
   }
-
-  const fromCookie = safeParseAttributionCookie(getCookieValue(AB_ATTRIBUTION_COOKIE));
+  const fromCookie = safeParseAttributionCookie(
+    getCookieValue(AB_ATTRIBUTION_COOKIE),
+  );
   if (fromCookie?.sessionId === sessionId) {
     window.__abAttributionCache = fromCookie;
     return fromCookie;
   }
+  return null;
+}
+
+function resolveAttributionContext(sessionId) {
+  if (typeof window === 'undefined') return null;
+
+  // Attribution is first-touch per session, EXCEPT when the current URL carries
+  // explicit campaign/click-id params (e.g. a LinkedIn/Google ad click). Those
+  // must always be captured so an ad touch is never masked by an earlier
+  // same-session direct/organic visit.
+  const forceDetect = hasMarketingParams();
+  if (!forceDetect) {
+    const cached = readCachedAttribution(sessionId);
+    if (cached) return cached;
+  }
 
   const detected = detectAttributionContext();
-  if (!detected) return null;
+  if (!detected) return readCachedAttribution(sessionId);
 
   const payload = {
     sessionId,
@@ -236,6 +286,7 @@ export function getAbContext(overrides = {}) {
     acquisitionTerm: overrides.acquisitionTerm || attribution?.term || null,
     acquisitionContent: overrides.acquisitionContent || attribution?.content || null,
     referrer: overrides.referrer || attribution?.referrer || null,
+    liFatId: overrides.liFatId || attribution?.liFatId || null,
     ...overrides,
   };
 }
@@ -373,9 +424,17 @@ async function writeAbEvent(eventName, payload = {}) {
     return;
   }
 
+  // liFatId isn't a first-class AbTestEvent column; fold it into metadata so
+  // it survives storage and can be read back out by the order webhook later.
+  const mergedMetadata =
+    context.liFatId != null
+      ? { ...(context.metadata || {}), liFatId: context.liFatId }
+      : context.metadata;
+
   const finalPayload = {
     eventName,
     ...context,
+    metadata: mergedMetadata,
     eventId: buildEventId(eventName, context, fingerprint),
   };
 
