@@ -14,7 +14,10 @@ import {
   getAllTestimonials,
   getAuthors,
 } from '../../../helpers/api';
-import { trackAbLessonClick, trackAbMeetingClick } from '../../../libs/analytics';
+import {
+  trackAbLessonClick,
+  trackAbMeetingClick,
+} from '../../../libs/analytics';
 
 const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 
@@ -30,13 +33,13 @@ const PROGRAMS = [
     price: '$179',
     headerClass: 'bg-base-mid',
     priceClass: 'text-base-dark',
-    badge: { label: 'Crash Course', className: 'bg-brand-indigo text-white' },
+    badge: null,
     highlight: false,
     bestFit: 'I need packaging basics in one day.',
     depth: '1-day orientation',
     included: 'Packaging Boot Camp',
     build: 'Foundational packaging language and context',
-    access: 'Access to Boot Camp',
+    access: 'Course Only',
     credential: 'Course completion',
   },
   {
@@ -46,13 +49,12 @@ const PROGRAMS = [
     price: '$2,400',
     headerClass: 'bg-base-dark',
     priceClass: 'text-base-dark',
-    badge: { label: 'Self-paced Certificate', className: 'bg-base-brand text-white' },
+    badge: null,
     highlight: false,
     bestFit:
       'I want comprehensive packaging knowledge for my role, resume, or entry into the industry.',
     depth: 'Comprehensive professional certificate',
-    included:
-      'Boot Camp + 11 additional courses that expand each foundational section',
+    included: 'Everything in Boot Camp',
     build:
       'Broad fluency across materials, design, manufacturing, sustainability, logistics, and business',
     access: '6 months of access to the full Packaging School course catalog',
@@ -65,12 +67,15 @@ const PROGRAMS = [
     price: '$7,000',
     headerClass: 'bg-clemson',
     priceClass: 'text-clemson-dark',
-    badge: { label: 'Premiere, all inclusive', className: 'bg-brand-yellow text-black' },
+    badge: {
+      label: 'Premiere, all inclusive',
+      className: 'bg-brand-yellow text-black',
+    },
     highlight: true,
     bestFit:
       'I want the full certificate path plus professor guidance through a custom project for my job and/or portfolio.',
     depth: '12-week guided program, completed on your schedule',
-    included: 'CPS + professor guidance through a custom project',
+    included: 'Everything in CPS',
     build:
       'Applied packaging mastery through a custom job- or portfolio-based project',
     access: '12 months of access to the full Packaging School course catalog',
@@ -128,13 +133,21 @@ const TEAM_USE_CASES = [
 // Employer / partner logos. Add an `href` (destination) per entry if/when
 // provided; tiles without one render as static (non-clickable) cards.
 const PARTNER_LOGOS = [
-  { name: 'BMW', logo: 'https://packschool.s3.amazonaws.com/bmw.png', href: '' },
+  {
+    name: 'BMW',
+    logo: 'https://packschool.s3.amazonaws.com/bmw.png',
+    href: '',
+  },
   {
     name: 'Starbucks',
     logo: 'https://packschool.s3.amazonaws.com/starbucks-coffee-logo.png',
     href: '',
   },
-  { name: 'Coca-Cola', logo: 'https://packschool.s3.amazonaws.com/coke.png', href: '' },
+  {
+    name: 'Coca-Cola',
+    logo: 'https://packschool.s3.amazonaws.com/coke.png',
+    href: '',
+  },
   {
     name: 'Smurfit Westrock',
     logo: 'https://packschool.s3.us-east-1.amazonaws.com/sm-westrock.png',
@@ -177,7 +190,37 @@ const TESTIMONIAL_ROTATE_MS = 7000;
 const truncateText = (text, max = TESTIMONIAL_MAX_CHARS) => {
   const clean = String(text || '').trim();
   if (clean.length <= max) return clean;
-  return `${clean.slice(0, max).replace(/\s+\S*$/, '').trimEnd()}…`;
+  return `${clean
+    .slice(0, max)
+    .replace(/\s+\S*$/, '')
+    .trimEnd()}…`;
+};
+
+// Renders a comparison-cell value, turning any "course catalog" phrase into a
+// link to the full catalog. Returns a plain string when there's no match.
+const renderWithCatalogLink = (text) => {
+  const value = String(text || '');
+  if (!value.toLowerCase().includes('course catalog')) return value;
+
+  const parts = [];
+  const regex = /course catalog/gi;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(value)) !== null) {
+    if (match.index > lastIndex) parts.push(value.slice(lastIndex, match.index));
+    parts.push(
+      <Link
+        key={match.index}
+        href='/all_courses'
+        className='font-semibold text-base-mid underline underline-offset-2 hover:text-base-dark'
+      >
+        {match[0]}
+      </Link>,
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < value.length) parts.push(value.slice(lastIndex));
+  return parts;
 };
 
 const LESSON_BREAKPOINTS = {
@@ -197,7 +240,8 @@ const parseLessonTimestamp = (dateValue) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-const getLessonSortDate = (lesson) => lesson?.backdate || lesson?.createdAt || null;
+const getLessonSortDate = (lesson) =>
+  lesson?.backdate || lesson?.createdAt || null;
 
 const formatLessonDate = (dateValue) => {
   if (!dateValue) return '';
@@ -233,7 +277,9 @@ const extractAuthorTokens = (rawAuthor) => {
     try {
       const parsed = JSON.parse(trimmed);
       if (Array.isArray(parsed)) {
-        return parsed.map((value) => String(value || '').trim()).filter(Boolean);
+        return parsed
+          .map((value) => String(value || '').trim())
+          .filter(Boolean);
       }
     } catch {
       // fall through to token parsing
@@ -324,7 +370,9 @@ const HomeVariantD = () => {
         const authorIds = [
           ...new Set(
             sorted.flatMap((item) =>
-              extractAuthorTokens(item?.author).filter((token) => isUuid(token)),
+              extractAuthorTokens(item?.author).filter((token) =>
+                isUuid(token),
+              ),
             ),
           ),
         ];
@@ -410,7 +458,10 @@ const HomeVariantD = () => {
   }, [isTestimonialPaused, testimonialCount]);
 
   const activeTestimonial = useMemo(
-    () => (testimonialCount ? testimonials[testimonialIndex % testimonialCount] : null),
+    () =>
+      testimonialCount
+        ? testimonials[testimonialIndex % testimonialCount]
+        : null,
     [testimonials, testimonialIndex, testimonialCount],
   );
 
@@ -526,7 +577,8 @@ const HomeVariantD = () => {
         <div className='relative mx-auto max-w-7xl px-4 py-20 lg:px-8 lg:py-28 text-center'>
           <span className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs md:text-sm font-semibold uppercase tracking-wide text-base-light ring-1 ring-inset ring-white/15'>
             <StarIcon className='h-4 w-4 text-brand-yellow' />
-            Powered by Clemson University packaging expertise
+            Developed at Clemson University | Licensed by the SC Commission on
+            Higher Education
           </span>
           <h1 className='mx-auto mt-8 max-w-4xl text-4xl font-semibold leading-[1.08] text-white md:text-5xl lg:text-6xl'>
             Learn the Language of Packaging.{' '}
@@ -535,12 +587,11 @@ const HomeVariantD = () => {
             </span>
           </h1>
           <p className='mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-300 md:text-xl'>
-            Packaging touches every business, but most professionals and teams
-            lack a shared understanding of materials, design, sustainability,
-            supply chain, and packaging decisions. Packaging School gives
-            individuals and organizations a practical online path to build
-            packaging fluency, earn credible credentials, and make better
-            packaging decisions with confidence.
+            Packaging impacts every business, but most professionals lack a
+            shared understanding of materials, design, sustainability, supply
+            chain, and packaging decisions. Packaging School offers a practical
+            online path to build packaging fluency, earn credentials, and make
+            confident packaging decisions.
           </p>
           <div className='mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <SpeakWithHuman source='variant_d_hero' />
@@ -555,7 +606,7 @@ const HomeVariantD = () => {
       </section>
 
       {/* Credibility strip */}
-      <section className='bg-base-light'>
+      {/* <section className='bg-base-light'>
         <div className='mx-auto max-w-6xl px-4 py-10 lg:px-8'>
           <ul className='mx-auto flex w-fit flex-col items-start gap-y-4 lg:w-auto lg:flex-row lg:flex-wrap lg:items-center lg:justify-center lg:gap-x-3 lg:gap-y-3'>
             {CREDIBILITY_POINTS.map((point, index) => (
@@ -576,19 +627,22 @@ const HomeVariantD = () => {
             ))}
           </ul>
         </div>
-      </section>
+      </section> */}
 
       {/* Program comparison */}
-      <section id='programs' className='mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24'>
+      <section
+        id='programs'
+        className='mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24'
+      >
         <div className='mx-auto max-w-3xl text-center'>
           <h2 className='text-3xl font-semibold leading-tight text-slate-900 md:text-4xl'>
-            Choose the Packaging Learning Path That Fits Your Goal
+            Choose the Learning Path That Fits Your Goal
           </h2>
           <p className='mt-5 text-base leading-relaxed text-slate-600 md:text-lg'>
             All programs are 100% online and completed on your schedule. Start
-            with a one-day orientation, build comprehensive packaging fluency, or
-            choose the full certificate path with professor guidance through a
-            custom project.
+            with a one-day orientation, build comprehensive packaging fluency,
+            or choose the full certificate path with professor guidance through
+            a custom project.
           </p>
         </div>
 
@@ -622,7 +676,7 @@ const HomeVariantD = () => {
                       {row.label}
                     </div>
                     <div className='mt-1 text-sm leading-relaxed text-slate-800'>
-                      {program[row.key]}
+                      {renderWithCatalogLink(program[row.key])}
                     </div>
                   </div>
                 ))}
@@ -656,7 +710,7 @@ const HomeVariantD = () => {
                 {PROGRAMS.map((program) => (
                   <th
                     key={program.key}
-                    className={`px-6 py-6 text-left align-top ${program.headerClass} ${
+                    className={`px-6 py-6 text-left align-bottom ${program.headerClass} ${
                       program.highlight ? 'ring-2 ring-inset ring-clemson' : ''
                     }`}
                   >
@@ -687,7 +741,7 @@ const HomeVariantD = () => {
                         program.highlight ? 'bg-clemson/5' : ''
                       }`}
                     >
-                      {program[row.key]}
+                      {renderWithCatalogLink(program[row.key])}
                     </td>
                   ))}
                 </tr>
@@ -786,29 +840,21 @@ const HomeVariantD = () => {
           <p className='mt-5 text-base leading-relaxed text-slate-600 md:text-lg'>
             Packaging School programs are designed for professionals who need
             practical packaging knowledge they can apply at work. Learners come
-            from brands, suppliers, manufacturers, retailers, startups, agencies,
-            universities, logistics organizations, and teams across the packaging
-            value chain.
+            from brands, suppliers, manufacturers, retailers, startups,
+            agencies, universities, logistics organizations, and teams across
+            the packaging value chain.
           </p>
         </div>
 
         <div className='mt-10 flex flex-wrap justify-center gap-3'>
-          {VALUE_CHAIN_ROLES.map((role, index) => {
-            const chipColors = [
-              'bg-base-light text-base-dark',
-              'bg-brand-indigo-light/25 text-brand-indigo',
-              'bg-clemson/15 text-clemson-dark',
-              'bg-brand-green/15 text-base-dark-highlight',
-            ];
-            return (
-              <span
-                key={role}
-                className={`rounded-full px-4 py-2 text-sm font-semibold ${chipColors[index % chipColors.length]}`}
-              >
-                {role}
-              </span>
-            );
-          })}
+          {VALUE_CHAIN_ROLES.map((role) => (
+            <span
+              key={role}
+              className='rounded-full bg-base-light px-4 py-2 text-sm font-semibold text-base-dark'
+            >
+              {role}
+            </span>
+          ))}
         </div>
 
         {/* Social validation: employer logos + testimonials */}
@@ -928,7 +974,8 @@ const HomeVariantD = () => {
                     <ChevronLeftIcon className='h-4 w-4' />
                   </button>
                   <span className='text-sm font-medium tabular-nums text-slate-500'>
-                    {(testimonialIndex % testimonialCount) + 1} / {testimonialCount}
+                    {(testimonialIndex % testimonialCount) + 1} /{' '}
+                    {testimonialCount}
                   </span>
                   <button
                     type='button'
@@ -956,9 +1003,9 @@ const HomeVariantD = () => {
               <p className='mt-5 text-base leading-relaxed text-indigo-100 md:text-lg'>
                 Give your team a shared packaging language without building
                 internal curriculum from scratch. Packaging School supports team
-                learning for onboarding, sales enablement, packaging development,
-                sustainability alignment, procurement, operations, and
-                cross-functional collaboration.
+                learning for onboarding, sales enablement, packaging
+                development, sustainability alignment, procurement, operations,
+                and cross-functional collaboration.
               </p>
               <div className='mt-8'>
                 <Link
@@ -1018,7 +1065,10 @@ const HomeVariantD = () => {
             ))}
           </div>
         ) : lotmLessons.length ? (
-          <div onTouchStart={handleLessonTouchStart} onTouchEnd={handleLessonTouchEnd}>
+          <div
+            onTouchStart={handleLessonTouchStart}
+            onTouchEnd={handleLessonTouchEnd}
+          >
             <div
               className={`mt-12 grid gap-6 transition-all duration-300 ${lessonGridClass}`}
             >
@@ -1059,7 +1109,10 @@ const HomeVariantD = () => {
                           }
                         />
                       ) : (
-                        <Link href={lessonHref} className='absolute inset-0 block'>
+                        <Link
+                          href={lessonHref}
+                          className='absolute inset-0 block'
+                        >
                           {lesson.seoImage ? (
                             <div
                               className='h-full w-full bg-cover bg-center'
