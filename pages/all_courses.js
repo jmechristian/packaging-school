@@ -41,7 +41,6 @@ import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconToolti
 import { createCourseSearch } from '../src/graphql/mutations';
 import { useThinkificLink } from '../hooks/useThinkificLink';
 import { getAbContext, trackEvent } from '../libs/analytics';
-import SummerSavingsBanner from '../components/nav/SummerSavingsBanner';
 
 const CATEGORY_ORDER = [
   'AUTO',
@@ -420,7 +419,6 @@ const Page = ({ firstCardImage }) => {
         image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
         preloadImage={firstCardImage}
       />
-      <SummerSavingsBanner />
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-6 sm:py-12'>
         <div className='flex flex-col gap-4 sm:gap-6'>
           <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-slate-900'>

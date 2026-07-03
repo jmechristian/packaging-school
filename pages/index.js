@@ -6,7 +6,6 @@ import { generateMetadata } from '../libs/seo/generateMetadata';
 import HomeVariantB from '../components/home/variants/HomeVariantB';
 import HomeVariantC from '../components/home/variants/HomeVariantC';
 import HomeVariantD from '../components/home/variants/HomeVariantD';
-import SummerSavingsBanner from '../components/nav/SummerSavingsBanner';
 import {
   HOME_EXPERIMENT_KEY,
   chooseVariant,
@@ -154,7 +153,6 @@ const App = ({ variant }) => {
         url='/'
         image='https://packschool.s3.amazonaws.com/firework-box-3.webp'
       />
-      {resolvedVariant !== 'D' ? <SummerSavingsBanner /> : null}
       <VariantComponent />
     </>
   );

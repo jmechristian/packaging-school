@@ -52,10 +52,6 @@ import LessonSubscribe from '../../components/shared/LessonSubscribe';
 import { buildLessonJsonLd } from '../../libs/seo/lessonJsonLd';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
 import { optimizeTiptapImages } from '../../libs/tiptapContent';
-import { trackAbPromoClick } from '../../libs/analytics';
-
-const SIDEBAR_PROMO_SRC =
-  'https://packschool.s3.us-east-1.amazonaws.com/Summer-School-Savings-02.png';
 
 const Page = ({
   lesson,
@@ -1211,27 +1207,6 @@ const Page = ({
                       ))}
                     </div>
                   )}
-                  <Link
-                    href='/summer-savings'
-                    className='block w-full -mb-3'
-                    onClick={() =>
-                      trackAbPromoClick({
-                        pagePath: router.asPath,
-                        nextPath: '/summer-savings',
-                        source: 'lesson_sidebar_promo',
-                        metadata: {
-                          promo: 'summer_school_savings',
-                          lessonSlug: lesson?.slug || null,
-                        },
-                      })
-                    }
-                  >
-                    <img
-                      src={SIDEBAR_PROMO_SRC}
-                      alt='Summer School Savings - now through July 2, 2026'
-                      className='w-full h-auto rounded-lg'
-                    />
-                  </Link>
                 </div>
                 <div className='flex flex-col gap-5 py-5 px-4 lg:px-0'>
                   <div className='grid grid-cols-3 gap-2 w-fit lg:hidden'>

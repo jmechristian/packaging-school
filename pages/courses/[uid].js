@@ -76,7 +76,6 @@ import {
   getDeviceType,
 } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import SummerSavingsBanner from '../../components/nav/SummerSavingsBanner';
 import {
   FilmIcon,
   ArrowDownTrayIcon,
@@ -243,7 +242,6 @@ const Page = ({ course }) => {
       <div className='grid lg:!grid-cols-12 gap-16 max-w-7xl mx-auto px-4 lg:!px-0 py-12 w-full'>
         <div className='lg:!col-span-8 w-full'>
           <div className='flex flex-col gap-7 w-full text-left'>
-            <SummerSavingsBanner embedded />
             <div className='w-full flex flex-col gap-3'>
               <nav
                 className='w-full text-sm text-gray-600'
