@@ -283,7 +283,7 @@ const Page = ({ course }) => {
                 {course.subheadline}
               </div>
             </div>
-            {course.preview && (
+            {course.preview ? (
               <div className='w-full rounded-md overflow-hidden'>
                 <VideoPlayerInView
                   videoEmbedLink={course.preview}
@@ -291,7 +291,13 @@ const Page = ({ course }) => {
                   light={course.seoImage}
                 />
               </div>
+            ) : (
+              <div
+                className='w-full aspect-[16/9] rounded-lg bg-center bg-cover'
+                style={{ backgroundImage: `url(${course.seoImage})` }}
+              />
             )}
+
             <div className='w-full flex flex-col gap-4'>
               <h2 className='w-full h4-base border-y-2 border-y-gray-300 py-2'>
                 What you will learn
