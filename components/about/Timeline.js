@@ -243,6 +243,11 @@ const timeline = [
       'Launch of published courses as the education partner for the Paperboard Packaging Council.',
     date: '2026',
   },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with Network Distribution®',
+    date: '2026',
+  },
 ];
 
 const Timeline = () => {
