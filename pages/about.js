@@ -5,6 +5,10 @@ import GradientCTA from '../components/GradientCTA';
 import Timeline from '../components/about/Timeline';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const listStaff = /* GraphQL */ `
   query ListStaff {
@@ -29,6 +33,14 @@ const Page = ({ pageData }) => {
       'The Packaging School bridges the gap between academia and industry by partnering with companies, subject matter experts and associations to create a shared learning management system. Our expanded catalog connects knowledge-seekers with knowledge-providers in packaging and processing.',
   });
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'About', path: '/about' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
@@ -36,6 +48,7 @@ const Page = ({ pageData }) => {
         description={metadata.description}
         url='/about'
         image='https://packschool.s3.us-east-1.amazonaws.com/Team+Photo+2025+APS+compressed.png'
+        structuredData={[organization, website, breadcrumb]}
       />
       <Mission />
       <Staff staff={pageData?.listStaff?.items ?? []} />

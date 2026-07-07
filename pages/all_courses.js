@@ -15,6 +15,11 @@ import {
 } from 'react-icons/md';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+  buildItemListJsonLd,
+} from '../libs/seo/organizationJsonLd';
 import { categoryMenu, updateCategoryMenu } from '../data/CategoryMenu';
 import {
   setCategoryIcon,
@@ -93,7 +98,11 @@ const groupCoursesByCategory = (courses, filters) => {
   return groups;
 };
 
-const Page = ({ firstCardImage }) => {
+const Page = ({
+  firstCardImage,
+  courseListItems = [],
+  certificateListItems = [],
+}) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const deviceType = getDeviceType();
@@ -410,6 +419,19 @@ const Page = ({ firstCardImage }) => {
   const hasResults =
     sortedCertificates?.length > 0 || sortedAndSearchedCourses?.length > 0;
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'All Courses', path: '/all_courses' }],
+    siteUrl,
+  );
+  const itemList = buildItemListJsonLd(
+    [...certificateListItems, ...courseListItems],
+    siteUrl,
+    { name: 'Packaging School Courses & Certificates' },
+  );
+
   return (
     <>
       <Meta
@@ -418,6 +440,7 @@ const Page = ({ firstCardImage }) => {
         url='/all_courses'
         image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
         preloadImage={firstCardImage}
+        structuredData={[organization, website, breadcrumb, itemList]}
       />
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-6 sm:py-12'>
         <div className='flex flex-col gap-4 sm:gap-6'>
@@ -844,16 +867,49 @@ export default Page;
 
 export async function getStaticProps() {
   try {
-    const certificates = await getCertificates();
+    const [certificates, courses] = await Promise.all([
+      getCertificates(),
+      getAllLMSCourses(),
+    ]);
     const firstCardImage = certificates?.[0]?.seoImage || null;
+
+    // Trimmed down to just what's needed for the ItemList structured data —
+    // deliberately excludes heavier fields (what_learned, pricing, images,
+    // etc) so we don't bloat the static HTML payload for this listing page.
+    const courseListItems = (courses || [])
+      .filter((course) => course?.slug && course?.title)
+      .map((course) => ({
+        name: course.title,
+        url: `/${
+          course.type === 'COLLECTION' || course.type === 'COLLECTIONS'
+            ? 'collections'
+            : 'courses'
+        }/${course.slug}`,
+      }));
+
+    const certificateListItems = (certificates || [])
+      .filter((cert) => cert?.link && cert?.title)
+      .map((cert) => ({
+        name: cert.title,
+        url: cert.link,
+      }));
+
     return {
-      props: { firstCardImage: firstCardImage || null },
+      props: {
+        firstCardImage: firstCardImage || null,
+        courseListItems,
+        certificateListItems,
+      },
       revalidate: 60 * 60 * 4,
     };
   } catch (err) {
     console.error('getStaticProps /all_courses error:', err);
     return {
-      props: { firstCardImage: null },
+      props: {
+        firstCardImage: null,
+        courseListItems: [],
+        certificateListItems: [],
+      },
       revalidate: 60,
     };
   }

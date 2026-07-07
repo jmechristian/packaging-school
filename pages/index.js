@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
+import { buildHomeJsonLd } from '../libs/seo/organizationJsonLd';
 import HomeVariantB from '../components/home/variants/HomeVariantB';
 import HomeVariantC from '../components/home/variants/HomeVariantC';
 import HomeVariantD from '../components/home/variants/HomeVariantD';
@@ -145,6 +146,10 @@ const App = ({ variant }) => {
       'The Packaging School brings together the business, art, and science of packaging so you can lead projects, optimize supply chains, increase margins, and develop sustainable solutions.',
   });
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+
   return (
     <>
       <Meta
@@ -152,6 +157,7 @@ const App = ({ variant }) => {
         description={metadata.description}
         url='/'
         image='https://packschool.s3.amazonaws.com/firework-box-3.webp'
+        structuredData={[organization, website]}
       />
       <VariantComponent />
     </>
