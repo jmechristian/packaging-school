@@ -7,6 +7,17 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon,
 } from '@heroicons/react/20/solid';
+
+const RESOURCE_LINKS = [
+  {
+    label: 'Auditor Glossary',
+    href: 'https://packschool.s3.us-east-1.amazonaws.com/FPA_AuditorGlossary.pdf',
+  },
+  {
+    label: 'Auditor Shopping Packet',
+    href: 'https://packschool.s3.us-east-1.amazonaws.com/FPA_AuditorShoppingPacket.pdf',
+  },
+];
 import Image from 'next/legacy/image';
 
 const Fpas = () => {
@@ -30,6 +41,7 @@ const Fpas = () => {
   const [columnFilters, setColumnFilters] = useState({});
   const [columnExcludedValues, setColumnExcludedValues] = useState({});
   const [openFilterColumn, setOpenFilterColumn] = useState(null);
+  const [isResourcesMenuOpen, setIsResourcesMenuOpen] = useState(false);
 
   // Get sheetId from query params or use environment variable
   const sheetId =
@@ -130,6 +142,18 @@ const Fpas = () => {
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, [openFilterColumn]);
+
+  // Close resources dropdown when clicking outside
+  useEffect(() => {
+    if (!isResourcesMenuOpen) return;
+    const close = (e) => {
+      if (e.target.closest?.('[data-resources-menu]') == null) {
+        setIsResourcesMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [isResourcesMenuOpen]);
 
   // Load saved custom column views from localStorage
   useEffect(() => {
@@ -757,14 +781,46 @@ const Fpas = () => {
               height={100}
             />
           </div>
-          <div className='flex flex-col gap-0'>
-            <h1 className='text-2xl font-bold'>FPA - WIC - CA - 2025</h1>
-            <p className='text-sm  text-gray-600'>
-              Showing {sortedData.length} of {data.length} records
-            </p>
-            {/* <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
-              Range: {range}
-            </p> */}
+          <div className='flex items-end gap-4'>
+            <div className='flex flex-col justify-end gap-1'>
+              <h1 className='text-base font-bold leading-none m-0'>
+                FPA - WIC - CA - 2025
+              </h1>
+              <p className='text-sm text-gray-600 leading-none m-0'>
+                Showing {sortedData.length} of {data.length} records
+              </p>
+              {/* <p className='text-xs text-gray-500' title={`Sheet: ${sheetId}`}>
+                Range: {range}
+              </p> */}
+            </div>
+            <div className='relative' data-resources-menu>
+              <button
+                type='button'
+                onClick={() => setIsResourcesMenuOpen((open) => !open)}
+                className='inline-flex items-center gap-1.5 text-xs sm:text-sm px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 font-medium text-gray-700'
+                aria-haspopup='true'
+                aria-expanded={isResourcesMenuOpen}
+              >
+                Resources
+                <ChevronDownIcon className='w-4 h-4 text-gray-500' />
+              </button>
+              {isResourcesMenuOpen && (
+                <div className='absolute right-0 top-full mt-1 z-30 min-w-[220px] bg-white border border-gray-300 rounded-md shadow-lg py-1'>
+                  {RESOURCE_LINKS.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='block px-3 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50'
+                      onClick={() => setIsResourcesMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
