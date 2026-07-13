@@ -15,8 +15,20 @@ import ExpandSearch from '../components/shared/ExpandSearch';
 import VideoPlayer from '../components/VideoPlayer';
 import CustomerCourses from '../components/shared/CustomerCourses';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const Page = ({ isbt, isbtCourses }) => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'ISBT', path: '/isbt' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
@@ -25,6 +37,8 @@ const Page = ({ isbt, isbtCourses }) => {
           'Enroll in unique online courses from ISBT, the sole organization focused on the science of beverages since 1953.'
         }
         image={'https://packschool.s3.amazonaws.com/isbt-landing-seoImage.webp'}
+        url='/isbt'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='w-full flex flex-col gap-4 md:gap-6 lg:gap-12 py-6 lg:py-9 mx-auto'>
         <div className='w-full h-full grid md:grid-cols-2 gap-x-24 py-16 max-w-7xl mx-auto px-3 md:px-6 xl:px-0'>

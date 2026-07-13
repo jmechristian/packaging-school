@@ -3,6 +3,10 @@ import { Amplify, API } from 'aws-amplify';
 import Meta from '../../components/shared/Meta';
 import awsExports from '../../src/aws-exports';
 import { listGlossaryTerms } from '../../src/graphql/queries';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../../libs/seo/organizationJsonLd';
 
 Amplify.configure(awsExports);
 
@@ -78,12 +82,22 @@ const Page = ({ terms }) => {
     return map;
   }, [filteredTerms]);
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Glossary', path: '/glossary' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
         title='Glossary | Packaging School'
         description='Browse packaging terms and definitions with an A–Z index and search.'
         image='https://packschool.s3.amazonaws.com/about-seoImage.webp'
+        url='/glossary'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='glossary'>
         <header className='glossary__header'>

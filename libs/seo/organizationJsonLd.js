@@ -109,3 +109,39 @@ export function buildItemListJsonLd(items, siteUrl, opts = {}) {
     })),
   });
 }
+
+const stripHtml = (value) =>
+  value
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/**
+ * Build a FAQPage schema from a flat list of { question, answer } entries.
+ * Only string answers are included (JSX/rich-text-as-elements answers are
+ * skipped); HTML markup within string answers is stripped down to plain text.
+ * @param {Array<{ question: string, answer: string }>} faqs
+ */
+export function buildFaqJsonLd(faqs) {
+  const validFaqs = (faqs || []).filter(
+    (faq) =>
+      faq?.question &&
+      typeof faq.question === 'string' &&
+      faq?.answer &&
+      typeof faq.answer === 'string',
+  );
+  if (!validFaqs.length) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: validFaqs.map((faq) => ({
+      '@type': 'Question',
+      name: stripHtml(faq.question),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: stripHtml(faq.answer),
+      },
+    })),
+  };
+}

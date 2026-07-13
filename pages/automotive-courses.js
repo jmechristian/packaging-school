@@ -4,8 +4,20 @@ import GradientCTA from '../components/GradientCTA';
 import CenteredTextHeader from '../components/layout/CenteredTextHeader';
 import CourseCard from '../components/course-card/CourseCard';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const Index = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Automotive Courses', path: '/automotive-courses' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
@@ -14,6 +26,8 @@ const Index = () => {
           'We visited leading experts at PakFab (Returnable Metal Packaging), Tree Brand Packaging (Expendable Packaging – Wood), NTIC Excor Zerust (Comprehensive Corrosion Control), and IPS (Packaging Distributor) to develop industry-specific education from the people who know it best.'
         }
         image={'https://packschool.s3.amazonaws.com/autocourses-seoImage.webp'}
+        url='/automotive-courses'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='w-full flex justify-center items-center bg-base-mid mt-24'>
         <div className='flex gap-12 max-w-7xl mx-auto py-4'>

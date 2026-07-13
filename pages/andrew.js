@@ -5,8 +5,31 @@ import AndrewVideo from '../components/andrew/AndrewVideo';
 import GradientCTA from '../components/GradientCTA';
 import Meta from '../components/shared/Meta';
 import { MdLaunch } from 'react-icons/md';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const Page = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Andrew Hurley', path: '/andrew' }],
+    siteUrl,
+  );
+  const person = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${siteUrl}/andrew#person`,
+    name: 'Dr. Andrew Hurley',
+    jobTitle: 'Chief Learning Officer & Founder',
+    worksFor: { '@id': `${siteUrl}/#organization` },
+    url: `${siteUrl}/andrew`,
+    description:
+      'Dr. Andrew Hurley is a Professor of Food, Nutrition and Packaging Science at Clemson University. Andrew chairs the curriculum committee, manages an internationally recognized consumer behavior research program, and has delivered over 100 presentations on package design globally.',
+  };
+
   return (
     <>
       <Meta
@@ -14,6 +37,8 @@ const Page = () => {
         description={
           'Dr. Andrew Hurley is a Professor of Food, Nutrition and Packaging Science at Clemson University. Andrew chairs the curriculum committee, manages an internationally recognized consumer behavior research program, and has delivered over 100 presentations on package design globally.'
         }
+        url='/andrew'
+        structuredData={[organization, website, breadcrumb, person]}
       />
       <AndrewHero />
       <AndrewAbout />

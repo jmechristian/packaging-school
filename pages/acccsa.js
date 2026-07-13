@@ -4,6 +4,10 @@ import AcccsaCourses from '../components/acccsa/AcccsaCourses';
 import Link from 'next/link';
 import Script from 'next/script';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const courses = [
   {
@@ -127,6 +131,14 @@ const courses = [
 ];
 
 const Page = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'ACCCSA', path: '/acccsa' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
@@ -135,6 +147,8 @@ const Page = () => {
           'Los cursos de ACCCSA, elegidos por expertos, maximizan el aprendizaje rápido. La educación en línea de AICC y The Packaging School ofrece cursos gratuitos.'
         }
         image={'https://packschool.s3.amazonaws.com/acccsa-seoImage.webp'}
+        url='/acccsa'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='!relative z-0'>
         {/* <div

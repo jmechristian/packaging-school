@@ -7,6 +7,11 @@ import { Disclosure } from '@headlessui/react';
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const faqs = [
   {
@@ -32,6 +37,15 @@ const faqs = [
 ];
 
 const Index = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Food Packaging Certificate', path: '/food-packaging' }],
+    siteUrl,
+  );
+  const faqJsonLd = buildFaqJsonLd(faqs);
+
   return (
     <>
       <Meta
@@ -40,6 +54,8 @@ const Index = () => {
           'Boost your brand by sponsoring our project! Partner with us to enrich food packaging pros with deep industry insights. Spotlight your brand, establish your leaders as experts.'
         }
         image={'https://packschool.s3.amazonaws.com/fpc-seoImage.webp'}
+        url='/food-packaging'
+        structuredData={[organization, website, breadcrumb, faqJsonLd]}
       />
       <PatternBackground />
       {/* Hero section */}

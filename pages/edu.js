@@ -3,8 +3,20 @@ import Script from 'next/script';
 import Image from "next/legacy/image";
 import CourseCard from '../components/course-card/CourseCard';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const Page = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'AICC Education', path: '/edu' }],
+    siteUrl,
+  );
+
   return (
     <>
       <Meta
@@ -12,6 +24,8 @@ const Page = () => {
         description={
           'While many are away from friends and classrooms, The Packaging School and AICC have come together to bridge the gap between on-campus and at-home packaging education.'
         }
+        url='/edu'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='container-7xl py-20'>
         <div className='flex flex-col gap-16'>

@@ -4,6 +4,11 @@ import { Disclosure } from '@headlessui/react';
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/react/24/outline';
 import GradientCTA from '../components/GradientCTA';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const tiers = [
   {
@@ -199,6 +204,15 @@ function classNames(...classes) {
 }
 
 export default function Example() {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'CMPM vs. CPS', path: '/cmpm-vs-cps' }],
+    siteUrl,
+  );
+  const faqJsonLd = buildFaqJsonLd(faqs);
+
   return (
     <>
       <Meta
@@ -206,6 +220,8 @@ export default function Example() {
         description={
           'Compare out two most popular comprehensive certificate programs developed by the leaders in packaging education.'
         }
+        url='/cmpm-vs-cps'
+        structuredData={[organization, website, breadcrumb, faqJsonLd]}
       />
       <div className='bg-white pt-32 sm:pt-48 relative isolate'>
         <div className='mx-auto max-w-7xl px-6 lg:px-8'>

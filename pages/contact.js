@@ -21,6 +21,10 @@ import {
 import { useForm } from 'react-hook-form';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 export default function Index() {
   const metadata = generateMetadata({
@@ -30,6 +34,13 @@ export default function Index() {
     description:
       'Have queries or want to learn about packaging? Contact the Packaging School for expert insights and tailored educational content.',
   });
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Contact', path: '/contact' }],
+    siteUrl,
+  );
   const {
     register,
     handleSubmit,
@@ -64,6 +75,7 @@ export default function Index() {
         description={metadata.description}
         url='/contact'
         image='https://packschool.s3.amazonaws.com/contact-seoImage.webp'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='relative isolate bg-white'>
         <div className='mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2'>

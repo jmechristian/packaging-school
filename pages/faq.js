@@ -5,6 +5,11 @@ import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
 import { getAllFaqs } from '../helpers/api';
 import FaqSection from '../components/shared/FaqSection';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 // const faqs = [
 //   {
@@ -325,10 +330,23 @@ const Page = ({ faqs }) => {
     description:
       'Find answers to packaging education questions. Get quick insights on courses, certifications, and support from the Packaging School.',
   });
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'FAQ', path: '/faq' }],
+    siteUrl,
+  );
+  const faqJsonLd = buildFaqJsonLd(faqs);
 
   return (
     <>
-      <Meta title={metadata.title} description={metadata.description} url='/faq' />
+      <Meta
+        title={metadata.title}
+        description={metadata.description}
+        url='/faq'
+        structuredData={[organization, website, breadcrumb, faqJsonLd]}
+      />
       <div className='w-full flex flex-col gap-10 max-w-7xl mx-auto py-10 lg:py-20'>
         <div className='w-full flex flex-col gap-5 lg:flex-row justify-between items-center px-4 lg:px-0'>
           <div className='h2-base'>Frequently Asked Questions</div>

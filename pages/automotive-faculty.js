@@ -3,6 +3,10 @@ import Link from 'next/link';
 import CenteredTextHeader from '../components/layout/CenteredTextHeader';
 import GradientCTA from '../components/GradientCTA';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const people = [
   {
@@ -194,9 +198,21 @@ const people2 = [
 ];
 
 const Index = () => {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Automotive Faculty', path: '/automotive-faculty' }],
+    siteUrl,
+  );
+
   return (
     <>
-      <Meta title={'Automotive Faculty'} />
+      <Meta
+        title={'Automotive Faculty'}
+        url='/automotive-faculty'
+        structuredData={[organization, website, breadcrumb]}
+      />
       <div className='w-full flex justify-center items-center bg-base-mid'>
         <div className='flex gap-12 max-w-7xl mx-auto py-4'>
           <div className='font-greycliff text-white font-semibold text-lg'>

@@ -15,6 +15,10 @@ import { useRouter } from 'next/router';
 import GradientCTA from '../components/GradientCTA';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/outline';
 import Meta from '../components/shared/Meta';
+import {
+  buildHomeJsonLd,
+  buildBreadcrumbJsonLd,
+} from '../libs/seo/organizationJsonLd';
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_ID,
@@ -171,6 +175,14 @@ const Page = () => {
 
   const router = useRouter();
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Library', path: '/library' }],
+    siteUrl,
+  );
+
   const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
     key: 'RECENT_SEARCH',
     limit: 5,
@@ -202,6 +214,8 @@ const Page = () => {
           'Explore an expansive collection of courses and articles covering a wide array of packaging design, management, and regulations topics.'
         }
         image={'https://packschool.s3.amazonaws.com/library-seoImage.webp'}
+        url='/library'
+        structuredData={[organization, website, breadcrumb]}
       />
       <div className='flex flex-col gap-6'>
         <FadeIn>
