@@ -21,8 +21,6 @@ import SalesBar from './SalesBar';
 import LogoWhite from '../../../components/layout/LogoWhite';
 import { useThinkificLink } from '../../../hooks/useThinkificLink';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { getVariantFromDocumentCookie } from '../../../libs/abVariant';
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -50,15 +48,10 @@ export default function HeaderNew() {
   const router = useRouter();
   const currentPath = router.asPath;
 
-  // Hide the promotional SalesBar on the homepage when the D experiment
-  // variant is active. Resolved client-side after mount to avoid hydration
-  // mismatches, since the header is shared across all pages.
-  const [hideHomeSalesBar, setHideHomeSalesBar] = useState(false);
-  useEffect(() => {
-    const isHome = router.pathname === '/';
-    const variant = getVariantFromDocumentCookie();
-    setHideHomeSalesBar(isHome && variant === 'D');
-  }, [router.pathname, router.asPath]);
+  // The homepage has its own hero/CTA treatment, so we suppress the shared
+  // promotional SalesBar there. router.pathname is identical on server and
+  // client, so this is safe to derive during render without hydration issues.
+  const hideHomeSalesBar = router.pathname === '/';
 
   // Initialize autocomplete when component mounts
   useEffect(() => {
