@@ -6766,6 +6766,7 @@ export const createAbTestEvent = /* GraphQL */ `
       eventName
       variant
       sessionId
+      visitorId
       userID
       email
       pagePath
@@ -6816,6 +6817,7 @@ export const updateAbTestEvent = /* GraphQL */ `
       eventName
       variant
       sessionId
+      visitorId
       userID
       email
       pagePath
@@ -6866,6 +6868,7 @@ export const deleteAbTestEvent = /* GraphQL */ `
       eventName
       variant
       sessionId
+      visitorId
       userID
       email
       pagePath

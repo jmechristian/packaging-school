@@ -3815,6 +3815,7 @@ export const getAbTestEvent = /* GraphQL */ `
       eventName
       variant
       sessionId
+      visitorId
       userID
       email
       pagePath
@@ -3867,6 +3868,7 @@ export const listAbTestEvents = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9075,6 +9077,7 @@ export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9140,6 +9143,7 @@ export const abTestEventsByExperimentDayAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9205,6 +9209,7 @@ export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9270,6 +9275,73 @@ export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
+        userID
+        email
+        pagePath
+        deviceType
+        acquisitionChannel
+        acquisitionSource
+        acquisitionMedium
+        acquisitionCampaign
+        acquisitionTerm
+        acquisitionContent
+        referrer
+        previousPath
+        nextPath
+        metric
+        value
+        orderId
+        externalOrderId
+        orderNumber
+        purchaserEmail
+        purchaserFirstName
+        purchaserLastName
+        couponCode
+        grossAmountCents
+        netAmountCents
+        discountAmountCents
+        matchedIntentId
+        attributionMethod
+        source
+        reason
+        ipAddress
+        country
+        metadata
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const abTestEventsByVisitorIdAndCreatedAt = /* GraphQL */ `
+  query AbTestEventsByVisitorIdAndCreatedAt(
+    $visitorId: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByVisitorIdAndCreatedAt(
+      visitorId: $visitorId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        experimentKey
+        experimentDay
+        eventName
+        variant
+        sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9335,6 +9407,7 @@ export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
@@ -9400,6 +9473,7 @@ export const abTestEventsByEmailAndCreatedAt = /* GraphQL */ `
         eventName
         variant
         sessionId
+        visitorId
         userID
         email
         pagePath
