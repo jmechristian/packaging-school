@@ -1,19 +1,28 @@
 import {
   AB_SESSION_COOKIE,
   AB_SESSION_MAX_AGE,
+  AB_VISITOR_MAX_AGE,
   HOME_EXPERIMENT_KEY,
   createSessionCookieValue,
+  createVisitorCookieValue,
   getSessionIdFromDocumentCookie,
   getVariantFromDocumentCookie,
+  getVisitorIdFromDocumentCookie,
 } from './abVariant';
 
 const DEFAULT_THROTTLE_MS = 1500;
 export const AB_ATTRIBUTION_COOKIE = 'ps_ab_attribution';
+export const AB_FIRST_TOUCH_COOKIE = 'ps_ab_first_touch';
+export const AB_IDENTITY_COOKIE = 'ps_ab_identity';
+// Bumped whenever the emitted event/metadata shape changes so the analytics
+// codebase can branch on schema version when reconstructing journeys.
+const AB_EVENT_SCHEMA_VERSION = 2;
 const EVENT_THROTTLE_MS = {
   ab_exposure: 60000,
   ab_page_view: 3000,
   ab_nav_next: 1000,
   ab_engagement: 1000,
+  ab_product_view: 3000,
   ab_pdf_click: 1500,
   ab_meeting_click: 1500,
   ab_lesson_click: 1500,
@@ -62,6 +71,116 @@ export function refreshAbSessionCookie() {
     sessionId,
   )}; Path=/; Max-Age=${AB_SESSION_MAX_AGE}; SameSite=Lax`;
   return sessionId;
+}
+
+// Persistent, cross-session identifier for a browser. Created once and refreshed
+// on each visit so it survives for ~2 years, letting the analytics codebase
+// stitch together every visit (and eventually the purchase) for one person.
+export function ensureAbVisitorId() {
+  if (typeof document === 'undefined') return null;
+
+  const existing = getVisitorIdFromDocumentCookie();
+  if (existing) {
+    // Refresh the TTL so an active visitor never silently expires.
+    document.cookie = createVisitorCookieValue(existing);
+    ensureFirstTouch(existing);
+    return existing;
+  }
+
+  const nextVisitorId = makeSessionId();
+  document.cookie = createVisitorCookieValue(nextVisitorId);
+  ensureFirstTouch(nextVisitorId);
+  return nextVisitorId;
+}
+
+// Capture the visitor's very first acquisition context exactly once. This is
+// what enables true first-touch vs last-touch attribution and time-to-purchase.
+function ensureFirstTouch(visitorId) {
+  if (typeof document === 'undefined') return null;
+
+  const existing = safeParseAttributionCookie(
+    getCookieValue(AB_FIRST_TOUCH_COOKIE),
+  );
+  if (existing && existing.visitorId === visitorId) return existing;
+
+  const detected = detectAttributionContext() || {};
+  const firstTouch = {
+    visitorId,
+    channel: detected.channel || null,
+    source: detected.source || null,
+    medium: detected.medium || null,
+    campaign: detected.campaign || null,
+    referrer: detected.referrer || null,
+    landingPath:
+      typeof window !== 'undefined' ? window.location.pathname : null,
+    firstSeenAt: new Date().toISOString(),
+  };
+
+  document.cookie = `${AB_FIRST_TOUCH_COOKIE}=${encodeURIComponent(
+    JSON.stringify(firstTouch),
+  )}; Path=/; Max-Age=${AB_VISITOR_MAX_AGE}; SameSite=Lax`;
+  return firstTouch;
+}
+
+function getFirstTouch() {
+  return safeParseAttributionCookie(getCookieValue(AB_FIRST_TOUCH_COOKIE));
+}
+
+// Called from _app once Auth0 resolves the logged-in user so that userID/email
+// ride on every subsequent event. Email is especially valuable: it lets the
+// analytics codebase link a known user's browsing (via the abEventByEmail GSI)
+// well before any purchase, and matches how the order webhook attributes sales.
+export function setAbIdentity({ userID = null, email = null } = {}) {
+  if (typeof window === 'undefined') return;
+
+  const normalizedEmail = email ? String(email).trim().toLowerCase() : null;
+  const identity = {
+    userID: userID != null ? String(userID) : null,
+    email: normalizedEmail,
+  };
+
+  const current = window.__abIdentity || {};
+  const merged = {
+    userID: identity.userID || current.userID || null,
+    email: identity.email || current.email || null,
+  };
+  window.__abIdentity = merged;
+
+  try {
+    document.cookie = `${AB_IDENTITY_COOKIE}=${encodeURIComponent(
+      JSON.stringify(merged),
+    )}; Path=/; Max-Age=${AB_SESSION_MAX_AGE}; SameSite=Lax`;
+  } catch {
+    // Non-fatal: identity still lives on window for the current page.
+  }
+}
+
+function getAbIdentity() {
+  if (typeof window === 'undefined') return null;
+  if (window.__abIdentity) return window.__abIdentity;
+  const fromCookie = safeParseAttributionCookie(
+    getCookieValue(AB_IDENTITY_COOKIE),
+  );
+  if (fromCookie) {
+    window.__abIdentity = fromCookie;
+    return fromCookie;
+  }
+  return null;
+}
+
+// Monotonic per-session counter so events can be ordered precisely even when
+// beacon/keepalive writes land out of order or share a createdAt timestamp.
+function nextEventSeq(sessionId) {
+  if (typeof window === 'undefined' || !sessionId) return null;
+  try {
+    const key = `ab_seq_${sessionId}`;
+    const current = Number(window.sessionStorage.getItem(key) || '0');
+    const next = Number.isFinite(current) ? current + 1 : 1;
+    window.sessionStorage.setItem(key, String(next));
+    return next;
+  } catch {
+    return null;
+  }
 }
 
 function getDeviceTypeFromUserAgent() {
@@ -268,6 +387,8 @@ function resolveAttributionContext(sessionId) {
 export function getAbContext(overrides = {}) {
   const variant = overrides.variant || getVariantFromDocumentCookie();
   const sessionId = overrides.sessionId || ensureAbSessionId();
+  const visitorId = overrides.visitorId || ensureAbVisitorId();
+  const identity = getAbIdentity() || {};
   const pagePath =
     overrides.pagePath ||
     (typeof window !== 'undefined' ? window.location.pathname : null);
@@ -277,6 +398,9 @@ export function getAbContext(overrides = {}) {
     experimentKey: HOME_EXPERIMENT_KEY,
     variant: variant || null,
     sessionId,
+    visitorId,
+    userID: overrides.userID || identity.userID || null,
+    email: overrides.email || identity.email || null,
     pagePath,
     deviceType: overrides.deviceType || getDeviceTypeFromUserAgent(),
     acquisitionChannel: overrides.acquisitionChannel || attribution?.channel || null,
@@ -424,12 +548,23 @@ async function writeAbEvent(eventName, payload = {}) {
     return;
   }
 
-  // liFatId isn't a first-class AbTestEvent column; fold it into metadata so
-  // it survives storage and can be read back out by the order webhook later.
-  const mergedMetadata =
-    context.liFatId != null
-      ? { ...(context.metadata || {}), liFatId: context.liFatId }
-      : context.metadata;
+  // Path-to-purchase enrichments live in the metadata JSON blob (no schema
+  // change needed): precise ordering signals, the visitor's first-touch
+  // snapshot, quality/context signals, and a schema version. Caller-supplied
+  // metadata (e.g. contentType/contentId on product views) wins over defaults.
+  // liFatId isn't a first-class AbTestEvent column, so it also rides here where
+  // the order webhook can read it back out after a purchase.
+  const firstTouch = getFirstTouch();
+  const mergedMetadata = {
+    schemaVersion: AB_EVENT_SCHEMA_VERSION,
+    clientTs: new Date().toISOString(),
+    eventSeq: nextEventSeq(context.sessionId),
+    userAgent:
+      typeof navigator !== 'undefined' ? navigator.userAgent || null : null,
+    ...(firstTouch ? { firstTouch } : {}),
+    ...(context.metadata || {}),
+    ...(context.liFatId != null ? { liFatId: context.liFatId } : {}),
+  };
 
   const finalPayload = {
     eventName,
@@ -466,6 +601,29 @@ export async function trackAbNavNext(payload = {}) {
 
 export async function trackAbEngagement(payload = {}) {
   await writeAbEvent('ab_engagement', payload);
+}
+
+// Fired when a visitor views a purchasable product (e.g. a course page). The
+// product context is stored in metadata so the analytics codebase can measure
+// the view -> intent -> complete funnel without any schema change.
+export async function trackAbProductView({
+  contentType = null,
+  contentId = null,
+  productName = null,
+  priceId = null,
+  metadata = {},
+  ...rest
+} = {}) {
+  await writeAbEvent('ab_product_view', {
+    ...rest,
+    metadata: {
+      ...metadata,
+      contentType,
+      contentId,
+      productName,
+      priceId,
+    },
+  });
 }
 
 export async function trackAbPurchaseIntent(payload = {}) {

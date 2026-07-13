@@ -54,6 +54,7 @@ const intentByEmailQuery = eventsByEmailQuery(`
   eventName
   variant
   sessionId
+  visitorId
   userID
   email
   pagePath
@@ -383,6 +384,12 @@ export default async function handler(req, res) {
     let sessionId = normalizeString(
       payload.ab_session_id || payload.session_id || metadata?.ab_session_id,
     );
+    // Persistent visitor id, resolved from the matched intent below. Carrying it
+    // onto the complete event stitches the purchase back into the visitor's full
+    // cross-session journey for path-to-purchase analysis.
+    let visitorId = normalizeString(
+      payload.ab_visitor_id || metadata?.ab_visitor_id,
+    );
     let deviceType = normalizeString(
       payload.device_type || payload.device || metadata?.device_type || metadata?.device,
     );
@@ -445,6 +452,7 @@ export default async function handler(req, res) {
           acquisitionCampaign =
             acquisitionCampaign || normalizeString(matchedIntent.acquisitionCampaign);
           userID = userID || normalizeString(matchedIntent.userID);
+          visitorId = visitorId || normalizeString(matchedIntent.visitorId);
           pagePath = pagePath || normalizeString(matchedIntent.pagePath);
         }
       } catch (error) {
@@ -498,6 +506,7 @@ export default async function handler(req, res) {
             eventName: 'ab_purchase_complete',
             variant: normalizeString(variant),
             sessionId: normalizeString(sessionId),
+            visitorId: normalizeString(visitorId),
             deviceType: normalizeString(deviceType),
             acquisitionChannel: normalizeString(acquisitionChannel),
             acquisitionSource: normalizeString(acquisitionSource),

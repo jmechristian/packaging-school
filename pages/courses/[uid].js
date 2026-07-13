@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { trackAbProductView } from '../../libs/analytics';
 import HoverCard from '../../components/shared/HoverCard';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
@@ -107,6 +108,22 @@ const Page = ({ course }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showFullOutline, setShowFullOutline] = useState(false);
   const deviceType = getDeviceType();
+
+  // Record a product view so the analytics codebase can measure the
+  // view -> intent -> complete funnel per course.
+  useEffect(() => {
+    if (!course?.id) return;
+    trackAbProductView({
+      contentType: 'course',
+      contentId: course.slug || course.id,
+      productName: course.title || null,
+      priceId: course.thinkificId || course.courseId || null,
+      metadata: {
+        price: course.price ?? null,
+        courseType: course.type || null,
+      },
+    });
+  }, [course?.id, course?.slug, course?.title, course?.thinkificId, course?.courseId, course?.price, course?.type]);
   // Use a stable base URL during SSR/SSG so OG tags are absolute and consistent.
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';

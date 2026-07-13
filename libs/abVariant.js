@@ -1,8 +1,13 @@
 export const HOME_EXPERIMENT_KEY = 'home_v1';
 export const HOME_VARIANT_COOKIE = 'ps_ab_home_v1';
 export const AB_SESSION_COOKIE = 'ps_ab_session_id';
+// Persistent, cross-session visitor id. This is the linchpin for path-to-purchase
+// analysis: it stitches every visit from the same browser together, even the
+// anonymous browsing that happens before we ever learn an email/user id.
+export const AB_VISITOR_COOKIE = 'ps_ab_visitor_id';
 export const AB_COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days
 export const AB_SESSION_MAX_AGE = 60 * 60 * 6; // 6 hours
+export const AB_VISITOR_MAX_AGE = 60 * 60 * 24 * 730; // 730 days (~2 years)
 export const HOME_VARIANT_CONFIG = [
   { key: 'B', weight: 1 },
   { key: 'C', weight: 1 },
@@ -120,5 +125,22 @@ export function getSessionIdFromDocumentCookie() {
 
 export function createSessionCookieValue(sessionId) {
   return `${AB_SESSION_COOKIE}=${encodeURIComponent(sessionId)}; Path=/; Max-Age=${AB_SESSION_MAX_AGE}; SameSite=Lax`;
+}
+
+export function getVisitorIdFromDocumentCookie() {
+  if (typeof document === 'undefined') return null;
+  const cookies = parseCookieHeader(document.cookie);
+  return cookies[AB_VISITOR_COOKIE] || null;
+}
+
+export function getVisitorIdFromCookieHeader(cookieHeader) {
+  const matches = getCookieValues(cookieHeader, AB_VISITOR_COOKIE);
+  return matches.length > 0 ? matches[matches.length - 1] : null;
+}
+
+export function createVisitorCookieValue(visitorId, hostHeader) {
+  const domain = getCookieDomain(hostHeader);
+  const domainPart = domain ? `; Domain=${domain}` : '';
+  return `${AB_VISITOR_COOKIE}=${encodeURIComponent(visitorId)}; Path=/; Max-Age=${AB_VISITOR_MAX_AGE}; SameSite=Lax${domainPart}`;
 }
 

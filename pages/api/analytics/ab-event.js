@@ -76,6 +76,7 @@ export default async function handler(req, res) {
       experimentKey,
       variant,
       sessionId,
+      visitorId,
       userID,
       pagePath,
       deviceType,
@@ -119,6 +120,13 @@ export default async function handler(req, res) {
     const ipAddress = Array.isArray(forwardedFor)
       ? forwardedFor[0]
       : safeString(forwardedFor?.split(',')[0]) || safeString(req.socket?.remoteAddress);
+
+    // Vercel/edge provides visitor geo via headers - cheap geo signal for
+    // path analysis (the `country` column already exists, no schema change).
+    const country =
+      safeString(req.headers['x-vercel-ip-country']) ||
+      safeString(req.headers['cloudfront-viewer-country']) ||
+      null;
 
     const createdAt = new Date().toISOString();
     const experimentDay = toExperimentDay(experimentKey, createdAt);
@@ -189,6 +197,7 @@ export default async function handler(req, res) {
             eventName: safeString(eventName),
             variant: safeString(variant),
             sessionId: safeString(sessionId),
+            visitorId: safeString(visitorId),
             userID: safeString(userID),
             email: resolvedEmail,
             pagePath: safeString(pagePath),
@@ -219,6 +228,7 @@ export default async function handler(req, res) {
             source: safeString(source),
             reason: safeString(reason),
             ipAddress,
+            country,
             metadata: metadata ? JSON.stringify(metadata) : null,
             createdAt,
           },

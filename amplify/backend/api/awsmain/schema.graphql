@@ -1009,6 +1009,8 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
   eventName: String! @index(name: "abEventByName", sortKeyFields: ["createdAt"])
   variant: String
   sessionId: String @index(name: "abEventBySession", sortKeyFields: ["createdAt"])
+  visitorId: String
+    @index(name: "abEventByVisitor", sortKeyFields: ["createdAt"])
   userID: ID @index(name: "abEventByUser", sortKeyFields: ["createdAt"])
   email: String @index(name: "abEventByEmail", sortKeyFields: ["createdAt"])
   pagePath: String
