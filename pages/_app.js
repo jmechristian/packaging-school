@@ -40,7 +40,6 @@ function AbIdentitySync() {
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const lastPathRef = useRef(null);
-  const lastSessionEndAtRef = useRef(0);
 
   const normalizePath = (url) => {
     if (!url) return '';
@@ -123,30 +122,7 @@ export default function App({ Component, pageProps }) {
       }, INACTIVITY_MS);
     };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState !== 'hidden') return;
-      const now = Date.now();
-      if (now - lastSessionEndAtRef.current < 2000) return;
-      lastSessionEndAtRef.current = now;
-      trackAbSessionEnd({
-        pagePath: normalizePath(window.location.pathname),
-        reason: 'visibility_hidden',
-      });
-    };
-
-    const handlePageHide = () => {
-      const now = Date.now();
-      if (now - lastSessionEndAtRef.current < 2000) return;
-      lastSessionEndAtRef.current = now;
-      trackAbSessionEnd({
-        pagePath: normalizePath(window.location.pathname),
-        reason: 'page_hide',
-      });
-    };
-
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('pagehide', handlePageHide);
     window.addEventListener('mousemove', resetInactivityTimer);
     window.addEventListener('keydown', resetInactivityTimer);
     window.addEventListener('scroll', resetInactivityTimer, { passive: true });
@@ -157,8 +133,6 @@ export default function App({ Component, pageProps }) {
     return () => {
       if (inactivityTimer) window.clearTimeout(inactivityTimer);
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('pagehide', handlePageHide);
       window.removeEventListener('mousemove', resetInactivityTimer);
       window.removeEventListener('keydown', resetInactivityTimer);
       window.removeEventListener('scroll', resetInactivityTimer);

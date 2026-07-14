@@ -27,7 +27,7 @@ const EVENT_THROTTLE_MS = {
   ab_meeting_click: 1500,
   ab_lesson_click: 1500,
   ab_promo_click: 1500,
-  ab_purchase_intent: 3000,
+  ab_purchase_intent: 15000,
   ab_purchase_complete: 3000,
   ab_session_end: 30000,
 };
@@ -51,15 +51,90 @@ export function trackEvent(eventName, params = {}) {
   });
 }
 
+// The session window (~6h) after which a returning visitor is a new session.
+const AB_SESSION_MS = AB_SESSION_MAX_AGE * 1000;
+const AB_SESSION_META_KEY = 'ps_ab_session_meta';
+const AB_ENDED_SESSIONS_KEY = 'ps_ab_ended_sessions';
+
+function loadSessionMeta() {
+  try {
+    const raw = window.localStorage.getItem(AB_SESSION_META_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveSessionMeta(meta) {
+  try {
+    window.localStorage.setItem(AB_SESSION_META_KEY, JSON.stringify(meta));
+  } catch {
+    // Non-fatal (private mode / storage disabled).
+  }
+}
+
+function loadEndedSessions() {
+  try {
+    const raw = window.localStorage.getItem(AB_ENDED_SESSIONS_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
+
+function isSessionEnded(sessionId) {
+  if (!sessionId) return false;
+  return loadEndedSessions().includes(sessionId);
+}
+
+// Records that a session has been closed so ab_session_end fires at most once
+// per sessionId, no matter how many triggers race to end it.
+function markSessionEnded(sessionId) {
+  try {
+    const arr = loadEndedSessions();
+    if (arr.includes(sessionId)) return;
+    arr.push(sessionId);
+    while (arr.length > 20) arr.shift(); // keep bounded
+    window.localStorage.setItem(AB_ENDED_SESSIONS_KEY, JSON.stringify(arr));
+  } catch {
+    // Non-fatal.
+  }
+}
+
 export function ensureAbSessionId() {
   if (typeof document === 'undefined') return null;
 
-  const existing = getSessionIdFromDocumentCookie();
-  if (existing) return existing;
+  const now = Date.now();
+  let id = getSessionIdFromDocumentCookie();
+  const meta = loadSessionMeta();
 
-  const nextSessionId = makeSessionId();
-  document.cookie = createSessionCookieValue(nextSessionId);
-  return nextSessionId;
+  if (id) {
+    const stale =
+      meta && meta.id === id && now - (meta.lastActivity || 0) > AB_SESSION_MS;
+
+    // Returned after the ~6h window closed without an explicit end: close the
+    // old session now (guarded, so it emits exactly one ab_session_end).
+    if (stale && !isSessionEnded(id)) {
+      trackAbSessionEnd({ sessionId: id, reason: 'inactivity_timeout' });
+    }
+
+    // Rotate to a fresh session once the current one has ended - either via the
+    // stale-window close above or the in-page inactivity timer.
+    if (stale || isSessionEnded(id)) {
+      id = null;
+    }
+  }
+
+  if (!id) {
+    id = makeSessionId();
+    document.cookie = createSessionCookieValue(id);
+    saveSessionMeta({ id, lastActivity: now });
+    return id;
+  }
+
+  saveSessionMeta({ id, lastActivity: now });
+  return id;
 }
 
 export function refreshAbSessionCookie() {
@@ -492,6 +567,19 @@ function buildDedupeFingerprint(eventName, payload) {
     ].join('|');
   }
 
+  if (eventName === 'ab_purchase_intent') {
+    // A single checkout fires two intents ~1s apart: the on-site order create
+    // (source: create_new_order) and the Thinkific SSO handoff (source:
+    // pre_thinkific_redirect). Key only on buyer + session so their differing
+    // source/metadata collapse into one intent row within the throttle window.
+    return [
+      eventName,
+      normalized.experimentKey || '',
+      normalized.sessionId || '',
+      normalized.email || '',
+    ].join('|');
+  }
+
   if (eventName === 'ab_page_view') {
     // Route-change and initial-load can represent the same page view within a short window.
     return [
@@ -653,6 +741,13 @@ export async function trackAbPurchaseComplete(payload = {}) {
   await writeAbEvent('ab_purchase_complete', payload);
 }
 
+// Emits exactly one ab_session_end per sessionId. Session end is driven by the
+// session window / inactivity - NEVER by visibility or pagehide (those fire many
+// times per visit as the user switches tabs, locks the screen, etc.).
 export async function trackAbSessionEnd(payload = {}) {
-  await writeAbEvent('ab_session_end', payload);
+  if (typeof document === 'undefined') return;
+  const sessionId = payload.sessionId || getSessionIdFromDocumentCookie();
+  if (!sessionId || isSessionEnded(sessionId)) return;
+  markSessionEnded(sessionId);
+  await writeAbEvent('ab_session_end', { ...payload, sessionId });
 }
