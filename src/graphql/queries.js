@@ -4896,6 +4896,50 @@ export const listEmailSubscriptions = /* GraphQL */ `
     }
   }
 `;
+export const getEmailTemplate = /* GraphQL */ `
+  query GetEmailTemplate($id: ID!) {
+    getEmailTemplate(id: $id) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailTemplates = /* GraphQL */ `
+  query ListEmailTemplates(
+    $filter: ModelEmailTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        slug
+        name
+        subject
+        preheader
+        description
+        status
+        documentJson
+        updatedBy
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getImageObject = /* GraphQL */ `
   query GetImageObject($id: ID!) {
     getImageObject(id: $id) {
@@ -9897,6 +9941,40 @@ export const emailSubscriptionsByEmail = /* GraphQL */ `
         country
         device
         page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailTemplateBySlug = /* GraphQL */ `
+  query EmailTemplateBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailTemplateBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        slug
+        name
+        subject
+        preheader
+        description
+        status
+        documentJson
+        updatedBy
         createdAt
         updatedAt
         __typename

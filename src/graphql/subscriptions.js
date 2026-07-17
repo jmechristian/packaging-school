@@ -8119,6 +8119,66 @@ export const onDeleteEmailSubscription = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEmailTemplate = /* GraphQL */ `
+  subscription OnCreateEmailTemplate(
+    $filter: ModelSubscriptionEmailTemplateFilterInput
+  ) {
+    onCreateEmailTemplate(filter: $filter) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailTemplate = /* GraphQL */ `
+  subscription OnUpdateEmailTemplate(
+    $filter: ModelSubscriptionEmailTemplateFilterInput
+  ) {
+    onUpdateEmailTemplate(filter: $filter) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailTemplate = /* GraphQL */ `
+  subscription OnDeleteEmailTemplate(
+    $filter: ModelSubscriptionEmailTemplateFilterInput
+  ) {
+    onDeleteEmailTemplate(filter: $filter) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateImageObject = /* GraphQL */ `
   subscription OnCreateImageObject(
     $filter: ModelSubscriptionImageObjectFilterInput

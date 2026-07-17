@@ -8503,6 +8503,69 @@ export const deleteEmailSubscription = /* GraphQL */ `
     }
   }
 `;
+export const createEmailTemplate = /* GraphQL */ `
+  mutation CreateEmailTemplate(
+    $input: CreateEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    createEmailTemplate(input: $input, condition: $condition) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailTemplate = /* GraphQL */ `
+  mutation UpdateEmailTemplate(
+    $input: UpdateEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    updateEmailTemplate(input: $input, condition: $condition) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailTemplate = /* GraphQL */ `
+  mutation DeleteEmailTemplate(
+    $input: DeleteEmailTemplateInput!
+    $condition: ModelEmailTemplateConditionInput
+  ) {
+    deleteEmailTemplate(input: $input, condition: $condition) {
+      id
+      slug
+      name
+      subject
+      preheader
+      description
+      status
+      documentJson
+      updatedBy
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createImageObject = /* GraphQL */ `
   mutation CreateImageObject(
     $input: CreateImageObjectInput!

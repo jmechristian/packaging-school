@@ -1277,6 +1277,19 @@ type EmailSubscription @model @auth(rules: [{ allow: public }]) {
   page: String
 }
 
+type EmailTemplate @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  slug: String!
+    @index(name: "emailTemplateBySlug", queryField: "emailTemplateBySlug")
+  name: String!
+  subject: String
+  preheader: String
+  description: String
+  status: String
+  documentJson: AWSJSON!
+  updatedBy: String
+}
+
 ######### IMAGES #########
 
 type ImageObject @model @auth(rules: [{ allow: public }]) {
