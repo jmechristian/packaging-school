@@ -1525,6 +1525,7 @@ export const createUser = /* GraphQL */ `
         contactConsent
         status
         videoLink
+        manualVideoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -1781,6 +1782,7 @@ export const updateUser = /* GraphQL */ `
         contactConsent
         status
         videoLink
+        manualVideoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -2037,6 +2039,7 @@ export const deleteUser = /* GraphQL */ `
         contactConsent
         status
         videoLink
+        manualVideoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -3694,6 +3697,7 @@ export const createIcpfCmpmForm = /* GraphQL */ `
       contactConsent
       status
       videoLink
+      manualVideoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId
@@ -3791,6 +3795,7 @@ export const updateIcpfCmpmForm = /* GraphQL */ `
       contactConsent
       status
       videoLink
+      manualVideoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId
@@ -3888,6 +3893,7 @@ export const deleteIcpfCmpmForm = /* GraphQL */ `
       contactConsent
       status
       videoLink
+      manualVideoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId

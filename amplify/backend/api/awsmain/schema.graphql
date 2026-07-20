@@ -394,7 +394,10 @@ type BoosterCourseProgress @model @auth(rules: [{ allow: public }]) {
       queryField: "boosterProgressByUserEmail"
     )
   thinkificCourseId: String!
-    @index(name: "boosterProgressByCourse", queryField: "boosterProgressByCourse")
+    @index(
+      name: "boosterProgressByCourse"
+      queryField: "boosterProgressByCourse"
+    )
   courseTitle: String
   completedLessonIds: [String]
   completedLessonTitles: [String]
@@ -407,9 +410,13 @@ type BoosterCourseProgress @model @auth(rules: [{ allow: public }]) {
 
 type BoosterDiscountCode @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  userId: ID! @index(name: "boosterCodesByUser", queryField: "boosterCodesByUser")
+  userId: ID!
+    @index(name: "boosterCodesByUser", queryField: "boosterCodesByUser")
   userEmail: String
-    @index(name: "boosterCodesByUserEmail", queryField: "boosterCodesByUserEmail")
+    @index(
+      name: "boosterCodesByUserEmail"
+      queryField: "boosterCodesByUserEmail"
+    )
   thinkificCourseId: String!
     @index(name: "boosterCodesByCourse", queryField: "boosterCodesByCourse")
   milestonePercent: Int!
@@ -520,6 +527,7 @@ type IcpfCmpmForm
   contactConsent: Boolean
   status: String @default(value: "DRAFT")
   videoLink: String
+  manualVideoLink: String
 }
 
 type PgsfForm
@@ -983,7 +991,8 @@ type AbTestExposure @model @auth(rules: [{ allow: public }]) {
   experimentKey: String!
     @index(name: "abExposureByExperiment", sortKeyFields: ["createdAt"])
   variant: String!
-  sessionId: String @index(name: "abExposureBySession", sortKeyFields: ["createdAt"])
+  sessionId: String
+    @index(name: "abExposureBySession", sortKeyFields: ["createdAt"])
   userID: ID @index(name: "abExposureByUser", sortKeyFields: ["createdAt"])
   pagePath: String
   deviceType: String
@@ -1008,7 +1017,8 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
     @index(name: "abEventByExperimentDay", sortKeyFields: ["createdAt"])
   eventName: String! @index(name: "abEventByName", sortKeyFields: ["createdAt"])
   variant: String
-  sessionId: String @index(name: "abEventBySession", sortKeyFields: ["createdAt"])
+  sessionId: String
+    @index(name: "abEventBySession", sortKeyFields: ["createdAt"])
   visitorId: String
     @index(name: "abEventByVisitor", sortKeyFields: ["createdAt"])
   userID: ID @index(name: "abEventByUser", sortKeyFields: ["createdAt"])
@@ -1403,7 +1413,8 @@ type Order @model @auth(rules: [{ allow: public }]) {
 
 type ThinkificEnrollmentWebhookEvent @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  eventId: String! @index(name: "webhookByEventId", queryField: "webhookByEventId")
+  eventId: String!
+    @index(name: "webhookByEventId", queryField: "webhookByEventId")
   resource: String!
   action: String!
   tenantId: String

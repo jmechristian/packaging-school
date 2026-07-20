@@ -1,7 +1,15 @@
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-const TextInput = ({ label, placeholder, name, type, required, value }) => {
+const TextInput = ({
+  label,
+  placeholder,
+  name,
+  type,
+  required,
+  value,
+  validate,
+}) => {
   const { register, formState, setValue } = useFormContext();
 
   useEffect(() => {
@@ -26,7 +34,10 @@ const TextInput = ({ label, placeholder, name, type, required, value }) => {
       <div className='mt-1 md:mt-2 w-full'>
         <input
           type={type ? type : 'text'}
-          {...register(`${name}`, { required: required ? true : false })}
+          {...register(`${name}`, {
+            required: required ? true : false,
+            ...(validate ? { validate } : {}),
+          })}
           name={name}
           id={name}
           className='block w-full rounded-md border-0 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm md:text-base sm:leading-6'
@@ -37,7 +48,9 @@ const TextInput = ({ label, placeholder, name, type, required, value }) => {
       <div className='w-full'>
         {formState.errors.hasOwnProperty(name) && (
           <div className='text-sm text-red-600 mt-1 mb-2'>
-            Please fill out field.
+            {typeof formState.errors[name]?.message === 'string'
+              ? formState.errors[name].message
+              : 'Please fill out field.'}
           </div>
         )}
       </div>

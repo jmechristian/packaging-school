@@ -1032,6 +1032,7 @@ export const getUser = /* GraphQL */ `
         contactConsent
         status
         videoLink
+        manualVideoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId
@@ -2005,6 +2006,7 @@ export const getIcpfCmpmForm = /* GraphQL */ `
       contactConsent
       status
       videoLink
+      manualVideoLink
       createdOn
       updatedOn
       icpfCmpmFormUserId
@@ -2061,6 +2063,7 @@ export const listIcpfCmpmForms = /* GraphQL */ `
         contactConsent
         status
         videoLink
+        manualVideoLink
         createdOn
         updatedOn
         icpfCmpmFormUserId

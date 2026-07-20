@@ -9,6 +9,7 @@ const FileUpload = ({
   accept = '.pdf,.jpg,.jpeg,.png,.gif',
   maxSize = 10 * 1024 * 1024, // 10MB default
   placeholder = 'Upload a file...',
+  validate,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -209,7 +210,10 @@ const FileUpload = ({
       )}
 
       <input
-        {...register(name, { required: required && 'This field is required' })}
+        {...register(name, {
+          required: required && 'This field is required',
+          ...(validate ? { validate } : {}),
+        })}
         type='hidden'
       />
     </div>

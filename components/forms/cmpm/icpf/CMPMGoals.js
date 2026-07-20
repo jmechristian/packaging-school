@@ -1,10 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TextArea from '../../TextArea';
+import TextInput from '../../TextInput';
 import FileUpload from '../../FileUpload';
 import { useFormContext } from 'react-hook-form';
+import { validateManualVideoLink } from '../../../../libs/validateManualVideoLink';
+
+const hasVideoValue = (value) =>
+  !!value &&
+  value !== 'null' &&
+  value !== 'undefined' &&
+  String(value).trim().length > 0;
 
 const CMPMGoals = () => {
-  const { formState, register } = useFormContext();
+  const { register, watch, getValues, clearErrors } = useFormContext();
+  const videoLink = watch('videoLink');
+  const manualVideoLink = watch('manualVideoLink');
+
+  const validateVideoResponse = () => {
+    const hasUpload = hasVideoValue(getValues('videoLink'));
+    const hasManual = hasVideoValue(getValues('manualVideoLink'));
+    if (hasUpload || hasManual) return true;
+    return 'Please upload a video or provide a video link';
+  };
+
+  const validateManualLinkField = (value) => {
+    if (!hasVideoValue(value)) {
+      return validateVideoResponse();
+    }
+    return validateManualVideoLink(value);
+  };
+
+  useEffect(() => {
+    const hasUpload = hasVideoValue(videoLink);
+    const hasManual = hasVideoValue(manualVideoLink);
+    const manualOk =
+      !hasManual || validateManualVideoLink(manualVideoLink) === true;
+
+    if ((hasUpload || hasManual) && manualOk) {
+      clearErrors(['videoLink', 'manualVideoLink']);
+    }
+  }, [videoLink, manualVideoLink, clearErrors]);
+
   return (
     <div className='flex flex-col gap-6 lg:gap-9'>
       <TextArea
@@ -153,15 +189,35 @@ const CMPMGoals = () => {
           </ul>
         </div>
       </div>
-      <div className='md:col-span-2'>
+      <div className='md:col-span-2 flex flex-col gap-4'>
+        <div className='flex justify-between'>
+          <div className='block text-sm md:text-base font-greycliff font-semibold leading-6 text-slate-700'>
+            Video response
+          </div>
+          <span className='text-sm leading-6 text-red-500'>Required</span>
+        </div>
+        <p className='text-sm text-slate-600 font-greycliff -mt-2'>
+          Upload your video file or paste a link to it — at least one is
+          required.
+        </p>
         <FileUpload
           name={'videoLink'}
           label={'Upload your video response'}
-          required
           accept={'.mp4,.mov,.m4v,.webm,.avi'}
           maxSize={250 * 1024 * 1024}
           placeholder={'Upload your video response file'}
+          validate={validateVideoResponse}
         />
+        <TextInput
+          name={'manualVideoLink'}
+          label={'Or paste a link to your video'}
+          placeholder={'https://drive.google.com/...'}
+          validate={validateManualLinkField}
+        />
+        <p className='text-xs text-slate-500 font-greycliff -mt-2'>
+          https only. Supported hosts: YouTube, Vimeo, Google Drive, Dropbox,
+          OneDrive, Loom, WeTransfer, Box, iCloud, Streamable.
+        </p>
       </div>
     </div>
   );

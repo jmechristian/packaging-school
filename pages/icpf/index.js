@@ -162,6 +162,7 @@ const ICPF = () => {
                       yearGoals: '',
                       contactConsent: false,
                       videoLink: '',
+                      manualVideoLink: '',
                     });
 
                     router.push(`/forms/cmpm/icpf/${form.id}`);
