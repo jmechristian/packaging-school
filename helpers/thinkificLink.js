@@ -1,5 +1,6 @@
 import { runThinkificSSO } from './sso';
 import { getAbContext, trackAbPurchaseIntent } from '../libs/analytics';
+import { isCheckoutIntentUrl } from '../libs/checkoutIntent';
 
 export const handleThinkificLink = async (url, awsUser, returnTo) => {
   // If user is not authenticated, redirect to Thinkific directly
@@ -15,20 +16,29 @@ export const handleThinkificLink = async (url, awsUser, returnTo) => {
   // email within a time window to attribute (and, for the LinkedIn boot camp
   // campaign, confirm) the sale. Fire-and-forget: keepalive covers the
   // imminent navigation away from the page.
-  try {
-    const abContext = getAbContext();
-    trackAbPurchaseIntent({
-      ...abContext,
-      email: awsUser.email,
-      source: 'pre_thinkific_redirect',
-      metadata: {
+  //
+  // IMPORTANT: only fire intent for genuine checkout/enroll destinations.
+  // navigateToThinkific() handles every LMS link (opening owned courses,
+  // account/billing nav, etc.); firing on all of them inflated the funnel.
+  if (isCheckoutIntentUrl(url)) {
+    try {
+      const abContext = getAbContext();
+      trackAbPurchaseIntent({
+        ...abContext,
         email: awsUser.email,
-        liFatId: abContext.liFatId,
-        courseLink: url,
-      },
-    });
-  } catch (error) {
-    console.warn('Failed to record pre-redirect purchase intent:', error?.message);
+        source: 'pre_thinkific_redirect',
+        metadata: {
+          email: awsUser.email,
+          liFatId: abContext.liFatId,
+          courseLink: url,
+        },
+      });
+    } catch (error) {
+      console.warn(
+        'Failed to record pre-redirect purchase intent:',
+        error?.message,
+      );
+    }
   }
 
   // Check if user has completed onboarding (you might want to adjust this condition)
