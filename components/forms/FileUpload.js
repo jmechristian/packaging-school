@@ -34,28 +34,59 @@ const FileUpload = ({
     console.log(`FileUpload ${name}: Starting upload for file:`, file.name);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('fieldName', name);
-
-      const response = await fetch('/api/upload-file', {
+      // Get a short-lived presigned URL so the browser uploads directly to S3.
+      // This avoids Vercel's FUNCTION_PAYLOAD_TOO_LARGE limit (~4.5MB).
+      const presignResponse = await fetch('/api/upload-presign', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          fileType: file.type || 'application/octet-stream',
+          fileSize: file.size,
+          fieldName: name,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
+      if (!presignResponse.ok) {
+        const presignError = await presignResponse.json().catch(() => ({}));
+        throw new Error(presignError.error || 'Failed to prepare upload');
       }
 
-      const result = await response.json();
-      console.log(
-        `FileUpload ${name}: Upload successful, URL:`,
-        result.fileUrl
-      );
-      setValue(name, result.fileUrl);
+      const { uploadUrl, fileUrl } = await presignResponse.json();
+
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            setUploadProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(new Error('Upload failed'));
+          }
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.addEventListener('abort', () => reject(new Error('Upload aborted')));
+
+        xhr.open('PUT', uploadUrl);
+        xhr.setRequestHeader(
+          'Content-Type',
+          file.type || 'application/octet-stream'
+        );
+        xhr.send(file);
+      });
+
+      console.log(`FileUpload ${name}: Upload successful, URL:`, fileUrl);
+      setValue(name, fileUrl);
       setUploadProgress(100);
     } catch (err) {
-      setError('Failed to upload file. Please try again.');
+      setError(err.message || 'Failed to upload file. Please try again.');
       console.error(`FileUpload ${name}: Upload error:`, err);
     } finally {
       setIsUploading(false);
