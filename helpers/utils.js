@@ -566,3 +566,111 @@ export const createContact = async (email, firstName, lastName) => {
 
   return contact;
 };
+
+// Mirrors FooterEmailSignup ("Stay Up To Date") — AC form 90 / PS Website Email Subscribe.
+const AC_SUBSCRIBE_FORM = {
+  u: '90',
+  f: '90',
+  s: 's',
+  c: '0',
+  m: '0',
+  act: 'sub',
+  v: '2',
+  or: '0c1319e8fc019ba9b13bc70d9fe0b4ef',
+};
+const AC_PROC_URL = 'https://packagingschool42200.activehosted.com/proc.php';
+const AC_API_BASE = 'https://packagingschool42200.api-us1.com/api/3';
+const AC_LEAD_SOURCE_FIELD_ID =
+  process.env.ACTIVECAMPAIGN_LEAD_SOURCE_FIELD_ID || '78';
+
+/**
+ * Subscribe an email via the same Active Campaign form used by the site footer.
+ * Optionally sets Lead Source when empty (first-touch).
+ */
+export const subscribeToMailingList = async ({
+  email,
+  firstName,
+  lastName,
+  source = 'thinkific',
+} = {}) => {
+  if (!email) {
+    throw new Error('email is required to subscribe to mailing list');
+  }
+
+  const formData = new URLSearchParams();
+  Object.entries(AC_SUBSCRIBE_FORM).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+  formData.append('email', email);
+  if (firstName) formData.append('firstname', firstName);
+  if (lastName) formData.append('lastname', lastName);
+
+  const formResponse = await fetch(AC_PROC_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+    },
+    body: formData.toString(),
+  });
+
+  // AC form endpoint often returns a redirect/HTML page; treat 2xx/3xx as success.
+  if (!formResponse.ok && formResponse.status >= 400) {
+    throw new Error(
+      `Active Campaign form subscribe failed (${formResponse.status})`
+    );
+  }
+
+  // Best-effort: tag Lead Source for Thinkific signups when the field is empty.
+  let leadSource = source;
+  if (source && process.env.ACTIVECAMPAIN_API_KEY) {
+    try {
+      const lookup = await fetch(
+        `${AC_API_BASE}/contacts?email=${encodeURIComponent(
+          email
+        )}&include=fieldValues&limit=1`,
+        {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
+          },
+        }
+      );
+      const lookupData = await lookup.json().catch(() => ({}));
+      const contact = lookupData?.contacts?.[0];
+      const existingSource =
+        (lookupData?.fieldValues || []).find(
+          (fv) => String(fv.field) === String(AC_LEAD_SOURCE_FIELD_ID)
+        )?.value || null;
+
+      if (contact?.id && !existingSource) {
+        await fetch(`${AC_API_BASE}/contact/sync`, {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            'Api-Token': process.env.ACTIVECAMPAIN_API_KEY,
+          },
+          body: JSON.stringify({
+            contact: {
+              email,
+              fieldValues: [
+                { field: AC_LEAD_SOURCE_FIELD_ID, value: source },
+              ],
+            },
+          }),
+        });
+        leadSource = source;
+      } else {
+        leadSource = existingSource || source;
+      }
+    } catch (error) {
+      console.warn('Failed to set Active Campaign Lead Source:', error?.message);
+    }
+  }
+
+  return {
+    formId: AC_SUBSCRIBE_FORM.f,
+    source: leadSource,
+  };
+};
