@@ -2,6 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
 import { parseCookieHeader, AB_SESSION_COOKIE, HOME_EXPERIMENT_KEY } from '../../../libs/abVariant';
 import { AB_ATTRIBUTION_COOKIE } from '../../../libs/analytics';
+import { isCheckoutIntentUrl } from '../../../libs/checkoutIntent';
 
 // Thinkific's order webhook can't carry campaign data back to us, so right
 // before handing off to Thinkific SSO we record a purchase-intent event that
@@ -9,6 +10,12 @@ import { AB_ATTRIBUTION_COOKIE } from '../../../libs/analytics';
 // captured on landing. The order webhook later matches on this email within
 // a time window to attribute (and, for gated campaigns, confirm) the sale.
 async function recordPreThinkificIntent({ req, baseUrl, email, courseLink }) {
+  // This endpoint is a generic SSO handoff used for ALL authenticated LMS
+  // redirects (opening owned courses, expired-token retries, etc.) - a checkout
+  // can never START here. Only record intent when the destination is an actual
+  // enrollment/checkout URL, matching the client-side tracker's classification.
+  if (!isCheckoutIntentUrl(courseLink)) return;
+
   try {
     const cookies = parseCookieHeader(req.headers.cookie || '');
     let attribution = null;

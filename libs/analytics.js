@@ -9,6 +9,10 @@ import {
   getVariantFromDocumentCookie,
   getVisitorIdFromDocumentCookie,
 } from './abVariant';
+import {
+  classifyAcquisitionChannel,
+  isOwnReferrerHost,
+} from './acquisitionChannel';
 
 const DEFAULT_THROTTLE_MS = 1500;
 export const AB_ATTRIBUTION_COOKIE = 'ps_ab_attribution';
@@ -31,8 +35,6 @@ const EVENT_THROTTLE_MS = {
   ab_purchase_complete: 3000,
   ab_session_end: 30000,
 };
-
-const OWN_HOST_PATTERNS = ['packagingschool.com', 'localhost', '127.0.0.1'];
 
 function makeSessionId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -307,45 +309,6 @@ function getReferrerHost(referrer) {
   } catch {
     return null;
   }
-}
-
-function isOwnReferrerHost(host) {
-  if (!host) return false;
-  return OWN_HOST_PATTERNS.some((pattern) => host === pattern || host.endsWith(`.${pattern}`));
-}
-
-function classifyAcquisitionChannel({ medium, source, hasClickId, referrerHost }) {
-  const normalizedMedium = String(medium || '').toLowerCase();
-  const normalizedSource = String(source || '').toLowerCase();
-
-  if (hasClickId) return 'paid';
-  if (
-    /(cpc|ppc|paid|display|banner|retargeting|affiliate|sponsored|ads?)/.test(
-      normalizedMedium
-    )
-  ) {
-    return 'paid';
-  }
-  if (/(email|newsletter)/.test(normalizedMedium)) return 'email';
-  if (
-    /(social|facebook|instagram|linkedin|x|twitter|tiktok|pinterest|reddit)/.test(
-      normalizedMedium
-    ) ||
-    /(facebook|instagram|linkedin|t\.co|twitter|tiktok|pinterest|reddit)/.test(
-      normalizedSource
-    )
-  ) {
-    return 'social';
-  }
-  if (normalizedMedium === 'organic') return 'organic';
-  if (!source && !referrerHost) return 'direct';
-  if (referrerHost && !isOwnReferrerHost(referrerHost)) {
-    if (/google\.|bing\.|yahoo\.|duckduckgo\./.test(referrerHost)) {
-      return 'organic';
-    }
-    return 'referral';
-  }
-  return 'direct';
 }
 
 function detectAttributionContext() {
