@@ -621,7 +621,30 @@ function isThrottled(eventName, fingerprint) {
   return false;
 }
 
+// Stable, time-INDEPENDENT id for a purchase-intent so every emitter for the
+// same buyer+session collapses to one row via the server's attribute_not_exists
+// guard - the on-site create-order click, the client pre-SSO handoff, and the
+// server-side external-redirect SSO handoff can be minutes apart, so a time
+// bucket would let them slip through as duplicates. Email is canonicalized to
+// match the server (ab-event.js) and the webhook's email lookup.
+export function buildPurchaseIntentEventId({
+  experimentKey,
+  sessionId,
+  email,
+} = {}) {
+  const fingerprint = [
+    'ab_purchase_intent',
+    experimentKey || HOME_EXPERIMENT_KEY || '',
+    sessionId || '',
+    (email || '').trim().toLowerCase(),
+  ].join('|');
+  return `ab_purchase_intent_${hashString(fingerprint)}`;
+}
+
 function buildEventId(eventName, payload, fingerprint) {
+  if (eventName === 'ab_purchase_intent') {
+    return buildPurchaseIntentEventId(payload);
+  }
   const ttl = EVENT_THROTTLE_MS[eventName] ?? DEFAULT_THROTTLE_MS;
   const bucket = Math.floor(Date.now() / ttl);
   const hash = hashString(fingerprint);

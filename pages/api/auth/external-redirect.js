@@ -1,7 +1,10 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { handleSSO } from '../../../helpers/api';
 import { parseCookieHeader, AB_SESSION_COOKIE, HOME_EXPERIMENT_KEY } from '../../../libs/abVariant';
-import { AB_ATTRIBUTION_COOKIE } from '../../../libs/analytics';
+import {
+  AB_ATTRIBUTION_COOKIE,
+  buildPurchaseIntentEventId,
+} from '../../../libs/analytics';
 import { isCheckoutIntentUrl } from '../../../libs/checkoutIntent';
 
 // Thinkific's order webhook can't carry campaign data back to us, so right
@@ -27,13 +30,24 @@ async function recordPreThinkificIntent({ req, baseUrl, email, courseLink }) {
       }
     }
 
+    const sessionId =
+      attribution?.sessionId || cookies[AB_SESSION_COOKIE] || null;
+
     await fetch(`${baseUrl}/api/analytics/ab-event`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         eventName: 'ab_purchase_intent',
         experimentKey: HOME_EXPERIMENT_KEY,
-        sessionId: attribution?.sessionId || cookies[AB_SESSION_COOKIE] || null,
+        // Deterministic id shared with the client tracker so this server-side
+        // handoff and any client intent for the same buyer+session collapse to
+        // a single row (attribute_not_exists guard in ab-event.js).
+        eventId: buildPurchaseIntentEventId({
+          experimentKey: HOME_EXPERIMENT_KEY,
+          sessionId,
+          email,
+        }),
+        sessionId,
         email,
         pagePath: '/api/auth/external-redirect',
         acquisitionChannel: attribution?.channel || null,
