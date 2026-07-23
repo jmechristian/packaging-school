@@ -76,7 +76,7 @@ export default function HeaderNew() {
       },
     ],
     pages: [
-      { name: 'Certificates', href: '/certifications' },
+      { name: 'Certificates', href: '/certifications/get-to-know-cmpm' },
       { name: 'Courses', href: '/all_courses' },
       { name: 'Teams', href: '/teams' },
       { name: 'Articles', href: '/lessons' },
