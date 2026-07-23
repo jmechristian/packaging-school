@@ -311,6 +311,33 @@ function getReferrerHost(referrer) {
   }
 }
 
+// Ad-platform click ids we recognize. Presence of any of these means the visit
+// is a paid ad click. gclid/gbraid/wbraid are Google Ads (wbraid/gbraid are the
+// newer iOS/privacy variants); li_fat_id is LinkedIn; msclkid Microsoft/Bing;
+// fbclid Meta; ttclid TikTok.
+const CLICK_ID_KEYS = [
+  'gclid',
+  'gbraid',
+  'wbraid',
+  'li_fat_id',
+  'msclkid',
+  'fbclid',
+  'ttclid',
+];
+
+// Canonical source/medium implied by each click id. This is what lets us still
+// identify Google Ads and LinkedIn Ads sessions when the campaign relies on
+// auto-tagging and sends NO utm_* params (Google Ads' default behavior).
+const CLICK_ID_ATTRIBUTION = {
+  gclid: { source: 'google', medium: 'cpc' },
+  gbraid: { source: 'google', medium: 'cpc' },
+  wbraid: { source: 'google', medium: 'cpc' },
+  msclkid: { source: 'bing', medium: 'cpc' },
+  li_fat_id: { source: 'linkedin', medium: 'paid_social' },
+  fbclid: { source: 'facebook', medium: 'paid_social' },
+  ttclid: { source: 'tiktok', medium: 'paid_social' },
+};
+
 function detectAttributionContext() {
   if (typeof window === 'undefined') return null;
 
@@ -319,25 +346,33 @@ function detectAttributionContext() {
   const referrer = typeof document !== 'undefined' ? document.referrer || '' : '';
   const referrerHost = getReferrerHost(referrer);
 
+  // Collect every ad click id present. These are persisted verbatim (see
+  // metadata folding in writeAbEvent) so a conversion can later be replayed to
+  // the ad platform's conversions API (LinkedIn today; gclid enables Google Ads
+  // offline conversion import) - Thinkific's webhook can't carry them back.
+  const clickIds = {};
+  for (const key of CLICK_ID_KEYS) {
+    const value = params.get(key);
+    if (value) clickIds[key] = value;
+  }
+  const clickIdKey = CLICK_ID_KEYS.find((key) => clickIds[key]) || null;
+  const hasClickId = Boolean(clickIdKey);
+  const adAttribution = clickIdKey ? CLICK_ID_ATTRIBUTION[clickIdKey] : null;
+
   // Accept both standard utm_* params and the bare names used by our ad links
-  // (e.g. LinkedIn ads land with ?source=LinkedIn&campaign=bootcamp).
+  // (e.g. LinkedIn ads land with ?source=LinkedIn&campaign=bootcamp). When no
+  // explicit source/medium is present, fall back to the ad network implied by
+  // the click id so auto-tagged Google/LinkedIn ad clicks are still labeled.
+  const explicitSource = params.get('utm_source') || params.get('source') || null;
+  const explicitMedium = params.get('utm_medium') || params.get('medium') || null;
   const source =
-    params.get('utm_source') || params.get('source') || referrerHost || null;
-  const medium = params.get('utm_medium') || params.get('medium') || null;
+    explicitSource || adAttribution?.source || referrerHost || null;
+  const medium = explicitMedium || adAttribution?.medium || null;
   const campaign = params.get('utm_campaign') || params.get('campaign') || null;
   const term = params.get('utm_term') || params.get('term') || null;
   const content = params.get('utm_content') || params.get('content') || null;
 
-  // li_fat_id is LinkedIn's per-click first-party ad tracking id (populated
-  // automatically when Enhanced Conversion Tracking is on). Unlike the other
-  // click ids we only use for channel classification, this one is persisted
-  // verbatim so it can be replayed to LinkedIn's Conversions API once a
-  // purchase is confirmed server-side (Thinkific's webhook cannot carry it
-  // back to us, so we have to remember it ourselves).
-  const liFatId = params.get('li_fat_id') || null;
-  const hasClickId = ['gclid', 'msclkid', 'fbclid', 'ttclid', 'li_fat_id'].some((key) =>
-    Boolean(params.get(key))
-  );
+  const liFatId = clickIds.li_fat_id || null;
 
   const inferredMedium =
     medium || (hasClickId ? 'cpc' : referrerHost && !isOwnReferrerHost(referrerHost) ? 'referral' : '(none)');
@@ -356,6 +391,7 @@ function detectAttributionContext() {
     content,
     referrer: referrer || null,
     liFatId,
+    clickIds: Object.keys(clickIds).length ? clickIds : null,
   };
 }
 
@@ -369,6 +405,8 @@ const MARKETING_PARAM_KEYS = [
   'medium',
   'campaign',
   'gclid',
+  'gbraid',
+  'wbraid',
   'msclkid',
   'fbclid',
   'ttclid',
@@ -449,6 +487,7 @@ export function getAbContext(overrides = {}) {
     acquisitionContent: overrides.acquisitionContent || attribution?.content || null,
     referrer: overrides.referrer || attribution?.referrer || null,
     liFatId: overrides.liFatId || attribution?.liFatId || null,
+    clickIds: overrides.clickIds || attribution?.clickIds || null,
     ...overrides,
   };
 }
@@ -615,6 +654,9 @@ async function writeAbEvent(eventName, payload = {}) {
     ...(firstTouch ? { firstTouch } : {}),
     ...(context.metadata || {}),
     ...(context.liFatId != null ? { liFatId: context.liFatId } : {}),
+    // All ad click ids (gclid/gbraid/wbraid/li_fat_id/msclkid/fbclid/ttclid)
+    // persisted for later conversion replay (Google Ads offline import, etc.).
+    ...(context.clickIds ? { clickIds: context.clickIds } : {}),
   };
 
   const finalPayload = {
