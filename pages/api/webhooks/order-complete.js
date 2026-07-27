@@ -3,6 +3,7 @@ import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
 import { eventsByEmailQuery, toExperimentDay } from '../../../libs/abAnalyticsQueries';
 import { isLinkedInTargetProduct, sendLinkedInConversionEvent } from '../../../libs/linkedinConversions';
+import { deriveBuyerAttribution } from '../../../libs/purchaseAttribution';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
@@ -120,12 +121,6 @@ function isLikelyInternalOrderId(value) {
   return normalized.length >= 12;
 }
 
-function normalizeComparable(value) {
-  const normalized = normalizeString(value);
-  if (!normalized) return null;
-  return normalized.trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
 function normalizeNumber(value) {
   if (value === undefined || value === null || value === '') return null;
   const parsed = Number(value);
@@ -204,45 +199,12 @@ async function withTimeout(promise, ms) {
   }
 }
 
-// Channel values that don't represent a real acquisition touch (so we can skip
-// them when crediting the "last non-direct touch").
-const DIRECT_CHANNELS = new Set([
-  'direct',
-  '(direct)',
-  'none',
-  '(none)',
-  'unassigned',
-  'na',
-  'unknown',
-]);
-
-function isNonDirectChannel(channel) {
-  const c = normalizeLower(channel);
-  if (!c) return false;
-  return !DIRECT_CHANNELS.has(c);
-}
-
-function hasAnyChannel(event) {
-  return Boolean(normalizeString(event?.acquisitionChannel));
-}
-
-// firstTouch is identical across a visitor's events (their very first landing),
-// so grab it from whichever buyer event carries it.
-function pickFirstTouch(events) {
-  for (const event of events) {
-    const meta = parseEventMetadata(event?.metadata);
-    if (meta?.firstTouch && typeof meta.firstTouch === 'object') {
-      return meta.firstTouch;
-    }
-  }
-  return null;
-}
-
 // A Thinkific order webhook is server-to-server: no browser cookies, so no
 // visitorId/sessionId on the request. The buyer email is the only identity we
-// get. This resolves the buyer's on-site journey via the abEventByEmail GSI (no
-// table scan) and derives last-non-direct-touch attribution so the complete row
-// is stamped with the acquisition context that already exists on their events.
+// get. This fetches the buyer's on-site journey via the abEventByEmail GSI (no
+// table scan) and delegates to the pure deriveBuyerAttribution() to credit the
+// last non-direct touch, so the complete row is stamped with the acquisition
+// context that already exists on their events.
 async function resolveBuyerAttribution({
   email,
   productName,
@@ -269,96 +231,7 @@ async function resolveBuyerAttribution({
   });
 
   const items = result?.data?.abTestEventsByEmailAndCreatedAt?.items || [];
-  if (!items.length) return null;
-
-  // Only credit touches at/before the purchase (small grace for clock skew).
-  const graceMs = 5 * 60 * 1000;
-  const pool = items.filter((event) => {
-    const ms = Date.parse(event?.createdAt || '');
-    return Number.isFinite(ms) && ms <= anchorMs + graceMs;
-  });
-  const events = pool.length ? pool : items; // DESC (most recent first)
-
-  const normalizedProductName = normalizeComparable(productName);
-
-  // Best matchable purchase intent (product + time proximity) - used for
-  // identity/linkage and to mark method="intent".
-  let matchedIntent = null;
-  let bestScore = -Infinity;
-  for (const candidate of events) {
-    if (candidate?.eventName !== 'ab_purchase_intent') continue;
-    const candMs = Date.parse(candidate?.createdAt || '');
-    if (!Number.isFinite(candMs)) continue;
-
-    const meta = parseEventMetadata(candidate?.metadata);
-    const candCourse = normalizeComparable(meta?.courseName || meta?.productName);
-    const courseMatches =
-      normalizedProductName &&
-      candCourse &&
-      (candCourse === normalizedProductName ||
-        candCourse.includes(normalizedProductName) ||
-        normalizedProductName.includes(candCourse));
-
-    const timeDelta = Math.abs(anchorMs - candMs);
-    const score = (courseMatches ? 5 : 0) + Math.max(0, 3 - timeDelta / (60 * 60 * 1000));
-    if (score > bestScore) {
-      bestScore = score;
-      matchedIntent = candidate;
-    }
-  }
-
-  // Last non-direct touch at/before purchase, falling back to last touch.
-  const lastNonDirect = events.find((event) => isNonDirectChannel(event?.acquisitionChannel)) || null;
-  const lastTouch = events.find((event) => hasAnyChannel(event)) || null;
-  const attributionEvent = lastNonDirect || lastTouch || null;
-
-  // Identity to stitch onto the sale: prefer the matched intent, else the most
-  // recent event carrying a visitor/session id, else the most recent event.
-  const identityEvent =
-    matchedIntent ||
-    events.find((event) => normalizeString(event?.visitorId) || normalizeString(event?.sessionId)) ||
-    events[0];
-
-  const firstTouch = pickFirstTouch(events);
-
-  let method;
-  if (matchedIntent) method = 'intent';
-  else if (lastNonDirect) method = 'email';
-  else method = 'email_fallback';
-
-  // Acquisition: last non-direct touch -> last touch -> first touch -> direct.
-  const acquisitionChannel =
-    normalizeString(attributionEvent?.acquisitionChannel) ||
-    normalizeString(firstTouch?.channel) ||
-    'direct';
-  const acquisitionSource =
-    normalizeString(attributionEvent?.acquisitionSource) ||
-    normalizeString(firstTouch?.source) ||
-    null;
-  const acquisitionMedium =
-    normalizeString(attributionEvent?.acquisitionMedium) ||
-    normalizeString(firstTouch?.medium) ||
-    null;
-  const acquisitionCampaign =
-    normalizeString(attributionEvent?.acquisitionCampaign) ||
-    normalizeString(firstTouch?.campaign) ||
-    null;
-
-  return {
-    method,
-    matchedIntent,
-    variant: normalizeString(identityEvent?.variant),
-    sessionId: normalizeString(identityEvent?.sessionId),
-    visitorId: normalizeString(identityEvent?.visitorId),
-    userID: normalizeString(identityEvent?.userID),
-    deviceType: normalizeString(identityEvent?.deviceType),
-    pagePath: normalizeString(identityEvent?.pagePath),
-    acquisitionChannel,
-    acquisitionSource,
-    acquisitionMedium,
-    acquisitionCampaign,
-    firstTouch,
-  };
+  return deriveBuyerAttribution(items, { productName, anchorMs });
 }
 
 async function recordReceipt(fields) {
