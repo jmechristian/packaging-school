@@ -47,8 +47,9 @@ const createWebhookReceiptMutation = /* GraphQL */ `
   }
 `;
 
-// Indexed intent lookup by buyer email (abEventByEmail GSI), most-recent first.
-const intentByEmailQuery = eventsByEmailQuery(`
+// Indexed lookup of a buyer's events by email (abEventByEmail GSI), most-recent
+// first. Pulls all event types so attribution can be derived from any touch.
+const buyerEventsByEmailQuery = eventsByEmailQuery(`
   id
   createdAt
   eventName
@@ -203,38 +204,94 @@ async function withTimeout(promise, ms) {
   }
 }
 
-// Deterministic-ish attribution: scope to the buyer email via the GSI (no table
-// scan), then tie-break by product match and time proximity within a window.
-async function findIntentByEmail({ email, productName, createdAtIso, windowHours = 72 }) {
+// Channel values that don't represent a real acquisition touch (so we can skip
+// them when crediting the "last non-direct touch").
+const DIRECT_CHANNELS = new Set([
+  'direct',
+  '(direct)',
+  'none',
+  '(none)',
+  'unassigned',
+  'na',
+  'unknown',
+]);
+
+function isNonDirectChannel(channel) {
+  const c = normalizeLower(channel);
+  if (!c) return false;
+  return !DIRECT_CHANNELS.has(c);
+}
+
+function hasAnyChannel(event) {
+  return Boolean(normalizeString(event?.acquisitionChannel));
+}
+
+// firstTouch is identical across a visitor's events (their very first landing),
+// so grab it from whichever buyer event carries it.
+function pickFirstTouch(events) {
+  for (const event of events) {
+    const meta = parseEventMetadata(event?.metadata);
+    if (meta?.firstTouch && typeof meta.firstTouch === 'object') {
+      return meta.firstTouch;
+    }
+  }
+  return null;
+}
+
+// A Thinkific order webhook is server-to-server: no browser cookies, so no
+// visitorId/sessionId on the request. The buyer email is the only identity we
+// get. This resolves the buyer's on-site journey via the abEventByEmail GSI (no
+// table scan) and derives last-non-direct-touch attribution so the complete row
+// is stamped with the acquisition context that already exists on their events.
+async function resolveBuyerAttribution({
+  email,
+  productName,
+  createdAtIso,
+  windowHours = 24 * 90, // 90 days: organic journeys can span weeks
+}) {
   const canonicalEmail = normalizeEmail(email);
   if (!canonicalEmail) return null;
 
   const createdAtMs = Date.parse(createdAtIso || '');
   const anchorMs = Number.isFinite(createdAtMs) ? createdAtMs : Date.now();
   const lowerBound = new Date(anchorMs - windowHours * 60 * 60 * 1000).toISOString();
-  const normalizedProductName = normalizeComparable(productName);
 
+  // Pull ALL of the buyer's recent events (page views, product views, intents),
+  // not just intents - most-recent first.
   const result = await API.graphql({
-    query: intentByEmailQuery,
+    query: buyerEventsByEmailQuery,
     variables: {
       email: canonicalEmail,
       createdAt: { ge: lowerBound },
       sortDirection: 'DESC',
-      filter: { eventName: { eq: 'ab_purchase_intent' } },
-      limit: 50,
+      limit: 100,
     },
   });
 
-  const candidates = result?.data?.abTestEventsByEmailAndCreatedAt?.items || [];
-  if (!candidates.length) return null;
+  const items = result?.data?.abTestEventsByEmailAndCreatedAt?.items || [];
+  if (!items.length) return null;
 
-  let best = null;
-  for (const candidate of candidates) {
+  // Only credit touches at/before the purchase (small grace for clock skew).
+  const graceMs = 5 * 60 * 1000;
+  const pool = items.filter((event) => {
+    const ms = Date.parse(event?.createdAt || '');
+    return Number.isFinite(ms) && ms <= anchorMs + graceMs;
+  });
+  const events = pool.length ? pool : items; // DESC (most recent first)
+
+  const normalizedProductName = normalizeComparable(productName);
+
+  // Best matchable purchase intent (product + time proximity) - used for
+  // identity/linkage and to mark method="intent".
+  let matchedIntent = null;
+  let bestScore = -Infinity;
+  for (const candidate of events) {
+    if (candidate?.eventName !== 'ab_purchase_intent') continue;
     const candMs = Date.parse(candidate?.createdAt || '');
     if (!Number.isFinite(candMs)) continue;
 
-    const metadata = parseEventMetadata(candidate?.metadata);
-    const candCourse = normalizeComparable(metadata?.courseName || metadata?.productName);
+    const meta = parseEventMetadata(candidate?.metadata);
+    const candCourse = normalizeComparable(meta?.courseName || meta?.productName);
     const courseMatches =
       normalizedProductName &&
       candCourse &&
@@ -244,16 +301,63 @@ async function findIntentByEmail({ email, productName, createdAtIso, windowHours
 
     const timeDelta = Math.abs(anchorMs - candMs);
     const score = (courseMatches ? 5 : 0) + Math.max(0, 3 - timeDelta / (60 * 60 * 1000));
-
-    if (!best || score > best.score) {
-      best = { score, event: candidate, courseMatches: Boolean(courseMatches) };
+    if (score > bestScore) {
+      bestScore = score;
+      matchedIntent = candidate;
     }
   }
 
-  if (!best) return null;
+  // Last non-direct touch at/before purchase, falling back to last touch.
+  const lastNonDirect = events.find((event) => isNonDirectChannel(event?.acquisitionChannel)) || null;
+  const lastTouch = events.find((event) => hasAnyChannel(event)) || null;
+  const attributionEvent = lastNonDirect || lastTouch || null;
+
+  // Identity to stitch onto the sale: prefer the matched intent, else the most
+  // recent event carrying a visitor/session id, else the most recent event.
+  const identityEvent =
+    matchedIntent ||
+    events.find((event) => normalizeString(event?.visitorId) || normalizeString(event?.sessionId)) ||
+    events[0];
+
+  const firstTouch = pickFirstTouch(events);
+
+  let method;
+  if (matchedIntent) method = 'intent';
+  else if (lastNonDirect) method = 'email';
+  else method = 'email_fallback';
+
+  // Acquisition: last non-direct touch -> last touch -> first touch -> direct.
+  const acquisitionChannel =
+    normalizeString(attributionEvent?.acquisitionChannel) ||
+    normalizeString(firstTouch?.channel) ||
+    'direct';
+  const acquisitionSource =
+    normalizeString(attributionEvent?.acquisitionSource) ||
+    normalizeString(firstTouch?.source) ||
+    null;
+  const acquisitionMedium =
+    normalizeString(attributionEvent?.acquisitionMedium) ||
+    normalizeString(firstTouch?.medium) ||
+    null;
+  const acquisitionCampaign =
+    normalizeString(attributionEvent?.acquisitionCampaign) ||
+    normalizeString(firstTouch?.campaign) ||
+    null;
+
   return {
-    event: best.event,
-    method: best.courseMatches ? 'email_course' : 'email_recency',
+    method,
+    matchedIntent,
+    variant: normalizeString(identityEvent?.variant),
+    sessionId: normalizeString(identityEvent?.sessionId),
+    visitorId: normalizeString(identityEvent?.visitorId),
+    userID: normalizeString(identityEvent?.userID),
+    deviceType: normalizeString(identityEvent?.deviceType),
+    pagePath: normalizeString(identityEvent?.pagePath),
+    acquisitionChannel,
+    acquisitionSource,
+    acquisitionMedium,
+    acquisitionCampaign,
+    firstTouch,
   };
 }
 
@@ -423,40 +527,39 @@ export default async function handler(req, res) {
         ? grossAmountCents - netAmountCents
         : null;
 
-    // Deterministic-ish attribution by buyer email via the GSI (no scan).
+    // Attribution by buyer email via the GSI (no scan). Resolves the buyer's
+    // journey and credits the last non-direct touch even when there's no
+    // matchable intent (webhooks carry no cookies, so this is the norm).
     let matchedIntent = null;
+    let firstTouch = null;
     let attributionMethod = variant && sessionId ? 'payload' : 'none';
-    if (!variant || !sessionId) {
+    if (!variant || !sessionId || !acquisitionChannel) {
       try {
-        const match = await withTimeout(
-          findIntentByEmail({
+        const resolved = await withTimeout(
+          resolveBuyerAttribution({
             email: webhookUserEmail,
             productName: webhookProductName,
             createdAtIso: webhookCreatedAt,
-            windowHours: 72,
           }),
-          3000,
+          3500,
         );
-        if (match?.event) {
-          matchedIntent = match.event;
-          attributionMethod = match.method;
-          variant = variant || normalizeString(matchedIntent.variant);
-          sessionId = sessionId || normalizeString(matchedIntent.sessionId);
-          deviceType = deviceType || normalizeString(matchedIntent.deviceType);
-          acquisitionChannel =
-            acquisitionChannel || normalizeString(matchedIntent.acquisitionChannel);
-          acquisitionSource =
-            acquisitionSource || normalizeString(matchedIntent.acquisitionSource);
-          acquisitionMedium =
-            acquisitionMedium || normalizeString(matchedIntent.acquisitionMedium);
-          acquisitionCampaign =
-            acquisitionCampaign || normalizeString(matchedIntent.acquisitionCampaign);
-          userID = userID || normalizeString(matchedIntent.userID);
-          visitorId = visitorId || normalizeString(matchedIntent.visitorId);
-          pagePath = pagePath || normalizeString(matchedIntent.pagePath);
+        if (resolved) {
+          matchedIntent = resolved.matchedIntent || null;
+          attributionMethod = resolved.method;
+          variant = variant || resolved.variant;
+          sessionId = sessionId || resolved.sessionId;
+          deviceType = deviceType || resolved.deviceType;
+          acquisitionChannel = acquisitionChannel || resolved.acquisitionChannel;
+          acquisitionSource = acquisitionSource || resolved.acquisitionSource;
+          acquisitionMedium = acquisitionMedium || resolved.acquisitionMedium;
+          acquisitionCampaign = acquisitionCampaign || resolved.acquisitionCampaign;
+          userID = userID || resolved.userID;
+          visitorId = visitorId || resolved.visitorId;
+          pagePath = pagePath || resolved.pagePath;
+          firstTouch = resolved.firstTouch || null;
         }
       } catch (error) {
-        console.warn('Email intent match failed:', error?.message);
+        console.warn('Buyer attribution resolution failed:', error?.message);
       }
     }
 
@@ -466,6 +569,7 @@ export default async function handler(req, res) {
         method: attributionMethod,
         matchedIntentId: matchedIntent?.id || null,
       },
+      ...(firstTouch ? { firstTouch } : {}),
       webhookPayload: {
         id: payload?.id ?? null,
         order_number: payload?.order_number ?? null,

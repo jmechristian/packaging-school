@@ -207,7 +207,8 @@ const renderWithCatalogLink = (text) => {
   let lastIndex = 0;
   let match;
   while ((match = regex.exec(value)) !== null) {
-    if (match.index > lastIndex) parts.push(value.slice(lastIndex, match.index));
+    if (match.index > lastIndex)
+      parts.push(value.slice(lastIndex, match.index));
     parts.push(
       <Link
         key={match.index}
@@ -577,8 +578,8 @@ const HomeVariantD = () => {
         <div className='relative mx-auto max-w-7xl px-4 py-20 lg:px-8 lg:py-28 text-center'>
           <span className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs md:text-sm font-semibold uppercase tracking-wide text-base-light ring-1 ring-inset ring-white/15'>
             <StarIcon className='h-4 w-4 text-brand-yellow' />
-            Developed at Clemson University | Licensed by the SC Commission on
-            Higher Education
+            Developed at Clemson University &amp; Licensed by the SC Commission
+            on Higher Education
           </span>
           <h1 className='mx-auto mt-8 max-w-4xl text-4xl font-semibold leading-[1.08] text-white md:text-5xl lg:text-6xl'>
             Learn the Language of Packaging.{' '}
