@@ -13,6 +13,7 @@ import { createCertAppStart } from '../src/graphql/mutations';
 import Loader from '../components/shared/Loader';
 import Meta from '../components/shared/Meta';
 import { createCmpmFromAppStart } from '../helpers/api';
+import { trackAbCmpmStart } from '../libs/analytics';
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +100,24 @@ const Page = () => {
   const router = useRouter();
   const onSubmit = async (data) => {
     setIsLoading(true);
+
+    // Internal analytics: the visitor started (created) their CMPM application.
+    // Fire early with the typed email so the eventual sale can stitch back to
+    // this touch via the abEventByEmail journey resolution. keepalive covers
+    // the router.push to the full form below.
+    try {
+      trackAbCmpmStart({
+        email: data.email || null,
+        source: 'cmpm_application_start',
+        metadata: {
+          firstName: data.firstName || null,
+          lastName: data.lastName || null,
+          hasPhone: Boolean(data.phone),
+        },
+      });
+    } catch (error) {
+      console.warn('ab_cmpm_start tracking failed:', error?.message);
+    }
 
     await API.graphql({
       query: createCertAppStart,

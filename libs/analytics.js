@@ -31,6 +31,8 @@ const EVENT_THROTTLE_MS = {
   ab_meeting_click: 1500,
   ab_lesson_click: 1500,
   ab_promo_click: 1500,
+  ab_cmpm_start: 1500,
+  ab_cmpm_submit: 1500,
   ab_purchase_intent: 15000,
   ab_purchase_complete: 3000,
   ab_session_end: 30000,
@@ -763,6 +765,18 @@ export async function trackAbLessonClick(payload = {}) {
 
 export async function trackAbPromoClick(payload = {}) {
   await writeAbEvent('ab_promo_click', payload);
+}
+
+// CMPM application funnel: start = the visitor begins the application form,
+// submit = they submit it (the app-start step that also fires the
+// send-certificate-start email action). Passing the typed email lets the sale
+// stitch back to this touch via the abEventByEmail journey resolution.
+export async function trackAbCmpmStart(payload = {}) {
+  await writeAbEvent('ab_cmpm_start', payload);
+}
+
+export async function trackAbCmpmSubmit(payload = {}) {
+  await writeAbEvent('ab_cmpm_submit', payload);
 }
 
 export async function trackAbPurchaseComplete(payload = {}) {

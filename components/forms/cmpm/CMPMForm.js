@@ -15,6 +15,7 @@ import CMPMPricing from './CMPMPricing';
 import { MdCopyAll } from 'react-icons/md';
 import { saveCmpmForm, getAWSUser } from '../../../helpers/api';
 import { setAWSUser } from '../../../features/auth/authslice';
+import { trackAbCmpmSubmit } from '../../../libs/analytics';
 const CMPMForm = ({ methods, email, free, id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -258,6 +259,24 @@ const CMPMForm = ({ methods, email, free, id }) => {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
+
+    // Internal analytics: the visitor submitted their full CMPM application.
+    // Fire before submitFormToAWS (which navigates to the confirmation page);
+    // keepalive ensures it still reaches the server through the navigation.
+    try {
+      trackAbCmpmSubmit({
+        email: data.email || methods.getValues('email') || isEmail || null,
+        source: 'cmpm_application_submit',
+        metadata: {
+          formId: id || null,
+          sessionApplying: data.sessionApplying || null,
+          paymentConfirmation: data.paymentConfirmation || null,
+        },
+      });
+    } catch (error) {
+      console.warn('ab_cmpm_submit tracking failed:', error?.message);
+    }
+
     await submitFormToAWS(data);
     sendSubmitNotification(data);
     setIsSubmitting(false);
