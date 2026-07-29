@@ -592,9 +592,6 @@ function ProgramCurriculum() {
                 confidence, and leave with skills they can apply immediately in
                 their careers.
               </p>
-              <p className='mt-3 text-xs text-slate-400'>
-                Closing philosophy line pending final approval before publish.
-              </p>
             </div>
           </div>
         </div>
