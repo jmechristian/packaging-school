@@ -48,10 +48,10 @@ export default function HeaderNew() {
   const router = useRouter();
   const currentPath = router.asPath;
 
-  // The homepage has its own hero/CTA treatment, so we suppress the shared
-  // promotional SalesBar there. router.pathname is identical on server and
-  // client, so this is safe to derive during render without hydration issues.
-  const hideHomeSalesBar = router.pathname === '/';
+  // SalesBar is homepage-only; suppress it on every other route.
+  // router.pathname is identical on server and client, so this is safe to
+  // derive during render without hydration issues.
+  const showHomeSalesBar = router.pathname === '/';
 
   // Initialize autocomplete when component mounts
   useEffect(() => {
@@ -431,7 +431,7 @@ export default function HeaderNew() {
             </div>
           </div>
           {/* Top navigation */}
-          {!hideHomeSalesBar ? (
+          {showHomeSalesBar ? (
             <Suspense>
               <SalesBar user={user} />
             </Suspense>

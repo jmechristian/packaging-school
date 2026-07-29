@@ -21,7 +21,7 @@ const CertificateCirriculum = () => {
               />
               <WeekItem
                 week={'5'}
-                title={`Material \nManagement II`}
+                title='Material Management II'
                 content='Fundamental material properties of Glass, Metal, and Polymers converted to packaging solutions.'
               />
               <WeekItem
@@ -67,7 +67,7 @@ const CertificateCirriculum = () => {
             <div className='flex flex-col gap-9 w-full'>
               <WeekItem
                 week={'4'}
-                title={`Material\n Management I`}
+                title='Material Management I'
                 content='Fundamental material properties of Glass, Metal, and Polymers converted to packaging solutions.'
               />
               <WeekItem
