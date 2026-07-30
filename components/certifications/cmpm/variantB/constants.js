@@ -11,11 +11,29 @@ export const CLEMSON_LOGO =
   'https://packschool.s3.amazonaws.com/01-LOGO_ClemsonCCL.png';
 
 export const SPECIALIZATIONS = [
-  'Packaging Science',
-  'Automotive Packaging',
-  'Sustainable Packaging',
-  'Food Packaging',
+  {
+    name: 'Packaging Science',
+    href: '/certifications/get-to-know-cps',
+    source: 'cmpm_b_catalog_cps',
+  },
+  {
+    name: 'Automotive Packaging',
+    href: '/certifications/get-to-know-apc',
+    source: 'cmpm_b_catalog_apc',
+  },
+  {
+    name: 'Sustainable Packaging',
+    href: '/certifications/get-to-know-csp',
+    source: 'cmpm_b_catalog_csp',
+  },
+  {
+    name: 'Food Packaging',
+    href: '/food-packaging',
+    source: 'cmpm_b_catalog_food',
+  },
 ];
+
+export const CATALOG_HREF = '/certifications';
 
 export const CURRICULUM_WEEKS = [
   {

@@ -27,6 +27,7 @@ import { CMPM_EXPERIMENT_KEY } from '../../../../libs/abVariant';
 import TeamCohortForm from './TeamCohortForm';
 import {
   APPLY_HREF,
+  CATALOG_HREF,
   CLIENT_LOGOS,
   CLEMSON_LOGO,
   CONSULT_HREF,
@@ -67,6 +68,17 @@ function trackConsult(source) {
       experimentKey: CMPM_EXPERIMENT_KEY,
       pagePath: PAGE_PATH,
       nextPath: CONSULT_HREF,
+      source,
+    }),
+  );
+}
+
+function trackCatalogNav(source, nextPath) {
+  trackAbNavNext(
+    withCmpmExperiment({
+      experimentKey: CMPM_EXPERIMENT_KEY,
+      pagePath: PAGE_PATH,
+      nextPath,
       source,
     }),
   );
@@ -508,29 +520,38 @@ function ProgramCurriculum() {
           </div>
           <ArrowLongRightIcon className='mx-auto hidden h-8 w-8 shrink-0 text-clemson lg:block' />
           <div className='flex-1'>
-            <h3 className='font-greycliff text-2xl font-bold'>
-              Unlock the full library
+            <h3 className='font-greycliff text-2xl font-bold md:text-3xl'>
+              Access the Entire Library with the Certificate
             </h3>
             <p className='mt-3 max-w-2xl leading-relaxed text-white/85'>
-              Complete the program and enjoy access to our full course library
-              for the rest of the year—personalized just for you. That&apos;s
-              4,000+ lessons across all of our specializations. Work through
-              enough of any one specialization&apos;s courses, and you can
-              complete that certificate too.
+              Finish the Certificate of Mastery and get free access to our full
+              course library for the rest of the year—no extra charge,
+              personalized just for you. Work through enough of any one
+              specialization&apos;s courses, and you can complete that
+              certificate too.
             </p>
-            <div className='mt-5 flex flex-wrap gap-2'>
-              <span className='rounded-full bg-white/15 px-3 py-1.5 text-sm font-medium'>
-                4,000+ lessons
-              </span>
-              {SPECIALIZATIONS.map((name) => (
-                <span
-                  key={name}
-                  className='rounded-full bg-white/10 px-3 py-1.5 text-sm'
+            <div className='mt-5 flex flex-wrap items-center gap-2'>
+              {SPECIALIZATIONS.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => trackCatalogNav(item.source, item.href)}
+                  className='rounded-full bg-white/10 px-3 py-1.5 text-sm transition hover:bg-white/20'
                 >
-                  {name}
-                </span>
+                  {item.name}
+                </Link>
               ))}
             </div>
+            <Link
+              href={CATALOG_HREF}
+              onClick={() =>
+                trackCatalogNav('cmpm_b_view_catalog', CATALOG_HREF)
+              }
+              className='mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-clemson transition hover:text-white'
+            >
+              View the entire catalog
+              <ArrowLongRightIcon className='h-4 w-4' />
+            </Link>
           </div>
         </div>
       </div>
