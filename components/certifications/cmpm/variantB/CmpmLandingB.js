@@ -43,6 +43,7 @@ import {
   PDP_QUOTE,
   PDP_SAMPLES,
   PDP_SPOTLIGHT_PDF,
+  PROOF_LOGOS,
   PROOF_TESTIMONIALS,
   SECTION3_QUOTE,
   SPECIALIZATIONS,
@@ -891,17 +892,17 @@ function Proof({ spotlightOpen, onToggleSpotlight }) {
           </h2>
         </div>
 
-        <div className='mt-8 flex flex-wrap items-center justify-start gap-x-8 gap-y-4'>
-          {CLIENT_LOGOS.map((logo) => (
+        <div className='mt-8 flex flex-wrap items-center justify-start gap-x-8 gap-y-6 md:gap-x-12'>
+          {PROOF_LOGOS.map((logo) => (
             <div
               key={`proof-${logo.name}`}
-              className='flex h-12 w-28 items-center justify-center grayscale opacity-70'
+              className='flex h-20 w-20 items-center justify-center md:h-24 md:w-24'
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={logo.logo}
                 alt={logo.name}
-                className='max-h-10 max-w-full object-contain'
+                className='max-h-full max-w-full object-contain'
               />
             </div>
           ))}

@@ -136,6 +136,7 @@ export const CURRICULUM_WEEKS = [
   },
 ];
 
+// Logo strip under the hero
 export const CLIENT_LOGOS = [
   {
     name: 'Colgate-Palmolive',
@@ -143,11 +144,11 @@ export const CLIENT_LOGOS = [
   },
   {
     name: 'Smurfit Westrock',
-    logo: 'https://packschool.s3.us-east-1.amazonaws.com/sm-westrock.png',
+    logo: 'https://packschool.s3.amazonaws.com/sm-westrock.png',
   },
   {
     name: 'Unilever',
-    logo: 'https://packschool.s3.us-east-1.amazonaws.com/ul-black.png',
+    logo: 'https://packschool.s3.amazonaws.com/ul-black.png',
   },
   {
     name: '3M',
@@ -155,15 +156,39 @@ export const CLIENT_LOGOS = [
   },
   {
     name: 'Cummins',
-    logo: 'https://packschool.s3.us-east-1.amazonaws.com/cummins.png',
+    logo: 'https://packschool.s3.amazonaws.com/cummins.png',
   },
   {
     name: 'Church & Dwight',
-    logo: 'https://packschool.s3.us-east-1.amazonaws.com/cd-black.png',
+    logo: 'https://packschool.s3.amazonaws.com/cd-black.png',
   },
   {
     name: 'Coca-Cola',
     logo: 'https://packschool.s3.amazonaws.com/coke.png',
+  },
+];
+
+// Proof section — Trusted by packaging leaders
+export const PROOF_LOGOS = [
+  {
+    name: 'KIND',
+    logo: 'https://packschool.s3.amazonaws.com/cmpmlogo-1.png',
+  },
+  {
+    name: 'Pratt',
+    logo: 'https://packschool.s3.amazonaws.com/cmpmlogo-2.png',
+  },
+  {
+    name: 'Staples',
+    logo: 'https://packschool.s3.amazonaws.com/cmpmlogo-3.png',
+  },
+  {
+    name: 'RXBAR',
+    logo: 'https://packschool.s3.amazonaws.com/cmpmlogo-4.png',
+  },
+  {
+    name: 'Gorilla',
+    logo: 'https://packschool.s3.amazonaws.com/cmpmlogo-5.png',
   },
 ];
 
