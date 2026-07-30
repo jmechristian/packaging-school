@@ -1,7 +1,5 @@
-export const APPLY_HREF =
-  '/certificate-of-mastery-in-packaging-management';
-export const CONSULT_HREF =
-  'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
+export const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
+export const CONSULT_HREF = 'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
 export const PDP_SPOTLIGHT_PDF =
   'https://packschool.s3.amazonaws.com/PDP-spotlight-for-CMPM-WEB.pdf';
 export const EXPLAINER_VIDEO = 'https://youtu.be/N_hYWvQO0Sg';
@@ -93,7 +91,7 @@ export const CURRICULUM_WEEKS = [
     week: '5',
     title: 'Material Management II',
     content:
-      'Fundamental material properties of Glass, Metal, and Polymers converted to packaging solutions.',
+      'Examine the structure, properties, and performance of paperboard and corrugated materials, and how they are designed and converted into packaging solutions for a wide range of applications.',
   },
   {
     week: '6',
