@@ -16,19 +16,14 @@ import {
 } from '@heroicons/react/24/outline';
 import CountdownTimer from '../../../shared/CountdownTimer';
 import VideoPlayer from '../../../VideoPlayer';
-import {
-  getCurrentCMPMSessions,
-  getLatestCMPMSessions,
-} from '../../../../helpers/api';
+import { getCurrentCMPMSessions } from '../../../../helpers/api';
 import {
   trackAbMeetingClick,
   trackAbNavNext,
   trackAbEngagement,
   withCmpmExperiment,
 } from '../../../../libs/analytics';
-import {
-  CMPM_EXPERIMENT_KEY,
-} from '../../../../libs/abVariant';
+import { CMPM_EXPERIMENT_KEY } from '../../../../libs/abVariant';
 import TeamCohortForm from './TeamCohortForm';
 import {
   APPLY_HREF,
@@ -46,6 +41,14 @@ import {
 } from './constants';
 
 const PAGE_PATH = '/certifications/get-to-know-cmpm';
+
+function formatSessionTitle(title) {
+  return String(title || '').replace(/\bCMPM\b/g, 'Certificate of Mastery');
+}
+
+function isIcpfSession(session) {
+  return String(session?.title || '').includes('ICPF');
+}
 
 function trackApply(source) {
   trackAbNavNext(
@@ -89,13 +92,13 @@ export default function CmpmLandingB() {
     let cancelled = false;
     (async () => {
       try {
-        const [latest, all] = await Promise.all([
-          getLatestCMPMSessions(),
-          getCurrentCMPMSessions(),
-        ]);
+        const all = await getCurrentCMPMSessions();
         if (cancelled) return;
-        setLatestSession(latest);
-        setSessions(Array.isArray(all) ? all : []);
+        const open = (Array.isArray(all) ? all : []).filter(
+          (session) => !isIcpfSession(session),
+        );
+        setSessions(open);
+        setLatestSession(open[0] || null);
       } catch (err) {
         console.warn('CMPM sessions fetch failed:', err?.message);
       }
@@ -135,9 +138,7 @@ export default function CmpmLandingB() {
       />
       <LogoStrip />
       <TheProject />
-      <WhoItsFor
-        onRequestTeam={() => openTeam('cmpm_b_section3_team')}
-      />
+      <WhoItsFor onRequestTeam={() => openTeam('cmpm_b_section3_team')} />
       <ProgramCurriculum />
       <Proof
         spotlightOpen={spotlightOpen}
@@ -168,23 +169,23 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
         <div className='absolute bottom-0 right-0 h-96 w-96 rounded-full bg-base-brand/40 blur-3xl' />
       </div>
 
-      <div className='relative mx-auto grid max-w-7xl gap-10 px-6 py-14 md:py-20 lg:grid-cols-2 lg:items-center lg:gap-14 lg:py-24'>
-        <div className='flex flex-col gap-6'>
+      <div className='relative mx-auto grid max-w-7xl gap-8 px-6 py-12 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-20'>
+        <div className='flex flex-col gap-5'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-clemson'>
             Certificate of Mastery in Packaging Management
           </p>
           <h1 className='font-greycliff text-4xl font-semibold leading-tight tracking-tight md:text-5xl xl:text-[3.25rem]'>
-            A Clemson University Certificate. PhD-Led. Built for Your Success.
+            Clemson University Certificate. PhD-Led. Built for Your Success.
           </h1>
           <p className='max-w-xl text-lg leading-relaxed text-white/85 md:text-xl'>
-            In 12 weeks—even while working full-time—you&apos;ll walk away with a
-            credential and a completed project that proves it.
+            In 12 weeks—even while working full-time—you&apos;ll walk away with
+            a credential and a completed project that proves it.
           </p>
 
           <div className='rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm md:p-5'>
-            <p className='text-sm font-semibold uppercase tracking-wide text-clemson'>
+            {/* <p className='text-sm font-semibold uppercase tracking-wide text-clemson'>
               Project callout
-            </p>
+            </p> */}
             <p className='mt-2 text-base leading-relaxed text-white md:text-lg'>
               1:1 PhD mentorship on your own project—improve a real job function
               or sharpen your portfolio toward your biggest career goal.
@@ -192,8 +193,8 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
           </div>
 
           <p className='text-base text-white/80'>
-            Finish, and spend the rest of the year with access to everything we
-            offer, curated for you.
+            Complete the program and enjoy access to our full course library for
+            the rest of the year—personalized just for you.
           </p>
 
           <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
@@ -217,7 +218,8 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
           </div>
 
           <p className='text-xs text-white/55'>
-            SC Commission on Higher Education License #5400
+            Packaging School is Licensed (#5400) by the SC Commission on Higher
+            Education License #5400
           </p>
         </div>
 
@@ -268,7 +270,7 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
 function LogoStrip() {
   return (
     <div className='border-b border-slate-200 bg-slate-50'>
-      <div className='mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-3 px-6 py-8 md:gap-x-5'>
+      <div className='mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-3 px-6 py-6 md:gap-x-5'>
         {CLIENT_LOGOS.map((logo) => (
           <div
             key={logo.name}
@@ -293,7 +295,7 @@ function LogoStrip() {
 
 function TheProject() {
   return (
-    <section className='mx-auto max-w-7xl px-6 py-16 md:py-24'>
+    <section className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
       <div className='mx-auto max-w-3xl text-center'>
         <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
           The Project
@@ -301,8 +303,8 @@ function TheProject() {
         <h2 className='mt-3 font-greycliff text-3xl font-semibold tracking-tight md:text-4xl'>
           Your Package Development Plan
         </h2>
-        <p className='mt-6 text-lg leading-relaxed text-slate-600 md:text-xl'>
-          Every CMPM student builds a{' '}
+        <p className='mt-4 text-lg leading-relaxed text-slate-600 md:text-xl'>
+          Every Certificate of Mastery student builds a{' '}
           <span className='font-semibold text-slate-900'>
             Package Development Plan (PDP)
           </span>
@@ -323,7 +325,7 @@ function TheProject() {
 function WhoItsFor({ onRequestTeam }) {
   return (
     <section className='bg-slate-50'>
-      <div className='mx-auto max-w-7xl px-6 py-16 md:py-24'>
+      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
         <div className='max-w-3xl'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
             Who It&apos;s For
@@ -331,14 +333,14 @@ function WhoItsFor({ onRequestTeam }) {
           <h2 className='mt-3 font-greycliff text-3xl font-semibold tracking-tight md:text-4xl'>
             One certificate. Two ways to use it.
           </h2>
-          <p className='mt-5 text-lg text-slate-600'>
-            Either way, you&apos;ll learn the language of packaging—the
-            vocabulary that lets you speak with authority across the materials,
-            processes, and technologies of packaging.
+          <p className='mt-4 text-lg text-slate-600'>
+            However you choose to use it, you&apos;ll learn the language of
+            packaging—the vocabulary that lets you speak with authority across
+            packaging materials, processes, and technologies.
           </p>
         </div>
 
-        <div className='mt-12 grid gap-8 lg:grid-cols-2 lg:gap-10'>
+        <div className='mt-8 grid gap-6 lg:grid-cols-2 lg:gap-8'>
           {/* Individual column */}
           <div className='flex flex-col gap-5'>
             <p className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
@@ -393,11 +395,11 @@ function WhoItsFor({ onRequestTeam }) {
                 <p className='mt-3 leading-relaxed text-white/85'>
                   R&amp;D, procurement, and logistics each touch packaging—but
                   rarely speak the same language about it. Enroll one person
-                  from each function in a private CMPM cohort, and together they
-                  become your in-house packaging team: R&amp;D speaking materials
-                  and design, procurement speaking sourcing and cost, logistics
-                  speaking supply chain and compliance—all fluent, all aligned,
-                  all in 12 weeks.
+                  from each function in a private Certificate of Mastery cohort,
+                  and together they become your in-house packaging team: R&amp;D
+                  speaking materials and design, procurement speaking sourcing
+                  and cost, logistics speaking supply chain and compliance—all
+                  fluent, all aligned, all in 12 weeks.
                 </p>
               </div>
             </div>
@@ -425,7 +427,7 @@ function WhoItsFor({ onRequestTeam }) {
         </div>
 
         {/* Pull-quote */}
-        <blockquote className='mt-12 border-l-4 border-clemson bg-white px-6 py-6 shadow-sm md:px-8'>
+        <blockquote className='mt-8 border-l-4 border-clemson bg-white px-6 py-5 shadow-sm md:px-8'>
           <p className='text-lg leading-relaxed text-slate-700 md:text-xl'>
             &ldquo;{SECTION3_QUOTE.body}&rdquo;
           </p>
@@ -457,7 +459,7 @@ function FunctionChip({ icon: Icon, label }) {
 
 function ProgramCurriculum() {
   return (
-    <section className='mx-auto max-w-7xl px-6 py-16 md:py-24'>
+    <section className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
       <div className='max-w-3xl'>
         <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
           Program &amp; Curriculum
@@ -465,7 +467,7 @@ function ProgramCurriculum() {
         <h2 className='mt-3 font-greycliff text-3xl font-semibold tracking-tight md:text-4xl'>
           Executive-level education, designed to be agile.
         </h2>
-        <p className='mt-5 text-lg text-slate-600'>
+        <p className='mt-4 text-lg text-slate-600'>
           You&apos;ll walk away with a tangible deliverable you can present to
           management and peers: your PDP, applied directly to your own
           organization&apos;s—or your own portfolio&apos;s—projects.
@@ -473,7 +475,7 @@ function ProgramCurriculum() {
       </div>
 
       {/* Stats */}
-      <div className='mt-10 grid grid-cols-2 gap-4 md:grid-cols-4'>
+      <div className='mt-8 grid grid-cols-2 gap-4 md:grid-cols-4'>
         {[
           { value: '14', label: 'Courses' },
           { value: '80', label: 'Hours' },
@@ -495,13 +497,13 @@ function ProgramCurriculum() {
       </div>
 
       {/* Catalog unlock diagram */}
-      <div className='mt-12 rounded-2xl bg-gradient-to-br from-base-dark to-base-brand p-6 text-white md:p-10'>
-        <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10'>
+      <div className='mt-8 rounded-2xl bg-gradient-to-br from-base-dark to-base-brand p-6 text-white md:p-8'>
+        <div className='flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-8'>
           <div className='flex shrink-0 flex-col items-center gap-3 text-center'>
             <div className='flex h-20 w-20 items-center justify-center rounded-full bg-clemson shadow-lg'>
               <KeyIcon className='h-10 w-10 text-white' />
             </div>
-            <p className='font-semibold'>CMPM Completion</p>
+            <p className='font-semibold'>Certificate of Mastery Completion</p>
             <p className='text-xs text-white/70'>Your key</p>
           </div>
           <ArrowLongRightIcon className='mx-auto hidden h-8 w-8 shrink-0 text-clemson lg:block' />
@@ -510,11 +512,11 @@ function ProgramCurriculum() {
               Unlock the full library
             </h3>
             <p className='mt-3 max-w-2xl leading-relaxed text-white/85'>
-              Finish CMPM, and for the rest of the year, every course in our
-              library is yours—one at a time, at your own pace, curated for you.
-              That&apos;s 4,000+ lessons across all of our specializations. Work
-              through enough of any one specialization&apos;s courses, and you
-              can complete that certificate too.
+              Complete the program and enjoy access to our full course library
+              for the rest of the year—personalized just for you. That&apos;s
+              4,000+ lessons across all of our specializations. Work through
+              enough of any one specialization&apos;s courses, and you can
+              complete that certificate too.
             </p>
             <div className='mt-5 flex flex-wrap gap-2'>
               <span className='rounded-full bg-white/15 px-3 py-1.5 text-sm font-medium'>
@@ -529,19 +531,16 @@ function ProgramCurriculum() {
                 </span>
               ))}
             </div>
-            <p className='mt-3 text-xs text-white/50'>
-              Specialization list pending final confirmation before launch.
-            </p>
           </div>
         </div>
       </div>
 
       {/* Curriculum grid */}
-      <div className='mt-14'>
+      <div className='mt-10'>
         <h3 className='font-greycliff text-2xl font-bold md:text-3xl'>
           Week-by-week curriculum
         </h3>
-        <div className='mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {CURRICULUM_WEEKS.map((week) => (
             <div
               key={week.week}
@@ -562,7 +561,7 @@ function ProgramCurriculum() {
       </div>
 
       {/* Instructor + video — each on its own row */}
-      <div className='mt-14 flex flex-col gap-16'>
+      <div className='mt-10 flex flex-col gap-10'>
         <div className='overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
           <div className='flex flex-col md:flex-row'>
             <div className='relative min-h-64 w-full shrink-0 overflow-hidden sm:min-h-72 md:min-h-0 md:w-72 md:self-stretch lg:w-80'>
@@ -582,15 +581,15 @@ function ProgramCurriculum() {
                 Dr. Julie Suggs
               </h3>
               <p className='mt-4 max-w-2xl leading-relaxed text-slate-600'>
-                Dr. Julie Suggs, Academic Director, holds a PhD in Food Technology
-                and leads the CMPM program. She has taught and mentored students
-                across every level—from C-suite executives and directors to
-                mid-management professionals and highly ambitious students early
-                in their careers. Dr. Suggs is passionate about creating a
-                hands-on, inclusive learning environment where students work
-                through real-world packaging challenges, build lasting professional
-                confidence, and leave with skills they can apply immediately in
-                their careers.
+                Dr. Julie Suggs, Academic Director, holds a PhD in Food
+                Technology and leads the Certificate of Mastery program. She has
+                taught and mentored students across every level—from C-suite
+                executives and directors to mid-management professionals and
+                highly ambitious students early in their careers. Dr. Suggs is
+                passionate about creating a hands-on, inclusive learning
+                environment where students work through real-world packaging
+                challenges, build lasting professional confidence, and leave
+                with skills they can apply immediately in their careers.
               </p>
             </div>
           </div>
@@ -599,12 +598,8 @@ function ProgramCurriculum() {
         <div className='mx-auto w-full max-w-4xl'>
           <div className='text-center'>
             <h3 className='font-greycliff text-2xl font-semibold md:text-3xl'>
-              Everything you need to know about the CMPM
+              Everything you need to know about the Certificate of Mastery
             </h3>
-            <p className='mt-2 text-sm text-slate-500'>
-              Explainer video—trim to CMPM-only content before launch; additional
-              b-roll planned to smooth edits.
-            </p>
           </div>
           <div className='mt-6 overflow-hidden rounded-2xl shadow-lg'>
             <VideoPlayer
@@ -626,7 +621,7 @@ function ProgramCurriculum() {
 function Proof({ spotlightOpen, onToggleSpotlight }) {
   return (
     <section className='bg-slate-50'>
-      <div className='mx-auto max-w-7xl px-6 py-16 md:py-24'>
+      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
         <div className='max-w-3xl'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
             Proof
@@ -652,7 +647,7 @@ function Proof({ spotlightOpen, onToggleSpotlight }) {
           ))}
         </div>
 
-        <div className='mt-12 grid gap-6 md:grid-cols-2'>
+        <div className='mt-8 grid gap-6 md:grid-cols-2'>
           {PROOF_TESTIMONIALS.map((t) => (
             <blockquote
               key={t.author}
@@ -663,14 +658,16 @@ function Proof({ spotlightOpen, onToggleSpotlight }) {
               </p>
               <footer className='mt-5 text-sm font-semibold text-slate-900'>
                 {t.author}
-                <span className='block font-normal text-slate-500'>{t.role}</span>
+                <span className='block font-normal text-slate-500'>
+                  {t.role}
+                </span>
               </footer>
             </blockquote>
           ))}
         </div>
 
         {/* Inline expandable PDP Alumni Spotlight (replaces pop-up gate) */}
-        <div className='mt-12 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
+        <div className='mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
           <button
             type='button'
             onClick={onToggleSpotlight}
@@ -693,9 +690,8 @@ function Proof({ spotlightOpen, onToggleSpotlight }) {
           {spotlightOpen ? (
             <div className='border-t border-slate-200 px-6 py-6 md:px-8'>
               <p className='text-slate-600'>
-                Browse the alumni PDP spotlight PDF—real deliverables built under
-                1:1 PhD mentorship. Placeholder card until additional inline
-                examples are curated.
+                Browse the alumni PDP spotlight PDF—real deliverables built
+                under 1:1 PhD mentorship.
               </p>
               <a
                 href={PDP_SPOTLIGHT_PDF}
@@ -726,7 +722,7 @@ function CohortsEnroll({
   onRequestTeam,
 }) {
   return (
-    <section id='enroll' className='mx-auto max-w-7xl px-6 py-16 md:py-24'>
+    <section id='enroll' className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
       <div className='max-w-3xl'>
         <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
           Cohorts &amp; Enroll
@@ -738,14 +734,14 @@ function CohortsEnroll({
 
       {/* Countdown — soonest future deadline from CMPM sessions */}
       {latestSession ? (
-        <div className='mt-10 overflow-hidden rounded-2xl bg-dark px-6 py-8 text-white md:px-10'>
+        <div className='mt-8 overflow-hidden rounded-2xl bg-dark px-6 py-7 text-white md:px-10'>
           <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between'>
             <div>
               <p className='text-sm font-semibold uppercase tracking-wide text-clemson'>
                 Application deadline
               </p>
               <p className='mt-2 font-greycliff text-2xl font-bold md:text-3xl'>
-                {latestSession.title}
+                {formatSessionTitle(latestSession.title)}
               </p>
               <p className='mt-1 text-white/70'>
                 Apply by {formatDate(latestSession.deadline)} · Cohort{' '}
@@ -763,70 +759,49 @@ function CohortsEnroll({
             </div>
           </div>
         </div>
-      ) : (
-        <div className='mt-10 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-slate-500'>
-          Cohort countdown loads from the live CMPM session calendar (soonest
-          future deadline).
-        </div>
-      )}
+      ) : null}
 
       {/* Cohort calendar — show all open future sessions */}
-      <div className='mt-12'>
+      <div className='mt-8'>
         <div className='flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'>
           <h3 className='font-greycliff text-2xl font-bold'>Cohort calendar</h3>
-          <p className='text-sm text-slate-500'>
-            Five cohorts annually: Spring, Summer, Fall I, Fall II, Winter
-          </p>
         </div>
-        <div className='mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
+        <div className='mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
           {sessions.length ? (
-            sessions.map((session) => {
-              const isIcpf = String(session.title || '').includes('ICPF');
-              return (
-                <div
-                  key={`${session.title}-${session.deadline}`}
-                  className='flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm'
+            sessions.map((session) => (
+              <div
+                key={`${session.title}-${session.deadline}`}
+                className='flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm'
+              >
+                <p className='text-sm font-semibold uppercase tracking-wide text-base-mid'>
+                  {formatSessionTitle(session.title)}
+                </p>
+                <p className='mt-3 text-base font-semibold leading-snug text-slate-900'>
+                  {formatDate(session.startDate)} –{' '}
+                  {formatDate(session.endDate)}
+                </p>
+                <p className='mt-2 text-sm text-slate-600'>
+                  Deadline {formatDate(session.deadline)}
+                </p>
+                <Link
+                  href={APPLY_HREF}
+                  onClick={onApply}
+                  className='mt-auto pt-5 text-base font-semibold text-clemson hover:text-clemson-dark'
                 >
-                  <p className='text-sm font-semibold uppercase tracking-wide text-base-mid'>
-                    {session.title}
-                  </p>
-                  <p className='mt-3 text-base font-semibold leading-snug text-slate-900'>
-                    {formatDate(session.startDate)} –{' '}
-                    {formatDate(session.endDate)}
-                  </p>
-                  <p className='mt-2 text-sm text-slate-600'>
-                    Deadline {formatDate(session.deadline)}
-                  </p>
-                  {isIcpf ? (
-                    <span className='mt-3 inline-flex w-fit rounded-full bg-brand-yellow-light px-2.5 py-1 text-sm font-semibold text-slate-800'>
-                      ICPF Sponsored
-                    </span>
-                  ) : null}
-                  <Link
-                    href={isIcpf ? '/icpf' : APPLY_HREF}
-                    onClick={onApply}
-                    className='mt-auto pt-5 text-base font-semibold text-clemson hover:text-clemson-dark'
-                  >
-                    Apply Now →
-                  </Link>
-                </div>
-              );
-            })
+                  Apply Now →
+                </Link>
+              </div>
+            ))
           ) : (
             <p className='col-span-full text-slate-500'>
               Loading open cohorts…
             </p>
           )}
         </div>
-        <p className='mt-4 text-sm text-slate-500'>
-          <ClockIcon className='mr-1 inline h-4 w-4' />
-          Page always surfaces the soonest future deadline from the CMPM
-          sessions source of truth.
-        </p>
       </div>
 
       {/* Pricing */}
-      <div className='mt-12 grid gap-6 lg:grid-cols-3'>
+      <div className='mt-8 grid gap-6 lg:grid-cols-3'>
         <div className='rounded-2xl border border-slate-200 bg-white p-7 shadow-sm lg:col-span-2'>
           <p className='text-sm font-semibold uppercase tracking-wide text-slate-500'>
             Investment
@@ -851,13 +826,6 @@ function CohortsEnroll({
               $25 application fee, credited toward tuition upon enrollment
             </li>
           </ul>
-          <div className='mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600'>
-            <span className='font-semibold text-slate-900'>ICPF Sponsored:</span>{' '}
-            A scholarship track available exclusively to university students.
-            Eligible student applicants are reviewed by an industry committee,
-            which selects the sponsorship recipients. See the Factbook below for
-            fuller detail.
-          </div>
         </div>
         <div className='flex flex-col justify-center gap-3 rounded-2xl bg-base-dark p-7 text-white'>
           <Link
@@ -898,11 +866,7 @@ function Factbook() {
   const items = [
     {
       title: 'CEU Eligibility',
-      body: 'CMPM is CEU-eligible, offering 8 CEUs upon completion.',
-    },
-    {
-      title: 'ICPF-Sponsored',
-      body: 'A scholarship track for students currently enrolled in an eligible college, university, or associate degree program. Scholarships are awarded through a competitive review process conducted by an industry committee. Only currently enrolled students are eligible to apply for this track.',
+      body: 'Certificate of Mastery is CEU-eligible, offering 8 CEUs upon completion.',
     },
     {
       title: 'Employer Recognition',
@@ -923,10 +887,10 @@ function Factbook() {
     },
     {
       title: 'Credential Recognition',
-      body: "The CMPM is a line on your resume—it's issued by Clemson University's Center for Corporate Learning.",
+      body: "The Certificate of Mastery is a line on your resume—it's issued by Clemson University's Center for Corporate Learning.",
     },
     {
-      title: 'CMPM vs. CPS',
+      title: 'Certificate of Mastery vs. CPS',
       body: (
         <div className='space-y-3'>
           <p>
@@ -934,21 +898,21 @@ function Factbook() {
             language of packaging—the core knowledge needed to speak and
             understand the industry, covered in 12 foundational courses over up
             to 6 months, self-paced, with email-based instructor access. All of
-            CPS is included in CMPM.
+            CPS is included in Certificate of Mastery.
           </p>
           <p>
-            <strong>CMPM</strong> is for someone who wants to apply that language
-            to a real project or portfolio—and because what you&apos;re trying to
-            do has likely never been done exactly that way before, you&apos;ll
-            work one-on-one with a dedicated PhD professor who provides weekly
-            office hours, personalized feedback, and coaching throughout the
-            three-month program (80 hours across 14 courses, including Project
-            Management, Human Factors, and the capstone Packaging Development
-            Plan).
+            <strong>Certificate of Mastery</strong> is for someone who wants to
+            apply that language to a real project or portfolio—and because what
+            you&apos;re trying to do has likely never been done exactly that way
+            before, you&apos;ll work one-on-one with a dedicated PhD professor
+            who provides weekly office hours, personalized feedback, and
+            coaching throughout the three-month program (80 hours across 14
+            courses, including Project Management, Human Factors, and the
+            capstone Packaging Development Plan).
           </p>
           <p>
-            CPS is a Packaging School credential; CMPM is a Clemson University
-            credential and requires a higher price point.
+            CPS is a Packaging School credential; Certificate of Mastery is a
+            Clemson University credential and requires a higher price point.
           </p>
         </div>
       ),
@@ -961,7 +925,7 @@ function Factbook() {
 
   return (
     <section className='border-t border-slate-200 bg-white'>
-      <div className='mx-auto max-w-7xl px-6 py-16 md:py-20'>
+      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
         <div className='flex flex-col gap-6 md:flex-row md:items-end md:justify-between'>
           <div>
             <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
@@ -977,11 +941,11 @@ function Factbook() {
           </div>
         </div>
 
-        <dl className='mt-10 divide-y divide-slate-200 border-y border-slate-200'>
+        <dl className='mt-8 divide-y divide-slate-200 border-y border-slate-200'>
           {items.map((item) => (
             <div
               key={item.title}
-              className='grid gap-3 py-6 md:grid-cols-12 md:gap-8'
+              className='grid gap-3 py-5 md:grid-cols-12 md:gap-8'
             >
               <dt className='font-greycliff text-lg font-bold text-slate-900 md:col-span-4'>
                 {item.title}
@@ -992,11 +956,6 @@ function Factbook() {
             </div>
           ))}
         </dl>
-
-        <p className='mt-6 text-xs text-slate-400'>
-          Alumni discount percentage / additional alumni benefits are placeholders
-          until confirmed—publish only verified terms.
-        </p>
       </div>
     </section>
   );

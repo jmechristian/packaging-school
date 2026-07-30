@@ -10,9 +10,6 @@ export const JULIE_IMAGE =
 export const CLEMSON_LOGO =
   'https://packschool.s3.amazonaws.com/01-LOGO_ClemsonCCL.png';
 
-// Confirm before launch: Packaging Science, Automotive Packaging,
-// Sustainable Packaging, Food Packaging — listed as the 4 additional
-// specializations in the catalog-access claim.
 export const SPECIALIZATIONS = [
   'Packaging Science',
   'Automotive Packaging',
@@ -127,7 +124,7 @@ export const CLIENT_LOGOS = [
 
 // Section 3 pull-quote: Mario emphasizes process / cross-functional value.
 export const SECTION3_QUOTE = {
-  body: 'The CMPM is a great program for both up-and-coming professionals curious to know more about packaging engineering as well as seasoned packaging professionals who are looking to do deeper dives and obtain additional knowledge; very fun, useful and engaging overall!',
+  body: 'The Certificate of Mastery is a great program for both up-and-coming professionals curious to know more about packaging engineering as well as seasoned packaging professionals who are looking to do deeper dives and obtain additional knowledge; very fun, useful and engaging overall!',
   author: 'Mario Barrios',
   role: 'Senior Packaging Engineer, Colgate-Palmolive Company',
 };
@@ -135,17 +132,17 @@ export const SECTION3_QUOTE = {
 // Section 5 — same set as CMPMReviews, minus Mario (used in Section 3).
 export const PROOF_TESTIMONIALS = [
   {
-    body: 'At this point in my career, I was searching for an educational opportunity with the most comprehensive, data driven, and practical program and the CMPM offered that in droves. I was able to use my background to traverse other packaging disciplines and learn all new platforms I had interacted with but never had the chance to dive in. I recommend this program whether you’re just starting in packaging or even with several years under your belt.',
+    body: 'At this point in my career, I was searching for an educational opportunity with the most comprehensive, data driven, and practical program and the Certificate of Mastery offered that in droves. I was able to use my background to traverse other packaging disciplines and learn all new platforms I had interacted with but never had the chance to dive in. I recommend this program whether you’re just starting in packaging or even with several years under your belt.',
     author: 'Adam Moffitt',
     role: 'Business Development Manager, UPM Raflatac',
   },
   {
-    body: 'The CMPM program offers valuable insights into the latest packaging trends and processes. It also provides an excellent framework for project management. I highly encourage anyone who is interested in taking their packaging knowledge to the next level to take this course.',
+    body: 'The Certificate of Mastery program offers valuable insights into the latest packaging trends and processes. It also provides an excellent framework for project management. I highly encourage anyone who is interested in taking their packaging knowledge to the next level to take this course.',
     author: 'Clay Mitchell',
     role: 'Category Manager, American Paper and Twine',
   },
   {
-    body: 'I loved the fact that the CMPM program was an interactive online series that inspired my creativity and enabled my ability to use new tools to take back to Nissan North America, Inc. It allowed me to implement an effective and efficient packaging process to help not only me, but my colleagues in their everyday performance on the job.',
+    body: 'I loved the fact that the Certificate of Mastery program was an interactive online series that inspired my creativity and enabled my ability to use new tools to take back to Nissan North America, Inc. It allowed me to implement an effective and efficient packaging process to help not only me, but my colleagues in their everyday performance on the job.',
     author: 'Lauren McDonald',
     role: 'Packaging Specialist, Volkswagen Group of America, Inc.',
   },
@@ -155,12 +152,12 @@ export const PROOF_TESTIMONIALS = [
     role: 'Regional Sales Manager, Jamestown Container Corporation',
   },
   {
-    body: 'The CMPM is a very complete and inspiring program, its content has contributed to reinforce my knowledge in key areas such as materials, production processes, and supply chain. This allowed me to keep growing as a packaging professional and will further contribute to strengthen my value proposition and packaging solutions to my customers.',
+    body: 'The Certificate of Mastery is a very complete and inspiring program, its content has contributed to reinforce my knowledge in key areas such as materials, production processes, and supply chain. This allowed me to keep growing as a packaging professional and will further contribute to strengthen my value proposition and packaging solutions to my customers.',
     author: 'Carolina Aristizábal Molina',
     role: 'Packaging Engineer, Smurfit Kappa',
   },
   {
-    body: 'The CMPM was a constructive overview of all things packaging! The coursework provided was informational and applicable to everyday practices within our organization; laying the groundwork for what it takes to launch a package.',
+    body: 'The Certificate of Mastery was a constructive overview of all things packaging! The coursework provided was informational and applicable to everyday practices within our organization; laying the groundwork for what it takes to launch a package.',
     author: 'Garrett Patrick',
     role: 'Packaging Engineer, Gorilla Glue',
   },
@@ -170,26 +167,26 @@ export const HERO_FRAMES = [
   {
     id: 'grad-1',
     src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-1.png',
-    alt: 'CMPM graduate holding their framed Clemson certificate',
+    alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-2',
     src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-2.png',
-    alt: 'CMPM graduate holding their framed Clemson certificate',
+    alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-3',
     src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-3.png',
-    alt: 'CMPM graduate holding their framed Clemson certificate',
+    alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-4',
     src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-4.png',
-    alt: 'CMPM graduate holding their framed Clemson certificate',
+    alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-5',
     src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-5.png',
-    alt: 'CMPM graduate holding their framed Clemson certificate',
+    alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
 ];
