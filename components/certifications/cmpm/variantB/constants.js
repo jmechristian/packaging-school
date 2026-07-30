@@ -35,6 +35,35 @@ export const SPECIALIZATIONS = [
 
 export const CATALOG_HREF = '/certifications';
 
+export const PDP_SAMPLES = [
+  {
+    src: 'https://packschool.s3.amazonaws.com/pdp-1.png',
+    alt: 'Student PDP slide—Starbucks packaging product overview with material callouts',
+  },
+  {
+    src: 'https://packschool.s3.amazonaws.com/pdp-2.png',
+    alt: 'Student PDP slide—Hydrix brand concept with stick-pack and pouch mockups',
+  },
+  {
+    src: 'https://packschool.s3.amazonaws.com/pdp-3.png',
+    alt: 'Student PDP slide—trü frü product overview with stand-up pouch packaging',
+  },
+  {
+    src: 'https://packschool.s3.amazonaws.com/pdp-4.png',
+    alt: 'Student PDP slide—UP Food brand identity, logo, and color system',
+  },
+  {
+    src: 'https://packschool.s3.amazonaws.com/pdp-5.png',
+    alt: 'Student PDP slide—professional growth reflection on systems thinking in packaging',
+  },
+];
+
+export const PDP_QUOTE = {
+  body: 'This program has influenced my future in the packaging industry, as before this program, I only viewed packaging as something that protected the products that I ordered. Now I understand that it goes way beyond that consumer mindset, and that packaging decisions actually affect all parts of the supply chain, including manufacturing, transportation, distribution, and more. This program has allowed me to apply what I have learned to my career in supply chain management, especially during my time at Amazon.',
+  author: 'Renisha Parika',
+  role: 'Area Manager, Amazon',
+};
+
 export const CURRICULUM_WEEKS = [
   {
     week: '1',
@@ -184,27 +213,27 @@ export const PROOF_TESTIMONIALS = [
 export const HERO_FRAMES = [
   {
     id: 'grad-1',
-    src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-1.png',
+    src: 'https://packschool.s3.amazonaws.com/cmpmb-1.png',
     alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-2',
-    src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-2.png',
+    src: 'https://packschool.s3.amazonaws.com/cmpmb-2.png',
     alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-3',
-    src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-3.png',
+    src: 'https://packschool.s3.amazonaws.com/cmpmb-3.png',
     alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-4',
-    src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-4.png',
+    src: 'https://packschool.s3.amazonaws.com/cmpmb-4.png',
     alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
   {
     id: 'grad-5',
-    src: 'https://packschool.s3.us-east-1.amazonaws.com/cmpm-grad-5.png',
+    src: 'https://packschool.s3.amazonaws.com/cmpmb-5.png',
     alt: 'Certificate of Mastery graduate holding their framed Clemson certificate',
   },
 ];

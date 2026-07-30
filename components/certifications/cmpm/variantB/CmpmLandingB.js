@@ -8,12 +8,17 @@ import {
   BriefcaseIcon,
   CheckCircleIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   ClockIcon,
   CubeIcon,
   KeyIcon,
+  MagnifyingGlassPlusIcon,
   TruckIcon,
   UserGroupIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { Dialog } from '@headlessui/react';
 import CountdownTimer from '../../../shared/CountdownTimer';
 import VideoPlayer from '../../../VideoPlayer';
 import { getCurrentCMPMSessions } from '../../../../helpers/api';
@@ -35,6 +40,8 @@ import {
   EXPLAINER_VIDEO,
   HERO_FRAMES,
   JULIE_IMAGE,
+  PDP_QUOTE,
+  PDP_SAMPLES,
   PDP_SPOTLIGHT_PDF,
   PROOF_TESTIMONIALS,
   SECTION3_QUOTE,
@@ -80,6 +87,19 @@ function trackCatalogNav(source, nextPath) {
       pagePath: PAGE_PATH,
       nextPath,
       source,
+    }),
+  );
+}
+
+function trackPdpEngagement(metric, source, metadata = {}) {
+  trackAbEngagement(
+    withCmpmExperiment({
+      experimentKey: CMPM_EXPERIMENT_KEY,
+      pagePath: PAGE_PATH,
+      metric,
+      value: 1,
+      source,
+      metadata,
     }),
   );
 }
@@ -181,7 +201,7 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
         <div className='absolute bottom-0 right-0 h-96 w-96 rounded-full bg-base-brand/40 blur-3xl' />
       </div>
 
-      <div className='relative mx-auto grid max-w-7xl gap-8 px-6 py-12 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-20'>
+      <div className='relative mx-auto grid max-w-7xl gap-8 px-6 py-14 md:py-20 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-20'>
         <div className='flex flex-col gap-5'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-clemson'>
             Certificate of Mastery in Packaging Management
@@ -236,8 +256,8 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
         </div>
 
         {/* Hero visual carousel — CMPM graduates with certificates */}
-        <div className='relative'>
-          <div className='relative aspect-[4/5] overflow-hidden rounded-2xl bg-base-dark shadow-2xl sm:aspect-[5/4] lg:aspect-[4/5] xl:aspect-[5/4]'>
+        <div className='relative mx-auto w-full lg:w-[74%]'>
+          <div className='relative aspect-[500/629] overflow-hidden rounded-2xl bg-base-dark shadow-2xl'>
             {HERO_FRAMES.map((f, i) => (
               <div
                 key={f.id}
@@ -306,26 +326,245 @@ function LogoStrip() {
 /* -------------------------------------------------------------------------- */
 
 function TheProject() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [loaded, setLoaded] = useState({});
+  const total = PDP_SAMPLES.length;
+  const currentReady = Boolean(loaded[slideIndex]);
+
+  const goPrev = (tracked = true) => {
+    if (tracked) {
+      trackPdpEngagement('pdp_carousel_prev', 'cmpm_b_pdp_prev', {
+        fromSlide: slideIndex + 1,
+      });
+    }
+    setSlideIndex((i) => (i - 1 + total) % total);
+  };
+  const goNext = (tracked = true) => {
+    if (tracked) {
+      trackPdpEngagement('pdp_carousel_next', 'cmpm_b_pdp_next', {
+        fromSlide: slideIndex + 1,
+      });
+    }
+    setSlideIndex((i) => (i + 1) % total);
+  };
+  const goToSlide = (i) => {
+    if (i === slideIndex) return;
+    trackPdpEngagement('pdp_carousel_slide', `cmpm_b_pdp_slide_${i + 1}`, {
+      slide: i + 1,
+      fromSlide: slideIndex + 1,
+    });
+    setSlideIndex(i);
+  };
+  const openLightbox = () => {
+    trackPdpEngagement('pdp_carousel_enlarge', 'cmpm_b_pdp_enlarge', {
+      slide: slideIndex + 1,
+    });
+    setLightboxOpen(true);
+  };
+
+  const markLoaded = (i) => {
+    setLoaded((prev) => (prev[i] ? prev : { ...prev, [i]: true }));
+  };
+
+  useEffect(() => {
+    if (!lightboxOpen) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') goPrev(false);
+      if (e.key === 'ArrowRight') goNext(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxOpen, slideIndex]);
+
   return (
-    <section className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
-      <div className='mx-auto max-w-3xl text-center'>
-        <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
-          The Project
-        </p>
-        <h2 className='mt-3 font-greycliff text-3xl font-semibold tracking-tight md:text-4xl'>
-          Your Package Development Plan
-        </h2>
-        <p className='mt-4 text-lg leading-relaxed text-slate-600 md:text-xl'>
-          Every Certificate of Mastery student builds a{' '}
-          <span className='font-semibold text-slate-900'>
-            Package Development Plan (PDP)
-          </span>
-          —a real deliverable, not a case study. You&apos;ll work 1-on-1 with a
-          PhD mentor who pushes you to apply what you&apos;re learning directly
-          to your own goals, whether that&apos;s a live responsibility at work
-          or the portfolio that moves your career forward.
-        </p>
+    <section className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
+      <div className='grid items-center gap-8 lg:grid-cols-2 lg:gap-12'>
+        <div className='max-w-xl self-center'>
+          <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
+            The Project
+          </p>
+          <h2 className='mt-3 font-greycliff text-3xl font-semibold tracking-tight md:text-4xl'>
+            Your Package Development Plan
+          </h2>
+          <p className='mt-4 text-lg leading-relaxed text-slate-600'>
+            Every Certificate of Mastery student builds a{' '}
+            <span className='font-semibold text-slate-900'>
+              Package Development Plan (PDP)
+            </span>
+            —a real deliverable, not a case study. You&apos;ll work 1-on-1 with
+            a PhD mentor who pushes you to apply what you&apos;re learning
+            directly to your own goals, whether that&apos;s a live
+            responsibility at work or the portfolio that moves your career
+            forward.
+          </p>
+        </div>
+
+        <div className='self-center'>
+          <div className='relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm'>
+            {PDP_SAMPLES.map((item, i) => (
+              <div
+                key={item.src}
+                className={`absolute inset-0 transition-opacity duration-300 ease-out ${
+                  i === slideIndex && currentReady ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-hidden={i !== slideIndex}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  sizes='(max-width: 1024px) 100vw, 50vw'
+                  className='object-cover object-top'
+                  priority={i <= 1}
+                  onLoadingComplete={() => markLoaded(i)}
+                />
+              </div>
+            ))}
+            {!currentReady ? (
+              <div
+                className='absolute inset-0 z-[5] flex items-center justify-center bg-slate-100'
+                aria-hidden='true'
+              >
+                <div className='h-full w-full animate-pulse bg-gradient-to-r from-slate-100 via-slate-200/80 to-slate-100' />
+              </div>
+            ) : null}
+            <button
+              type='button'
+              onClick={openLightbox}
+              className='absolute inset-0 z-10 flex items-end justify-end p-3'
+              aria-label='Enlarge project example'
+            >
+              <span className='inline-flex items-center gap-1.5 rounded-lg bg-black/65 px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-black/80'>
+                <MagnifyingGlassPlusIcon className='h-4 w-4' />
+                Enlarge
+              </span>
+            </button>
+          </div>
+
+          <div className='mt-4 flex items-center justify-center gap-4'>
+            <button
+              type='button'
+              onClick={() => goPrev(true)}
+              className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:bg-slate-50'
+              aria-label='Previous project example'
+            >
+              <ChevronLeftIcon className='h-5 w-5' />
+            </button>
+            <div className='flex items-center gap-2'>
+              {PDP_SAMPLES.map((item, i) => (
+                <button
+                  key={item.src}
+                  type='button'
+                  onClick={() => goToSlide(i)}
+                  aria-label={`Show project example ${i + 1}`}
+                  aria-current={i === slideIndex ? 'true' : undefined}
+                  className={`h-2.5 rounded-full transition ${
+                    i === slideIndex
+                      ? 'w-6 bg-clemson'
+                      : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type='button'
+              onClick={() => goNext(true)}
+              className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:bg-slate-50'
+              aria-label='Next project example'
+            >
+              <ChevronRightIcon className='h-5 w-5' />
+            </button>
+          </div>
+          <p className='mt-3 text-center text-xs font-medium uppercase tracking-[0.14em] text-slate-400'>
+            Student work · {slideIndex + 1} of {total}
+          </p>
+        </div>
       </div>
+
+      <blockquote className='mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 px-6 py-7 md:px-10 md:py-9'>
+        <p className='font-greycliff text-lg leading-relaxed text-slate-800 md:text-xl'>
+          &ldquo;{PDP_QUOTE.body}&rdquo;
+        </p>
+        <footer className='mt-5 text-sm font-semibold text-slate-900'>
+          {PDP_QUOTE.author}
+          <span className='font-normal text-slate-500'>
+            {' '}
+            — {PDP_QUOTE.role}
+          </span>
+        </footer>
+      </blockquote>
+
+      <Dialog
+        open={lightboxOpen}
+        onClose={setLightboxOpen}
+        className='relative z-50'
+      >
+        <div className='fixed inset-0 bg-black/80' aria-hidden='true' />
+        <div className='fixed inset-0 flex items-center justify-center p-4 md:p-8'>
+          <Dialog.Panel className='relative flex max-h-full w-full max-w-6xl flex-col'>
+            <div className='mb-3 flex items-center justify-between gap-3 text-white'>
+              <Dialog.Title className='text-sm font-semibold'>
+                Student Package Development Plan · {slideIndex + 1} of {total}
+              </Dialog.Title>
+              <button
+                type='button'
+                onClick={() => setLightboxOpen(false)}
+                className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20'
+                aria-label='Close enlarged view'
+              >
+                <XMarkIcon className='h-6 w-6' />
+              </button>
+            </div>
+            <div className='relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-black shadow-2xl'>
+              {PDP_SAMPLES.map((item, i) => (
+                <div
+                  key={`lb-${item.src}`}
+                  className={`absolute inset-0 transition-opacity duration-300 ease-out ${
+                    i === slideIndex && currentReady
+                      ? 'opacity-100'
+                      : 'opacity-0'
+                  }`}
+                  aria-hidden={i !== slideIndex}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes='100vw'
+                    className='object-contain'
+                    onLoadingComplete={() => markLoaded(i)}
+                  />
+                </div>
+              ))}
+              {!currentReady ? (
+                <div
+                  className='absolute inset-0 animate-pulse bg-slate-800'
+                  aria-hidden='true'
+                />
+              ) : null}
+            </div>
+            <div className='mt-4 flex items-center justify-center gap-4'>
+              <button
+                type='button'
+                onClick={() => goPrev(true)}
+                className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20'
+                aria-label='Previous project example'
+              >
+                <ChevronLeftIcon className='h-5 w-5' />
+              </button>
+              <button
+                type='button'
+                onClick={() => goNext(true)}
+                className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20'
+                aria-label='Next project example'
+              >
+                <ChevronRightIcon className='h-5 w-5' />
+              </button>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </section>
   );
 }
@@ -337,7 +576,7 @@ function TheProject() {
 function WhoItsFor({ onRequestTeam }) {
   return (
     <section className='bg-slate-50'>
-      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
+      <div className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
         <div className='max-w-3xl'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
             Who It&apos;s For
@@ -471,7 +710,7 @@ function FunctionChip({ icon: Icon, label }) {
 
 function ProgramCurriculum() {
   return (
-    <section className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
+    <section className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
       <div className='max-w-3xl'>
         <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
           Program &amp; Curriculum
@@ -642,7 +881,7 @@ function ProgramCurriculum() {
 function Proof({ spotlightOpen, onToggleSpotlight }) {
   return (
     <section className='bg-slate-50'>
-      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
+      <div className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
         <div className='max-w-3xl'>
           <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
             Proof
@@ -743,7 +982,7 @@ function CohortsEnroll({
   onRequestTeam,
 }) {
   return (
-    <section id='enroll' className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
+    <section id='enroll' className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
       <div className='max-w-3xl'>
         <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
           Cohorts &amp; Enroll
@@ -946,7 +1185,7 @@ function Factbook() {
 
   return (
     <section className='border-t border-slate-200 bg-white'>
-      <div className='mx-auto max-w-7xl px-6 py-12 md:py-16'>
+      <div className='mx-auto max-w-7xl px-6 py-14 md:py-20'>
         <div className='flex flex-col gap-6 md:flex-row md:items-end md:justify-between'>
           <div>
             <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-mid'>
