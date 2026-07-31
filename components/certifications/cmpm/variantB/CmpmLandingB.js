@@ -38,6 +38,7 @@ import {
   CONSULT_HREF,
   CURRICULUM_WEEKS,
   EXPLAINER_VIDEO,
+  EXPLAINER_VIDEO_2,
   HERO_FRAMES,
   JULIE_IMAGE,
   PDP_QUOTE,
@@ -252,7 +253,7 @@ function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
 
           <p className='text-xs text-white/55'>
             Packaging School is Licensed (#5400) by the SC Commission on Higher
-            Education License #5400
+            Education
           </p>
         </div>
 
@@ -478,7 +479,7 @@ function TheProject() {
             </button>
           </div>
           <p className='mt-3 text-center text-xs font-medium uppercase tracking-[0.14em] text-slate-400'>
-            Student work · {slideIndex + 1} of {total}
+            Samples from PDP projects · {slideIndex + 1} of {total}
           </p>
         </div>
       </div>
@@ -756,7 +757,7 @@ function ProgramCurriculum() {
               <KeyIcon className='h-10 w-10 text-white' />
             </div>
             <p className='font-semibold'>Certificate of Mastery Completion</p>
-            <p className='text-xs text-white/70'>Your key</p>
+            {/* <p className='text-xs text-white/70'>Your key</p> */}
           </div>
           <ArrowLongRightIcon className='mx-auto hidden h-8 w-8 shrink-0 text-clemson lg:block' />
           <div className='flex-1'>
@@ -856,18 +857,27 @@ function ProgramCurriculum() {
           </div>
         </div>
 
-        <div className='mx-auto w-full max-w-4xl'>
+        <div className='w-full'>
           <div className='text-center'>
             <h3 className='font-greycliff text-2xl font-semibold md:text-3xl'>
               Everything you need to know about the Certificate of Mastery
             </h3>
           </div>
-          <div className='mt-6 overflow-hidden rounded-2xl shadow-lg'>
-            <VideoPlayer
-              videoEmbedLink={EXPLAINER_VIDEO}
-              light={true}
-              hideSupport={true}
-            />
+          <div className='mt-6 grid gap-4 md:grid-cols-2 md:gap-6'>
+            <div className='overflow-hidden rounded-2xl shadow-lg'>
+              <VideoPlayer
+                videoEmbedLink={EXPLAINER_VIDEO}
+                light={true}
+                hideSupport={true}
+              />
+            </div>
+            <div className='overflow-hidden rounded-2xl shadow-lg'>
+              <VideoPlayer
+                videoEmbedLink={EXPLAINER_VIDEO_2}
+                light={true}
+                hideSupport={true}
+              />
+            </div>
           </div>
         </div>
       </div>

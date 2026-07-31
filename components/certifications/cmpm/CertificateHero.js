@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react';
 import VideoPlayer from '../../VideoPlayer';
 import FadeIn from '../../../helpers/FadeIn';
 import { getLatestCMPMSessions } from '../../../helpers/api';
-import {
-  ArrowLongRightIcon,
-  BoltIcon,
-  ClockIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import CountdownTimer from '../../shared/CountdownTimer';
+import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
+import {
+  trackAbMeetingClick,
+  trackAbNavNext,
+  withCmpmExperiment,
+} from '../../../libs/analytics';
+
+const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
+const CONSULT_HREF = 'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
+const PAGE_PATH = '/certifications/get-to-know-cmpm';
 
 const CertificateHero = () => {
   const router = useRouter();
@@ -30,6 +36,31 @@ const CertificateHero = () => {
     };
     fetchLatestSession();
   }, []);
+
+  const onApply = () => {
+    trackAbNavNext(
+      withCmpmExperiment({
+        experimentKey: CMPM_EXPERIMENT_KEY,
+        pagePath: PAGE_PATH,
+        nextPath: APPLY_HREF,
+        source: 'cmpm_a_hero_apply',
+      }),
+    );
+    router.push(APPLY_HREF);
+  };
+
+  const onConsult = () => {
+    trackAbMeetingClick(
+      withCmpmExperiment({
+        experimentKey: CMPM_EXPERIMENT_KEY,
+        pagePath: PAGE_PATH,
+        nextPath: CONSULT_HREF,
+        source: 'cmpm_a_hero_consult',
+      }),
+    );
+    window.open(CONSULT_HREF, '_blank');
+  };
+
   return (
     <div className='flex flex-col gap-12 xl:gap-24 lg:flex-row items-center pt-6 md:pt-16 lg:pt-24 container-7xl text-center lg:text-left'>
       <div className='w-full max-w-sm md:max-w-md xl:max-w-2xl flex flex-col shadow-xl'>
@@ -79,20 +110,13 @@ const CertificateHero = () => {
             <div className='flex flex-col xl:flex-row xl:items-center left-center gap-6 mt-4'>
               <button
                 className='w-full md:w-fit px-6 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff text-xl'
-                onClick={() =>
-                  router.push('/certificate-of-mastery-in-packaging-management')
-                }
+                onClick={onApply}
               >
                 Apply Now
               </button>
               <div
                 className='flex gap-1.5 items-center cursor-pointer'
-                onClick={() =>
-                  window.open(
-                    'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-                    '_blank'
-                  )
-                }
+                onClick={onConsult}
               >
                 <div className='font-semibold text-xl font-greycliff dark:text-base-brand'>
                   Schedule a FREE Live Demo

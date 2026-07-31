@@ -3,6 +3,7 @@ export const CONSULT_HREF = 'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
 export const PDP_SPOTLIGHT_PDF =
   'https://packschool.s3.amazonaws.com/PDP-spotlight-for-CMPM-WEB.pdf';
 export const EXPLAINER_VIDEO = 'https://youtu.be/N_hYWvQO0Sg';
+export const EXPLAINER_VIDEO_2 = 'https://youtu.be/opvsR5BB35g';
 export const JULIE_IMAGE =
   'https://packschool.s3.amazonaws.com/JULIE-2018-sm.jpg';
 export const CLEMSON_LOGO =

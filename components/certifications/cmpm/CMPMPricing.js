@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
 import { API } from 'aws-amplify';
-import { CheckIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { listCMPMSessions } from '../../../src/graphql/queries';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
+import {
+  trackAbMeetingClick,
+  trackAbNavNext,
+  withCmpmExperiment,
+} from '../../../libs/analytics';
+
+const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
+const CONSULT_HREF = 'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
+const PAGE_PATH = '/certifications/get-to-know-cmpm';
 
 export default function CMPMPricing() {
   const [sessions, setSessions] = useState([]);
@@ -24,6 +33,30 @@ export default function CMPMPricing() {
       month: 'short',
       day: 'numeric',
     });
+  };
+
+  const onApply = (nextPath, source) => {
+    trackAbNavNext(
+      withCmpmExperiment({
+        experimentKey: CMPM_EXPERIMENT_KEY,
+        pagePath: PAGE_PATH,
+        nextPath,
+        source,
+      }),
+    );
+    router.push(nextPath);
+  };
+
+  const onConsult = () => {
+    trackAbMeetingClick(
+      withCmpmExperiment({
+        experimentKey: CMPM_EXPERIMENT_KEY,
+        pagePath: PAGE_PATH,
+        nextPath: CONSULT_HREF,
+        source: 'cmpm_a_pricing_consult',
+      }),
+    );
+    window.open(CONSULT_HREF, '_blank');
   };
 
   return (
@@ -47,12 +80,7 @@ export default function CMPMPricing() {
         </div>
         <div
           className='w-full lg:w-fit py-2 lg:pl-6 lg:pr-9 bg-base-brand cursor-pointer rounded-lg mt-9 flex gap-2 items-center'
-          onClick={() =>
-            window.open(
-              'https://calendar.app.google/qUZMKuFbF7NhpxgL8',
-              '_blank'
-            )
-          }
+          onClick={onConsult}
         >
           <div>
             <QuestionMarkCircleIcon className='w-16 h-16 fill-white/70' />
@@ -84,7 +112,7 @@ export default function CMPMPricing() {
                   return dateA - dateB;
                 })
                 .slice(0, 3)
-                .map((it, i) => (
+                .map((it) => (
                   <div
                     className='bg-slate-400 dark:bg-dark-mid rounded-lg shadow-sm'
                     key={it.deadline}
@@ -107,11 +135,9 @@ export default function CMPMPricing() {
                         className='bg-black hover:bg-black/80 transition-all duration-300 cursor-pointer text-white font-bold text-center text-sm px-4 py-2 rounded-md mt-3'
                         onClick={() => {
                           if (it.title.includes('ICPF')) {
-                            router.push(`/icpf`);
+                            onApply('/icpf', 'cmpm_a_cohort_icpf_apply');
                           } else {
-                            router.push(
-                              `/certificate-of-mastery-in-packaging-management`
-                            );
+                            onApply(APPLY_HREF, 'cmpm_a_cohort_apply');
                           }
                         }}
                       >
@@ -136,12 +162,6 @@ export default function CMPMPricing() {
                   USD
                 </span>
               </p>
-              {/* <Link
-                href='/certificate-of-mastery-in-packaging-management'
-                className='mt-10 block w-full rounded-md bg-clemson px-3 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clemson'
-              >
-                Apply Now
-              </Link> */}
               <p className='mt-6 text-xs leading-4 text-gray-600'>
                 Invoices and receipts available for easy company reimbursement
               </p>

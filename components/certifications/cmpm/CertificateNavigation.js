@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Popover } from '@headlessui/react';
 import clsx from 'clsx';
+import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
+import { trackAbNavNext, withCmpmExperiment } from '../../../libs/analytics';
+
+const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
+const PAGE_PATH = '/certifications/get-to-know-cmpm';
 
 const sections = [
   {
@@ -13,6 +18,17 @@ const sections = [
   { id: 'where', title: 'Where do I start?' },
   { id: 'reviews', title: 'What do your peers say?' },
 ];
+
+function trackNavApply(source) {
+  trackAbNavNext(
+    withCmpmExperiment({
+      experimentKey: CMPM_EXPERIMENT_KEY,
+      pagePath: PAGE_PATH,
+      nextPath: APPLY_HREF,
+      source,
+    }),
+  );
+}
 
 function MenuIcon({ open, ...props }) {
   return (
@@ -100,9 +116,10 @@ const CertificateNavigation = () => {
                 </Popover.Button>
               ))}
               <Link
-                href={'/certificate-of-mastery-in-packaging-management'}
-                className='flex items-center px-4 py-3'>
-
+                href={APPLY_HREF}
+                onClick={() => trackNavApply('cmpm_a_nav_mobile_apply')}
+                className='flex items-center px-4 py-3'
+              >
                 <span
                   aria-hidden='true'
                   className='font-mono text-sm text-base-brand'
@@ -139,12 +156,10 @@ const CertificateNavigation = () => {
           ))}
           <li className='flex [counter-increment:section] cursor-pointer'>
             <div
-              onClick={() =>
-                window.open(
-                  '/certificate-of-mastery-in-packaging-management',
-                  '_blank'
-                )
-              }
+              onClick={() => {
+                trackNavApply('cmpm_a_nav_apply');
+                window.open(APPLY_HREF, '_blank');
+              }}
               className={clsx(
                 'flex w-full flex-col items-center justify-center border-b-2 before:mb-2 font-sans font-semibold before:font-mono before:text-sm before:content-[counter(section,decimal-leading-zero)]',
                 activeIndex === 4
