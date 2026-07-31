@@ -68,31 +68,31 @@ export const CURRICULUM_WEEKS = [
     week: '1',
     title: 'Global Competitive Landscape',
     content:
-      'Major companies, products and markets, including market share concentration, key success factors, current volumes and forecasts.',
+      'Analyze the major companies, products, and markets that shape the packaging industry, including market share concentration, key success factors, current market volumes, and future forecasts.',
   },
   {
     week: '2',
     title: 'Project Management Essentials',
     content:
-      'Core management skills such as project management, problem-solving, administrative and being financially savvy.',
+      'Apply project management, problem-solving, administrative, and financial management skills to support successful packaging projects.',
   },
   {
     week: '3',
     title: 'Regulations & Corporate Sustainability',
     content:
-      'Introductions to the major regulatory agencies and applicable laws for packaging compliance in key industries.',
+      'Examine packaging regulations, corporate sustainability initiatives, and the roles of major regulatory agencies in ensuring compliance across key industries.',
   },
   {
     week: '4',
     title: 'Material Management I',
     content:
-      'Fundamental material properties of Glass, Metal, and Polymers converted to packaging solutions.',
+      'Assess the performance characteristics of glass, metal, and polymer materials for packaging applications.',
   },
   {
     week: '5',
     title: 'Material Management II',
     content:
-      'Examine the structure, properties, and performance of paperboard and corrugated materials, and how they are designed and converted into packaging solutions for a wide range of applications.',
+      'Examine the structure, properties, and performance of paperboard and corrugated materials, and learn how they are designed and converted into packaging solutions for a wide range of applications.',
   },
   {
     week: '6',
@@ -103,37 +103,37 @@ export const CURRICULUM_WEEKS = [
     week: '7',
     title: 'Package Labeling & Finishing',
     content:
-      'Core printing processes and finishing techniques employed to apply brand assets and required labeling to packaging.',
+      'Explain the core printing processes and finishing techniques used to apply brand assets and required labeling to packaging.',
   },
   {
     week: '8',
     title: 'Packaging Development Workflow',
     content:
-      'Stakeholders and best practices of packaging development across functions: R&D, marketing, sales, procurement, legal, distribution, quality control, manufacturing, warehousing, point-of-sale, and end-user.',
+      'Identify the key stages of the packaging development workflow and the responsibilities of cross-functional stakeholders, including R&D, marketing, sales, procurement, legal, distribution, quality control, manufacturing, warehousing, point-of-sale, and end-user groups.',
   },
   {
     week: '9',
     title: 'Capital Equipment & Manufacturing',
     content:
-      'Packaging line optimization and basic production equipment types. Strategies to increase production efficiency.',
+      'Explore common packaging production equipment and strategies used to optimize packaging line performance.',
   },
   {
     week: '10',
     title: 'Logistics & Supply Chain Management',
     content:
-      'Setting up a logistics plan, defining your distribution system, and developing test protocols to ensure successful and on-time delivery of your products.',
+      'Develop logistics plans, distribution strategies, and test protocols to support successful, on-time product delivery.',
   },
   {
     week: '11',
     title: 'Leveraging Human Factors In Packaging',
     content:
-      'Triggers to influence perception, cognition, appeal and decision-making in your customers.',
+      'Apply human factors principles to influence consumer perception, cognition, appeal, and decision-making through packaging design.',
   },
   {
     week: '12',
     title: 'Review & Final Exam',
     content:
-      'Review and test your knowledge on all that you have gleaned from the courses.',
+      'Demonstrate knowledge of key packaging concepts and practices through a comprehensive review and final examination.',
   },
 ];
 
