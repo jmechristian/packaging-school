@@ -10,10 +10,10 @@ export default function APCAPS() {
               <APSLogo />
             </div>
 
-            <p className='mt-6 text-xl lg:text-2xl font-semibold  text-base-mid whitespace-pre-wrap'>
+            {/* <p className='mt-6 text-xl lg:text-2xl font-semibold  text-base-mid whitespace-pre-wrap'>
               October 21-23rd, 2024
               <br /> Hyatt Regency,{'\n'}Greenville SC
-            </p>
+            </p> */}
             <p className='mt-6 text-xl text-gray-600 dark:text-gray-500'>
               The premier open forum for OEMs, Tier 1 Part Suppliers and
               Packaging Solution Providers to discuss packaging innovations and
