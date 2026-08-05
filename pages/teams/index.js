@@ -220,26 +220,6 @@ const Teams = () => {
             </div>
           </div>
         </section>
-        <section className='pb-16'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
-            <div className='w-full rounded-lg overflow-hidden'>
-              <Image
-                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+1.png'
-                alt='Cummins Packaging Training Library Testimonial 1'
-                width={600}
-                height={600}
-              />
-            </div>
-            <div className='w-full rounded-lg overflow-hidden'>
-              <Image
-                src='https://packschool.s3.us-east-1.amazonaws.com/Cummins_testimonial_2_edit.png'
-                alt='Cummins Packaging Training Library Testimonial 2'
-                width={600}
-                height={600}
-              />
-            </div>
-          </div>
-        </section>
         <section className='py-16 bg-slate-900 rounded-t-2xl'>
           <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='max-w-3xl'>
@@ -486,36 +466,51 @@ const Teams = () => {
           </div>
         </section>
         <section className='py-12 sm:py-16 bg-slate-900 rounded-b-2xl'>
-          <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
-            <h2 className='text-2xl sm:text-3xl font-semibold text-white'>
-              Ready to Build Training That Fits Your Team?
-            </h2>
-            <p className='mt-3 text-sm sm:text-base text-slate-300'>
-              Contact{' '}
-              <span className='font-semibold text-white'>Dr. Julie Suggs</span>,
-              our Academy Director, to explore a tailored learning plan for your
-              organization.
-            </p>
-            <p className='mt-1 text-sm text-slate-400'>
-              Email:{' '}
-              <a
-                href='mailto:julie@packagingschool.com'
-                className='text-clemson hover:text-clemson/80 font-medium underline-offset-2 hover:underline'
-              >
-                julie@packagingschool.com
-              </a>
-            </p>
-            <div className='mt-6'>
-              <a
-                href='mailto:julie@packagingschool.com?subject=Team%20Training%20Inquiry'
-                className='inline-flex items-center justify-center rounded-full bg-clemson px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-clemson/90 transition-colors'
-              >
-                Email Dr. Suggs to Get Started
-              </a>
+          <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center'>
+              <div className='w-full rounded-lg overflow-hidden'>
+                <Image
+                  src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+1.png'
+                  alt='Cummins Packaging Training Library Testimonial 1'
+                  width={600}
+                  height={600}
+                  className='w-full h-auto'
+                />
+              </div>
+              <div className='text-center md:text-left'>
+                <h2 className='text-2xl sm:text-3xl font-semibold text-white'>
+                  Ready to Build Training That Fits Your Team?
+                </h2>
+                <p className='mt-3 text-sm sm:text-base text-slate-300'>
+                  Contact{' '}
+                  <span className='font-semibold text-white'>
+                    Dr. Julie Suggs
+                  </span>
+                  , our Academy Director, to explore a tailored learning plan
+                  for your organization.
+                </p>
+                <p className='mt-1 text-sm text-slate-400'>
+                  Email:{' '}
+                  <a
+                    href='mailto:julie@packagingschool.com'
+                    className='text-clemson hover:text-clemson/80 font-medium underline-offset-2 hover:underline'
+                  >
+                    julie@packagingschool.com
+                  </a>
+                </p>
+                <div className='mt-6'>
+                  <a
+                    href='mailto:julie@packagingschool.com?subject=Team%20Training%20Inquiry'
+                    className='inline-flex items-center justify-center rounded-full bg-clemson px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-clemson/90 transition-colors'
+                  >
+                    Email Dr. Suggs to Get Started
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-        <section className='py-16'>
+        {/* <section className='py-16'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
             <div className='w-full rounded-lg overflow-hidden'>
               <Image
@@ -534,7 +529,7 @@ const Teams = () => {
               />
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
     </>
   );
