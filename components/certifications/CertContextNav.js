@@ -9,6 +9,7 @@ const CERTS = [
   {
     id: 'cmpm',
     label: 'Packaging Management',
+    shortLabel: 'Management',
     href: '/certifications/get-to-know-cmpm',
     title: 'Certificate of Mastery in Packaging Management',
     badge: 'Premier',
@@ -16,6 +17,7 @@ const CERTS = [
   {
     id: 'cps',
     label: 'Packaging Science',
+    shortLabel: 'Science',
     href: '/certifications/get-to-know-cps',
     title: 'Certificate of Packaging Science',
   },
@@ -49,8 +51,10 @@ function scrollToHero(e) {
   }
 }
 
-function CertLink({ cert, isActive, onNavigate, className }) {
+function CertLink({ cert, isActive, onNavigate, className, compact }) {
   const href = isActive ? `#${CERT_HERO_ID}` : cert.href;
+  const label =
+    compact && cert.shortLabel ? cert.shortLabel : cert.label;
 
   return (
     <Link
@@ -63,7 +67,7 @@ function CertLink({ cert, isActive, onNavigate, className }) {
       }}
       className={className}
     >
-      <span className='leading-none'>{cert.label}</span>
+      <span className='leading-none'>{label}</span>
       {cert.badge ? (
         <span
           className={clsx(
@@ -107,7 +111,7 @@ const CertContextNav = ({ active }) => {
                     aria-hidden='true'
                   />
                   <span className='truncate text-sm font-semibold leading-none text-slate-900 dark:text-white'>
-                    {current.label}
+                    {current.shortLabel || current.label}
                   </span>
                   {current.badge ? (
                     <span className='shrink-0 text-[10px] font-semibold uppercase leading-none tracking-wide text-clemson'>
@@ -141,6 +145,7 @@ const CertContextNav = ({ active }) => {
                           <CertLink
                             cert={cert}
                             isActive={isActive}
+                            compact
                             onNavigate={() => close()}
                             className={clsx(
                               'group flex w-full items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm leading-none transition',
