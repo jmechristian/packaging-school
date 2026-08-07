@@ -10,7 +10,10 @@ import { useRouter } from 'next/router';
 const APCHero = ({ orderHandler }) => {
   const router = useRouter();
   return (
-    <div className='grid lg:grid-cols-2 items-center gap-3 lg:gap-6 overflow-hidden py-6 container-7xl'>
+    <div
+      id='cert-hero'
+      className='grid lg:grid-cols-2 items-center gap-3 lg:gap-6 overflow-hidden py-6 container-7xl scroll-mt-24'
+    >
       <div>
         <Image
           src={'https://packschool.s3.amazonaws.com/apc.png'}

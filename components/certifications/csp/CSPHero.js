@@ -9,7 +9,10 @@ const CSPHero = ({ orderHandler }) => {
   const router = useRouter();
 
   return (
-    <div className='w-full max-w-7xl mx-auto lg:!pr-6 xl:!pr-0'>
+    <div
+      id='cert-hero'
+      className='w-full max-w-7xl mx-auto lg:!pr-6 xl:!pr-0 scroll-mt-24'
+    >
       <div className='grid gap-9 lg:gap-6 lg:grid-cols-2 overflow-hidden w-full h-full'>
         <div className='w-full h-full p-6 xl:!p-0 flex flex-col justify-center max-w-xl mx-auto'>
           <div className='flex flex-col gap-10'>

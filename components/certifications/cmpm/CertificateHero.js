@@ -62,7 +62,10 @@ const CertificateHero = () => {
   };
 
   return (
-    <div className='flex flex-col gap-12 xl:gap-24 lg:flex-row items-center pt-6 md:pt-16 lg:pt-24 container-7xl text-center lg:text-left'>
+    <div
+      id='cert-hero'
+      className='flex flex-col gap-12 xl:gap-24 lg:flex-row items-center pt-6 md:pt-16 lg:pt-24 container-7xl text-center lg:text-left scroll-mt-24'
+    >
       <div className='w-full max-w-sm md:max-w-md xl:max-w-2xl flex flex-col shadow-xl'>
         <div className='w-full h-full bg-brand-yellow-light rounded-t-xl px-6 pb-6'>
           <FadeIn>

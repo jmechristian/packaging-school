@@ -12,6 +12,7 @@ import CPSReviews from '../../components/certifications/cps/CPSReviews';
 import Meta from '../../components/shared/Meta';
 import { getCertificates } from '../../helpers/api';
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
+import CertContextNav from '../../components/certifications/CertContextNav';
 Amplify.configure(awsExports);
 
 export const Page = () => {
@@ -56,6 +57,7 @@ export const Page = () => {
           Boolean
         )}
       />
+      <CertContextNav active='cps' />
       <div className='flex flex-col dark:bg-dark-dark'>
         <CPSHero cert={cert} />
         <CPSNav />

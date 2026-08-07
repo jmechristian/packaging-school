@@ -467,8 +467,8 @@ const Teams = () => {
         </section>
         <section className='py-12 sm:py-16 bg-slate-900 rounded-b-2xl'>
           <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center'>
-              <div className='w-full rounded-lg overflow-hidden'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center justify-items-center'>
+              <div className='w-full max-w-md rounded-lg overflow-hidden'>
                 <Image
                   src='https://packschool.s3.us-east-1.amazonaws.com/Cummins+testimonial+1.png'
                   alt='Cummins Packaging Training Library Testimonial 1'
@@ -477,7 +477,7 @@ const Teams = () => {
                   className='w-full h-auto'
                 />
               </div>
-              <div className='text-center md:text-left'>
+              <div className='flex w-full max-w-md flex-col items-center text-center'>
                 <h2 className='text-2xl sm:text-3xl font-semibold text-white'>
                   Ready to Build Training That Fits Your Team?
                 </h2>

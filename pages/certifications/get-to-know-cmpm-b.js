@@ -1,6 +1,7 @@
 import Meta from '../../components/shared/Meta';
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
 import CmpmLandingB from '../../components/certifications/cmpm/variantB/CmpmLandingB';
+import CertContextNav from '../../components/certifications/CertContextNav';
 
 const Page = () => {
   const siteUrl =
@@ -33,6 +34,7 @@ const Page = () => {
           cmpmJsonLd?.credential,
         ].filter(Boolean)}
       />
+      <CertContextNav active='cmpm' />
       <CmpmLandingB />
     </>
   );

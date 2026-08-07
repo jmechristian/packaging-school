@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import Meta from '../../components/shared/Meta';
 import { createNewOrder } from '../../helpers/api';
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
+import CertContextNav from '../../components/certifications/CertContextNav';
 
 const Page = ({ testimonials }) => {
   const { awsUser } = useSelector((state) => state.auth);
@@ -74,6 +75,7 @@ const Page = ({ testimonials }) => {
           Boolean
         )}
       />
+      <CertContextNav active='apc' />
       <div className='flex flex-col dark:bg-dark-dark gap-12'>
         <APCHero orderHandler={orderHandler} />
         <APCNavigation />

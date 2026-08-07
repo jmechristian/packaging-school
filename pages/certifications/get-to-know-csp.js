@@ -13,6 +13,7 @@ import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { buildCertificationJsonLd } from '../../libs/seo/certificationJsonLd';
+import CertContextNav from '../../components/certifications/CertContextNav';
 
 const Page = () => {
   const { awsUser } = useSelector((state) => state.auth);
@@ -68,6 +69,7 @@ const Page = () => {
           Boolean
         )}
       />
+      <CertContextNav active='csp' />
       <div className='w-full h-full flex flex-col gap-12 lg:!gap-36 pt-6 md:!pt-20 pb-20 dark:bg-dark-dark'>
         <CSPHero orderHandler={orderHandler} />
         <CSPNav />

@@ -14,6 +14,7 @@ import {
 } from '../../libs/abVariant';
 import { trackAbExposure, withCmpmExperiment } from '../../libs/analytics';
 import CmpmLandingB from '../../components/certifications/cmpm/variantB/CmpmLandingB';
+import CertContextNav from '../../components/certifications/CertContextNav';
 
 const CMPMHow = dynamic(
   () => import('../../components/certifications/cmpm/CMPMHow'),
@@ -154,6 +155,7 @@ const Page = ({ variant }) => {
           cmpmJsonLd?.credential,
         ].filter(Boolean)}
       />
+      <CertContextNav active='cmpm' />
       {isB ? <CmpmLandingB /> : <ClassicCmpmLanding />}
     </>
   );

@@ -197,7 +197,10 @@ export default function CmpmLandingB() {
 
 function Hero({ frameIndex, onSelectFrame, onApply, onConsult }) {
   return (
-    <section className='relative overflow-hidden bg-gradient-to-br from-dark via-base-dark-highlight to-base-dark text-white'>
+    <section
+      id='cert-hero'
+      className='relative scroll-mt-24 overflow-hidden bg-gradient-to-br from-dark via-base-dark-highlight to-base-dark text-white'
+    >
       <div className='pointer-events-none absolute inset-0 opacity-40'>
         <div className='absolute -left-24 top-10 h-72 w-72 rounded-full bg-clemson/30 blur-3xl' />
         <div className='absolute bottom-0 right-0 h-96 w-96 rounded-full bg-base-brand/40 blur-3xl' />

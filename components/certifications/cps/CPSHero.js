@@ -31,7 +31,10 @@ const CPSHero = ({ cert }) => {
     }
   };
   return (
-    <div className='grid lg:grid-cols-2 items-center gap-6 overflow-hidden py-12 md:py-24 container-7xl'>
+    <div
+      id='cert-hero'
+      className='grid lg:grid-cols-2 items-center gap-6 overflow-hidden py-12 md:py-24 container-7xl scroll-mt-24'
+    >
       <div>
         <Image
           src={'https://packschool.s3.amazonaws.com/cps_hero.png'}
