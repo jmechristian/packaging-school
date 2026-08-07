@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import clsx from 'clsx';
+import { Disclosure, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 export const CERT_HERO_ID = 'cert-hero';
 
@@ -47,57 +49,138 @@ function scrollToHero(e) {
   }
 }
 
+function CertLink({ cert, isActive, onNavigate, className }) {
+  const href = isActive ? `#${CERT_HERO_ID}` : cert.href;
+
+  return (
+    <Link
+      href={href}
+      title={cert.title}
+      aria-current={isActive ? 'page' : undefined}
+      onClick={(e) => {
+        if (isActive) scrollToHero(e);
+        onNavigate?.(e);
+      }}
+      className={className}
+    >
+      <span className='leading-none'>{cert.label}</span>
+      {cert.badge ? (
+        <span
+          className={clsx(
+            'text-[10px] font-semibold uppercase leading-none tracking-wide',
+            isActive
+              ? 'text-clemson'
+              : 'text-slate-400 group-hover:text-clemson',
+          )}
+        >
+          · {cert.badge}
+        </span>
+      ) : null}
+    </Link>
+  );
+}
+
 /**
  * Subtle cross-cert context bar for certification landing pages.
  * Pass `active` as one of: cps | apc | csp | food | cmpm
  */
 const CertContextNav = ({ active }) => {
+  const current = CERTS.find((c) => c.id === active) || CERTS[0];
+
   return (
     <nav
       aria-label='Certificate programs'
       className='border-b border-slate-200/80 bg-slate-50/95 text-slate-600 dark:border-slate-700/80 dark:bg-dark-mid/90 dark:text-slate-300'
     >
-      <div className='mx-auto flex max-w-7xl items-center justify-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8'>
-        <span className='hidden shrink-0 self-center text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-slate-400 dark:text-slate-500 sm:inline'>
+      {/* Mobile — collapse to current cert */}
+      <div className='md:hidden'>
+        <Disclosure>
+          {({ open, close }) => (
+            <div>
+              <Disclosure.Button className='flex w-full items-center justify-between gap-3 px-4 py-3 text-left'>
+                <span className='flex min-w-0 items-center gap-2'>
+                  <span className='shrink-0 text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-slate-400 dark:text-slate-500'>
+                    5 Certificates
+                  </span>
+                  <span
+                    className='h-3 w-px shrink-0 bg-slate-300 dark:bg-slate-600'
+                    aria-hidden='true'
+                  />
+                  <span className='truncate text-sm font-semibold leading-none text-slate-900 dark:text-white'>
+                    {current.label}
+                  </span>
+                  {current.badge ? (
+                    <span className='shrink-0 text-[10px] font-semibold uppercase leading-none tracking-wide text-clemson'>
+                      · {current.badge}
+                    </span>
+                  ) : null}
+                </span>
+                <ChevronDownIcon
+                  className={clsx(
+                    'h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200',
+                    open && 'rotate-180',
+                  )}
+                  aria-hidden='true'
+                />
+              </Disclosure.Button>
+
+              <Transition
+                enter='transition duration-150 ease-out'
+                enterFrom='opacity-0 -translate-y-1'
+                enterTo='opacity-100 translate-y-0'
+                leave='transition duration-100 ease-in'
+                leaveFrom='opacity-100 translate-y-0'
+                leaveTo='opacity-0 -translate-y-1'
+              >
+                <Disclosure.Panel className='border-t border-slate-200/80 px-2 pb-2 dark:border-slate-700/80'>
+                  <ul className='flex flex-col py-1'>
+                    {CERTS.map((cert) => {
+                      const isActive = active === cert.id;
+                      return (
+                        <li key={cert.id}>
+                          <CertLink
+                            cert={cert}
+                            isActive={isActive}
+                            onNavigate={() => close()}
+                            className={clsx(
+                              'group flex w-full items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm leading-none transition',
+                              isActive
+                                ? 'bg-white font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200/80 dark:bg-dark-dark dark:text-white dark:ring-slate-600'
+                                : 'font-medium text-slate-500 hover:bg-white/70 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-dark-dark/60 dark:hover:text-white',
+                            )}
+                          />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Disclosure.Panel>
+              </Transition>
+            </div>
+          )}
+        </Disclosure>
+      </div>
+
+      {/* Desktop — full horizontal row */}
+      <div className='mx-auto hidden max-w-7xl items-center justify-center gap-3 px-4 py-2.5 sm:px-6 md:flex lg:px-8'>
+        <span className='shrink-0 self-center text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-slate-400 dark:text-slate-500'>
           5 Certificates
         </span>
-        <div
-          className='flex min-w-0 items-center gap-1 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
-          role='list'
-        >
+        <div className='flex items-center gap-1' role='list'>
           {CERTS.map((cert) => {
             const isActive = active === cert.id;
-            const href = isActive ? `#${CERT_HERO_ID}` : cert.href;
-
             return (
-              <Link
-                key={cert.id}
-                href={href}
-                role='listitem'
-                title={cert.title}
-                aria-current={isActive ? 'page' : undefined}
-                onClick={isActive ? scrollToHero : undefined}
-                className={clsx(
-                  'group relative inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm leading-none transition',
-                  isActive
-                    ? 'bg-white font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200/80 dark:bg-dark-dark dark:text-white dark:ring-slate-600'
-                    : 'font-medium text-slate-500 hover:bg-white/70 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-dark-dark/60 dark:hover:text-white',
-                )}
-              >
-                <span className='leading-none'>{cert.label}</span>
-                {cert.badge ? (
-                  <span
-                    className={clsx(
-                      'hidden text-[10px] font-semibold uppercase leading-none tracking-wide lg:inline',
-                      isActive
-                        ? 'text-clemson'
-                        : 'text-slate-400 group-hover:text-clemson',
-                    )}
-                  >
-                    · {cert.badge}
-                  </span>
-                ) : null}
-              </Link>
+              <div key={cert.id} role='listitem'>
+                <CertLink
+                  cert={cert}
+                  isActive={isActive}
+                  className={clsx(
+                    'group relative inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm leading-none transition',
+                    isActive
+                      ? 'bg-white font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200/80 dark:bg-dark-dark dark:text-white dark:ring-slate-600'
+                      : 'font-medium text-slate-500 hover:bg-white/70 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-dark-dark/60 dark:hover:text-white',
+                  )}
+                />
+              </div>
             );
           })}
         </div>
