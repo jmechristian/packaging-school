@@ -22,7 +22,8 @@ export const AB_FIRST_TOUCH_COOKIE = 'ps_ab_first_touch';
 export const AB_IDENTITY_COOKIE = 'ps_ab_identity';
 // Bumped whenever the emitted event/metadata shape changes so the analytics
 // codebase can branch on schema version when reconstructing journeys.
-const AB_EVENT_SCHEMA_VERSION = 2;
+const AB_EVENT_SCHEMA_VERSION = 3;
+const AB_GEO_STORAGE_KEY = 'ps_ab_geo';
 const EVENT_THROTTLE_MS = {
   ab_exposure: 60000,
   ab_page_view: 3000,
@@ -292,6 +293,38 @@ function safeParseAttributionCookie(rawValue) {
   }
 }
 
+// Called once after the Layout ipinfo lookup so every subsequent AB event can
+// stamp city/region/country without another geo request.
+export function setAbGeoContext(geo = {}) {
+  if (typeof window === 'undefined') return;
+  const next = {
+    city: geo.city ? String(geo.city) : null,
+    region: geo.region ? String(geo.region) : null,
+    country: geo.country ? String(geo.country) : null,
+    ip: geo.ip ? String(geo.ip) : null,
+  };
+  window.__abGeoCache = next;
+  try {
+    window.sessionStorage.setItem(AB_GEO_STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // Non-fatal.
+  }
+}
+
+function readAbGeoContext() {
+  if (typeof window === 'undefined') return null;
+  if (window.__abGeoCache) return window.__abGeoCache;
+  try {
+    const raw = window.sessionStorage.getItem(AB_GEO_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    window.__abGeoCache = parsed;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 function getCookieValue(name) {
   if (typeof document === 'undefined') return null;
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -474,6 +507,7 @@ export function getAbContext(overrides = {}) {
     overrides.pagePath ||
     (typeof window !== 'undefined' ? window.location.pathname : null);
   const attribution = resolveAttributionContext(sessionId);
+  const geo = readAbGeoContext();
 
   const base = {
     experimentKey: HOME_EXPERIMENT_KEY,
@@ -493,6 +527,9 @@ export function getAbContext(overrides = {}) {
     referrer: overrides.referrer || attribution?.referrer || null,
     liFatId: overrides.liFatId || attribution?.liFatId || null,
     clickIds: overrides.clickIds || attribution?.clickIds || null,
+    city: overrides.city || geo?.city || null,
+    region: overrides.region || geo?.region || null,
+    country: overrides.country || geo?.country || null,
     ...overrides,
   };
 
@@ -505,6 +542,16 @@ export function getAbContext(overrides = {}) {
       ...(base.metadata || {}),
       cmpmVariant,
       cmpmExperimentKey: CMPM_EXPERIMENT_KEY,
+    };
+  }
+
+  // Keep geo mirrored in metadata for dashboards that only read the JSON blob.
+  if (base.city || base.region || base.country) {
+    base.metadata = {
+      ...(base.metadata || {}),
+      ...(base.city ? { city: base.city } : {}),
+      ...(base.region ? { region: base.region } : {}),
+      ...(base.country ? { country: base.country } : {}),
     };
   }
 

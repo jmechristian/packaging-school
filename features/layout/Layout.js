@@ -9,6 +9,7 @@ import HeaderNew from '../navigation/Header/HeaderNew';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
 import FlashSaleBanner from '../../components/nav/FlashSaleBanner';
+import { setAbGeoContext } from '../../libs/analytics';
 
 const CartToggle = dynamic(() => import('./CartToggle'), { ssr: false });
 const ScrollTop = dynamic(() => import('./ScrollTop'), { ssr: false });
@@ -29,20 +30,22 @@ const Layout = ({ children }) => {
   // const [isFlashSaleBannerMounted, setIsFlashSaleBannerMounted] =
   //   useState(true);
 
-  // Get location data
+  // Get location data once per visit (ipinfo) and stamp AB analytics geo.
   useEffect(() => {
     fetch('https://ipinfo.io/?token=0133a1a5f7f332')
       .then((response) => response.json())
       .then((data) => {
-        const [lat, long] = data.loc.split(',');
-        dispatch(
-          setLocation({
-            ip: data.ip,
-            country: data.country,
-            lat: lat,
-            long: long,
-          })
-        );
+        const [lat, long] = String(data.loc || ',').split(',');
+        const geo = {
+          ip: data.ip || null,
+          city: data.city || null,
+          region: data.region || null,
+          country: data.country || null,
+          lat: lat || null,
+          long: long || null,
+        };
+        dispatch(setLocation(geo));
+        setAbGeoContext(geo);
       })
       .catch((error) => console.log(error));
   }, [dispatch]);

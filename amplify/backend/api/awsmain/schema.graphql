@@ -1005,6 +1005,8 @@ type AbTestExposure @model @auth(rules: [{ allow: public }]) {
   source: String
   referrer: String
   ipAddress: String
+  city: String
+  region: String
   country: String
   createdAt: AWSDateTime
 }
@@ -1051,6 +1053,8 @@ type AbTestEvent @model @auth(rules: [{ allow: public }]) {
   source: String
   reason: String
   ipAddress: String
+  city: String
+  region: String
   country: String
   metadata: AWSJSON
   createdAt: AWSDateTime

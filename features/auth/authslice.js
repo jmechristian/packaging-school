@@ -28,6 +28,8 @@ const initialState = {
   // Location
   location: {
     ip: null,
+    city: null,
+    region: null,
     country: null,
     lat: null,
     long: null,
@@ -103,6 +105,8 @@ export const authSlice = createSlice({
     // Location
     setLocation: (state, action) => {
       state.location.ip = action.payload.ip;
+      state.location.city = action.payload.city ?? null;
+      state.location.region = action.payload.region ?? null;
       state.location.country = action.payload.country;
       state.location.lat = action.payload.lat;
       state.location.long = action.payload.long;

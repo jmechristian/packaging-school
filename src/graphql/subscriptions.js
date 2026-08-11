@@ -6394,6 +6394,8 @@ export const onCreateAbTestExposure = /* GraphQL */ `
       source
       referrer
       ipAddress
+      city
+      region
       country
       createdAt
       updatedAt
@@ -6422,6 +6424,8 @@ export const onUpdateAbTestExposure = /* GraphQL */ `
       source
       referrer
       ipAddress
+      city
+      region
       country
       createdAt
       updatedAt
@@ -6450,6 +6454,8 @@ export const onDeleteAbTestExposure = /* GraphQL */ `
       source
       referrer
       ipAddress
+      city
+      region
       country
       createdAt
       updatedAt
@@ -6499,6 +6505,8 @@ export const onCreateAbTestEvent = /* GraphQL */ `
       source
       reason
       ipAddress
+      city
+      region
       country
       metadata
       createdAt
@@ -6549,6 +6557,8 @@ export const onUpdateAbTestEvent = /* GraphQL */ `
       source
       reason
       ipAddress
+      city
+      region
       country
       metadata
       createdAt
@@ -6599,6 +6609,8 @@ export const onDeleteAbTestEvent = /* GraphQL */ `
       source
       reason
       ipAddress
+      city
+      region
       country
       metadata
       createdAt

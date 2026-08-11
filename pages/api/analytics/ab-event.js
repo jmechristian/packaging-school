@@ -106,6 +106,9 @@ export default async function handler(req, res) {
       source,
       referrer,
       reason,
+      city: bodyCity,
+      region: bodyRegion,
+      country: bodyCountry,
       metadata,
       eventId,
     } = req.body || {};
@@ -121,9 +124,20 @@ export default async function handler(req, res) {
       ? forwardedFor[0]
       : safeString(forwardedFor?.split(',')[0]) || safeString(req.socket?.remoteAddress);
 
-    // Vercel/edge provides visitor geo via headers - cheap geo signal for
-    // path analysis (the `country` column already exists, no schema change).
+    // Prefer client geo (ipinfo, once per visit). Fall back to edge headers
+    // when present (Vercel / CloudFront).
+    const city =
+      safeString(bodyCity) ||
+      safeString(req.headers['x-vercel-ip-city']) ||
+      safeString(req.headers['cloudfront-viewer-city']) ||
+      null;
+    const region =
+      safeString(bodyRegion) ||
+      safeString(req.headers['x-vercel-ip-country-region']) ||
+      safeString(req.headers['cloudfront-viewer-country-region']) ||
+      null;
     const country =
+      safeString(bodyCountry) ||
       safeString(req.headers['x-vercel-ip-country']) ||
       safeString(req.headers['cloudfront-viewer-country']) ||
       null;
@@ -175,6 +189,9 @@ export default async function handler(req, res) {
               source: safeString(source),
               referrer: safeString(referrer),
               ipAddress,
+              city,
+              region,
+              country,
               createdAt,
             },
           },
@@ -228,6 +245,8 @@ export default async function handler(req, res) {
             source: safeString(source),
             reason: safeString(reason),
             ipAddress,
+            city,
+            region,
             country,
             metadata: metadata ? JSON.stringify(metadata) : null,
             createdAt,

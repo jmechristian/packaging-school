@@ -3768,6 +3768,8 @@ export const getAbTestExposure = /* GraphQL */ `
       source
       referrer
       ipAddress
+      city
+      region
       country
       createdAt
       updatedAt
@@ -3799,6 +3801,8 @@ export const listAbTestExposures = /* GraphQL */ `
         source
         referrer
         ipAddress
+        city
+        region
         country
         createdAt
         updatedAt
@@ -3849,6 +3853,8 @@ export const getAbTestEvent = /* GraphQL */ `
       source
       reason
       ipAddress
+      city
+      region
       country
       metadata
       createdAt
@@ -3902,6 +3908,8 @@ export const listAbTestEvents = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9002,6 +9010,8 @@ export const abTestExposuresByExperimentKeyAndCreatedAt = /* GraphQL */ `
         source
         referrer
         ipAddress
+        city
+        region
         country
         createdAt
         updatedAt
@@ -9046,6 +9056,8 @@ export const abTestExposuresBySessionIdAndCreatedAt = /* GraphQL */ `
         source
         referrer
         ipAddress
+        city
+        region
         country
         createdAt
         updatedAt
@@ -9090,6 +9102,8 @@ export const abTestExposuresByUserIDAndCreatedAt = /* GraphQL */ `
         source
         referrer
         ipAddress
+        city
+        region
         country
         createdAt
         updatedAt
@@ -9155,6 +9169,8 @@ export const abTestEventsByExperimentKeyAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9221,6 +9237,8 @@ export const abTestEventsByExperimentDayAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9287,6 +9305,8 @@ export const abTestEventsByEventNameAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9353,6 +9373,8 @@ export const abTestEventsBySessionIdAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9419,6 +9441,8 @@ export const abTestEventsByVisitorIdAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9485,6 +9509,8 @@ export const abTestEventsByUserIDAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
@@ -9551,6 +9577,8 @@ export const abTestEventsByEmailAndCreatedAt = /* GraphQL */ `
         source
         reason
         ipAddress
+        city
+        region
         country
         metadata
         createdAt
