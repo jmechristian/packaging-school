@@ -1513,6 +1513,53 @@ type CourseOutlineRequest @model @auth(rules: [{ allow: public }]) {
   page: String
 }
 
+######### LIBRARY ENROLLMENT APPROVAL #########
+
+type LibraryEnrollmentRequest @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  librarySlug: String!
+    @index(name: "requestsByLibrary", queryField: "enrollmentRequestsByLibrary")
+  status: String! @default(value: "PENDING")
+  requesterUserID: ID!
+    @index(
+      name: "requestsByRequesterUser"
+      queryField: "enrollmentRequestsByRequesterUser"
+    )
+  requesterEmail: String!
+    @index(
+      name: "requestsByRequesterEmail"
+      queryField: "enrollmentRequestsByRequesterEmail"
+    )
+  requesterName: String
+  salesLeaderUserID: ID!
+    @index(
+      name: "requestsBySalesLeaderUser"
+      queryField: "enrollmentRequestsBySalesLeaderUser"
+    )
+  salesLeaderEmail: String!
+    @index(
+      name: "requestsBySalesLeader"
+      queryField: "enrollmentRequestsBySalesLeader"
+    )
+  salesLeaderName: String
+  courseId: String
+  courseName: String
+  courseImage: String
+  courseLink: String
+  thinkificId: String
+  couponCode: String
+  decisionToken: String
+    @index(
+      name: "requestsByDecisionToken"
+      queryField: "enrollmentRequestsByDecisionToken"
+    )
+  decidedAt: AWSDateTime
+  decidedByEmail: String
+  declineReason: String
+  thinkificEnrollmentId: String
+  page: String
+}
+
 ######### GLOSSARY QUIZ GAME #########
 
 enum LeaderboardPeriod {

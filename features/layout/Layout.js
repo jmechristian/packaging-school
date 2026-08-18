@@ -52,7 +52,13 @@ const Layout = ({ children }) => {
 
   // Redirect to profile for onboarding if needed
   useEffect(() => {
-    if (isReady && needsOnboarding && router.pathname !== '/profile') {
+    if (
+      isReady &&
+      needsOnboarding &&
+      router.pathname !== '/profile' &&
+      router.pathname !== '/network-distribution' &&
+      router.pathname !== '/auth/popup-complete'
+    ) {
       router.push('/profile');
     }
   }, [isReady, needsOnboarding, router]);

@@ -9568,6 +9568,102 @@ export const onDeleteCourseOutlineRequest = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLibraryEnrollmentRequest = /* GraphQL */ `
+  subscription OnCreateLibraryEnrollmentRequest(
+    $filter: ModelSubscriptionLibraryEnrollmentRequestFilterInput
+  ) {
+    onCreateLibraryEnrollmentRequest(filter: $filter) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateLibraryEnrollmentRequest = /* GraphQL */ `
+  subscription OnUpdateLibraryEnrollmentRequest(
+    $filter: ModelSubscriptionLibraryEnrollmentRequestFilterInput
+  ) {
+    onUpdateLibraryEnrollmentRequest(filter: $filter) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteLibraryEnrollmentRequest = /* GraphQL */ `
+  subscription OnDeleteLibraryEnrollmentRequest(
+    $filter: ModelSubscriptionLibraryEnrollmentRequestFilterInput
+  ) {
+    onDeleteLibraryEnrollmentRequest(filter: $filter) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateUserGameStats = /* GraphQL */ `
   subscription OnCreateUserGameStats(
     $filter: ModelSubscriptionUserGameStatsFilterInput

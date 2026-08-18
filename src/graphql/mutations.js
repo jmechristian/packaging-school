@@ -10048,6 +10048,105 @@ export const deleteCourseOutlineRequest = /* GraphQL */ `
     }
   }
 `;
+export const createLibraryEnrollmentRequest = /* GraphQL */ `
+  mutation CreateLibraryEnrollmentRequest(
+    $input: CreateLibraryEnrollmentRequestInput!
+    $condition: ModelLibraryEnrollmentRequestConditionInput
+  ) {
+    createLibraryEnrollmentRequest(input: $input, condition: $condition) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateLibraryEnrollmentRequest = /* GraphQL */ `
+  mutation UpdateLibraryEnrollmentRequest(
+    $input: UpdateLibraryEnrollmentRequestInput!
+    $condition: ModelLibraryEnrollmentRequestConditionInput
+  ) {
+    updateLibraryEnrollmentRequest(input: $input, condition: $condition) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteLibraryEnrollmentRequest = /* GraphQL */ `
+  mutation DeleteLibraryEnrollmentRequest(
+    $input: DeleteLibraryEnrollmentRequestInput!
+    $condition: ModelLibraryEnrollmentRequestConditionInput
+  ) {
+    deleteLibraryEnrollmentRequest(input: $input, condition: $condition) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createUserGameStats = /* GraphQL */ `
   mutation CreateUserGameStats(
     $input: CreateUserGameStatsInput!

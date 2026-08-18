@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
-import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
   MdSearch,
   MdOutlineTimer,
@@ -14,13 +13,16 @@ import {
 import {
   getCourseByID,
   getAllLearningOfTheMonths,
-  createNewOrder,
   getLNetworkLibrary,
-  getDeviceType,
 } from '../../helpers/api';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
 import VideoPlayer from '../../components/VideoPlayer';
+import EnrollmentRequestModal from '../../components/network-distribution/EnrollmentRequestModal';
+import {
+  clearEnrollResume,
+  consumePendingEnrollCourse,
+} from '../../components/network-distribution/EnrollmentAuthPanel';
 
 const LUCID_LIBRARY_PPTX_URL =
   'https://packschool.s3.us-east-1.amazonaws.com/Network-Distribution.pptx';
@@ -77,16 +79,14 @@ const CourseCard = ({
   course,
   courseData: initialCourseData,
   searchQuery,
-  page = '/network-distribution',
-  code = 'networklibrary',
+  request,
+  enrollmentLookup,
+  onEnroll,
+  onOpenCourse,
+  onOpenDashboard,
 }) => {
-  const router = useRouter();
-  const { awsUser, location } = useSelector((state) => state.auth);
-  const deviceType = getDeviceType();
-  const { navigateToThinkific } = useThinkificLink();
   const [courseData, setCourseData] = useState(initialCourseData || null);
   const [isVisible, setIsVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (initialCourseData) {
@@ -115,31 +115,21 @@ const CourseCard = ({
 
   if (!isVisible) return null;
 
-  const orderHandler = async () => {
-    setIsLoading(true);
-    const enrollLink = `${courseData.link}?coupon=${code}`;
-    const orderId = await createNewOrder({
-      courseDescription: courseData.subheadline,
-      courseDiscount: 100,
-      courseImage: courseData.seoImage,
-      courseName: courseData.title,
-      courseLink: enrollLink,
-      total: courseData.price,
-      userID: awsUser ? awsUser.id : null,
-      email: awsUser ? awsUser.email : null,
-      name: awsUser ? awsUser.name : null,
-      ipAddress: location.ip,
-      country: location.country,
-      device: deviceType,
-      page,
-    });
+  const enrolled = isCourseEnrolled(courseData, enrollmentLookup);
+  const status = request?.status;
+  const ctaLabel = enrolled
+    ? 'Already Enrolled'
+    : status === 'PENDING'
+      ? 'Pending Approval'
+      : status === 'APPROVED'
+        ? 'Open Course'
+        : 'Enroll in Course';
 
-    if (awsUser && awsUser.name.includes(' ')) {
-      navigateToThinkific(enrollLink, enrollLink);
-    } else {
-      router.push(`/order/${orderId.id}`);
-    }
-  };
+  const ctaClass = enrolled
+    ? 'bg-[#f4aa00] text-[#0A1D3A] cursor-pointer hover:bg-[#e09c00]'
+    : status === 'PENDING'
+      ? 'bg-gray-400 text-white cursor-not-allowed'
+      : 'bg-gray-900 text-white cursor-pointer hover:bg-gray-700';
 
   return (
     <div className='w-full h-full bg-[#ffffff] rounded-md pb-2 overflow-hidden'>
@@ -186,24 +176,21 @@ const CourseCard = ({
               : courseData && courseData.subheadline}
           </div>
           <div
-            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-gray-700 transition-all duration-300'
-            // onClick={() => {
-            //   window.open(
-            //     courseData && courseData.link + '?coupon=pipelinepackaging',
-            //     '_blank'
-            //   );
-            // }}
+            className={`w-full h-10 flex items-center justify-center rounded-md font-medium transition-all duration-300 ${ctaClass}`}
             onClick={() => {
-              orderHandler();
+              if (!courseData || (status === 'PENDING' && !enrolled)) return;
+              if (enrolled) {
+                onOpenDashboard();
+                return;
+              }
+              if (status === 'APPROVED') {
+                onOpenCourse(courseData);
+                return;
+              }
+              onEnroll(courseData);
             }}
           >
-            {isLoading ? (
-              <div className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-gray-700 transition-all duration-300'>
-                <MdOutlineTimer className='animate-spin mr-2' /> Preparing...
-              </div>
-            ) : (
-              'Enroll in Course'
-            )}
+            {ctaLabel}
           </div>
         </div>
       </div>
@@ -211,8 +198,51 @@ const CourseCard = ({
   );
 };
 
+const THINKIFIC_DASHBOARD =
+  'https://learn.packagingschool.com/enrollments?role=admin';
+
+const courseKey = (course) => course?.id || course?.courseId;
+
+const findRequestForCourse = (requests, course) =>
+  requests.find((item) => item.courseId === courseKey(course));
+
+const normalizeName = (value) => String(value || '').trim().toLowerCase();
+
+const isCourseEnrolled = (course, enrollmentLookup) => {
+  if (!course || !enrollmentLookup) return false;
+  if (
+    course.thinkificId &&
+    enrollmentLookup.ids.has(String(course.thinkificId))
+  ) {
+    return true;
+  }
+  const title = normalizeName(course.title);
+  return Boolean(title && enrollmentLookup.names.has(title));
+};
+
+const buildEnrollLink = (course, code = 'networklibrary') => {
+  const link = String(course?.link || '').replace(/^Link:\s*/i, '').trim();
+  if (!link) return null;
+  if (link.includes('coupon=')) return link;
+  return `${link}${link.includes('?') ? '&' : '?'}coupon=${code}`;
+};
+
 const Page = ({ lib, learningOfTheMonths }) => {
   console.log(lib);
+  const { user } = useUser();
+  const { navigateToThinkific } = useThinkificLink();
+  const [requests, setRequests] = useState([]);
+  const [enrollmentLookup, setEnrollmentLookup] = useState({
+    ids: new Set(),
+    names: new Set(),
+  });
+  const [enrollCourse, setEnrollCourse] = useState(null);
+
+  useEffect(() => {
+    const saved = consumePendingEnrollCourse();
+    if (saved) setEnrollCourse(saved);
+  }, []);
+
   const allCourses = lib?.pschoolCourses?.items ?? lib?.pschoolCourses ?? [];
   const apcCourses = allCourses
     .filter((c) => c?.courseId && c.courseId.startsWith('APC'))
@@ -261,6 +291,62 @@ const Page = ({ lib, learningOfTheMonths }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [bookmarkHint, setBookmarkHint] = useState(null);
+
+  const loadRequests = useCallback(async () => {
+    if (!user?.email) {
+      setRequests([]);
+      return;
+    }
+    try {
+      const response = await fetch(
+        '/api/network-distribution/enrollment-requests?scope=mine',
+      );
+      const data = await response.json();
+      setRequests(data.items || []);
+    } catch (error) {
+      console.error('Failed to load enrollment requests', error);
+    }
+  }, [user?.email]);
+
+  const loadEnrollments = useCallback(async () => {
+    if (!user?.email) {
+      setEnrollmentLookup({ ids: new Set(), names: new Set() });
+      return;
+    }
+    try {
+      const response = await fetch(
+        `/api/thinkific/get-enrollments?email=${encodeURIComponent(user.email)}`,
+      );
+      const data = await response.json();
+      const items = (data.items || []).filter((item) => item.expired === false);
+      setEnrollmentLookup({
+        ids: new Set(items.map((item) => String(item.course_id))),
+        names: new Set(items.map((item) => normalizeName(item.course_name))),
+      });
+    } catch (error) {
+      console.error('Failed to load Thinkific enrollments', error);
+      setEnrollmentLookup({ ids: new Set(), names: new Set() });
+    }
+  }, [user?.email]);
+
+  useEffect(() => {
+    loadRequests();
+  }, [loadRequests]);
+
+  useEffect(() => {
+    loadEnrollments();
+  }, [loadEnrollments]);
+
+  const handleOpenDashboard = () => {
+    navigateToThinkific(THINKIFIC_DASHBOARD, THINKIFIC_DASHBOARD);
+  };
+
+  const handleOpenCourse = (courseData) => {
+    const enrollLink = buildEnrollLink(courseData);
+    if (enrollLink) {
+      navigateToThinkific(enrollLink, enrollLink);
+    }
+  };
 
   const handleAddBookmark = () => {
     const title =
@@ -466,8 +552,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
               seoImage:
                 'https://files.cdn.thinkific.com/bundles/bundle_card_image_000/003/803/1507034685.original.jpg',
               slug: 'cps-bundle',
+              thinkificBundleId: 3803,
             }}
             searchQuery=''
+            request={findRequestForCourse(requests, { id: 'CPS-00' })}
+            onEnroll={setEnrollCourse}
+            onOpenCourse={handleOpenCourse}
+            onOpenDashboard={handleOpenDashboard}
+            enrollmentLookup={enrollmentLookup}
           />
           {cpsCourses.map((course) => (
             <CourseCard
@@ -475,6 +567,11 @@ const Page = ({ lib, learningOfTheMonths }) => {
               course={course.id}
               courseData={course}
               searchQuery=''
+              request={findRequestForCourse(requests, course)}
+              onEnroll={setEnrollCourse}
+              onOpenCourse={handleOpenCourse}
+              onOpenDashboard={handleOpenDashboard}
+              enrollmentLookup={enrollmentLookup}
             />
           ))}
         </div>
@@ -517,8 +614,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
               seoImage:
                 'https://files.cdn.thinkific.com/bundles/bundle_card_image_000/031/389/1735935575.original.jpg',
               slug: 'apc-bundle',
+              thinkificBundleId: 31389,
             }}
             searchQuery=''
+            request={findRequestForCourse(requests, { id: 'APC-00' })}
+            onEnroll={setEnrollCourse}
+            onOpenCourse={handleOpenCourse}
+            onOpenDashboard={handleOpenDashboard}
+            enrollmentLookup={enrollmentLookup}
           />
           {apcCourses.map((course) => (
             <CourseCard
@@ -526,6 +629,11 @@ const Page = ({ lib, learningOfTheMonths }) => {
               course={course.id}
               courseData={course}
               searchQuery=''
+              request={findRequestForCourse(requests, course)}
+              onEnroll={setEnrollCourse}
+              onOpenCourse={handleOpenCourse}
+              onOpenDashboard={handleOpenDashboard}
+              enrollmentLookup={enrollmentLookup}
             />
           ))}
         </div>
@@ -568,8 +676,14 @@ const Page = ({ lib, learningOfTheMonths }) => {
               seoImage:
                 'https://files.cdn.thinkific.com/bundles/bundle_card_image_000/358/972/1771518762.original.png',
               slug: 'csp-bundle',
+              thinkificBundleId: 358972,
             }}
             searchQuery=''
+            request={findRequestForCourse(requests, { id: 'CSP-00' })}
+            onEnroll={setEnrollCourse}
+            onOpenCourse={handleOpenCourse}
+            onOpenDashboard={handleOpenDashboard}
+            enrollmentLookup={enrollmentLookup}
           />
           {spcCourses.map((course) => (
             <CourseCard
@@ -577,6 +691,11 @@ const Page = ({ lib, learningOfTheMonths }) => {
               course={course.id}
               courseData={course}
               searchQuery=''
+              request={findRequestForCourse(requests, course)}
+              onEnroll={setEnrollCourse}
+              onOpenCourse={handleOpenCourse}
+              onOpenDashboard={handleOpenDashboard}
+              enrollmentLookup={enrollmentLookup}
             />
           ))}
         </div>
@@ -676,6 +795,23 @@ const Page = ({ lib, learningOfTheMonths }) => {
           ))}
         </dl>
       </div>
+      <EnrollmentRequestModal
+        open={Boolean(enrollCourse)}
+        course={enrollCourse}
+        onClose={() => {
+          clearEnrollResume();
+          setEnrollCourse(null);
+        }}
+        onSubmitted={(item) => {
+          if (item) {
+            setRequests((prev) => {
+              const without = prev.filter((req) => req.id !== item.id);
+              return [item, ...without];
+            });
+          }
+          loadRequests();
+        }}
+      />
     </div>
   );
 };

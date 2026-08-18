@@ -5807,6 +5807,78 @@ export const listCourseOutlineRequests = /* GraphQL */ `
     }
   }
 `;
+export const getLibraryEnrollmentRequest = /* GraphQL */ `
+  query GetLibraryEnrollmentRequest($id: ID!) {
+    getLibraryEnrollmentRequest(id: $id) {
+      id
+      librarySlug
+      status
+      requesterUserID
+      requesterEmail
+      requesterName
+      salesLeaderUserID
+      salesLeaderEmail
+      salesLeaderName
+      courseId
+      courseName
+      courseImage
+      courseLink
+      thinkificId
+      couponCode
+      decisionToken
+      decidedAt
+      decidedByEmail
+      declineReason
+      thinkificEnrollmentId
+      page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listLibraryEnrollmentRequests = /* GraphQL */ `
+  query ListLibraryEnrollmentRequests(
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLibraryEnrollmentRequests(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getUserGameStats = /* GraphQL */ `
   query GetUserGameStats($id: ID!) {
     getUserGameStats(id: $id) {
@@ -10316,6 +10388,282 @@ export const searchLogsByTimestampAndId = /* GraphQL */ `
         rating_comment
         rating_timestamp
         helpful
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsByLibrary = /* GraphQL */ `
+  query EnrollmentRequestsByLibrary(
+    $librarySlug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsByLibrary(
+      librarySlug: $librarySlug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsByRequesterUser = /* GraphQL */ `
+  query EnrollmentRequestsByRequesterUser(
+    $requesterUserID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsByRequesterUser(
+      requesterUserID: $requesterUserID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsByRequesterEmail = /* GraphQL */ `
+  query EnrollmentRequestsByRequesterEmail(
+    $requesterEmail: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsByRequesterEmail(
+      requesterEmail: $requesterEmail
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsBySalesLeaderUser = /* GraphQL */ `
+  query EnrollmentRequestsBySalesLeaderUser(
+    $salesLeaderUserID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsBySalesLeaderUser(
+      salesLeaderUserID: $salesLeaderUserID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsBySalesLeader = /* GraphQL */ `
+  query EnrollmentRequestsBySalesLeader(
+    $salesLeaderEmail: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsBySalesLeader(
+      salesLeaderEmail: $salesLeaderEmail
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const enrollmentRequestsByDecisionToken = /* GraphQL */ `
+  query EnrollmentRequestsByDecisionToken(
+    $decisionToken: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLibraryEnrollmentRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    enrollmentRequestsByDecisionToken(
+      decisionToken: $decisionToken
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        librarySlug
+        status
+        requesterUserID
+        requesterEmail
+        requesterName
+        salesLeaderUserID
+        salesLeaderEmail
+        salesLeaderName
+        courseId
+        courseName
+        courseImage
+        courseLink
+        thinkificId
+        couponCode
+        decisionToken
+        decidedAt
+        decidedByEmail
+        declineReason
+        thinkificEnrollmentId
+        page
         createdAt
         updatedAt
         __typename

@@ -21,6 +21,7 @@ import ProfileApplications from './ProfileApplications';
 import SavedLessons from './SavedLessons';
 import ProfileWishlist from './ProfileWishlist';
 import BoosterProgress from './BoosterProgress';
+import ProfileLibraryRequests from './ProfileLibraryRequests';
 const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
   const { awsUser, thinkificUser, user, userXp } = useSelector(
     (state) => state.auth
@@ -28,21 +29,30 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
   console.log('awsUser', awsUser);
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('courses');
+  const [hasLibraryRequests, setHasLibraryRequests] = useState(false);
 
-  // Debug log to help diagnose infinite loop/data loss
-  // console.log('ProfileDashboard render:', {
-  //   awsUser,
-  //   thinkificUser,
-  //   activeTab,
-  // });
-
-  // Add effect to sync with URL on mount and URL changes
   useEffect(() => {
-    const tabFromUrl = router.query.tab;
-    if (tabFromUrl && tabs.some((tab) => tab.value === tabFromUrl)) {
-      setActiveTab(tabFromUrl);
-    }
-  }, [router.query.tab]);
+    let cancelled = false;
+    const loadLibraryRequests = async () => {
+      try {
+        const response = await fetch(
+          '/api/network-distribution/enrollment-requests?scope=mine',
+        );
+        const data = await response.json();
+        if (!cancelled) {
+          setHasLibraryRequests(
+            response.ok && Array.isArray(data.items) && data.items.length > 0,
+          );
+        }
+      } catch {
+        if (!cancelled) setHasLibraryRequests(false);
+      }
+    };
+    loadLibraryRequests();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Only handle tab change, do NOT call refreshUser or set users to null
   const handleTabChange = (tabValue, tabType) => {
@@ -62,42 +72,64 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
     }
   };
 
-  const tabs = [
-    {
-      label: 'Enrollments',
-      value: 'courses',
-    },
-    {
-      label: 'Certificates',
-      value: 'https://learn.packagingschool.com/account/certificates',
-      type: 'external',
-    },
-    {
-      label: 'Applications',
-      value: 'certificates',
-    },
-    {
-      label: 'Booster Progress',
-      value: 'boosterProgress',
-    },
-    {
-      label: 'Lessons Saved',
-      value: 'lessonsSaved',
-    },
-    {
-      label: 'Wishlist',
-      value: 'wishlist',
-    },
-    {
-      label: 'Profile',
-      value: 'profile',
-    },
-    {
-      label: 'Billing Information',
-      value: 'https://learn.packagingschool.com/account/billing',
-      type: 'external',
-    },
-  ];
+  const tabs = useMemo(() => {
+    const allTabs = [
+      {
+        label: 'Enrollments',
+        value: 'courses',
+      },
+      {
+        label: 'Library Requests',
+        value: 'libraryRequests',
+      },
+      {
+        label: 'Certificates',
+        value: 'https://learn.packagingschool.com/account/certificates',
+        type: 'external',
+      },
+      {
+        label: 'Applications',
+        value: 'certificates',
+      },
+      {
+        label: 'Booster Progress',
+        value: 'boosterProgress',
+      },
+      {
+        label: 'Lessons Saved',
+        value: 'lessonsSaved',
+      },
+      {
+        label: 'Wishlist',
+        value: 'wishlist',
+      },
+      {
+        label: 'Profile',
+        value: 'profile',
+      },
+      {
+        label: 'Billing Information',
+        value: 'https://learn.packagingschool.com/account/billing',
+        type: 'external',
+      },
+    ];
+
+    if (hasLibraryRequests) return allTabs;
+    return allTabs.filter((tab) => tab.value !== 'libraryRequests');
+  }, [hasLibraryRequests]);
+
+  useEffect(() => {
+    const tabFromUrl = router.query.tab;
+    if (tabFromUrl && tabs.some((tab) => tab.value === tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+      return;
+    }
+    if (!hasLibraryRequests) {
+      setActiveTab((current) =>
+        current === 'libraryRequests' ? 'courses' : current,
+      );
+    }
+  }, [router.query.tab, tabs, hasLibraryRequests]);
 
   const profileItems = [
     {
@@ -129,6 +161,8 @@ const ProfileDashboard = ({ isLoading, navigateToThinkific }) => {
             navigateToThinkific={navigateToThinkific}
           />
         );
+      case 'libraryRequests':
+        return <ProfileLibraryRequests />;
       case 'certificates':
         return (
           <ProfileApplications
