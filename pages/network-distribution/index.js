@@ -23,7 +23,7 @@ import { Disclosure } from '@headlessui/react';
 import VideoPlayer from '../../components/VideoPlayer';
 
 const LUCID_LIBRARY_PPTX_URL =
-  'https://packschool.s3.us-east-1.amazonaws.com/Lucid+Motors_ppt.pptx';
+  'https://packschool.s3.us-east-1.amazonaws.com/Network-Distribution.pptx';
 
 const LOTMCard = ({ lesson }) => {
   const formatDate = (dateString) => {
@@ -142,7 +142,7 @@ const CourseCard = ({
   };
 
   return (
-    <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
+    <div className='w-full h-full bg-[#ffffff] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
         <div className='w-full aspect-[16/9] bg-black'>
           {courseData && courseData.preview ? (
@@ -233,9 +233,9 @@ const Page = ({ lib, learningOfTheMonths }) => {
   const faqs = [
     {
       id: 1,
-      question: 'Who is my Lucid Motors contact?',
+      question: 'Who is my Network Distribution contact?',
       answer:
-        'If you have any questions about the curriculum or how to navigate your learning journey, please reach out to brianmclaughlin@lucidmotors.com. ',
+        'If you have any questions about the curriculum or how to navigate your learning journey, please reach out to info@packagingschool.com. ',
     },
     {
       id: 2,
@@ -253,7 +253,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
       id: 4,
       question: 'How do I access new courses each quarter?',
       answer:
-        'Each time you plan to enroll in a new course, come back to this page: packagingschool.com/lucid-motors. Be sure to bookmark it or save it as your homepage for easy access. This page will show the current quarter’s courses available for enrollment and allow you to preview upcoming quarters. ',
+        'Each time you plan to enroll in a new course, come back to this page: packagingschool.com/network-distribution. Be sure to bookmark it or save it as your homepage for easy access. This page will show the current quarter’s courses available for enrollment and allow you to preview upcoming quarters. ',
     },
   ];
 
@@ -263,7 +263,8 @@ const Page = ({ lib, learningOfTheMonths }) => {
   const [bookmarkHint, setBookmarkHint] = useState(null);
 
   const handleAddBookmark = () => {
-    const title = document.title || 'Pipeline Packaging | The Packaging School';
+    const title =
+      document.title || 'Network Distribution | The Packaging School';
     const url = typeof window !== 'undefined' ? window.location.href : '';
 
     if (typeof window === 'undefined') return;
