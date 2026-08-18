@@ -2825,7 +2825,8 @@ export const getAbExperimentSummary = async (experimentKey = 'home_v1') => {
       if (item.eventName === 'ab_exposure') bucket.exposure += 1;
       if (item.eventName === 'ab_page_view') bucket.pageViews += 1;
       if (item.eventName === 'ab_purchase_intent') bucket.purchaseIntent += 1;
-      if (item.eventName === 'ab_purchase_complete') bucket.purchaseComplete += 1;
+      if (item.eventName === 'ab_purchase_complete')
+        bucket.purchaseComplete += 1;
       return acc;
     },
     { experimentKey, totalEvents: items.length, byVariant: {} },
@@ -2916,6 +2917,92 @@ export const getLucidMotorsLibrary = async () => {
   const res = await API.graphql({
     query: getLucidMotorsLibraryQuery,
     variables: { slug: 'lucid-motors' },
+  });
+  return res.data.customerLibariesBySlug.items[0];
+};
+
+export const getLNetworkLibrary = async () => {
+  const getLNetworkLibraryQuery = /* GraphQL */ `
+    query MyQuery {
+      customerLibariesBySlug(slug: "network-distribution") {
+        items {
+          email
+          displayName
+          description
+          code
+          addOns
+          backgroundImage
+          highlightColor
+          id
+          link
+          logo
+          pdf
+          primaryColor
+          clientCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
+          }
+          pschoolCourses {
+            items {
+              altLink
+              callout
+              category
+              categoryArray
+              courseId
+              demo
+              hours
+              id
+              lessons
+              link
+              objectives
+              preview
+              price
+              seoImage
+              shortDescription
+              slug
+              stripeLink
+              subheadline
+              thinkificId
+              title
+              type
+              videos
+              what_learned
+            }
+          }
+          slide
+          slug
+          status
+          video
+        }
+      }
+    }
+  `;
+  const res = await API.graphql({
+    query: getLNetworkLibraryQuery,
+    variables: { slug: 'network-distribution' },
   });
   return res.data.customerLibariesBySlug.items[0];
 };
