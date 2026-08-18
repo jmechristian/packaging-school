@@ -235,7 +235,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
       id: 1,
       question: 'Who is my Network Distribution contact?',
       answer:
-        'If you have any questions about the curriculum or how to navigate your learning journey, please reach out to info@packagingschool.com. ',
+        'If you have any questions about the curriculum or how to navigate your learning journey, please reach out to opietersen@networkdistribution.com. ',
     },
     {
       id: 2,
@@ -247,7 +247,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
       id: 3,
       question: 'How do I sign up?',
       answer:
-        'Refer to the slide deck / PDF at the top of the page or email info@packagingschool.com.',
+        'Refer to the slide deck / PDF at the top of the page or email opietersen@networkdistribution.com.',
     },
     {
       id: 4,
