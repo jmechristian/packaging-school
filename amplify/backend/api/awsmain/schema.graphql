@@ -722,6 +722,9 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   partner: [Partner] @manyToMany(relationName: "PartnerCourses")
   libraries: [CustomerLibary] @manyToMany(relationName: "LibraryCourses")
   glossaryTerms: [GlossaryTerm] @manyToMany(relationName: "CourseGlossaryTerms")
+  thirtyDay: String
+  ninetyDay: String
+  threeSixtyDay: String
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {

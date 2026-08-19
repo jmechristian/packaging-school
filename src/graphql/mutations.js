@@ -2931,6 +2931,9 @@ export const createLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -2999,6 +3002,9 @@ export const updateLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -3067,6 +3073,9 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -4865,6 +4874,9 @@ export const createLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      thirtyDay
+      ninetyDay
+      threeSixtyDay
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4952,6 +4964,9 @@ export const updateLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      thirtyDay
+      ninetyDay
+      threeSixtyDay
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -5039,6 +5054,9 @@ export const deleteLMSCourse = /* GraphQL */ `
         nextToken
         __typename
       }
+      thirtyDay
+      ninetyDay
+      threeSixtyDay
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -9050,6 +9068,9 @@ export const createCourseReview = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -9148,6 +9169,9 @@ export const updateCourseReview = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -9246,6 +9270,9 @@ export const deleteCourseReview = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12059,6 +12086,9 @@ export const createUserWishlist = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12153,6 +12183,9 @@ export const updateUserWishlist = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12247,6 +12280,9 @@ export const deleteUserWishlist = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12317,6 +12353,9 @@ export const createCollectionCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12387,6 +12426,9 @@ export const updateCollectionCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12457,6 +12499,9 @@ export const deleteCollectionCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12518,6 +12563,9 @@ export const createCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12579,6 +12627,9 @@ export const updateCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12640,6 +12691,9 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12691,6 +12745,9 @@ export const createCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12755,6 +12812,9 @@ export const updateCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12819,6 +12879,9 @@ export const deleteCourseLessons = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12883,6 +12946,9 @@ export const createCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12947,6 +13013,9 @@ export const updateCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13011,6 +13080,9 @@ export const deleteCourseInstructors = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13075,6 +13147,9 @@ export const createAchievementCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13136,6 +13211,9 @@ export const updateAchievementCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13197,6 +13275,9 @@ export const deleteAchievementCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13258,6 +13339,9 @@ export const createPartnerCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13318,6 +13402,9 @@ export const updatePartnerCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13378,6 +13465,9 @@ export const deletePartnerCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13438,6 +13528,9 @@ export const createLibraryCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13513,6 +13606,9 @@ export const updateLibraryCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13588,6 +13684,9 @@ export const deleteLibraryCourses = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13663,6 +13762,9 @@ export const createCourseGlossaryTerms = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13728,6 +13830,9 @@ export const updateCourseGlossaryTerms = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13793,6 +13898,9 @@ export const deleteCourseGlossaryTerms = /* GraphQL */ `
         subscriptionPrice
         stripeLink
         callout
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
         createdAt
         updatedAt
         customerLibaryClientCoursesId

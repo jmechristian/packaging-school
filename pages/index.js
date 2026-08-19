@@ -88,7 +88,7 @@ const App = () => {
         title={metadata.title}
         description={metadata.description}
         url='/'
-        image='https://packschool.s3.amazonaws.com/firework-box-3.webp'
+        image='https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
         structuredData={[organization, website]}
       />
       <HomeVariantD />
