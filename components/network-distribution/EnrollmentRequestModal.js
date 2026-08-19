@@ -20,7 +20,7 @@ const StepPills = ({ current }) => {
           <div key={label} className='flex items-center gap-2'>
             <div
               className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
-                active || done ? 'text-white' : 'text-white/45'
+                active || done ? 'text-white' : 'text-white/75'
               }`}
             >
               <span
@@ -29,7 +29,7 @@ const StepPills = ({ current }) => {
                     ? 'bg-[#f4aa00] text-[#0A1D3A]'
                     : done
                       ? 'bg-white/20 text-white'
-                      : 'border border-white/30 text-white/50'
+                      : 'border border-white/50 text-white/80'
                 }`}
               >
                 {done ? '✓' : step}
