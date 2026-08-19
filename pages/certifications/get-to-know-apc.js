@@ -31,7 +31,7 @@ const Page = ({ testimonials }) => {
     title: 'Automotive Packaging Certificate (APC)',
     description:
       'Elevate your career with our unique online program tailored for automotive packaging pros. Ideal for suppliers, OEMs, engineers, and sales teams.',
-    seoImage: 'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp',
+    seoImage: 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
     price: 2400,
     link: 'https://learn.packagingschool.com/enroll/735516',
   };
@@ -41,7 +41,8 @@ const Page = ({ testimonials }) => {
       courseDescription:
         'Build the skills for success in automotive packaging with the only 100% online program. Ideal for packaging/logistics staff at suppliers or OEMs, as well as sales, customer service, and packaging engineers in the field.',
       courseDiscount: 0,
-      courseImage: 'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp',
+      courseImage:
+        'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
       courseName: 'Automotive Packaging Certificate (APC)',
       courseLink: `https://learn.packagingschool.com/enroll/735516`,
       total: 2400,
@@ -53,7 +54,7 @@ const Page = ({ testimonials }) => {
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `https://learn.packagingschool.com/enroll/735516`,
-        `https://learn.packagingschool.com/enroll/735516`
+        `https://learn.packagingschool.com/enroll/735516`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -67,12 +68,12 @@ const Page = ({ testimonials }) => {
         description={
           'Elevate your career with our unique online program tailored for automotive packaging pros. Ideal for suppliers, OEMs, engineers, and sales teams.'
         }
-        image={'https://packschool.s3.amazonaws.com/aps-seoImage-sm.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         keywords={
           'Automotive Packaging, Returnable Packaging Systems, Expendable Case Studies, Applications, Supplier Databases, Transportation, SME Feedback, certification'
         }
         structuredData={[apcJsonLd?.breadcrumb, apcJsonLd?.credential].filter(
-          Boolean
+          Boolean,
         )}
       />
       <CertContextNav active='apc' />

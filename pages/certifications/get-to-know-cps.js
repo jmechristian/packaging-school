@@ -23,7 +23,7 @@ export const Page = () => {
     title: 'Certificate of Packaging Science (CPS)',
     description:
       'Ideal for professionals in the packaging or related industries seeking a comprehensive understanding of the packaging industry. With the flexibility of 6-month access, this is an excellent choice for salespeople, packaging engineers, marketing leads, operations personnel, and procurement professionals looking to gain valuable insights.',
-    seoImage: 'https://packschool.s3.amazonaws.com/cps-1-seoImage.webp',
+    seoImage: 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
     link: `${siteUrl}/certifications/get-to-know-cps`,
   };
   useEffect(() => {
@@ -49,12 +49,12 @@ export const Page = () => {
         description={
           'Ideal for professionals in the packaging or related industries seeking a comprehensive understanding of the packaging industry. With the flexibility of 6-month access, this is an excellent choice for salespeople, packaging engineers, marketing leads, operations personnel, and procurement professionals looking to gain valuable insights.'
         }
-        image={'https://packschool.s3.amazonaws.com/cps-1-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         keywords={
           'certification, packaging design, packaging materials, corrugated containers, polymers, machinery, packaging regulations'
         }
         structuredData={[cpsJsonLd?.breadcrumb, cpsJsonLd?.credential].filter(
-          Boolean
+          Boolean,
         )}
       />
       <CertContextNav active='cps' />

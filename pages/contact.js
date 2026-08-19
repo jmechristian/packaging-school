@@ -74,7 +74,7 @@ export default function Index() {
         title={metadata.title}
         description={metadata.description}
         url='/contact'
-        image='https://packschool.s3.amazonaws.com/contact-seoImage.webp'
+        image='https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
         structuredData={[organization, website, breadcrumb]}
       />
       <div className='relative isolate bg-white'>
@@ -272,8 +272,8 @@ export default function Index() {
                   {isSending
                     ? 'Sending...'
                     : hasSent
-                    ? 'Sent!'
-                    : 'Send Message'}
+                      ? 'Sent!'
+                      : 'Send Message'}
                 </button>
               </div>
             </div>

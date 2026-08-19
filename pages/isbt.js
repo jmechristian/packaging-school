@@ -36,7 +36,7 @@ const Page = ({ isbt, isbtCourses }) => {
         description={
           'Enroll in unique online courses from ISBT, the sole organization focused on the science of beverages since 1953.'
         }
-        image={'https://packschool.s3.amazonaws.com/isbt-landing-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         url='/isbt'
         structuredData={[organization, website, breadcrumb]}
       />
@@ -245,8 +245,8 @@ export async function getStaticProps() {
   ]);
 
   const isbt = customerRes.data.getCustomer;
-  const isbtCourses = (coursesRes.data.listLMSCourses.items || []).sort((a, b) =>
-    a.courseId.localeCompare(b.courseId)
+  const isbtCourses = (coursesRes.data.listLMSCourses.items || []).sort(
+    (a, b) => a.courseId.localeCompare(b.courseId),
   );
 
   return {

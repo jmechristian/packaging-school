@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Head from 'next/head';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { API } from 'aws-amplify';
 import { createWorkshopForm } from '../src/graphql/mutations';
 import { useRouter } from 'next/router';
@@ -125,7 +125,7 @@ const Page = () => {
     if (res.errors) {
       setIsLoading(false);
       setIsError(
-        'Error sending form. Please email info@packagingschool.com for assistance.'
+        'Error sending form. Please email info@packagingschool.com for assistance.',
       );
     }
   };
@@ -134,7 +134,7 @@ const Page = () => {
     <>
       <Meta
         title={'Interactive Workshops Hosted by Industry Professionals'}
-        image={'https://packschool.s3.amazonaws.com/workshop-seoImage-sm.png'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         description={
           'Partner with us for a tailored 1-3 hour workshop and keynote on sustainable innovation, where our experts guide you through sustainability definition, audits, creative brainstorming, goal-setting, greenwashing identification, and environmental impact measurement to bring your product innovations to life.'
         }
@@ -308,7 +308,7 @@ const Page = () => {
                   onClick={() =>
                     window.open(
                       'https://www.linkedin.com/in/drandrewhurley/',
-                      '_blank'
+                      '_blank',
                     )
                   }
                 >
@@ -377,7 +377,8 @@ const Page = () => {
                     </li>
                     <li className='ml-6'>
                       Examine environmental claims about a package or product
-                      through the Federal Trade Commission (FTC) Green Guides{' '}
+                      through the Federal Trade Commission (FTC) Green
+                      Guides{' '}
                     </li>
                     <li className='ml-6'>
                       Apply an over-packaged example (e.g., polybag in a

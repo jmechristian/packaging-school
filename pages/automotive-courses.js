@@ -25,7 +25,7 @@ const Index = () => {
         description={
           'We visited leading experts at PakFab (Returnable Metal Packaging), Tree Brand Packaging (Expendable Packaging – Wood), NTIC Excor Zerust (Comprehensive Corrosion Control), and IPS (Packaging Distributor) to develop industry-specific education from the people who know it best.'
         }
-        image={'https://packschool.s3.amazonaws.com/autocourses-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         url='/automotive-courses'
         structuredData={[organization, website, breadcrumb]}
       />

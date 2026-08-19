@@ -146,7 +146,7 @@ const Page = () => {
         description={
           'Los cursos de ACCCSA, elegidos por expertos, maximizan el aprendizaje rápido. La educación en línea de AICC y The Packaging School ofrece cursos gratuitos.'
         }
-        image={'https://packschool.s3.amazonaws.com/acccsa-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         url='/acccsa'
         structuredData={[organization, website, breadcrumb]}
       />

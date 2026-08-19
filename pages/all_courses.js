@@ -438,7 +438,7 @@ const Page = ({
         title={metadata.title}
         description={metadata.description}
         url='/all_courses'
-        image='https://packschool.s3.amazonaws.com/all-courses-seoImage.webp'
+        image='https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
         preloadImage={firstCardImage}
         structuredData={[organization, website, breadcrumb, itemList]}
       />

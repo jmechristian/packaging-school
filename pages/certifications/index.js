@@ -139,9 +139,7 @@ const Index = ({ certificates }) => {
         description={
           'Expert-led, comprehensive certificate programs designed to elevate your expertise in packaging management and packaging design, automotive packaging, and food packaging.'
         }
-        image={
-          'https://packschool.s3.amazonaws.com/certifications-seoImage.webp'
-        }
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         structuredData={structuredData}
       />
       <div className='w-full pb-40 md:pb-48 border-b-2 border-b-black pt-5 lg:pt-24'>

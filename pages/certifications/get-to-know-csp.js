@@ -25,7 +25,7 @@ const Page = () => {
     title: 'Certificate of Sustainable Packaging (CSP)',
     description:
       'Master sustainable packaging with our certificate program: learn sustainability terms, UN goals, system creation, carbon footprint, neutrality via offsets, and LCA software usage for design.',
-    seoImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+    seoImage: 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
     price: 2400,
     link: 'https://learn.packagingschool.com/enroll/2772370?price_id=3600658',
   };
@@ -35,7 +35,8 @@ const Page = () => {
       courseDescription:
         "The Packaging School's program helps professionals master sustainable design, creating company champions. Discover the dos and don'ts of sustainable packaging and drive impactful change in your organization.",
       courseDiscount: 0,
-      courseImage: 'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png',
+      courseImage:
+        'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
       courseName: 'Certificate of Sustainable Packaging (CSP)',
       courseLink: `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`,
       total: 2400,
@@ -47,7 +48,7 @@ const Page = () => {
     if (awsUser && awsUser.name.includes(' ')) {
       navigateToThinkific(
         `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`,
-        `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`
+        `https://learn.packagingschool.com/enroll/2772370?price_id=3600658`,
       );
     } else {
       router.push(`/order/${orderId.id}`);
@@ -64,9 +65,9 @@ const Page = () => {
         keywords={
           'sustainability terms, UN goals, system creation, carbon footprint, neutrality via offsets, LCA software'
         }
-        image={'https://packschool.s3.amazonaws.com/csp-seoImage-1-sm.png'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         structuredData={[cspJsonLd?.breadcrumb, cspJsonLd?.credential].filter(
-          Boolean
+          Boolean,
         )}
       />
       <CertContextNav active='csp' />

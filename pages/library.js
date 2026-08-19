@@ -22,7 +22,7 @@ import {
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_ID,
-  process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
+  process.env.NEXT_PUBLIC_ALGOLIA_API_KEY,
 );
 
 export function CertItem({ hit, components }) {
@@ -170,7 +170,7 @@ export function LOTMItem({ hit, components }) {
 
 const Page = () => {
   const { allLessons, allCourses, allArticles } = useSelector(
-    (state) => state.course_filter
+    (state) => state.course_filter,
   );
 
   const router = useRouter();
@@ -213,7 +213,7 @@ const Page = () => {
         description={
           'Explore an expansive collection of courses and articles covering a wide array of packaging design, management, and regulations topics.'
         }
-        image={'https://packschool.s3.amazonaws.com/library-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         url='/library'
         structuredData={[organization, website, breadcrumb]}
       />

@@ -11,7 +11,7 @@ const Page = () => {
       'Certificate of Mastery in Packaging Management | Clemson-Backed, PhD-Led',
     description:
       'Clemson-backed, PhD-mentored packaging certificate for professionals and career-changers alike—with a built-in work project and full course-library access for the rest of the year after you finish.',
-    seoImage: 'https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp',
+    seoImage: 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
     link: `${siteUrl}/certifications/get-to-know-cmpm-b`,
   };
   const cmpmJsonLd = buildCertificationJsonLd(cmpmCert, siteUrl);
@@ -25,14 +25,13 @@ const Page = () => {
         description={
           'Clemson-backed, PhD-mentored packaging certificate for professionals and career-changers alike—with a built-in work project and full course-library access for the rest of the year after you finish.'
         }
-        image={'https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         keywords={
           'Certificate of Mastery, Clemson University, Packaging Development Plan, PhD mentorship, packaging certificate, Package Development Plan, executive packaging education'
         }
-        structuredData={[
-          cmpmJsonLd?.breadcrumb,
-          cmpmJsonLd?.credential,
-        ].filter(Boolean)}
+        structuredData={[cmpmJsonLd?.breadcrumb, cmpmJsonLd?.credential].filter(
+          Boolean,
+        )}
       />
       <CertContextNav active='cmpm' />
       <CmpmLandingB />

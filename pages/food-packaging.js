@@ -54,7 +54,7 @@ const Index = () => {
         description={
           'Boost your brand by sponsoring our project! Partner with us to enrich food packaging pros with deep industry insights. Spotlight your brand, establish your leaders as experts.'
         }
-        image={'https://packschool.s3.amazonaws.com/fpc-seoImage.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         url='/food-packaging'
         structuredData={[organization, website, breadcrumb, faqJsonLd]}
       />

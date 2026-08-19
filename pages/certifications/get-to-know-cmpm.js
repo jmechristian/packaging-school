@@ -34,9 +34,12 @@ const CertificateCirriculum = dynamic(
     ),
   },
 );
-const Testimonial = dynamic(() => import('../../components/shared/Testimonial'), {
-  ssr: false,
-});
+const Testimonial = dynamic(
+  () => import('../../components/shared/Testimonial'),
+  {
+    ssr: false,
+  },
+);
 const CMPMWhere = dynamic(
   () => import('../../components/certifications/cmpm/CMPMWhere'),
   {
@@ -55,15 +58,12 @@ const CMPMReviews = dynamic(
     ),
   },
 );
-const CMPMPDP = dynamic(
-  () => import('../../components/forms/cmpm/CMPMPDP'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' />
-    ),
-  },
-);
+const CMPMPDP = dynamic(() => import('../../components/forms/cmpm/CMPMPDP'), {
+  ssr: false,
+  loading: () => (
+    <div className='w-full h-48 bg-gray-100 animate-pulse rounded-lg' />
+  ),
+});
 
 const META_A = {
   title: 'Certificate of Mastery in Packaging Management (CMPM)',
@@ -99,8 +99,8 @@ function ClassicCmpmLanding() {
         <p>
           “I have greatly broadened my knowledge of the packaging industry as a
           whole, which was exactly what I hoped to gain from this program. I
-          highly recommend this program to anyone who wants to take a deeper dive
-          into the industry!”
+          highly recommend this program to anyone who wants to take a deeper
+          dive into the industry!”
         </p>
       </Testimonial>
       <CMPMWhere />
@@ -123,7 +123,7 @@ const Page = ({ variant }) => {
   const cmpmCert = {
     title: meta.title,
     description: meta.description,
-    seoImage: 'https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp',
+    seoImage: 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp',
     link: `${siteUrl}/certifications/get-to-know-cmpm`,
   };
   const cmpmJsonLd = buildCertificationJsonLd(cmpmCert, siteUrl);
@@ -144,16 +144,15 @@ const Page = ({ variant }) => {
       <Meta
         title={meta.title}
         description={meta.description}
-        image={'https://packschool.s3.amazonaws.com/cmpm-seoImage-sm.webp'}
+        image={'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'}
         keywords={
           isB
             ? 'CMPM, Clemson University, Packaging Development Plan, PhD mentorship, packaging certificate, Package Development Plan, executive packaging education'
             : 'Global Competitive Landscape, Project Management Essentials, Regulations, Sustainability, Materials, Package Design, Packaging Development Workflow, Capital Equipment, Manufacturing, Logistics, Supply Chain Management, certification'
         }
-        structuredData={[
-          cmpmJsonLd?.breadcrumb,
-          cmpmJsonLd?.credential,
-        ].filter(Boolean)}
+        structuredData={[cmpmJsonLd?.breadcrumb, cmpmJsonLd?.credential].filter(
+          Boolean,
+        )}
       />
       <CertContextNav active='cmpm' />
       {isB ? <CmpmLandingB /> : <ClassicCmpmLanding />}
@@ -166,17 +165,13 @@ export async function getServerSideProps({ req, res, query }) {
   const overrideRaw =
     typeof query?.ab_variant === 'string' ? query.ab_variant : null;
   const overrideVariant =
-    overrideRaw &&
-    getAllowedCmpmVariants().includes(overrideRaw.toUpperCase())
+    overrideRaw && getAllowedCmpmVariants().includes(overrideRaw.toUpperCase())
       ? overrideRaw.toUpperCase()
       : null;
   const variant = overrideVariant || existingVariant || chooseCmpmVariant();
 
   if (!existingVariant || overrideVariant) {
-    const nextCookie = createCmpmVariantCookieValue(
-      variant,
-      req.headers.host,
-    );
+    const nextCookie = createCmpmVariantCookieValue(variant, req.headers.host);
     const currentSetCookie = res.getHeader('Set-Cookie');
     const normalized = Array.isArray(currentSetCookie)
       ? currentSetCookie

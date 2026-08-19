@@ -21,7 +21,10 @@ const splitDefinition = (definition) => {
   }
 
   const [intro, ...bullets] = bulletSplit;
-  return { intro: intro.trim(), bullets: bullets.map((item) => item.trim()).filter(Boolean) };
+  return {
+    intro: intro.trim(),
+    bullets: bullets.map((item) => item.trim()).filter(Boolean),
+  };
 };
 
 const highlightText = (text, query) => {
@@ -59,7 +62,10 @@ const Page = ({ terms }) => {
     return terms.filter((term) => {
       const termText = normalizeText(term.term || '');
       const definitionText = normalizeText(term.definition || '');
-      return termText.includes(normalizedQuery) || definitionText.includes(normalizedQuery);
+      return (
+        termText.includes(normalizedQuery) ||
+        definitionText.includes(normalizedQuery)
+      );
     });
   }, [normalizedQuery, terms]);
 
@@ -95,7 +101,7 @@ const Page = ({ terms }) => {
       <Meta
         title='Glossary | Packaging School'
         description='Browse packaging terms and definitions with an A–Z index and search.'
-        image='https://packschool.s3.amazonaws.com/about-seoImage.webp'
+        image='https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
         url='/glossary'
         structuredData={[organization, website, breadcrumb]}
       />
@@ -103,7 +109,8 @@ const Page = ({ terms }) => {
         <header className='glossary__header'>
           <h1>Glossary</h1>
           <p>
-            Find terms and definitions from across packaging, printing, and production.{' '}
+            Find terms and definitions from across packaging, printing, and
+            production.{' '}
             <span className='glossary__count'>
               {filteredTerms.length.toLocaleString()} terms
             </span>
@@ -136,37 +143,45 @@ const Page = ({ terms }) => {
         </nav>
 
         <div className='glossary__content'>
-          {LETTERS.filter((letter) => groupedTerms.has(letter)).map((letter) => (
-            <section key={letter} id={`letter-${letter}`} className='glossary__section'>
-              <h2>{letter}</h2>
-              <dl>
-                {groupedTerms.get(letter).map((term) => {
-                  const { intro, bullets } = splitDefinition(term.definition || '');
-                  return (
-                    <div key={term.id} className='glossary__entry'>
-                      <dt>{highlightText(term.term, normalizedQuery)}</dt>
-                      <dd>
-                        {intro && (
-                          <p className='glossary__intro'>
-                            {highlightText(intro, normalizedQuery)}
-                          </p>
-                        )}
-                        {bullets.length > 0 && (
-                          <ul>
-                            {bullets.map((item, index) => (
-                              <li key={`${term.id}-bullet-${index}`}>
-                                {highlightText(item, normalizedQuery)}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </dd>
-                    </div>
-                  );
-                })}
-              </dl>
-            </section>
-          ))}
+          {LETTERS.filter((letter) => groupedTerms.has(letter)).map(
+            (letter) => (
+              <section
+                key={letter}
+                id={`letter-${letter}`}
+                className='glossary__section'
+              >
+                <h2>{letter}</h2>
+                <dl>
+                  {groupedTerms.get(letter).map((term) => {
+                    const { intro, bullets } = splitDefinition(
+                      term.definition || '',
+                    );
+                    return (
+                      <div key={term.id} className='glossary__entry'>
+                        <dt>{highlightText(term.term, normalizedQuery)}</dt>
+                        <dd>
+                          {intro && (
+                            <p className='glossary__intro'>
+                              {highlightText(intro, normalizedQuery)}
+                            </p>
+                          )}
+                          {bullets.length > 0 && (
+                            <ul>
+                              {bullets.map((item, index) => (
+                                <li key={`${term.id}-bullet-${index}`}>
+                                  {highlightText(item, normalizedQuery)}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </dd>
+                      </div>
+                    );
+                  })}
+                </dl>
+              </section>
+            ),
+          )}
         </div>
       </div>
 
@@ -209,7 +224,9 @@ const Page = ({ terms }) => {
           border-radius: 10px;
           border: 1px solid #d1d5db;
           font-size: 1rem;
-          transition: border 0.2s ease, box-shadow 0.2s ease;
+          transition:
+            border 0.2s ease,
+            box-shadow 0.2s ease;
         }
 
         .glossary__search input:focus {
