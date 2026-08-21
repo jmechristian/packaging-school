@@ -14,14 +14,6 @@ export const HOME_VARIANT_CONFIG = [
   { key: 'D', weight: 1 },
 ];
 
-// Separate CMPM landing experiment (not homepage home_v1).
-export const CMPM_EXPERIMENT_KEY = 'cmpm_v1';
-export const CMPM_VARIANT_COOKIE = 'ps_ab_cmpm_v1';
-export const CMPM_VARIANT_CONFIG = [
-  { key: 'A', weight: 1 },
-  { key: 'B', weight: 1 },
-];
-
 function normalizeVariant(value) {
   if (value === undefined || value === null) return null;
   const normalized = String(value).replace(/"/g, '').trim().toUpperCase();
@@ -29,19 +21,8 @@ function normalizeVariant(value) {
   return null;
 }
 
-function normalizeCmpmVariant(value) {
-  if (value === undefined || value === null) return null;
-  const normalized = String(value).replace(/"/g, '').trim().toUpperCase();
-  if (getAllowedCmpmVariants().includes(normalized)) return normalized;
-  return null;
-}
-
 export function getAllowedHomeVariants() {
   return HOME_VARIANT_CONFIG.map((entry) => entry.key);
-}
-
-export function getAllowedCmpmVariants() {
-  return CMPM_VARIANT_CONFIG.map((entry) => entry.key);
 }
 
 export function getCookieValues(cookieHeader = '', key) {
@@ -123,47 +104,6 @@ export function createVariantCookieValue(variant, hostHeader) {
   const domain = getCookieDomain(hostHeader);
   const domainPart = domain ? `; Domain=${domain}` : '';
   return `${HOME_VARIANT_COOKIE}=${resolvedVariant}; Path=/; Max-Age=${AB_COOKIE_MAX_AGE}; SameSite=Lax${domainPart}`;
-}
-
-export function chooseCmpmVariant() {
-  const weighted = CMPM_VARIANT_CONFIG.filter(
-    (entry) => entry?.key && Number(entry.weight) > 0,
-  );
-  if (weighted.length === 0) return 'A';
-
-  const totalWeight = weighted.reduce((sum, entry) => sum + Number(entry.weight), 0);
-  const roll = Math.random() * totalWeight;
-  let cumulative = 0;
-  for (const entry of weighted) {
-    cumulative += Number(entry.weight);
-    if (roll < cumulative) {
-      return entry.key;
-    }
-  }
-
-  return weighted[weighted.length - 1].key;
-}
-
-export function getCmpmVariantFromCookieHeader(cookieHeader) {
-  const matches = getCookieValues(cookieHeader, CMPM_VARIANT_COOKIE);
-  for (let i = matches.length - 1; i >= 0; i -= 1) {
-    const normalized = normalizeCmpmVariant(matches[i]);
-    if (normalized) return normalized;
-  }
-  return null;
-}
-
-export function getCmpmVariantFromDocumentCookie() {
-  if (typeof document === 'undefined') return null;
-  const cookies = parseCookieHeader(document.cookie);
-  return normalizeCmpmVariant(cookies[CMPM_VARIANT_COOKIE]);
-}
-
-export function createCmpmVariantCookieValue(variant, hostHeader) {
-  const resolvedVariant = normalizeCmpmVariant(variant) || chooseCmpmVariant();
-  const domain = getCookieDomain(hostHeader);
-  const domainPart = domain ? `; Domain=${domain}` : '';
-  return `${CMPM_VARIANT_COOKIE}=${resolvedVariant}; Path=/; Max-Age=${AB_COOKIE_MAX_AGE}; SameSite=Lax${domainPart}`;
 }
 
 function getCookieDomain(hostHeader = '') {

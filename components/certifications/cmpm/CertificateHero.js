@@ -5,11 +5,9 @@ import { getLatestCMPMSessions } from '../../../helpers/api';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import CountdownTimer from '../../shared/CountdownTimer';
-import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
 import {
   trackAbMeetingClick,
   trackAbNavNext,
-  withCmpmExperiment,
 } from '../../../libs/analytics';
 
 const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
@@ -38,26 +36,20 @@ const CertificateHero = () => {
   }, []);
 
   const onApply = () => {
-    trackAbNavNext(
-      withCmpmExperiment({
-        experimentKey: CMPM_EXPERIMENT_KEY,
-        pagePath: PAGE_PATH,
-        nextPath: APPLY_HREF,
-        source: 'cmpm_a_hero_apply',
-      }),
-    );
+    trackAbNavNext({
+      pagePath: PAGE_PATH,
+      nextPath: APPLY_HREF,
+      source: 'cmpm_a_hero_apply',
+    });
     router.push(APPLY_HREF);
   };
 
   const onConsult = () => {
-    trackAbMeetingClick(
-      withCmpmExperiment({
-        experimentKey: CMPM_EXPERIMENT_KEY,
-        pagePath: PAGE_PATH,
-        nextPath: CONSULT_HREF,
-        source: 'cmpm_a_hero_consult',
-      }),
-    );
+    trackAbMeetingClick({
+      pagePath: PAGE_PATH,
+      nextPath: CONSULT_HREF,
+      source: 'cmpm_a_hero_consult',
+    });
     window.open(CONSULT_HREF, '_blank');
   };
 

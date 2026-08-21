@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Popover } from '@headlessui/react';
 import clsx from 'clsx';
-import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
-import { trackAbNavNext, withCmpmExperiment } from '../../../libs/analytics';
+import { trackAbNavNext } from '../../../libs/analytics';
 
 const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
 const PAGE_PATH = '/certifications/get-to-know-cmpm';
@@ -20,14 +19,11 @@ const sections = [
 ];
 
 function trackNavApply(source) {
-  trackAbNavNext(
-    withCmpmExperiment({
-      experimentKey: CMPM_EXPERIMENT_KEY,
-      pagePath: PAGE_PATH,
-      nextPath: APPLY_HREF,
-      source,
-    }),
-  );
+  trackAbNavNext({
+    pagePath: PAGE_PATH,
+    nextPath: APPLY_HREF,
+    source,
+  });
 }
 
 function MenuIcon({ open, ...props }) {

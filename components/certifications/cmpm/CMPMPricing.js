@@ -3,11 +3,9 @@ import { API } from 'aws-amplify';
 import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { listCMPMSessions } from '../../../src/graphql/queries';
 import { useRouter } from 'next/router';
-import { CMPM_EXPERIMENT_KEY } from '../../../libs/abVariant';
 import {
   trackAbMeetingClick,
   trackAbNavNext,
-  withCmpmExperiment,
 } from '../../../libs/analytics';
 
 const APPLY_HREF = '/certificate-of-mastery-in-packaging-management';
@@ -36,26 +34,20 @@ export default function CMPMPricing() {
   };
 
   const onApply = (nextPath, source) => {
-    trackAbNavNext(
-      withCmpmExperiment({
-        experimentKey: CMPM_EXPERIMENT_KEY,
-        pagePath: PAGE_PATH,
-        nextPath,
-        source,
-      }),
-    );
+    trackAbNavNext({
+      pagePath: PAGE_PATH,
+      nextPath,
+      source,
+    });
     router.push(nextPath);
   };
 
   const onConsult = () => {
-    trackAbMeetingClick(
-      withCmpmExperiment({
-        experimentKey: CMPM_EXPERIMENT_KEY,
-        pagePath: PAGE_PATH,
-        nextPath: CONSULT_HREF,
-        source: 'cmpm_a_pricing_consult',
-      }),
-    );
+    trackAbMeetingClick({
+      pagePath: PAGE_PATH,
+      nextPath: CONSULT_HREF,
+      source: 'cmpm_a_pricing_consult',
+    });
     window.open(CONSULT_HREF, '_blank');
   };
 

@@ -206,7 +206,10 @@ const courseKey = (course) => course?.id || course?.courseId;
 const findRequestForCourse = (requests, course) =>
   requests.find((item) => item.courseId === courseKey(course));
 
-const normalizeName = (value) => String(value || '').trim().toLowerCase();
+const normalizeName = (value) =>
+  String(value || '')
+    .trim()
+    .toLowerCase();
 
 const isCourseEnrolled = (course, enrollmentLookup) => {
   if (!course || !enrollmentLookup) return false;
@@ -221,7 +224,9 @@ const isCourseEnrolled = (course, enrollmentLookup) => {
 };
 
 const buildEnrollLink = (course, code = 'networklibrary') => {
-  const link = String(course?.link || '').replace(/^Link:\s*/i, '').trim();
+  const link = String(course?.link || '')
+    .replace(/^Link:\s*/i, '')
+    .trim();
   if (!link) return null;
   if (link.includes('coupon=')) return link;
   return `${link}${link.includes('?') ? '&' : '?'}coupon=${code}`;
@@ -439,12 +444,12 @@ const Page = ({ lib, learningOfTheMonths }) => {
         >
           <div className='absolute inset-0 opacity-90'></div>
           <div className='w-full lg:w-1/2 flex justify-center items-center gap-5 px-10 relative z-10'>
-            <div className='w-[300px] lg:w-[450px]'>
+            <div className='w-[300px] lg:w-[500px]'>
               <Image
                 src={`${lib.logo}`}
                 alt='pipeline-logo'
-                width={400}
-                height={163}
+                width={500}
+                height={81}
               />
             </div>
           </div>

@@ -80,6 +80,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/certifications/get-to-know-cmpm-b',
+        destination: '/certifications/get-to-know-cmpm',
+        permanent: true,
+      },
+      {
         source: '/cmpm',
         destination: 'certifications/get-to-know-cmpm',
         permanent: true,

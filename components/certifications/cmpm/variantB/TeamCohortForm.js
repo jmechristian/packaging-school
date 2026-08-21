@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { trackAbEngagement, withCmpmExperiment } from '../../../../libs/analytics';
-import { CMPM_EXPERIMENT_KEY } from '../../../../libs/abVariant';
+import { trackAbEngagement } from '../../../../libs/analytics';
 
 const FUNCTIONS = ['R&D', 'Procurement', 'Logistics'];
 
@@ -43,21 +42,18 @@ export default function TeamCohortForm({ open, onClose }) {
     }
     setStatus('sending');
     try {
-      trackAbEngagement(
-        withCmpmExperiment({
-          experimentKey: CMPM_EXPERIMENT_KEY,
-          pagePath: '/certifications/get-to-know-cmpm',
-          metric: 'team_cohort_request',
-          value: 1,
-          source: 'cmpm_b_team_cohort_form',
-          metadata: {
-            companyName: form.companyName,
-            teamSize: form.teamSize,
-            functions: form.functions,
-            timeline: form.timeline,
-          },
-        }),
-      );
+      trackAbEngagement({
+        pagePath: '/certifications/get-to-know-cmpm',
+        metric: 'team_cohort_request',
+        value: 1,
+        source: 'cmpm_b_team_cohort_form',
+        metadata: {
+          companyName: form.companyName,
+          teamSize: form.teamSize,
+          functions: form.functions,
+          timeline: form.timeline,
+        },
+      });
 
       // Routes to sales inbox — not the individual application flow.
       await fetch('/api/send-contact-email', {

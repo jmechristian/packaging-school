@@ -2,11 +2,9 @@ import {
   AB_SESSION_COOKIE,
   AB_SESSION_MAX_AGE,
   AB_VISITOR_MAX_AGE,
-  CMPM_EXPERIMENT_KEY,
   HOME_EXPERIMENT_KEY,
   createSessionCookieValue,
   createVisitorCookieValue,
-  getCmpmVariantFromDocumentCookie,
   getSessionIdFromDocumentCookie,
   getVariantFromDocumentCookie,
   getVisitorIdFromDocumentCookie,
@@ -499,7 +497,6 @@ function resolveAttributionContext(sessionId) {
 
 export function getAbContext(overrides = {}) {
   const homeVariant = overrides.variant || getVariantFromDocumentCookie();
-  const cmpmVariant = getCmpmVariantFromDocumentCookie();
   const sessionId = overrides.sessionId || ensureAbSessionId();
   const visitorId = overrides.visitorId || ensureAbVisitorId();
   const identity = getAbIdentity() || {};
@@ -533,18 +530,6 @@ export function getAbContext(overrides = {}) {
     ...overrides,
   };
 
-  // Once assigned to the CMPM landing experiment, stamp membership on every
-  // event's metadata so journeys keyed by visitorId can filter A vs B. Callers
-  // that pass experimentKey: cmpm_v1 (exposure, CTAs, form events) still win
-  // via overrides above for the top-level partition.
-  if (cmpmVariant) {
-    base.metadata = {
-      ...(base.metadata || {}),
-      cmpmVariant,
-      cmpmExperimentKey: CMPM_EXPERIMENT_KEY,
-    };
-  }
-
   // Keep geo mirrored in metadata for dashboards that only read the JSON blob.
   if (base.city || base.region || base.country) {
     base.metadata = {
@@ -556,29 +541,6 @@ export function getAbContext(overrides = {}) {
   }
 
   return base;
-}
-
-// Stamp cmpm_v1 + assigned variant for CMPM experiment-scoped events (exposure,
-// landing CTAs, application start/submit). Falls back to the sticky cookie when
-// the caller doesn't pass an explicit variant.
-export function withCmpmExperiment(payload = {}) {
-  const cmpmVariant =
-    (payload.variant && ['A', 'B'].includes(String(payload.variant).toUpperCase())
-      ? String(payload.variant).toUpperCase()
-      : null) || getCmpmVariantFromDocumentCookie();
-
-  if (!cmpmVariant) return payload;
-
-  return {
-    ...payload,
-    experimentKey: CMPM_EXPERIMENT_KEY,
-    variant: cmpmVariant,
-    metadata: {
-      ...(payload.metadata || {}),
-      cmpmVariant,
-      cmpmExperimentKey: CMPM_EXPERIMENT_KEY,
-    },
-  };
 }
 
 function getCacheStore() {
@@ -858,14 +820,12 @@ export async function trackAbPromoClick(payload = {}) {
 // submit = they submit it (the app-start step that also fires the
 // send-certificate-start email action). Passing the typed email lets the sale
 // stitch back to this touch via the abEventByEmail journey resolution.
-// When the visitor was assigned on the CMPM landing, these events land in the
-// cmpm_v1 partition with their sticky A/B variant.
 export async function trackAbCmpmStart(payload = {}) {
-  await writeAbEvent('ab_cmpm_start', withCmpmExperiment(payload));
+  await writeAbEvent('ab_cmpm_start', payload);
 }
 
 export async function trackAbCmpmSubmit(payload = {}) {
-  await writeAbEvent('ab_cmpm_submit', withCmpmExperiment(payload));
+  await writeAbEvent('ab_cmpm_submit', payload);
 }
 
 export async function trackAbPurchaseComplete(payload = {}) {

@@ -26,9 +26,7 @@ import {
   trackAbMeetingClick,
   trackAbNavNext,
   trackAbEngagement,
-  withCmpmExperiment,
 } from '../../../../libs/analytics';
-import { CMPM_EXPERIMENT_KEY } from '../../../../libs/abVariant';
 import TeamCohortForm from './TeamCohortForm';
 import {
   APPLY_HREF,
@@ -61,49 +59,37 @@ function isIcpfSession(session) {
 }
 
 function trackApply(source) {
-  trackAbNavNext(
-    withCmpmExperiment({
-      experimentKey: CMPM_EXPERIMENT_KEY,
-      pagePath: PAGE_PATH,
-      nextPath: APPLY_HREF,
-      source,
-    }),
-  );
+  trackAbNavNext({
+    pagePath: PAGE_PATH,
+    nextPath: APPLY_HREF,
+    source,
+  });
 }
 
 function trackConsult(source) {
-  trackAbMeetingClick(
-    withCmpmExperiment({
-      experimentKey: CMPM_EXPERIMENT_KEY,
-      pagePath: PAGE_PATH,
-      nextPath: CONSULT_HREF,
-      source,
-    }),
-  );
+  trackAbMeetingClick({
+    pagePath: PAGE_PATH,
+    nextPath: CONSULT_HREF,
+    source,
+  });
 }
 
 function trackCatalogNav(source, nextPath) {
-  trackAbNavNext(
-    withCmpmExperiment({
-      experimentKey: CMPM_EXPERIMENT_KEY,
-      pagePath: PAGE_PATH,
-      nextPath,
-      source,
-    }),
-  );
+  trackAbNavNext({
+    pagePath: PAGE_PATH,
+    nextPath,
+    source,
+  });
 }
 
 function trackPdpEngagement(metric, source, metadata = {}) {
-  trackAbEngagement(
-    withCmpmExperiment({
-      experimentKey: CMPM_EXPERIMENT_KEY,
-      pagePath: PAGE_PATH,
-      metric,
-      value: 1,
-      source,
-      metadata,
-    }),
-  );
+  trackAbEngagement({
+    pagePath: PAGE_PATH,
+    metric,
+    value: 1,
+    source,
+    metadata,
+  });
 }
 
 function formatDate(dateString) {
@@ -150,15 +136,12 @@ export default function CmpmLandingB() {
   }, []);
 
   const openTeam = (source) => {
-    trackAbEngagement(
-      withCmpmExperiment({
-        experimentKey: CMPM_EXPERIMENT_KEY,
-        pagePath: PAGE_PATH,
-        metric: 'team_cohort_open',
-        value: 1,
-        source,
-      }),
-    );
+    trackAbEngagement({
+      pagePath: PAGE_PATH,
+      metric: 'team_cohort_open',
+      value: 1,
+      source,
+    });
     setTeamOpen(true);
   };
 
