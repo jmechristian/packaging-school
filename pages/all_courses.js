@@ -12,6 +12,8 @@ import {
   MdExpandMore,
   MdWorkspacePremium,
   MdVideocam,
+  MdTableRows,
+  MdGridView,
 } from 'react-icons/md';
 import Meta from '../components/shared/Meta';
 import { generateMetadata } from '../libs/seo/generateMetadata';
@@ -42,6 +44,7 @@ import CourseTableRow from '../components/shared/CourseTableRow';
 import CertificateTableRow from '../components/shared/CertificateTableRow';
 import CourseMobileCard from '../components/shared/CourseMobileCard';
 import CertificateMobileCard from '../components/shared/CertificateMobileCard';
+import CatalogGridCard from '../components/shared/CatalogGridCard';
 import BrutalCircleIconTooltip from '../components/shared/BrutalCircleIconTooltip';
 import { createCourseSearch } from '../src/graphql/mutations';
 import { useThinkificLink } from '../hooks/useThinkificLink';
@@ -98,6 +101,8 @@ const groupCoursesByCategory = (courses, filters) => {
   return groups;
 };
 
+const VIEW_STORAGE_KEY = 'all_courses_view';
+
 const Page = ({
   firstCardImage,
   courseListItems = [],
@@ -118,6 +123,25 @@ const Page = ({
   );
   const [navigatingId, setNavigatingId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [viewMode, setViewMode] = useState('table');
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
+      if (stored === 'cards' || stored === 'table') setViewMode(stored);
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
+  const setView = (mode) => {
+    setViewMode(mode);
+    try {
+      window.localStorage.setItem(VIEW_STORAGE_KEY, mode);
+    } catch {
+      // ignore storage errors
+    }
+  };
 
   // JS-based responsive detection — avoids sm: CSS breakpoint visibility bugs on back nav
   useEffect(() => {
@@ -362,8 +386,8 @@ const Page = ({
     }
   };
 
-  const cardClickHandler = async (id, slug, altlink, type) => {
-    await registgerCourseClick(id, router.asPath, location, slug, 'TABLE');
+  const cardClickHandler = async (id, slug, altlink, type, source = 'TABLE') => {
+    await registgerCourseClick(id, router.asPath, location, slug, source);
     if (altlink) {
       window.open(altlink, '_blank');
     } else {
@@ -444,9 +468,43 @@ const Page = ({
       />
       <div className='w-full max-w-7xl mx-auto px-3 xl:!px-0 py-6 sm:py-12'>
         <div className='flex flex-col gap-4 sm:gap-6'>
-          <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-slate-900'>
-            Browse All Courses
-          </h1>
+          <div className='flex items-center justify-between gap-3'>
+            <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-slate-900'>
+              Browse All Courses
+            </h1>
+            <div
+              className='inline-flex items-center rounded-lg border border-slate-300 bg-slate-100 p-0.5 flex-shrink-0'
+              role='group'
+              aria-label='Catalog view'
+            >
+              <button
+                type='button'
+                onClick={() => setView('table')}
+                aria-pressed={viewMode === 'table'}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'table'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <MdTableRows size={18} />
+                <span className='hidden sm:inline'>Table</span>
+              </button>
+              <button
+                type='button'
+                onClick={() => setView('cards')}
+                aria-pressed={viewMode === 'cards'}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'cards'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <MdGridView size={18} />
+                <span className='hidden sm:inline'>Cards</span>
+              </button>
+            </div>
+          </div>
 
           {/* Search + Filter Icons */}
           <div className='flex flex-col gap-3 sm:gap-4 w-full'>
@@ -519,14 +577,33 @@ const Page = ({
 
           {/* Content */}
           {isLoading ? (
-            <div className='grid grid-cols-1 gap-4'>
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className='h-16 bg-slate-200 rounded animate-pulse'
-                />
-              ))}
-            </div>
+            viewMode === 'cards' ? (
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5'>
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className='rounded-lg border border-slate-200 overflow-hidden'
+                  >
+                    <div className='aspect-[16/9] bg-slate-200 animate-pulse' />
+                    <div className='p-4 space-y-2'>
+                      <div className='h-3 w-16 bg-slate-200 rounded animate-pulse' />
+                      <div className='h-5 w-3/4 bg-slate-200 rounded animate-pulse' />
+                      <div className='h-4 w-full bg-slate-200 rounded animate-pulse' />
+                      <div className='h-4 w-2/3 bg-slate-200 rounded animate-pulse' />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className='grid grid-cols-1 gap-4'>
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className='h-16 bg-slate-200 rounded animate-pulse'
+                  />
+                ))}
+              </div>
+            )
           ) : !hasResults ? (
             <div className='w-full py-16 flex flex-col items-center justify-center gap-4'>
               {isSearchTerm.length > 3 ? (
@@ -576,7 +653,53 @@ const Page = ({
                     )}
                   </button>
                   {isCategoryExpanded('CERTIFICATES') &&
-                    (isMobile ? (
+                    (viewMode === 'cards' ? (
+                      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 p-3 sm:p-4 bg-slate-50 border border-slate-200 border-t-0'>
+                        {sortedCertificates.map((cert) => (
+                          <CatalogGridCard
+                            key={cert.id}
+                            courseId={cert.courseId}
+                            title={cert.title}
+                            subtitle={cert.description}
+                            hours={cert.hours}
+                            metaCount={cert.courses}
+                            metaCountLabel='Courses'
+                            price={cert.price}
+                            seoImage={cert.seoImage}
+                            previewUrl={cert.video || cert.preview}
+                            isNavigating={navigatingId === cert.id}
+                            isCertificate
+                            abbreviation={cert.abbreviation}
+                            purchaseLabel={
+                              cert.abbreviation === 'CPS' ||
+                              cert.abbreviation === 'CMPM'
+                                ? 'Apply Now'
+                                : 'Enroll Now'
+                            }
+                            onCardClick={() => {
+                              setNavigatingId(cert.id);
+                              handleCertCardClick(
+                                cert,
+                                cert.abbreviation,
+                                'CERTIFICATE-VIEW',
+                                cert.link,
+                                cert.applicationLink,
+                              );
+                            }}
+                            onPurchase={() => {
+                              setNavigatingId(cert.id);
+                              handleCertCardClick(
+                                cert,
+                                cert.abbreviation,
+                                'CERTIFICATE-APPLY',
+                                cert.link,
+                                cert.applicationLink,
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+                    ) : isMobile ? (
                       <div className='border border-slate-200 border-t-0'>
                         {sortedCertificates.map((cert) => (
                           <CertificateMobileCard
@@ -743,7 +866,37 @@ const Page = ({
                       )}
                     </button>
                     {isExpanded &&
-                      (isMobile ? (
+                      (viewMode === 'cards' ? (
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 p-3 sm:p-4 bg-slate-50 border border-slate-200 border-t-0'>
+                          {items.map((course) => (
+                            <CatalogGridCard
+                              key={course.id}
+                              courseId={course.courseId}
+                              title={course.title}
+                              subtitle={course.subheadline}
+                              hours={course.hours}
+                              metaCount={course.lessons}
+                              metaCountLabel='Lessons'
+                              price={course.price}
+                              seoImage={course.seoImage}
+                              previewUrl={course.preview || course.video}
+                              isNavigating={navigatingId === course.id}
+                              purchaseLabel='Enroll'
+                              onCardClick={() => {
+                                setNavigatingId(course.id);
+                                cardClickHandler(
+                                  course.id,
+                                  course.slug,
+                                  course.altLink,
+                                  course.type,
+                                  'CARD',
+                                );
+                              }}
+                              onPurchase={() => orderHandler(course)}
+                            />
+                          ))}
+                        </div>
+                      ) : isMobile ? (
                         <div className='border border-slate-200 border-t-0'>
                           {items.map((course) => (
                             <CourseMobileCard
