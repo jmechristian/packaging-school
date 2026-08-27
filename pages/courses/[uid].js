@@ -49,6 +49,9 @@ const lMSCoursesBySlug = /* GraphQL */ `
         callout
         createdAt
         updatedAt
+        thirtyDay
+        ninetyDay
+        threeSixtyDay
       }
     }
   }
@@ -89,9 +92,37 @@ import {
   AcademicCapIcon,
   UserIcon,
   CalendarDaysIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/solid';
 
 const ADVISOR_CALENDAR_URL = 'https://calendar.app.google/qUZMKuFbF7NhpxgL8';
+
+const ACCESS_TIERS = [
+  {
+    id: 'THIRTY',
+    field: 'thirtyDay',
+    label: '30-Day Access',
+    price: 179,
+    description: 'A focused month to complete the course.',
+    badge: null,
+  },
+  {
+    id: 'NINETY',
+    field: 'ninetyDay',
+    label: '90-Day Access',
+    price: 399,
+    description: 'Time to learn the material and put it into practice.',
+    badge: 'Most popular',
+  },
+  {
+    id: 'THREE_SIXTY',
+    field: 'threeSixtyDay',
+    label: '360-Day Access',
+    price: 500,
+    description: 'A full year of access at your own pace.',
+    badge: 'Best value',
+  },
+];
 
 const LESSON_TYPE_ICONS = {
   VIDEO: FilmIcon,
@@ -107,7 +138,14 @@ const Page = ({ course }) => {
   const { navigateToThinkific } = useThinkificLink();
   const [isLoading, setIsLoading] = useState(false);
   const [showFullOutline, setShowFullOutline] = useState(false);
+  const [selectedTier, setSelectedTier] = useState('NINETY');
   const deviceType = getDeviceType();
+
+  const availableTiers = ACCESS_TIERS.filter((tier) => course?.[tier.field]);
+  const hasTierPricing = availableTiers.length > 0;
+  const activeTier =
+    availableTiers.find((tier) => tier.id === selectedTier) ??
+    availableTiers[0];
 
   // Record a product view so the analytics codebase can measure the
   // view -> intent -> complete funnel per course.
@@ -182,8 +220,23 @@ const Page = ({ course }) => {
     return { lessonsCount: lessons, videosCount: videos };
   }, [course?.courseOutline]);
 
+  const getCheckout = (type) => {
+    if (type === 'TRIAL') {
+      return {
+        link: course?.link ? `${course.link}?et=free_trial` : null,
+        total: 0,
+      };
+    }
+    const tier = ACCESS_TIERS.find((item) => item.id === type);
+    if (tier) {
+      return { link: course?.[tier.field] || null, total: tier.price };
+    }
+    return { link: course?.link || null, total: course?.price };
+  };
+
   const orderHandler = async (type) => {
-    if (!course?.link) return;
+    const { link: targetUrl, total } = getCheckout(type);
+    if (!targetUrl) return;
     setIsLoading(true);
     try {
       await registgerCourseClick(
@@ -198,29 +251,13 @@ const Page = ({ course }) => {
         courseDiscount: 0,
         courseImage: course.seoImage,
         courseName: course.title,
-        courseLink:
-          type === 'SUBSCRIPTION'
-            ? course.subscriptionLink
-            : type === 'TRIAL'
-              ? `${course.link}?et=free_trial`
-              : course.link,
-        total:
-          type === 'SUBSCRIPTION'
-            ? course.subscriptionPrice
-            : type === 'TRIAL'
-              ? 0
-              : course.price,
+        courseLink: targetUrl,
+        total,
         userID: awsUser?.id ?? null,
         email: awsUser?.email ?? null,
         name: awsUser?.name ?? null,
         type,
       });
-      const targetUrl =
-        type === 'SUBSCRIPTION'
-          ? course.subscriptionLink
-          : type === 'TRIAL'
-            ? `${course.link}?et=free_trial`
-            : course.link;
       if (awsUser?.name?.includes(' ')) {
         await navigateToThinkific(targetUrl, targetUrl);
       } else {
@@ -510,56 +547,132 @@ const Page = ({ course }) => {
                 </div>
               )}
             </div>
-            {course.link && (
-              <div className='flex flex-col gap-3 pt-4 border-t border-gray-300'>
-                <div className='flex flex-col gap-2 p-4 rounded-lg border-2 border-clemson bg-white shadow-sm'>
-                  <span className='text-sm font-semibold text-gray-900'>
-                    Buy now
-                  </span>
-                  <span className='text-3xl font-bold text-gray-900'>
-                    {course.price === 'FREE' ? 'Free' : `$${course.price}`}
-                  </span>
-                  <span className='text-xs text-gray-600'>3-Month Access</span>
-                  <div className='flex flex-col gap-2'>
-                    <button
-                      type='button'
-                      onClick={() => orderHandler('BUY')}
-                      disabled={isLoading}
-                      className='w-full bg-clemson hover:bg-clemson-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+            {(hasTierPricing || course.link) && (
+              <div className='flex flex-col gap-4 pt-4 border-t border-gray-300'>
+                {hasTierPricing ? (
+                  <div className='flex flex-col gap-4 rounded-lg border border-gray-300 bg-white p-4'>
+                    <div className='flex flex-col gap-1'>
+                      <h3 className='text-base font-semibold text-gray-900'>
+                        Choose Your Access
+                      </h3>
+                      <p className='text-sm text-gray-600 leading-snug'>
+                        Get the flexibility you need to learn packaging on your
+                        schedule.
+                      </p>
+                    </div>
+                    <div
+                      role='radiogroup'
+                      aria-label='Access duration'
+                      className='flex flex-col gap-2'
                     >
-                      {isLoading ? 'Loading...' : 'Buy now'}
-                    </button>
-                    {trialLink && (
+                      {availableTiers.map((tier) => {
+                        const isSelected = activeTier?.id === tier.id;
+                        return (
+                          <button
+                            key={tier.id}
+                            type='button'
+                            role='radio'
+                            aria-checked={isSelected}
+                            onClick={() => setSelectedTier(tier.id)}
+                            className={`w-full text-left rounded-lg border p-3.5 transition-colors ${
+                              isSelected
+                                ? 'border-clemson bg-clemson/5 shadow-sm'
+                                : 'border-gray-200 bg-white hover:border-gray-300'
+                            }`}
+                          >
+                            <div className='flex items-start justify-between gap-3'>
+                              <div className='flex items-start gap-2.5 min-w-0'>
+                                {isSelected ? (
+                                  <CheckCircleIcon className='w-5 h-5 mt-0.5 shrink-0 text-clemson' />
+                                ) : (
+                                  <span className='mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 border-gray-300' />
+                                )}
+                                <div className='flex flex-col gap-0.5 min-w-0'>
+                                  <div className='flex items-center gap-2 flex-wrap'>
+                                    <span className='text-sm font-semibold text-gray-900'>
+                                      {tier.label}
+                                    </span>
+                                    {tier.badge && (
+                                      <span
+                                        className={`text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded ${
+                                          isSelected
+                                            ? 'bg-clemson text-white'
+                                            : 'bg-gray-100 text-gray-600'
+                                        }`}
+                                      >
+                                        {tier.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className='text-xs text-gray-600 leading-snug'>
+                                    {tier.description}
+                                  </span>
+                                </div>
+                              </div>
+                              <span className='text-lg font-bold text-gray-900 tabular-nums shrink-0'>
+                                ${tier.price}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className='flex flex-col gap-2'>
                       <button
                         type='button'
-                        onClick={() => orderHandler('TRIAL')}
-                        disabled={isLoading}
-                        className='w-full border-2 border-clemson text-clemson hover:bg-clemson hover:text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        onClick={() =>
+                          activeTier && orderHandler(activeTier.id)
+                        }
+                        disabled={isLoading || !activeTier}
+                        className='w-full bg-clemson hover:bg-clemson-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                       >
-                        Free trial
+                        {isLoading
+                          ? 'Loading...'
+                          : `Get ${activeTier?.label ?? 'Access'}`}
                       </button>
-                    )}
+                      {trialLink && (
+                        <button
+                          type='button'
+                          onClick={() => orderHandler('TRIAL')}
+                          disabled={isLoading}
+                          className='w-full text-sm font-medium text-gray-600 hover:text-gray-900 py-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                          Or start a free trial
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-                {course.subscriptionLink && course.subscriptionPrice && (
-                  <div className='flex flex-col gap-2 p-3 rounded-lg border border-gray-200 bg-gray-50'>
-                    <span className='text-xs font-medium text-gray-600'>
-                      Or subscribe
+                ) : (
+                  <div className='flex flex-col gap-2 p-4 rounded-lg border-2 border-clemson bg-white shadow-sm'>
+                    <span className='text-sm font-semibold text-gray-900'>
+                      Buy now
                     </span>
-                    <span className='text-2xl font-semibold text-gray-700'>
-                      ${course.subscriptionPrice}
+                    <span className='text-3xl font-bold text-gray-900'>
+                      {course.price === 'FREE' ? 'Free' : `$${course.price}`}
                     </span>
-                    <span className='text-xs text-gray-500'>
-                      per month for 6 months
+                    <span className='text-xs text-gray-600'>
+                      3-Month Access
                     </span>
-                    <button
-                      type='button'
-                      onClick={() => orderHandler('SUBSCRIPTION')}
-                      disabled={isLoading}
-                      className='w-full border border-gray-400 text-gray-600 hover:bg-gray-300 hover:text-gray-900 font-medium py-2.5 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm'
-                    >
-                      Subscribe
-                    </button>
+                    <div className='flex flex-col gap-2'>
+                      <button
+                        type='button'
+                        onClick={() => orderHandler('BUY')}
+                        disabled={isLoading}
+                        className='w-full bg-clemson hover:bg-clemson-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                      >
+                        {isLoading ? 'Loading...' : 'Buy now'}
+                      </button>
+                      {trialLink && (
+                        <button
+                          type='button'
+                          onClick={() => orderHandler('TRIAL')}
+                          disabled={isLoading}
+                          className='w-full border-2 border-clemson text-clemson hover:bg-clemson hover:text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                          Free trial
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
