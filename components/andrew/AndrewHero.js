@@ -89,7 +89,7 @@ const AndrewHero = () => {
                 </div>
                 <div className='mt-10 flex items-center gap-x-6 w-full'>
                   <a
-                    href='https://www.researchgate.net/profile/Rupert_Hurley'
+                    href='https://www.linkedin.com/in/drandrewhurley/'
                     className='rounded-md font-greycliff bg-clemson px-6 py-3 font-semibold text-white shadow-sm hover:bg-clemson-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 cursor-pointer text-lg focus-visible:outline-clemson flex items-center gap-x-2'
                     target='_blank'
                     rel='noopener noreferrer'
