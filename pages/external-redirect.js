@@ -5,17 +5,14 @@ export default function ExternalRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check for external URL in sessionStorage
     const externalUrl = sessionStorage.getItem('externalReturnTo');
 
     if (externalUrl) {
-      // Clear the stored URL
       sessionStorage.removeItem('externalReturnTo');
-
-      // Redirect to the external URL
-      window.location.href = externalUrl;
+      window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+        externalUrl,
+      )}`;
     } else {
-      // Fallback to profile page
       router.push('/profile?tab=courses');
     }
   }, [router]);

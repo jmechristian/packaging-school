@@ -1,4 +1,5 @@
 import { signThinkificSsoUserToken } from '../../helpers/thinkificUserJwt';
+import { buildThinkificSsoUrl } from '../../libs/thinkificSsoUrl';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,10 +18,7 @@ export default function handler(req, res) {
       return res.status(500).json({ error: 'Failed to sign JWT (check NEXT_PUBLIC_API_KEY)' });
     }
 
-    // Construct the redirect URL
-    const thinkificUrl = `https://packagingschool.thinkific.com/api/sso/v2/sso/jwt?jwt=${token}${
-      return_to ? `&return_to=${encodeURIComponent(return_to)}` : ''
-    }`;
+    const thinkificUrl = buildThinkificSsoUrl(token, return_to);
 
     res.status(200).json({ url: thinkificUrl });
   } catch (error) {

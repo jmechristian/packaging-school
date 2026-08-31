@@ -1,5 +1,6 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { getAWSUser } from '../../../helpers/api';
+import { toAuth0CallbackReturnTo } from '../../../libs/auth0ExternalReturnTo';
 
 export default handleAuth({
   authorizationParams: {
@@ -50,17 +51,7 @@ export default handleAuth({
     }
 
     // Check if returnTo is external (needs SSO redirect)
-    const isExternalUrl =
-      returnTo &&
-      (returnTo.startsWith('http') ||
-        returnTo.includes('learn.packagingschool.com'));
-
-    // If we have an external returnTo, redirect to external-redirect handler
-    // which will handle SSO and redirect to the external URL
-    // For internal URLs, redirect to profile so afterCallback can run
-    const callbackReturnTo = isExternalUrl
-      ? `/api/auth/external-redirect?returnTo=${encodeURIComponent(returnTo)}`
-      : returnTo || '/profile';
+    const callbackReturnTo = toAuth0CallbackReturnTo(returnTo);
 
     try {
       await handleCallback(req, res, {
@@ -74,16 +65,13 @@ export default handleAuth({
           try {
             // Goal: keep callback simple and deterministic.
             // We do NOT auto-run Thinkific SSO here anymore.
+            // Auth0 returnTo is an internal path (menu: current page, order:
+            // /order/{id}). Thinkific SSO runs after that page loads.
 
-            // Dynamically determine baseUrl for internal API calls
-            let baseUrl;
-            if (process.env.NODE_ENV === 'development') {
-              baseUrl = 'http://localhost:3001';
-            } else {
-              const protocol = req.headers['x-forwarded-proto'] || 'http';
-              const host = req.headers.host;
-              baseUrl = `${protocol}://${host}`;
-            }
+            const protocol =
+              req.headers['x-forwarded-proto'] ||
+              (process.env.NODE_ENV === 'development' ? 'http' : 'https');
+            const baseUrl = `${protocol}://${req.headers.host}`;
 
             // Fetch AWS user by email for fallback name
             let awsUser = null;

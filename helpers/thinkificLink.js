@@ -9,12 +9,14 @@ export const handleThinkificLink = async (url, awsUser, returnTo) => {
     return;
   }
 
+  const destination = returnTo || url;
+
   // Thinkific's order webhook has no way to carry campaign data back to us,
   // so right before we hand off to Thinkific we record a purchase-intent
   // event that pairs the buyer's now-known email with any LinkedIn click id
   // (li_fat_id) captured on landing. The order webhook later matches on this
-  // email within a time window to attribute (and, for the LinkedIn boot camp
-  // campaign, confirm) the sale. Fire-and-forget: keepalive covers the
+  // email within a time window to attribute (and, for gated campaigns, confirm)
+  // the sale. Fire-and-forget: keepalive covers the
   // imminent navigation away from the page.
   //
   // IMPORTANT: only fire intent for genuine checkout/enroll destinations.
@@ -41,10 +43,8 @@ export const handleThinkificLink = async (url, awsUser, returnTo) => {
     }
   }
 
-  // Check if user has completed onboarding (you might want to adjust this condition)
-  // For now, we'll run SSO for all authenticated users
   try {
-    await runThinkificSSO(awsUser, returnTo);
+    await runThinkificSSO(awsUser, destination);
   } catch (error) {
     console.error('SSO failed, redirecting directly:', error);
     window.location.href = url;

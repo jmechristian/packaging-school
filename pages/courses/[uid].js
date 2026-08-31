@@ -79,7 +79,6 @@ import {
   registgerCourseClick,
   getDeviceType,
 } from '../../helpers/api';
-import { useThinkificLink } from '../../hooks/useThinkificLink';
 import {
   FilmIcon,
   ArrowDownTrayIcon,
@@ -135,7 +134,6 @@ const LESSON_TYPE_ICONS = {
 const Page = ({ course }) => {
   const router = useRouter();
   const { location, awsUser } = useSelector((state) => state.auth);
-  const { navigateToThinkific } = useThinkificLink();
   const [isLoading, setIsLoading] = useState(false);
   const [showFullOutline, setShowFullOutline] = useState(false);
   const [selectedTier, setSelectedTier] = useState('NINETY');
@@ -259,7 +257,9 @@ const Page = ({ course }) => {
         type,
       });
       if (awsUser?.name?.includes(' ')) {
-        await navigateToThinkific(targetUrl, targetUrl);
+        window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+          targetUrl,
+        )}`;
       } else {
         router.push(`/order/${orderId.id}`);
       }

@@ -4,9 +4,14 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/router';
 
 const PurchaseLogin = ({ order, couponInfo, coupon }) => {
-  const returnTo = couponInfo
-    ? `${order.courseLink}?coupon=${coupon}`
+  // Thinkific destination — may include ?price_id= / coupon. Never send this
+  // through Auth0 (same rule as menu login: Auth0 only gets an internal path).
+  const lmsDestination = couponInfo
+    ? `${order.courseLink}${
+        order.courseLink?.includes('?') ? '&' : '?'
+      }coupon=${coupon}`
     : order.courseLink;
+
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,77 +20,52 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
   const { user, isLoading: userIsLoading } = useUser();
   const router = useRouter();
 
-  // Get the referring URL if no returnTo is specified
-  const getReturnTo = () => {
-    if (returnTo) {
-      // If returnTo is an external URL (learn subdomain), store it for later use
-      if (returnTo.includes('learn.packagingschool.com')) {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('externalReturnTo', returnTo);
-        }
-        // Return a local URL that will trigger the external redirect logic
-        return `/api/auth/external-redirect?returnTo=${encodeURIComponent(
-          returnTo
-        )}`;
-      }
-      return returnTo;
-    }
+  const orderPath = `/order/${order?.id || router.query.oid}`;
 
-    return null;
+  const startThinkificSso = (destination) => {
+    if (
+      destination &&
+      destination.includes('learn.packagingschool.com')
+    ) {
+      window.location.href = `/api/auth/external-redirect?returnTo=${encodeURIComponent(
+        destination,
+      )}`;
+      return;
+    }
+    router.push('/profile');
   };
 
-  // Handle already authenticated users
+  // After Auth0, land back here (internal path). Then SSO with courseLink.
   useEffect(() => {
     if (!userIsLoading) {
       setIsCheckingAuth(false);
 
       if (user) {
-        // User is already authenticated, redirect them to the course
-        const returnToUrl = getReturnTo();
-
-        if (returnToUrl) {
-          // If there's a returnTo URL, redirect to it
-          if (returnToUrl.startsWith('/api/auth/external-redirect')) {
-            // For external URLs, use the external redirect handler
-            window.location.href = returnToUrl;
-          } else {
-            // For internal URLs, use router.push
-            router.push(returnToUrl);
-          }
-        } else {
-          // No returnTo, redirect to profile
-          router.push('/profile');
-        }
+        startThinkificSso(lmsDestination);
       }
     }
-  }, [user, userIsLoading, router, returnTo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, userIsLoading, lmsDestination]);
 
   const handleMagicLink = () => {
     if (!email || !firstName || !lastName) {
       setMessage(
-        'Please fill in all fields (email, first name, and last name)'
+        'Please fill in all fields (email, first name, and last name)',
       );
       return;
     }
 
-    const returnToUrl = getReturnTo();
-    // Redirect directly to the magic link endpoint with name fields
     const magicLinkUrl = `/api/magic-link?email=${encodeURIComponent(
-      email
+      email,
     )}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(
-      lastName
-    )}${returnToUrl ? `&returnTo=${encodeURIComponent(returnToUrl)}` : ''}`;
+      lastName,
+    )}&returnTo=${encodeURIComponent(orderPath)}`;
     window.location.href = magicLinkUrl;
   };
 
-  const getAuthUrl = (baseUrl) => {
-    const returnToUrl = getReturnTo();
-    return `${baseUrl}${
-      returnToUrl ? `?returnTo=${encodeURIComponent(returnToUrl)}` : ''
-    }`;
-  };
+  const getAuthUrl = (baseUrl) =>
+    `${baseUrl}?returnTo=${encodeURIComponent(orderPath)}`;
 
-  // Show loading state while checking authentication
   if (isCheckingAuth || userIsLoading) {
     return (
       <div className='flex flex-col items-center justify-center gap-4'>
@@ -95,7 +75,6 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
     );
   }
 
-  // Don't render login form if user is already authenticated
   if (user) {
     return null;
   }
@@ -175,7 +154,6 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
 
       <div className='text-center text-gray-400'>or</div>
 
-      {/* Email input and login options */}
       <div className='space-y-4'>
         <input
           type='email'
@@ -206,11 +184,9 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
           <Link
             href={
               email
-                ? `/api/auth/password-login?email=${encodeURIComponent(email)}${
-                    getReturnTo()
-                      ? `&returnTo=${encodeURIComponent(getReturnTo())}`
-                      : ''
-                  }`
+                ? `/api/auth/password-login?email=${encodeURIComponent(
+                    email,
+                  )}&returnTo=${encodeURIComponent(orderPath)}`
                 : getAuthUrl('/api/auth/password-login')
             }
             className='block text-center bg-clemson text-white py-3 px-4 rounded-md hover:bg-clemson-dark transition-colors font-medium'
@@ -250,7 +226,7 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
         </Link>
       </div>
       <div className='text-center text-sm text-gray-500'>
-        <Link href={getAuthUrl('/')} className='text-red-600 hover:underline'>
+        <Link href='/' className='text-red-600 hover:underline'>
           Cancel
         </Link>
       </div>
