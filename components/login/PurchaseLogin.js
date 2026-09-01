@@ -66,17 +66,18 @@ const PurchaseLogin = ({ order, couponInfo, coupon }) => {
   const getAuthUrl = (baseUrl) =>
     `${baseUrl}?returnTo=${encodeURIComponent(orderPath)}`;
 
-  if (isCheckingAuth || userIsLoading) {
+  if (isCheckingAuth || userIsLoading || user) {
     return (
-      <div className='flex flex-col items-center justify-center gap-4'>
+      <div className='flex flex-col items-center justify-center gap-4 py-8'>
         <div className='w-12 h-12 border-4 border-clemson border-t-transparent rounded-full animate-spin'></div>
-        <p className='text-gray-600'>Checking authentication...</p>
+        <p className='text-[#36394d] text-base font-raleway font-semibold text-center'>
+          Taking you to checkout
+        </p>
+        <p className='text-gray-500 text-sm font-raleway text-center'>
+          Signing you in to complete your purchase. This only takes a moment.
+        </p>
       </div>
     );
-  }
-
-  if (user) {
-    return null;
   }
 
   return (

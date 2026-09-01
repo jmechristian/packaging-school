@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import PurchaseLogin from '../../../components/login/PurchaseLogin';
 import { getOrderByID, getCouponInfo } from '../../../helpers/api';
 
@@ -84,6 +85,8 @@ const Order = (props) => {
   const { order } = props;
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { user, isLoading: userIsLoading } = useUser();
+  const isCompletingPurchase = userIsLoading || !!user;
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [couponEntered, setCouponEntered] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
@@ -319,7 +322,9 @@ const Order = (props) => {
             <div className='w-full border-l border-l-gray-200'>
               <div className='w-full pl-10 pr-10 pb-10 lg:!pr-0 lg:!pl-[53px] bg-white h-full flex flex-col gap-6 pt-[80px] max-w-[454px] mx-auto lg:!mx-0'>
                 <div className='font-raleway text-2xl font-[600] text-[#36394d] leading-[1.3]'>
-                  Sign in or sign up to complete your purchase
+                  {isCompletingPurchase
+                    ? 'Completing your purchase'
+                    : 'Sign in or sign up to complete your purchase'}
                 </div>
                 <PurchaseLogin
                   order={order}
