@@ -324,7 +324,7 @@ const Page = ({ lesson }) => {
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
                 className='tiptap lg:text-lg px-4 lg:px-0'
               ></div>
-              {lesson.analysis && awsUser && (
+              {lesson.analysis?.quizQuestion && awsUser && (
                 <div className='w-full'>
                   <LessonQuiz analysis={lesson.analysis} lessonId={lesson.id} />
                 </div>
