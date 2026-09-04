@@ -1,6 +1,7 @@
 import React from 'react';
 import Staff from '../components/about/Staff';
 import Mission from '../components/about/Mission';
+import TestimonialsCallout from '../components/about/TestimonialsCallout';
 import GradientCTA from '../components/GradientCTA';
 import Timeline from '../components/about/Timeline';
 import Meta from '../components/shared/Meta';
@@ -51,6 +52,7 @@ const Page = ({ pageData }) => {
         structuredData={[organization, website, breadcrumb]}
       />
       <Mission />
+      <TestimonialsCallout />
       <Staff staff={pageData?.listStaff?.items ?? []} />
       <Timeline />
       <GradientCTA

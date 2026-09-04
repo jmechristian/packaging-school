@@ -6,7 +6,7 @@ const Staff = ({ staff }) => {
   if (!staff || staff.length === 0) return null;
 
   const sorted = [...staff].sort((a, b) =>
-    (a.fullName || '').localeCompare(b.fullName || '')
+    (a.fullName || '').localeCompare(b.fullName || ''),
   );
 
   return (
@@ -19,13 +19,16 @@ const Staff = ({ staff }) => {
         </div>
         <ul
           role='list'
-          className='mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4'
+          className='mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3'
         >
           {sorted.map((person) => (
             <li key={person.id || person.fullName}>
               <div className='relative aspect-[14/13] w-full overflow-hidden rounded-2xl'>
                 <Image
-                  src={person.image || 'https://packschool.s3.amazonaws.com/avatar_default.jpeg'}
+                  src={
+                    person.image ||
+                    'https://packschool.s3.amazonaws.com/avatar_default.jpeg'
+                  }
                   alt={person.fullName || 'Team member'}
                   fill
                   sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw'
