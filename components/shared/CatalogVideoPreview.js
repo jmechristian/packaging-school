@@ -7,7 +7,12 @@ const VideoPlayer = dynamic(
   { ssr: false },
 );
 
-const CatalogVideoPreview = ({ seoImage, previewUrl, title }) => {
+const CatalogVideoPreview = ({
+  seoImage,
+  previewUrl,
+  title,
+  autoPlay = true,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [imgError, setImgError] = useState(false);
   const hasPreview = !!previewUrl;
@@ -25,7 +30,7 @@ const CatalogVideoPreview = ({ seoImage, previewUrl, title }) => {
           <VideoPlayer
             videoEmbedLink={previewUrl}
             light={false}
-            playing={true}
+            playing={autoPlay}
           />
           <button
             type='button'

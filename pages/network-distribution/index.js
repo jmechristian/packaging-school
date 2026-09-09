@@ -17,7 +17,7 @@ import {
 } from '../../helpers/api';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
-import VideoPlayer from '../../components/VideoPlayer';
+import CatalogVideoPreview from '../../components/shared/CatalogVideoPreview';
 import EnrollmentRequestModal from '../../components/network-distribution/EnrollmentRequestModal';
 import {
   clearEnrollResume,
@@ -134,21 +134,12 @@ const CourseCard = ({
   return (
     <div className='w-full h-full bg-[#EBEBEB] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
-        <div className='w-full aspect-[16/9] bg-black'>
-          {courseData && courseData.preview ? (
-            <VideoPlayer
-              videoEmbedLink={courseData && courseData.preview}
-              light
-            />
-          ) : (
-            <div
-              className='w-full aspect-[16/9] bg-cover bg-center'
-              style={{
-                backgroundImage: `url(${courseData && courseData.seoImage})`,
-              }}
-            ></div>
-          )}
-        </div>
+        <CatalogVideoPreview
+          seoImage={courseData?.seoImage}
+          previewUrl={courseData?.preview || courseData?.video}
+          title={courseData?.title}
+          autoPlay={false}
+        />
         <div className='w-full flex flex-col gap-2 px-3 py-2'>
           <div className='font-semibold leading-tight text-[#D3382C] w-full h-10 mt-1 line-clamp-2 max-w-[80%]'>
             {courseData && courseData.courseId}{' '}
