@@ -38,7 +38,7 @@ const LOTMCard = ({ lesson }) => {
   };
 
   return (
-    <div className='w-full h-full bg-[#f4f4f5] rounded-md pb-2 overflow-hidden'>
+    <div className='w-full h-full bg-[#EBEBEB] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
         <div
           className='w-full aspect-[16/9] bg-black bg-cover bg-center'
@@ -62,7 +62,7 @@ const LOTMCard = ({ lesson }) => {
             {lesson.subhead}
           </div>
           <div
-            className='w-full h-10 flex items-center justify-center bg-gray-900 text-white rounded-md cursor-pointer hover:bg-[#D3382C] transition-all duration-300'
+            className='w-full h-10 flex items-center justify-center bg-[#4261FF] text-white rounded-md cursor-pointer hover:bg-[#3450e0] transition-all duration-300'
             onClick={() => {
               window.open(`/lessons/${lesson.slug}`, '_blank');
             }}
@@ -126,13 +126,13 @@ const CourseCard = ({
         : 'Enroll in Course';
 
   const ctaClass = enrolled
-    ? 'bg-[#f4aa00] text-[#0A1D3A] cursor-pointer hover:bg-[#e09c00]'
+    ? 'bg-[#4261FF] text-white cursor-pointer hover:bg-[#3450e0]'
     : status === 'PENDING'
       ? 'bg-gray-400 text-white cursor-not-allowed'
-      : 'bg-gray-900 text-white cursor-pointer hover:bg-gray-700';
+      : 'bg-[#4261FF] text-white cursor-pointer hover:bg-[#3450e0]';
 
   return (
-    <div className='w-full h-full bg-[#ffffff] rounded-md pb-2 overflow-hidden'>
+    <div className='w-full h-full bg-[#EBEBEB] rounded-md pb-2 overflow-hidden'>
       <div className='flex flex-col'>
         <div className='w-full aspect-[16/9] bg-black'>
           {courseData && courseData.preview ? (
@@ -412,75 +412,67 @@ const Page = ({ lib, learningOfTheMonths }) => {
         <title>Network Distribution | The Packaging School</title>
         <meta name='robots' content='noindex,nofollow' />
       </Head>
-      <div className='w-full max-w-7xl mx-auto lg:grid lg:grid-cols-12 lg:items-center relative'>
-        <button
-          type='button'
-          onClick={handleAddBookmark}
-          className='absolute top-0 right-4 z-20 flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 bg-white/90 hover:bg-white hover:text-[#D3382C] shadow-sm border border-gray-200/80 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:ring-offset-1'
-          title='Add this page to your bookmarks'
-          aria-label='Add bookmark'
-        >
-          <MdOutlineBookmarkAdd size={22} />
-          <span className='text-sm font-medium'>Add Bookmark</span>
-        </button>
-        {bookmarkHint && (
-          <div
-            className='absolute top-14 right-4 z-20 px-3 py-2 rounded-lg bg-gray-800 text-white text-sm shadow-lg fade-in'
-            role='status'
-            aria-live='polite'
+      <div className='w-full max-w-7xl mx-auto px-4 lg:px-0'>
+        <div className='relative w-full overflow-hidden rounded-lg bg-[#0A1D3A]'>
+          <Image
+            src='/images/network-distribution-banner.png'
+            alt='Network Distribution and Packaging Distributors of America'
+            width={1024}
+            height={267}
+            className='w-full h-auto'
+            priority
+          />
+          <button
+            type='button'
+            onClick={handleAddBookmark}
+            className='absolute top-3 right-3 z-20 flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 bg-white/90 hover:bg-white hover:text-[#D3382C] shadow-sm border border-gray-200/80 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:ring-offset-1'
+            title='Add this page to your bookmarks'
+            aria-label='Add bookmark'
           >
-            Press{' '}
-            <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>
-              {bookmarkHint}
-            </kbd>{' '}
-            to bookmark
-          </div>
-        )}
-        <div
-          className='rounded-lg h-[180px] lg:h-[240px] row-span-full col-start-1 col-span-9 lg:self-center flex items-center relative'
-          style={{
-            backgroundImage: `url(${lib.backgroundImage})`,
-          }}
-        >
-          <div className='absolute inset-0 opacity-90'></div>
-          <div className='w-full lg:w-1/2 flex justify-center items-center gap-5 px-10 relative z-10'>
-            <div className='w-[300px] lg:w-[500px]'>
-              <Image
-                src={`${lib.logo}`}
-                alt='pipeline-logo'
-                width={500}
-                height={81}
-              />
+            <MdOutlineBookmarkAdd size={22} />
+            <span className='text-sm font-medium'>Add Bookmark</span>
+          </button>
+          {bookmarkHint && (
+            <div
+              className='absolute top-16 right-3 z-20 px-3 py-2 rounded-lg bg-gray-800 text-white text-sm shadow-lg fade-in'
+              role='status'
+              aria-live='polite'
+            >
+              Press{' '}
+              <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>
+                {bookmarkHint}
+              </kbd>{' '}
+              to bookmark
             </div>
-          </div>
-        </div>
-        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 lg:self-end lg:absolute lg:top-[50%]'>
-          <div className='w-full aspect-[16/9] overflow-hidden rounded-lg'>
-            <iframe
-              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(LUCID_LIBRARY_PPTX_URL)}`}
-              className='w-full h-full min-h-[240px]'
-              frameBorder='0'
-              allowFullScreen
-              title='How to Access Your Library'
-            />
-          </div>
-          <div
-            className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
-            onClick={() => {
-              window.open(`${lib.pdf}`, '_blank');
-            }}
-          >
-            <div>Download as PDF</div>
-            <MdDownloadForOffline className='text-gray-700' size={20} />
-          </div>
+          )}
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto flex flex-col gap-10 pl-4 pr-4 lg:pr-0 lg:pl-5 pt-8 pb-8 border-b border-gray-300'>
-        <div className='w-full flex flex-col gap-5 mt-10 lg:mt-0'>
+      <div className='w-full max-w-7xl mx-auto px-4 lg:px-0 pt-8 pb-8 border-b border-gray-300'>
+        <div className='grid lg:grid-cols-2 gap-8 lg:gap-10 items-start'>
           <div
-            className='max-w-xl w-full text-gray-700 flex flex-col gap-2'
+            className='w-full text-gray-700 flex flex-col gap-2'
             dangerouslySetInnerHTML={{ __html: lib.description }}
           />
+          <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg'>
+            <div className='w-full aspect-[16/9] overflow-hidden rounded-t-lg'>
+              <iframe
+                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(LUCID_LIBRARY_PPTX_URL)}`}
+                className='w-full h-full min-h-[240px]'
+                frameBorder='0'
+                allowFullScreen
+                title='How to Access Your Library'
+              />
+            </div>
+            <div
+              className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
+              onClick={() => {
+                window.open(`${lib.pdf}`, '_blank');
+              }}
+            >
+              <div>Download as PDF</div>
+              <MdDownloadForOffline className='text-gray-700' size={20} />
+            </div>
+          </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto bg-[#0A1D3A] p-12 rounded-t-md flex flex-col gap-4'>
@@ -523,10 +515,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
       </div>
       <div
         id='track-1'
-        className='w-full max-w-7xl mx-auto bg-[#f4aa00] text-black p-12 scroll-mt-24'
+        className='w-full max-w-7xl mx-auto bg-[#D2E5FF] text-black p-12 scroll-mt-24'
       >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
-          <h4 className='h4-base text-black'>
+          <h4 className='h4-base text-[#0A1D3A]'>
             1. Certificate of Packaging Science (CPS) Track
           </h4>
           <div className='w-full flex text-black max-w-7xl gap-4 mx-auto text-lg mb-1'>
@@ -539,7 +531,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#f0f0f0] p-8'>
+      <div className='w-full max-w-7xl mx-auto bg-white p-8'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
           <CourseCard
             key='CPS-00'
@@ -583,10 +575,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
       </div>
       <div
         id='track-2'
-        className='w-full max-w-7xl mx-auto bg-[#f4aa00] text-black p-12 scroll-mt-24'
+        className='w-full max-w-7xl mx-auto bg-[#D2E5FF] text-black p-12 scroll-mt-24'
       >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
-          <h4 className='h4-base text-black'>
+          <h4 className='h4-base text-[#0A1D3A]'>
             2. Automotive Packaging Certificate Track (APC)
           </h4>
           <div className='w-full flex text-black max-w-7xl gap-4 mx-auto text-lg mb-1'>
@@ -601,7 +593,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#f0f0f0] p-8'>
+      <div className='w-full max-w-7xl mx-auto bg-white p-8'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
           <CourseCard
             key='APC-00'
@@ -645,10 +637,10 @@ const Page = ({ lib, learningOfTheMonths }) => {
       </div>
       <div
         id='track-3'
-        className='w-full max-w-7xl mx-auto bg-[#f4aa00] text-black p-12 scroll-mt-24'
+        className='w-full max-w-7xl mx-auto bg-[#D2E5FF] text-black p-12 scroll-mt-24'
       >
         <div className='w-full flex max-w-7xl mx-auto flex-col gap-5 items-start justify-start'>
-          <h4 className='h4-base text-black'>
+          <h4 className='h4-base text-[#0A1D3A]'>
             3. Certificate of Sustainable Packaging Track (CSP)
           </h4>
           <div className='w-full flex text-black max-w-7xl gap-4 mx-auto text-lg mb-1'>
@@ -663,7 +655,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
           </div>
         </div>
       </div>
-      <div className='w-full max-w-7xl mx-auto bg-[#f0f0f0] p-8'>
+      <div className='w-full max-w-7xl mx-auto bg-white p-8'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
           <CourseCard
             key='CSP-00'
@@ -766,7 +758,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
         )}
       </div>
       {/* FAQS */}
-      <div className='mx-auto divide-y divide-gray-900/10 w-full max-w-7xl bg-[#f4f4f5] rounded-lg p-10 mt-10'>
+      <div className='mx-auto divide-y divide-gray-900/10 w-full max-w-7xl bg-[#D2E5FF] rounded-lg p-10 mt-10'>
         <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>
           Frequently asked questions
         </h2>
