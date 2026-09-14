@@ -152,7 +152,7 @@ const CourseCard = ({
               <div className='font-semibold line-through text-gray-400'>
                 ${courseData && courseData.price}
               </div>
-              <div className='font-semibold'>$0</div>
+              <div className='font-semibold'>$75</div>
             </div>
 
             <div className='font-semibold flex items-center gap-1'>
