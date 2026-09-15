@@ -84,6 +84,7 @@ const CourseCard = ({
   onEnroll,
   onOpenCourse,
   onOpenDashboard,
+  discountedPrice = 75,
 }) => {
   const [courseData, setCourseData] = useState(initialCourseData || null);
   const [isVisible, setIsVisible] = useState(true);
@@ -152,7 +153,7 @@ const CourseCard = ({
               <div className='font-semibold line-through text-gray-400'>
                 ${courseData && courseData.price}
               </div>
-              <div className='font-semibold'>$75</div>
+              <div className='font-semibold'>${discountedPrice}</div>
             </div>
 
             <div className='font-semibold flex items-center gap-1'>
@@ -548,6 +549,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             onOpenCourse={handleOpenCourse}
             onOpenDashboard={handleOpenDashboard}
             enrollmentLookup={enrollmentLookup}
+            discountedPrice={900}
           />
           {cpsCourses.map((course) => (
             <CourseCard
@@ -610,6 +612,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             onOpenCourse={handleOpenCourse}
             onOpenDashboard={handleOpenDashboard}
             enrollmentLookup={enrollmentLookup}
+            discountedPrice={675}
           />
           {apcCourses.map((course) => (
             <CourseCard
@@ -672,6 +675,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             onOpenCourse={handleOpenCourse}
             onOpenDashboard={handleOpenDashboard}
             enrollmentLookup={enrollmentLookup}
+            discountedPrice={375}
           />
           {spcCourses.map((course) => (
             <CourseCard
