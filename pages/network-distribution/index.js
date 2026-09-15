@@ -241,8 +241,20 @@ const Page = ({ lib, learningOfTheMonths }) => {
   }, []);
 
   const allCourses = lib?.pschoolCourses?.items ?? lib?.pschoolCourses ?? [];
+  const isExamCourse = (c) => {
+    const id = String(c?.courseId || '').toUpperCase();
+    const title = String(c?.title || '').toLowerCase();
+    return (
+      id === 'CPS-C13' ||
+      id === 'APC-A10' ||
+      title.includes('final exam') ||
+      title.includes('final assessment')
+    );
+  };
   const apcCourses = allCourses
-    .filter((c) => c?.courseId && c.courseId.startsWith('APC'))
+    .filter(
+      (c) => c?.courseId && c.courseId.startsWith('APC') && !isExamCourse(c),
+    )
     .sort((a, b) => (a.courseId || '').localeCompare(b.courseId || ''));
   const nonApcCourses = allCourses
     .filter((c) => !c?.courseId || !c.courseId.startsWith('APC'))
@@ -254,7 +266,9 @@ const Page = ({ lib, learningOfTheMonths }) => {
     ) ?? [];
 
   const cpsCourses = nonApcCourses
-    .filter((c) => c?.courseId && c.courseId.startsWith('CPS'))
+    .filter(
+      (c) => c?.courseId && c.courseId.startsWith('CPS') && !isExamCourse(c),
+    )
     .sort((a, b) => (a.courseId || '').localeCompare(b.courseId || ''));
 
   const faqs = [
@@ -532,7 +546,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               id: 'CPS-00',
               title: 'Certificate of Packaging Science Bundle',
               subheadline:
-                'Enroll in all 12 courses and pass the final exam (enroll separately) to earn your certification—the fastest way to get certified.',
+                'Enroll in all 12 courses and pass the final exam to earn your certification—the fastest way to get certified.',
               link: 'https://learn.packagingschool.com/enroll/39015?price_id=39006&coupon=networklibrary',
               hours: '63',
               lessons: '643',
@@ -549,7 +563,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             onOpenCourse={handleOpenCourse}
             onOpenDashboard={handleOpenDashboard}
             enrollmentLookup={enrollmentLookup}
-            discountedPrice={900}
+            discountedPrice={975}
           />
           {cpsCourses.map((course) => (
             <CourseCard
@@ -595,7 +609,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
               id: 'APC-00',
               title: 'Automotive Packaging Certificate Bundle',
               subheadline:
-                'Enroll in all 9 courses and pass the final exam (enroll separately) to earn your certification—the fastest way to get certified.',
+                'Enroll in all 9 courses and pass the final exam to earn your certification—the fastest way to get certified.',
               link: 'Link: https://packagingschool.com/enroll/623256?price_id=659662&coupon=networklibrary',
               hours: '29',
               lessons: '151',
@@ -612,7 +626,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
             onOpenCourse={handleOpenCourse}
             onOpenDashboard={handleOpenDashboard}
             enrollmentLookup={enrollmentLookup}
-            discountedPrice={675}
+            discountedPrice={750}
           />
           {apcCourses.map((course) => (
             <CourseCard
