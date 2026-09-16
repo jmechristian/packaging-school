@@ -10,20 +10,7 @@ import {
   buildHomeJsonLd,
   buildBreadcrumbJsonLd,
 } from '../libs/seo/organizationJsonLd';
-
-const listStaff = /* GraphQL */ `
-  query ListStaff {
-    listStaff {
-      items {
-        id
-        fullName
-        title
-        image
-        linkedIn
-      }
-    }
-  }
-`;
+import { listStaff } from '../src/graphql/queries';
 
 const Page = ({ pageData }) => {
   const metadata = generateMetadata({
@@ -66,22 +53,33 @@ const Page = ({ pageData }) => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async ({ res }) => {
   const { Amplify, API } = await import('aws-amplify');
   const awsExports = (await import('../src/aws-exports')).default;
   Amplify.configure(awsExports);
 
+  res.setHeader('Cache-Control', 'no-store, must-revalidate');
+
   try {
-    const res = await API.graphql({ query: listStaff });
+    const items = [];
+    let nextToken = null;
+
+    do {
+      const response = await API.graphql({
+        query: listStaff,
+        variables: { limit: 100, nextToken },
+      });
+      items.push(...(response.data?.listStaff?.items ?? []));
+      nextToken = response.data?.listStaff?.nextToken ?? null;
+    } while (nextToken);
+
     return {
-      props: { pageData: res.data },
-      revalidate: 60 * 60 * 4, // ISR: revalidate every 4 hours
+      props: { pageData: { listStaff: { items } } },
     };
   } catch (err) {
-    console.error('getStaticProps /about error:', err);
+    console.error('getServerSideProps /about error:', err);
     return {
       props: { pageData: { listStaff: { items: [] } } },
-      revalidate: 60,
     };
   }
 };

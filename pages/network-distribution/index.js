@@ -24,9 +24,6 @@ import {
   consumePendingEnrollCourse,
 } from '../../components/network-distribution/EnrollmentAuthPanel';
 
-const LUCID_LIBRARY_PPTX_URL =
-  'https://packschool.s3.us-east-1.amazonaws.com/Network-Distribution.pptx';
-
 const LOTMCard = ({ lesson }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -461,13 +458,15 @@ const Page = ({ lib, learningOfTheMonths }) => {
           />
           <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg'>
             <div className='w-full aspect-[16/9] overflow-hidden rounded-t-lg'>
-              <iframe
-                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(LUCID_LIBRARY_PPTX_URL)}`}
-                className='w-full h-full min-h-[240px]'
-                frameBorder='0'
-                allowFullScreen
-                title='How to Access Your Library'
-              />
+              {lib.slide ? (
+                <iframe
+                  src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(lib.slide)}`}
+                  className='w-full h-full min-h-[240px]'
+                  frameBorder='0'
+                  allowFullScreen
+                  title='How to Access Your Library'
+                />
+              ) : null}
             </div>
             <div
               className='w-full flex items-center justify-center py-4 gap-1 cursor-pointer'
