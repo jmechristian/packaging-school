@@ -8215,6 +8215,126 @@ export const onDeleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const onCreateInternalDigestRecipient = /* GraphQL */ `
+  subscription OnCreateInternalDigestRecipient(
+    $filter: ModelSubscriptionInternalDigestRecipientFilterInput
+  ) {
+    onCreateInternalDigestRecipient(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateInternalDigestRecipient = /* GraphQL */ `
+  subscription OnUpdateInternalDigestRecipient(
+    $filter: ModelSubscriptionInternalDigestRecipientFilterInput
+  ) {
+    onUpdateInternalDigestRecipient(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteInternalDigestRecipient = /* GraphQL */ `
+  subscription OnDeleteInternalDigestRecipient(
+    $filter: ModelSubscriptionInternalDigestRecipientFilterInput
+  ) {
+    onDeleteInternalDigestRecipient(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateInternalDigestSend = /* GraphQL */ `
+  subscription OnCreateInternalDigestSend(
+    $filter: ModelSubscriptionInternalDigestSendFilterInput
+  ) {
+    onCreateInternalDigestSend(filter: $filter) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateInternalDigestSend = /* GraphQL */ `
+  subscription OnUpdateInternalDigestSend(
+    $filter: ModelSubscriptionInternalDigestSendFilterInput
+  ) {
+    onUpdateInternalDigestSend(filter: $filter) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteInternalDigestSend = /* GraphQL */ `
+  subscription OnDeleteInternalDigestSend(
+    $filter: ModelSubscriptionInternalDigestSendFilterInput
+  ) {
+    onDeleteInternalDigestSend(filter: $filter) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateImageObject = /* GraphQL */ `
   subscription OnCreateImageObject(
     $filter: ModelSubscriptionImageObjectFilterInput
@@ -9685,6 +9805,102 @@ export const onDeleteLibraryEnrollmentRequest = /* GraphQL */ `
       declineReason
       thinkificEnrollmentId
       page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateNetworkDistributionSalesLeader = /* GraphQL */ `
+  subscription OnCreateNetworkDistributionSalesLeader(
+    $filter: ModelSubscriptionNetworkDistributionSalesLeaderFilterInput
+  ) {
+    onCreateNetworkDistributionSalesLeader(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateNetworkDistributionSalesLeader = /* GraphQL */ `
+  subscription OnUpdateNetworkDistributionSalesLeader(
+    $filter: ModelSubscriptionNetworkDistributionSalesLeaderFilterInput
+  ) {
+    onUpdateNetworkDistributionSalesLeader(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteNetworkDistributionSalesLeader = /* GraphQL */ `
+  subscription OnDeleteNetworkDistributionSalesLeader(
+    $filter: ModelSubscriptionNetworkDistributionSalesLeaderFilterInput
+  ) {
+    onDeleteNetworkDistributionSalesLeader(filter: $filter) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateNetworkDistributionLearner = /* GraphQL */ `
+  subscription OnCreateNetworkDistributionLearner(
+    $filter: ModelSubscriptionNetworkDistributionLearnerFilterInput
+  ) {
+    onCreateNetworkDistributionLearner(filter: $filter) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateNetworkDistributionLearner = /* GraphQL */ `
+  subscription OnUpdateNetworkDistributionLearner(
+    $filter: ModelSubscriptionNetworkDistributionLearnerFilterInput
+  ) {
+    onUpdateNetworkDistributionLearner(filter: $filter) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteNetworkDistributionLearner = /* GraphQL */ `
+  subscription OnDeleteNetworkDistributionLearner(
+    $filter: ModelSubscriptionNetworkDistributionLearnerFilterInput
+  ) {
+    onDeleteNetworkDistributionLearner(filter: $filter) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
       createdAt
       updatedAt
       __typename

@@ -8602,6 +8602,132 @@ export const deleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const createInternalDigestRecipient = /* GraphQL */ `
+  mutation CreateInternalDigestRecipient(
+    $input: CreateInternalDigestRecipientInput!
+    $condition: ModelInternalDigestRecipientConditionInput
+  ) {
+    createInternalDigestRecipient(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateInternalDigestRecipient = /* GraphQL */ `
+  mutation UpdateInternalDigestRecipient(
+    $input: UpdateInternalDigestRecipientInput!
+    $condition: ModelInternalDigestRecipientConditionInput
+  ) {
+    updateInternalDigestRecipient(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteInternalDigestRecipient = /* GraphQL */ `
+  mutation DeleteInternalDigestRecipient(
+    $input: DeleteInternalDigestRecipientInput!
+    $condition: ModelInternalDigestRecipientConditionInput
+  ) {
+    deleteInternalDigestRecipient(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createInternalDigestSend = /* GraphQL */ `
+  mutation CreateInternalDigestSend(
+    $input: CreateInternalDigestSendInput!
+    $condition: ModelInternalDigestSendConditionInput
+  ) {
+    createInternalDigestSend(input: $input, condition: $condition) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateInternalDigestSend = /* GraphQL */ `
+  mutation UpdateInternalDigestSend(
+    $input: UpdateInternalDigestSendInput!
+    $condition: ModelInternalDigestSendConditionInput
+  ) {
+    updateInternalDigestSend(input: $input, condition: $condition) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteInternalDigestSend = /* GraphQL */ `
+  mutation DeleteInternalDigestSend(
+    $input: DeleteInternalDigestSendInput!
+    $condition: ModelInternalDigestSendConditionInput
+  ) {
+    deleteInternalDigestSend(input: $input, condition: $condition) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createImageObject = /* GraphQL */ `
   mutation CreateImageObject(
     $input: CreateImageObjectInput!
@@ -10168,6 +10294,108 @@ export const deleteLibraryEnrollmentRequest = /* GraphQL */ `
       declineReason
       thinkificEnrollmentId
       page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createNetworkDistributionSalesLeader = /* GraphQL */ `
+  mutation CreateNetworkDistributionSalesLeader(
+    $input: CreateNetworkDistributionSalesLeaderInput!
+    $condition: ModelNetworkDistributionSalesLeaderConditionInput
+  ) {
+    createNetworkDistributionSalesLeader(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateNetworkDistributionSalesLeader = /* GraphQL */ `
+  mutation UpdateNetworkDistributionSalesLeader(
+    $input: UpdateNetworkDistributionSalesLeaderInput!
+    $condition: ModelNetworkDistributionSalesLeaderConditionInput
+  ) {
+    updateNetworkDistributionSalesLeader(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteNetworkDistributionSalesLeader = /* GraphQL */ `
+  mutation DeleteNetworkDistributionSalesLeader(
+    $input: DeleteNetworkDistributionSalesLeaderInput!
+    $condition: ModelNetworkDistributionSalesLeaderConditionInput
+  ) {
+    deleteNetworkDistributionSalesLeader(input: $input, condition: $condition) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createNetworkDistributionLearner = /* GraphQL */ `
+  mutation CreateNetworkDistributionLearner(
+    $input: CreateNetworkDistributionLearnerInput!
+    $condition: ModelNetworkDistributionLearnerConditionInput
+  ) {
+    createNetworkDistributionLearner(input: $input, condition: $condition) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateNetworkDistributionLearner = /* GraphQL */ `
+  mutation UpdateNetworkDistributionLearner(
+    $input: UpdateNetworkDistributionLearnerInput!
+    $condition: ModelNetworkDistributionLearnerConditionInput
+  ) {
+    updateNetworkDistributionLearner(input: $input, condition: $condition) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteNetworkDistributionLearner = /* GraphQL */ `
+  mutation DeleteNetworkDistributionLearner(
+    $input: DeleteNetworkDistributionLearnerInput!
+    $condition: ModelNetworkDistributionLearnerConditionInput
+  ) {
+    deleteNetworkDistributionLearner(input: $input, condition: $condition) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
       createdAt
       updatedAt
       __typename

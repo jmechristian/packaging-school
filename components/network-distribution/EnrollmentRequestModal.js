@@ -55,6 +55,8 @@ export default function EnrollmentRequestModal({
   const { user, isLoading: userIsLoading } = useUser();
   const { awsUser } = useSelector((state) => state.auth);
   const [salesLeaderEmail, setSalesLeaderEmail] = useState('');
+  const [salesLeaders, setSalesLeaders] = useState([]);
+  const [leadersLoading, setLeadersLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -69,6 +71,33 @@ export default function EnrollmentRequestModal({
       setSuccess(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (!open || !user?.email || !isWorkEmail(user.email)) return undefined;
+
+    let cancelled = false;
+    setLeadersLoading(true);
+    fetch('/api/network-distribution/sales-leaders')
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.message || 'Could not load sales leaders.');
+        }
+        if (!cancelled) setSalesLeaders(data.items || []);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err.message || 'Could not load sales leaders.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLeadersLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, user?.email]);
 
   useEffect(() => {
     if (open && user?.email) {
@@ -105,8 +134,8 @@ export default function EnrollmentRequestModal({
       setError('Please confirm you have approval from your Sales Leader.');
       return;
     }
-    if (!isWorkEmail(salesLeaderEmail.trim())) {
-      setError('Enter a valid work email for your Sales Leader.');
+    if (!salesLeaderEmail) {
+      setError('Select your approved sales leader.');
       return;
     }
 
@@ -310,19 +339,34 @@ export default function EnrollmentRequestModal({
 
                       <div>
                         <label className='block text-sm font-medium text-slate-700 mb-1.5'>
-                          Sales Leader email
+                          Sales Leader
                         </label>
-                        <input
-                          type='email'
+                        <select
                           required
                           value={salesLeaderEmail}
                           onChange={(e) => setSalesLeaderEmail(e.target.value)}
-                          placeholder='leader@networkdistribution.com'
-                          className='w-full h-11 border border-slate-200 rounded-md px-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0A1D3A]/20 focus:border-[#0A1D3A]'
-                        />
+                          disabled={leadersLoading || !salesLeaders.length}
+                          className='w-full h-11 border border-slate-200 rounded-md px-3.5 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#0A1D3A]/20 focus:border-[#0A1D3A] disabled:bg-slate-50'
+                        >
+                          <option value=''>
+                            {leadersLoading
+                              ? 'Loading sales leaders...'
+                              : 'Select your sales leader'}
+                          </option>
+                          {salesLeaders.map((leader) => (
+                            <option key={leader.email} value={leader.email}>
+                              {leader.name
+                                ? `${leader.name} (${leader.email})`
+                                : leader.email}
+                            </option>
+                          ))}
+                        </select>
                         <p className='text-xs text-slate-400 mt-1.5'>
-                          They will receive an email with approve and decline
-                          options.
+                          {salesLeaders.length
+                            ? 'They will receive an email with approve and decline options.'
+                            : leadersLoading
+                              ? 'Loading approved sales leaders...'
+                              : 'No approved sales leaders are available yet.'}
                         </p>
                       </div>
 

@@ -10,6 +10,7 @@ import { ensureNetworkDistributionThinkific } from '../../../../helpers/thinkifi
 import { sendLibraryEnrollmentRequestEmail } from '../../../../helpers/libraryEnrollmentEmails';
 import { getAppBaseUrl } from '../../../../helpers/appBaseUrl';
 import { isWorkEmail } from '../../../../helpers/workEmail';
+import { isApprovedSalesLeader } from '../../../../helpers/networkDistributionLeaders';
 
 const LIBRARY_SLUG = 'network-distribution';
 const COUPON_CODE = 'networklibrary';
@@ -44,6 +45,15 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     const scope = req.query.scope === 'leader' ? 'leader' : 'mine';
     try {
+      if (scope === 'leader') {
+        const isLeader = await isApprovedSalesLeader(sessionEmail);
+        if (!isLeader) {
+          return res.status(403).json({
+            message: 'Only approved sales leaders can view enrollment requests.',
+          });
+        }
+      }
+
       const items =
         scope === 'leader'
           ? await getEnrollmentRequestsBySalesLeaderUser(awsUser.id)
@@ -88,6 +98,14 @@ export default async function handler(req, res) {
   const leaderEmail = salesLeaderEmail.trim().toLowerCase();
 
   try {
+    const isLeader = await isApprovedSalesLeader(leaderEmail);
+    if (!isLeader) {
+      return res.status(400).json({
+        message:
+          'That person is not an approved sales leader. Choose a sales leader from the list.',
+      });
+    }
+
     const salesLeader = await getAWSUser(leaderEmail);
     if (!salesLeader?.id) {
       return res.status(400).json({

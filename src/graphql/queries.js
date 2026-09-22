@@ -4960,6 +4960,102 @@ export const listEmailTemplates = /* GraphQL */ `
     }
   }
 `;
+export const getInternalDigestRecipient = /* GraphQL */ `
+  query GetInternalDigestRecipient($id: ID!) {
+    getInternalDigestRecipient(id: $id) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listInternalDigestRecipients = /* GraphQL */ `
+  query ListInternalDigestRecipients(
+    $filter: ModelInternalDigestRecipientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listInternalDigestRecipients(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        active
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getInternalDigestSend = /* GraphQL */ `
+  query GetInternalDigestSend($id: ID!) {
+    getInternalDigestSend(id: $id) {
+      id
+      kind
+      sentAt
+      subject
+      html
+      text
+      periodStart
+      periodEnd
+      recipientCount
+      recipients
+      status
+      trigger
+      error
+      statsJson
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listInternalDigestSends = /* GraphQL */ `
+  query ListInternalDigestSends(
+    $filter: ModelInternalDigestSendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listInternalDigestSends(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        kind
+        sentAt
+        subject
+        html
+        text
+        periodStart
+        periodEnd
+        recipientCount
+        recipients
+        status
+        trigger
+        error
+        statsJson
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getImageObject = /* GraphQL */ `
   query GetImageObject($id: ID!) {
     getImageObject(id: $id) {
@@ -5882,6 +5978,86 @@ export const listLibraryEnrollmentRequests = /* GraphQL */ `
         declineReason
         thinkificEnrollmentId
         page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getNetworkDistributionSalesLeader = /* GraphQL */ `
+  query GetNetworkDistributionSalesLeader($id: ID!) {
+    getNetworkDistributionSalesLeader(id: $id) {
+      id
+      email
+      name
+      active
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listNetworkDistributionSalesLeaders = /* GraphQL */ `
+  query ListNetworkDistributionSalesLeaders(
+    $filter: ModelNetworkDistributionSalesLeaderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNetworkDistributionSalesLeaders(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        active
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getNetworkDistributionLearner = /* GraphQL */ `
+  query GetNetworkDistributionLearner($id: ID!) {
+    getNetworkDistributionLearner(id: $id) {
+      id
+      email
+      salesLeaderEmail
+      name
+      firstApprovedAt
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listNetworkDistributionLearners = /* GraphQL */ `
+  query ListNetworkDistributionLearners(
+    $filter: ModelNetworkDistributionLearnerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNetworkDistributionLearners(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        salesLeaderEmail
+        name
+        firstApprovedAt
+        status
         createdAt
         updatedAt
         __typename
@@ -10132,6 +10308,76 @@ export const emailTemplateBySlug = /* GraphQL */ `
     }
   }
 `;
+export const internalDigestRecipientByEmail = /* GraphQL */ `
+  query InternalDigestRecipientByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelInternalDigestRecipientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    internalDigestRecipientByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        active
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const internalDigestSendsByKindAndSentAt = /* GraphQL */ `
+  query InternalDigestSendsByKindAndSentAt(
+    $kind: String!
+    $sentAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelInternalDigestSendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    internalDigestSendsByKindAndSentAt(
+      kind: $kind
+      sentAt: $sentAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        kind
+        sentAt
+        subject
+        html
+        text
+        periodStart
+        periodEnd
+        recipientCount
+        recipients
+        status
+        trigger
+        error
+        statsJson
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const purchasesByEmail = /* GraphQL */ `
   query PurchasesByEmail(
     $email: String!
@@ -10709,6 +10955,97 @@ export const enrollmentRequestsByDecisionToken = /* GraphQL */ `
         declineReason
         thinkificEnrollmentId
         page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const ndSalesLeadersByEmail = /* GraphQL */ `
+  query NdSalesLeadersByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNetworkDistributionSalesLeaderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    ndSalesLeadersByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        name
+        active
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const ndLearnersByEmail = /* GraphQL */ `
+  query NdLearnersByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNetworkDistributionLearnerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    ndLearnersByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        salesLeaderEmail
+        name
+        firstApprovedAt
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const ndLearnersBySalesLeader = /* GraphQL */ `
+  query NdLearnersBySalesLeader(
+    $salesLeaderEmail: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNetworkDistributionLearnerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    ndLearnersBySalesLeader(
+      salesLeaderEmail: $salesLeaderEmail
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        salesLeaderEmail
+        name
+        firstApprovedAt
+        status
         createdAt
         updatedAt
         __typename

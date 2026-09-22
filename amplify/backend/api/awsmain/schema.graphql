@@ -1307,6 +1307,40 @@ type EmailTemplate @model @auth(rules: [{ allow: public }]) {
   updatedBy: String
 }
 
+type InternalDigestRecipient @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String!
+    @index(
+      name: "internalDigestRecipientByEmail"
+      queryField: "internalDigestRecipientByEmail"
+    )
+  name: String
+  active: Boolean
+}
+
+# kind is a constant partition ("weekly") so history can be queried newest-first.
+type InternalDigestSend @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  kind: String!
+    @index(
+      name: "internalDigestSendByKindAndSentAt"
+      queryField: "internalDigestSendsByKindAndSentAt"
+      sortKeyFields: ["sentAt"]
+    )
+  sentAt: AWSDateTime!
+  subject: String!
+  html: String!
+  text: String
+  periodStart: AWSDate
+  periodEnd: AWSDate
+  recipientCount: Int
+  recipients: [String]
+  status: String
+  trigger: String
+  error: String
+  statsJson: AWSJSON
+}
+
 ######### IMAGES #########
 
 type ImageObject @model @auth(rules: [{ allow: public }]) {
@@ -1561,6 +1595,31 @@ type LibraryEnrollmentRequest @model @auth(rules: [{ allow: public }]) {
   declineReason: String
   thinkificEnrollmentId: String
   page: String
+}
+
+type NetworkDistributionSalesLeader @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String!
+    @index(
+      name: "ndSalesLeaderByEmail"
+      queryField: "ndSalesLeadersByEmail"
+    )
+  name: String
+  active: Boolean @default(value: "true")
+}
+
+type NetworkDistributionLearner @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String!
+    @index(name: "ndLearnerByEmail", queryField: "ndLearnersByEmail")
+  salesLeaderEmail: String!
+    @index(
+      name: "ndLearnersBySalesLeader"
+      queryField: "ndLearnersBySalesLeader"
+    )
+  name: String
+  firstApprovedAt: AWSDateTime
+  status: String
 }
 
 ######### GLOSSARY QUIZ GAME #########

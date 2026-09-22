@@ -92,24 +92,81 @@ const RequestSection = ({ title, count, children }) => {
   );
 };
 
+const formatPercent = (value) =>
+  value == null || Number.isNaN(Number(value))
+    ? '—'
+    : `${Math.round(Number(value))}%`;
+
+const LearnerCard = ({ learner }) => (
+  <div className='border border-gray-200 rounded-lg p-5 bg-white flex flex-col gap-3'>
+    <div>
+      <div className='font-semibold text-gray-900'>
+        {learner.name || learner.email}
+      </div>
+      {learner.name ? (
+        <div className='text-sm text-gray-600'>{learner.email}</div>
+      ) : null}
+    </div>
+    {learner.courses?.length ? (
+      <ul className='flex flex-col gap-2'>
+        {learner.courses.map((course) => (
+          <li
+            key={`${learner.email}-${course.courseId || course.courseName}`}
+            className='flex items-center justify-between gap-3 text-sm'
+          >
+            <span className='text-gray-800'>{course.courseName}</span>
+            <span className='text-gray-500 whitespace-nowrap'>
+              {course.completed
+                ? 'Completed'
+                : course.expired
+                  ? 'Expired'
+                  : formatPercent(course.percentComplete)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p className='text-sm text-gray-500'>No approved courses yet.</p>
+    )}
+  </div>
+);
+
 const Page = () => {
   const [requests, setRequests] = useState([]);
+  const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState('');
   const [actingId, setActingId] = useState(null);
   const [reasons, setReasons] = useState({});
 
-  const loadRequests = async () => {
+  const loadDashboard = async () => {
     setError('');
     try {
-      const response = await fetch(
-        '/api/network-distribution/enrollment-requests?scope=leader',
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to load requests');
+      const [requestsRes, progressRes] = await Promise.all([
+        fetch('/api/network-distribution/enrollment-requests?scope=leader'),
+        fetch('/api/network-distribution/leader-progress'),
+      ]);
+      const requestsData = await requestsRes.json();
+      const progressData = await progressRes.json();
+
+      if (requestsRes.status === 403 || progressRes.status === 403) {
+        setUnauthorized(true);
+        setRequests([]);
+        setLearners([]);
+        return;
       }
-      setRequests(data.items || []);
+
+      if (!requestsRes.ok) {
+        throw new Error(requestsData.message || 'Failed to load requests');
+      }
+      if (!progressRes.ok) {
+        throw new Error(progressData.message || 'Failed to load learner progress');
+      }
+
+      setUnauthorized(false);
+      setRequests(requestsData.items || []);
+      setLearners(progressData.items || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -118,7 +175,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    loadRequests();
+    loadDashboard();
   }, []);
 
   const decide = async (id, action) => {
@@ -141,7 +198,7 @@ const Page = () => {
         throw new Error(data.message || 'Could not update request');
       }
       setReasons((prev) => ({ ...prev, [id]: '' }));
-      await loadRequests();
+      await loadDashboard();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -179,15 +236,28 @@ const Page = () => {
       <p className='text-gray-600 mt-2 mb-8'>
         Requests sent to your email from the Network Distribution library.
       </p>
-      {error && <p className='text-red-600 mb-4'>{error}</p>}
+      {error && !unauthorized && <p className='text-red-600 mb-4'>{error}</p>}
       {loading ? (
         <div className='flex justify-center py-16'>
           <div className='w-10 h-10 border-4 border-clemson border-t-transparent rounded-full animate-spin' />
         </div>
-      ) : !requests.length ? (
-        <p className='text-gray-600'>No enrollment requests for your email.</p>
+      ) : unauthorized ? (
+        <div className='border border-gray-200 rounded-lg bg-white p-6'>
+          <h2 className='text-lg font-semibold text-gray-900'>
+            Sales leader access required
+          </h2>
+          <p className='text-gray-600 mt-2'>
+            This page is only available to approved Network Distribution sales
+            leaders.
+          </p>
+        </div>
       ) : (
         <div className='flex flex-col gap-10'>
+          <RequestSection title='Learners' count={learners.length}>
+            {learners.map((learner) => (
+              <LearnerCard key={learner.email} learner={learner} />
+            ))}
+          </RequestSection>
           <RequestSection title='Pending' count={pending.length}>
             {renderCards(pending)}
           </RequestSection>
@@ -197,6 +267,11 @@ const Page = () => {
           <RequestSection title='Approved' count={approved.length}>
             {renderCards(approved)}
           </RequestSection>
+          {!requests.length && !learners.length ? (
+            <p className='text-gray-600'>
+              No enrollment requests or approved learners yet.
+            </p>
+          ) : null}
         </div>
       )}
     </div>

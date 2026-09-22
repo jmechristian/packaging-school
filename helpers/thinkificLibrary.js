@@ -5,7 +5,8 @@ const PDA_GROUP = NETWORK_DISTRIBUTION_GROUP;
 
 const restHeaders = () => ({
   'Content-Type': 'application/json',
-  'X-Auth-API-Key': process.env.NEXT_THINKIFIC_API_KEY,
+  'X-Auth-API-Key':
+    process.env.NEXT_THINKIFIC_API_KEY || process.env.NEXT_PUBLIC_API_KEY,
   'X-Auth-Subdomain': process.env.NEXT_THINKIFIC_SUBDOMAIN,
 });
 
@@ -204,4 +205,163 @@ export const createThinkificBundleEnrollment = async ({ userId, bundleId }) => {
     );
   }
   return data;
+};
+
+export const NETWORK_DISTRIBUTION_COUPON = 'networklibrary';
+export const NETWORK_DISTRIBUTION_PROMOTION_ID = 2446636;
+export const NETWORK_DISTRIBUTION_COUPON_ID = 13088973;
+
+const restJson = async (path, options = {}, attempt = 0) => {
+  const response = await fetch(`${THINKIFIC_REST}${path}`, {
+    ...options,
+    headers: {
+      ...restHeaders(),
+      ...(options.headers || {}),
+    },
+  });
+  if (response.status === 429 && attempt < 3) {
+    const retryAfter = Number(response.headers.get('retry-after')) || 1 + attempt;
+    await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
+    return restJson(path, options, attempt + 1);
+  }
+  const data =
+    response.status === 204 ? {} : await response.json().catch(() => ({}));
+  return { response, data };
+};
+
+const pagination = (data) => data?.meta?.pagination || {};
+
+export const listThinkificCoupons = async (
+  promotionId,
+  { page = 1, limit = 100 } = {},
+) => {
+  const { response, data } = await restJson(
+    `/coupons?promotion_id=${Number(promotionId)}&page=${page}&limit=${limit}`,
+  );
+  if (!response.ok) {
+    throw new Error(
+      data?.error || data?.message || `Failed to list coupons (${response.status})`,
+    );
+  }
+  return data;
+};
+
+export const parseThinkificProductIdFromLink = (link) => {
+  const cleaned = String(link || '')
+    .replace(/^Link:\s*/i, '')
+    .trim();
+  const match = cleaned.match(/\/enroll\/(\d+)/i);
+  return match ? Number(match[1]) : null;
+};
+
+export const getThinkificPromotionByCoupon = async ({
+  productId,
+  couponCode = NETWORK_DISTRIBUTION_COUPON,
+}) => {
+  if (!productId || !couponCode) return null;
+  const { response, data } = await restJson(
+    `/promotions/by_coupon?product_id=${Number(productId)}&coupon_code=${encodeURIComponent(
+      couponCode,
+    )}`,
+  );
+  if (!response.ok) return null;
+  return data;
+};
+
+const findCouponOnPromotion = async (promotionId, target) => {
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const data = await listThinkificCoupons(promotionId, { page, limit: 100 });
+    const match = (data.items || []).find(
+      (coupon) => String(coupon.code || '').toLowerCase() === target,
+    );
+    if (match) return match;
+    totalPages = pagination(data).total_pages || 1;
+    page += 1;
+  }
+
+  return null;
+};
+
+export const findThinkificCouponByCode = async ({
+  code = NETWORK_DISTRIBUTION_COUPON,
+  promotionId,
+  productId,
+} = {}) => {
+  const target = String(code || '').trim().toLowerCase();
+  if (!target) {
+    throw new Error('Coupon code is required');
+  }
+
+  if (promotionId) {
+    const direct = await findCouponOnPromotion(Number(promotionId), target);
+    if (direct) return direct;
+  }
+
+  if (productId) {
+    const promotion = await getThinkificPromotionByCoupon({
+      productId,
+      couponCode: target,
+    });
+    if (promotion?.id) {
+      const fromProduct = await findCouponOnPromotion(Number(promotion.id), target);
+      if (fromProduct) return fromProduct;
+    }
+  }
+
+  return null;
+};
+
+export const getThinkificCouponById = async (couponId) => {
+  if (!couponId) return null;
+  const { response, data } = await restJson(`/coupons/${Number(couponId)}`);
+  if (!response.ok) return null;
+  return data;
+};
+
+export const incrementThinkificCouponUsage = async ({
+  code = NETWORK_DISTRIBUTION_COUPON,
+  couponId = NETWORK_DISTRIBUTION_COUPON_ID,
+  promotionId = NETWORK_DISTRIBUTION_PROMOTION_ID,
+  productId,
+} = {}) => {
+  const coupon =
+    (await getThinkificCouponById(couponId)) ||
+    (await findThinkificCouponByCode({
+      code,
+      promotionId,
+      productId,
+    }));
+  if (!coupon?.id) {
+    throw new Error(`Thinkific coupon not found: ${code}`);
+  }
+
+  const nextUsed = Number(coupon.quantity_used || 0) + 1;
+  const body = {
+    code: coupon.code,
+    quantity_used: nextUsed,
+  };
+  if (coupon.quantity != null && coupon.quantity !== '') {
+    body.quantity = Number(coupon.quantity);
+  }
+
+  const { response, data } = await restJson(`/coupons/${coupon.id}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok && response.status !== 204) {
+    throw new Error(
+      data?.error ||
+        data?.message ||
+        `Thinkific coupon update failed (${response.status})`,
+    );
+  }
+
+  return {
+    ...coupon,
+    quantity_used: nextUsed,
+  };
 };

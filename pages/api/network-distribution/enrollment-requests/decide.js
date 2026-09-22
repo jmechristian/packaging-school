@@ -1,13 +1,19 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import {
+  getCustomerLibraryBySlug,
   getLibraryEnrollmentRequest,
+  updateCustomerLibrary,
   updateLibraryEnrollmentRequest,
 } from '../../../../helpers/libraryEnrollmentRequests';
 import {
+  NETWORK_DISTRIBUTION_COUPON,
+  NETWORK_DISTRIBUTION_PROMOTION_ID,
   createThinkificBundleEnrollment,
   createThinkificEnrollment,
   ensureNetworkDistributionThinkific,
   getNetworkDistributionBundleId,
+  incrementThinkificCouponUsage,
+  parseThinkificProductIdFromLink,
 } from '../../../../helpers/thinkificLibrary';
 import {
   sendLibraryEnrollmentApprovedEmail,
@@ -15,6 +21,10 @@ import {
 } from '../../../../helpers/libraryEnrollmentEmails';
 import { getAppBaseUrl } from '../../../../helpers/appBaseUrl';
 import { getAWSUser } from '../../../../helpers/api';
+import {
+  isApprovedSalesLeader,
+  upsertLearner,
+} from '../../../../helpers/networkDistributionLeaders';
 
 const htmlPage = (title, message, ok = true) => `<!DOCTYPE html>
 <html>
@@ -47,8 +57,60 @@ const buildCourseUrl = (request) => {
   const cleaned = String(request.courseLink).replace(/^Link:\s*/i, '').trim();
   if (!cleaned) return null;
   if (cleaned.includes('coupon=')) return cleaned;
-  const coupon = request.couponCode || 'networklibrary';
+  const coupon = request.couponCode || NETWORK_DISTRIBUTION_COUPON;
   return `${cleaned}${cleaned.includes('?') ? '&' : '?'}coupon=${coupon}`;
+};
+
+const numericId = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+};
+
+const resolveCouponLookup = async (librarySlug) => {
+  const fromEnv = numericId(
+    process.env.NEXT_THINKIFIC_NETWORK_PROMOTION_ID ||
+      process.env.NETWORK_DISTRIBUTION_PROMOTION_ID,
+  );
+
+  let library = null;
+  if (librarySlug) {
+    try {
+      library = await getCustomerLibraryBySlug(librarySlug);
+    } catch (error) {
+      console.warn('Could not load library promotion id:', error);
+    }
+  }
+
+  return {
+    library,
+    promotionId:
+      fromEnv ||
+      numericId(library?.promotionId) ||
+      NETWORK_DISTRIBUTION_PROMOTION_ID,
+  };
+};
+
+const rememberPromotionId = async (library, promotionId) => {
+  if (!library?.id || !promotionId || library.promotionId) return;
+  try {
+    await updateCustomerLibrary({
+      id: library.id,
+      promotionId: Number(promotionId),
+    });
+  } catch (error) {
+    console.warn('Could not persist library promotion id:', error);
+  }
+};
+
+const consumeThinkificCoupon = async (request) => {
+  const { library, promotionId } = await resolveCouponLookup(request.librarySlug);
+  const coupon = await incrementThinkificCouponUsage({
+    code: request.couponCode || NETWORK_DISTRIBUTION_COUPON,
+    promotionId,
+    productId: parseThinkificProductIdFromLink(request.courseLink),
+  });
+  await rememberPromotionId(library, coupon?.promotion_id);
+  return coupon;
 };
 
 const decideRequest = async ({ request, action, declineReason, decidedByEmail, req }) => {
@@ -80,6 +142,7 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
   }
 
   let thinkificEnrollmentId = request.thinkificEnrollmentId || null;
+  let enrollmentCreated = false;
   const { user } = await ensureNetworkDistributionThinkific({
     email: request.requesterEmail,
     name: request.requesterName,
@@ -95,6 +158,7 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
       thinkificEnrollmentId = enrollment?.id
         ? String(enrollment.id)
         : thinkificEnrollmentId;
+      enrollmentCreated = true;
     } else if (request.thinkificId) {
       const enrollment = await createThinkificEnrollment({
         userId: user.id,
@@ -103,9 +167,18 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
       thinkificEnrollmentId = enrollment?.id
         ? String(enrollment.id)
         : thinkificEnrollmentId;
+      enrollmentCreated = true;
     }
   } catch (enrollError) {
     console.error('Thinkific enrollment failed:', enrollError);
+  }
+
+  if (enrollmentCreated) {
+    try {
+      await consumeThinkificCoupon(request);
+    } catch (couponError) {
+      console.error('Thinkific coupon increment failed:', couponError);
+    }
   }
 
   const updated = await updateLibraryEnrollmentRequest({
@@ -115,6 +188,16 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
     decidedByEmail,
     thinkificEnrollmentId,
   });
+
+  try {
+    await upsertLearner({
+      email: request.requesterEmail,
+      salesLeaderEmail: request.salesLeaderEmail,
+      name: request.requesterName,
+    });
+  } catch (rosterError) {
+    console.error('ND learner roster upsert failed:', rosterError);
+  }
 
   const courseUrl = buildCourseUrl(request);
   await sendLibraryEnrollmentApprovedEmail({
@@ -189,6 +272,27 @@ export default async function handler(req, res) {
           );
       }
       return res.status(403).json({ message: 'Not authorized to decide this request.' });
+    }
+
+    const leaderStillApproved = await isApprovedSalesLeader(
+      request.salesLeaderEmail,
+    );
+    if (!leaderStillApproved) {
+      if (wantsHtml(req)) {
+        return res
+          .status(403)
+          .send(
+            htmlPage(
+              'Not authorized',
+              'This sales leader is no longer approved to decide enrollment requests.',
+              false,
+            ),
+          );
+      }
+      return res.status(403).json({
+        message:
+          'This sales leader is no longer approved to decide enrollment requests.',
+      });
     }
 
     const result = await decideRequest({

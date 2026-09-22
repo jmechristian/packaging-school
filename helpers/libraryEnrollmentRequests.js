@@ -206,3 +206,44 @@ export const getEnrollmentRequestByDecisionToken = async (token) => {
   const items = await paginate(BY_DECISION_TOKEN, 'decisionToken', token);
   return items[0] || null;
 };
+
+const LIBRARY_BY_SLUG = /* GraphQL */ `
+  query CustomerLibariesBySlug($slug: String!) {
+    customerLibariesBySlug(slug: $slug, limit: 1) {
+      items {
+        id
+        slug
+        code
+        promotionId
+        availableCodes
+        usedCodes
+      }
+    }
+  }
+`;
+
+const UPDATE_LIBRARY = /* GraphQL */ `
+  mutation UpdateCustomerLibary($input: UpdateCustomerLibaryInput!) {
+    updateCustomerLibary(input: $input) {
+      id
+      slug
+      promotionId
+    }
+  }
+`;
+
+export const getCustomerLibraryBySlug = async (slug) => {
+  const res = await API.graphql({
+    query: LIBRARY_BY_SLUG,
+    variables: { slug },
+  });
+  return res.data.customerLibariesBySlug.items[0] || null;
+};
+
+export const updateCustomerLibrary = async (input) => {
+  const res = await API.graphql({
+    query: UPDATE_LIBRARY,
+    variables: { input },
+  });
+  return res.data.updateCustomerLibary;
+};
