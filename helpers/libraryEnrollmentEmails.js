@@ -4,6 +4,7 @@ import { render } from '@react-email/render';
 import LibraryEnrollmentRequestEmail from '../react-email-starter/emails/library-enrollment-request';
 import LibraryEnrollmentApprovedEmail from '../react-email-starter/emails/library-enrollment-approved';
 import LibraryEnrollmentDeclinedEmail from '../react-email-starter/emails/library-enrollment-declined';
+import LibraryEnrollmentInternalEmail from '../react-email-starter/emails/library-enrollment-internal';
 
 const sesClient = new SESClient({
   region: 'us-east-1',
@@ -14,6 +15,7 @@ const sesClient = new SESClient({
 });
 
 const FROM = 'info@packagingschool.com';
+const INTERNAL_TO = 'info@packagingschool.com';
 
 const sendSesEmail = async ({ to, subject, html, bcc = [] }) => {
   const destination = {
@@ -97,6 +99,39 @@ export const sendLibraryEnrollmentApprovedEmail = async ({
   });
 };
 
+export const sendLibraryEnrollmentInternalEmail = async ({
+  to = INTERNAL_TO,
+  salesLeaderName,
+  salesLeaderEmail,
+  studentName,
+  studentEmail,
+  courseName,
+  courseId,
+  couponCode,
+  couponUsed,
+  couponQuantity,
+}) => {
+  const html = render(
+    <LibraryEnrollmentInternalEmail
+      salesLeaderName={salesLeaderName}
+      salesLeaderEmail={salesLeaderEmail}
+      studentName={studentName}
+      studentEmail={studentEmail}
+      courseName={courseName}
+      courseId={courseId}
+      couponCode={couponCode}
+      couponUsed={couponUsed}
+      couponQuantity={couponQuantity}
+    />,
+  );
+
+  await sendSesEmail({
+    to,
+    subject: `Network Distribution enrollment: ${courseName}`,
+    html,
+  });
+};
+
 export const sendLibraryEnrollmentDeclinedEmail = async ({
   to,
   requesterName,
@@ -137,6 +172,12 @@ export const renderLibraryEnrollmentEmail = (template, props = {}) => {
     return {
       subject: `Enrollment request declined: ${props.courseName || 'course'}`,
       html: render(<LibraryEnrollmentDeclinedEmail {...props} />),
+    };
+  }
+  if (template === 'internal') {
+    return {
+      subject: `Network Distribution enrollment: ${props.courseName || 'course'}`,
+      html: render(<LibraryEnrollmentInternalEmail {...props} />),
     };
   }
   throw new Error(`Unknown email template: ${template}`);

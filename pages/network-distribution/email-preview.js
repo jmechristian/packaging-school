@@ -6,6 +6,7 @@ const TEMPLATES = [
   { id: 'request', label: 'Sales leader request' },
   { id: 'approved', label: 'Learner approved' },
   { id: 'declined', label: 'Learner declined' },
+  { id: 'internal', label: 'Internal purchase notice' },
 ];
 
 export default function EmailPreviewPage() {

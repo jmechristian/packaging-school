@@ -7,17 +7,20 @@ import {
 } from '../../../../helpers/libraryEnrollmentRequests';
 import {
   NETWORK_DISTRIBUTION_COUPON,
+  NETWORK_DISTRIBUTION_COUPON_ID,
   NETWORK_DISTRIBUTION_PROMOTION_ID,
   createThinkificBundleEnrollment,
   createThinkificEnrollment,
   ensureNetworkDistributionThinkific,
   getNetworkDistributionBundleId,
+  getThinkificCouponById,
   incrementThinkificCouponUsage,
   parseThinkificProductIdFromLink,
 } from '../../../../helpers/thinkificLibrary';
 import {
   sendLibraryEnrollmentApprovedEmail,
   sendLibraryEnrollmentDeclinedEmail,
+  sendLibraryEnrollmentInternalEmail,
 } from '../../../../helpers/libraryEnrollmentEmails';
 import { getAppBaseUrl } from '../../../../helpers/appBaseUrl';
 import { getAWSUser } from '../../../../helpers/api';
@@ -143,6 +146,7 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
 
   let thinkificEnrollmentId = request.thinkificEnrollmentId || null;
   let enrollmentCreated = false;
+  let coupon = null;
   const { user } = await ensureNetworkDistributionThinkific({
     email: request.requesterEmail,
     name: request.requesterName,
@@ -175,9 +179,17 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
 
   if (enrollmentCreated) {
     try {
-      await consumeThinkificCoupon(request);
+      coupon = await consumeThinkificCoupon(request);
     } catch (couponError) {
       console.error('Thinkific coupon increment failed:', couponError);
+    }
+  }
+
+  if (!coupon) {
+    try {
+      coupon = await getThinkificCouponById(NETWORK_DISTRIBUTION_COUPON_ID);
+    } catch (couponLookupError) {
+      console.warn('Could not load Thinkific coupon for internal email:', couponLookupError);
     }
   }
 
@@ -208,6 +220,22 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
     dashboardUrl: `${baseUrl}/profile?tab=courses`,
     courseUrl: courseUrl || `${baseUrl}/network-distribution`,
   });
+
+  try {
+    await sendLibraryEnrollmentInternalEmail({
+      salesLeaderName: request.salesLeaderName,
+      salesLeaderEmail: request.salesLeaderEmail,
+      studentName: request.requesterName,
+      studentEmail: request.requesterEmail,
+      courseName: request.courseName,
+      courseId: request.courseId,
+      couponCode: request.couponCode || NETWORK_DISTRIBUTION_COUPON,
+      couponUsed: coupon?.quantity_used,
+      couponQuantity: coupon?.quantity,
+    });
+  } catch (internalEmailError) {
+    console.error('Internal enrollment email failed:', internalEmailError);
+  }
 
   return { request: updated };
 };

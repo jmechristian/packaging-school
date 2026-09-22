@@ -14,6 +14,14 @@ const SAMPLE = (baseUrl) => ({
   courseUrl: `${baseUrl}/network-distribution`,
   catalogUrl: `${baseUrl}/network-distribution`,
   declineReason: 'Please enroll in the individual course instead of the bundle.',
+  salesLeaderName: 'Jordan Lee',
+  salesLeaderEmail: 'jordan@networkdistribution.com',
+  studentName: 'Alex Rivera',
+  studentEmail: 'alex@networkdistribution.com',
+  courseId: 'CPS-00',
+  couponCode: 'networklibrary',
+  couponUsed: 1,
+  couponQuantity: 100,
 });
 
 export default async function handler(req, res) {

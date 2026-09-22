@@ -163,3 +163,18 @@ export const CourseCallout = ({ name }: { name: string }) => (
     <Text style={libraryEmailStyles.courseName}>{name}</Text>
   </Section>
 );
+
+export const DetailRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string | number | null;
+}) => (
+  <Section style={{ margin: '0 0 16px' }}>
+    <Text style={libraryEmailStyles.courseLabel}>{label}</Text>
+    <Text style={{ ...libraryEmailStyles.courseName, fontSize: '15px' }}>
+      {value || '—'}
+    </Text>
+  </Section>
+);
