@@ -29,25 +29,189 @@ import {
   upsertLearner,
 } from '../../../../helpers/networkDistributionLeaders';
 
-const htmlPage = (title, message, ok = true) => `<!DOCTYPE html>
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+const htmlPage = ({
+  title,
+  message,
+  variant = 'info',
+  courseName,
+  studentName,
+  dashboardUrl,
+} = {}) => {
+  const safeTitle = escapeHtml(title);
+  const safeMessage = escapeHtml(message);
+  const safeCourse = escapeHtml(courseName);
+  const safeStudent = escapeHtml(studentName);
+  const safeDashboard = escapeHtml(
+    dashboardUrl || `${getAppBaseUrl()}/network-distribution/approvals`,
+  );
+  const tone =
+    variant === 'approved'
+      ? { mark: '✓', markBg: '#f4aa00', markColor: '#0A1D3A', label: 'Approved' }
+      : variant === 'declined'
+        ? { mark: '✕', markBg: '#fecdd3', markColor: '#9f1239', label: 'Declined' }
+        : variant === 'already'
+          ? { mark: 'i', markBg: '#e2e8f0', markColor: '#0A1D3A', label: 'Already processed' }
+          : variant === 'error'
+            ? { mark: '!', markBg: '#fecdd3', markColor: '#9f1239', label: 'Needs attention' }
+            : { mark: 'i', markBg: '#e2e8f0', markColor: '#0A1D3A', label: 'Enrollment request' };
+
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>${title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${safeTitle}</title>
     <style>
-      body { font-family: Helvetica, Arial, sans-serif; text-align: center; padding: 64px 24px; color: #111; }
-      .card { max-width: 520px; margin: 0 auto; border: 2px solid #111; border-radius: 16px; padding: 32px; }
-      h1 { color: ${ok ? '#0A1D3A' : '#B91C1C'}; font-size: 24px; }
+      body {
+        margin: 0;
+        background: #f4f4f5;
+        color: #334155;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        padding: 32px 12px;
+      }
+      .card {
+        max-width: 560px;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .header { background: #0A1D3A; padding: 28px 32px 24px; }
+      .eyebrow {
+        color: #f4aa00;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin: 0 0 8px;
+      }
+      .header h1 {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0;
+      }
+      .content { padding: 28px 32px 8px; }
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 20px;
+      }
+      .mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        background: ${tone.markBg};
+        color: ${tone.markColor};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .status-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin: 0 0 2px;
+      }
+      .status-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #0A1D3A;
+        margin: 0;
+      }
+      .message {
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0 0 16px;
+      }
+      .course {
+        background: #f8fafc;
+        border-left: 3px solid #f4aa00;
+        padding: 14px 16px;
+        margin: 8px 0 24px;
+      }
+      .course-label {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin: 0 0 4px;
+      }
+      .course-name {
+        color: #0A1D3A;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 0;
+      }
+      .footer {
+        padding: 8px 32px 28px;
+      }
+      .button {
+        display: inline-block;
+        background: #0A1D3A;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 12px 22px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+      .footer-text {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 20px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+      }
       a { color: #0A1D3A; }
     </style>
   </head>
   <body>
     <div class="card">
-      <h1>${title}</h1>
-      <p>${message}</p>
+      <div class="header">
+        <p class="eyebrow">Network Distribution Library</p>
+        <h1>${safeTitle}</h1>
+      </div>
+      <div class="content">
+        <div class="status">
+          <div class="mark">${tone.mark}</div>
+          <div>
+            <p class="status-label">${tone.label}</p>
+            ${safeStudent ? `<p class="status-title">${safeStudent}</p>` : ''}
+          </div>
+        </div>
+        <p class="message">${safeMessage}</p>
+        ${
+          safeCourse
+            ? `<div class="course"><p class="course-label">Course</p><p class="course-name">${safeCourse}</p></div>`
+            : ''
+        }
+      </div>
+      <div class="footer">
+        <a class="button" href="${safeDashboard}">Open approvals dashboard</a>
+        <p class="footer-text">Questions? Email <a href="mailto:info@packagingschool.com">info@packagingschool.com</a>.</p>
+      </div>
     </div>
   </body>
 </html>`;
+};
 
 const wantsHtml = (req) => {
   if (req.method === 'GET') return true;
@@ -256,9 +420,13 @@ export default async function handler(req, res) {
 
   if (!id || !['approve', 'decline'].includes(action)) {
     if (wantsHtml(req)) {
-      return res
-        .status(400)
-        .send(htmlPage('Invalid request', 'Missing request id or action.', false));
+      return res.status(400).send(
+        htmlPage({
+          title: 'Invalid request',
+          message: 'Missing request id or action.',
+          variant: 'error',
+        }),
+      );
     }
     return res.status(400).json({ message: 'Missing request id or action.' });
   }
@@ -267,9 +435,13 @@ export default async function handler(req, res) {
     const request = await getLibraryEnrollmentRequest(id);
     if (!request) {
       if (wantsHtml(req)) {
-        return res
-          .status(404)
-          .send(htmlPage('Not found', 'This enrollment request does not exist.', false));
+        return res.status(404).send(
+          htmlPage({
+            title: 'Not found',
+            message: 'This enrollment request does not exist.',
+            variant: 'error',
+          }),
+        );
       }
       return res.status(404).json({ message: 'Request not found.' });
     }
@@ -292,11 +464,11 @@ export default async function handler(req, res) {
         return res
           .status(403)
           .send(
-            htmlPage(
-              'Not authorized',
-              'This approval link is invalid or expired.',
-              false,
-            ),
+            htmlPage({
+              title: 'Not authorized',
+              message: 'This approval link is invalid or expired.',
+              variant: 'error',
+            }),
           );
       }
       return res.status(403).json({ message: 'Not authorized to decide this request.' });
@@ -310,11 +482,12 @@ export default async function handler(req, res) {
         return res
           .status(403)
           .send(
-            htmlPage(
-              'Not authorized',
-              'This sales leader is no longer approved to decide enrollment requests.',
-              false,
-            ),
+            htmlPage({
+              title: 'Not authorized',
+              message:
+                'This sales leader is no longer approved to decide enrollment requests.',
+              variant: 'error',
+            }),
           );
       }
       return res.status(403).json({
@@ -333,6 +506,7 @@ export default async function handler(req, res) {
 
     const verb = action === 'approve' ? 'approved' : 'declined';
     if (wantsHtml(req)) {
+      const decidedStatus = String(result.request?.status || '').toUpperCase();
       const title = result.alreadyDecided
         ? 'Already processed'
         : action === 'approve'
@@ -341,7 +515,24 @@ export default async function handler(req, res) {
       const message = result.alreadyDecided
         ? `This request was already ${String(result.request.status).toLowerCase()}.`
         : `You ${verb} ${request.requesterName}'s request for ${request.courseName}.`;
-      return res.status(200).send(htmlPage(title, message, true));
+      const variant = result.alreadyDecided
+        ? decidedStatus === 'DECLINED'
+          ? 'declined'
+          : decidedStatus === 'APPROVED'
+            ? 'approved'
+            : 'already'
+        : action === 'approve'
+          ? 'approved'
+          : 'declined';
+      return res.status(200).send(
+        htmlPage({
+          title,
+          message,
+          variant,
+          courseName: request.courseName,
+          studentName: request.requesterName,
+        }),
+      );
     }
 
     const { decisionToken, ...safe } = result.request || {};
@@ -349,9 +540,13 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Decide enrollment request failed:', error);
     if (wantsHtml(req)) {
-      return res
-        .status(500)
-        .send(htmlPage('Error', 'Could not process this request. Please try again.', false));
+      return res.status(500).send(
+        htmlPage({
+          title: 'Error',
+          message: 'Could not process this request. Please try again.',
+          variant: 'error',
+        }),
+      );
     }
     return res.status(500).json({ message: 'Failed to process request.' });
   }
