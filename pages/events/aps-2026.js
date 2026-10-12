@@ -34,14 +34,18 @@ const readAttendee = () => {
     .find((item) => item.startsWith(`${ATTENDEE_COOKIE}=`));
   if (!row) return null;
   try {
-    return JSON.parse(decodeURIComponent(row.slice(ATTENDEE_COOKIE.length + 1)));
+    return JSON.parse(
+      decodeURIComponent(row.slice(ATTENDEE_COOKIE.length + 1)),
+    );
   } catch {
     return null;
   }
 };
 
 const writeAttendee = ({ email, firstName, lastName }) => {
-  const value = encodeURIComponent(JSON.stringify({ email, firstName, lastName }));
+  const value = encodeURIComponent(
+    JSON.stringify({ email, firstName, lastName }),
+  );
   document.cookie = `${ATTENDEE_COOKIE}=${value}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
 };
 
@@ -59,7 +63,10 @@ const sendToCompletionCourse = async ({ email, firstName, lastName }) => {
       },
     });
   } catch (error) {
-    console.warn('Failed to record pre-redirect purchase intent:', error?.message);
+    console.warn(
+      'Failed to record pre-redirect purchase intent:',
+      error?.message,
+    );
   }
 
   try {
@@ -108,7 +115,9 @@ const APS2026 = ({ photos = [] }) => {
         setActivePhoto((current) => (current + 1) % photos.length);
       }
       if (event.key === 'ArrowLeft') {
-        setActivePhoto((current) => (current - 1 + photos.length) % photos.length);
+        setActivePhoto(
+          (current) => (current - 1 + photos.length) % photos.length,
+        );
       }
     };
     document.body.style.overflow = 'hidden';
@@ -158,7 +167,8 @@ const APS2026 = ({ photos = [] }) => {
       if (!response.ok) {
         setAccessPending(false);
         setAccessError(
-          data.message || "That name and email aren't on the 2026 registration list.",
+          data.message ||
+            "That name and email aren't on the 2026 registration list.",
         );
         return;
       }
@@ -175,13 +185,15 @@ const APS2026 = ({ photos = [] }) => {
 
   const goToPage = (nextPage) => {
     setPage(nextPage);
-    document.getElementById('photos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document
+      .getElementById('photos')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
     <>
       <Meta
-        title='AutoPack Summit 2026 Media'
+        title='AutoPack Summit 2026'
         description='A look back at AutoPack Summit 2026 in Greenville: the connections from the floor and the education from the room.'
         image={LOGO}
       />
@@ -203,8 +215,8 @@ const APS2026 = ({ photos = [] }) => {
               A look <span className='text-ap-darkblue'>back</span>
             </h1>
             <p className='max-w-xl text-lg leading-snug text-neutral-700'>
-              The connections from the floor, and the education that came out
-              of the room.
+              The connections from the floor, and the education that came out of
+              the room.
             </p>
             <div className='mt-2 flex flex-col gap-3 text-neutral-900 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2'>
               <p className='flex items-center gap-2 font-semibold'>
@@ -271,7 +283,10 @@ const APS2026 = ({ photos = [] }) => {
           </nav>
         </div>
 
-        <section id='photos' className='scroll-mt-40 mx-auto max-w-7xl px-5 py-12 lg:py-16 xl:px-0'>
+        <section
+          id='photos'
+          className='scroll-mt-40 mx-auto max-w-7xl px-5 py-12 lg:py-16 xl:px-0'
+        >
           <SectionHeading kicker='Photos' title='From the floor' />
           <div className='mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5 md:gap-3'>
             {visiblePhotos.map((photo, index) => (
@@ -282,25 +297,33 @@ const APS2026 = ({ photos = [] }) => {
                 aria-label={`Open photo ${start + index + 1}`}
                 className='relative aspect-square overflow-hidden bg-neutral-200'
               >
-                <img src={photo.src} alt='' className='h-full w-full object-cover' />
+                <img
+                  src={photo.src}
+                  alt=''
+                  className='h-full w-full object-cover'
+                />
               </button>
             ))}
           </div>
           {pageCount > 1 && (
             <div className='mt-8 flex flex-wrap items-center justify-center gap-2'>
-              {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
-                <button
-                  key={number}
-                  type='button'
-                  onClick={() => goToPage(number)}
-                  aria-current={number === page ? 'page' : undefined}
-                  className={`flex h-9 w-9 items-center justify-center text-sm font-semibold ${
-                    number === page ? 'bg-ap-yellow text-neutral-900' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                  }`}
-                >
-                  {number}
-                </button>
-              ))}
+              {Array.from({ length: pageCount }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    type='button'
+                    onClick={() => goToPage(number)}
+                    aria-current={number === page ? 'page' : undefined}
+                    className={`flex h-9 w-9 items-center justify-center text-sm font-semibold ${
+                      number === page
+                        ? 'bg-ap-yellow text-neutral-900'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                    }`}
+                  >
+                    {number}
+                  </button>
+                ),
+              )}
             </div>
           )}
         </section>
@@ -319,7 +342,10 @@ const APS2026 = ({ photos = [] }) => {
           </div>
         </section>
 
-        <section id='certificate' className='scroll-mt-40 mx-auto max-w-7xl px-5 pb-12 lg:pb-20 xl:px-0'>
+        <section
+          id='certificate'
+          className='scroll-mt-40 mx-auto max-w-7xl px-5 pb-12 lg:pb-20 xl:px-0'
+        >
           <div className='grid gap-4 lg:grid-cols-2'>
             <article className='flex flex-col rounded-2xl bg-ap-darkblue p-6 text-white md:p-8'>
               <span className='flex h-12 w-12 items-center justify-center rounded-xl bg-white/10'>
@@ -398,11 +424,15 @@ const APS2026 = ({ photos = [] }) => {
               <div className='flex items-end justify-between gap-4'>
                 <div className='flex items-end gap-4'>
                   <DateMark day='Mon' date='18' />
-                  <span className='pb-1 font-oswald text-4xl leading-none'>–</span>
+                  <span className='pb-1 font-oswald text-4xl leading-none'>
+                    –
+                  </span>
                   <DateMark day='Wed' date='20' />
                 </div>
                 <div className='border-l-2 border-black pl-5'>
-                  <p className='font-oswald text-3xl uppercase leading-none'>2027</p>
+                  <p className='font-oswald text-3xl uppercase leading-none'>
+                    2027
+                  </p>
                   <p className='mt-2 text-sm font-semibold leading-snug'>
                     Hyatt Regency
                     <br />
@@ -415,7 +445,10 @@ const APS2026 = ({ photos = [] }) => {
           </div>
         </section>
 
-        <section id='thank-you' className='scroll-mt-40 mx-auto max-w-7xl px-5 py-16 lg:py-24 xl:px-0'>
+        <section
+          id='thank-you'
+          className='scroll-mt-40 mx-auto max-w-7xl px-5 py-16 lg:py-24 xl:px-0'
+        >
           <div className='mx-auto max-w-3xl text-center'>
             <p className='text-xs font-semibold uppercase tracking-[0.16em] text-ap-blue'>
               Thank you
@@ -458,7 +491,9 @@ const APS2026 = ({ photos = [] }) => {
               type='button'
               aria-label='Previous photo'
               onClick={() =>
-                setActivePhoto((current) => (current - 1 + photos.length) % photos.length)
+                setActivePhoto(
+                  (current) => (current - 1 + photos.length) % photos.length,
+                )
               }
               className='absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2'
             >
@@ -467,7 +502,9 @@ const APS2026 = ({ photos = [] }) => {
             <button
               type='button'
               aria-label='Next photo'
-              onClick={() => setActivePhoto((current) => (current + 1) % photos.length)}
+              onClick={() =>
+                setActivePhoto((current) => (current + 1) % photos.length)
+              }
               className='absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2'
             >
               <ChevronRightIcon className='h-6 w-6' />
@@ -499,7 +536,10 @@ const APS2026 = ({ photos = [] }) => {
             <h2 className='mt-2 font-oswald text-3xl font-medium uppercase leading-none'>
               Certificate of Completion
             </h2>
-            <form className='mt-6 flex flex-col gap-4' onSubmit={submitCompletionAccess}>
+            <form
+              className='mt-6 flex flex-col gap-4'
+              onSubmit={submitCompletionAccess}
+            >
               <label className='block text-sm font-semibold'>
                 Email
                 <input
@@ -509,7 +549,10 @@ const APS2026 = ({ photos = [] }) => {
                   required
                   value={attendee.email}
                   onChange={(event) =>
-                    setAttendee((current) => ({ ...current, email: event.target.value }))
+                    setAttendee((current) => ({
+                      ...current,
+                      email: event.target.value,
+                    }))
                   }
                   className='mt-1 w-full rounded-xl border border-neutral-300 px-3 py-2 font-normal'
                 />
@@ -523,7 +566,10 @@ const APS2026 = ({ photos = [] }) => {
                   required
                   value={attendee.firstName}
                   onChange={(event) =>
-                    setAttendee((current) => ({ ...current, firstName: event.target.value }))
+                    setAttendee((current) => ({
+                      ...current,
+                      firstName: event.target.value,
+                    }))
                   }
                   className='mt-1 w-full rounded-xl border border-neutral-300 px-3 py-2 font-normal'
                 />
@@ -537,12 +583,17 @@ const APS2026 = ({ photos = [] }) => {
                   required
                   value={attendee.lastName}
                   onChange={(event) =>
-                    setAttendee((current) => ({ ...current, lastName: event.target.value }))
+                    setAttendee((current) => ({
+                      ...current,
+                      lastName: event.target.value,
+                    }))
                   }
                   className='mt-1 w-full rounded-xl border border-neutral-300 px-3 py-2 font-normal'
                 />
               </label>
-              {accessError ? <p className='text-sm text-ap-red'>{accessError}</p> : null}
+              {accessError ? (
+                <p className='text-sm text-ap-red'>{accessError}</p>
+              ) : null}
               <button
                 type='submit'
                 disabled={accessPending}
@@ -560,7 +611,9 @@ const APS2026 = ({ photos = [] }) => {
 
 const SectionHeading = ({ kicker, title }) => (
   <div className='max-w-2xl'>
-    <p className='text-xs font-semibold uppercase tracking-[0.16em] text-ap-blue'>{kicker}</p>
+    <p className='text-xs font-semibold uppercase tracking-[0.16em] text-ap-blue'>
+      {kicker}
+    </p>
     <h2 className='mt-2 font-oswald text-4xl font-medium uppercase leading-none tracking-tight md:text-5xl'>
       {title}
     </h2>
