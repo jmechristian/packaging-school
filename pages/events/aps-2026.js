@@ -359,10 +359,14 @@ const APS2026 = ({ photos = [] }) => {
               <h2 className='mt-2 font-oswald text-3xl font-medium uppercase leading-none tracking-tight md:text-4xl'>
                 Certificate of Completion
               </h2>
+              <p className='mt-4 inline-flex w-fit rounded-full bg-ap-yellow px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-900'>
+                Free
+              </p>
               <p className='mb-8 mt-4 max-w-xl text-lg leading-snug text-blue-100'>
-                Attendees who meet the participation requirements receive a 2026
-                Certificate of Attendance for professional development,
-                reimbursement, or continuing education.
+                The Certificate of Completion module is free. Attendees who meet
+                the participation requirements receive a 2026 Certificate of
+                Attendance for professional development, reimbursement, or
+                continuing education.
               </p>
               <button
                 type='button'
@@ -538,6 +542,9 @@ const APS2026 = ({ photos = [] }) => {
             <h2 className='mt-2 font-oswald text-3xl font-medium uppercase leading-none'>
               Certificate of Completion
             </h2>
+            <p className='mt-3 text-neutral-700'>
+              The module is free.
+            </p>
             <form
               className='mt-6 flex flex-col gap-4'
               onSubmit={submitCompletionAccess}
