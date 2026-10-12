@@ -147,6 +147,28 @@ const APS2026 = ({ photos = [] }) => {
     setAccessPending(true);
     setAccessError('');
     const next = { email, firstName, lastName };
+
+    try {
+      const response = await fetch('/api/events/aps-2026-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setAccessPending(false);
+        setAccessError(
+          data.message || "That name and email aren't on the 2026 registration list.",
+        );
+        return;
+      }
+    } catch (error) {
+      console.error('APS 2026 registration check failed', error);
+      setAccessPending(false);
+      setAccessError("We couldn't check the registration list. Try again.");
+      return;
+    }
+
     writeAttendee(next);
     await sendToCompletionCourse(next);
   };
