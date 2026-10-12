@@ -137,7 +137,7 @@ const APS2026 = ({ photos = [] }) => {
 
   const submitCompletionAccess = async (event) => {
     event.preventDefault();
-    const email = attendee.email.trim();
+    const email = attendee.email.trim().toLowerCase();
     const firstName = attendee.firstName.trim();
     const lastName = attendee.lastName.trim();
     if (!email.includes('@') || !firstName || !lastName) {

@@ -57,6 +57,21 @@ export const getThinkificUserByEmail = async (email) => {
   return user || null;
 };
 
+export const ensureThinkificSsoUser = async ({ email, firstName, lastName }) => {
+  if (!email || !firstName || !lastName) {
+    throw new Error('Email, first name, and last name are required');
+  }
+
+  let user = await getThinkificUserByEmail(email);
+  if (!user?.id) {
+    user = await createThinkificUser({ email, firstName, lastName });
+  }
+  if (!user?.id) {
+    throw new Error('Could not resolve Thinkific user');
+  }
+  return user;
+};
+
 export const createThinkificUser = async ({ email, firstName, lastName }) => {
   const names = parseName(`${firstName || ''} ${lastName || ''}`.trim());
   const response = await fetch(`${THINKIFIC_REST}/users`, {

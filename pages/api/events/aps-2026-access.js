@@ -1,4 +1,5 @@
 import { isApprovedAps2026Registrant } from '../../../helpers/aps2026Registrants';
+import { ensureThinkificSsoUser } from '../../../helpers/thinkificLibrary';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,22 +16,38 @@ export default async function handler(req, res) {
     });
   }
 
+  let matched = false;
   try {
-    const matched = await isApprovedAps2026Registrant({
+    matched = await isApprovedAps2026Registrant({
       email,
       firstName,
       lastName,
     });
-    if (!matched) {
-      return res.status(403).json({
-        message: "That name and email aren't on the 2026 registration list.",
-      });
-    }
-    return res.status(200).json({ ok: true });
   } catch (error) {
     console.error('APS 2026 registration check failed', error);
     return res.status(500).json({
       message: "We couldn't check the registration list. Try again.",
     });
   }
+
+  if (!matched) {
+    return res.status(403).json({
+      message: "That name and email aren't on the 2026 registration list.",
+    });
+  }
+
+  try {
+    await ensureThinkificSsoUser({
+      email: email.toLowerCase(),
+      firstName,
+      lastName,
+    });
+  } catch (error) {
+    console.error('APS 2026 Thinkific account setup failed', error);
+    return res.status(500).json({
+      message: "We couldn't set up the learning account. Try again.",
+    });
+  }
+
+  return res.status(200).json({ ok: true });
 }
