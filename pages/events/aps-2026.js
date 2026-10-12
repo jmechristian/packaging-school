@@ -19,6 +19,8 @@ import { getAbContext, trackAbPurchaseIntent } from '../../libs/analytics';
 
 const LOGO =
   'https://packschool.s3.us-east-1.amazonaws.com/AutoPackSummit+RGB+COLOR+on+Transparent+Back.png';
+const META_IMAGE =
+  'https://autopacksummitapp94b14feadba64f23aff0ed8deae77b99bc6-dev.s3.us-east-1.amazonaws.com/public/2026/Bella%20Luna%20Photos%20Greenville%20SC-73-1280.jpg';
 const THANK_YOU_VIDEO = 'https://youtu.be/7yDlnQcywng?si=of1YfTWWXY_8ZG3k';
 const COMPLETION_COURSE =
   'https://learn.packagingschool.com/enroll/3901872?price_id=4873642';
@@ -195,7 +197,7 @@ const APS2026 = ({ photos = [] }) => {
       <Meta
         title='AutoPack Summit 2026'
         description='A look back at AutoPack Summit 2026 in Greenville: the connections from the floor and the education from the room.'
-        image={LOGO}
+        image={META_IMAGE}
       />
       <Head>
         <link rel='preconnect' href='https://fonts.googleapis.com' />
