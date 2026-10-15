@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -9,6 +10,7 @@ import {
   MdOutlineBook,
   MdDownloadForOffline,
   MdOutlineBookmarkAdd,
+  MdOutlineFactCheck,
 } from 'react-icons/md';
 import {
   getCourseByID,
@@ -231,6 +233,7 @@ const Page = ({ lib, learningOfTheMonths }) => {
     names: new Set(),
   });
   const [enrollCourse, setEnrollCourse] = useState(null);
+  const [isSalesLeader, setIsSalesLeader] = useState(false);
 
   useEffect(() => {
     const saved = consumePendingEnrollCourse();
@@ -345,6 +348,29 @@ const Page = ({ lib, learningOfTheMonths }) => {
     loadEnrollments();
   }, [loadEnrollments]);
 
+  useEffect(() => {
+    if (!user?.email) {
+      setIsSalesLeader(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+    fetch('/api/network-distribution/is-sales-leader')
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!cancelled) {
+          setIsSalesLeader(Boolean(data.isSalesLeader));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setIsSalesLeader(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.email]);
+
   const handleOpenDashboard = () => {
     navigateToThinkific(THINKIFIC_DASHBOARD, THINKIFIC_DASHBOARD);
   };
@@ -425,29 +451,44 @@ const Page = ({ lib, learningOfTheMonths }) => {
             className='w-full h-auto'
             priority
           />
-          <button
-            type='button'
-            onClick={handleAddBookmark}
-            className='absolute top-3 right-3 z-20 flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 bg-white/90 hover:bg-white hover:text-[#D3382C] shadow-sm border border-gray-200/80 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:ring-offset-1'
-            title='Add this page to your bookmarks'
-            aria-label='Add bookmark'
-          >
-            <MdOutlineBookmarkAdd size={22} />
-            <span className='text-sm font-medium'>Add Bookmark</span>
-          </button>
-          {bookmarkHint && (
-            <div
-              className='absolute top-16 right-3 z-20 px-3 py-2 rounded-lg bg-gray-800 text-white text-sm shadow-lg fade-in'
-              role='status'
-              aria-live='polite'
-            >
-              Press{' '}
-              <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>
-                {bookmarkHint}
-              </kbd>{' '}
-              to bookmark
+          <div className='absolute top-3 right-3 z-20 flex flex-col items-end gap-2'>
+            <div className='flex items-center gap-2'>
+              {isSalesLeader ? (
+                <Link
+                  href='/network-distribution/approvals'
+                  className='flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 bg-white/90 hover:bg-white hover:text-[#0A1D3A] shadow-sm border border-gray-200/80 transition-colors focus:outline-none focus:ring-2 focus:ring-[#0A1D3A] focus:ring-offset-1'
+                  title='Open enrollment approvals'
+                  aria-label='Open enrollment approvals'
+                >
+                  <MdOutlineFactCheck size={22} />
+                  <span className='text-sm font-medium'>Approvals</span>
+                </Link>
+              ) : null}
+              <button
+                type='button'
+                onClick={handleAddBookmark}
+                className='flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 bg-white/90 hover:bg-white hover:text-[#D3382C] shadow-sm border border-gray-200/80 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D3382C] focus:ring-offset-1'
+                title='Add this page to your bookmarks'
+                aria-label='Add bookmark'
+              >
+                <MdOutlineBookmarkAdd size={22} />
+                <span className='text-sm font-medium'>Add Bookmark</span>
+              </button>
             </div>
-          )}
+            {bookmarkHint && (
+              <div
+                className='px-3 py-2 rounded-lg bg-gray-800 text-white text-sm shadow-lg fade-in'
+                role='status'
+                aria-live='polite'
+              >
+                Press{' '}
+                <kbd className='font-mono font-semibold px-1.5 py-0.5 bg-gray-700 rounded'>
+                  {bookmarkHint}
+                </kbd>{' '}
+                to bookmark
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className='w-full max-w-7xl mx-auto px-4 lg:px-0 pt-8 pb-8 border-b border-gray-300'>
