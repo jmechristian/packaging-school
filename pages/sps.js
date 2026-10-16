@@ -1,7 +1,47 @@
 import { useState } from 'react';
-import Head from 'next/head';
+import Meta from '../components/shared/Meta';
+import { generateMetadata } from '../libs/seo/generateMetadata';
+import { buildBreadcrumbJsonLd } from '../libs/seo/organizationJsonLd';
 
 const CONTACT_EMAIL = 'info@packagingschool.com';
+const PAGE_PATH = '/sps';
+const PAGE_TITLE = 'Southeastern Packaging Summit | Packaging School';
+const PAGE_DESCRIPTION =
+  'Southeastern Packaging Summit, April 19–20, 2027 at the Madren Conference Center at Clemson University. From the team behind AutoPack Summit.';
+
+const metadata = generateMetadata({
+  pageType: 'STATIC',
+  pathname: PAGE_PATH,
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+});
+
+const eventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'Southeastern Packaging Summit',
+  description: PAGE_DESCRIPTION,
+  startDate: '2027-04-19',
+  endDate: '2027-04-20',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  url: 'https://packagingschool.com/sps',
+  location: {
+    '@type': 'Place',
+    name: 'Madren Conference Center at Clemson University',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Clemson',
+      addressRegion: 'SC',
+      addressCountry: 'US',
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: 'Packaging School',
+    url: 'https://packagingschool.com',
+  },
+};
 
 const interests = [
   { id: 'attend', label: 'Attend' },
@@ -47,13 +87,19 @@ export default function SoutheasternPackagingSummit() {
 
   return (
     <div className='sps-page'>
-      <Head>
-        <title>Southeastern Packaging Summit | April 19–20, 2027</title>
-        <meta
-          name='description'
-          content='Southeastern Packaging Summit, April 19–20, 2027 at the Madren Conference Center at Clemson University. A new industry event from the team behind AutoPack Summit.'
-        />
-      </Head>
+      <Meta
+        title={metadata.title}
+        description={metadata.description}
+        url={PAGE_PATH}
+        keywords='Southeastern Packaging Summit, packaging conference, Clemson University, AutoPack Summit, packaging sponsorship'
+        structuredData={[
+          eventJsonLd,
+          buildBreadcrumbJsonLd(
+            [{ name: 'Southeastern Packaging Summit', path: PAGE_PATH }],
+            'https://packagingschool.com',
+          ),
+        ]}
+      />
       <main className='sps-main'>
         <div className='sps-layout'>
         <div className='sps-copy'>
