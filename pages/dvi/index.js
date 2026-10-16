@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import {
   MdSearch,
   MdOutlineTimer,
@@ -21,14 +20,14 @@ import {
   BookmarkSquareIcon,
 } from '@heroicons/react/24/outline';
 import { Disclosure } from '@headlessui/react';
-const ReactGoogleSlides = dynamic(() => import('react-google-slides'), {
-  ssr: false,
-});
 import VideoPlayer from '../../components/VideoPlayer';
 import { cpsCourses, createNewOrder } from '../../helpers/api';
 import { useThinkificLink } from '../../hooks/useThinkificLink';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+
+const DVI_LIBRARY_PPTX_URL =
+  'https://packschool.s3.us-east-1.amazonaws.com/CurrentDVIInstructionsforLibrary.pptx';
 
 const cpsExam = {
   courseId: 'CPS-C13',
@@ -254,30 +253,27 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg aspect-[16/9] row-span-full col-span-6 col-start-7 self-end absolute top-1/3'>
-          <div className='w-full aspect-[16/9]'>
-            <ReactGoogleSlides
-              width={'100%'}
-              height={'100%'}
-              slidesLink={
-                'https://docs.google.com/presentation/d/1dBW36ISkbHXxrFKQKt6QGflL1kF72B80WqvfMy8bcUk/edit?usp=drivesdk'
-              }
-              position={1}
-              showControls
-              loop
+        <div className='w-full flex flex-col bg-[#f4f4f5] rounded-lg row-span-full col-span-6 col-start-7 self-end absolute top-1/3'>
+          <div className='w-full aspect-[16/9] overflow-hidden rounded-t-lg'>
+            <iframe
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(DVI_LIBRARY_PPTX_URL)}`}
+              className='w-full h-full'
+              frameBorder='0'
+              allowFullScreen
+              title='DVI library instructions'
             />
-            <div
-              className='flex items-center gap-1 justify-center mt-2 cursor-pointer'
-              onClick={() => {
-                window.open(
-                  'https://packschool.s3.us-east-1.amazonaws.com/4_9_25-DVI-Instructions-for-Library.pdf',
-                  '_blank',
-                );
-              }}
-            >
-              <div className='text-gray-700'>Download as PDF</div>
-              <MdDownloadForOffline className='text-gray-700' size={20} />
-            </div>
+          </div>
+          <div
+            className='flex items-center gap-1 justify-center py-3 cursor-pointer'
+            onClick={() => {
+              window.open(
+                'https://packschool.s3.us-east-1.amazonaws.com/CurrentDVIInstructionsforLibrary.pdf',
+                '_blank',
+              );
+            }}
+          >
+            <div className='text-gray-700'>Download as PDF</div>
+            <MdDownloadForOffline className='text-gray-700' size={20} />
           </div>
         </div>
       </div>
