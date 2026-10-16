@@ -46,7 +46,7 @@ const eventJsonLd = {
 const interests = [
   { id: 'attend', label: 'Attend' },
   { id: 'sponsor', label: 'Sponsor' },
-  { id: 'both', label: 'Both' },
+  { id: 'speak', label: 'Speak' },
 ];
 
 export default function SoutheasternPackagingSummit() {

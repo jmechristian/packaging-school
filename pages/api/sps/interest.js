@@ -30,8 +30,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Name and a valid email are required.' });
   }
 
-  if (!['attend', 'sponsor', 'both'].includes(interest)) {
-    return res.status(400).json({ message: 'Choose attend, sponsor, or both.' });
+  if (!['attend', 'sponsor', 'speak'].includes(interest)) {
+    return res.status(400).json({ message: 'Choose attend, sponsor, or speak.' });
   }
 
   try {
@@ -43,8 +43,6 @@ export default async function handler(req, res) {
     });
 
     try {
-      const interestLabel =
-        interest === 'both' ? 'sponsor and attend' : interest;
       await sesClient.send(
         new SendEmailCommand({
           Source: CONTACT_EMAIL,
@@ -64,7 +62,7 @@ export default async function handler(req, res) {
                   `Name: ${name}`,
                   `Email: ${email}`,
                   `Company: ${company || '—'}`,
-                  `Interest: ${interestLabel}`,
+                  `Interest: ${interest}`,
                 ].join('\n'),
               },
             },
