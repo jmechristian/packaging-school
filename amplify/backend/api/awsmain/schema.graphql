@@ -1307,6 +1307,82 @@ type EmailTemplate @model @auth(rules: [{ allow: public }]) {
   updatedBy: String
 }
 
+# Owned marketing contacts. Status is subscribed | unsubscribed | bounced | archived.
+type EmailContact @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  email: String!
+    @index(name: "emailContactByEmail", queryField: "emailContactByEmail")
+  firstName: String
+  lastName: String
+  searchText: String
+  status: String
+  source: String
+  thinkificUserId: String
+  thinkificMatched: Boolean
+  enrollmentCount: Int
+  hasPurchase: Boolean
+  acContactId: String
+  unsubscribedAt: AWSDateTime
+  archivedAt: AWSDateTime
+}
+
+type EmailList @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  description: String
+  status: String
+  memberCount: Int
+  archivedAt: AWSDateTime
+}
+
+type EmailListMembership @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  listId: ID! @index(name: "membershipByList", queryField: "membershipByList")
+  contactId: ID!
+    @index(name: "membershipByContact", queryField: "membershipByContact")
+  email: String!
+  status: String
+}
+
+type EmailCampaign @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  subject: String
+  preheader: String
+  fromName: String
+  fromEmail: String
+  templateId: ID
+  listId: ID
+  status: String
+  scheduledAt: AWSDateTime
+  htmlSnapshot: String
+  recipientCount: Int
+  sentCount: Int
+  failedCount: Int
+  openCount: Int
+  clickCount: Int
+  unsubCount: Int
+  sentAt: AWSDateTime
+  error: String
+}
+
+type EmailSend @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  campaignId: ID!
+    @index(name: "emailSendByCampaign", queryField: "emailSendByCampaign")
+  contactId: ID
+  email: String!
+  status: String
+  sesMessageId: String
+  openedAt: AWSDateTime
+  openCount: Int
+  clickedAt: AWSDateTime
+  clickCount: Int
+  lastClickedUrl: String
+  skipReason: String
+  error: String
+}
+
 type InternalDigestRecipient @model @auth(rules: [{ allow: public }]) {
   id: ID!
   email: String!
@@ -1550,6 +1626,17 @@ type CourseOutlineRequest @model @auth(rules: [{ allow: public }]) {
   page: String
 }
 
+######### Southeastern Packaging Summit #########
+
+type SpsInterest @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  email: String!
+    @index(name: "spsInterestByEmail", queryField: "spsInterestsByEmail")
+  company: String
+  interest: String
+}
+
 ######### LIBRARY ENROLLMENT APPROVAL #########
 
 type LibraryEnrollmentRequest @model @auth(rules: [{ allow: public }]) {
@@ -1600,10 +1687,7 @@ type LibraryEnrollmentRequest @model @auth(rules: [{ allow: public }]) {
 type NetworkDistributionSalesLeader @model @auth(rules: [{ allow: public }]) {
   id: ID!
   email: String!
-    @index(
-      name: "ndSalesLeaderByEmail"
-      queryField: "ndSalesLeadersByEmail"
-    )
+    @index(name: "ndSalesLeaderByEmail", queryField: "ndSalesLeadersByEmail")
   name: String
   active: Boolean @default(value: "true")
 }

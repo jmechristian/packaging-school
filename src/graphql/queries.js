@@ -4960,6 +4960,254 @@ export const listEmailTemplates = /* GraphQL */ `
     }
   }
 `;
+export const getEmailContact = /* GraphQL */ `
+  query GetEmailContact($id: ID!) {
+    getEmailContact(id: $id) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailContacts = /* GraphQL */ `
+  query ListEmailContacts(
+    $filter: ModelEmailContactFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        firstName
+        lastName
+        searchText
+        status
+        source
+        thinkificUserId
+        thinkificMatched
+        enrollmentCount
+        hasPurchase
+        acContactId
+        unsubscribedAt
+        archivedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailList = /* GraphQL */ `
+  query GetEmailList($id: ID!) {
+    getEmailList(id: $id) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailLists = /* GraphQL */ `
+  query ListEmailLists(
+    $filter: ModelEmailListFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailLists(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        status
+        memberCount
+        archivedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailListMembership = /* GraphQL */ `
+  query GetEmailListMembership($id: ID!) {
+    getEmailListMembership(id: $id) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailListMemberships = /* GraphQL */ `
+  query ListEmailListMemberships(
+    $filter: ModelEmailListMembershipFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailListMemberships(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        listId
+        contactId
+        email
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailCampaign = /* GraphQL */ `
+  query GetEmailCampaign($id: ID!) {
+    getEmailCampaign(id: $id) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailCampaigns = /* GraphQL */ `
+  query ListEmailCampaigns(
+    $filter: ModelEmailCampaignFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailCampaigns(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        subject
+        preheader
+        fromName
+        fromEmail
+        templateId
+        listId
+        status
+        scheduledAt
+        htmlSnapshot
+        recipientCount
+        sentCount
+        failedCount
+        openCount
+        clickCount
+        unsubCount
+        sentAt
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailSend = /* GraphQL */ `
+  query GetEmailSend($id: ID!) {
+    getEmailSend(id: $id) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailSends = /* GraphQL */ `
+  query ListEmailSends(
+    $filter: ModelEmailSendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailSends(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        campaignId
+        contactId
+        email
+        status
+        sesMessageId
+        openedAt
+        openCount
+        clickedAt
+        clickCount
+        lastClickedUrl
+        skipReason
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getInternalDigestRecipient = /* GraphQL */ `
   query GetInternalDigestRecipient($id: ID!) {
     getInternalDigestRecipient(id: $id) {
@@ -5906,6 +6154,42 @@ export const listCourseOutlineRequests = /* GraphQL */ `
         country
         device
         page
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getSpsInterest = /* GraphQL */ `
+  query GetSpsInterest($id: ID!) {
+    getSpsInterest(id: $id) {
+      id
+      name
+      email
+      company
+      interest
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listSpsInterests = /* GraphQL */ `
+  query ListSpsInterests(
+    $filter: ModelSpsInterestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSpsInterests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        company
+        interest
         createdAt
         updatedAt
         __typename
@@ -10308,6 +10592,143 @@ export const emailTemplateBySlug = /* GraphQL */ `
     }
   }
 `;
+export const emailContactByEmail = /* GraphQL */ `
+  query EmailContactByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailContactFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailContactByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        firstName
+        lastName
+        searchText
+        status
+        source
+        thinkificUserId
+        thinkificMatched
+        enrollmentCount
+        hasPurchase
+        acContactId
+        unsubscribedAt
+        archivedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const membershipByList = /* GraphQL */ `
+  query MembershipByList(
+    $listId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailListMembershipFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    membershipByList(
+      listId: $listId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        listId
+        contactId
+        email
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const membershipByContact = /* GraphQL */ `
+  query MembershipByContact(
+    $contactId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailListMembershipFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    membershipByContact(
+      contactId: $contactId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        listId
+        contactId
+        email
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailSendByCampaign = /* GraphQL */ `
+  query EmailSendByCampaign(
+    $campaignId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailSendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailSendByCampaign(
+      campaignId: $campaignId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignId
+        contactId
+        email
+        status
+        sesMessageId
+        openedAt
+        openCount
+        clickedAt
+        clickCount
+        lastClickedUrl
+        skipReason
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const internalDigestRecipientByEmail = /* GraphQL */ `
   query InternalDigestRecipientByEmail(
     $email: String!
@@ -10679,6 +11100,36 @@ export const searchLogsByTimestampAndId = /* GraphQL */ `
         rating_comment
         rating_timestamp
         helpful
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const spsInterestsByEmail = /* GraphQL */ `
+  query SpsInterestsByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelSpsInterestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    spsInterestsByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        email
+        company
+        interest
         createdAt
         updatedAt
         __typename

@@ -57,6 +57,7 @@ const Layout = ({ children }) => {
       needsOnboarding &&
       router.pathname !== '/profile' &&
       router.pathname !== '/network-distribution' &&
+      router.pathname !== '/sps' &&
       router.pathname !== '/auth/popup-complete'
     ) {
       router.push('/profile');

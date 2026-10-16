@@ -8602,6 +8602,357 @@ export const deleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const createEmailContact = /* GraphQL */ `
+  mutation CreateEmailContact(
+    $input: CreateEmailContactInput!
+    $condition: ModelEmailContactConditionInput
+  ) {
+    createEmailContact(input: $input, condition: $condition) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailContact = /* GraphQL */ `
+  mutation UpdateEmailContact(
+    $input: UpdateEmailContactInput!
+    $condition: ModelEmailContactConditionInput
+  ) {
+    updateEmailContact(input: $input, condition: $condition) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailContact = /* GraphQL */ `
+  mutation DeleteEmailContact(
+    $input: DeleteEmailContactInput!
+    $condition: ModelEmailContactConditionInput
+  ) {
+    deleteEmailContact(input: $input, condition: $condition) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailList = /* GraphQL */ `
+  mutation CreateEmailList(
+    $input: CreateEmailListInput!
+    $condition: ModelEmailListConditionInput
+  ) {
+    createEmailList(input: $input, condition: $condition) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailList = /* GraphQL */ `
+  mutation UpdateEmailList(
+    $input: UpdateEmailListInput!
+    $condition: ModelEmailListConditionInput
+  ) {
+    updateEmailList(input: $input, condition: $condition) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailList = /* GraphQL */ `
+  mutation DeleteEmailList(
+    $input: DeleteEmailListInput!
+    $condition: ModelEmailListConditionInput
+  ) {
+    deleteEmailList(input: $input, condition: $condition) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailListMembership = /* GraphQL */ `
+  mutation CreateEmailListMembership(
+    $input: CreateEmailListMembershipInput!
+    $condition: ModelEmailListMembershipConditionInput
+  ) {
+    createEmailListMembership(input: $input, condition: $condition) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailListMembership = /* GraphQL */ `
+  mutation UpdateEmailListMembership(
+    $input: UpdateEmailListMembershipInput!
+    $condition: ModelEmailListMembershipConditionInput
+  ) {
+    updateEmailListMembership(input: $input, condition: $condition) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailListMembership = /* GraphQL */ `
+  mutation DeleteEmailListMembership(
+    $input: DeleteEmailListMembershipInput!
+    $condition: ModelEmailListMembershipConditionInput
+  ) {
+    deleteEmailListMembership(input: $input, condition: $condition) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailCampaign = /* GraphQL */ `
+  mutation CreateEmailCampaign(
+    $input: CreateEmailCampaignInput!
+    $condition: ModelEmailCampaignConditionInput
+  ) {
+    createEmailCampaign(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailCampaign = /* GraphQL */ `
+  mutation UpdateEmailCampaign(
+    $input: UpdateEmailCampaignInput!
+    $condition: ModelEmailCampaignConditionInput
+  ) {
+    updateEmailCampaign(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailCampaign = /* GraphQL */ `
+  mutation DeleteEmailCampaign(
+    $input: DeleteEmailCampaignInput!
+    $condition: ModelEmailCampaignConditionInput
+  ) {
+    deleteEmailCampaign(input: $input, condition: $condition) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailSend = /* GraphQL */ `
+  mutation CreateEmailSend(
+    $input: CreateEmailSendInput!
+    $condition: ModelEmailSendConditionInput
+  ) {
+    createEmailSend(input: $input, condition: $condition) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailSend = /* GraphQL */ `
+  mutation UpdateEmailSend(
+    $input: UpdateEmailSendInput!
+    $condition: ModelEmailSendConditionInput
+  ) {
+    updateEmailSend(input: $input, condition: $condition) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailSend = /* GraphQL */ `
+  mutation DeleteEmailSend(
+    $input: DeleteEmailSendInput!
+    $condition: ModelEmailSendConditionInput
+  ) {
+    deleteEmailSend(input: $input, condition: $condition) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createInternalDigestRecipient = /* GraphQL */ `
   mutation CreateInternalDigestRecipient(
     $input: CreateInternalDigestRecipientInput!
@@ -10195,6 +10546,57 @@ export const deleteCourseOutlineRequest = /* GraphQL */ `
       country
       device
       page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createSpsInterest = /* GraphQL */ `
+  mutation CreateSpsInterest(
+    $input: CreateSpsInterestInput!
+    $condition: ModelSpsInterestConditionInput
+  ) {
+    createSpsInterest(input: $input, condition: $condition) {
+      id
+      name
+      email
+      company
+      interest
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateSpsInterest = /* GraphQL */ `
+  mutation UpdateSpsInterest(
+    $input: UpdateSpsInterestInput!
+    $condition: ModelSpsInterestConditionInput
+  ) {
+    updateSpsInterest(input: $input, condition: $condition) {
+      id
+      name
+      email
+      company
+      interest
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteSpsInterest = /* GraphQL */ `
+  mutation DeleteSpsInterest(
+    $input: DeleteSpsInterestInput!
+    $condition: ModelSpsInterestConditionInput
+  ) {
+    deleteSpsInterest(input: $input, condition: $condition) {
+      id
+      name
+      email
+      company
+      interest
       createdAt
       updatedAt
       __typename

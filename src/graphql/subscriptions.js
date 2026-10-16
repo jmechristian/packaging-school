@@ -8215,6 +8215,342 @@ export const onDeleteEmailTemplate = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEmailContact = /* GraphQL */ `
+  subscription OnCreateEmailContact(
+    $filter: ModelSubscriptionEmailContactFilterInput
+  ) {
+    onCreateEmailContact(filter: $filter) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailContact = /* GraphQL */ `
+  subscription OnUpdateEmailContact(
+    $filter: ModelSubscriptionEmailContactFilterInput
+  ) {
+    onUpdateEmailContact(filter: $filter) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailContact = /* GraphQL */ `
+  subscription OnDeleteEmailContact(
+    $filter: ModelSubscriptionEmailContactFilterInput
+  ) {
+    onDeleteEmailContact(filter: $filter) {
+      id
+      email
+      firstName
+      lastName
+      searchText
+      status
+      source
+      thinkificUserId
+      thinkificMatched
+      enrollmentCount
+      hasPurchase
+      acContactId
+      unsubscribedAt
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailList = /* GraphQL */ `
+  subscription OnCreateEmailList(
+    $filter: ModelSubscriptionEmailListFilterInput
+  ) {
+    onCreateEmailList(filter: $filter) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailList = /* GraphQL */ `
+  subscription OnUpdateEmailList(
+    $filter: ModelSubscriptionEmailListFilterInput
+  ) {
+    onUpdateEmailList(filter: $filter) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailList = /* GraphQL */ `
+  subscription OnDeleteEmailList(
+    $filter: ModelSubscriptionEmailListFilterInput
+  ) {
+    onDeleteEmailList(filter: $filter) {
+      id
+      name
+      description
+      status
+      memberCount
+      archivedAt
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailListMembership = /* GraphQL */ `
+  subscription OnCreateEmailListMembership(
+    $filter: ModelSubscriptionEmailListMembershipFilterInput
+  ) {
+    onCreateEmailListMembership(filter: $filter) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailListMembership = /* GraphQL */ `
+  subscription OnUpdateEmailListMembership(
+    $filter: ModelSubscriptionEmailListMembershipFilterInput
+  ) {
+    onUpdateEmailListMembership(filter: $filter) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailListMembership = /* GraphQL */ `
+  subscription OnDeleteEmailListMembership(
+    $filter: ModelSubscriptionEmailListMembershipFilterInput
+  ) {
+    onDeleteEmailListMembership(filter: $filter) {
+      id
+      listId
+      contactId
+      email
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailCampaign = /* GraphQL */ `
+  subscription OnCreateEmailCampaign(
+    $filter: ModelSubscriptionEmailCampaignFilterInput
+  ) {
+    onCreateEmailCampaign(filter: $filter) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailCampaign = /* GraphQL */ `
+  subscription OnUpdateEmailCampaign(
+    $filter: ModelSubscriptionEmailCampaignFilterInput
+  ) {
+    onUpdateEmailCampaign(filter: $filter) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailCampaign = /* GraphQL */ `
+  subscription OnDeleteEmailCampaign(
+    $filter: ModelSubscriptionEmailCampaignFilterInput
+  ) {
+    onDeleteEmailCampaign(filter: $filter) {
+      id
+      name
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      listId
+      status
+      scheduledAt
+      htmlSnapshot
+      recipientCount
+      sentCount
+      failedCount
+      openCount
+      clickCount
+      unsubCount
+      sentAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailSend = /* GraphQL */ `
+  subscription OnCreateEmailSend(
+    $filter: ModelSubscriptionEmailSendFilterInput
+  ) {
+    onCreateEmailSend(filter: $filter) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailSend = /* GraphQL */ `
+  subscription OnUpdateEmailSend(
+    $filter: ModelSubscriptionEmailSendFilterInput
+  ) {
+    onUpdateEmailSend(filter: $filter) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailSend = /* GraphQL */ `
+  subscription OnDeleteEmailSend(
+    $filter: ModelSubscriptionEmailSendFilterInput
+  ) {
+    onDeleteEmailSend(filter: $filter) {
+      id
+      campaignId
+      contactId
+      email
+      status
+      sesMessageId
+      openedAt
+      openCount
+      clickedAt
+      clickCount
+      lastClickedUrl
+      skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateInternalDigestRecipient = /* GraphQL */ `
   subscription OnCreateInternalDigestRecipient(
     $filter: ModelSubscriptionInternalDigestRecipientFilterInput
@@ -9709,6 +10045,54 @@ export const onDeleteCourseOutlineRequest = /* GraphQL */ `
       country
       device
       page
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateSpsInterest = /* GraphQL */ `
+  subscription OnCreateSpsInterest(
+    $filter: ModelSubscriptionSpsInterestFilterInput
+  ) {
+    onCreateSpsInterest(filter: $filter) {
+      id
+      name
+      email
+      company
+      interest
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateSpsInterest = /* GraphQL */ `
+  subscription OnUpdateSpsInterest(
+    $filter: ModelSubscriptionSpsInterestFilterInput
+  ) {
+    onUpdateSpsInterest(filter: $filter) {
+      id
+      name
+      email
+      company
+      interest
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteSpsInterest = /* GraphQL */ `
+  subscription OnDeleteSpsInterest(
+    $filter: ModelSubscriptionSpsInterestFilterInput
+  ) {
+    onDeleteSpsInterest(filter: $filter) {
+      id
+      name
+      email
+      company
+      interest
       createdAt
       updatedAt
       __typename
