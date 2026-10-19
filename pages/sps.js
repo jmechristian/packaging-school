@@ -137,6 +137,13 @@ export default function SoutheasternPackagingSummit() {
           <p className='sps-where'>
             Madren Conference Center at Clemson University
           </p>
+          <aside className='sps-mission'>
+            <p className='sps-kicker'>Mission</p>
+            <p>
+              Connect southeastern companies with southeastern packaging
+              providers in the most innovative packaging space.
+            </p>
+          </aside>
           <p className='sps-tagline'>
             From the team producing{' '}
             <a href='https://autopacksummit.com'>AutoPackSummit.com</a> — a sold-out
@@ -318,8 +325,26 @@ export default function SoutheasternPackagingSummit() {
           font-size: 16px;
           line-height: 1.55;
         }
+        .sps-mission {
+          margin: 26px auto 0;
+          max-width: 520px;
+          padding: 18px 20px 20px 22px;
+          text-align: left;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          box-shadow: inset 3px 0 0 #e05020;
+        }
+        .sps-mission p:last-child {
+          margin: 0;
+          color: #fff;
+          font-size: 20px;
+          font-weight: 550;
+          line-height: 1.35;
+          letter-spacing: -0.02em;
+        }
         .sps-tagline {
-          margin-top: 22px;
+          margin-top: 18px;
         }
         .sps-contact {
           margin-top: 8px;
@@ -434,6 +459,7 @@ export default function SoutheasternPackagingSummit() {
             margin-left: 0;
           }
           .sps-where,
+          .sps-mission,
           .sps-tagline,
           .sps-contact,
           .sps-note {
