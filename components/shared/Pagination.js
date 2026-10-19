@@ -5,6 +5,7 @@ const Pagination = ({
   itemsPerPage,
   currentPage,
   onPageChange,
+  plain = false,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -19,7 +20,9 @@ const Pagination = ({
             className={`${
               number === currentPage
                 ? 'bg-clemson'
-                : 'transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
+                : plain
+                  ? 'bg-white hover:bg-neutral-100'
+                  : 'transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 shadow-[2px_2px_0px_black] hover:shadow-[6px_6px_0px_black]'
             } w-9 h-9 flex items-center justify-center border border-black font-semibold`}
           >
             {number}
