@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { MdApps, MdDehaze, MdSort, MdOutlineSearch } from 'react-icons/md';
@@ -23,6 +24,42 @@ import {
 import { resolveIndexPayload } from '../../utils/indexPayload';
 import Meta from '../../components/shared/Meta';
 import { generateMetadata } from '../../libs/seo/generateMetadata';
+
+const LOTM_LOGO =
+  'https://packschool.s3.us-east-1.amazonaws.com/LOTM-Logo-Final_White.png';
+
+const LearningOfTheMonthCallout = () => (
+  <Link
+    href='/learning-of-the-month'
+    className='flex flex-col items-start gap-5 border border-black bg-base-brand/10 px-8 py-5 transition-colors hover:bg-base-brand/15 md:!flex-row md:!items-center md:!gap-8 md:px-10 md:py-6'
+  >
+    <div
+      className='flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-brand-yellow-light'
+      aria-hidden='true'
+    >
+      <div
+        className='h-[70%] w-[70%] bg-contain bg-center bg-no-repeat'
+        style={{ backgroundImage: `url(${LOTM_LOGO})` }}
+      />
+    </div>
+    <div className='flex min-w-0 flex-1 flex-col gap-1.5'>
+      <p className='text-xs font-semibold uppercase tracking-[0.18em] text-base-dark'>
+        Monthly series
+      </p>
+      <p className='text-xl font-semibold leading-tight text-neutral-900 md:text-2xl'>
+        Learning of the Month
+      </p>
+      <p className='max-w-3xl text-sm leading-snug text-neutral-700 md:text-base'>
+        Each month, the Packaging School team comes together to develop a short
+        lesson related to numerous industry topics—from site visits, deep
+        dives, and interviews.
+      </p>
+    </div>
+    <div className='shrink-0 text-sm font-semibold uppercase tracking-wide text-clemson-dark'>
+      Browse the library
+    </div>
+  </Link>
+);
 
 const getLessonsQuery = /* GraphQL */ `
   query MyQuery {
@@ -305,6 +342,7 @@ const Page = () => {
             />
           </div>
         </div>
+        <LearningOfTheMonthCallout />
         <div className='w-full flex flex-col gap-5'>
           {/* HEADING */}
           <div

@@ -48,6 +48,7 @@ function generateSiteMap(lessons, courses, careers) {
     '/food-packaging',
     '/glossary',
     '/isbt',
+    '/learning-of-the-month',
     '/library',
     '/pack-design-workshop-for-educators',
     '/packaging-events',

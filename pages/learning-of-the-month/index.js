@@ -12,7 +12,11 @@ import {
   registgerLessonClick,
 } from '../../helpers/api';
 import { getAuthor } from '../../src/graphql/queries';
-import { buildBreadcrumbJsonLd } from '../../libs/seo/organizationJsonLd';
+import { generateMetadata } from '../../libs/seo/generateMetadata';
+import {
+  buildBreadcrumbJsonLd,
+  buildHomeJsonLd,
+} from '../../libs/seo/organizationJsonLd';
 
 const PAGE_SIZE = 9;
 const LOTM_LOGO =
@@ -21,6 +25,12 @@ const DEFAULT_AVATAR =
   'https://packschool.s3.amazonaws.com/avatar_default.jpeg';
 const INTRO =
   'Each month, the Packaging School team comes together to develop a short lesson related to numerous industry topics—from site visits, deep dives, and interviews, our LOTM series is designed to help you keep your finger on the pulse of the dynamic packaging industry.';
+const PAGE_PATH = '/learning-of-the-month';
+const PAGE_TITLE = 'The Learning of the Month Library | Packaging School';
+const PAGE_DESCRIPTION =
+  'Explore Learning of the Month: short Packaging School lessons from site visits, deep dives, and interviews, published every month.';
+const PAGE_KEYWORDS =
+  'Learning of the Month, LOTM, packaging lessons, packaging industry, site visits, packaging interviews, packaging deep dives';
 
 const lessonTimestamp = (lesson) => {
   const raw = lesson?.backdate || lesson?.createdAt;
@@ -153,6 +163,67 @@ const CardSkeleton = () => (
   </div>
 );
 
+const toIsoDate = (lesson) => {
+  const time = lessonTimestamp(lesson);
+  return time ? new Date(time).toISOString() : undefined;
+};
+
+const buildLotmStructuredData = (lessons, siteUrl) => {
+  const pageUrl = `${siteUrl}${PAGE_PATH}`;
+  const { organization, website } = buildHomeJsonLd(siteUrl);
+  const breadcrumb = buildBreadcrumbJsonLd(
+    [{ name: 'Learning of the Month', path: PAGE_PATH }],
+    siteUrl,
+  );
+
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${pageUrl}#lessons`,
+    name: 'Learning of the Month Library',
+    description: INTRO,
+    url: pageUrl,
+    itemListOrder: 'https://schema.org/ItemListOrderDescending',
+    numberOfItems: lessons.length,
+    itemListElement: lessons.slice(0, 100).map((lesson, index) => {
+      const url = `${siteUrl}/lessons/${lesson.slug}`;
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        url,
+        item: {
+          '@type': 'Article',
+          headline: lesson.title,
+          description: lesson.subhead || undefined,
+          image: lesson.seoImage || undefined,
+          datePublished: toIsoDate(lesson),
+          url,
+          mainEntityOfPage: url,
+          publisher: { '@id': `${siteUrl}/#organization` },
+        },
+      };
+    }),
+  };
+
+  const collectionPage = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${pageUrl}#webpage`,
+    url: pageUrl,
+    name: 'Learning of the Month Library',
+    headline: 'Learning of the Month Library',
+    description: INTRO,
+    inLanguage: 'en-US',
+    isPartOf: { '@id': `${siteUrl}/#website` },
+    publisher: { '@id': `${siteUrl}/#organization` },
+    mainEntity: { '@id': `${pageUrl}#lessons` },
+  };
+
+  return [organization, website, breadcrumb, collectionPage, itemList].filter(
+    Boolean,
+  );
+};
+
 const SignupCallout = () => (
   <section className='border border-black bg-base-brand/15'>
     <div className='grid items-center gap-8 p-6 md:p-10 lg:grid-cols-[auto_1fr_minmax(280px,420px)]'>
@@ -174,14 +245,16 @@ const SignupCallout = () => (
   </section>
 );
 
-const Page = () => {
+const Page = ({ initialLessons = [], initialAuthors = {} }) => {
   const router = useRouter();
   const { location } = useSelector((state) => state.auth);
   const libraryRef = useRef(null);
-  const [lessons, setLessons] = useState([]);
-  const [authors, setAuthors] = useState({});
-  const [authorsLoaded, setAuthorsLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [lessons, setLessons] = useState(initialLessons);
+  const [authors, setAuthors] = useState(initialAuthors);
+  const [authorsLoaded, setAuthorsLoaded] = useState(
+    Object.keys(initialAuthors).length > 0,
+  );
+  const [isLoading, setIsLoading] = useState(initialLessons.length === 0);
   const [hasError, setHasError] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -190,6 +263,8 @@ const Page = () => {
     process.env.NEXT_PUBLIC_SITE_URL || 'https://packagingschool.com';
 
   useEffect(() => {
+    if (initialLessons.length > 0) return undefined;
+
     let cancelled = false;
 
     const loadLessons = async () => {
@@ -208,7 +283,7 @@ const Page = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialLessons.length]);
 
   const sortedLessons = useMemo(() => {
     return [...lessons]
@@ -217,7 +292,7 @@ const Page = () => {
   }, [lessons]);
 
   useEffect(() => {
-    if (isLoading) return undefined;
+    if (isLoading || Object.keys(initialAuthors).length > 0) return undefined;
 
     const ids = [
       ...new Set(sortedLessons.flatMap((lesson) => authorIdsFor(lesson))),
@@ -255,7 +330,7 @@ const Page = () => {
     return () => {
       cancelled = true;
     };
-  }, [sortedLessons, isLoading]);
+  }, [sortedLessons, isLoading, initialAuthors]);
 
   const filteredLessons = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -273,31 +348,21 @@ const Page = () => {
     return filteredLessons.slice(start, start + PAGE_SIZE);
   }, [filteredLessons, currentPage]);
 
-  const structuredData = useMemo(() => {
-    const breadcrumb = buildBreadcrumbJsonLd(
-      [{ name: 'Learning of the Month', path: '/learning-of-the-month' }],
-      siteUrl,
-    );
+  const metadata = generateMetadata({
+    pageType: 'STATIC',
+    pathname: PAGE_PATH,
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  });
 
-    const itemList =
-      sortedLessons.length > 0
-        ? {
-            '@context': 'https://schema.org',
-            '@type': 'ItemList',
-            name: 'Learning of the Month Library',
-            itemListOrder: 'https://schema.org/ItemListOrderDescending',
-            numberOfItems: sortedLessons.length,
-            itemListElement: sortedLessons.slice(0, 100).map((lesson, index) => ({
-              '@type': 'ListItem',
-              position: index + 1,
-              name: lesson.title,
-              url: `${siteUrl}/lessons/${lesson.slug}`,
-            })),
-          }
-        : null;
+  const structuredData = useMemo(
+    () => buildLotmStructuredData(sortedLessons, siteUrl),
+    [sortedLessons, siteUrl],
+  );
 
-    return [breadcrumb, itemList].filter(Boolean);
-  }, [sortedLessons, siteUrl]);
+  const shareImage =
+    sortedLessons.find((lesson) => lesson.seoImage)?.seoImage ||
+    'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp';
 
   const handleSearch = (value) => {
     setSearchTerm(value);
@@ -324,10 +389,14 @@ const Page = () => {
   return (
     <>
       <Meta
-        title='Learning of the Month Library | Packaging School'
-        description='Browse monthly Packaging School lessons from site visits, deep dives, and interviews across the packaging industry.'
-        image='https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
-        url='/learning-of-the-month'
+        title={metadata.title}
+        description={metadata.description}
+        keywords={PAGE_KEYWORDS}
+        image={shareImage}
+        preloadImage={shareImage}
+        url={PAGE_PATH}
+        robots={metadata.robots}
+        type='website'
         structuredData={structuredData}
       />
       <div className='bg-white'>
@@ -428,5 +497,66 @@ const Page = () => {
     </>
   );
 };
+
+const slimLesson = (lesson) => ({
+  id: lesson.id,
+  title: lesson.title || '',
+  subhead: lesson.subhead || '',
+  seoImage: lesson.seoImage || '',
+  slug: lesson.slug,
+  author: authorIdsFor(lesson),
+  backdate: lesson.backdate || null,
+  createdAt: lesson.createdAt || null,
+  type: lesson.type || 'LOTM',
+});
+
+export async function getStaticProps() {
+  try {
+    const lessons = await getAllLearningOfTheMonths();
+    const published = (lessons || [])
+      .filter((lesson) => lesson?.type === 'LOTM' && lesson?.slug)
+      .sort((a, b) => lessonTimestamp(b) - lessonTimestamp(a))
+      .map(slimLesson);
+
+    const ids = [...new Set(published.flatMap((lesson) => lesson.author))];
+    const entries = await Promise.all(
+      ids.map(async (id) => {
+        try {
+          const result = await API.graphql({
+            query: getAuthor,
+            variables: { id },
+          });
+          const author = result?.data?.getAuthor;
+          if (!author?.name) return null;
+          return [
+            id,
+            {
+              id: author.id,
+              name: author.name,
+              headshot: author.headshot || null,
+              linkedIn: author.linkedIn || null,
+            },
+          ];
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    return {
+      props: {
+        initialLessons: published,
+        initialAuthors: Object.fromEntries(entries.filter(Boolean)),
+      },
+      revalidate: 60 * 60,
+    };
+  } catch (error) {
+    console.error('Error building Learning of the Month page:', error);
+    return {
+      props: { initialLessons: [], initialAuthors: {} },
+      revalidate: 60,
+    };
+  }
+}
 
 export default Page;
