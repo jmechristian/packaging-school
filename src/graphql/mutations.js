@@ -8886,6 +8886,7 @@ export const createEmailSend = /* GraphQL */ `
     createEmailSend(input: $input, condition: $condition) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8911,6 +8912,7 @@ export const updateEmailSend = /* GraphQL */ `
     updateEmailSend(input: $input, condition: $condition) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8936,6 +8938,7 @@ export const deleteEmailSend = /* GraphQL */ `
     deleteEmailSend(input: $input, condition: $condition) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8946,6 +8949,162 @@ export const deleteEmailSend = /* GraphQL */ `
       clickCount
       lastClickedUrl
       skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailAutomation = /* GraphQL */ `
+  mutation CreateEmailAutomation(
+    $input: CreateEmailAutomationInput!
+    $condition: ModelEmailAutomationConditionInput
+  ) {
+    createEmailAutomation(input: $input, condition: $condition) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailAutomation = /* GraphQL */ `
+  mutation UpdateEmailAutomation(
+    $input: UpdateEmailAutomationInput!
+    $condition: ModelEmailAutomationConditionInput
+  ) {
+    updateEmailAutomation(input: $input, condition: $condition) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailAutomation = /* GraphQL */ `
+  mutation DeleteEmailAutomation(
+    $input: DeleteEmailAutomationInput!
+    $condition: ModelEmailAutomationConditionInput
+  ) {
+    deleteEmailAutomation(input: $input, condition: $condition) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEmailAutomationRun = /* GraphQL */ `
+  mutation CreateEmailAutomationRun(
+    $input: CreateEmailAutomationRunInput!
+    $condition: ModelEmailAutomationRunConditionInput
+  ) {
+    createEmailAutomationRun(input: $input, condition: $condition) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmailAutomationRun = /* GraphQL */ `
+  mutation UpdateEmailAutomationRun(
+    $input: UpdateEmailAutomationRunInput!
+    $condition: ModelEmailAutomationRunConditionInput
+  ) {
+    updateEmailAutomationRun(input: $input, condition: $condition) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmailAutomationRun = /* GraphQL */ `
+  mutation DeleteEmailAutomationRun(
+    $input: DeleteEmailAutomationRunInput!
+    $condition: ModelEmailAutomationRunConditionInput
+  ) {
+    deleteEmailAutomationRun(input: $input, condition: $condition) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
       error
       createdAt
       updatedAt

@@ -5161,6 +5161,7 @@ export const getEmailSend = /* GraphQL */ `
     getEmailSend(id: $id) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -5188,6 +5189,7 @@ export const listEmailSends = /* GraphQL */ `
       items {
         id
         campaignId
+        automationRunId
         contactId
         email
         status
@@ -5198,6 +5200,122 @@ export const listEmailSends = /* GraphQL */ `
         clickCount
         lastClickedUrl
         skipReason
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailAutomation = /* GraphQL */ `
+  query GetEmailAutomation($id: ID!) {
+    getEmailAutomation(id: $id) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailAutomations = /* GraphQL */ `
+  query ListEmailAutomations(
+    $filter: ModelEmailAutomationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailAutomations(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        key
+        name
+        status
+        sendDay
+        sendTime
+        subject
+        preheader
+        fromName
+        fromEmail
+        templateId
+        audience
+        lastRunOn
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmailAutomationRun = /* GraphQL */ `
+  query GetEmailAutomationRun($id: ID!) {
+    getEmailAutomationRun(id: $id) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmailAutomationRuns = /* GraphQL */ `
+  query ListEmailAutomationRuns(
+    $filter: ModelEmailAutomationRunFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmailAutomationRuns(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        automationId
+        runOn
+        status
+        subject
+        recipientCount
+        sentCount
+        failedCount
+        skippedCount
+        openCount
+        clickCount
+        unsubCount
+        startedAt
+        finishedAt
         error
         createdAt
         updatedAt
@@ -10709,6 +10827,7 @@ export const emailSendByCampaign = /* GraphQL */ `
       items {
         id
         campaignId
+        automationRunId
         contactId
         email
         status
@@ -10719,6 +10838,123 @@ export const emailSendByCampaign = /* GraphQL */ `
         clickCount
         lastClickedUrl
         skipReason
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailSendByRun = /* GraphQL */ `
+  query EmailSendByRun(
+    $automationRunId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailSendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailSendByRun(
+      automationRunId: $automationRunId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignId
+        automationRunId
+        contactId
+        email
+        status
+        sesMessageId
+        openedAt
+        openCount
+        clickedAt
+        clickCount
+        lastClickedUrl
+        skipReason
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailAutomationByKey = /* GraphQL */ `
+  query EmailAutomationByKey(
+    $key: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailAutomationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailAutomationByKey(
+      key: $key
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        key
+        name
+        status
+        sendDay
+        sendTime
+        subject
+        preheader
+        fromName
+        fromEmail
+        templateId
+        audience
+        lastRunOn
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailAutomationRunByAutomation = /* GraphQL */ `
+  query EmailAutomationRunByAutomation(
+    $automationId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailAutomationRunFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailAutomationRunByAutomation(
+      automationId: $automationId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        automationId
+        runOn
+        status
+        subject
+        recipientCount
+        sentCount
+        failedCount
+        skippedCount
+        openCount
+        clickCount
+        unsubCount
+        startedAt
+        finishedAt
         error
         createdAt
         updatedAt

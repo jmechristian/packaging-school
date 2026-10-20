@@ -1368,8 +1368,10 @@ type EmailCampaign @model @auth(rules: [{ allow: public }]) {
 
 type EmailSend @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  campaignId: ID!
+  campaignId: ID
     @index(name: "emailSendByCampaign", queryField: "emailSendByCampaign")
+  automationRunId: ID
+    @index(name: "emailSendByRun", queryField: "emailSendByRun")
   contactId: ID
   email: String!
   status: String
@@ -1380,6 +1382,44 @@ type EmailSend @model @auth(rules: [{ allow: public }]) {
   clickCount: Int
   lastClickedUrl: String
   skipReason: String
+  error: String
+}
+
+# Weekly automation. status is on | off. sendDay is Mon–Sun. sendTime is HH:mm Eastern.
+type EmailAutomation @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  key: String!
+    @index(name: "emailAutomationByKey", queryField: "emailAutomationByKey")
+  name: String!
+  status: String
+  sendDay: String
+  sendTime: String
+  subject: String
+  preheader: String
+  fromName: String
+  fromEmail: String
+  templateId: ID
+  audience: String
+  lastRunOn: String
+}
+
+# One execution of an automation. status is RUNNING | SENT | FAILED.
+type EmailAutomationRun @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  automationId: ID!
+    @index(name: "emailAutomationRunByAutomation", queryField: "emailAutomationRunByAutomation")
+  runOn: String
+  status: String
+  subject: String
+  recipientCount: Int
+  sentCount: Int
+  failedCount: Int
+  skippedCount: Int
+  openCount: Int
+  clickCount: Int
+  unsubCount: Int
+  startedAt: AWSDateTime
+  finishedAt: AWSDateTime
   error: String
 }
 

@@ -8486,6 +8486,7 @@ export const onCreateEmailSend = /* GraphQL */ `
     onCreateEmailSend(filter: $filter) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8510,6 +8511,7 @@ export const onUpdateEmailSend = /* GraphQL */ `
     onUpdateEmailSend(filter: $filter) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8534,6 +8536,7 @@ export const onDeleteEmailSend = /* GraphQL */ `
     onDeleteEmailSend(filter: $filter) {
       id
       campaignId
+      automationRunId
       contactId
       email
       status
@@ -8544,6 +8547,156 @@ export const onDeleteEmailSend = /* GraphQL */ `
       clickCount
       lastClickedUrl
       skipReason
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailAutomation = /* GraphQL */ `
+  subscription OnCreateEmailAutomation(
+    $filter: ModelSubscriptionEmailAutomationFilterInput
+  ) {
+    onCreateEmailAutomation(filter: $filter) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailAutomation = /* GraphQL */ `
+  subscription OnUpdateEmailAutomation(
+    $filter: ModelSubscriptionEmailAutomationFilterInput
+  ) {
+    onUpdateEmailAutomation(filter: $filter) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailAutomation = /* GraphQL */ `
+  subscription OnDeleteEmailAutomation(
+    $filter: ModelSubscriptionEmailAutomationFilterInput
+  ) {
+    onDeleteEmailAutomation(filter: $filter) {
+      id
+      key
+      name
+      status
+      sendDay
+      sendTime
+      subject
+      preheader
+      fromName
+      fromEmail
+      templateId
+      audience
+      lastRunOn
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEmailAutomationRun = /* GraphQL */ `
+  subscription OnCreateEmailAutomationRun(
+    $filter: ModelSubscriptionEmailAutomationRunFilterInput
+  ) {
+    onCreateEmailAutomationRun(filter: $filter) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEmailAutomationRun = /* GraphQL */ `
+  subscription OnUpdateEmailAutomationRun(
+    $filter: ModelSubscriptionEmailAutomationRunFilterInput
+  ) {
+    onUpdateEmailAutomationRun(filter: $filter) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEmailAutomationRun = /* GraphQL */ `
+  subscription OnDeleteEmailAutomationRun(
+    $filter: ModelSubscriptionEmailAutomationRunFilterInput
+  ) {
+    onDeleteEmailAutomationRun(filter: $filter) {
+      id
+      automationId
+      runOn
+      status
+      subject
+      recipientCount
+      sentCount
+      failedCount
+      skippedCount
+      openCount
+      clickCount
+      unsubCount
+      startedAt
+      finishedAt
       error
       createdAt
       updatedAt
