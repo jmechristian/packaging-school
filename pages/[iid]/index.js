@@ -42,7 +42,7 @@ const Page = ({ indexPage, indexPayload }) => {
       : router.push(
           `/${
             type && type === 'COLLECTION' ? 'collections' : 'courses'
-          }/${slug}`
+          }/${slug}`,
         );
   };
 
@@ -257,9 +257,9 @@ const Page = ({ indexPage, indexPayload }) => {
         title={index && index.title}
         description={index && index.description}
         image={
-          index && index.hero.hero
-            ? index.hero.hero
-            : 'https://packmedia54032-staging.s3.amazonaws.com/public/all-courses-seoimagewebp'
+          index && index.seoImage
+            ? index.seoImage
+            : 'https://packschool.s3.us-east-1.amazonaws.com/default-seo.webp'
         }
         url={indexPage?.slug ? `/${indexPage.slug}` : router.asPath}
         type='website'
