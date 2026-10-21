@@ -10,11 +10,20 @@ const restHeaders = () => ({
   'X-Auth-Subdomain': process.env.NEXT_THINKIFIC_SUBDOMAIN,
 });
 
-const parseName = (name = '') => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
+export const THINKIFIC_NAME_REQUIRED =
+  'A first and last name are required to create the Thinkific account.';
+
+const usableName = (value) => {
+  const text = String(value || '').trim();
+  return Boolean(text) && !text.includes('@');
+};
+
+export const splitLearnerName = (name = '') => {
+  if (!usableName(name)) return { firstName: '', lastName: '' };
+  const parts = String(name).trim().split(/\s+/).filter(Boolean);
   return {
-    firstName: parts[0] || 'Learner',
-    lastName: parts.slice(1).join(' ') || 'Network Distribution',
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' '),
   };
 };
 
@@ -73,14 +82,19 @@ export const ensureThinkificSsoUser = async ({ email, firstName, lastName }) => 
 };
 
 export const createThinkificUser = async ({ email, firstName, lastName }) => {
-  const names = parseName(`${firstName || ''} ${lastName || ''}`.trim());
+  const first = usableName(firstName) ? String(firstName).trim() : '';
+  const last = usableName(lastName) ? String(lastName).trim() : '';
+  if (!first || !last) {
+    throw new Error(THINKIFIC_NAME_REQUIRED);
+  }
+
   const response = await fetch(`${THINKIFIC_REST}/users`, {
     method: 'POST',
     headers: restHeaders(),
     body: JSON.stringify({
       email,
-      first_name: firstName || names.firstName,
-      last_name: lastName || names.lastName,
+      first_name: first,
+      last_name: last,
       provider: 'SSO',
     }),
   });
@@ -142,14 +156,19 @@ export const ensureNetworkDistributionThinkific = async ({
     throw new Error('Email is required to ensure Thinkific user');
   }
 
-  const parsed = parseName(name);
+  const parsed = splitLearnerName(name);
+  const first = usableName(firstName) ? String(firstName).trim() : parsed.firstName;
+  const last = usableName(lastName) ? String(lastName).trim() : parsed.lastName;
   let user = await getThinkificUserByEmail(email);
 
   if (!user?.id) {
+    if (!first || !last) {
+      throw new Error(THINKIFIC_NAME_REQUIRED);
+    }
     user = await createThinkificUser({
       email,
-      firstName: firstName || parsed.firstName,
-      lastName: lastName || parsed.lastName,
+      firstName: first,
+      lastName: last,
     });
   }
 

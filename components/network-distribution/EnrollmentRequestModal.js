@@ -5,8 +5,31 @@ import { useSelector } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import EnrollmentAuthPanel, {
   markEnrollResume,
+  readLearnerName,
+  rememberLearnerName,
 } from './EnrollmentAuthPanel';
 import { isWorkEmail } from '../../helpers/workEmail';
+
+const usableName = (value) => {
+  const text = String(value || '').trim();
+  return Boolean(text) && !text.includes('@');
+};
+
+const namesFromAccount = (user, awsUser) => {
+  if (usableName(user?.given_name) && usableName(user?.family_name)) {
+    return {
+      firstName: user.given_name.trim(),
+      lastName: user.family_name.trim(),
+    };
+  }
+
+  const fullName = [awsUser?.name, user?.name].find(usableName);
+  if (!fullName) return { firstName: '', lastName: '' };
+
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return { firstName: '', lastName: '' };
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+};
 
 const StepPills = ({ current }) => {
   const steps = ['Sign in', 'Request approval'];
@@ -54,6 +77,8 @@ export default function EnrollmentRequestModal({
 }) {
   const { user, isLoading: userIsLoading } = useUser();
   const { awsUser } = useSelector((state) => state.auth);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [salesLeaderEmail, setSalesLeaderEmail] = useState('');
   const [salesLeaders, setSalesLeaders] = useState([]);
   const [leadersLoading, setLeadersLoading] = useState(false);
@@ -64,6 +89,8 @@ export default function EnrollmentRequestModal({
 
   useEffect(() => {
     if (!open) {
+      setFirstName('');
+      setLastName('');
       setSalesLeaderEmail('');
       setConfirmed(false);
       setSubmitting(false);
@@ -100,26 +127,30 @@ export default function EnrollmentRequestModal({
   }, [open, user?.email]);
 
   useEffect(() => {
-    if (open && user?.email) {
-      fetch('/api/network-distribution/ensure-thinkific', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: awsUser?.name || user?.name,
-          firstName: user?.given_name,
-          lastName: user?.family_name,
-        }),
-      }).catch((err) =>
-        console.warn('Thinkific ensure failed (non-fatal):', err),
-      );
-    }
+    if (!open || !user?.email) return;
+    const stored = readLearnerName();
+    const profile = namesFromAccount(user, awsUser);
+    const storedMatches =
+      stored?.email && stored.email === user.email.toLowerCase();
+    setFirstName(
+      (current) =>
+        current ||
+        profile.firstName ||
+        (storedMatches ? stored.firstName : ''),
+    );
+    setLastName(
+      (current) =>
+        current || profile.lastName || (storedMatches ? stored.lastName : ''),
+    );
   }, [
     open,
+    user,
+    awsUser,
     user?.email,
-    awsUser?.name,
     user?.name,
     user?.given_name,
     user?.family_name,
+    awsUser?.name,
   ]);
 
   const handleAuthenticated = () => {
@@ -134,6 +165,17 @@ export default function EnrollmentRequestModal({
       setError('Please confirm you have approval from your Sales Leader.');
       return;
     }
+    const learnerFirst = firstName.trim();
+    const learnerLast = lastName.trim();
+    if (
+      !learnerFirst ||
+      !learnerLast ||
+      learnerFirst.includes('@') ||
+      learnerLast.includes('@')
+    ) {
+      setError('Enter your first and last name.');
+      return;
+    }
     if (!salesLeaderEmail) {
       setError('Select your approved sales leader.');
       return;
@@ -141,13 +183,18 @@ export default function EnrollmentRequestModal({
 
     setSubmitting(true);
     try {
+      rememberLearnerName({
+        firstName: learnerFirst,
+        lastName: learnerLast,
+        email: user?.email,
+      });
       await fetch('/api/network-distribution/ensure-thinkific', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: awsUser?.name || user?.name,
-          firstName: user?.given_name,
-          lastName: user?.family_name,
+          name: `${learnerFirst} ${learnerLast}`,
+          firstName: learnerFirst,
+          lastName: learnerLast,
         }),
       });
 
@@ -158,6 +205,8 @@ export default function EnrollmentRequestModal({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             salesLeaderEmail: salesLeaderEmail.trim(),
+            firstName: learnerFirst,
+            lastName: learnerLast,
             courseId: course.id || course.courseId,
             courseName: course.title,
             courseImage: course.seoImage,
@@ -167,7 +216,7 @@ export default function EnrollmentRequestModal({
             couponCode: coupon,
             page,
             requesterUserID: awsUser?.id || null,
-            requesterName: awsUser?.name || user?.name || user?.email,
+            requesterName: `${learnerFirst} ${learnerLast}`,
           }),
         },
       );
@@ -320,8 +369,39 @@ export default function EnrollmentRequestModal({
                         </h3>
                         <p className='text-sm text-slate-500 mt-1 leading-relaxed'>
                           Enrollment is processed after your sales leader
-                          approves this request.
+                          approves this request. Your name is included in that
+                          email and used if your course account still needs to
+                          be created.
                         </p>
+                      </div>
+
+                      <div className='grid grid-cols-2 gap-3'>
+                        <div>
+                          <label className='block text-sm font-medium text-slate-700 mb-1.5'>
+                            First name
+                          </label>
+                          <input
+                            type='text'
+                            required
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            autoComplete='given-name'
+                            className='w-full h-11 border border-slate-200 rounded-md px-3.5 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#0A1D3A]/20 focus:border-[#0A1D3A]'
+                          />
+                        </div>
+                        <div>
+                          <label className='block text-sm font-medium text-slate-700 mb-1.5'>
+                            Last name
+                          </label>
+                          <input
+                            type='text'
+                            required
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            autoComplete='family-name'
+                            className='w-full h-11 border border-slate-200 rounded-md px-3.5 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#0A1D3A]/20 focus:border-[#0A1D3A]'
+                          />
+                        </div>
                       </div>
 
                       <label className='flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-800 cursor-pointer'>

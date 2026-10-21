@@ -12,6 +12,8 @@ import {
   createThinkificBundleEnrollment,
   createThinkificEnrollment,
   ensureNetworkDistributionThinkific,
+  splitLearnerName,
+  THINKIFIC_NAME_REQUIRED,
   getNetworkDistributionBundleId,
   getThinkificCouponById,
   incrementThinkificCouponUsage,
@@ -311,8 +313,11 @@ const decideRequest = async ({ request, action, declineReason, decidedByEmail, r
   let thinkificEnrollmentId = request.thinkificEnrollmentId || null;
   let enrollmentCreated = false;
   let coupon = null;
+  const learnerName = splitLearnerName(request.requesterName);
   const { user } = await ensureNetworkDistributionThinkific({
     email: request.requesterEmail,
+    firstName: learnerName.firstName,
+    lastName: learnerName.lastName,
     name: request.requesterName,
   });
 
@@ -539,15 +544,21 @@ export default async function handler(req, res) {
     return res.status(200).json({ item: safe, alreadyDecided: result.alreadyDecided });
   } catch (error) {
     console.error('Decide enrollment request failed:', error);
+    const needsName = error?.message === THINKIFIC_NAME_REQUIRED;
+    const message = needsName
+      ? 'This learner needs a first and last name before their course account can be created. Ask them to submit the request again with their name.'
+      : 'Could not process this request. Please try again.';
     if (wantsHtml(req)) {
-      return res.status(500).send(
+      return res.status(needsName ? 400 : 500).send(
         htmlPage({
-          title: 'Error',
-          message: 'Could not process this request. Please try again.',
+          title: needsName ? 'Name required' : 'Error',
+          message,
           variant: 'error',
         }),
       );
     }
-    return res.status(500).json({ message: 'Failed to process request.' });
+    return res.status(needsName ? 400 : 500).json({
+      message: needsName ? message : 'Failed to process request.',
+    });
   }
 }

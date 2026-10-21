@@ -117,17 +117,25 @@ const CourseCard = ({
 
   const enrolled = isCourseEnrolled(courseData, enrollmentLookup);
   const status = request?.status;
+  const storedName = String(request?.requesterName || '').trim();
+  const pendingNeedsName =
+    status === 'PENDING' &&
+    (!storedName ||
+      storedName.includes('@') ||
+      storedName.split(/\s+/).filter(Boolean).length < 2);
   const ctaLabel = enrolled
     ? 'Already Enrolled'
-    : status === 'PENDING'
-      ? 'Pending Approval'
-      : status === 'APPROVED'
-        ? 'Open Course'
-        : 'Enroll in Course';
+    : pendingNeedsName
+      ? 'Add your name'
+      : status === 'PENDING'
+        ? 'Pending Approval'
+        : status === 'APPROVED'
+          ? 'Open Course'
+          : 'Enroll in Course';
 
   const ctaClass = enrolled
     ? 'bg-[#4261FF] text-white cursor-pointer hover:bg-[#3450e0]'
-    : status === 'PENDING'
+    : status === 'PENDING' && !pendingNeedsName
       ? 'bg-gray-400 text-white cursor-not-allowed'
       : 'bg-[#4261FF] text-white cursor-pointer hover:bg-[#3450e0]';
 
@@ -169,7 +177,12 @@ const CourseCard = ({
           <div
             className={`w-full h-10 flex items-center justify-center rounded-md font-medium transition-all duration-300 ${ctaClass}`}
             onClick={() => {
-              if (!courseData || (status === 'PENDING' && !enrolled)) return;
+              if (!courseData) return;
+              if (pendingNeedsName) {
+                onEnroll(courseData);
+                return;
+              }
+              if (status === 'PENDING' && !enrolled) return;
               if (enrolled) {
                 onOpenDashboard();
                 return;

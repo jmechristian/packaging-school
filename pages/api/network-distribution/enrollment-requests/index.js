@@ -5,6 +5,7 @@ import {
   createLibraryEnrollmentRequest,
   getEnrollmentRequestsByRequesterUser,
   getEnrollmentRequestsBySalesLeaderUser,
+  updateLibraryEnrollmentRequest,
 } from '../../../../helpers/libraryEnrollmentRequests';
 import { ensureNetworkDistributionThinkific } from '../../../../helpers/thinkificLibrary';
 import { sendLibraryEnrollmentRequestEmail } from '../../../../helpers/libraryEnrollmentEmails';
@@ -19,6 +20,35 @@ const publicRequest = (item) => {
   if (!item) return item;
   const { decisionToken, ...rest } = item;
   return rest;
+};
+
+const sendLeaderRequestEmail = async ({
+  req,
+  request,
+  leaderEmail,
+  name,
+  sessionEmail,
+  courseName,
+  courseImage,
+  decisionToken,
+}) => {
+  const token = decisionToken || request.decisionToken;
+  const baseUrl = getAppBaseUrl(req);
+  const decideUrl = (action) =>
+    `${baseUrl}/api/network-distribution/enrollment-requests/decide?id=${encodeURIComponent(
+      request.id,
+    )}&action=${action}&token=${encodeURIComponent(token)}`;
+
+  await sendLibraryEnrollmentRequestEmail({
+    to: leaderEmail,
+    requesterName: name,
+    requesterEmail: sessionEmail,
+    courseName,
+    courseImage,
+    approveUrl: decideUrl('approve'),
+    declineUrl: decideUrl('decline'),
+    dashboardUrl: `${baseUrl}/network-distribution/approvals`,
+  });
 };
 
 export default async function handler(req, res) {
@@ -76,6 +106,8 @@ export default async function handler(req, res) {
 
   const {
     salesLeaderEmail,
+    firstName,
+    lastName,
     courseId,
     courseName,
     courseImage,
@@ -84,6 +116,19 @@ export default async function handler(req, res) {
     couponCode,
     page,
   } = req.body || {};
+
+  const learnerFirst = String(firstName || '').trim();
+  const learnerLast = String(lastName || '').trim();
+  if (
+    !learnerFirst ||
+    !learnerLast ||
+    learnerFirst.includes('@') ||
+    learnerLast.includes('@')
+  ) {
+    return res.status(400).json({
+      message: 'Enter your first and last name.',
+    });
+  }
 
   if (!isWorkEmail(salesLeaderEmail)) {
     return res.status(400).json({
@@ -122,30 +167,43 @@ export default async function handler(req, res) {
         item.status === 'PENDING',
     );
 
-    if (duplicate) {
-      return res.status(409).json({
-        message: 'You already have a pending request for this course.',
-        item: publicRequest(duplicate),
-      });
-    }
-
-    const name =
-      awsUser.name ||
-      session.user.name ||
-      [session.user.given_name, session.user.family_name]
-        .filter(Boolean)
-        .join(' ') ||
-      sessionEmail;
+    const name = `${learnerFirst} ${learnerLast}`;
 
     try {
       await ensureNetworkDistributionThinkific({
         email: sessionEmail,
-        firstName: session.user.given_name,
-        lastName: session.user.family_name,
+        firstName: learnerFirst,
+        lastName: learnerLast,
         name,
       });
     } catch (thinkificError) {
       console.warn('Thinkific ensure/group failed (non-fatal):', thinkificError);
+    }
+
+    if (duplicate) {
+      const currentName = String(duplicate.requesterName || '').trim();
+      if (currentName.toLowerCase() === name.toLowerCase()) {
+        return res.status(409).json({
+          message: 'You already have a pending request for this course.',
+          item: publicRequest(duplicate),
+        });
+      }
+
+      const updated = await updateLibraryEnrollmentRequest({
+        id: duplicate.id,
+        requesterName: name,
+      });
+      await sendLeaderRequestEmail({
+        req,
+        request: { ...duplicate, ...updated, decisionToken: duplicate.decisionToken },
+        leaderEmail,
+        name,
+        sessionEmail,
+        courseName,
+        courseImage,
+      });
+
+      return res.status(200).json({ item: publicRequest(updated), updated: true });
     }
 
     const decisionToken = crypto.randomBytes(32).toString('hex');
@@ -168,21 +226,15 @@ export default async function handler(req, res) {
       page: page || '/network-distribution',
     });
 
-    const baseUrl = getAppBaseUrl(req);
-    const decideUrl = (action) =>
-      `${baseUrl}/api/network-distribution/enrollment-requests/decide?id=${encodeURIComponent(
-        created.id,
-      )}&action=${action}&token=${encodeURIComponent(decisionToken)}`;
-
-    await sendLibraryEnrollmentRequestEmail({
-      to: leaderEmail,
-      requesterName: name,
-      requesterEmail: sessionEmail,
+    await sendLeaderRequestEmail({
+      req,
+      request: created,
+      leaderEmail,
+      name,
+      sessionEmail,
       courseName,
       courseImage,
-      approveUrl: decideUrl('approve'),
-      declineUrl: decideUrl('decline'),
-      dashboardUrl: `${baseUrl}/network-distribution/approvals`,
+      decisionToken,
     });
 
     return res.status(201).json({ item: publicRequest(created) });

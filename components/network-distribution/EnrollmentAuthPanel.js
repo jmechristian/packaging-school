@@ -4,6 +4,33 @@ import { isWorkEmail } from '../../helpers/workEmail';
 const ND_AUTH_MESSAGE = 'ND_AUTH_COMPLETE';
 export const ND_ENROLL_STORAGE_KEY = 'ndEnrollCourse';
 export const ND_ENROLL_RESUME_KEY = 'ndEnrollResume';
+export const ND_LEARNER_NAME_KEY = 'ndLearnerName';
+
+export const rememberLearnerName = ({ firstName, lastName, email }) => {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(
+      ND_LEARNER_NAME_KEY,
+      JSON.stringify({
+        firstName: String(firstName || '').trim(),
+        lastName: String(lastName || '').trim(),
+        email: String(email || '').trim().toLowerCase(),
+      }),
+    );
+  } catch (err) {
+    console.warn('Could not persist learner name', err);
+  }
+};
+
+export const readLearnerName = () => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(ND_LEARNER_NAME_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
 
 const toCourseSnapshot = (course) => {
   if (!course || typeof course !== 'object') return null;
@@ -117,19 +144,24 @@ export default function EnrollmentAuthPanel({ onAuthenticated, course }) {
     `${base}${base.includes('?') ? '&' : '?'}returnTo=${encodeURIComponent(returnTo)}`;
 
   const handlePrimary = () => {
+    const first = firstName.trim();
+    const last = lastName.trim();
     if (!isWorkEmail(email)) {
       setMessage('Use your work email. Personal addresses are not accepted.');
       return;
     }
-    if (mode === 'signup' && (!firstName || !lastName)) {
-      setMessage('Enter your first and last name to create an account.');
+    if (!first || !last || first.includes('@') || last.includes('@')) {
+      setMessage('Enter your first and last name.');
       return;
     }
+
+    rememberLearnerName({ firstName: first, lastName: last, email });
+    const nameQuery = `&firstName=${encodeURIComponent(first)}&lastName=${encodeURIComponent(last)}`;
 
     if (mode === 'signup') {
       launch(
         withReturnTo(
-          `/api/auth/signup?login_hint=${encodeURIComponent(email.trim())}`,
+          `/api/auth/signup?login_hint=${encodeURIComponent(email.trim())}${nameQuery}`,
         ),
       );
       return;
@@ -137,7 +169,7 @@ export default function EnrollmentAuthPanel({ onAuthenticated, course }) {
 
     launch(
       withReturnTo(
-        `/api/auth/password-login?email=${encodeURIComponent(email.trim())}`,
+        `/api/auth/password-login?email=${encodeURIComponent(email.trim())}${nameQuery}`,
       ),
     );
   };
@@ -152,30 +184,40 @@ export default function EnrollmentAuthPanel({ onAuthenticated, course }) {
           {mode === 'signup' ? 'Create your account' : 'Sign in to continue'}
         </h3>
         <p className='text-sm text-slate-500 mt-1 leading-relaxed'>
-          Use your work email. A secure window will open so you can stay on this
-          page.
+          Use your work email and enter your first and last name. A secure
+          window will open so you can stay on this page.
         </p>
       </div>
 
       <div className='space-y-3'>
-        {mode === 'signup' && (
-          <div className='grid grid-cols-2 gap-3'>
+        <div className='grid grid-cols-2 gap-3'>
+          <div>
+            <label className='block text-sm font-medium text-slate-700 mb-1.5'>
+              First name
+            </label>
             <input
               type='text'
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder='First name'
+              autoComplete='given-name'
               className={fieldClass}
             />
+          </div>
+          <div>
+            <label className='block text-sm font-medium text-slate-700 mb-1.5'>
+              Last name
+            </label>
             <input
               type='text'
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder='Last name'
+              autoComplete='family-name'
               className={fieldClass}
             />
           </div>
-        )}
+        </div>
         <div>
           <label className='block text-sm font-medium text-slate-700 mb-1.5'>
             Work email
