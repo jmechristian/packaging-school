@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { API } from 'aws-amplify';
 import { MdOutlineSearch, MdClose } from 'react-icons/md';
+import EducationPartnerCallout from '../../components/shared/EducationPartnerCallout';
 import Meta from '../../components/shared/Meta';
 import Pagination from '../../components/shared/Pagination';
 import FooterEmailSignup from '../../features/navigation/Footer/FooterEmailSignup';
@@ -491,6 +492,10 @@ const Page = ({ initialLessons = [], initialAuthors = {} }) => {
           ) : null}
         </div>
 
+        <EducationPartnerCallout
+          page={PAGE_PATH}
+          pageTitle='Learning of the Month Library'
+        />
         <SignupCallout />
       </div>
       </div>

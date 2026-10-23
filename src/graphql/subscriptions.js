@@ -10252,6 +10252,51 @@ export const onDeleteSpsInterest = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEducationPartnerLead = /* GraphQL */ `
+  subscription OnCreateEducationPartnerLead(
+    $filter: ModelSubscriptionEducationPartnerLeadFilterInput
+  ) {
+    onCreateEducationPartnerLead(filter: $filter) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEducationPartnerLead = /* GraphQL */ `
+  subscription OnUpdateEducationPartnerLead(
+    $filter: ModelSubscriptionEducationPartnerLeadFilterInput
+  ) {
+    onUpdateEducationPartnerLead(filter: $filter) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEducationPartnerLead = /* GraphQL */ `
+  subscription OnDeleteEducationPartnerLead(
+    $filter: ModelSubscriptionEducationPartnerLeadFilterInput
+  ) {
+    onDeleteEducationPartnerLead(filter: $filter) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateLibraryEnrollmentRequest = /* GraphQL */ `
   subscription OnCreateLibraryEnrollmentRequest(
     $filter: ModelSubscriptionLibraryEnrollmentRequestFilterInput

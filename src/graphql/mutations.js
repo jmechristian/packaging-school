@@ -10762,6 +10762,54 @@ export const deleteSpsInterest = /* GraphQL */ `
     }
   }
 `;
+export const createEducationPartnerLead = /* GraphQL */ `
+  mutation CreateEducationPartnerLead(
+    $input: CreateEducationPartnerLeadInput!
+    $condition: ModelEducationPartnerLeadConditionInput
+  ) {
+    createEducationPartnerLead(input: $input, condition: $condition) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEducationPartnerLead = /* GraphQL */ `
+  mutation UpdateEducationPartnerLead(
+    $input: UpdateEducationPartnerLeadInput!
+    $condition: ModelEducationPartnerLeadConditionInput
+  ) {
+    updateEducationPartnerLead(input: $input, condition: $condition) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEducationPartnerLead = /* GraphQL */ `
+  mutation DeleteEducationPartnerLead(
+    $input: DeleteEducationPartnerLeadInput!
+    $condition: ModelEducationPartnerLeadConditionInput
+  ) {
+    deleteEducationPartnerLead(input: $input, condition: $condition) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createLibraryEnrollmentRequest = /* GraphQL */ `
   mutation CreateLibraryEnrollmentRequest(
     $input: CreateLibraryEnrollmentRequestInput!

@@ -6317,6 +6317,44 @@ export const listSpsInterests = /* GraphQL */ `
     }
   }
 `;
+export const getEducationPartnerLead = /* GraphQL */ `
+  query GetEducationPartnerLead($id: ID!) {
+    getEducationPartnerLead(id: $id) {
+      id
+      email
+      page
+      pageTitle
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEducationPartnerLeads = /* GraphQL */ `
+  query ListEducationPartnerLeads(
+    $filter: ModelEducationPartnerLeadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEducationPartnerLeads(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        page
+        pageTitle
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getLibraryEnrollmentRequest = /* GraphQL */ `
   query GetLibraryEnrollmentRequest($id: ID!) {
     getLibraryEnrollmentRequest(id: $id) {
@@ -11366,6 +11404,35 @@ export const spsInterestsByEmail = /* GraphQL */ `
         email
         company
         interest
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const educationPartnerLeadsByEmail = /* GraphQL */ `
+  query EducationPartnerLeadsByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEducationPartnerLeadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    educationPartnerLeadsByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        page
+        pageTitle
         createdAt
         updatedAt
         __typename
