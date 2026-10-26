@@ -6020,6 +6020,8 @@ export const createCustomerLibary = /* GraphQL */ `
       availableCodes
       usedCodes
       promotionId
+      thinkificGroupId
+      thinkificGroupName
       createdAt
       updatedAt
       __typename
@@ -6063,6 +6065,8 @@ export const updateCustomerLibary = /* GraphQL */ `
       availableCodes
       usedCodes
       promotionId
+      thinkificGroupId
+      thinkificGroupName
       createdAt
       updatedAt
       __typename
@@ -6106,6 +6110,8 @@ export const deleteCustomerLibary = /* GraphQL */ `
       availableCodes
       usedCodes
       promotionId
+      thinkificGroupId
+      thinkificGroupName
       createdAt
       updatedAt
       __typename
@@ -14394,6 +14400,8 @@ export const createLibraryCourses = /* GraphQL */ `
         availableCodes
         usedCodes
         promotionId
+        thinkificGroupId
+        thinkificGroupName
         createdAt
         updatedAt
         __typename
@@ -14472,6 +14480,8 @@ export const updateLibraryCourses = /* GraphQL */ `
         availableCodes
         usedCodes
         promotionId
+        thinkificGroupId
+        thinkificGroupName
         createdAt
         updatedAt
         __typename
@@ -14550,6 +14560,8 @@ export const deleteLibraryCourses = /* GraphQL */ `
         availableCodes
         usedCodes
         promotionId
+        thinkificGroupId
+        thinkificGroupName
         createdAt
         updatedAt
         __typename

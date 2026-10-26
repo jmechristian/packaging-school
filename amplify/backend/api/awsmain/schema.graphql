@@ -875,6 +875,8 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
   availableCodes: Int
   usedCodes: Int
   promotionId: Int
+  thinkificGroupId: String
+  thinkificGroupName: String
 }
 
 ######### Salesbar #########
