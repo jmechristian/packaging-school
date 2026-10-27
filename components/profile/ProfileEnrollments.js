@@ -15,7 +15,7 @@ const ProfileEnrollments = ({
   const [filter, setFilter] = useState('active');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const enrollmentsPerPage = 9;
+  const [enrollmentsPerPage, setEnrollmentsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchEnrollments = async () => {
@@ -141,7 +141,30 @@ const ProfileEnrollments = ({
             </svg>
           </div>
         </div>
-        <div className='flex items-center gap-2 w-full justify-end'>
+        <div className='flex flex-wrap items-center gap-3 w-full justify-end'>
+          <label
+            htmlFor='enrollment-page-size'
+            className='flex items-center gap-2 text-xs font-bold text-gray-500 shrink-0'
+          >
+            Show
+            <select
+              id='enrollment-page-size'
+              value={enrollmentsPerPage}
+              onChange={(event) =>
+                setEnrollmentsPerPage(Number(event.target.value))
+              }
+              aria-label='Courses per page'
+              className='min-w-[5.5rem] appearance-none border border-gray-300 rounded-lg bg-white bg-[length:14px] bg-[right_0.7rem_center] bg-no-repeat pl-3 pr-9 py-1 text-sm font-medium text-gray-700 focus:border-clemson focus:ring-1 focus:ring-clemson'
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E\")",
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+          </label>
           <div className='flex items-center gap-2 font-bold'>
             <div
               className={`text-xs text-gray-500 cursor-pointer ${

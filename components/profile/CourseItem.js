@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { MdPlayCircle, MdStarBorder, MdStar } from 'react-icons/md';
+import { MdPlayCircle, MdStarBorder, MdStar, MdEvent } from 'react-icons/md';
 import {
   reEnroll,
   getCourseByThinkificId,
@@ -9,6 +9,37 @@ import {
   getReviewByUserAndCourse,
   updateUserReview,
 } from '../../helpers/api';
+
+const formatExpiry = (enrollment) => {
+  if (!enrollment?.expiry_date) {
+    if (enrollment?.expired) {
+      return { label: 'Expired', tone: 'text-red-600' };
+    }
+    return { label: 'No expiration', tone: 'text-slate-500' };
+  }
+
+  const date = new Date(enrollment.expiry_date);
+  if (Number.isNaN(date.getTime())) {
+    return { label: 'No expiration', tone: 'text-slate-500' };
+  }
+
+  const formatted = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  if (enrollment.expired || date.getTime() < Date.now()) {
+    return { label: `Expired ${formatted}`, tone: 'text-red-600' };
+  }
+
+  const daysUntilExpiry = (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+  if (daysUntilExpiry <= 30) {
+    return { label: `Expires ${formatted}`, tone: 'text-amber-700' };
+  }
+
+  return { label: `Expires ${formatted}`, tone: 'text-slate-600' };
+};
 
 const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
   const router = useRouter();
@@ -122,95 +153,90 @@ const CourseItem = ({ course, enrollment, navigateToThinkific }) => {
     });
   };
 
+  const courseTitle = course?.title || enrollment?.course_name || 'Course';
+  const imageUrl = course?.cardImage?.url;
+  const expiry = formatExpiry(enrollment);
+
+  const openCourse = () => {
+    if (!course?.slug) return;
+    navigateToThinkific(
+      `https://learn.packagingschool.com/courses/take/${course.slug}`,
+      `https://learn.packagingschool.com/courses/take/${course.slug}`,
+    );
+  };
+
+  const completion = Math.round(
+    (Number(enrollment.percentage_completed) || 0) * 100
+  );
+
   return (
-    course && (
+    enrollment && (
       <div
-        key={course.id}
-        className={`border flex flex-col rounded-lg space-y-3 hover:shadow-md transition-shadow bg-gray-50 p-2.5`}
+        key={enrollment.id}
+        className='flex h-full flex-col gap-3 rounded-lg border bg-white p-2.5 transition-shadow hover:shadow-md'
       >
         <div
-          className='w-full aspect-[16/9] bg-gray-200 rounded-lg flex items-center justify-center bg-cover bg-center relative'
-          style={{
-            backgroundImage: `url(${course.cardImage.url})`,
-          }}
+          className='relative flex aspect-[16/9] w-full items-center justify-center rounded-lg bg-gray-200 bg-cover bg-center'
+          style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
         >
-          <div className='absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center'></div>
-          <button
-            onClick={() => {
-              navigateToThinkific(
-                `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                `https://learn.packagingschool.com/courses/take/${course.slug}`,
-              );
-            }}
-            className='text-white hover:text-clemson transition-all duration-300 text-sm font-bold relative z-10 cursor-pointer'
-          >
-            <MdPlayCircle size={55} />
-          </button>
-        </div>
-        <div className='flex items-start justify-between'>
-          <div className='flex items-center gap-2'>
-            <div
-              className='font-semibold text-gray-900 tracking-tight leading-tight cursor-pointer'
-              onClick={() => {
-                navigateToThinkific(
-                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                  `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                );
-              }}
+          <div className='absolute inset-0 rounded-lg bg-black/40'></div>
+          {course?.slug && (
+            <button
+              type='button'
+              onClick={openCourse}
+              className='relative z-10 cursor-pointer text-white transition-all duration-300 hover:text-clemson'
             >
-              {course.title}
-            </div>
-          </div>
+              <MdPlayCircle size={55} />
+            </button>
+          )}
         </div>
-        <div className='flex flex-col gap-2 h-full justify-end'>
-          {/* <div className='text-xs text-gray-100'>
-            Enrolled:{' '}
-            {new Date(enrollment.created_at).toISOString().split('T')[0]}
-          </div> */}
-
-          <div className='flex items-center gap-0'>
-            <div className='w-full'>
-              <div className='w-full h-1 bg-slate-300'>
-                <div
-                  className='h-1 bg-indigo-500'
-                  style={{
-                    width: `${enrollment.percentage_completed * 100}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
+        <div
+          className={`font-semibold leading-tight tracking-tight text-gray-900 ${
+            course?.slug ? 'cursor-pointer' : ''
+          }`}
+          onClick={openCourse}
+        >
+          {courseTitle}
+        </div>
+        <div className='mt-auto flex flex-col gap-2'>
+          <div className='h-1 w-full bg-slate-300'>
+            <div
+              className='h-1 bg-indigo-500'
+              style={{ width: `${completion}%` }}
+            ></div>
           </div>
-          <div className='flex justify-between items-center'>
+          <div
+            className={`flex items-center gap-1 text-xs font-medium ${expiry.tone}`}
+          >
+            <MdEvent size={14} />
+            <span>{expiry.label}</span>
+          </div>
+          <div className='flex flex-wrap items-center justify-between gap-x-2 gap-y-1'>
             <div className='text-xs font-bold text-gray-500'>
-              {Math.round((enrollment.percentage_completed || 0) * 100)}%
-              Complete
+              {completion}% Complete
             </div>
-            <div className='flex justify-end gap-1.5'>
-              <div className='text-xs text-slate-500 flex items-center'>
+            <div className='flex items-center gap-1.5'>
+              <div className='flex items-center text-xs text-slate-500'>
                 {renderStars(true)}
               </div>
               <div
-                className='text-xs text-slate-600 cursor-pointer'
+                className='cursor-pointer whitespace-nowrap text-xs text-slate-600'
                 onClick={() => setShowRatingModal(true)}
               >
                 Leave a Rating
               </div>
             </div>
           </div>
-          <div
-            className='w-full flex items-center justify-center gap-1 p-2 bg-base-brand text-white font-semibold rounded-md hover:bg-base-dark transition-all duration-300 cursor-pointer mt-2'
-            onClick={() => {
-              navigateToThinkific(
-                `https://learn.packagingschool.com/courses/take/${course.slug}`,
-                `https://learn.packagingschool.com/courses/take/${course.slug}`,
-              );
-            }}
-          >
-            <div>Continue Course</div>
-            <div>
+          {course?.slug && (
+            <button
+              type='button'
+              className='mt-2 flex w-full cursor-pointer items-center justify-center gap-1 rounded-md bg-base-brand p-2 font-semibold text-white transition-all duration-300 hover:bg-base-dark'
+              onClick={openCourse}
+            >
+              Continue Course
               <MdPlayCircle size={20} />
-            </div>
-          </div>
+            </button>
+          )}
         </div>
         {showRatingModal && (
           <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
