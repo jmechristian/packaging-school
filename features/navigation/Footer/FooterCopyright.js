@@ -43,6 +43,9 @@ const FooterCopyright = () => {
             Terms of Service
           </a>
         </div>
+        <div>
+          <a href='/email-policy'>Email Policy</a>
+        </div>
       </div>
     </div>
   );
