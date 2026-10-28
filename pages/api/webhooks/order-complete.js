@@ -1,9 +1,14 @@
 import crypto from 'crypto';
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../../../src/aws-exports';
-import { eventsByEmailQuery, toExperimentDay } from '../../../libs/abAnalyticsQueries';
+import { eventsByEmailQuery, eventsByVisitorIdQuery, toExperimentDay } from '../../../libs/abAnalyticsQueries';
 import { isLinkedInTargetProduct, sendLinkedInConversionEvent } from '../../../libs/linkedinConversions';
 import { deriveBuyerAttribution } from '../../../libs/purchaseAttribution';
+import { pickGoogleClickId, GOOGLE_CLICK_LOOKBACK_MS } from '../../../libs/googleClick';
+import {
+  sendGoogleAdsPurchaseConversion,
+  shouldSkipZeroAmount,
+} from '../../../libs/googleAdsConversions';
 
 if (typeof window === 'undefined') {
   Amplify.configure(awsExports);
@@ -65,6 +70,18 @@ const buyerEventsByEmailQuery = eventsByEmailQuery(`
   acquisitionSource
   acquisitionMedium
   acquisitionCampaign
+  metadata
+`);
+
+const googleClickEventsByEmailQuery = eventsByEmailQuery(`
+  id
+  createdAt
+  metadata
+`);
+
+const googleClickEventsByVisitorQuery = eventsByVisitorIdQuery(`
+  id
+  createdAt
   metadata
 `);
 
@@ -232,6 +249,70 @@ async function resolveBuyerAttribution({
 
   const items = result?.data?.abTestEventsByEmailAndCreatedAt?.items || [];
   return deriveBuyerAttribution(items, { productName, anchorMs });
+}
+
+async function listClickEvents(query, connectionName, variables) {
+  const items = [];
+  let nextToken = null;
+  for (let page = 0; page < 3; page += 1) {
+    const result = await API.graphql({
+      query,
+      variables: {
+        ...variables,
+        limit: 100,
+        ...(nextToken ? { nextToken } : {}),
+      },
+    });
+    const connection = result?.data?.[connectionName];
+    const pageItems = connection?.items || [];
+    items.push(...pageItems.filter(Boolean));
+    nextToken = connection?.nextToken || null;
+    if (!nextToken) break;
+  }
+  return items;
+}
+
+// Latest Google click id for this buyer: the matched checkout intent, then
+// email history, then the anonymous visitor history (the ad landing often has
+// no email yet).
+async function resolveGoogleClick({ email, visitorId, matchedIntentId, anchorMs }) {
+  const lowerBound = new Date(anchorMs - GOOGLE_CLICK_LOOKBACK_MS).toISOString();
+  let click = null;
+
+  if (email) {
+    try {
+      const items = await listClickEvents(
+        googleClickEventsByEmailQuery,
+        'abTestEventsByEmailAndCreatedAt',
+        { email, createdAt: { ge: lowerBound }, sortDirection: 'DESC' },
+      );
+      click = pickGoogleClickId(items, { anchorMs, matchedIntentId });
+    } catch (error) {
+      console.warn('Google click email lookup failed:', error?.message);
+    }
+  }
+
+  if (!click && visitorId) {
+    try {
+      const items = await listClickEvents(
+        googleClickEventsByVisitorQuery,
+        'abTestEventsByVisitorIdAndCreatedAt',
+        { visitorId, createdAt: { ge: lowerBound }, sortDirection: 'DESC' },
+      );
+      click = pickGoogleClickId(items, { anchorMs, matchedIntentId });
+    } catch (error) {
+      console.warn('Google click visitor lookup failed:', error?.message);
+    }
+  }
+
+  return click;
+}
+
+function conversionAuditReason(label, result) {
+  if (!result) return null;
+  if (result.success) return `${label}:sent`;
+  if (result.skipped) return `${label}:skipped:${result.reason}`;
+  return `${label}:failed:${result.status || result.error || 'unknown'}`;
 }
 
 async function recordReceipt(fields) {
@@ -568,6 +649,52 @@ export default async function handler(req, res) {
       }
     }
 
+    // Purchase Confirmed is an import-from-clicks action. Report the sale once,
+    // after Thinkific has confirmed it. A $0 order is not a purchase. Missing
+    // OAuth config skips the upload without failing the webhook.
+    let googleAdsConversion = null;
+    if (decision === 'recorded') {
+      const conversionHappenedAt = Date.parse(webhookCreatedAt || '') || Date.now();
+      try {
+        if (
+          shouldSkipZeroAmount({
+            amountDollars: payload?.amount_dollars,
+            amountCents: netAmountCents,
+          })
+        ) {
+          googleAdsConversion = { success: false, skipped: true, reason: 'zero_amount' };
+        } else {
+          const click = await resolveGoogleClick({
+            email: canonicalEmail,
+            visitorId,
+            matchedIntentId: matchedIntent?.id || null,
+            anchorMs: conversionHappenedAt,
+          });
+          googleAdsConversion = await sendGoogleAdsPurchaseConversion({
+            click,
+            email: canonicalEmail,
+            amountDollars: payload?.amount_dollars,
+            amountCents: netAmountCents,
+            conversionHappenedAt,
+            orderId: externalOrderId || webhookOrderNumber,
+          });
+          if (!googleAdsConversion?.success && !googleAdsConversion?.skipped) {
+            console.warn('Google Ads conversion upload did not succeed:', googleAdsConversion);
+          }
+        }
+      } catch (error) {
+        googleAdsConversion = { success: false, error: error?.message };
+        console.warn('Google Ads conversion upload threw:', error?.message);
+      }
+    }
+
+    const auditReason = [
+      conversionAuditReason('linkedin_conversion', linkedInConversion),
+      conversionAuditReason('google_ads_conversion', googleAdsConversion),
+    ]
+      .filter(Boolean)
+      .join('; ');
+
     await recordReceipt({
       decision,
       action,
@@ -580,18 +707,12 @@ export default async function handler(req, res) {
       matchedIntentId: matchedIntent?.id || null,
       attributionMethod,
       abEventId: dedupeEventId,
-      reason: linkedInConversion
-        ? `linkedin_conversion:${
-            linkedInConversion.success
-              ? 'sent'
-              : linkedInConversion.skipped
-                ? `skipped:${linkedInConversion.reason}`
-                : `failed:${linkedInConversion.status || linkedInConversion.error || 'unknown'}`
-          }`
-        : undefined,
-      rawPayload: linkedInConversion
-        ? JSON.stringify({ ...body, _linkedinConversion: linkedInConversion })
-        : JSON.stringify(body),
+      reason: auditReason || undefined,
+      rawPayload: JSON.stringify({
+        ...body,
+        ...(linkedInConversion ? { _linkedinConversion: linkedInConversion } : {}),
+        ...(googleAdsConversion ? { _googleAdsConversion: googleAdsConversion } : {}),
+      }),
       createdAt: completeCreatedAt,
     });
 
@@ -605,6 +726,7 @@ export default async function handler(req, res) {
       attributionMethod,
       abEventId: dedupeEventId,
       linkedInConversion,
+      googleAdsConversion,
     });
   } catch (error) {
     console.error('Order completion webhook failed:', error);

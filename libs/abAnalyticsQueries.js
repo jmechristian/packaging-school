@@ -71,6 +71,34 @@ export const eventsByEmailQuery = (fields = EVENT_FULL_FIELDS) => /* GraphQL */ 
   }
 `;
 
+// Same shape as the email query, partitioned by visitorId. The order webhook
+// uses it when the buyer's email events have no Google click id but an earlier
+// anonymous page view (same browser) does.
+export const eventsByVisitorIdQuery = (fields = EVENT_FULL_FIELDS) => /* GraphQL */ `
+  query AbEventsByVisitorId(
+    $visitorId: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAbTestEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    abTestEventsByVisitorIdAndCreatedAt(
+      visitorId: $visitorId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${fields}
+      }
+      nextToken
+    }
+  }
+`;
+
 function toUtcDayString(date) {
   const y = date.getUTCFullYear();
   const m = String(date.getUTCMonth() + 1).padStart(2, '0');

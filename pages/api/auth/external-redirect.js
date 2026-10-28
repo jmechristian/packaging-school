@@ -5,6 +5,11 @@ import {
   AB_ATTRIBUTION_COOKIE,
   buildPurchaseIntentEventId,
 } from '../../../libs/analytics';
+import {
+  AB_GOOGLE_CLICK_COOKIE,
+  mergeClickIds,
+  parseGoogleClickRecord,
+} from '../../../libs/googleClick';
 import { isCheckoutIntentUrl } from '../../../libs/checkoutIntent';
 import {
   getLmsUrlFromReturnTo,
@@ -37,6 +42,10 @@ async function recordPreThinkificIntent({ req, baseUrl, email, courseLink }) {
 
     const sessionId =
       attribution?.sessionId || cookies[AB_SESSION_COOKIE] || null;
+    const clickIds = mergeClickIds(
+      attribution?.clickIds,
+      parseGoogleClickRecord(cookies[AB_GOOGLE_CLICK_COOKIE]),
+    );
 
     await fetch(`${baseUrl}/api/analytics/ab-event`, {
       method: 'POST',
@@ -65,8 +74,9 @@ async function recordPreThinkificIntent({ req, baseUrl, email, courseLink }) {
         source: 'external_redirect_pre_sso',
         metadata: {
           email,
-          liFatId: attribution?.liFatId || null,
+          liFatId: attribution?.liFatId || clickIds?.li_fat_id || null,
           courseLink,
+          ...(clickIds ? { clickIds } : {}),
         },
       }),
     });

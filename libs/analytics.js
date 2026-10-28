@@ -13,6 +13,13 @@ import {
   classifyAcquisitionChannel,
   isOwnReferrerHost,
 } from './acquisitionChannel';
+import {
+  AB_GOOGLE_CLICK_COOKIE,
+  GOOGLE_CLICK_MAX_AGE_SECONDS,
+  googleClickRecordFromSearch,
+  mergeClickIds,
+  parseGoogleClickRecord,
+} from './googleClick';
 
 const DEFAULT_THROTTLE_MS = 1500;
 export const AB_ATTRIBUTION_COOKIE = 'ps_ab_attribution';
@@ -383,8 +390,10 @@ function detectAttributionContext() {
 
   // Collect every ad click id present. These are persisted verbatim (see
   // metadata folding in writeAbEvent) so a conversion can later be replayed to
-  // the ad platform's conversions API (LinkedIn today; gclid enables Google Ads
-  // offline conversion import) - Thinkific's webhook can't carry them back.
+  // the ad platform's conversions API. LinkedIn reads li_fat_id. Google Ads
+  // reads gclid/gbraid/wbraid, which also persist in a 90-day cookie because
+  // the session attribution cookie expires after 6 hours. Thinkific's webhook
+  // can't carry any of them back.
   const clickIds = {};
   for (const key of CLICK_ID_KEYS) {
     const value = params.get(key);
@@ -470,8 +479,30 @@ function readCachedAttribution(sessionId) {
   return null;
 }
 
+function persistGoogleClickFromUrl() {
+  if (typeof document === 'undefined' || typeof window === 'undefined') return;
+  const record = googleClickRecordFromSearch(new URL(window.location.href).searchParams);
+  if (!record) return;
+  const existing = readStoredGoogleClick();
+  // The same click can stay in the URL across page views. Keep the original
+  // capture time so a later purchase can tell how old the click really is.
+  if (existing && existing.key === record.key && existing.value === record.value) return;
+  document.cookie = `${AB_GOOGLE_CLICK_COOKIE}=${encodeURIComponent(
+    JSON.stringify(record),
+  )}; Path=/; Max-Age=${GOOGLE_CLICK_MAX_AGE_SECONDS}; SameSite=Lax`;
+}
+
+function readStoredGoogleClick() {
+  if (typeof document === 'undefined') return null;
+  return parseGoogleClickRecord(getCookieValue(AB_GOOGLE_CLICK_COOKIE));
+}
+
 function resolveAttributionContext(sessionId) {
   if (typeof window === 'undefined') return null;
+
+  // A Google click id has to survive past this 6-hour session so a later
+  // purchase can be uploaded to Ads. A new click replaces the stored one.
+  persistGoogleClickFromUrl();
 
   // Attribution is first-touch per session, EXCEPT when the current URL carries
   // explicit campaign/click-id params (e.g. a LinkedIn/Google ad click). Those
@@ -539,6 +570,13 @@ export function getAbContext(overrides = {}) {
       ...(base.country ? { country: base.country } : {}),
     };
   }
+
+  // Session attribution expires after 6 hours. The 90-day Google click cookie
+  // fills gclid/gbraid/wbraid back in so later events still carry it.
+  base.clickIds = mergeClickIds(
+    base.clickIds || attribution?.clickIds || null,
+    readStoredGoogleClick(),
+  );
 
   return base;
 }
