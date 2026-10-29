@@ -1,27 +1,18 @@
 import React from 'react';
-import HeadlineMotion from '../../../helpers/HeadlineMotion';
 import FadeIn from '../../../helpers/FadeIn';
 
-import Link from 'next/link';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import Image from 'next/legacy/image';
-import { useRouter } from 'next/router';
+
+const WPO_LOGO =
+  'https://packschool.s3.us-east-1.amazonaws.com/world-packaging-organisation-wpo-logo-vector.png';
 
 const APCHero = ({ orderHandler }) => {
-  const router = useRouter();
   return (
     <div
       id='cert-hero'
-      className='grid lg:grid-cols-2 items-center gap-3 lg:gap-6 overflow-hidden py-6 container-7xl scroll-mt-24'
+      className='grid items-center gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-12 xl:gap-14 overflow-hidden py-6 lg:py-10 container-7xl scroll-mt-24'
     >
-      <div>
-        <Image
-          src={'https://packschool.s3.amazonaws.com/apc.png'}
-          width={600}
-          height={600}
-          alt='Automotive Packaging Certificate'
-        />
-      </div>
       <div className='flex flex-col gap-9'>
         <div>
           <FadeIn>
@@ -47,7 +38,7 @@ const APCHero = ({ orderHandler }) => {
           <FadeIn>
             <div className='flex flex-col md:flex-row items-center gap-6 mt-4'>
               <button
-                className='w-full md:w-fit px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff text-xl'
+                className='w-full md:w-fit shrink-0 whitespace-nowrap px-9 bg-clemson rounded-lg py-4 text-white font-semibold font-greycliff text-xl'
                 onClick={() => orderHandler()}
               >
                 Enroll Now
@@ -71,6 +62,36 @@ const APCHero = ({ orderHandler }) => {
             </div>
           </FadeIn>
         </div>
+      </div>
+      <div className='flex justify-center lg:justify-start'>
+        <FadeIn>
+          <div className='w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-white/10 dark:bg-dark-mid'>
+            <div className='flex justify-center bg-slate-50 px-8 pt-8 pb-6 dark:bg-white'>
+              {/* Source PNG is a wide canvas with the portrait mark centered. */}
+              <div className='relative h-52 w-[8.4rem]'>
+                <Image
+                  src={WPO_LOGO}
+                  alt='World Packaging Organisation'
+                  layout='fill'
+                  objectFit='cover'
+                  objectPosition='center'
+                />
+              </div>
+            </div>
+            <div className='flex flex-col items-center gap-3 px-8 py-7 text-center'>
+              <p className='text-xs font-bold uppercase tracking-[0.22em] text-clemson'>
+                Internationally Recognized
+              </p>
+              <h2 className='text-xl font-semibold leading-snug text-slate-900 xl:text-2xl dark:text-white'>
+                Officially Recognized by the World Packaging Organisation (WPO)
+              </h2>
+              <p className='font-greycliff text-base leading-relaxed text-slate-600 dark:text-gray-400'>
+                Recognized for excellence in professional automotive packaging
+                education.
+              </p>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </div>
   );
