@@ -86,7 +86,7 @@ const APCHero = ({ orderHandler }) => {
                 Officially Recognized by the World Packaging Organisation (WPO)
               </h2>
               <p className='font-greycliff text-base leading-relaxed text-slate-600 dark:text-gray-400'>
-                Recognized for excellence in professional automotive packaging
+                Honoring excellence in professional automotive packaging
                 education.
               </p>
             </div>
