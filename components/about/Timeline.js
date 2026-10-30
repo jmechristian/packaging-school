@@ -248,6 +248,12 @@ const timeline = [
     description: 'Packaging School Library debut with Network Distribution®',
     date: '2026',
   },
+  {
+    name: 'Internationally Recognized',
+    description:
+      'The Automotive Packaging Certificate is officially recognized by the World Packaging Organisation (WPO), honoring excellence in professional automotive packaging education.',
+    date: '2026',
+  },
 ];
 
 const Timeline = () => {
