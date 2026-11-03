@@ -3300,6 +3300,10 @@ export const getCustomerLibary = /* GraphQL */ `
       promotionId
       thinkificGroupId
       thinkificGroupName
+      reportLayouts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -3339,6 +3343,68 @@ export const listCustomerLibaries = /* GraphQL */ `
         promotionId
         thinkificGroupId
         thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getReportLayout = /* GraphQL */ `
+  query GetReportLayout($id: ID!) {
+    getReportLayout(id: $id) {
+      id
+      libraryId
+      library {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        code
+        status
+        availableCodes
+        usedCodes
+        promotionId
+        thinkificGroupId
+        thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      title
+      modules
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listReportLayouts = /* GraphQL */ `
+  query ListReportLayouts(
+    $filter: ModelReportLayoutFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReportLayouts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        libraryId
+        name
+        title
+        modules
         createdAt
         updatedAt
         __typename
@@ -9575,6 +9641,36 @@ export const customerLibariesBySlug = /* GraphQL */ `
         promotionId
         thinkificGroupId
         thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const layoutsByLibrary = /* GraphQL */ `
+  query LayoutsByLibrary(
+    $libraryId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelReportLayoutFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    layoutsByLibrary(
+      libraryId: $libraryId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        libraryId
+        name
+        title
+        modules
         createdAt
         updatedAt
         __typename

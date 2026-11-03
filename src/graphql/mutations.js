@@ -6022,6 +6022,10 @@ export const createCustomerLibary = /* GraphQL */ `
       promotionId
       thinkificGroupId
       thinkificGroupName
+      reportLayouts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -6067,6 +6071,10 @@ export const updateCustomerLibary = /* GraphQL */ `
       promotionId
       thinkificGroupId
       thinkificGroupName
+      reportLayouts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -6112,6 +6120,139 @@ export const deleteCustomerLibary = /* GraphQL */ `
       promotionId
       thinkificGroupId
       thinkificGroupName
+      reportLayouts {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createReportLayout = /* GraphQL */ `
+  mutation CreateReportLayout(
+    $input: CreateReportLayoutInput!
+    $condition: ModelReportLayoutConditionInput
+  ) {
+    createReportLayout(input: $input, condition: $condition) {
+      id
+      libraryId
+      library {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        code
+        status
+        availableCodes
+        usedCodes
+        promotionId
+        thinkificGroupId
+        thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      title
+      modules
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateReportLayout = /* GraphQL */ `
+  mutation UpdateReportLayout(
+    $input: UpdateReportLayoutInput!
+    $condition: ModelReportLayoutConditionInput
+  ) {
+    updateReportLayout(input: $input, condition: $condition) {
+      id
+      libraryId
+      library {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        code
+        status
+        availableCodes
+        usedCodes
+        promotionId
+        thinkificGroupId
+        thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      title
+      modules
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteReportLayout = /* GraphQL */ `
+  mutation DeleteReportLayout(
+    $input: DeleteReportLayoutInput!
+    $condition: ModelReportLayoutConditionInput
+  ) {
+    deleteReportLayout(input: $input, condition: $condition) {
+      id
+      libraryId
+      library {
+        id
+        displayName
+        slug
+        description
+        link
+        logo
+        email
+        primaryColor
+        highlightColor
+        pdf
+        slide
+        video
+        addOns
+        backgroundImage
+        code
+        status
+        availableCodes
+        usedCodes
+        promotionId
+        thinkificGroupId
+        thinkificGroupName
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      title
+      modules
       createdAt
       updatedAt
       __typename

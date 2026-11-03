@@ -877,6 +877,17 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
   promotionId: Int
   thinkificGroupId: String
   thinkificGroupName: String
+  reportLayouts: [ReportLayout]
+    @hasMany(indexName: "layoutsByLibrary", fields: ["id"])
+}
+
+type ReportLayout @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  libraryId: ID! @index(name: "layoutsByLibrary", queryField: "layoutsByLibrary")
+  library: CustomerLibary @belongsTo(fields: ["libraryId"])
+  name: String!
+  title: String
+  modules: AWSJSON!
 }
 
 ######### Salesbar #########
