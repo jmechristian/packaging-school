@@ -254,6 +254,18 @@ const timeline = [
       'The Automotive Packaging Certificate is officially recognized by the World Packaging Organisation (WPO), honoring excellence in professional automotive packaging education.',
     date: '2026',
   },
+  {
+    name: 'B2B Services',
+    description: 'Packaging School Library debut with AMERIPEN®',
+    date: '2026',
+  },
+  {
+    name: 'Southeastern Packaging Summit',
+    link: '/sps',
+    description:
+      'Inaugural event planned for April of 2027 at the Clemson University conference center.',
+    date: '2027',
+  },
 ];
 
 const Timeline = () => {
