@@ -9,6 +9,7 @@ import {
 } from './googleClick.js';
 import {
   buildGoogleAdsIngestBody,
+  isCspThinkificProduct,
   normalizeEmailForGoogle,
   shouldSkipZeroAmount,
 } from './googleAdsConversions.js';
@@ -153,6 +154,19 @@ test('builds the Purchase Confirmed upload for the Packaging School account', ()
     assert.equal(shouldSkipZeroAmount({ amountDollars: 0 }), true);
     assert.equal(shouldSkipZeroAmount({ amountDollars: null, amountCents: 9700 }), false);
     assert.equal(shouldSkipZeroAmount({}), false);
+
+    const csp = buildGoogleAdsIngestBody({
+      click: { key: 'gclid', value: 'CLICK1' },
+      email: 'student@example.com',
+      amountDollars: '2400',
+      conversionHappenedAt: NOW,
+      orderId: 'CSP1',
+      conversionActionId: '7891144790',
+    });
+    assert.equal(csp.destinations[0].productDestinationId, '7891144790');
+    assert.equal(csp.events[0].transactionId, 'CSP1');
+    assert.equal(isCspThinkificProduct({ productId: 2772370 }), true);
+    assert.equal(isCspThinkificProduct({ productId: '887760' }), false);
   } finally {
     if (previousCustomer === undefined) delete process.env.GOOGLE_ADS_CUSTOMER_ID;
     else process.env.GOOGLE_ADS_CUSTOMER_ID = previousCustomer;

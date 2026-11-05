@@ -6,6 +6,8 @@ import { isLinkedInTargetProduct, sendLinkedInConversionEvent } from '../../../l
 import { deriveBuyerAttribution } from '../../../libs/purchaseAttribution';
 import { pickGoogleClickId, GOOGLE_CLICK_LOOKBACK_MS } from '../../../libs/googleClick';
 import {
+  googleAdsCspConversionActionId,
+  isCspThinkificProduct,
   sendGoogleAdsPurchaseConversion,
   shouldSkipZeroAmount,
 } from '../../../libs/googleAdsConversions';
@@ -651,46 +653,63 @@ export default async function handler(req, res) {
 
     // Purchase Confirmed is an import-from-clicks action. Report the sale once,
     // after Thinkific has confirmed it. A $0 order is not a purchase. Missing
-    // OAuth config skips the upload without failing the webhook.
+    // OAuth config skips the upload without failing the webhook. Certificate
+    // of Sustainable Packaging (Thinkific product 2772370) is also reported to
+    // its own action.
     let googleAdsConversion = null;
+    let googleAdsCspConversion = null;
     if (decision === 'recorded') {
       const conversionHappenedAt = Date.parse(webhookCreatedAt || '') || Date.now();
-      try {
-        if (
-          shouldSkipZeroAmount({
-            amountDollars: payload?.amount_dollars,
-            amountCents: netAmountCents,
-          })
-        ) {
-          googleAdsConversion = { success: false, skipped: true, reason: 'zero_amount' };
-        } else {
-          const click = await resolveGoogleClick({
+      const zeroAmount = shouldSkipZeroAmount({
+        amountDollars: payload?.amount_dollars,
+        amountCents: netAmountCents,
+      });
+      const click = zeroAmount
+        ? null
+        : await resolveGoogleClick({
             email: canonicalEmail,
             visitorId,
             matchedIntentId: matchedIntent?.id || null,
             anchorMs: conversionHappenedAt,
           });
-          googleAdsConversion = await sendGoogleAdsPurchaseConversion({
-            click,
-            email: canonicalEmail,
-            amountDollars: payload?.amount_dollars,
-            amountCents: netAmountCents,
-            conversionHappenedAt,
-            orderId: externalOrderId || webhookOrderNumber,
-          });
-          if (!googleAdsConversion?.success && !googleAdsConversion?.skipped) {
-            console.warn('Google Ads conversion upload did not succeed:', googleAdsConversion);
-          }
+      const uploadPurchase = (conversionActionId) => {
+        if (zeroAmount) return { success: false, skipped: true, reason: 'zero_amount' };
+        return sendGoogleAdsPurchaseConversion({
+          click,
+          email: canonicalEmail,
+          amountDollars: payload?.amount_dollars,
+          amountCents: netAmountCents,
+          conversionHappenedAt,
+          orderId: externalOrderId || webhookOrderNumber,
+          conversionActionId,
+        });
+      };
+      try {
+        googleAdsConversion = await uploadPurchase();
+        if (!googleAdsConversion?.success && !googleAdsConversion?.skipped) {
+          console.warn('Google Ads conversion upload did not succeed:', googleAdsConversion);
         }
       } catch (error) {
         googleAdsConversion = { success: false, error: error?.message };
         console.warn('Google Ads conversion upload threw:', error?.message);
+      }
+      if (isCspThinkificProduct({ productId: webhookProductId })) {
+        try {
+          googleAdsCspConversion = await uploadPurchase(googleAdsCspConversionActionId());
+          if (!googleAdsCspConversion?.success && !googleAdsCspConversion?.skipped) {
+            console.warn('Google Ads CSP conversion upload did not succeed:', googleAdsCspConversion);
+          }
+        } catch (error) {
+          googleAdsCspConversion = { success: false, error: error?.message };
+          console.warn('Google Ads CSP conversion upload threw:', error?.message);
+        }
       }
     }
 
     const auditReason = [
       conversionAuditReason('linkedin_conversion', linkedInConversion),
       conversionAuditReason('google_ads_conversion', googleAdsConversion),
+      conversionAuditReason('google_ads_csp_conversion', googleAdsCspConversion),
     ]
       .filter(Boolean)
       .join('; ');
@@ -712,6 +731,7 @@ export default async function handler(req, res) {
         ...body,
         ...(linkedInConversion ? { _linkedinConversion: linkedInConversion } : {}),
         ...(googleAdsConversion ? { _googleAdsConversion: googleAdsConversion } : {}),
+        ...(googleAdsCspConversion ? { _googleAdsCspConversion: googleAdsCspConversion } : {}),
       }),
       createdAt: completeCreatedAt,
     });
@@ -727,6 +747,7 @@ export default async function handler(req, res) {
       abEventId: dedupeEventId,
       linkedInConversion,
       googleAdsConversion,
+      googleAdsCspConversion,
     });
   } catch (error) {
     console.error('Order completion webhook failed:', error);

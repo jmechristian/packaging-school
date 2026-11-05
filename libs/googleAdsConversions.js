@@ -17,11 +17,19 @@ import crypto from 'crypto';
 //   GOOGLE_ADS_CUSTOMER_ID            defaults to 6847854799
 //   GOOGLE_ADS_LOGIN_CUSTOMER_ID      defaults to the customer id (set for an MCC login)
 //   GOOGLE_ADS_CONVERSION_ACTION_ID   defaults to 7878499571
+//
+// Certificate of Sustainable Packaging has its own import-from-clicks action.
+// Only Thinkific product 2772370 is uploaded there. Purchase Confirmed still
+// receives that sale as well.
+//   GOOGLE_ADS_CSP_CONVERSION_ACTION_ID  defaults to 7891144790
+//   GOOGLE_ADS_CSP_PRODUCT_ID            defaults to 2772370
 
 const INGEST_URL = 'https://datamanager.googleapis.com/v1/events:ingest';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const DEFAULT_CUSTOMER_ID = '6847854799';
 const DEFAULT_CONVERSION_ACTION_ID = '7878499571';
+const DEFAULT_CSP_CONVERSION_ACTION_ID = '7891144790';
+const DEFAULT_CSP_PRODUCT_ID = '2772370';
 
 let tokenCache = null;
 
@@ -37,6 +45,18 @@ export function googleAdsConversionActionId() {
   return digitsOnly(
     process.env.GOOGLE_ADS_CONVERSION_ACTION_ID || DEFAULT_CONVERSION_ACTION_ID,
   );
+}
+
+export function googleAdsCspConversionActionId() {
+  return digitsOnly(
+    process.env.GOOGLE_ADS_CSP_CONVERSION_ACTION_ID || DEFAULT_CSP_CONVERSION_ACTION_ID,
+  );
+}
+
+export function isCspThinkificProduct({ productId } = {}) {
+  const target = String(process.env.GOOGLE_ADS_CSP_PRODUCT_ID || DEFAULT_CSP_PRODUCT_ID).trim();
+  if (productId === undefined || productId === null || productId === '') return false;
+  return String(productId).trim() === target;
 }
 
 export function isGoogleAdsConversionsConfigured() {
@@ -125,12 +145,14 @@ export function buildGoogleAdsIngestBody(input = {}) {
   const event = buildGoogleAdsPurchaseEvent(input);
   const customerId = googleAdsCustomerId();
   const loginId = digitsOnly(process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID || customerId);
+  const conversionActionId =
+    digitsOnly(input.conversionActionId) || googleAdsConversionActionId();
   return {
     destinations: [
       {
         operatingAccount: { accountType: 'GOOGLE_ADS', accountId: customerId },
         loginAccount: { accountType: 'GOOGLE_ADS', accountId: loginId },
-        productDestinationId: googleAdsConversionActionId(),
+        productDestinationId: conversionActionId,
       },
     ],
     events: [event],
