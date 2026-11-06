@@ -2934,6 +2934,8 @@ export const createLearningPathCourse = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -3005,6 +3007,8 @@ export const updateLearningPathCourse = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -3076,6 +3080,8 @@ export const deleteLearningPathCourse = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -4877,6 +4883,8 @@ export const createLMSCourse = /* GraphQL */ `
       thirtyDay
       ninetyDay
       threeSixtyDay
+      disabled
+      disabledReason
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -4967,6 +4975,8 @@ export const updateLMSCourse = /* GraphQL */ `
       thirtyDay
       ninetyDay
       threeSixtyDay
+      disabled
+      disabledReason
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -5057,6 +5067,8 @@ export const deleteLMSCourse = /* GraphQL */ `
       thirtyDay
       ninetyDay
       threeSixtyDay
+      disabled
+      disabledReason
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -9854,6 +9866,8 @@ export const createCourseReview = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -9955,6 +9969,8 @@ export const updateCourseReview = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -10056,6 +10072,8 @@ export const deleteCourseReview = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -11317,6 +11335,330 @@ export const deleteAnswerEvent = /* GraphQL */ `
       termID
       correct
       latencyMs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOutreachCampaign = /* GraphQL */ `
+  mutation CreateOutreachCampaign(
+    $input: CreateOutreachCampaignInput!
+    $condition: ModelOutreachCampaignConditionInput
+  ) {
+    createOutreachCampaign(input: $input, condition: $condition) {
+      id
+      name
+      targetDate
+      notes
+      status
+      contactCount
+      reachedCount
+      radiusMiles
+      centerLatitude
+      centerLongitude
+      centerLabel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOutreachCampaign = /* GraphQL */ `
+  mutation UpdateOutreachCampaign(
+    $input: UpdateOutreachCampaignInput!
+    $condition: ModelOutreachCampaignConditionInput
+  ) {
+    updateOutreachCampaign(input: $input, condition: $condition) {
+      id
+      name
+      targetDate
+      notes
+      status
+      contactCount
+      reachedCount
+      radiusMiles
+      centerLatitude
+      centerLongitude
+      centerLabel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOutreachCampaign = /* GraphQL */ `
+  mutation DeleteOutreachCampaign(
+    $input: DeleteOutreachCampaignInput!
+    $condition: ModelOutreachCampaignConditionInput
+  ) {
+    deleteOutreachCampaign(input: $input, condition: $condition) {
+      id
+      name
+      targetDate
+      notes
+      status
+      contactCount
+      reachedCount
+      radiusMiles
+      centerLatitude
+      centerLongitude
+      centerLabel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOutreachTarget = /* GraphQL */ `
+  mutation CreateOutreachTarget(
+    $input: CreateOutreachTargetInput!
+    $condition: ModelOutreachTargetConditionInput
+  ) {
+    createOutreachTarget(input: $input, condition: $condition) {
+      id
+      campaignID
+      kind
+      name
+      phone
+      email
+      personCompany
+      title
+      linkedIn
+      contactEmail
+      address1
+      address2
+      city
+      region
+      postalCode
+      country
+      groupNames
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOutreachTarget = /* GraphQL */ `
+  mutation UpdateOutreachTarget(
+    $input: UpdateOutreachTargetInput!
+    $condition: ModelOutreachTargetConditionInput
+  ) {
+    updateOutreachTarget(input: $input, condition: $condition) {
+      id
+      campaignID
+      kind
+      name
+      phone
+      email
+      personCompany
+      title
+      linkedIn
+      contactEmail
+      address1
+      address2
+      city
+      region
+      postalCode
+      country
+      groupNames
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOutreachTarget = /* GraphQL */ `
+  mutation DeleteOutreachTarget(
+    $input: DeleteOutreachTargetInput!
+    $condition: ModelOutreachTargetConditionInput
+  ) {
+    deleteOutreachTarget(input: $input, condition: $condition) {
+      id
+      campaignID
+      kind
+      name
+      phone
+      email
+      personCompany
+      title
+      linkedIn
+      contactEmail
+      address1
+      address2
+      city
+      region
+      postalCode
+      country
+      groupNames
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOutreachContact = /* GraphQL */ `
+  mutation CreateOutreachContact(
+    $input: CreateOutreachContactInput!
+    $condition: ModelOutreachContactConditionInput
+  ) {
+    createOutreachContact(input: $input, condition: $condition) {
+      id
+      targetID
+      name
+      phone
+      email
+      title
+      linkedIn
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOutreachContact = /* GraphQL */ `
+  mutation UpdateOutreachContact(
+    $input: UpdateOutreachContactInput!
+    $condition: ModelOutreachContactConditionInput
+  ) {
+    updateOutreachContact(input: $input, condition: $condition) {
+      id
+      targetID
+      name
+      phone
+      email
+      title
+      linkedIn
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOutreachContact = /* GraphQL */ `
+  mutation DeleteOutreachContact(
+    $input: DeleteOutreachContactInput!
+    $condition: ModelOutreachContactConditionInput
+  ) {
+    deleteOutreachContact(input: $input, condition: $condition) {
+      id
+      targetID
+      name
+      phone
+      email
+      title
+      linkedIn
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOutreachAttempt = /* GraphQL */ `
+  mutation CreateOutreachAttempt(
+    $input: CreateOutreachAttemptInput!
+    $condition: ModelOutreachAttemptConditionInput
+  ) {
+    createOutreachAttempt(input: $input, condition: $condition) {
+      id
+      campaignID
+      subjectID
+      reachedAt
+      responded
+      mood
+      notes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOutreachAttempt = /* GraphQL */ `
+  mutation UpdateOutreachAttempt(
+    $input: UpdateOutreachAttemptInput!
+    $condition: ModelOutreachAttemptConditionInput
+  ) {
+    updateOutreachAttempt(input: $input, condition: $condition) {
+      id
+      campaignID
+      subjectID
+      reachedAt
+      responded
+      mood
+      notes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOutreachAttempt = /* GraphQL */ `
+  mutation DeleteOutreachAttempt(
+    $input: DeleteOutreachAttemptInput!
+    $condition: ModelOutreachAttemptConditionInput
+  ) {
+    deleteOutreachAttempt(input: $input, condition: $condition) {
+      id
+      campaignID
+      subjectID
+      reachedAt
+      responded
+      mood
+      notes
       createdAt
       updatedAt
       __typename
@@ -13073,6 +13415,8 @@ export const createUserWishlist = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13170,6 +13514,8 @@ export const updateUserWishlist = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13267,6 +13613,8 @@ export const deleteUserWishlist = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13340,6 +13688,8 @@ export const createCollectionCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13413,6 +13763,8 @@ export const updateCollectionCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13486,6 +13838,8 @@ export const deleteCollectionCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13550,6 +13904,8 @@ export const createCirriculumCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13614,6 +13970,8 @@ export const updateCirriculumCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13678,6 +14036,8 @@ export const deleteCirriculumCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13732,6 +14092,8 @@ export const createCourseLessons = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13799,6 +14161,8 @@ export const updateCourseLessons = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13866,6 +14230,8 @@ export const deleteCourseLessons = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -13933,6 +14299,8 @@ export const createCourseInstructors = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14000,6 +14368,8 @@ export const updateCourseInstructors = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14067,6 +14437,8 @@ export const deleteCourseInstructors = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14134,6 +14506,8 @@ export const createAchievementCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14198,6 +14572,8 @@ export const updateAchievementCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14262,6 +14638,8 @@ export const deleteAchievementCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14326,6 +14704,8 @@ export const createPartnerCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14389,6 +14769,8 @@ export const updatePartnerCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14452,6 +14834,8 @@ export const deletePartnerCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14515,6 +14899,8 @@ export const createLibraryCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14595,6 +14981,8 @@ export const updateLibraryCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14675,6 +15063,8 @@ export const deleteLibraryCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14755,6 +15145,8 @@ export const createCourseGlossaryTerms = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14823,6 +15215,8 @@ export const updateCourseGlossaryTerms = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -14891,6 +15285,8 @@ export const deleteCourseGlossaryTerms = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId

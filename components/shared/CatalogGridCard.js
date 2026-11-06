@@ -1,6 +1,7 @@
 import React from 'react';
 import { MdHourglassEmpty } from 'react-icons/md';
 import CatalogVideoPreview from './CatalogVideoPreview';
+import { CourseDisabledCallout } from './CourseDisabledNotice';
 
 const formatPrice = (price) => {
   if (price === 'FREE' || price === 'Free' || price === 0 || price === '0') {
@@ -26,6 +27,8 @@ const CatalogGridCard = ({
   hidePrice = false,
   isCertificate = false,
   abbreviation,
+  disabled = false,
+  disabledReason,
 }) => {
   const handleClick = (e) => {
     if (e.target.closest('button') || e.target.closest('a')) return;
@@ -69,6 +72,10 @@ const CatalogGridCard = ({
           )}
         </div>
 
+        {disabled && disabledReason ? (
+          <CourseDisabledCallout reason={disabledReason} />
+        ) : null}
+
         <h3 className='font-semibold text-slate-900 text-base leading-tight'>
           {title}
         </h3>
@@ -111,17 +118,24 @@ const CatalogGridCard = ({
                   <span className='text-base font-semibold text-slate-900 leading-none'>
                     {formatPrice(price)}
                   </span>
-                  {onPurchase && (isCertificate || price !== 'FREE') && (
-                    <button
-                      type='button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onPurchase();
-                      }}
-                      className='text-xs font-medium text-base-brand hover:underline'
-                    >
-                      {purchaseLabel}
-                    </button>
+                  {disabled ? (
+                    <span className='text-xs font-medium text-slate-400'>
+                      Unavailable
+                    </span>
+                  ) : (
+                    onPurchase &&
+                    (isCertificate || price !== 'FREE') && (
+                      <button
+                        type='button'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onPurchase();
+                        }}
+                        className='text-xs font-medium text-base-brand hover:underline'
+                      >
+                        {purchaseLabel}
+                      </button>
+                    )
                   )}
                 </>
               )}

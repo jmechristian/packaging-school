@@ -1611,6 +1611,8 @@ export const getLearningPathCourse = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -2676,6 +2678,8 @@ export const getLMSCourse = /* GraphQL */ `
       thirtyDay
       ninetyDay
       threeSixtyDay
+      disabled
+      disabledReason
       createdAt
       updatedAt
       customerLibaryClientCoursesId
@@ -2724,6 +2728,8 @@ export const listLMSCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -5806,6 +5812,8 @@ export const getCourseReview = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -6697,6 +6705,242 @@ export const listAnswerEvents = /* GraphQL */ `
     }
   }
 `;
+export const getOutreachCampaign = /* GraphQL */ `
+  query GetOutreachCampaign($id: ID!) {
+    getOutreachCampaign(id: $id) {
+      id
+      name
+      targetDate
+      notes
+      status
+      contactCount
+      reachedCount
+      radiusMiles
+      centerLatitude
+      centerLongitude
+      centerLabel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listOutreachCampaigns = /* GraphQL */ `
+  query ListOutreachCampaigns(
+    $filter: ModelOutreachCampaignFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOutreachCampaigns(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        targetDate
+        notes
+        status
+        contactCount
+        reachedCount
+        radiusMiles
+        centerLatitude
+        centerLongitude
+        centerLabel
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getOutreachTarget = /* GraphQL */ `
+  query GetOutreachTarget($id: ID!) {
+    getOutreachTarget(id: $id) {
+      id
+      campaignID
+      kind
+      name
+      phone
+      email
+      personCompany
+      title
+      linkedIn
+      contactEmail
+      address1
+      address2
+      city
+      region
+      postalCode
+      country
+      groupNames
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listOutreachTargets = /* GraphQL */ `
+  query ListOutreachTargets(
+    $filter: ModelOutreachTargetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOutreachTargets(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        campaignID
+        kind
+        name
+        phone
+        email
+        personCompany
+        title
+        linkedIn
+        contactEmail
+        address1
+        address2
+        city
+        region
+        postalCode
+        country
+        groupNames
+        assigneeID
+        assigneeName
+        reachedOut
+        reachedOutAt
+        notes
+        category
+        latitude
+        longitude
+        archived
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getOutreachContact = /* GraphQL */ `
+  query GetOutreachContact($id: ID!) {
+    getOutreachContact(id: $id) {
+      id
+      targetID
+      name
+      phone
+      email
+      title
+      linkedIn
+      assigneeID
+      assigneeName
+      reachedOut
+      reachedOutAt
+      notes
+      category
+      latitude
+      longitude
+      archived
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listOutreachContacts = /* GraphQL */ `
+  query ListOutreachContacts(
+    $filter: ModelOutreachContactFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOutreachContacts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        targetID
+        name
+        phone
+        email
+        title
+        linkedIn
+        assigneeID
+        assigneeName
+        reachedOut
+        reachedOutAt
+        notes
+        category
+        latitude
+        longitude
+        archived
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getOutreachAttempt = /* GraphQL */ `
+  query GetOutreachAttempt($id: ID!) {
+    getOutreachAttempt(id: $id) {
+      id
+      campaignID
+      subjectID
+      reachedAt
+      responded
+      mood
+      notes
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listOutreachAttempts = /* GraphQL */ `
+  query ListOutreachAttempts(
+    $filter: ModelOutreachAttemptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOutreachAttempts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignID
+        subjectID
+        reachedAt
+        responded
+        mood
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getLessonTags = /* GraphQL */ `
   query GetLessonTags($id: ID!) {
     getLessonTags(id: $id) {
@@ -7511,6 +7755,8 @@ export const getUserWishlist = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -7601,6 +7847,8 @@ export const getCollectionCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -7686,6 +7934,8 @@ export const getCirriculumCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -7761,6 +8011,8 @@ export const getCourseLessons = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -7845,6 +8097,8 @@ export const getCourseInstructors = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -7933,6 +8187,8 @@ export const getAchievementCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -8018,6 +8274,8 @@ export const getPartnerCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -8098,6 +8356,8 @@ export const getLibraryCourses = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -8195,6 +8455,8 @@ export const getCourseGlossaryTerms = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -9407,6 +9669,8 @@ export const lMSCoursesByThinkificId = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -9466,6 +9730,8 @@ export const lMSCoursesBySlug = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
         createdAt
         updatedAt
         customerLibaryClientCoursesId
@@ -12069,6 +12335,170 @@ export const answerEventsByTermIDAndCreatedAt = /* GraphQL */ `
         termID
         correct
         latencyMs
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const outreachTargetsByCampaign = /* GraphQL */ `
+  query OutreachTargetsByCampaign(
+    $campaignID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOutreachTargetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    outreachTargetsByCampaign(
+      campaignID: $campaignID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignID
+        kind
+        name
+        phone
+        email
+        personCompany
+        title
+        linkedIn
+        contactEmail
+        address1
+        address2
+        city
+        region
+        postalCode
+        country
+        groupNames
+        assigneeID
+        assigneeName
+        reachedOut
+        reachedOutAt
+        notes
+        category
+        latitude
+        longitude
+        archived
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const outreachContactsByTarget = /* GraphQL */ `
+  query OutreachContactsByTarget(
+    $targetID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOutreachContactFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    outreachContactsByTarget(
+      targetID: $targetID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        targetID
+        name
+        phone
+        email
+        title
+        linkedIn
+        assigneeID
+        assigneeName
+        reachedOut
+        reachedOutAt
+        notes
+        category
+        latitude
+        longitude
+        archived
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const outreachAttemptsByCampaign = /* GraphQL */ `
+  query OutreachAttemptsByCampaign(
+    $campaignID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOutreachAttemptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    outreachAttemptsByCampaign(
+      campaignID: $campaignID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignID
+        subjectID
+        reachedAt
+        responded
+        mood
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const outreachAttemptsBySubject = /* GraphQL */ `
+  query OutreachAttemptsBySubject(
+    $subjectID: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOutreachAttemptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    outreachAttemptsBySubject(
+      subjectID: $subjectID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        campaignID
+        subjectID
+        reachedAt
+        responded
+        mood
+        notes
         createdAt
         updatedAt
         __typename

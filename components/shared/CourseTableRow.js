@@ -4,6 +4,11 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdVideocam, MdClose, MdHourglassEmpty } from 'react-icons/md';
 import SubheadlineCell from './SubheadlineCell';
+import {
+  CourseDisabledCallout,
+  CourseDisabledLabel,
+  isCourseDisabled,
+} from './CourseDisabledNotice';
 
 const VideoPlayer = dynamic(
   () => import('../VideoPlayer').then((m) => m.default),
@@ -16,9 +21,18 @@ const CourseTableRow = ({
   onPurchase,
   isNavigating,
   hidePrice = false,
+  disabledStyle = 'callout',
 }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const hasPreview = !!(course.preview || course.video);
+  const isDisabled = isCourseDisabled(course);
+  const useLabel = isDisabled && disabledStyle === 'label';
+  const reason = course.disabledReason?.trim();
+  const cellBg = useLabel
+    ? 'bg-neutral-200'
+    : isNavigating
+      ? 'bg-slate-100'
+      : 'bg-white group-hover:bg-slate-50';
 
   const handleRowClick = (e) => {
     if (e.target.closest('button') || e.target.closest('a')) return;
@@ -34,24 +48,52 @@ const CourseTableRow = ({
 
   return (
     <>
+      {useLabel && reason ? (
+        <tr className='bg-neutral-200'>
+          <td colSpan={hidePrice ? 6 : 7} className='px-2 sm:px-3 pt-2 pb-0'>
+            <CourseDisabledLabel reason={reason} />
+          </td>
+        </tr>
+      ) : null}
       <tr
         className={`border-b border-slate-200 transition-colors group relative ${
-          isNavigating ? 'bg-slate-100 cursor-wait' : 'hover:bg-slate-50 cursor-pointer'
+          useLabel
+            ? `bg-neutral-200 [&_*]:!text-slate-400 ${isNavigating ? 'cursor-wait' : 'cursor-pointer'}`
+            : isNavigating
+              ? 'bg-slate-100 cursor-wait'
+              : 'hover:bg-slate-50 cursor-pointer'
         }`}
         onClick={handleRowClick}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role='button'
+        aria-disabled={isDisabled || undefined}
       >
-        <td className={`sticky left-0 z-[1] px-2 sm:px-3 py-2.5 sm:py-3 text-xs font-mono text-slate-600 align-top whitespace-nowrap shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)] ${
-          isNavigating ? 'bg-slate-100' : 'bg-white group-hover:bg-slate-50'
-        }`}>
+        <td className={`sticky left-0 z-[1] px-2 sm:px-3 py-2.5 sm:py-3 text-xs font-mono align-top whitespace-nowrap shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)] ${
+          useLabel ? 'text-slate-400' : 'text-slate-600'
+        } ${cellBg}`}>
           {course.courseId}
         </td>
         <td className='px-2 sm:px-3 py-2.5 sm:py-3 align-top min-w-0'>
-          <div className='font-semibold text-slate-900 text-sm sm:text-base leading-tight break-words'>{course.title}</div>
+          <div className='flex flex-col items-start gap-1'>
+            {!useLabel && isDisabled ? (
+              <CourseDisabledCallout reason={reason} />
+            ) : null}
+            <div
+              className={`font-semibold text-sm sm:text-base leading-tight break-words ${
+                useLabel ? 'text-slate-500' : 'text-slate-900'
+              }`}
+            >
+              {course.title}
+            </div>
+          </div>
         </td>
-        <SubheadlineCell content={course.subheadline || ''} className='py-2.5 sm:py-3' />
+        <SubheadlineCell
+          content={course.subheadline || ''}
+          className={`py-2.5 sm:py-3 ${
+            useLabel ? '[&_.text-slate-700]:text-slate-400 [&_button]:text-slate-400' : ''
+          }`}
+        />
         <td className='px-2 sm:px-3 py-2.5 sm:py-3 text-sm font-medium align-top text-center'>
           {course.hours}
         </td>
@@ -59,9 +101,7 @@ const CourseTableRow = ({
           {course.lessons}
         </td>
         <td
-          className={`px-0 py-2.5 sm:py-3 align-middle text-center overflow-hidden ${
-            isNavigating ? 'bg-slate-100' : 'bg-white group-hover:bg-slate-50'
-          }`}
+          className={`px-0 py-2.5 sm:py-3 align-middle text-center overflow-hidden ${cellBg}`}
         >
           <div className='flex items-center justify-center w-full'>
             {isNavigating ? (
@@ -86,16 +126,23 @@ const CourseTableRow = ({
               <span className='text-sm sm:text-base font-semibold truncate'>
                 {course.price === 'FREE' ? 'Free' : `$${course.price}`}
               </span>
-              {onPurchase && course.price !== 'FREE' && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onPurchase();
-                  }}
-                  className='text-xs font-medium text-base-brand hover:underline'
-                >
-                  Enroll
-                </button>
+              {isDisabled ? (
+                <span className='text-xs font-medium text-slate-400'>
+                  Unavailable
+                </span>
+              ) : (
+                onPurchase &&
+                course.price !== 'FREE' && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPurchase();
+                    }}
+                    className='text-xs font-medium text-base-brand hover:underline'
+                  >
+                    Enroll
+                  </button>
+                )
               )}
             </div>
           </td>

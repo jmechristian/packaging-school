@@ -976,6 +976,8 @@ export const getAllLMSCourses = async () => {
           stripeLink
           demo
           partOf
+          disabled
+          disabledReason
         }
       }
     }

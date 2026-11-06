@@ -168,6 +168,7 @@ const Page = () => {
   });
 
   const orderHandler = async (courseData) => {
+    if (courseData?.disabled) return;
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
       courseDiscount: 0,

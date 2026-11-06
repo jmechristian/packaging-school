@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { trackAbProductView } from '../../libs/analytics';
 import HoverCard from '../../components/shared/HoverCard';
+import { CourseDisabledCallout } from '../../components/shared/CourseDisabledNotice';
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
 import { getCourseInstructorsWithDetails } from '../../libs/courseInstructorsQuery';
@@ -52,6 +53,8 @@ const lMSCoursesBySlug = /* GraphQL */ `
         thirtyDay
         ninetyDay
         threeSixtyDay
+        disabled
+        disabledReason
       }
     }
   }
@@ -233,6 +236,7 @@ const Page = ({ course }) => {
   };
 
   const orderHandler = async (type) => {
+    if (course?.disabled) return;
     const { link: targetUrl, total } = getCheckout(type);
     if (!targetUrl) return;
     setIsLoading(true);
@@ -330,7 +334,13 @@ const Page = ({ course }) => {
                     ))}
                 </ol>
               </nav>
-              <div className='w-full'>
+              <div className='w-full flex flex-col items-start gap-2'>
+                {course.disabled && course.disabledReason ? (
+                  <CourseDisabledCallout
+                    reason={course.disabledReason}
+                    className='text-xs px-2.5 py-1'
+                  />
+                ) : null}
                 <h1 className='h2-base'>{course.title}</h1>
               </div>
               <div className='w-full text-xl text-gray-600'>
@@ -574,7 +584,8 @@ const Page = ({ course }) => {
                             role='radio'
                             aria-checked={isSelected}
                             onClick={() => setSelectedTier(tier.id)}
-                            className={`w-full text-left rounded-lg border p-3.5 transition-colors ${
+                            disabled={course.disabled}
+                            className={`w-full text-left rounded-lg border p-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                               isSelected
                                 ? 'border-clemson bg-clemson/5 shadow-sm'
                                 : 'border-gray-200 bg-white hover:border-gray-300'
@@ -623,14 +634,16 @@ const Page = ({ course }) => {
                         onClick={() =>
                           activeTier && orderHandler(activeTier.id)
                         }
-                        disabled={isLoading || !activeTier}
+                        disabled={isLoading || !activeTier || course.disabled}
                         className='w-full bg-clemson hover:bg-clemson-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                       >
-                        {isLoading
-                          ? 'Loading...'
-                          : `Get ${activeTier?.label ?? 'Access'}`}
+                        {course.disabled
+                          ? 'Unavailable'
+                          : isLoading
+                            ? 'Loading...'
+                            : `Get ${activeTier?.label ?? 'Access'}`}
                       </button>
-                      {trialLink && (
+                      {trialLink && !course.disabled && (
                         <button
                           type='button'
                           onClick={() => orderHandler('TRIAL')}
@@ -657,12 +670,16 @@ const Page = ({ course }) => {
                       <button
                         type='button'
                         onClick={() => orderHandler('BUY')}
-                        disabled={isLoading}
+                        disabled={isLoading || course.disabled}
                         className='w-full bg-clemson hover:bg-clemson-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                       >
-                        {isLoading ? 'Loading...' : 'Buy now'}
+                        {course.disabled
+                          ? 'Unavailable'
+                          : isLoading
+                            ? 'Loading...'
+                            : 'Buy now'}
                       </button>
-                      {trialLink && (
+                      {trialLink && !course.disabled && (
                         <button
                           type='button'
                           onClick={() => orderHandler('TRIAL')}

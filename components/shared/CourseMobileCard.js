@@ -3,6 +3,11 @@ import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdVideocam, MdClose, MdHourglassEmpty } from 'react-icons/md';
+import {
+  CourseDisabledCallout,
+  CourseDisabledLabel,
+  isCourseDisabled,
+} from './CourseDisabledNotice';
 
 const VideoPlayer = dynamic(
   () => import('../VideoPlayer').then((m) => m.default),
@@ -15,9 +20,13 @@ const CourseMobileCard = ({
   onPurchase,
   isNavigating,
   hidePrice = false,
+  disabledStyle = 'callout',
 }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const hasPreview = !!(course.preview || course.video);
+  const isDisabled = isCourseDisabled(course);
+  const useLabel = isDisabled && disabledStyle === 'label';
+  const reason = course.disabledReason?.trim();
 
   const handleClick = (e) => {
     if (e.target.closest('button') || e.target.closest('a')) return;
@@ -26,6 +35,14 @@ const CourseMobileCard = ({
 
   return (
     <>
+      <div
+        className={`border-b border-slate-200 ${useLabel ? 'bg-neutral-200' : ''}`}
+      >
+        {useLabel && reason ? (
+          <div className='px-3 pt-2'>
+            <CourseDisabledLabel reason={reason} />
+          </div>
+        ) : null}
       <div
         role='button'
         tabIndex={0}
@@ -36,15 +53,25 @@ const CourseMobileCard = ({
             onRowClick?.();
           }
         }}
-        className={`flex justify-between gap-3 p-3 border-b border-slate-200 ${
-          isNavigating ? 'bg-slate-100 cursor-wait' : 'cursor-pointer active:bg-slate-50'
+        aria-disabled={isDisabled || undefined}
+        className={`flex justify-between gap-3 p-3 ${
+          useLabel
+            ? 'opacity-50 cursor-pointer'
+            : isNavigating
+              ? 'bg-slate-100 cursor-wait'
+              : 'cursor-pointer active:bg-slate-50'
         }`}
       >
         <div className='min-w-0 flex-1'>
-          <div className='text-xs font-mono text-slate-600 mb-0.5'>
+          {!useLabel && isDisabled ? (
+            <div className='mb-1'>
+              <CourseDisabledCallout reason={reason} />
+            </div>
+          ) : null}
+          <div className={`text-xs font-mono mb-0.5 ${useLabel ? 'text-slate-400' : 'text-slate-600'}`}>
             {course.courseId}
           </div>
-          <div className='font-semibold text-slate-900 text-sm leading-tight'>
+          <div className={`font-semibold text-sm leading-tight ${useLabel ? 'text-slate-500' : 'text-slate-900'}`}>
             {course.title}
           </div>
         </div>
@@ -68,20 +95,28 @@ const CourseMobileCard = ({
               <div className='font-semibold text-slate-900'>
                 {course.price === 'FREE' ? 'Free' : `$${course.price}`}
               </div>
-              {onPurchase && course.price !== 'FREE' && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onPurchase();
-                  }}
-                  className='text-xs font-medium text-base-brand hover:underline'
-                >
-                  Enroll
-                </button>
+              {isDisabled ? (
+                <span className='text-xs font-medium text-slate-400'>
+                  Unavailable
+                </span>
+              ) : (
+                onPurchase &&
+                course.price !== 'FREE' && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPurchase();
+                    }}
+                    className='text-xs font-medium text-base-brand hover:underline'
+                  >
+                    Enroll
+                  </button>
+                )
               )}
             </div>
           )}
         </div>
+      </div>
       </div>
       {typeof document !== 'undefined' &&
         createPortal(

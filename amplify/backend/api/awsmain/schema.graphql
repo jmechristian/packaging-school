@@ -725,6 +725,8 @@ type LMSCourse @model @auth(rules: [{ allow: public }]) {
   thirtyDay: String
   ninetyDay: String
   threeSixtyDay: String
+  disabled: Boolean
+  disabledReason: String
 }
 
 type LMSLesson @model @auth(rules: [{ allow: public }]) {
@@ -883,7 +885,8 @@ type CustomerLibary @model @auth(rules: [{ allow: public }]) {
 
 type ReportLayout @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  libraryId: ID! @index(name: "layoutsByLibrary", queryField: "layoutsByLibrary")
+  libraryId: ID!
+    @index(name: "layoutsByLibrary", queryField: "layoutsByLibrary")
   library: CustomerLibary @belongsTo(fields: ["libraryId"])
   name: String!
   title: String
@@ -1420,7 +1423,10 @@ type EmailAutomation @model @auth(rules: [{ allow: public }]) {
 type EmailAutomationRun @model @auth(rules: [{ allow: public }]) {
   id: ID!
   automationId: ID!
-    @index(name: "emailAutomationRunByAutomation", queryField: "emailAutomationRunByAutomation")
+    @index(
+      name: "emailAutomationRunByAutomation"
+      queryField: "emailAutomationRunByAutomation"
+    )
   runOn: String
   status: String
   subject: String
@@ -1808,5 +1814,119 @@ type AnswerEvent @model @auth(rules: [{ allow: public }]) {
   termID: ID! @index(name: "eventsByTerm", sortKeyFields: ["createdAt"])
   correct: Boolean!
   latencyMs: Int
+  createdAt: AWSDateTime
+}
+
+######### OUTREACH #########
+
+enum OutreachCampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETE
+}
+
+enum OutreachTargetKind {
+  PERSON
+  COMPANY
+}
+
+type OutreachCampaign @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  targetDate: AWSDate
+  notes: String
+  status: OutreachCampaignStatus @default(value: "ACTIVE")
+  contactCount: Int @default(value: "0")
+  reachedCount: Int @default(value: "0")
+  radiusMiles: Float
+  centerLatitude: Float
+  centerLongitude: Float
+  centerLabel: String
+}
+
+# A campaign target is either one person, or a company that contains people.
+# Both are contacts. Person fields live on the target when kind is PERSON.
+# People inside a company are OutreachContact rows.
+# category is a free label for the map color. latitude and longitude are geocoded.
+type OutreachTarget @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  campaignID: ID!
+    @index(
+      name: "outreachTargetsByCampaign"
+      queryField: "outreachTargetsByCampaign"
+      sortKeyFields: ["createdAt"]
+    )
+  kind: OutreachTargetKind!
+  name: String
+  phone: String
+  email: String
+  personCompany: String
+  title: String
+  linkedIn: String
+  contactEmail: String
+  address1: String
+  address2: String
+  city: String
+  region: String
+  postalCode: String
+  country: String
+  groupNames: [String]
+  assigneeID: ID
+  assigneeName: String
+  reachedOut: Boolean @default(value: "false")
+  reachedOutAt: AWSDateTime
+  notes: String
+  category: String
+  latitude: Float
+  longitude: Float
+  archived: Boolean @default(value: "false")
+  createdAt: AWSDateTime
+}
+
+type OutreachContact @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  targetID: ID!
+    @index(
+      name: "outreachContactsByTarget"
+      queryField: "outreachContactsByTarget"
+      sortKeyFields: ["createdAt"]
+    )
+  name: String
+  phone: String
+  email: String
+  title: String
+  linkedIn: String
+  assigneeID: ID
+  assigneeName: String
+  reachedOut: Boolean @default(value: "false")
+  reachedOutAt: AWSDateTime
+  notes: String
+  category: String
+  latitude: Float
+  longitude: Float
+  archived: Boolean @default(value: "false")
+  createdAt: AWSDateTime
+}
+
+# One logged reach-out. subjectID is the person, company, or person-at-a-company.
+# reachedAt is the date and time entered for that attempt. mood is 1–5 when they responded.
+type OutreachAttempt @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  campaignID: ID!
+    @index(
+      name: "outreachAttemptsByCampaign"
+      queryField: "outreachAttemptsByCampaign"
+      sortKeyFields: ["createdAt"]
+    )
+  subjectID: ID!
+    @index(
+      name: "outreachAttemptsBySubject"
+      queryField: "outreachAttemptsBySubject"
+      sortKeyFields: ["createdAt"]
+    )
+  reachedAt: AWSDateTime
+  responded: Boolean @default(value: "false")
+  mood: Int
+  notes: String
   createdAt: AWSDateTime
 }

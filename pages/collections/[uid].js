@@ -57,6 +57,8 @@ const collectionBySlugWithCourses = /* GraphQL */ `
               video: videos
               link
               seoImage
+              disabled
+              disabledReason
             }
           }
         }
@@ -262,6 +264,7 @@ const Page = ({ collection, courses }) => {
                           course={course}
                           isNavigating={navigatingId === course.id}
                           hidePrice
+                          disabledStyle='label'
                           onRowClick={async () => {
                             setNavigatingId(course.id);
                             await registgerCourseClick(
@@ -297,7 +300,7 @@ const Page = ({ collection, courses }) => {
                         <colgroup>
                           <col style={{ width: '8%' }} />
                           <col style={{ width: '24%' }} />
-                          <col style={{ width: '44%' }} />
+                          <col style={{ width: '52%' }} />
                           <col style={{ width: '6%' }} />
                           <col style={{ width: '6%' }} />
                           <col style={{ width: '4%' }} />
@@ -358,6 +361,7 @@ const Page = ({ collection, courses }) => {
                               course={course}
                               isNavigating={navigatingId === course.id}
                               hidePrice
+                              disabledStyle='label'
                               onRowClick={async () => {
                                 setNavigatingId(course.id);
                                 await registgerCourseClick(

@@ -336,6 +336,7 @@ const Page = ({
   const isCategoryExpanded = (cat) => !collapsedCategories.has(cat);
 
   const orderHandler = async (courseData) => {
+    if (courseData?.disabled) return;
     const orderId = await createNewOrder({
       courseDescription: courseData.subheadline,
       courseDiscount: 0,
@@ -882,6 +883,8 @@ const Page = ({
                               previewUrl={course.preview || course.video}
                               isNavigating={navigatingId === course.id}
                               purchaseLabel='Enroll'
+                              disabled={Boolean(course.disabled)}
+                              disabledReason={course.disabledReason}
                               onCardClick={() => {
                                 setNavigatingId(course.id);
                                 cardClickHandler(
