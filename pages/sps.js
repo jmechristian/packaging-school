@@ -58,6 +58,8 @@ export default function SoutheasternPackagingSummit() {
   });
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
+  const [flyerUrl, setFlyerUrl] = useState('');
+  const [flyerOpened, setFlyerOpened] = useState(false);
 
   const update = (key) => (event) => {
     setForm((current) => ({ ...current, [key]: event.target.value }));
@@ -65,6 +67,7 @@ export default function SoutheasternPackagingSummit() {
 
   const submit = async (event) => {
     event.preventDefault();
+    const flyerTab = window.open('', '_blank');
     setStatus('saving');
     setMessage('');
     try {
@@ -77,9 +80,27 @@ export default function SoutheasternPackagingSummit() {
       if (!response.ok) {
         throw new Error(data.message || 'Could not save your request.');
       }
+      const nextFlyerUrl =
+        typeof data.flyerUrl === 'string' && data.flyerUrl.startsWith('https://')
+          ? data.flyerUrl
+          : '';
+      let opened = false;
+      if (nextFlyerUrl && flyerTab && !flyerTab.closed) {
+        try {
+          flyerTab.location.replace(nextFlyerUrl);
+          opened = true;
+        } catch {
+          flyerTab.close();
+        }
+      } else if (flyerTab && !flyerTab.closed) {
+        flyerTab.close();
+      }
+      setFlyerUrl(nextFlyerUrl);
+      setFlyerOpened(opened);
       setStatus('saved');
       setForm({ name: '', email: '', company: '', interest: 'attend' });
     } catch (error) {
+      if (flyerTab && !flyerTab.closed) flyerTab.close();
       setStatus('error');
       setMessage(error.message);
     }
@@ -163,12 +184,28 @@ export default function SoutheasternPackagingSummit() {
               <p className='sps-note'>
                 Details on attending and sponsoring will come to the email you
                 shared.
+                {flyerOpened
+                  ? ' The flyer is open in a new tab.'
+                  : ' Open the flyer below.'}
               </p>
+              {flyerUrl ? (
+                <a
+                  className='sps-flyer-open'
+                  href={flyerUrl}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  Open the flyer
+                </a>
+              ) : null}
             </div>
           ) : (
             <form onSubmit={submit}>
               <p className='sps-kicker'>Stay informed</p>
               <h2>Tell us how you want to take part.</h2>
+              <p className='sps-flyer-line'>
+                Submit to download additional information about the event.
+              </p>
               <label>
                 Name
                 <input
@@ -429,6 +466,26 @@ export default function SoutheasternPackagingSummit() {
         }
         button:disabled {
           opacity: 0.7;
+        }
+        .sps-flyer-line {
+          margin: -6px 0 2px;
+          color: rgba(247, 244, 239, 0.78);
+          font-size: 15px;
+          line-height: 1.45;
+        }
+        .sps-flyer-open {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 18px;
+          height: 48px;
+          padding: 0 18px;
+          border-radius: 999px;
+          background: #e05020;
+          color: white;
+          font-size: 16px;
+          font-weight: 700;
+          text-decoration: none;
         }
         .sps-error {
           margin: 0;

@@ -2,6 +2,8 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { createSpsInterest } from '../../../helpers/spsInterest';
 
 const CONTACT_EMAIL = 'info@packagingschool.com';
+const FLYER_URL =
+  'https://packschool.s3.us-east-1.amazonaws.com/SPS-Flyer-V3.pdf';
 
 const sesClient = new SESClient({
   region: 'us-east-1',
@@ -73,7 +75,7 @@ export default async function handler(req, res) {
       console.error('SPS interest email failed:', mailError);
     }
 
-    return res.status(201).json({ id: item?.id });
+    return res.status(201).json({ id: item?.id, flyerUrl: FLYER_URL });
   } catch (error) {
     console.error('SPS interest save failed:', error);
     return res.status(500).json({
