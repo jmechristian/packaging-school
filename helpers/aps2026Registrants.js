@@ -64,7 +64,7 @@ export async function isApprovedAps2026Registrant({ email, firstName, lastName }
   return items.some(
     (item) =>
       item.status === 'APPROVED' &&
-      String(item.aps?.year) === '2026' &&
+      String(item.aps?.year || '').includes('2026') &&
       normalize(item.firstName) === first &&
       normalize(item.lastName) === last,
   );

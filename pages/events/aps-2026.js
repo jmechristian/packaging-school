@@ -97,10 +97,15 @@ const NAV = [
   { href: '#next-year', label: '2027', icon: CalendarDaysIcon },
 ];
 
-const APS2026 = ({ photos = [] }) => {
+const APS2026 = ({ photos = [], presentations = [] }) => {
   const [page, setPage] = useState(1);
   const [activePhoto, setActivePhoto] = useState(null);
   const [accessOpen, setAccessOpen] = useState(false);
+  const [accessIntent, setAccessIntent] = useState('certificate');
+  const [pendingVideoId, setPendingVideoId] = useState(null);
+  const [activeVideoId, setActiveVideoId] = useState(null);
+  const [unlocked, setUnlocked] = useState(false);
+  const [videos, setVideos] = useState({});
   const [attendee, setAttendee] = useState(emptyAttendee);
   const [accessError, setAccessError] = useState('');
   const [accessPending, setAccessPending] = useState(false);
@@ -139,11 +144,59 @@ const APS2026 = ({ photos = [] }) => {
     return () => window.removeEventListener('keydown', onKey);
   }, [accessOpen]);
 
-  const openCompletionAccess = () => {
+  useEffect(() => {
+    if (!activeVideoId) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') setActiveVideoId(null);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [activeVideoId]);
+
+  useEffect(() => {
+    const saved = readAttendee();
+    if (!saved?.email || !saved.firstName || !saved.lastName) return undefined;
+    let cancelled = false;
+    const restore = async () => {
+      try {
+        const response = await fetch('/api/events/aps-2026-videos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(saved),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || cancelled) return;
+        setVideos(data.videos || {});
+        setUnlocked(true);
+      } catch (error) {
+        console.error('APS 2026 presentation restore failed', error);
+      }
+    };
+    restore();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const openAccess = (intent, videoId = null) => {
     const saved = readAttendee();
     setAttendee(saved ? { ...emptyAttendee, ...saved } : emptyAttendee);
     setAccessError('');
+    setAccessIntent(intent);
+    setPendingVideoId(videoId);
     setAccessOpen(true);
+  };
+
+  const openPresentation = (id) => {
+    if (unlocked && videos[id]) {
+      setActiveVideoId(id);
+      return;
+    }
+    openAccess('presentations', id);
   };
 
   const submitCompletionAccess = async (event) => {
@@ -158,14 +211,21 @@ const APS2026 = ({ photos = [] }) => {
     setAccessPending(true);
     setAccessError('');
     const next = { email, firstName, lastName };
+    const forPresentations = accessIntent === 'presentations';
 
+    let data = {};
     try {
-      const response = await fetch('/api/events/aps-2026-access', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(next),
-      });
-      const data = await response.json().catch(() => ({}));
+      const response = await fetch(
+        forPresentations
+          ? '/api/events/aps-2026-videos'
+          : '/api/events/aps-2026-access',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(next),
+        },
+      );
+      data = await response.json().catch(() => ({}));
       if (!response.ok) {
         setAccessPending(false);
         setAccessError(
@@ -182,8 +242,24 @@ const APS2026 = ({ photos = [] }) => {
     }
 
     writeAttendee(next);
+
+    if (forPresentations) {
+      setVideos(data.videos || {});
+      setUnlocked(true);
+      setAccessOpen(false);
+      setAccessPending(false);
+      if (pendingVideoId && data.videos?.[pendingVideoId]) {
+        setActiveVideoId(pendingVideoId);
+      }
+      return;
+    }
+
     await sendToCompletionCourse(next);
   };
+
+  const talks = presentations.filter((item) => item.group !== 'pitch');
+  const pitches = presentations.filter((item) => item.group === 'pitch');
+  const activeVideo = presentations.find((item) => item.id === activeVideoId);
 
   const goToPage = (nextPage) => {
     setPage(nextPage);
@@ -334,14 +410,34 @@ const APS2026 = ({ photos = [] }) => {
           id='presentations'
           className='scroll-mt-40 mx-auto max-w-7xl px-5 pb-12 lg:pb-20 xl:px-0'
         >
-          <div className='rounded-2xl bg-ap-darkblue px-6 py-10 text-white md:px-12 md:py-14'>
-            <p className='text-xs font-semibold uppercase tracking-[0.16em] text-ap-yellow'>
-              Presentations
-            </p>
-            <h2 className='mt-2 font-oswald text-4xl font-medium uppercase leading-none tracking-tight md:text-5xl'>
-              Coming soon
-            </h2>
+          <SectionHeading kicker='Presentations' title='From the stage' />
+          <div className='mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3'>
+            {talks.map((item) => (
+              <PresentationCard
+                key={item.id}
+                item={item}
+                unlocked={unlocked}
+                onOpen={openPresentation}
+              />
+            ))}
           </div>
+          {pitches.length > 0 && (
+            <div className='mt-10'>
+              <h3 className='font-oswald text-2xl font-medium uppercase leading-none tracking-tight md:text-3xl'>
+                Pack Pitch Contest
+              </h3>
+              <div className='mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3'>
+                {pitches.map((item) => (
+                  <PresentationCard
+                    key={item.id}
+                    item={item}
+                    unlocked={unlocked}
+                    onOpen={openPresentation}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section
@@ -370,7 +466,7 @@ const APS2026 = ({ photos = [] }) => {
               </p>
               <button
                 type='button'
-                onClick={openCompletionAccess}
+                onClick={() => openAccess('certificate')}
                 className='mt-auto inline-flex w-fit items-center gap-2 rounded-xl bg-ap-yellow px-5 py-3 font-semibold text-neutral-900'
               >
                 Get your certificate
@@ -540,10 +636,14 @@ const APS2026 = ({ photos = [] }) => {
               Automotive Packaging Summit
             </p>
             <h2 className='mt-2 font-oswald text-3xl font-medium uppercase leading-none'>
-              Certificate of Completion
+              {accessIntent === 'presentations'
+                ? 'Presentations'
+                : 'Certificate of Completion'}
             </h2>
             <p className='mt-3 text-neutral-700'>
-              The module is free.
+              {accessIntent === 'presentations'
+                ? 'Use the name and email from your 2026 registration.'
+                : 'The module is free.'}
             </p>
             <form
               className='mt-6 flex flex-col gap-4'
@@ -608,15 +708,117 @@ const APS2026 = ({ photos = [] }) => {
                 disabled={accessPending}
                 className='rounded-xl bg-ap-yellow px-4 py-3 font-semibold disabled:opacity-60'
               >
-                {accessPending ? 'Signing you in…' : 'Continue'}
+                {accessPending
+                  ? 'Checking…'
+                  : accessIntent === 'presentations'
+                    ? 'Watch'
+                    : 'Continue'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {activeVideo && videos[activeVideo.id] && (
+        <div
+          className='fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm'
+          onClick={() => setActiveVideoId(null)}
+        >
+          <div
+            className='w-full max-w-5xl'
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className='mb-3 flex items-start justify-between gap-4 text-white'>
+              <p className='font-oswald text-xl uppercase leading-none'>
+                {activeVideo.title}
+              </p>
+              <button
+                type='button'
+                onClick={() => setActiveVideoId(null)}
+                className='rounded-full bg-white/90 p-1 text-neutral-900'
+                aria-label='Close video'
+              >
+                <XMarkIcon className='h-6 w-6' />
+              </button>
+            </div>
+            <div className='aspect-video overflow-hidden rounded-2xl bg-black'>
+              <iframe
+                src={videos[activeVideo.id]}
+                title={activeVideo.title}
+                className='h-full w-full'
+                allow='autoplay; fullscreen; picture-in-picture'
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       )}
     </>
   );
 };
+
+const PresentationCard = ({ item, unlocked, onOpen }) => (
+  <button
+    type='button'
+    onClick={() => onOpen(item.id)}
+    className='group relative block w-full overflow-hidden rounded-2xl bg-ap-darkblue text-left'
+    style={{ paddingTop: '56.25%' }}
+  >
+    {item.cover ? (
+      <img
+        src={item.cover}
+        alt=''
+        className='absolute inset-0 h-full w-full object-cover'
+        style={{ objectPosition: item.coverPosition || 'center' }}
+      />
+    ) : null}
+    <div
+      className={`absolute inset-0 ${
+        item.cover
+          ? 'bg-gradient-to-t from-ap-darkblue via-ap-darkblue/70 to-ap-darkblue/30'
+          : 'bg-ap-darkblue'
+      }`}
+    />
+    {!unlocked && (
+      <span className='absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white'>
+        Locked
+      </span>
+    )}
+    <span className='absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-ap-yellow text-neutral-900'>
+      <svg viewBox='0 0 24 24' className='ml-0.5 h-6 w-6' aria-hidden='true'>
+        <path d='M8 5.5v13l11-6.5-11-6.5z' fill='currentColor' />
+      </svg>
+    </span>
+    <span className='absolute inset-x-0 bottom-0 z-10 p-4'>
+      {item.kicker ? (
+        <span className='text-[11px] font-semibold uppercase tracking-[0.16em] text-ap-yellow'>
+          {item.kicker}
+        </span>
+      ) : null}
+      <span className='line-clamp-3 font-oswald text-xl font-medium uppercase leading-none tracking-tight text-white'>
+        {item.title}
+      </span>
+      {item.speakers.length > 0 && (
+        <span
+          className={`mt-2 grid gap-x-3 gap-y-1 ${
+            item.speakers.length > 2 ? 'grid-cols-2' : 'grid-cols-1'
+          }`}
+        >
+          {item.speakers.map((speaker) => (
+            <span key={speaker.name} className='block'>
+              <span className='block text-sm font-semibold leading-tight text-white'>
+                {speaker.name}
+              </span>
+              <span className='block text-xs leading-tight text-white/80'>
+                {[speaker.jobTitle, speaker.company].filter(Boolean).join(', ')}
+              </span>
+            </span>
+          ))}
+        </span>
+      )}
+    </span>
+  </button>
+);
 
 const SectionHeading = ({ kicker, title }) => (
   <div className='max-w-2xl'>
@@ -685,14 +887,21 @@ const DateMark = ({ day, date }) => (
 );
 
 export async function getServerSideProps() {
-  try {
-    const { listAps2026Photos } = await import('../../helpers/aps2026Photos');
-    const photos = await listAps2026Photos();
-    return { props: { photos } };
-  } catch (error) {
-    console.error('APS 2026 photo list failed', error);
-    return { props: { photos: [] } };
-  }
+  const [{ listAps2026Photos }, { listAps2026PresentationCards }] =
+    await Promise.all([
+      import('../../helpers/aps2026Photos'),
+      import('../../helpers/aps2026Presentations'),
+    ]);
+
+  const [photos, presentations] = await Promise.all([
+    listAps2026Photos().catch((error) => {
+      console.error('APS 2026 photo list failed', error);
+      return [];
+    }),
+    listAps2026PresentationCards(),
+  ]);
+
+  return { props: { photos, presentations } };
 }
 
 export default APS2026;
