@@ -721,15 +721,18 @@ const APS2026 = ({ photos = [], presentations = [] }) => {
 
       {activeVideo && videos[activeVideo.id] && (
         <div
-          className='fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm'
+          className='fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 sm:p-8'
           onClick={() => setActiveVideoId(null)}
         >
           <div
-            className='w-full max-w-5xl'
+            className='flex w-full flex-col gap-3'
+            style={{
+              maxWidth: 'min(96vw, calc((100vh - 7.5rem) * 16 / 9))',
+            }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className='mb-3 flex items-start justify-between gap-4 text-white'>
-              <p className='font-oswald text-xl uppercase leading-none'>
+            <div className='flex items-center justify-between gap-4 text-white'>
+              <p className='font-oswald text-2xl uppercase leading-none'>
                 {activeVideo.title}
               </p>
               <button
@@ -741,11 +744,14 @@ const APS2026 = ({ photos = [], presentations = [] }) => {
                 <XMarkIcon className='h-6 w-6' />
               </button>
             </div>
-            <div className='aspect-video overflow-hidden rounded-2xl bg-black'>
+            <div
+              className='relative w-full overflow-hidden rounded-2xl bg-black'
+              style={{ paddingTop: '56.25%' }}
+            >
               <iframe
                 src={videos[activeVideo.id]}
                 title={activeVideo.title}
-                className='h-full w-full'
+                className='absolute inset-0 h-full w-full'
                 allow='autoplay; fullscreen; picture-in-picture'
                 allowFullScreen
               />
