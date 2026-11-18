@@ -48,11 +48,6 @@ export default function HeaderNew() {
   const router = useRouter();
   const currentPath = router.asPath;
 
-  // SalesBar is homepage-only; suppress it on every other route.
-  // router.pathname is identical on server and client, so this is safe to
-  // derive during render without hydration issues.
-  const showHomeSalesBar = router.pathname === '/';
-
   // Initialize autocomplete when component mounts
   useEffect(() => {
     const container = document.querySelector('#header-search');
@@ -431,11 +426,9 @@ export default function HeaderNew() {
             </div>
           </div>
           {/* Top navigation */}
-          {showHomeSalesBar ? (
-            <Suspense>
-              <SalesBar user={user} />
-            </Suspense>
-          ) : null}
+          <Suspense>
+            <SalesBar />
+          </Suspense>
           {/* <div className='w-full bg-red-700 h-12 flex gap-4 items-center justify-center p-4'>
             <div>
               <WrenchScrewdriverIcon className='w-6 h-6 text-white' />
