@@ -2,6 +2,10 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { createSpsInterest } from '../../../helpers/spsInterest';
 
 const CONTACT_EMAIL = 'info@packagingschool.com';
+const BCC_EMAILS = [
+  'lars@packagingschool.com',
+  'bianca@packagingschool.com',
+];
 const FLYER_URL =
   'https://packschool.s3.us-east-1.amazonaws.com/SPS-Flyer-V3.pdf';
 
@@ -49,7 +53,10 @@ export default async function handler(req, res) {
         new SendEmailCommand({
           Source: CONTACT_EMAIL,
           ReplyToAddresses: [email],
-          Destination: { ToAddresses: [CONTACT_EMAIL] },
+          Destination: {
+            ToAddresses: [CONTACT_EMAIL],
+            BccAddresses: BCC_EMAILS,
+          },
           Message: {
             Subject: {
               Charset: 'UTF-8',
