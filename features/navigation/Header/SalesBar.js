@@ -160,9 +160,9 @@ const SalesBar = () => {
   return (
     <div className='relative overflow-hidden border-b-2 border-clemson bg-[#10141c]'>
       <div className='relative mx-auto flex min-h-[64px] w-full items-center justify-center px-4 py-2.5 md:px-8 md:py-3'>
-        <div className='relative z-10 flex w-fit items-center gap-[3.2rem] md:gap-[5.6rem]'>
+        <div className='relative z-10 flex w-full max-w-full flex-col items-center gap-3 lg:w-fit lg:flex-row lg:gap-[5.6rem]'>
           {leaves ? <FallingLeaves animationData={leaves} /> : null}
-          <div className='min-w-0'>
+          <div className='w-full max-w-[20rem] shrink-0 text-center lg:w-auto lg:max-w-none lg:text-left'>
             <div className='text-xl font-bold !leading-none text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.9)] md:text-2xl'>
               Cyber Monday Deal Live!
             </div>
@@ -174,17 +174,20 @@ const SalesBar = () => {
             </div>
           </div>
 
-          <div className='flex shrink-0 items-center gap-3'>
+          <div className='flex shrink-0 flex-col items-center gap-1.5 sm:flex-row sm:gap-3'>
             <button
               type='button'
               onClick={copyCoupon}
               aria-label={copied ? 'Coupon code copied' : 'Copy coupon code'}
-              className='inline-flex items-center gap-1.5 rounded-md bg-clemson px-3 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-clemson-dark md:px-4 md:text-base'
+              className='inline-flex items-center gap-1 rounded-md bg-transparent px-0 py-0 text-sm font-bold text-clemson shadow-none transition hover:text-white sm:gap-1.5 sm:bg-clemson sm:px-3 sm:py-2 sm:text-white sm:shadow-sm sm:hover:bg-clemson-dark md:px-4 md:text-base'
             >
               {copied ? (
-                <CheckIcon className='h-5 w-5' aria-hidden='true' />
+                <CheckIcon className='h-4 w-4 sm:h-5 sm:w-5' aria-hidden='true' />
               ) : (
-                <ClipboardDocumentIcon className='h-5 w-5' aria-hidden='true' />
+                <ClipboardDocumentIcon
+                  className='h-4 w-4 sm:h-5 sm:w-5'
+                  aria-hidden='true'
+                />
               )}
               {copied ? 'Copied' : 'Copy code'}
             </button>
